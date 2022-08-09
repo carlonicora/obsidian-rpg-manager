@@ -1,0 +1,25 @@
+{
+	"name": "obsidian-rpg-manager",
+	"version": "0.0.2",
+	"description": "A plugin to manage your Tabletop Role Playing Game campaigns for Obsidian.",
+	"main": "src/main.ts",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
+	},
+	"keywords": [],
+	"author": "Carlo Nicora",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^16.11.6",
+		"@typescript-eslint/eslint-plugin": "5.29.0",
+		"@typescript-eslint/parser": "5.29.0",
+		"builtin-modules": "3.3.0",
+		"esbuild": "0.14.47",
+		"obsidian": "latest",
+		"tslib": "2.4.0",
+		"typescript": "4.7.4",
+		"obsidian-dataview": "^0.4.11"
+	}
+}
