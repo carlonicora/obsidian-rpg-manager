@@ -478,7 +478,7 @@ export class RpgComponentFactory{
 
 	clueStatus(){
 		this.dv.span(
-			((this.currentPage?.dates.found !== undefined)
+			((this.currentPage?.dates.found === undefined || this.currentPage?.dates.found === null)
 				? "==Clue **NOT** found by the player characters=="
 				: "_clue found by the player characters on " + this.functions.formatDate(this.currentPage?.dates.found, "short")  + "_") + "<br/>&nbsp;<br/>"
 		);

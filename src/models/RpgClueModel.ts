@@ -1,6 +1,6 @@
-import {RpgAbstractView} from "../abstracts/RpgAbstractView";
+import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgClueView extends RpgAbstractView {
+export class RpgClueModel extends AbstractModel {
 	public async render() {
 		this.renderer.clueStatus();
 		this.renderer.image(450);

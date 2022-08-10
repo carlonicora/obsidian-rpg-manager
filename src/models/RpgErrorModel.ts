@@ -1,6 +1,6 @@
-import {RpgAbstractView} from "../abstracts/RpgAbstractView";
+import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgErrorView extends RpgAbstractView {
+export class RpgErrorModel extends AbstractModel {
 	public async render() {
 		this.container.innerText = "The selected function does not exist in Rpg Manager";
 	}

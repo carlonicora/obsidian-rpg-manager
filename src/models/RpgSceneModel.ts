@@ -1,6 +1,6 @@
-import {RpgAbstractView} from "../abstracts/RpgAbstractView";
+import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgSceneView extends RpgAbstractView {
+export class RpgSceneModel extends AbstractModel {
 	public async render() {
 		this.renderer.sceneNavigator();
 		this.renderer.sceneLocations();

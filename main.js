@@ -47,7 +47,7 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 
 // src/data/RpgFunctions.ts
 var import_obsidian = require("obsidian");
@@ -97,7 +97,7 @@ var RpgFunctions = class extends import_obsidian.Component {
     return response;
   }
   getImageLink(page) {
-    const imageExtensions = ["jpeg", "jpg", "png"];
+    const imageExtensions = ["jpeg", "jpg", "png", "webp"];
     for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
       const fileName = this.app.vault.config.attachmentFolderPath + "/" + (page == null ? void 0 : page.file.name) + "." + imageExtensions[extensionCount];
       if (this.fileExists(fileName)) {
@@ -132,15 +132,28 @@ var RpgFunctions = class extends import_obsidian.Component {
   formatDate(date, type = null) {
     if (!date || date === void 0)
       return "";
+    let options = null;
+    if (type === "long") {
+      options = {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      };
+      return date.toLocaleString(options);
+    }
     if (type === "short") {
-      const options = {
+      options = {
+        weekday: "short",
         month: "short",
         day: "numeric",
         year: "numeric"
       };
-      return date.toLocaleString();
     }
-    return date.toISODate();
+    if (options !== null) {
+      return date.toLocaleString(options);
+    } else {
+      return date.toISODate();
+    }
   }
   formatTime(date) {
     if (!date || date === void 0)
@@ -155,9 +168,13 @@ var RpgFunctions = class extends import_obsidian.Component {
   calculateDuration(start, end) {
     if (!start || !end)
       return "";
+    const dtStart = new Date(start);
+    const dtEnd = new Date(end);
+    var difference = dtEnd.valueOf() - dtStart.valueOf();
     const diff = end - start;
-    const seconds = diff / 1e3;
-    const minutes = diff / 6e4;
+    const minutes = difference / 6e4;
+    const remaining = difference - minutes * 6e4;
+    const seconds = remaining > 0 ? remaining / 1e3 : 0;
     return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
   }
   getDeathStatus(page) {
@@ -177,12 +194,13 @@ var RpgFunctions = class extends import_obsidian.Component {
   }
 };
 
-// src/abstracts/RpgAbstractView.ts
+// src/abstracts/AbstractModel.ts
 var import_obsidian2 = require("obsidian");
 
 // src/data/RpgMetadataValidator.ts
 var RpgMetadataValidator = class {
   static validate(type, frontmatter) {
+    return true;
     if (frontmatter === void 0 || Object.keys(frontmatter).length === 0) {
       return false;
     }
@@ -497,8 +515,8 @@ var RpgComponentFactory = class {
     }
   }
   clueStatus() {
-    var _a, _b;
-    this.dv.span((((_a = this.currentPage) == null ? void 0 : _a.dates.found) !== void 0 ? "==Clue **NOT** found by the player characters==" : "_clue found by the player characters on " + this.functions.formatDate((_b = this.currentPage) == null ? void 0 : _b.dates.found, "short") + "_") + "<br/>&nbsp;<br/>");
+    var _a, _b, _c;
+    this.dv.span((((_a = this.currentPage) == null ? void 0 : _a.dates.found) === void 0 || ((_b = this.currentPage) == null ? void 0 : _b.dates.found) === null ? "==Clue **NOT** found by the player characters==" : "_clue found by the player characters on " + this.functions.formatDate((_c = this.currentPage) == null ? void 0 : _c.dates.found, "short") + "_") + "<br/>&nbsp;<br/>");
   }
   clueEvents() {
     const events = this.dv.pages("#event").where((page) => {
@@ -707,8 +725,8 @@ var RpgComponentFactory = class {
   }
 };
 
-// src/abstracts/RpgAbstractView.ts
-var RpgAbstractView = class extends import_obsidian2.MarkdownRenderChild {
+// src/abstracts/AbstractModel.ts
+var AbstractModel = class extends import_obsidian2.MarkdownRenderChild {
   constructor(functions, app, container, source, component, sourcePath) {
     super(container);
     this.functions = functions;
@@ -725,12 +743,12 @@ var RpgAbstractView = class extends import_obsidian2.MarkdownRenderChild {
   }
   renderComponent(wait = 500) {
     return __async(this, null, function* () {
-      const activeLeaf = this.app.workspace.activeLeaf;
       setTimeout(() => {
-        var _a;
+        var _a, _b;
         this.dv = this.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
         this.renderer = new RpgComponentFactory(this.functions, this.dv);
-        if (RpgMetadataValidator.validate(this.source, (_a = this.dv.current()) == null ? void 0 : _a.file.frontmatter)) {
+        console.log((_a = this.dv.current()) == null ? void 0 : _a.file.frontmatter);
+        if (RpgMetadataValidator.validate(this.source, (_b = this.dv.current()) == null ? void 0 : _b.file.frontmatter)) {
           this.container.innerHTML = "";
           this.render();
         }
@@ -740,7 +758,6 @@ var RpgAbstractView = class extends import_obsidian2.MarkdownRenderChild {
   onload() {
     this.renderComponent(0);
     this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.redrawContainer));
-    this.register(this.container.onNodeInserted(this.redrawContainer));
   }
   isActivePage() {
     var _a, _b, _c, _d;
@@ -754,8 +771,8 @@ var RpgAbstractView = class extends import_obsidian2.MarkdownRenderChild {
   }
 };
 
-// src/views/RpgNpcView.ts
-var RpgNpcView = class extends RpgAbstractView {
+// src/models/RpgNpcModel.ts
+var RpgNpcModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.synopsis();
@@ -770,8 +787,8 @@ var RpgNpcView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgErrorView.ts
-var RpgErrorView = class extends RpgAbstractView {
+// src/models/RpgErrorModel.ts
+var RpgErrorModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.container.innerText = "The selected function does not exist in Rpg Manager";
@@ -779,8 +796,8 @@ var RpgErrorView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgAdventureView.ts
-var RpgAdventureView = class extends RpgAbstractView {
+// src/models/RpgAdventureModel.ts
+var RpgAdventureModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       var _a;
@@ -789,8 +806,8 @@ var RpgAdventureView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgCampaignView.ts
-var RpgCampaignView = class extends RpgAbstractView {
+// src/models/RpgCampaignModel.ts
+var RpgCampaignModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.adventureList();
@@ -800,8 +817,8 @@ var RpgCampaignView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgClueView.ts
-var RpgClueView = class extends RpgAbstractView {
+// src/models/RpgClueModel.ts
+var RpgClueModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.clueStatus();
@@ -814,8 +831,8 @@ var RpgClueView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgEventView.ts
-var RpgEventView = class extends RpgAbstractView {
+// src/models/RpgEventModel.ts
+var RpgEventModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.synopsis();
@@ -827,8 +844,8 @@ var RpgEventView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgFactionView.ts
-var RpgFactionView = class extends RpgAbstractView {
+// src/models/RpgFactionModel.ts
+var RpgFactionModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.synopsis();
@@ -839,8 +856,8 @@ var RpgFactionView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgLocationView.ts
-var RpgLocationView = class extends RpgAbstractView {
+// src/models/RpgLocationModel.ts
+var RpgLocationModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       var _a, _b;
@@ -853,16 +870,16 @@ var RpgLocationView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgNotesView.ts
-var RpgNotesView = class extends RpgAbstractView {
+// src/models/RpgNotesModel.ts
+var RpgNotesModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
     });
   }
 };
 
-// src/views/RpgPcView.ts
-var RpgPcView = class extends RpgAbstractView {
+// src/models/RpgPcModel.ts
+var RpgPcModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.image(300, 300);
@@ -873,8 +890,8 @@ var RpgPcView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgSceneView.ts
-var RpgSceneView = class extends RpgAbstractView {
+// src/models/RpgSceneModel.ts
+var RpgSceneModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.sceneNavigator();
@@ -885,8 +902,8 @@ var RpgSceneView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgSessionView.ts
-var RpgSessionView = class extends RpgAbstractView {
+// src/models/RpgSessionModel.ts
+var RpgSessionModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       var _a;
@@ -895,8 +912,8 @@ var RpgSessionView = class extends RpgAbstractView {
   }
 };
 
-// src/views/RpgSessionNavigationView.ts
-var RpgSessionNavigationView = class extends RpgAbstractView {
+// src/models/RpgSessionNavigationModel.ts
+var RpgSessionNavigationModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.renderer.sessionNavigator();
@@ -904,55 +921,201 @@ var RpgSessionNavigationView = class extends RpgAbstractView {
   }
 };
 
+// src/views/TimelineView.ts
+var TimelineView_exports = {};
+__export(TimelineView_exports, {
+  TimelineView: () => TimelineView
+});
+
+// src/abstracts/AbstractView.ts
+var AbstractView = class {
+  constructor(functions, app, dv) {
+    this.functions = functions;
+    this.app = app;
+    this.dv = dv;
+    this.container = dv.container;
+  }
+};
+
+// src/views/TimelineView.ts
+var import_obsidian3 = require("obsidian");
+var TimelineView = class extends AbstractView {
+  render(data) {
+    return __async(this, null, function* () {
+      let response = this.header(data.campaign, data.campaignImage);
+      for (let eventCount = 0; eventCount < data.events.length; eventCount++) {
+        let fileLink = document.createElement("h3");
+        yield import_obsidian3.MarkdownRenderer.renderMarkdown(data.events[eventCount].link, fileLink, this.dv.currentFilePath, null);
+        let synopsis = document.createElement("span");
+        yield import_obsidian3.MarkdownRenderer.renderMarkdown(data.events[eventCount].description, synopsis, this.dv.currentFilePath, null);
+        const date = this.functions.formatDate(data.events[eventCount].time, "short");
+        const time = this.functions.formatTime(data.events[eventCount].time);
+        response += '<li><div class="bullet' + data.events[eventCount].getEventColour() + '"></div><div class="time">' + date + (time !== "00:00" ? "<br/>" + time : "") + '</div><div class="event-type' + data.events[eventCount].getEventColour() + '">' + data.events[eventCount].type + '</div><div class="desc">' + fileLink.outerHTML + synopsis.outerHTML + "</div></li>";
+      }
+      response += this.footer();
+      this.dv.container.innerHTML = response;
+    });
+  }
+  header(campaign, campaignImage) {
+    return '<div class="rpgm-container"><div class="rpgm-header"' + campaignImage + '><div class="rpgm-color-overlay"><div class="rpgm-day-number">Timeline</div><div class="rpgm-date-right"><div class="rpgm-day-name">' + (campaign !== null ? campaign.file.name : "Campaign") + '</div><div class="rpgm-month">' + (campaign !== null ? this.functions.formatDate(campaign.dates.current, "long") : "") + '</div></div></div></div><div class="rpgm-timeline"><ul>';
+  }
+  footer() {
+    return "</ul></div></div>";
+  }
+};
+
 // src/factories/RpgViewFactory.ts
 var RpgViewFactory = class {
+  static initialise(functions, app) {
+    this.functions = functions;
+    this.app = app;
+  }
+  static create(viewName, dv) {
+    return new TimelineView_exports[viewName + "View"](this.functions, this.app, dv);
+  }
+};
+
+// src/models/RpgTimelineModel.ts
+var TimelineEvent = class {
+  constructor(time, link, description, type) {
+    this.time = time;
+    this.link = link;
+    this.description = description;
+    this.type = type;
+  }
+  getEventColour() {
+    switch (this.type) {
+      case "event":
+        return "";
+        break;
+      case "birth":
+        return " green";
+        break;
+      case "death":
+        return " red";
+        break;
+      case "session":
+        return " blue";
+        break;
+    }
+  }
+};
+var RpgTimelineModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      let timelineEvents = [];
+      const events = this.dv.pages("#event").where((event) => {
+        var _a, _b;
+        return ((_a = event == null ? void 0 : event.dates) == null ? void 0 : _a.event) !== void 0 && ((_b = event == null ? void 0 : event.dates) == null ? void 0 : _b.event) !== null;
+      });
+      if (events !== void 0 && events.length > 0) {
+        for (let eventCount = 0; eventCount < events.length; eventCount++) {
+          timelineEvents.push(new TimelineEvent(events[eventCount].dates.event, events[eventCount].file.link.markdown(this.dv.currentFilePath), events[eventCount].synopsis ? events[eventCount].synopsis : "", "event"));
+        }
+      }
+      let characters = this.dv.pages("#character").where((character) => {
+        var _a, _b;
+        return ((_a = character == null ? void 0 : character.dates) == null ? void 0 : _a.dob) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.dob) !== null;
+      });
+      if (characters !== void 0 && characters.length > 0) {
+        for (let charactersCount = 0; charactersCount < characters.length; charactersCount++) {
+          timelineEvents.push(new TimelineEvent(characters[charactersCount].dates.dob, characters[charactersCount].file.link.markdown(this.dv.currentFilePath), characters[charactersCount].synopsis ? characters[charactersCount].synopsis : "", "birth"));
+        }
+      }
+      characters = this.dv.pages("#character").where((character) => {
+        var _a, _b;
+        return ((_a = character == null ? void 0 : character.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.death) !== null;
+      });
+      if (characters !== void 0 && characters.length > 0) {
+        for (let charactersCount = 0; charactersCount < characters.length; charactersCount++) {
+          timelineEvents.push(new TimelineEvent(characters[charactersCount].dates.death, characters[charactersCount].file.link.markdown(this.dv.currentFilePath), characters[charactersCount].synopsis ? characters[charactersCount].synopsis : "", "death"));
+        }
+      }
+      const sessions = this.dv.pages("#session").where((session) => {
+        var _a, _b;
+        return ((_a = session == null ? void 0 : session.dates) == null ? void 0 : _a.session) !== void 0 && ((_b = session == null ? void 0 : session.dates) == null ? void 0 : _b.session) !== null;
+      });
+      if (sessions !== void 0 && sessions.length > 0) {
+        for (let sessionsCount = 0; sessionsCount < sessions.length; sessionsCount++) {
+          timelineEvents.push(new TimelineEvent(sessions[sessionsCount].dates.session, sessions[sessionsCount].file.link.markdown(this.dv.currentFilePath), sessions[sessionsCount].synopsis ? sessions[sessionsCount].synopsis : "", "session"));
+        }
+      }
+      timelineEvents.sort((a, b) => {
+        return a.time - b.time;
+      });
+      const campaigns = this.dv.pages("#campaign").where((campaign) => campaign.file.folder !== "Templates");
+      let campaignImage = null;
+      if (campaigns !== void 0 && campaigns.length > 0) {
+        campaignImage = this.functions.getImageLink(campaigns[0]);
+        if (campaignImage !== null) {
+          campaignImage = ` style="background: url('` + campaignImage + `');"`;
+        } else {
+          campaignImage = "";
+        }
+      }
+      const data = {
+        events: timelineEvents,
+        campaign: campaigns !== void 0 && campaigns.length > 0 ? campaigns[0] : null,
+        campaignImage
+      };
+      const view = RpgViewFactory.create("Timeline", this.dv);
+      view.render(data);
+    });
+  }
+};
+
+// src/factories/RpgModelFactory.ts
+var RpgModelFactory = class {
   static create(functions, app, container, source, component, sourcePath) {
     switch (source.replace(/[\n\r]/g, "").toLowerCase()) {
       case "adventure":
-        return new RpgAdventureView(functions, app, container, source, component, sourcePath);
+        return new RpgAdventureModel(functions, app, container, source, component, sourcePath);
         break;
       case "campaign":
-        return new RpgCampaignView(functions, app, container, source, component, sourcePath);
+        return new RpgCampaignModel(functions, app, container, source, component, sourcePath);
         break;
       case "clue":
-        return new RpgClueView(functions, app, container, source, component, sourcePath);
+        return new RpgClueModel(functions, app, container, source, component, sourcePath);
         break;
       case "event":
-        return new RpgEventView(functions, app, container, source, component, sourcePath);
+        return new RpgEventModel(functions, app, container, source, component, sourcePath);
         break;
       case "faction":
-        return new RpgFactionView(functions, app, container, source, component, sourcePath);
+        return new RpgFactionModel(functions, app, container, source, component, sourcePath);
         break;
       case "location":
-        return new RpgLocationView(functions, app, container, source, component, sourcePath);
+        return new RpgLocationModel(functions, app, container, source, component, sourcePath);
         break;
       case "npc":
-        return new RpgNpcView(functions, app, container, source, component, sourcePath);
+        return new RpgNpcModel(functions, app, container, source, component, sourcePath);
         break;
       case "notes":
-        return new RpgNotesView(functions, app, container, source, component, sourcePath);
+        return new RpgNotesModel(functions, app, container, source, component, sourcePath);
         break;
       case "pc":
-        return new RpgPcView(functions, app, container, source, component, sourcePath);
+        return new RpgPcModel(functions, app, container, source, component, sourcePath);
         break;
       case "scene":
-        return new RpgSceneView(functions, app, container, source, component, sourcePath);
+        return new RpgSceneModel(functions, app, container, source, component, sourcePath);
         break;
       case "session":
-        return new RpgSessionView(functions, app, container, source, component, sourcePath);
+        return new RpgSessionModel(functions, app, container, source, component, sourcePath);
         break;
       case "sessionnavigator":
-        return new RpgSessionNavigationView(functions, app, container, source, component, sourcePath);
+        return new RpgSessionNavigationModel(functions, app, container, source, component, sourcePath);
+        break;
+      case "timeline":
+        return new RpgTimelineModel(functions, app, container, source, component, sourcePath);
         break;
       default:
-        return new RpgErrorView(functions, app, container, source, component, sourcePath);
+        return new RpgErrorModel(functions, app, container, source, component, sourcePath);
         break;
     }
   }
 };
 
 // src/main.ts
-var RpgManager = class extends import_obsidian3.Plugin {
+var RpgManager = class extends import_obsidian4.Plugin {
   constructor() {
     super(...arguments);
     this.areFunctionsLoaded = false;
@@ -960,14 +1123,11 @@ var RpgManager = class extends import_obsidian3.Plugin {
   onload() {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
-      this.refreshViews = (0, import_obsidian3.debounce)(this.refreshViews, 500, true);
+      this.refreshViews = (0, import_obsidian4.debounce)(this.refreshViews, 2500, true);
       this.registerEvent(this.app.metadataCache.on("resolved", function() {
         this.refreshViews();
       }.bind(this)));
       this.registerEvent(this.app.vault.on("modify", function() {
-        this.refreshViews();
-      }.bind(this)));
-      this.registerEvent(this.app.workspace.on("layout-change", function() {
         this.refreshViews();
       }.bind(this)));
       this.registerPriorityCodeblockPostProcessor("RpgManager", -100, (source, el, ctx) => __async(this, null, function* () {
@@ -983,9 +1143,10 @@ var RpgManager = class extends import_obsidian3.Plugin {
       if (!this.areFunctionsLoaded) {
         this.areFunctionsLoaded = true;
         this.functions = this.addChild(RpgFunctions.create(this.app));
+        RpgViewFactory.initialise(this.functions, this.app);
       }
       this.app.plugins.plugins.dataview.api.index.touch();
-      component.addChild(RpgViewFactory.create(this.functions, this.app, el, source, component, sourcePath));
+      component.addChild(RpgModelFactory.create(this.functions, this.app, el, source, component, sourcePath));
     });
   }
   registerPriorityCodeblockPostProcessor(language, priority, processor) {

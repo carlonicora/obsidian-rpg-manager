@@ -1,6 +1,6 @@
-import {RpgAbstractView} from "../abstracts/RpgAbstractView";
+import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgLocationView extends RpgAbstractView {
+export class RpgLocationModel extends AbstractModel {
 	public async render() {
 		this.renderer.synopsis(this.dv.current()?.address ? this.dv.current()?.address : null);
 		this.renderer.image(450);

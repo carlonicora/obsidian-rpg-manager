@@ -1,0 +1,162 @@
+$black: #202020;
+$white: #fff;
+$dark-grey: #808080;
+$light-grey: #d9d9d9;
+$purple: #B97CFC;
+$pink: #F93B69;
+$green: #B0E8E2;
+$orange: #EB8B6E;
+$red: #ff2020;
+$blue: #2020ff;
+
+.rpgm-container {
+	//max-width: 350px;
+	//max-height: 630px;
+	overflow: hidden;
+	//margin: 30px auto 0;
+	//box-shadow: 0 0 40px lighten($black, 50);
+	//font-family: 'Open Sans', sans-serif;
+}
+
+.rpgm-header {
+	background-size: cover;
+	color: $white;
+	position: relative;
+	min-height: 350px;
+}
+
+.rpgm-color-overlay {
+	margin-top: -25px;
+	margin-bottom: -50px;
+	box-sizing: border-box;
+	background: rgba(123, 94, 155, 0.5) ;
+	min-height: 350px;
+}
+
+.rpgm-day-number {
+	font-size: 4em;
+	display: inline-block;
+	padding-left: 30px;
+	width: 100%;
+	margin-top: 50px;
+}
+
+.rpgm-date-right {
+	display: inline-block;
+	padding-left: 30px;
+}
+
+.rpgm-day-name {
+	font-size: 1.6em;
+}
+
+.rpgm-month {
+	text-transform: uppercase;
+	font-weight: 300;
+	font-size: 0.6em;
+	letter-spacing: 2px;
+	margin-top: 2px;
+}
+
+.rpgm-timeline {
+	margin-top: 50px;
+
+	ul {
+		padding: 1em 0 0 2em;
+		margin: 0;
+		list-style: none;
+		position: relative;
+
+		&::before {
+			content: ' ';
+			height: 100%;
+			width: 1px;
+			background-color: $light-grey;
+			position: absolute;
+			top: 0;
+			left: 2.5em;
+			z-index: -1;
+		}
+	}
+
+	li div{
+		display: inline-block;
+		margin: 1em 0;
+		vertical-align: top;
+	}
+
+	.bullet {
+		width: 1em;
+		height: 1em;
+		box-sizing: border-box;
+		border-radius: 50%;
+		background: $dark-grey;
+		z-index: 1;
+		margin-right: 1em;
+		border: 1px solid $dark-grey;
+
+		&.red {
+			border: 1px solid $red;
+			background: $red;
+		}
+
+		&.green {
+			border: 1px solid $green;
+			background: $green;
+		}
+
+		&.blue {
+			border: 1px solid $blue;
+			background: $blue;
+		}
+	}
+
+	.time {
+		width: 115px;
+		font-size: 0.75em;
+		padding-top: 0.25em;
+	}
+
+	.event-type {
+		width: 55px;
+		font-size: 0.75em;
+		padding-top: 0.25em;
+		margin-left: 5px;
+		margin-right: 5px;
+
+		&.red {
+			color: $red;
+		}
+
+		&.green {
+			color: $green;
+		}
+
+		&.blue {
+			color: $blue;
+		}
+	}
+
+	.desc {
+		margin-top: 0px;
+	}
+
+	h3 {
+		font-size: 0.9em;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	h4 {
+		margin: 0;
+		font-size: 0.7em;
+		font-weight: 400;
+		color: $dark-grey;
+	}
+
+	.people img{
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+	}
+}

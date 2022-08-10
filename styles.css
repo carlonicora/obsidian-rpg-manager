@@ -1,2 +1,132 @@
-body {
+.rpgm-container {
+  overflow: hidden;
 }
+
+.rpgm-header {
+  background-size: cover;
+  color: #fff;
+  position: relative;
+  min-height: 350px;
+}
+
+.rpgm-color-overlay {
+  margin-top: -25px;
+  margin-bottom: -50px;
+  box-sizing: border-box;
+  background: rgba(123, 94, 155, 0.5);
+  min-height: 350px;
+}
+
+.rpgm-day-number {
+  font-size: 4em;
+  display: inline-block;
+  padding-left: 30px;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.rpgm-date-right {
+  display: inline-block;
+  padding-left: 30px;
+}
+
+.rpgm-day-name {
+  font-size: 1.6em;
+}
+
+.rpgm-month {
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.6em;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.rpgm-timeline {
+  margin-top: 50px;
+}
+.rpgm-timeline ul {
+  padding: 1em 0 0 2em;
+  margin: 0;
+  list-style: none;
+  position: relative;
+}
+.rpgm-timeline ul::before {
+  content: " ";
+  height: 100%;
+  width: 1px;
+  background-color: #d9d9d9;
+  position: absolute;
+  top: 0;
+  left: 2.5em;
+  z-index: -1;
+}
+.rpgm-timeline li div {
+  display: inline-block;
+  margin: 1em 0;
+  vertical-align: top;
+}
+.rpgm-timeline .bullet {
+  width: 1em;
+  height: 1em;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: #808080;
+  z-index: 1;
+  margin-right: 1em;
+  border: 1px solid #808080;
+}
+.rpgm-timeline .bullet.red {
+  border: 1px solid #ff2020;
+  background: #ff2020;
+}
+.rpgm-timeline .bullet.green {
+  border: 1px solid #B0E8E2;
+  background: #B0E8E2;
+}
+.rpgm-timeline .bullet.blue {
+  border: 1px solid #2020ff;
+  background: #2020ff;
+}
+.rpgm-timeline .time {
+  width: 115px;
+  font-size: 0.75em;
+  padding-top: 0.25em;
+}
+.rpgm-timeline .event-type {
+  width: 55px;
+  font-size: 0.75em;
+  padding-top: 0.25em;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.rpgm-timeline .event-type.red {
+  color: #ff2020;
+}
+.rpgm-timeline .event-type.green {
+  color: #B0E8E2;
+}
+.rpgm-timeline .event-type.blue {
+  color: #2020ff;
+}
+.rpgm-timeline .desc {
+  margin-top: 0px;
+}
+.rpgm-timeline h3 {
+  font-size: 0.9em;
+  font-weight: 400;
+  margin: 0;
+}
+.rpgm-timeline h4 {
+  margin: 0;
+  font-size: 0.7em;
+  font-weight: 400;
+  color: #808080;
+}
+.rpgm-timeline .people img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/*# sourceMappingURL=styles.css.map */

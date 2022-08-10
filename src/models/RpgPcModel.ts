@@ -1,6 +1,6 @@
-import {RpgAbstractView} from "../abstracts/RpgAbstractView";
+import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgPcView extends RpgAbstractView {
+export class RpgPcModel extends AbstractModel {
 	public async render() {
 		this.renderer.image(300, 300);
 		this.renderer.affiliations();

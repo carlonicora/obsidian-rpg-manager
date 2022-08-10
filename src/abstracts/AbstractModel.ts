@@ -4,7 +4,7 @@ import {RpgMetadataValidator} from "../data/RpgMetadataValidator";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {RpgComponentFactory} from "../factories/RpgComponentFactory";
 
-export abstract class RpgAbstractView extends MarkdownRenderChild {
+export abstract class AbstractModel extends MarkdownRenderChild {
 	protected dv: DataviewInlineApi;
 	protected renderer: RpgComponentFactory;
 
@@ -22,11 +22,12 @@ export abstract class RpgAbstractView extends MarkdownRenderChild {
 	abstract render(): Promise<void>;
 
 	private async renderComponent(wait = 500){
-		const activeLeaf = this.app.workspace.activeLeaf;
 		setTimeout(() => {
 			//@ts-ignore
 			this.dv = this.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
 			this.renderer = new RpgComponentFactory(this.functions, this.dv);
+
+			console.log(this.dv.current()?.file.frontmatter);
 
 			if (RpgMetadataValidator.validate(this.source, this.dv.current()?.file.frontmatter)) {
 				this.container.innerHTML = '';
@@ -38,9 +39,8 @@ export abstract class RpgAbstractView extends MarkdownRenderChild {
 
 	onload() {
 		this.renderComponent(0);
-		//@ts-ignore
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.redrawContainer));
-		this.register(this.container.onNodeInserted(this.redrawContainer));
+		//this.register(this.container.onNodeInserted(this.redrawContainer));
 	}
 
 	redrawContainer = () => {

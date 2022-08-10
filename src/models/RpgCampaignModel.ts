@@ -1,6 +1,6 @@
-import {RpgAbstractView} from "../abstracts/RpgAbstractView";
+import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgCampaignView extends RpgAbstractView {
+export class RpgCampaignModel extends AbstractModel {
 	public async render() {
 		this.renderer.adventureList();
 		this.renderer.sessionList();

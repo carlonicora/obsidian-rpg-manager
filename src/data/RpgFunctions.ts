@@ -81,7 +81,7 @@ export class RpgFunctions extends Component {
 	}
 
 	getImageLink(page: Record<string, Literal>|undefined){
-		const imageExtensions = ["jpeg", "jpg", "png"];
+		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
 
 		for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++){
 			const fileName = this.app.vault.config.attachmentFolderPath + '/' + page?.file.name + '.' + imageExtensions[extensionCount];
@@ -132,17 +132,32 @@ export class RpgFunctions extends Component {
 	formatDate(date: DateTime|undefined, type: string|null = null): string{
 		if (!date || date === undefined) return "";
 
-		if (type === "short"){
-			const options = {
-				month : 'short',
-				day:  "numeric",
-				year: "numeric",
+		let options = null;
+
+		if (type === "long"){
+			options = {
+				day:  'numeric',
+				month : 'long',
+				year: 'numeric',
 			};
 
-			return date.toLocaleString();
+			return date.toLocaleString(options);
 		}
 
-		return date.toISODate();
+		if (type === "short"){
+			options = {
+				weekday: 'short',
+				month : 'short',
+				day:  'numeric',
+				year: 'numeric',
+			};
+		}
+
+		if (options !== null){
+			return date.toLocaleString(options);
+		} else {
+			return date.toISODate();
+		}
 	}
 
 	formatTime(date: DateTime|undefined){
@@ -160,9 +175,16 @@ export class RpgFunctions extends Component {
 	calculateDuration(start:DateTime, end:DateTime){
 		if (!start || !end) return "";
 
+		const dtStart = new Date(start);
+		const dtEnd = new Date(end);
+
+		var difference = dtEnd.valueOf() - dtStart.valueOf();
+
 		const diff = end - start;
-		const seconds = diff/1000;
-		const minutes = diff/60000;
+
+		const minutes = difference/60000;
+		const remaining = (difference-(minutes*60000));
+		const seconds = remaining > 0 ?  remaining/1000 : 0;
 
 		return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
 	}
