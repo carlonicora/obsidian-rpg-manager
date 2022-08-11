@@ -34,6 +34,33 @@ export class CharacterData extends AbstractImageData implements CharacterDataInt
 	public isDead: boolean;
 	public goals: string|null;
 
+	public static frontmatter = {
+		'pc': {
+			'dates': {
+				'dob': true,
+				'death': true,
+			},
+			'relationships': {
+				'characters': true,
+				'factions': true,
+				'locations': true,
+			},
+		},
+		'npc': {
+			'synopsis': true,
+			'goals': true,
+			'dates': {
+				'dob': true,
+				'death': true,
+			},
+			'relationships': {
+				'characters': true,
+				'factions': true,
+				'locations': true,
+			},
+		}
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

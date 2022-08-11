@@ -132,4 +132,15 @@
   color: #808080;
 }
 
+.rpg-error {
+  border: solid 1px #EB8B6E;
+  background-color: #eeeeee;
+  padding: 10px 25px;
+}
+.rpg-error h3 {
+  color: #EB8B6E;
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
 /*# sourceMappingURL=styles.css.map */

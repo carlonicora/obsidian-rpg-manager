@@ -9,6 +9,12 @@ export interface CampaignDataInterface extends GenericDataInterface, GenericImag
 export class CampaignData extends AbstractImageData implements CampaignDataInterface {
 	public currentDate: string;
 
+	public static frontmatter = {
+		'dates': {
+			'current': true,
+		},
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

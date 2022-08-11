@@ -27,6 +27,13 @@ export class FactionList extends AbstractDataList implements FactionListInterfac
 export class FactionData extends AbstractImageData implements FactionDataInterface {
 	public synopsis: string;
 
+	public static frontmatter = {
+		'synopsis': true,
+		'relationships': {
+			'locations': true,
+		},
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

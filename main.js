@@ -215,8 +215,415 @@ __export(models_exports, {
 // src/abstracts/AbstractModel.ts
 var import_obsidian3 = require("obsidian");
 
-// src/data/validators/RpgMetadataValidator.ts
-var RpgMetadataValidator = class {
+// src/data/index.ts
+var data_exports = {};
+__export(data_exports, {
+  AdventureData: () => AdventureData,
+  AdventureList: () => AdventureList,
+  CampaignData: () => CampaignData,
+  CharacterData: () => CharacterData,
+  CharacterList: () => CharacterList,
+  ClueData: () => ClueData,
+  ClueList: () => ClueList,
+  EventData: () => EventData,
+  EventList: () => EventList,
+  FactionData: () => FactionData,
+  FactionList: () => FactionList,
+  ImageData: () => ImageData,
+  LocationData: () => LocationData,
+  LocationList: () => LocationList,
+  SceneData: () => SceneData,
+  SceneList: () => SceneList,
+  SessionData: () => SessionData,
+  SessionList: () => SessionList,
+  SynopsisData: () => SynopsisData,
+  TimelineData: () => TimelineData,
+  TimelineList: () => TimelineList
+});
+
+// src/abstracts/AbstractData.ts
+var AbstractData = class {
+  constructor(functions, data) {
+    this.functions = functions;
+    this.data = data;
+    this.link = data.file.link;
+    this.name = data.file.name;
+    this.path = data.file.path;
+  }
+};
+var AbstractImageData = class extends AbstractData {
+  constructor(functions, data) {
+    super(functions, data);
+    this.imageSrc = functions.getImageLink(data);
+    this.image = this.imageSrc !== null ? functions.getImage(data) : "";
+  }
+  getImage(width = 75, height = 75) {
+    if (this.imageSrc === null)
+      return "";
+    return this.functions.getImage(this.data, width, height);
+  }
+};
+var AbstractDataList = class {
+  constructor(campaign) {
+    this.campaign = campaign;
+  }
+  add(data) {
+    this.elements.push(data);
+  }
+  map(data) {
+    const response = /* @__PURE__ */ new Map();
+    const character = this.elements.find((t) => t.link === data.link);
+    if (character !== void 0) {
+      Object.entries(character).forEach(([key, value]) => {
+        response.set(key, value);
+      });
+    }
+    return response;
+  }
+};
+
+// src/data/AdventureData.ts
+var AdventureList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var AdventureData = class extends AbstractData {
+  constructor(functions, data) {
+    super(functions, data);
+    this.id = data.ids.adventure;
+    this.synopsis = data.synopsis;
+  }
+};
+AdventureData.frontmatter = {
+  "synopsis": true,
+  "ids": {
+    "adventure": true
+  }
+};
+
+// src/data/CampaignData.ts
+var CampaignData = class extends AbstractImageData {
+  constructor(functions, data) {
+    super(functions, data);
+    this.currentDate = data.dates.current;
+  }
+};
+CampaignData.frontmatter = {
+  "dates": {
+    "current": true
+  }
+};
+
+// src/data/CharacterData.ts
+var CharacterList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var CharacterData = class extends AbstractImageData {
+  constructor(functions, data, campaign, useAdditionalInformation = null) {
+    super(functions, data);
+    this.campaign = campaign;
+    this.age = "";
+    this.image = functions.getImage(data);
+    if (campaign !== null)
+      this.age = functions.calculateAge(data, campaign.currentDate);
+    this.isDead = data.dates.death != void 0;
+    this.goals = data.goals != void 0 ? data.goals : null;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+CharacterData.frontmatter = {
+  "pc": {
+    "dates": {
+      "dob": true,
+      "death": true
+    },
+    "relationships": {
+      "characters": true,
+      "factions": true,
+      "locations": true
+    }
+  },
+  "npc": {
+    "synopsis": true,
+    "goals": true,
+    "dates": {
+      "dob": true,
+      "death": true
+    },
+    "relationships": {
+      "characters": true,
+      "factions": true,
+      "locations": true
+    }
+  }
+};
+
+// src/data/ClueData.ts
+var ClueList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var ClueData = class extends AbstractImageData {
+  constructor(functions, data, useAdditionalInformation = null) {
+    super(functions, data);
+    this.image = functions.getImage(data);
+    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
+      this.found = functions.formatDate(data.dates.found, "long");
+    } else {
+      this.found = false;
+    }
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+ClueData.frontmatter = {
+  "synopsis": true,
+  "dates": {
+    "found": false
+  },
+  "relationships": {
+    "characters": true,
+    "locations": true
+  }
+};
+
+// src/data/EventData.ts
+var EventList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var EventData = class extends AbstractImageData {
+  constructor(functions, data, campaign, useAdditionalInformation = null) {
+    super(functions, data);
+    this.campaign = campaign;
+    if (data.dates.event != null)
+      this.date = this.functions.formatDate(data.dates.event, "short");
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+EventData.frontmatter = {
+  "synopsis": true,
+  "dates": {
+    "event": true
+  },
+  "relationships": {
+    "characters": true,
+    "clues": true,
+    "locations": true
+  }
+};
+
+// src/data/FactionData.ts
+var FactionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var FactionData = class extends AbstractImageData {
+  constructor(functions, data, campaign, useAdditionalInformation = null) {
+    super(functions, data);
+    this.campaign = campaign;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+FactionData.frontmatter = {
+  "synopsis": true,
+  "relationships": {
+    "locations": true
+  }
+};
+
+// src/data/ImageData.ts
+var ImageData = class extends AbstractImageData {
+  constructor(functions, data, width = 75, height = 75) {
+    super(functions, data);
+    this.image = this.imageSrc !== null ? functions.getImage(data, width, height) : "";
+  }
+};
+
+// src/data/LocationData.ts
+var LocationList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var LocationData = class extends AbstractImageData {
+  constructor(functions, data, useAdditionalInformation = null) {
+    super(functions, data);
+    this.address = data.address;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+LocationData.frontmatter = {
+  "synopsis": true,
+  "address": false
+};
+
+// src/data/SceneData.ts
+var SceneList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var SceneData = class extends AbstractImageData {
+  constructor(functions, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
+    var _a, _b;
+    super(functions, data);
+    this.session = session;
+    this.adventure = adventure;
+    this.previousScene = previousScene;
+    this.nextScene = nextScene;
+    this.campaign = campaign;
+    this.duration = "";
+    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
+    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
+    this.sceneId = ((_b = data.ids) == null ? void 0 : _b.scene) != void 0 ? data.ids.scene : 0;
+    this.startTime = this.functions.formatTime(data.time.start);
+    this.endTime = this.functions.formatTime(data.time.end);
+    if (this.startTime !== "" && this.endTime !== "") {
+      this.duration = this.functions.calculateDuration(data.time.start, data.time.end);
+    }
+  }
+};
+SceneData.frontmatter = {
+  "synopsis": true,
+  "ids": {
+    "session": true,
+    "scene": true
+  },
+  "relationships": {
+    "characters": true,
+    "clues": true,
+    "locations": true
+  },
+  "time": {
+    "start": false,
+    "end": false
+  }
+};
+
+// src/data/SessionData.ts
+var SessionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var SessionData = class extends AbstractData {
+  constructor(functions, data, campaign = null, adventure = null, previousSession = null, nextSession = null) {
+    super(functions, data);
+    this.campaign = campaign;
+    this.adventure = adventure;
+    this.previousSession = previousSession;
+    this.nextSession = nextSession;
+    this.id = data.ids.session;
+    this.adventureId = data.ids.adventure;
+    this.type = data.ids.type;
+    this.synopsis = data.synopsis;
+    if (data.dates.session !== null && data.dates.session !== void 0)
+      this.date = this.functions.formatDate(data.dates.session, "short");
+    if (data.dates.irl !== null && data.dates.irl !== void 0)
+      this.date = this.functions.formatDate(data.dates.irl);
+  }
+};
+SessionData.frontmatter = {
+  "synopsis": true,
+  "ids": {
+    "adventure": true,
+    "session": true,
+    "type": false
+  },
+  "dates": {
+    "session": true,
+    "irl": false
+  }
+};
+
+// src/data/SynopsisData.ts
+var SynopsisData = class extends AbstractData {
+  constructor(functions, data, title = null) {
+    var _a, _b;
+    super(functions, data);
+    this.title = title;
+    this.synopsis = data.synopsis !== null ? data.synopsis : "";
+    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.functions.formatDate(data.dates.death, "short") : "";
+    this.isCharacter = data.tags.indexOf("character/npc") !== -1;
+  }
+};
+
+// src/data/TimelineData.ts
+var TimelineList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+  sort() {
+    this.elements.sort((a, b) => {
+      return a.datetime - b.datetime;
+    });
+  }
+};
+var TimelineData = class extends AbstractImageData {
+  constructor(functions, data, type) {
+    super(functions, data);
+    this.type = type;
+    this.image = functions.getImage(data, 70);
+    this.synopsis = data.synopsis;
+    switch (type) {
+      case "event":
+        this.datetime = data.dates.event;
+        break;
+      case "death":
+        this.datetime = data.dates.death;
+        break;
+      case "birth":
+        this.datetime = data.dates.dob;
+        break;
+      case "session":
+        this.datetime = data.dates.session;
+        break;
+      case "clue":
+        this.datetime = data.dates.found;
+        break;
+    }
+    this.date = this.functions.formatDate(this.datetime, "short");
+    this.time = this.functions.formatTime(this.datetime);
+  }
+  getEventColour() {
+    switch (this.type) {
+      case "event":
+        return "";
+        break;
+      case "birth":
+        return " green";
+        break;
+      case "death":
+        return " red";
+        break;
+      case "session":
+        return " blue";
+        break;
+      case "clue":
+        return " purple";
+        break;
+    }
+    return "";
+  }
+};
+
+// src/validators/MetadataValidator.ts
+var MetadataValidator = class {
   static validate(app, current) {
     let response = true;
     app.vault.getFiles().forEach((file) => {
@@ -224,12 +631,54 @@ var RpgMetadataValidator = class {
         const cache = app.metadataCache.getFileCache(file);
         if (cache != void 0 && cache.frontmatter == void 0) {
           if (cache.sections != void 0 && cache.sections[0] != void 0 && cache.sections[0].type === "yaml") {
-            response = false;
+            response = "Invalid Frontmatter";
           }
         }
       }
     });
+    if (response === true) {
+      if (current.tags.indexOf("adventure") !== -1) {
+        response = this.validateFrontmatterElement(AdventureData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("campaign") !== -1) {
+        response = this.validateFrontmatterElement(CampaignData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("character/pc") !== -1) {
+        response = this.validateFrontmatterElement(CharacterData.frontmatter["pc"], current.file.frontmatter);
+      } else if (current.tags.indexOf("character/npc") !== -1) {
+        response = this.validateFrontmatterElement(CharacterData.frontmatter["npc"], current.file.frontmatter);
+      } else if (current.tags.indexOf("clue") !== -1) {
+        response = this.validateFrontmatterElement(ClueData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("event") !== -1) {
+        response = this.validateFrontmatterElement(EventData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("faction") !== -1) {
+        response = this.validateFrontmatterElement(FactionData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("location") !== -1) {
+        response = this.validateFrontmatterElement(LocationData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("scene") !== -1) {
+        response = this.validateFrontmatterElement(SceneData.frontmatter, current.file.frontmatter);
+      } else if (current.tags.indexOf("session") !== -1) {
+        response = this.validateFrontmatterElement(SessionData.frontmatter, current.file.frontmatter);
+      }
+    }
     return response;
+  }
+  static validateFrontmatterElement(element, frontmatter) {
+    let response = true;
+    let error = "";
+    Object.entries(element).forEach(([key, value]) => {
+      if (value === false || frontmatter !== null && key in frontmatter) {
+        if (typeof value === "object") {
+          let temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key]);
+          if (temporaryResponse !== true) {
+            error += temporaryResponse;
+            response = false;
+          }
+        }
+      } else {
+        error += "<li>" + key + " missing</li>";
+        response = false;
+      }
+    });
+    return response === true ? true : error;
   }
 };
 
@@ -572,317 +1021,6 @@ var RpgViewFactory = class {
   }
 };
 
-// src/abstracts/AbstractData.ts
-var AbstractData = class {
-  constructor(functions, data) {
-    this.functions = functions;
-    this.data = data;
-    this.link = data.file.link;
-    this.name = data.file.name;
-    this.path = data.file.path;
-  }
-};
-var AbstractImageData = class extends AbstractData {
-  constructor(functions, data) {
-    super(functions, data);
-    this.imageSrc = functions.getImageLink(data);
-    this.image = this.imageSrc !== null ? functions.getImage(data) : "";
-  }
-  getImage(width = 75, height = 75) {
-    if (this.imageSrc === null)
-      return "";
-    return this.functions.getImage(this.data, width, height);
-  }
-};
-var AbstractDataList = class {
-  constructor(campaign) {
-    this.campaign = campaign;
-  }
-  add(data) {
-    this.elements.push(data);
-  }
-  map(data) {
-    const response = /* @__PURE__ */ new Map();
-    const character = this.elements.find((t) => t.link === data.link);
-    if (character !== void 0) {
-      Object.entries(character).forEach(([key, value]) => {
-        response.set(key, value);
-      });
-    }
-    return response;
-  }
-};
-
-// src/data/CampaignData.ts
-var CampaignData = class extends AbstractImageData {
-  constructor(functions, data) {
-    super(functions, data);
-    this.currentDate = data.dates.current;
-  }
-};
-
-// src/data/SessionData.ts
-var SessionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var SessionData = class extends AbstractData {
-  constructor(functions, data, campaign = null, adventure = null, previousSession = null, nextSession = null) {
-    super(functions, data);
-    this.campaign = campaign;
-    this.adventure = adventure;
-    this.previousSession = previousSession;
-    this.nextSession = nextSession;
-    this.id = data.ids.session;
-    this.adventureId = data.ids.adventure;
-    this.type = data.ids.type;
-    this.synopsis = data.synopsis;
-    if (data.dates.session !== null && data.dates.session !== void 0)
-      this.date = this.functions.formatDate(data.dates.session, "short");
-    if (data.dates.irl !== null && data.dates.irl !== void 0)
-      this.date = this.functions.formatDate(data.dates.irl);
-  }
-};
-
-// src/data/AdventureData.ts
-var AdventureList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var AdventureData = class extends AbstractData {
-  constructor(functions, data) {
-    super(functions, data);
-    this.id = data.ids.adventure;
-    this.synopsis = data.synopsis;
-  }
-};
-
-// src/data/CharacterData.ts
-var CharacterList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var CharacterData = class extends AbstractImageData {
-  constructor(functions, data, campaign, useAdditionalInformation = null) {
-    super(functions, data);
-    this.campaign = campaign;
-    this.age = "";
-    this.image = functions.getImage(data);
-    if (campaign !== null)
-      this.age = functions.calculateAge(data, campaign.currentDate);
-    this.isDead = data.dates.death != void 0;
-    this.goals = data.goals != void 0 ? data.goals : null;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/data/ClueData.ts
-var ClueList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var ClueData = class extends AbstractImageData {
-  constructor(functions, data, useAdditionalInformation = null) {
-    super(functions, data);
-    this.image = functions.getImage(data);
-    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
-      this.found = functions.formatDate(data.dates.found, "long");
-    } else {
-      this.found = false;
-    }
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/data/ImageData.ts
-var ImageData = class extends AbstractImageData {
-  constructor(functions, data, width = 75, height = 75) {
-    super(functions, data);
-    this.image = this.imageSrc !== null ? functions.getImage(data, width, height) : "";
-  }
-};
-
-// src/data/SynopsisData.ts
-var SynopsisData = class extends AbstractData {
-  constructor(functions, data, title = null) {
-    var _a, _b;
-    super(functions, data);
-    this.title = title;
-    this.synopsis = data.synopsis !== null ? data.synopsis : "";
-    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.functions.formatDate(data.dates.death, "short") : "";
-    this.isCharacter = data.tags.indexOf("character/npc") !== -1;
-  }
-};
-
-// src/data/LocationData.ts
-var LocationList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var LocationData = class extends AbstractImageData {
-  constructor(functions, data, useAdditionalInformation = null) {
-    super(functions, data);
-    this.address = data.address;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/data/index.ts
-var data_exports = {};
-__export(data_exports, {
-  AdventureData: () => AdventureData,
-  AdventureList: () => AdventureList,
-  CampaignData: () => CampaignData,
-  CharacterData: () => CharacterData,
-  CharacterList: () => CharacterList,
-  ClueData: () => ClueData,
-  ClueList: () => ClueList,
-  EventData: () => EventData,
-  EventList: () => EventList,
-  FactionData: () => FactionData,
-  FactionList: () => FactionList,
-  ImageData: () => ImageData,
-  LocationData: () => LocationData,
-  LocationList: () => LocationList,
-  SceneData: () => SceneData,
-  SceneList: () => SceneList,
-  SessionData: () => SessionData,
-  SessionList: () => SessionList,
-  SynopsisData: () => SynopsisData,
-  TimelineData: () => TimelineData,
-  TimelineList: () => TimelineList
-});
-
-// src/data/EventData.ts
-var EventList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var EventData = class extends AbstractImageData {
-  constructor(functions, data, campaign, useAdditionalInformation = null) {
-    super(functions, data);
-    this.campaign = campaign;
-    if (data.dates.event != null)
-      this.date = this.functions.formatDate(data.dates.event, "short");
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/data/FactionData.ts
-var FactionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var FactionData = class extends AbstractImageData {
-  constructor(functions, data, campaign, useAdditionalInformation = null) {
-    super(functions, data);
-    this.campaign = campaign;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/data/SceneData.ts
-var SceneList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var SceneData = class extends AbstractImageData {
-  constructor(functions, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
-    var _a, _b;
-    super(functions, data);
-    this.session = session;
-    this.adventure = adventure;
-    this.previousScene = previousScene;
-    this.nextScene = nextScene;
-    this.campaign = campaign;
-    this.duration = "";
-    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
-    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
-    this.sceneId = ((_b = data.ids) == null ? void 0 : _b.scene) != void 0 ? data.ids.scene : 0;
-    this.startTime = this.functions.formatTime(data.time.start);
-    this.endTime = this.functions.formatTime(data.time.end);
-    if (this.startTime !== "" && this.endTime !== "") {
-      this.duration = this.functions.calculateDuration(data.time.start, data.time.end);
-    }
-  }
-};
-
-// src/data/TimelineData.ts
-var TimelineList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-  sort() {
-    this.elements.sort((a, b) => {
-      return a.datetime - b.datetime;
-    });
-  }
-};
-var TimelineData = class extends AbstractImageData {
-  constructor(functions, data, type) {
-    super(functions, data);
-    this.type = type;
-    this.image = functions.getImage(data, 70);
-    this.synopsis = data.synopsis;
-    switch (type) {
-      case "event":
-        this.datetime = data.dates.event;
-        break;
-      case "death":
-        this.datetime = data.dates.death;
-        break;
-      case "birth":
-        this.datetime = data.dates.dob;
-        break;
-      case "session":
-        this.datetime = data.dates.session;
-        break;
-      case "clue":
-        this.datetime = data.dates.found;
-        break;
-    }
-    this.date = this.functions.formatDate(this.datetime, "short");
-    this.time = this.functions.formatTime(this.datetime);
-  }
-  getEventColour() {
-    switch (this.type) {
-      case "event":
-        return "";
-        break;
-      case "birth":
-        return " green";
-        break;
-      case "death":
-        return " red";
-        break;
-      case "session":
-        return " blue";
-        break;
-      case "clue":
-        return " purple";
-        break;
-    }
-    return "";
-  }
-};
-
 // src/factories/DataFactory.ts
 var DataFactory = class {
   static create(type, functions, campaign, current, record, additionalInformation) {
@@ -1051,7 +1189,8 @@ var AbstractModel = class extends import_obsidian3.MarkdownRenderChild {
         } else {
           return;
         }
-        if (RpgMetadataValidator.validate(this.app, this.current)) {
+        const frontMatterValidation = MetadataValidator.validate(this.app, this.current);
+        if (typeof frontMatterValidation === "boolean") {
           const campaigns = this.dv.pages(`#campaign and -"Templates"`);
           if (campaigns !== void 0 && campaigns.length === 1) {
             this.campaign = new CampaignData(this.functions, campaigns[0]);
@@ -1061,6 +1200,20 @@ var AbstractModel = class extends import_obsidian3.MarkdownRenderChild {
           this.io = new IoData(this.functions, this.campaign, this.dv, this.current);
           this.container.innerHTML = "";
           this.render();
+        } else {
+          const error = document.createElement("div");
+          error.addClass("rpg-error");
+          if (frontMatterValidation === "Invalid Frontmatter") {
+            const heading = document.createElement("h3");
+            heading.innerText = frontMatterValidation;
+            error.append(heading);
+          } else {
+            const heading = document.createElement("h3");
+            heading.innerText = "Misconfigured Frontmatter for Rpg Manager";
+            error.append(heading);
+            error.innerHTML += "<ul>" + frontMatterValidation + "</ul>";
+          }
+          this.container.innerHTML = error.outerHTML;
         }
       }, wait);
     });

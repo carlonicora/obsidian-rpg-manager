@@ -1,5 +1,6 @@
 $black: #202020;
 $white: #fff;
+$off-white: #eeeeee;
 $dark-grey: #808080;
 $light-grey: #d9d9d9;
 $purple: #B97CFC;
@@ -166,5 +167,17 @@ $blue: #2020ff;
 			font-weight: 400;
 			color: $dark-grey;
 		}
+	}
+}
+
+.rpg-error {
+	border: solid 1px $orange;
+	background-color: $off-white;
+	padding: 10px 25px;
+
+	h3 {
+		color: $orange;
+		font-size: 1.1em;
+		font-weight: 400;
 	}
 }

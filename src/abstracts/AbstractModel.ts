@@ -1,6 +1,6 @@
-import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
+import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild, MarkdownRenderer} from "obsidian";
 import {RpgFunctions} from "../functions/RpgFunctions";
-import {RpgMetadataValidator} from "../data/validators/RpgMetadataValidator";
+import {MetadataValidator} from "../validators/MetadataValidator";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {CampaignData, CampaignDataInterface} from "../data/CampaignData";
@@ -38,7 +38,8 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 				return;
 			}
 
-			if (RpgMetadataValidator.validate(this.app, this.current)){
+			const frontMatterValidation = MetadataValidator.validate(this.app, this.current);
+			if (typeof frontMatterValidation === 'boolean'){
 				const campaigns = this.dv.pages("#campaign and " + `-"Templates"`);
 				if (campaigns !== undefined && campaigns.length === 1){
 					this.campaign = new CampaignData(
@@ -54,6 +55,22 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 				this.container.innerHTML = '';
 
 				this.render();
+			} else {
+				const error = document.createElement('div');
+				error.addClass('rpg-error');
+
+				if (frontMatterValidation === 'Invalid Frontmatter'){
+					const heading = document.createElement('h3');
+					heading.innerText = frontMatterValidation;
+					error.append(heading);
+				} else {
+					const heading = document.createElement('h3');
+					heading.innerText = 'Misconfigured Frontmatter for Rpg Manager';
+					error.append(heading);
+					error.innerHTML += '<ul>' + frontMatterValidation + '</ul>';
+				}
+
+				this.container.innerHTML = error.outerHTML;
 			}
 		}, wait);
 	}

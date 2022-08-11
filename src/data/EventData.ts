@@ -29,6 +29,18 @@ export class EventData extends AbstractImageData implements EventDataInterface {
 	public date: string;
 	public synopsis: string;
 
+	public static frontmatter = {
+		'synopsis': true,
+		'dates': {
+			'event': true,
+		},
+		'relationships': {
+			'characters': true,
+			'clues': true,
+			'locations': true,
+		},
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

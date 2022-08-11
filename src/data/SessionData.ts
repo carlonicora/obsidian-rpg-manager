@@ -41,6 +41,19 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 	public date: string;
 	public irl: string;
 
+	public static frontmatter = {
+		'synopsis': true,
+		'ids': {
+			'adventure': true,
+			'session': true,
+			'type': false,
+		},
+		'dates': {
+			'session': true,
+			'irl': false,
+		}
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

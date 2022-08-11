@@ -30,6 +30,17 @@ export class ClueData extends AbstractImageData implements ClueDataInterface {
 	public found: string|boolean;
 	public synopsis: string;
 
+	public static frontmatter = {
+		'synopsis': true,
+		'dates': {
+			'found': false,
+		},
+		'relationships': {
+			'characters': true,
+			'locations': true,
+		},
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

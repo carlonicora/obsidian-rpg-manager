@@ -30,6 +30,13 @@ export class AdventureData extends AbstractData implements AdventureDataInterfac
 	public id: number;
 	public synopsis: string;
 
+	public static frontmatter = {
+		'synopsis': true,
+		'ids': {
+			'adventure': true
+		},
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

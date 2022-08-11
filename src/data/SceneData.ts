@@ -44,6 +44,23 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 	public endTime: string;
 	public duration = '';
 
+	public static frontmatter = {
+		'synopsis': true,
+		'ids': {
+			'session': true,
+			'scene': true,
+		},
+		'relationships': {
+			'characters': true,
+			'clues': true,
+			'locations': true,
+		},
+		'time': {
+			'start': false,
+			'end': false,
+		}
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,

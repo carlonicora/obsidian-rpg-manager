@@ -29,6 +29,11 @@ export class LocationData extends AbstractImageData implements LocationDataInter
 	synopsis: string;
 	address: string;
 
+	public static frontmatter = {
+		'synopsis': true,
+		'address': false,
+	};
+
 	constructor(
 		functions: RpgFunctions,
 		data: Record<string, any>,
