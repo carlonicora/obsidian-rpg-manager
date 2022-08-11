@@ -1,6 +1,6 @@
 import {AbstractListView} from "../abstracts/AbstractListView";
 import {Component, MarkdownRenderer} from "obsidian";
-import {TimelineListInterface} from "../data/TimelineData";
+import {TimelineDataInterface, TimelineListInterface} from "../data/TimelineData";
 import {CampaignDataInterface} from "../data/CampaignData";
 
 export class TimelineView extends AbstractListView {
@@ -11,16 +11,10 @@ export class TimelineView extends AbstractListView {
 			data.campaign,
 		);
 
-		data.elements.forEach((timeline) => {
+		data.elements.forEach((timeline: TimelineDataInterface) => {
 			const fileLink = document.createElement('h3');
-			MarkdownRenderer.renderMarkdown(
-				timeline.link,
-				fileLink,
-				this.dv.currentFilePath,
-				null as unknown as Component,
-			);
-
 			const synopsis = document.createElement('span');
+
 			MarkdownRenderer.renderMarkdown(
 				timeline.synopsis,
 				synopsis,
@@ -28,8 +22,12 @@ export class TimelineView extends AbstractListView {
 				null as unknown as Component,
 			);
 
-			console.log(timeline.path);
-			console.log(fileLink);
+			MarkdownRenderer.renderMarkdown(
+				'[[' + timeline.name + ']]',
+				fileLink,
+				this.dv.currentFilePath,
+				null as unknown as Component,
+			);
 
 			response += '<li>' +
 				'<div class="bullet' + timeline.getEventColour() + '"></div>' +

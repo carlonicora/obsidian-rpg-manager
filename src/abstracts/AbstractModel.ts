@@ -1,6 +1,6 @@
 import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
 import {RpgFunctions} from "../functions/RpgFunctions";
-import {RpgMetadataValidator} from "../validators/RpgMetadataValidator";
+import {RpgMetadataValidator} from "../data/validators/RpgMetadataValidator";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {CampaignData, CampaignDataInterface} from "../data/CampaignData";

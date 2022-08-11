@@ -1,5 +1,4 @@
 import {
-	GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface,
 } from "../interfaces/DataInterfaces";
 import {DateTime} from "obsidian-dataview";
@@ -11,7 +10,7 @@ export interface TimelineListInterface extends GenericDataListInterface{
 	elements: TimelineDataInterface[];
 }
 
-export interface TimelineDataInterface extends GenericDataInterface, GenericImageDataInterface {
+export interface TimelineDataInterface extends GenericImageDataInterface {
 	synopsis: string;
 	time: string;
 	date: string;
@@ -67,6 +66,9 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 				break;
 			case 'session':
 				this.datetime = data.dates.session;
+				break;
+			case 'clue':
+				this.datetime = data.dates.found;
 				break;
 		}
 

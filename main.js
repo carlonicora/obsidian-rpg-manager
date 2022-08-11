@@ -215,7 +215,7 @@ __export(models_exports, {
 // src/abstracts/AbstractModel.ts
 var import_obsidian3 = require("obsidian");
 
-// src/validators/RpgMetadataValidator.ts
+// src/data/validators/RpgMetadataValidator.ts
 var RpgMetadataValidator = class {
   static validate(app, current) {
     let response = true;
@@ -473,12 +473,10 @@ var TimelineView = class extends AbstractListView {
       let response = this.header(data.campaign);
       data.elements.forEach((timeline) => {
         const fileLink = document.createElement("h3");
-        import_obsidian2.MarkdownRenderer.renderMarkdown(timeline.link, fileLink, this.dv.currentFilePath, null);
         const synopsis = document.createElement("span");
         import_obsidian2.MarkdownRenderer.renderMarkdown(timeline.synopsis, synopsis, this.dv.currentFilePath, null);
-        console.log(timeline.path);
-        console.log(fileLink);
-        response += '<li><div class="bullet' + timeline.getEventColour() + '"></div><div class="event-time">' + timeline.date + (timeline.time !== "00:00" ? "<br/>" + timeline.time : "") + '</div><div class="event-type' + timeline.getEventColour() + '">' + timeline.type + "</div><div>" + timeline.link + '</div><div class="event-details">' + fileLink.outerHTML + synopsis.outerHTML + "</div></li>";
+        import_obsidian2.MarkdownRenderer.renderMarkdown("[[" + timeline.name + "]]", fileLink, this.dv.currentFilePath, null);
+        response += '<li><div class="bullet' + timeline.getEventColour() + '"></div><div class="event-time">' + timeline.date + (timeline.time !== "00:00" ? "<br/>" + timeline.time : "") + '</div><div class="event-type' + timeline.getEventColour() + '">' + timeline.type + '</div><div class="event-details">' + fileLink.outerHTML + synopsis.outerHTML + "</div></li>";
       });
       response += this.footer();
       this.dv.container.innerHTML = response;
@@ -855,6 +853,9 @@ var TimelineData = class extends AbstractImageData {
         break;
       case "session":
         this.datetime = data.dates.session;
+        break;
+      case "clue":
+        this.datetime = data.dates.found;
         break;
     }
     this.date = this.functions.formatDate(this.datetime, "short");
