@@ -28,11 +28,12 @@ export class TimelineView extends AbstractListView {
 				null as unknown as Component,
 			);
 
-			const date = this.functions.formatDate(timeline.time, "short");
-			const time = this.functions.formatTime(timeline.time);
+			console.log(timeline.path);
+			console.log(fileLink);
+
 			response += '<li>' +
 				'<div class="bullet' + timeline.getEventColour() + '"></div>' +
-				'<div class="event-time">' + date + (time !== '00:00' ? '<br/>' + time : '') + '</div>' +
+				'<div class="event-time">' + timeline.date + (timeline.time !== '00:00' ? '<br/>' + timeline.time : '') + '</div>' +
 				'<div class="event-type' + timeline.getEventColour() + '">' + timeline.type + '</div>' +
 				'<div class="event-details">' +
 				fileLink.outerHTML +

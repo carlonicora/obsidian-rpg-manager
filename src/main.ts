@@ -4,7 +4,7 @@ import {
 	Plugin
 } from 'obsidian';
 
-import {RpgFunctions} from "./data/functions/RpgFunctions";
+import {RpgFunctions} from "./functions/RpgFunctions";
 import {RpgModelFactory} from "./factories/RpgModelFactory";
 import {RpgViewFactory} from "./factories/RpgViewFactory";
 

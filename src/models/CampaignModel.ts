@@ -1,16 +1,18 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {viewType} from "../factories/RpgViewFactory";
 
-export class RpgCampaignModel extends AbstractModel {
+export class CampaignModel extends AbstractModel {
 	public async render() {
+
 		this.adventureList();
 		this.sessionList();
 		this.characterList();
+
 	}
 
 	private async adventureList(
 	) {
-		this.writeData(
+		this.writeList(
 			this.io.getAdventureList(),
 			viewType.AdventureList,
 		);
@@ -18,7 +20,7 @@ export class RpgCampaignModel extends AbstractModel {
 
 	private async sessionList(
 	) {
-		this.writeData(
+		this.writeList(
 			this.io.getSessionList(),
 			viewType.SessionList
 		);
@@ -26,7 +28,7 @@ export class RpgCampaignModel extends AbstractModel {
 
 	private async characterList(
 	) {
-		this.writeData(
+		this.writeList(
 			this.io.getCharacterList(),
 			viewType.CharacterList,
 		);

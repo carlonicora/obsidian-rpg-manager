@@ -1,4 +1,4 @@
-import {RpgFunctions} from "../data/functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {App} from "obsidian";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {GenericDataListInterface} from "../interfaces/DataInterfaces";

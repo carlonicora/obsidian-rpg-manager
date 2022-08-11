@@ -1,12 +1,10 @@
 import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
-import {RpgFunctions} from "../data/functions/RpgFunctions";
-import {RpgMetadataValidator} from "../data/validators/RpgMetadataValidator";
+import {RpgFunctions} from "../functions/RpgFunctions";
+import {RpgMetadataValidator} from "../validators/RpgMetadataValidator";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {ImageData} from "../data/ImageData";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
-import {SynopsisData} from "../data/SynopsisData";
 import {CampaignData, CampaignDataInterface} from "../data/CampaignData";
-import {GenericDataListInterface} from "../interfaces/DataInterfaces";
+import {GenericDataInterface, GenericDataListInterface} from "../interfaces/DataInterfaces";
 import {IoData} from "../io/IoData";
 
 export abstract class AbstractModel extends MarkdownRenderChild {
@@ -51,7 +49,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 					this.campaign = null;
 				}
 
-				this.io = new IoData(this.functions, this.campaign, this.dv);
+				this.io = new IoData(this.functions, this.campaign, this.dv, this.current);
 
 				this.container.innerHTML = '';
 
@@ -86,7 +84,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 		return false;
 	}
 
-	protected writeData(
+	protected writeList(
 		data: GenericDataListInterface,
 		typeOfView: viewType,
 	): void {
@@ -96,40 +94,30 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 		}
 	}
 
+	protected writeData(
+		data: GenericDataInterface,
+		typeOfView: viewType,
+	): void {
+		const view = RpgViewFactory.createSingle(typeOfView, this.dv);
+		view.render(data);
+	}
+
 	protected image(
 		width = 75,
 		height = 75,
 	){
-		const current = this.dv.current();
-		if (current !== undefined) {
-
-			const data = new ImageData(
-				this.functions,
-				current,
-				width,
-				height,
-			)
-
-			const view = RpgViewFactory.createSingle(viewType.Image, this.dv);
-			view.render(data);
-		}
+		this.writeData(
+			this.io.getImage(width, height),
+			viewType.Image,
+		)
 	}
 
 	protected synopsis(
 		title: string|null = null,
 	){
-		const current = this.dv.current();
-
-		if (current !== undefined) {
-
-			const data = new SynopsisData(
-				this.functions,
-				current,
-				title
-			)
-
-			const view = RpgViewFactory.createSingle(viewType.Synopsis, this.dv);
-			view.render(data);
-		}
+		this.writeData(
+			this.io.getSynopsis(title),
+			viewType.Synopsis,
+		)
 	}
 }

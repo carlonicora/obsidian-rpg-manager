@@ -1,10 +1,11 @@
-import {RpgFunctions} from "../data/functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {GenericDataInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
 import {CampaignDataInterface} from "../data/CampaignData";
 
-export abstract class AbstractData {
+export abstract class AbstractData implements GenericDataInterface{
 	public link: string;
 	public name: string;
+	public path: string;
 
 	constructor(
 		protected functions: RpgFunctions,
@@ -12,6 +13,7 @@ export abstract class AbstractData {
 	) {
 		this.link = data.file.link;
 		this.name = data.file.name;
+		this.path = data.file.path;
 	}
 }
 

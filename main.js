@@ -49,7 +49,7 @@ __export(main_exports, {
 module.exports = __toCommonJS(main_exports);
 var import_obsidian4 = require("obsidian");
 
-// src/data/functions/RpgFunctions.ts
+// src/functions/RpgFunctions.ts
 var import_obsidian = require("obsidian");
 var RpgFunctions = class extends import_obsidian.Component {
   constructor(app) {
@@ -193,10 +193,29 @@ var RpgFunctions = class extends import_obsidian.Component {
   }
 };
 
+// src/models/index.ts
+var models_exports = {};
+__export(models_exports, {
+  AdventureModel: () => AdventureModel,
+  CampaignModel: () => CampaignModel,
+  ClueModel: () => ClueModel,
+  ErrorModel: () => ErrorModel,
+  EventModel: () => EventModel,
+  FactionModel: () => FactionModel,
+  LocationModel: () => LocationModel,
+  NotesModel: () => NotesModel,
+  NpcModel: () => NpcModel,
+  PcModel: () => PcModel,
+  SceneModel: () => SceneModel,
+  SessionModel: () => SessionModel,
+  SessionNavigationModel: () => SessionNavigationModel,
+  TimelineModel: () => TimelineModel
+});
+
 // src/abstracts/AbstractModel.ts
 var import_obsidian3 = require("obsidian");
 
-// src/data/validators/RpgMetadataValidator.ts
+// src/validators/RpgMetadataValidator.ts
 var RpgMetadataValidator = class {
   static validate(app, current) {
     let response = true;
@@ -214,55 +233,7 @@ var RpgMetadataValidator = class {
   }
 };
 
-// src/abstracts/AbstractData.ts
-var AbstractData = class {
-  constructor(functions, data) {
-    this.functions = functions;
-    this.data = data;
-    this.link = data.file.link;
-    this.name = data.file.name;
-  }
-};
-var AbstractImageData = class extends AbstractData {
-  constructor(functions, data) {
-    super(functions, data);
-    this.imageSrc = functions.getImageLink(data);
-    this.image = this.imageSrc !== null ? functions.getImage(data) : "";
-  }
-  getImage(width = 75, height = 75) {
-    if (this.imageSrc === null)
-      return "";
-    return this.functions.getImage(this.data, width, height);
-  }
-};
-var AbstractDataList = class {
-  constructor(campaign) {
-    this.campaign = campaign;
-  }
-  add(data) {
-    this.elements.push(data);
-  }
-  map(data) {
-    const response = /* @__PURE__ */ new Map();
-    const character = this.elements.find((t) => t.link === data.link);
-    if (character !== void 0) {
-      Object.entries(character).forEach(([key, value]) => {
-        response.set(key, value);
-      });
-    }
-    return response;
-  }
-};
-
-// src/data/ImageData.ts
-var ImageData = class extends AbstractImageData {
-  constructor(functions, data, width = 75, height = 75) {
-    super(functions, data);
-    this.image = this.imageSrc !== null ? functions.getImage(data, width, height) : "";
-  }
-};
-
-// src/views/views.ts
+// src/views/index.ts
 var views_exports = {};
 __export(views_exports, {
   AdventureListView: () => AdventureListView,
@@ -505,9 +476,9 @@ var TimelineView = class extends AbstractListView {
         import_obsidian2.MarkdownRenderer.renderMarkdown(timeline.link, fileLink, this.dv.currentFilePath, null);
         const synopsis = document.createElement("span");
         import_obsidian2.MarkdownRenderer.renderMarkdown(timeline.synopsis, synopsis, this.dv.currentFilePath, null);
-        const date = this.functions.formatDate(timeline.time, "short");
-        const time = this.functions.formatTime(timeline.time);
-        response += '<li><div class="bullet' + timeline.getEventColour() + '"></div><div class="event-time">' + date + (time !== "00:00" ? "<br/>" + time : "") + '</div><div class="event-type' + timeline.getEventColour() + '">' + timeline.type + '</div><div class="event-details">' + fileLink.outerHTML + synopsis.outerHTML + "</div></li>";
+        console.log(timeline.path);
+        console.log(fileLink);
+        response += '<li><div class="bullet' + timeline.getEventColour() + '"></div><div class="event-time">' + timeline.date + (timeline.time !== "00:00" ? "<br/>" + timeline.time : "") + '</div><div class="event-type' + timeline.getEventColour() + '">' + timeline.type + "</div><div>" + timeline.link + '</div><div class="event-details">' + fileLink.outerHTML + synopsis.outerHTML + "</div></li>";
       });
       response += this.footer();
       this.dv.container.innerHTML = response;
@@ -603,15 +574,44 @@ var RpgViewFactory = class {
   }
 };
 
-// src/data/SynopsisData.ts
-var SynopsisData = class extends AbstractData {
-  constructor(functions, data, title = null) {
-    var _a, _b;
+// src/abstracts/AbstractData.ts
+var AbstractData = class {
+  constructor(functions, data) {
+    this.functions = functions;
+    this.data = data;
+    this.link = data.file.link;
+    this.name = data.file.name;
+    this.path = data.file.path;
+  }
+};
+var AbstractImageData = class extends AbstractData {
+  constructor(functions, data) {
     super(functions, data);
-    this.title = title;
-    this.synopsis = data.synopsis !== null ? data.synopsis : "";
-    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.functions.formatDate(data.dates.death, "short") : "";
-    this.isCharacter = data.tags.indexOf("character/npc") !== -1;
+    this.imageSrc = functions.getImageLink(data);
+    this.image = this.imageSrc !== null ? functions.getImage(data) : "";
+  }
+  getImage(width = 75, height = 75) {
+    if (this.imageSrc === null)
+      return "";
+    return this.functions.getImage(this.data, width, height);
+  }
+};
+var AbstractDataList = class {
+  constructor(campaign) {
+    this.campaign = campaign;
+  }
+  add(data) {
+    this.elements.push(data);
+  }
+  map(data) {
+    const response = /* @__PURE__ */ new Map();
+    const character = this.elements.find((t) => t.link === data.link);
+    if (character !== void 0) {
+      Object.entries(character).forEach(([key, value]) => {
+        response.set(key, value);
+      });
+    }
+    return response;
   }
 };
 
@@ -684,12 +684,277 @@ var CharacterData = class extends AbstractImageData {
   }
 };
 
+// src/data/ClueData.ts
+var ClueList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var ClueData = class extends AbstractImageData {
+  constructor(functions, data, useAdditionalInformation = null) {
+    super(functions, data);
+    this.image = functions.getImage(data);
+    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
+      this.found = functions.formatDate(data.dates.found, "long");
+    } else {
+      this.found = false;
+    }
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/data/ImageData.ts
+var ImageData = class extends AbstractImageData {
+  constructor(functions, data, width = 75, height = 75) {
+    super(functions, data);
+    this.image = this.imageSrc !== null ? functions.getImage(data, width, height) : "";
+  }
+};
+
+// src/data/SynopsisData.ts
+var SynopsisData = class extends AbstractData {
+  constructor(functions, data, title = null) {
+    var _a, _b;
+    super(functions, data);
+    this.title = title;
+    this.synopsis = data.synopsis !== null ? data.synopsis : "";
+    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.functions.formatDate(data.dates.death, "short") : "";
+    this.isCharacter = data.tags.indexOf("character/npc") !== -1;
+  }
+};
+
+// src/data/LocationData.ts
+var LocationList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var LocationData = class extends AbstractImageData {
+  constructor(functions, data, useAdditionalInformation = null) {
+    super(functions, data);
+    this.address = data.address;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/data/index.ts
+var data_exports = {};
+__export(data_exports, {
+  AdventureData: () => AdventureData,
+  AdventureList: () => AdventureList,
+  CampaignData: () => CampaignData,
+  CharacterData: () => CharacterData,
+  CharacterList: () => CharacterList,
+  ClueData: () => ClueData,
+  ClueList: () => ClueList,
+  EventData: () => EventData,
+  EventList: () => EventList,
+  FactionData: () => FactionData,
+  FactionList: () => FactionList,
+  ImageData: () => ImageData,
+  LocationData: () => LocationData,
+  LocationList: () => LocationList,
+  SceneData: () => SceneData,
+  SceneList: () => SceneList,
+  SessionData: () => SessionData,
+  SessionList: () => SessionList,
+  SynopsisData: () => SynopsisData,
+  TimelineData: () => TimelineData,
+  TimelineList: () => TimelineList
+});
+
+// src/data/EventData.ts
+var EventList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var EventData = class extends AbstractImageData {
+  constructor(functions, data, campaign, useAdditionalInformation = null) {
+    super(functions, data);
+    this.campaign = campaign;
+    if (data.dates.event != null)
+      this.date = this.functions.formatDate(data.dates.event, "short");
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/data/FactionData.ts
+var FactionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var FactionData = class extends AbstractImageData {
+  constructor(functions, data, campaign, useAdditionalInformation = null) {
+    super(functions, data);
+    this.campaign = campaign;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/data/SceneData.ts
+var SceneList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var SceneData = class extends AbstractImageData {
+  constructor(functions, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
+    var _a, _b;
+    super(functions, data);
+    this.session = session;
+    this.adventure = adventure;
+    this.previousScene = previousScene;
+    this.nextScene = nextScene;
+    this.campaign = campaign;
+    this.duration = "";
+    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
+    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
+    this.sceneId = ((_b = data.ids) == null ? void 0 : _b.scene) != void 0 ? data.ids.scene : 0;
+    this.startTime = this.functions.formatTime(data.time.start);
+    this.endTime = this.functions.formatTime(data.time.end);
+    if (this.startTime !== "" && this.endTime !== "") {
+      this.duration = this.functions.calculateDuration(data.time.start, data.time.end);
+    }
+  }
+};
+
+// src/data/TimelineData.ts
+var TimelineList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+  sort() {
+    this.elements.sort((a, b) => {
+      return a.datetime - b.datetime;
+    });
+  }
+};
+var TimelineData = class extends AbstractImageData {
+  constructor(functions, data, type) {
+    super(functions, data);
+    this.type = type;
+    this.image = functions.getImage(data, 70);
+    this.synopsis = data.synopsis;
+    switch (type) {
+      case "event":
+        this.datetime = data.dates.event;
+        break;
+      case "death":
+        this.datetime = data.dates.death;
+        break;
+      case "birth":
+        this.datetime = data.dates.dob;
+        break;
+      case "session":
+        this.datetime = data.dates.session;
+        break;
+    }
+    this.date = this.functions.formatDate(this.datetime, "short");
+    this.time = this.functions.formatTime(this.datetime);
+  }
+  getEventColour() {
+    switch (this.type) {
+      case "event":
+        return "";
+        break;
+      case "birth":
+        return " green";
+        break;
+      case "death":
+        return " red";
+        break;
+      case "session":
+        return " blue";
+        break;
+      case "clue":
+        return " purple";
+        break;
+    }
+    return "";
+  }
+};
+
+// src/factories/DataFactory.ts
+var DataFactory = class {
+  static create(type, functions, campaign, current, record, additionalInformation) {
+    return this["create" + DataType[type]](functions, campaign, current, record, additionalInformation);
+  }
+  static createCharacter(functions, campaign, current, record, additionalInformation) {
+    return new CharacterData(functions, record, campaign, additionalInformation);
+  }
+  static createLocation(functions, campaign, current, record, additionalInformation) {
+    return new LocationData(functions, record, additionalInformation);
+  }
+  static createEvent(functions, campaign, current, record, additionalInformation) {
+    return new EventData(functions, record, campaign, additionalInformation);
+  }
+  static createClue(functions, campaign, current, record, additionalInformation) {
+    return new ClueData(functions, record, additionalInformation);
+  }
+  static createFaction(functions, campaign, current, record, additionalInformation) {
+    return new FactionData(functions, record, campaign, additionalInformation);
+  }
+};
+
 // src/io/IoData.ts
+var DataType = /* @__PURE__ */ ((DataType2) => {
+  DataType2[DataType2["Character"] = 0] = "Character";
+  DataType2[DataType2["Location"] = 1] = "Location";
+  DataType2[DataType2["Event"] = 2] = "Event";
+  DataType2[DataType2["Clue"] = 3] = "Clue";
+  DataType2[DataType2["Faction"] = 4] = "Faction";
+  return DataType2;
+})(DataType || {});
 var IoData = class {
-  constructor(functions, campaign, dv) {
+  constructor(functions, campaign, dv, current) {
     this.functions = functions;
     this.campaign = campaign;
     this.dv = dv;
+    this.current = current;
+    this.outlinks = [];
+    this.readOutlinks();
+  }
+  readOutlinks() {
+    const current = this.dv.current();
+    if (current != void 0) {
+      current.file.outlinks.forEach((file) => {
+        const page = this.dv.page(file.path);
+        if (page != void 0) {
+          this.outlinks.push(page);
+        }
+      });
+    }
+  }
+  isAlreadyPresent(list, element) {
+    let response = false;
+    list.elements.forEach((existingElement) => {
+      if (element.file.path === existingElement.path) {
+        response = true;
+        return true;
+      }
+    });
+    return response;
+  }
+  hasMainTag(page, type) {
+    if (page.tags == void 0) {
+      return false;
+    }
+    switch (type) {
+      case 0 /* Character */:
+        return page.tags.indexOf("character/npc") !== -1 || page.tags.indexOf("character/npc") !== -1;
+        break;
+      default:
+        return page.tags.indexOf(DataType[type].toLowerCase()) !== -1;
+        break;
+    }
   }
   getAdventureList() {
     const response = new AdventureList(this.campaign);
@@ -705,10 +970,55 @@ var IoData = class {
     });
     return response;
   }
+  getSceneList() {
+    const response = new SceneList(this.campaign);
+    this.dv.pages("#scene").where((page) => page.file.folder !== "Templates" && page.ids !== void 0 && page.ids.session != void 0 && page.ids.scene != void 0 && page.ids.session === this.current.ids.session).sort((page) => page.ids.scene).forEach((scene) => {
+      response.add(new SceneData(this.functions, scene));
+    });
+    return response;
+  }
   getCharacterList() {
     const response = new CharacterList(this.campaign);
     this.dv.pages("#character").where((character) => character.file.folder !== "Templates").sort((character) => character.file.name).forEach((character) => {
       response.add(new CharacterData(this.functions, character, this.campaign));
+    });
+    return response;
+  }
+  getClue() {
+    return new ClueData(this.functions, this.current);
+  }
+  getImage(width = 75, height = 75) {
+    return new ImageData(this.functions, this.current, width, height);
+  }
+  getSynopsis(title = null) {
+    return new SynopsisData(this.functions, this.current, title);
+  }
+  getRelationshipList(type, parentType = null, sorting = null) {
+    const response = new data_exports[DataType[type] + "List"](this.campaign);
+    this.variableSingular = DataType[type].toLowerCase();
+    this.variablePlural = this.variableSingular + "s";
+    const defaultSorting = function(page) {
+      return page.file.name;
+    };
+    let comparison;
+    if (parentType === null) {
+      comparison = function(page) {
+        return page.file.folder !== "Templates" && this.current.relationships != void 0 && this.current.relationships[this.variablePlural] != void 0 && this.current.relationships[this.variablePlural][page.file.name] !== void 0;
+      }.bind(this);
+    } else {
+      this.variableParentSingular = DataType[parentType].toLowerCase();
+      this.variableParentPlural = this.variableParentSingular + "s";
+      comparison = function(page) {
+        return page.file.folder !== "Templates" && page.relationships != void 0 && page.relationships[this.variableParentPlural] != void 0 && page.relationships[this.variableParentPlural][this.current.file.name] !== void 0;
+      }.bind(this);
+    }
+    this.dv.pages("#" + this.variableSingular).where(comparison).sort(sorting !== null ? sorting : defaultSorting).forEach((page) => {
+      response.add(DataFactory.create(type, this.functions, this.campaign, this.current, page, parentType === null ? this.current.relationships[this.variablePlural][page.file.name] : page.relationships[DataType[parentType].toLowerCase() + "s"][this.current.file.name]));
+    });
+    this.outlinks.forEach((page) => {
+      if (this.hasMainTag(page, type) && !this.isAlreadyPresent(response, page)) {
+        response.add(DataFactory.create(type, this.functions, this.campaign, this.current, page, "_in main description_"));
+      }
     });
     return response;
   }
@@ -747,7 +1057,7 @@ var AbstractModel = class extends import_obsidian3.MarkdownRenderChild {
           } else {
             this.campaign = null;
           }
-          this.io = new IoData(this.functions, this.campaign, this.dv);
+          this.io = new IoData(this.functions, this.campaign, this.dv, this.current);
           this.container.innerHTML = "";
           this.render();
         }
@@ -768,99 +1078,195 @@ var AbstractModel = class extends import_obsidian3.MarkdownRenderChild {
     }
     return false;
   }
-  writeData(data, typeOfView) {
+  writeList(data, typeOfView) {
     if (data.elements.length > 0) {
       const view = RpgViewFactory.createList(typeOfView, this.dv);
       view.render(data);
     }
   }
+  writeData(data, typeOfView) {
+    const view = RpgViewFactory.createSingle(typeOfView, this.dv);
+    view.render(data);
+  }
   image(width = 75, height = 75) {
-    const current = this.dv.current();
-    if (current !== void 0) {
-      const data = new ImageData(this.functions, current, width, height);
-      const view = RpgViewFactory.createSingle(5 /* Image */, this.dv);
-      view.render(data);
-    }
+    this.writeData(this.io.getImage(width, height), 5 /* Image */);
   }
   synopsis(title = null) {
-    const current = this.dv.current();
-    if (current !== void 0) {
-      const data = new SynopsisData(this.functions, current, title);
-      const view = RpgViewFactory.createSingle(6 /* Synopsis */, this.dv);
-      view.render(data);
-    }
+    this.writeData(this.io.getSynopsis(title), 6 /* Synopsis */);
   }
 };
 
-// src/data/ClueData.ts
-var ClueList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
+// src/models/AdventureModel.ts
+var AdventureModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      var _a;
+      this.sessionList((_a = this.dv.current()) == null ? void 0 : _a.ids.adventure);
+    });
   }
-};
-var ClueData = class extends AbstractImageData {
-  constructor(functions, data, useAdditionalInformation = null) {
-    super(functions, data);
-    this.image = functions.getImage(data);
-    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
-      this.found = functions.formatDate(data.dates.found, "long");
-    } else {
-      this.found = false;
-    }
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  sessionList(adventureId) {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getSessionList(adventureId), 3 /* SessionList */);
+    });
   }
 };
 
-// src/data/EventData.ts
-var EventList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
+// src/models/CampaignModel.ts
+var CampaignModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.adventureList();
+      this.sessionList();
+      this.characterList();
+    });
   }
-};
-var EventData = class extends AbstractImageData {
-  constructor(functions, data, campaign, useAdditionalInformation = null) {
-    super(functions, data);
-    this.campaign = campaign;
-    if (data.dates.event != null)
-      this.date = this.functions.formatDate(data.dates.event, "short");
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  adventureList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getAdventureList(), 0 /* AdventureList */);
+    });
   }
-};
-
-// src/data/FactionData.ts
-var FactionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
+  sessionList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getSessionList(), 3 /* SessionList */);
+    });
   }
-};
-var FactionData = class extends AbstractImageData {
-  constructor(functions, data, campaign, useAdditionalInformation = null) {
-    super(functions, data);
-    this.campaign = campaign;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  characterList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getCharacterList(), 1 /* CharacterList */);
+    });
   }
 };
 
-// src/data/LocationData.ts
-var LocationList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
+// src/models/ClueModel.ts
+var ClueModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.status();
+      this.image(450);
+      this.synopsis();
+      this.characterList();
+      this.locationList();
+      this.eventList();
+    });
   }
-};
-var LocationData = class extends AbstractImageData {
-  constructor(functions, data, useAdditionalInformation = null) {
-    super(functions, data);
-    this.address = data.address;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  status() {
+    this.writeData(this.io.getClue(), 4 /* ClueStatus */);
+  }
+  characterList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+    });
+  }
+  locationList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+    });
+  }
+  eventList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(2 /* Event */, 3 /* Clue */), 9 /* EventList */);
+    });
   }
 };
 
-// src/models/RpgNpcModel.ts
-var RpgNpcModel = class extends AbstractModel {
+// src/models/ErrorModel.ts
+var ErrorModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.container.innerText = "The selected function does not exist in Rpg Manager";
+    });
+  }
+};
+
+// src/models/EventModel.ts
+var EventModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.image(450);
+      this.synopsis();
+      this.characterList();
+      this.clueList();
+      this.locationList();
+    });
+  }
+  characterList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+    });
+  }
+  clueList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(3 /* Clue */), 10 /* ClueList */);
+    });
+  }
+  locationList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+    });
+  }
+};
+
+// src/models/FactionModel.ts
+var FactionModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.synopsis();
+      this.image(200);
+      this.characterList();
+      this.locationList();
+    });
+  }
+  characterList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(0 /* Character */, 4 /* Faction */), 1 /* CharacterList */);
+    });
+  }
+  locationList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+    });
+  }
+};
+
+// src/models/LocationModel.ts
+var LocationModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      var _a, _b;
+      this.synopsis(((_a = this.dv.current()) == null ? void 0 : _a.address) ? (_b = this.dv.current()) == null ? void 0 : _b.address : null);
+      this.image(450);
+      this.characterList();
+      this.eventList();
+      this.clueList();
+    });
+  }
+  characterList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(0 /* Character */, 1 /* Location */), 1 /* CharacterList */);
+    });
+  }
+  eventList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(2 /* Event */, 1 /* Location */), 9 /* EventList */);
+    });
+  }
+  clueList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(3 /* Clue */, 1 /* Location */), 10 /* ClueList */);
+    });
+  }
+};
+
+// src/models/NotesModel.ts
+var NotesModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+    });
+  }
+};
+
+// src/models/NpcModel.ts
+var NpcModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.synopsis();
@@ -885,407 +1291,33 @@ var RpgNpcModel = class extends AbstractModel {
   }
   factionList() {
     return __async(this, null, function* () {
-      const data = new FactionList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const factions = this.dv.pages("#faction").where((faction) => {
-          var _a, _b;
-          return faction.file.folder !== "Templates" && ((_a = current.relationships) == null ? void 0 : _a.factions) != null && ((_b = current.relationships) == null ? void 0 : _b.factions[faction.file.name]) !== void 0;
-        });
-        factions.forEach((faction) => {
-          var _a;
-          data.add(new FactionData(this.functions, faction, this.campaign, (_a = current.relationships) == null ? void 0 : _a.factions[faction.file.name]));
-        });
-        this.writeData(data, 12 /* FactionList */);
-      }
+      this.writeList(this.io.getRelationshipList(4 /* Faction */), 12 /* FactionList */);
     });
   }
   characterList() {
     return __async(this, null, function* () {
-      var _a;
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.characters) != null) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.characters[page.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a2;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a2 = current.relationships) == null ? void 0 : _a2.characters[character.file.name]));
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
+      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
     });
   }
   eventList() {
     return __async(this, null, function* () {
-      const data = new EventList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const events = this.dv.pages("#event").where((event) => {
-          var _a, _b;
-          return event.file.folder !== "Templates" && ((_a = event.relationships) == null ? void 0 : _a.characters) != null && ((_b = event.relationships) == null ? void 0 : _b.characters[current.file.name]) !== void 0;
-        });
-        events.forEach((event) => {
-          var _a;
-          data.add(new EventData(this.functions, event, this.campaign, (_a = event.relationships) == null ? void 0 : _a.characters[current.file.name]));
-        });
-        this.writeData(data, 9 /* EventList */);
-      }
+      this.writeList(this.io.getRelationshipList(2 /* Event */, 0 /* Character */), 9 /* EventList */);
     });
   }
   clueList() {
     return __async(this, null, function* () {
-      const data = new ClueList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const clues = this.dv.pages("#clue").where((page) => {
-          var _a, _b;
-          return page.file.folder !== "Templates" && ((_a = page.relationships) == null ? void 0 : _a.characters) != void 0 && ((_b = page.relationships) == null ? void 0 : _b.characters[current.file.name]) !== void 0;
-        });
-        clues.forEach((clue) => {
-          var _a;
-          data.add(new ClueData(this.functions, clue, (_a = clue.relationships) == null ? void 0 : _a.characters[current.file.name]));
-        });
-        this.writeData(data, 10 /* ClueList */);
-      }
+      this.writeList(this.io.getRelationshipList(3 /* Clue */, 0 /* Character */), 10 /* ClueList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      var _a;
-      const data = new LocationList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.locations) != null) {
-        const locations = this.dv.pages("#location").where((location) => {
-          var _a2;
-          return location.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]) !== void 0;
-        });
-        locations.forEach((location) => {
-          var _a2;
-          data.add(new LocationData(this.functions, location, (_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]));
-        });
-        this.writeData(data, 8 /* LocationList */);
-      }
+      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
     });
   }
 };
 
-// src/models/RpgErrorModel.ts
-var RpgErrorModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      this.container.innerText = "The selected function does not exist in Rpg Manager";
-    });
-  }
-};
-
-// src/models/RpgAdventureModel.ts
-var RpgAdventureModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      var _a;
-      this.sessionList((_a = this.dv.current()) == null ? void 0 : _a.ids.adventure);
-    });
-  }
-  sessionList(adventureId) {
-    return __async(this, null, function* () {
-      this.writeData(this.io.getSessionList(adventureId), 3 /* SessionList */);
-    });
-  }
-};
-
-// src/models/RpgCampaignModel.ts
-var RpgCampaignModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      this.adventureList();
-      this.sessionList();
-      this.characterList();
-    });
-  }
-  adventureList() {
-    return __async(this, null, function* () {
-      this.writeData(this.io.getAdventureList(), 0 /* AdventureList */);
-    });
-  }
-  sessionList() {
-    return __async(this, null, function* () {
-      this.writeData(this.io.getSessionList(), 3 /* SessionList */);
-    });
-  }
-  characterList() {
-    return __async(this, null, function* () {
-      this.writeData(this.io.getCharacterList(), 1 /* CharacterList */);
-    });
-  }
-};
-
-// src/models/RpgClueModel.ts
-var RpgClueModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      this.status();
-      this.image(450);
-      this.synopsis();
-      this.characterList();
-      this.locationList();
-      this.eventList();
-    });
-  }
-  status() {
-    const current = this.dv.current();
-    if (current !== void 0) {
-      const data = new ClueData(this.functions, current);
-      const view = RpgViewFactory.createSingle(4 /* ClueStatus */, this.dv);
-      view.render(data);
-    }
-  }
-  characterList() {
-    return __async(this, null, function* () {
-      var _a;
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.characters) != null) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.characters[page.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a2;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a2 = current.relationships) == null ? void 0 : _a2.characters[character.file.name]));
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
-    });
-  }
-  locationList() {
-    return __async(this, null, function* () {
-      var _a, _b;
-      const data = new LocationList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.locations) !== void 0 && ((_b = current.relationships) == null ? void 0 : _b.locations) !== null) {
-        const locations = this.dv.pages("#location").where((location) => {
-          var _a2;
-          return location.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]) !== void 0;
-        });
-        locations.forEach((location) => {
-          var _a2;
-          data.add(new LocationData(this.functions, location, (_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]));
-        });
-        this.writeData(data, 8 /* LocationList */);
-      }
-    });
-  }
-  eventList() {
-    return __async(this, null, function* () {
-      const data = new EventList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const events = this.dv.pages("#event").where((event) => {
-          var _a, _b;
-          return event.file.folder !== "Templates" && ((_a = event.relationships) == null ? void 0 : _a.clues) != null && ((_b = event.relationships) == null ? void 0 : _b.clues[current.file.name]) !== void 0;
-        });
-        events.forEach((event) => {
-          var _a;
-          data.add(new EventData(this.functions, event, this.campaign, (_a = event.relationships) == null ? void 0 : _a.clues[current.file.name]));
-        });
-        this.writeData(data, 9 /* EventList */);
-      }
-    });
-  }
-};
-
-// src/models/RpgEventModel.ts
-var RpgEventModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      this.image(450);
-      this.synopsis();
-      this.characterList();
-      this.clueList();
-      this.locationList();
-    });
-  }
-  characterList() {
-    return __async(this, null, function* () {
-      var _a;
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.characters) != null) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.characters[page.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a2;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a2 = current.relationships) == null ? void 0 : _a2.characters[character.file.name]));
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
-    });
-  }
-  clueList() {
-    return __async(this, null, function* () {
-      var _a;
-      const data = new ClueList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.clues) != null) {
-        const clues = this.dv.pages("#clue").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.clues[page.file.name]) !== void 0;
-        });
-        clues.forEach((clue) => {
-          var _a2;
-          data.add(new ClueData(this.functions, clue, (_a2 = current.relationships) == null ? void 0 : _a2.clues[clue.file.name]));
-        });
-        this.writeData(data, 10 /* ClueList */);
-      }
-    });
-  }
-  locationList() {
-    return __async(this, null, function* () {
-      var _a;
-      const data = new LocationList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.locations) != null) {
-        const locations = this.dv.pages("#location").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.locations[page.file.name]) !== void 0;
-        });
-        locations.forEach((location) => {
-          var _a2;
-          data.add(new LocationData(this.functions, location, (_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]));
-        });
-        this.writeData(data, 8 /* LocationList */);
-      }
-    });
-  }
-};
-
-// src/models/RpgFactionModel.ts
-var RpgFactionModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      this.synopsis();
-      this.image(200);
-      this.characterList();
-      this.locationList();
-    });
-  }
-  characterList() {
-    return __async(this, null, function* () {
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a, _b;
-          return page.file.folder !== "Templates" && ((_a = page.relationships) == null ? void 0 : _a.factions) != void 0 && ((_b = page.relationships) == null ? void 0 : _b.factions[current.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a = character.relationships) == null ? void 0 : _a.factions[current.file.name]));
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
-    });
-  }
-  locationList() {
-    return __async(this, null, function* () {
-      var _a;
-      const data = new LocationList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.locations) != null) {
-        const locations = this.dv.pages("#location").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.locations[page.file.name]) !== void 0;
-        });
-        locations.forEach((location) => {
-          var _a2;
-          data.add(new LocationData(this.functions, location, (_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]));
-        });
-        this.writeData(data, 8 /* LocationList */);
-      }
-    });
-  }
-};
-
-// src/models/RpgLocationModel.ts
-var RpgLocationModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-      var _a, _b;
-      this.synopsis(((_a = this.dv.current()) == null ? void 0 : _a.address) ? (_b = this.dv.current()) == null ? void 0 : _b.address : null);
-      this.image(450);
-      this.characterList();
-      this.eventList();
-      this.clueList();
-    });
-  }
-  characterList() {
-    return __async(this, null, function* () {
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a, _b;
-          return page.file.folder !== "Templates" && ((_a = page.relationships) == null ? void 0 : _a.locations) != void 0 && ((_b = page.relationships) == null ? void 0 : _b.locations[current.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a = character.relationships) == null ? void 0 : _a.locations[current.file.name]));
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
-    });
-  }
-  eventList() {
-    return __async(this, null, function* () {
-      const data = new EventList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const events = this.dv.pages("#event").where((event) => {
-          var _a, _b;
-          return event.file.folder !== "Templates" && ((_a = event.relationships) == null ? void 0 : _a.locations) != null && ((_b = event.relationships) == null ? void 0 : _b.locations[current.file.name]) !== void 0;
-        });
-        events.forEach((event) => {
-          var _a;
-          data.add(new EventData(this.functions, event, this.campaign, (_a = event.relationships) == null ? void 0 : _a.locations[current.file.name]));
-        });
-        this.writeData(data, 9 /* EventList */);
-      }
-    });
-  }
-  clueList() {
-    return __async(this, null, function* () {
-      const data = new ClueList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const clues = this.dv.pages("#clue").where((clue) => {
-          var _a, _b;
-          return clue.file.folder !== "Templates" && ((_a = clue.relationships) == null ? void 0 : _a.locations) != null && ((_b = clue.relationships) == null ? void 0 : _b.locations[current.file.name]) !== void 0;
-        });
-        clues.forEach((clue) => {
-          var _a;
-          data.add(new EventData(this.functions, clue, this.campaign, (_a = clue.relationships) == null ? void 0 : _a.locations[current.file.name]));
-        });
-        this.writeData(data, 10 /* ClueList */);
-      }
-    });
-  }
-};
-
-// src/models/RpgNotesModel.ts
-var RpgNotesModel = class extends AbstractModel {
-  render() {
-    return __async(this, null, function* () {
-    });
-  }
-};
-
-// src/models/RpgPcModel.ts
-var RpgPcModel = class extends AbstractModel {
+// src/models/PcModel.ts
+var PcModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.image(300, 300);
@@ -1296,93 +1328,25 @@ var RpgPcModel = class extends AbstractModel {
   }
   factionList() {
     return __async(this, null, function* () {
-      const data = new FactionList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const factions = this.dv.pages("#faction").where((faction) => {
-          var _a, _b;
-          return faction.file.folder !== "Templates" && ((_a = current.relationships) == null ? void 0 : _a.factions) != null && ((_b = current.relationships) == null ? void 0 : _b.factions[faction.file.name]) !== void 0;
-        });
-        factions.forEach((faction) => {
-          var _a;
-          data.add(new FactionData(this.functions, faction, this.campaign, (_a = current.relationships) == null ? void 0 : _a.factions[faction.file.name]));
-        });
-        this.writeData(data, 12 /* FactionList */);
-      }
+      this.writeList(this.io.getRelationshipList(4 /* Faction */), 12 /* FactionList */);
     });
   }
   characterList() {
     return __async(this, null, function* () {
-      var _a;
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.characters) != null) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.characters[page.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a2;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a2 = current.relationships) == null ? void 0 : _a2.characters[character.file.name]));
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
+      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      var _a;
-      const data = new LocationList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.locations) != null) {
-        const locations = this.dv.pages("#location").where((location) => {
-          var _a2;
-          return location.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]) !== void 0;
-        });
-        locations.forEach((location) => {
-          var _a2;
-          data.add(new LocationData(this.functions, location, (_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]));
-        });
-        this.writeData(data, 8 /* LocationList */);
-      }
+      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
     });
   }
 };
 
-// src/data/SceneData.ts
-var SceneList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var SceneData = class extends AbstractImageData {
-  constructor(functions, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
-    var _a, _b;
-    super(functions, data);
-    this.session = session;
-    this.adventure = adventure;
-    this.previousScene = previousScene;
-    this.nextScene = nextScene;
-    this.campaign = campaign;
-    this.duration = "";
-    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
-    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
-    this.sceneId = ((_b = data.ids) == null ? void 0 : _b.scene) != void 0 ? data.ids.scene : 0;
-    this.startTime = this.functions.formatTime(data.time.start);
-    this.endTime = this.functions.formatTime(data.time.end);
-    if (this.startTime !== "" && this.endTime !== "") {
-      this.duration = this.functions.calculateDuration(data.time.start, data.time.end);
-    }
-  }
-};
-
-// src/models/RpgSceneModel.ts
-var RpgSceneModel = class extends AbstractModel {
+// src/models/SceneModel.ts
+var SceneModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
-      this.outlinks = [];
-      yield this.readOutlinks();
       this.sceneNavigator();
       this.characterList();
       this.locationList();
@@ -1410,101 +1374,25 @@ var RpgSceneModel = class extends AbstractModel {
       }
     });
   }
-  readOutlinks() {
-    const current = this.dv.current();
-    if (current != void 0) {
-      current.file.outlinks.forEach((file) => {
-        const page = this.dv.page(file.path);
-        if (page != void 0) {
-          this.outlinks.push(page);
-        }
-      });
-    }
-  }
-  isAlreadyPresent(list, element) {
-    let response = false;
-    list.elements.forEach((existingElement) => {
-      if (element.file.name === existingElement.name) {
-        response = true;
-        return true;
-      }
-    });
-    return response;
-  }
   characterList() {
     return __async(this, null, function* () {
-      var _a;
-      const data = new CharacterList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && ((_a = current.relationships) == null ? void 0 : _a.characters) != null) {
-        const characters = this.dv.pages("#character").where((page) => {
-          var _a2;
-          return page.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.characters[page.file.name]) !== void 0;
-        });
-        characters.forEach((character) => {
-          var _a2;
-          data.add(new CharacterData(this.functions, character, this.campaign, (_a2 = current.relationships) == null ? void 0 : _a2.characters[character.file.name]));
-        });
-        this.outlinks.forEach((character) => {
-          if ((character.tags.indexOf("character/npc") !== -1 || character.tags.indexOf("character/pc") !== -1) && !this.isAlreadyPresent(data, character)) {
-            data.add(new CharacterData(this.functions, character, this.campaign, "_info in description_"));
-          }
-        });
-        this.writeData(data, 1 /* CharacterList */);
-      }
+      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      var _a;
-      const data = new LocationList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        if (((_a = current.relationships) == null ? void 0 : _a.locations) != null) {
-          const locations = this.dv.pages("#location").where((location) => {
-            var _a2;
-            return location.file.folder !== "Templates" && ((_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]) !== void 0;
-          });
-          locations.forEach((location) => {
-            var _a2;
-            data.add(new LocationData(this.functions, location, (_a2 = current.relationships) == null ? void 0 : _a2.locations[location.file.name]));
-          });
-        }
-        this.outlinks.forEach((location) => {
-          if (location.tags.indexOf("location") !== -1 && !this.isAlreadyPresent(data, location)) {
-            data.add(new LocationData(this.functions, location, "_info in description_"));
-          }
-        });
-        this.writeData(data, 8 /* LocationList */);
-      }
+      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
     });
   }
   clueList() {
     return __async(this, null, function* () {
-      const data = new ClueList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0) {
-        const clues = this.dv.pages("#clue").where((page) => {
-          var _a, _b;
-          return page.file.folder !== "Templates" && ((_a = current.relationships) == null ? void 0 : _a.clues) != void 0 && ((_b = current.relationships) == null ? void 0 : _b.clues[page.file.name]) !== void 0;
-        });
-        clues.forEach((clue) => {
-          var _a;
-          data.add(new ClueData(this.functions, clue, (_a = current.relationships) == null ? void 0 : _a.clues[clue.file.name]));
-        });
-        this.outlinks.forEach((clue) => {
-          if (clue.tags.indexOf("clue") !== -1 && !this.isAlreadyPresent(data, clue)) {
-            data.add(new ClueData(this.functions, clue, "_info in description_"));
-          }
-        });
-        this.writeData(data, 10 /* ClueList */);
-      }
+      this.writeList(this.io.getRelationshipList(3 /* Clue */), 10 /* ClueList */);
     });
   }
 };
 
-// src/models/RpgSessionModel.ts
-var RpgSessionModel = class extends AbstractModel {
+// src/models/SessionModel.ts
+var SessionModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.sceneList();
@@ -1512,21 +1400,13 @@ var RpgSessionModel = class extends AbstractModel {
   }
   sceneList() {
     return __async(this, null, function* () {
-      const data = new SceneList(this.campaign);
-      const current = this.dv.current();
-      if (current !== void 0 && current.ids.session != null) {
-        const scenes = this.dv.pages("#scene").where((page) => page.file.folder !== "Templates" && page.ids !== void 0 && page.ids.session != void 0 && page.ids.scene != void 0 && page.ids.session === current.ids.session).sort((page) => page.ids.scene);
-        scenes.forEach((scene) => {
-          data.add(new SceneData(this.functions, scene));
-        });
-        this.writeData(data, 15 /* SceneList */);
-      }
+      this.writeList(this.io.getSceneList(), 15 /* SceneList */);
     });
   }
 };
 
-// src/models/RpgSessionNavigationModel.ts
-var RpgSessionNavigationModel = class extends AbstractModel {
+// src/models/SessionNavigationModel.ts
+var SessionNavigationModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       this.sessionNavigator();
@@ -1550,54 +1430,8 @@ var RpgSessionNavigationModel = class extends AbstractModel {
   }
 };
 
-// src/data/TimelineData.ts
-var TimelineList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-  sort() {
-    this.elements.sort((a, b) => {
-      return a.time - b.time;
-    });
-  }
-};
-var TimelineData = class extends AbstractImageData {
-  constructor(functions, data, type) {
-    super(functions, data);
-    this.type = type;
-    this.image = functions.getImage(data, 70);
-    this.synopsis = data.synopsis;
-    switch (data.file.tags[0]) {
-      case "event":
-        this.time = data.dates.event;
-        break;
-    }
-  }
-  getEventColour() {
-    switch (this.type) {
-      case "event":
-        return "";
-        break;
-      case "birth":
-        return " green";
-        break;
-      case "death":
-        return " red";
-        break;
-      case "session":
-        return " blue";
-        break;
-      case "clue":
-        return " purple";
-        break;
-    }
-    return "";
-  }
-};
-
-// src/models/RpgTimelineModel.ts
-var RpgTimelineModel = class extends AbstractModel {
+// src/models/TimelineModel.ts
+var TimelineModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
       const data = new TimelineList(this.campaign);
@@ -1620,7 +1454,7 @@ var RpgTimelineModel = class extends AbstractModel {
         return ((_a = character == null ? void 0 : character.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.death) !== null;
       });
       characters.forEach((character) => {
-        character.add(new TimelineData(this.functions, character, "death"));
+        data.add(new TimelineData(this.functions, character, "death"));
       });
       const sessions = this.dv.pages("#session").where((session) => {
         var _a, _b;
@@ -1646,50 +1480,12 @@ var RpgTimelineModel = class extends AbstractModel {
 // src/factories/RpgModelFactory.ts
 var RpgModelFactory = class {
   static create(functions, app, container, source, component, sourcePath) {
-    switch (source.replace(/[\n\r]/g, "").toLowerCase()) {
-      case "adventure":
-        return new RpgAdventureModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "campaign":
-        return new RpgCampaignModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "clue":
-        return new RpgClueModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "event":
-        return new RpgEventModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "faction":
-        return new RpgFactionModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "location":
-        return new RpgLocationModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "npc":
-        return new RpgNpcModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "notes":
-        return new RpgNotesModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "pc":
-        return new RpgPcModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "scene":
-        return new RpgSceneModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "session":
-        return new RpgSessionModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "sessionnavigator":
-        return new RpgSessionNavigationModel(functions, app, container, source, component, sourcePath);
-        break;
-      case "timeline":
-        return new RpgTimelineModel(functions, app, container, source, component, sourcePath);
-        break;
-      default:
-        return new RpgErrorModel(functions, app, container, source, component, sourcePath);
-        break;
+    let modelName = source.replace(/[\n\r]/g, "").toLowerCase();
+    modelName = modelName[0].toUpperCase() + modelName.substring(1);
+    if (modelName === "Sessionnavigation") {
+      modelName = "SessionNavigation";
     }
+    return new models_exports[modelName + "Model"](functions, app, container, source, component, sourcePath);
   }
 };
 

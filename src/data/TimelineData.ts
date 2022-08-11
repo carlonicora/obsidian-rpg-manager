@@ -3,7 +3,7 @@ import {
 	GenericDataListInterface, GenericImageDataInterface,
 } from "../interfaces/DataInterfaces";
 import {DateTime} from "obsidian-dataview";
-import {RpgFunctions} from "./functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -13,8 +13,10 @@ export interface TimelineListInterface extends GenericDataListInterface{
 
 export interface TimelineDataInterface extends GenericDataInterface, GenericImageDataInterface {
 	synopsis: string;
-	time: DateTime;
+	time: string;
+	date: string;
 	type: string;
+	datetime: DateTime;
 
 	getEventColour(): string;
 }
@@ -32,14 +34,16 @@ export class TimelineList extends AbstractDataList implements TimelineListInterf
 
 	sort(){
 		this.elements.sort((a,b) => {
-			return a.time - b.time;
+			return a.datetime - b.datetime;
 		});
 	}
 }
 
 export class TimelineData extends AbstractImageData implements TimelineDataInterface {
 	synopsis: string;
-	time: DateTime;
+	time: string;
+	date: string;
+	datetime: DateTime;
 
 	constructor(
 		functions: RpgFunctions,
@@ -51,11 +55,23 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 		this.image = functions.getImage(data, 70);
 		this.synopsis = data.synopsis;
 
-		switch(data.file.tags[0]){
+		switch(type){
 			case 'event':
-				this.time = data.dates.event;
+				this.datetime = data.dates.event;
+				break;
+			case 'death':
+				this.datetime = data.dates.death;
+				break
+			case 'birth':
+				this.datetime = data.dates.dob;
+				break;
+			case 'session':
+				this.datetime = data.dates.session;
 				break;
 		}
+
+		this.date = this.functions.formatDate(this.datetime, "short");
+		this.time = this.functions.formatTime(this.datetime);
 	}
 
 	getEventColour(

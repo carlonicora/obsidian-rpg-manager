@@ -1,8 +1,8 @@
-import {RpgFunctions} from "../data/functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {App} from "obsidian";
 import {ListViewInterface} from "../abstracts/AbstractListView";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import * as Views from '../views/views'
+import * as Views from '../views'
 import {SingleViewInterface} from "../abstracts/AbstractSingleView";
 
 export enum viewType{

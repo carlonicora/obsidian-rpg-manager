@@ -1,5 +1,5 @@
 import {GenericSynopsisDataInterface} from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "./functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {AbstractData} from "../abstracts/AbstractData";
 
 export class SynopsisData extends AbstractData implements GenericSynopsisDataInterface {

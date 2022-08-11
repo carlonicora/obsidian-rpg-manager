@@ -1,5 +1,5 @@
 import {GenericImageDataInterface} from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "./functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {AbstractImageData} from "../abstracts/AbstractData";
 
 export class ImageData extends AbstractImageData implements GenericImageDataInterface {

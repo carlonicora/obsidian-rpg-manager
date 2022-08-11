@@ -1,7 +1,7 @@
 import {GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "./functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 import {SessionDataInterface} from "./SessionData";

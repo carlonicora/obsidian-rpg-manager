@@ -3,6 +3,7 @@ import {CampaignDataInterface} from "../data/CampaignData";
 export interface GenericDataInterface {
 	link: string;
 	name: string;
+	path: string;
 }
 
 export interface GenericImageDataInterface extends GenericDataInterface{

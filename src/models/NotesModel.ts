@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 
-export class RpgNotesModel extends AbstractModel {
+export class NotesModel extends AbstractModel {
 	public async render() {
 
 	}

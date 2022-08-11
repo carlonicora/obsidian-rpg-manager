@@ -1,6 +1,6 @@
 import {GenericDataInterface, GenericDataListInterface,
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "./functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {AbstractData, AbstractDataList} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 import {AdventureDataInterface} from "./AdventureData";

@@ -2,7 +2,7 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {TimelineData, TimelineList} from "../data/TimelineData";
 
-export class RpgTimelineModel extends AbstractModel {
+export class TimelineModel extends AbstractModel {
 	async render(){
 		const data = new TimelineList(this.campaign);
 
@@ -45,7 +45,7 @@ export class RpgTimelineModel extends AbstractModel {
 			);
 
 		characters.forEach((character) => {
-			character.add(
+			data.add(
 				new TimelineData(
 					this.functions,
 					character,

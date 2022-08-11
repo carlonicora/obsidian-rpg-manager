@@ -1,5 +1,5 @@
 import {GenericDataInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "./functions/RpgFunctions";
+import {RpgFunctions} from "../functions/RpgFunctions";
 import {AbstractImageData} from "../abstracts/AbstractData";
 
 export interface CampaignDataInterface extends GenericDataInterface, GenericImageDataInterface {
