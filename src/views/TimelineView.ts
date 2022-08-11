@@ -1,51 +1,45 @@
-import {AbstractView} from "../abstracts/AbstractView";
+import {AbstractListView} from "../abstracts/AbstractListView";
 import {Component, MarkdownRenderer} from "obsidian";
-import {TimelineEvent} from "../models/RpgTimelineModel";
+import {TimelineListInterface} from "../data/TimelineData";
+import {CampaignDataInterface} from "../data/CampaignData";
 
-export interface TimelineDataInterface {
-	events: TimelineEvent[];
-	campaign: any|null;
-	campaignImage: string;
-}
-
-export class TimelineView extends AbstractView {
+export class TimelineView extends AbstractListView {
 	async render(
-		data: TimelineDataInterface
+		data: TimelineListInterface
 	): Promise<void> {
 		let response : string = this.header(
 			data.campaign,
-			data.campaignImage,
 		);
 
-		for(let eventCount=0; eventCount<data.events.length; eventCount++){
-			let fileLink = document.createElement('h3');
-			await MarkdownRenderer.renderMarkdown(
-				data.events[eventCount].link,
+		data.elements.forEach((timeline) => {
+			const fileLink = document.createElement('h3');
+			MarkdownRenderer.renderMarkdown(
+				timeline.link,
 				fileLink,
 				this.dv.currentFilePath,
 				null as unknown as Component,
 			);
-			
-			let synopsis = document.createElement('span');
-			await MarkdownRenderer.renderMarkdown(
-				data.events[eventCount].description,
+
+			const synopsis = document.createElement('span');
+			MarkdownRenderer.renderMarkdown(
+				timeline.synopsis,
 				synopsis,
 				this.dv.currentFilePath,
 				null as unknown as Component,
 			);
 
-			const date = this.functions.formatDate(data.events[eventCount].time, "short");
-			const time = this.functions.formatTime(data.events[eventCount].time);
+			const date = this.functions.formatDate(timeline.time, "short");
+			const time = this.functions.formatTime(timeline.time);
 			response += '<li>' +
-				'<div class="bullet' + data.events[eventCount].getEventColour() + '"></div>' +
-				'<div class="time">' + date + (time !== '00:00' ? '<br/>' + time : '') + '</div>' +
-				'<div class="event-type' + data.events[eventCount].getEventColour() + '">' + data.events[eventCount].type + '</div>' +
-				'<div class="desc">' +
+				'<div class="bullet' + timeline.getEventColour() + '"></div>' +
+				'<div class="event-time">' + date + (time !== '00:00' ? '<br/>' + time : '') + '</div>' +
+				'<div class="event-type' + timeline.getEventColour() + '">' + timeline.type + '</div>' +
+				'<div class="event-details">' +
 				fileLink.outerHTML +
 				synopsis.outerHTML +
 				'</div>' +
 				'</li>'
-		}
+		});
 
 		response += this.footer();
 
@@ -53,16 +47,14 @@ export class TimelineView extends AbstractView {
 	}
 
 	private header(
-		campaign: any|null,
-		campaignImage: string,
+		campaign: CampaignDataInterface|null,
 	): string {
-		return '<div class="rpgm-container"><div class="rpgm-header"' + campaignImage + '>' +
-			'<div class="rpgm-color-overlay">' +
-			'<div class="rpgm-day-number">Timeline</div>' +
-			'<div class="rpgm-date-right">' +
-			'<div class="rpgm-day-name">' + (campaign !== null ? campaign.file.name : "Campaign") + '</div>' +
-			'<div class="rpgm-month">' + (campaign !== null ? this.functions.formatDate(campaign.dates.current, "long") : "") + '</div>' +
-			'</div>' +
+		return '<div class="rpgm-container">' +
+			'<div class="rpgm-header"' + (campaign?.imageSrc !== null ? campaign?.imageSrc : '') + '>' +
+			'<div class="rpgm-header-overlay">' +
+			'<div class="rpgm-header-title">Timeline</div>' +
+			'<div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div>' +
+			'<div class="rpgm-current-date">' + (campaign !== null ? this.functions.formatDate(campaign.currentDate, "long") : "") + '</div>' +
 			'</div>' +
 			'</div>' +
 			'<div class="rpgm-timeline"><ul>';

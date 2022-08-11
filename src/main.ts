@@ -1,17 +1,16 @@
 import {
 	Component, debounce,
 	MarkdownPostProcessorContext,
-	Plugin,
+	Plugin
 } from 'obsidian';
 
-import {RpgFunctions} from "./data/RpgFunctions";
+import {RpgFunctions} from "./data/functions/RpgFunctions";
 import {RpgModelFactory} from "./factories/RpgModelFactory";
-import {AbstractView} from "./abstracts/AbstractView";
 import {RpgViewFactory} from "./factories/RpgViewFactory";
 
 export default class RpgManager extends Plugin {
 	private functions: RpgFunctions;
-	private areFunctionsLoaded : boolean = false;
+	private areFunctionsLoaded = false;
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);

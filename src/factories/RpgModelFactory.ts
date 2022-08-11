@@ -1,5 +1,5 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
-import {RpgFunctions} from "../data/RpgFunctions";
+import {RpgFunctions} from "../data/functions/RpgFunctions";
 import {App, Component, MarkdownPostProcessorContext} from "obsidian";
 import {RpgNpcModel} from "../models/RpgNpcModel";
 import {RpgErrorModel} from "../models/RpgErrorModel";

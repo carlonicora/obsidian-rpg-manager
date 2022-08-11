@@ -1,12 +1,19 @@
 import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
-import {RpgFunctions} from "../data/RpgFunctions";
-import {RpgMetadataValidator} from "../data/RpgMetadataValidator";
+import {RpgFunctions} from "../data/functions/RpgFunctions";
+import {RpgMetadataValidator} from "../data/validators/RpgMetadataValidator";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {RpgComponentFactory} from "../factories/RpgComponentFactory";
+import {ImageData} from "../data/ImageData";
+import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
+import {SynopsisData} from "../data/SynopsisData";
+import {CampaignData, CampaignDataInterface} from "../data/CampaignData";
+import {GenericDataListInterface} from "../interfaces/DataInterfaces";
+import {IoData} from "../io/IoData";
 
 export abstract class AbstractModel extends MarkdownRenderChild {
 	protected dv: DataviewInlineApi;
-	protected renderer: RpgComponentFactory;
+	protected campaign: CampaignDataInterface|null;
+	protected current: Record<string, any>;
+	protected io: IoData;
 
 	constructor(
 		protected functions: RpgFunctions,
@@ -25,11 +32,27 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 		setTimeout(() => {
 			//@ts-ignore
 			this.dv = this.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
-			this.renderer = new RpgComponentFactory(this.functions, this.dv);
 
-			console.log(this.dv.current()?.file.frontmatter);
+			const current = this.dv.current();
+			if (current != null){
+				this.current = current;
+			} else {
+				return;
+			}
 
-			if (RpgMetadataValidator.validate(this.source, this.dv.current()?.file.frontmatter)) {
+			if (RpgMetadataValidator.validate(this.app, this.current)){
+				const campaigns = this.dv.pages("#campaign and " + `-"Templates"`);
+				if (campaigns !== undefined && campaigns.length === 1){
+					this.campaign = new CampaignData(
+						this.functions,
+						campaigns[0],
+					);
+				} else {
+					this.campaign = null;
+				}
+
+				this.io = new IoData(this.functions, this.campaign, this.dv);
+
 				this.container.innerHTML = '';
 
 				this.render();
@@ -40,7 +63,6 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 	onload() {
 		this.renderComponent(0);
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.redrawContainer));
-		//this.register(this.container.onNodeInserted(this.redrawContainer));
 	}
 
 	redrawContainer = () => {
@@ -62,5 +84,52 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 		}
 
 		return false;
+	}
+
+	protected writeData(
+		data: GenericDataListInterface,
+		typeOfView: viewType,
+	): void {
+		if (data.elements.length > 0) {
+			const view = RpgViewFactory.createList(typeOfView, this.dv);
+			view.render(data);
+		}
+	}
+
+	protected image(
+		width = 75,
+		height = 75,
+	){
+		const current = this.dv.current();
+		if (current !== undefined) {
+
+			const data = new ImageData(
+				this.functions,
+				current,
+				width,
+				height,
+			)
+
+			const view = RpgViewFactory.createSingle(viewType.Image, this.dv);
+			view.render(data);
+		}
+	}
+
+	protected synopsis(
+		title: string|null = null,
+	){
+		const current = this.dv.current();
+
+		if (current !== undefined) {
+
+			const data = new SynopsisData(
+				this.functions,
+				current,
+				title
+			)
+
+			const view = RpgViewFactory.createSingle(viewType.Synopsis, this.dv);
+			view.render(data);
+		}
 	}
 }

@@ -178,9 +178,7 @@ export class RpgFunctions extends Component {
 		const dtStart = new Date(start);
 		const dtEnd = new Date(end);
 
-		var difference = dtEnd.valueOf() - dtStart.valueOf();
-
-		const diff = end - start;
+		const difference = dtEnd.valueOf() - dtStart.valueOf();
 
 		const minutes = difference/60000;
 		const remaining = (difference-(minutes*60000));
@@ -193,12 +191,15 @@ export class RpgFunctions extends Component {
 		return (page.dates.death !== null ? "<br/>_(Deceased " + this.formatDate(page.dates.death) + ")_ " : "");
 	}
 
-	calculateAge(page: Record<string, Literal>|undefined, campaign: Record<string, Literal>){
+	calculateAge(
+		page: Record<string, Literal>|undefined,
+		currentDate: DateTime,
+	): string {
 		if (page === undefined) return "";
 
 		if (!page?.dates.dob) return "";
 
-		const end = page.dates.death || campaign.dates.current;
+		const end = page.dates.death || currentDate;
 
 		const startDate = new Date(page.dates.dob);
 		const endDate = new Date(end);
@@ -206,6 +207,6 @@ export class RpgFunctions extends Component {
 		const ageDifMs = endDate.valueOf() - startDate.valueOf();
 		const ageDate = new Date(ageDifMs);
 
-		return Math.abs(ageDate.getUTCFullYear() - 1970);
+		return (Math.abs(ageDate.getUTCFullYear() - 1970)).toString();
 	}
 }

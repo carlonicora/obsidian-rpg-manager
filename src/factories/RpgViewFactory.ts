@@ -1,8 +1,28 @@
-import {RpgFunctions} from "../data/RpgFunctions";
+import {RpgFunctions} from "../data/functions/RpgFunctions";
 import {App} from "obsidian";
-import {ViewInterface} from "../abstracts/AbstractView";
+import {ListViewInterface} from "../abstracts/AbstractListView";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import * as Views from '../views/TimelineView'
+import * as Views from '../views/views'
+import {SingleViewInterface} from "../abstracts/AbstractSingleView";
+
+export enum viewType{
+	AdventureList,
+	CharacterList,
+	Timeline,
+	SessionList,
+	ClueStatus,
+	Image,
+	Synopsis,
+	ClueRelationshipList,
+	LocationList,
+	EventList,
+	ClueList,
+	CharacterInfo,
+	FactionList,
+	SceneNavigator,
+	SessionNavigator,
+	SceneList,
+}
 
 export class RpgViewFactory {
 	private static functions: RpgFunctions;
@@ -17,13 +37,24 @@ export class RpgViewFactory {
 		this.app = app;
 	}
 
-	public static create(
-		viewName: string,
+	public static createList(
+		viewName: viewType,
 		dv: DataviewInlineApi,
-	): ViewInterface {
-
+	): ListViewInterface {
 		// @ts-ignore
-		return new Views[viewName + 'View'](
+		return new Views[viewType[viewName] + 'View'](
+			this.functions,
+			this.app,
+			dv
+		);
+	}
+
+	public static createSingle(
+		viewName: viewType,
+		dv: DataviewInlineApi,
+	): SingleViewInterface {
+		// @ts-ignore
+		return new Views[viewType[viewName] + 'View'](
 			this.functions,
 			this.app,
 			dv
