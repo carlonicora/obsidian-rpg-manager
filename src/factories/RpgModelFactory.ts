@@ -2,6 +2,7 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {RpgFunctions} from "../functions/RpgFunctions";
 import {App, Component, MarkdownPostProcessorContext} from "obsidian";
 import * as Models from '../models';
+import {ErrorModel} from "../models";
 
 export class RpgModelFactory {
 	public static create(
@@ -11,7 +12,8 @@ export class RpgModelFactory {
 		source: string,
 		component: Component | MarkdownPostProcessorContext,
 		sourcePath: string,
-	): AbstractModel {
+	): AbstractModel
+	{
 		let modelName = source.replace(/[\n\r]/g, '').toLowerCase();
 		modelName = modelName[0].toUpperCase() + modelName.substring(1);
 
@@ -19,7 +21,11 @@ export class RpgModelFactory {
 			modelName = 'SessionNavigation';
 		}
 
-		//@ts-ignore
-		return new Models[modelName + 'Model'](functions, app, container, source, component, sourcePath);
+		try {
+			//@ts-ignore
+			return new Models[modelName + 'Model'](functions, app, container, source, component, sourcePath);
+		} catch (e) {
+			return new ErrorModel(functions, app, container, source, component, sourcePath);
+		}
 	}
 }

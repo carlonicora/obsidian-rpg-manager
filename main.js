@@ -1639,7 +1639,11 @@ var RpgModelFactory = class {
     if (modelName === "Sessionnavigation") {
       modelName = "SessionNavigation";
     }
-    return new models_exports[modelName + "Model"](functions, app, container, source, component, sourcePath);
+    try {
+      return new models_exports[modelName + "Model"](functions, app, container, source, component, sourcePath);
+    } catch (e) {
+      return new ErrorModel(functions, app, container, source, component, sourcePath);
+    }
   }
 };
 
