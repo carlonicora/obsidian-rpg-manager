@@ -707,17 +707,18 @@ completed: true
 
 ### Scenes
 
-| Key                     | Type                          | Required/Optional | Description                                                    |
-|-------------------------|-------------------------------|-------------------|----------------------------------------------------------------|
-| alias                   | [array](#array)               | **Required**      | The aliases of the current scene                               |
-| tags                    | [array](#array)               | **Required**      | The tags associated to the scene. The tag `scene` is required. |
-| ids.session             | [number](#number)             | **Required**      | The identifier of the session the scene is part of             |
-| ids.scene               | [number](#number)             | **Required**      | The unique identifier of the scene in the session              |
-| relationships.clues     | [relationship](#relationship) | _Optional_        | The clues that can be found in the scene                       |
-| relationships.locations | [relationship](#relationship) | _Optional_        | The locations the scene happens in or is related to            |
-| time.start              | [date](#date)                 | _Optional_        | The **in-real-life** time the scene starts                     |
-| time.end                | [date](#date)                 | _Optional_        | The **in-real-life** time the scene ends                       |
-| completed               | [boolean](#boolean)           | _Optional_        | Identifies if the scene is fully written                       |
+| Key                      | Type                          | Required/Optional | Description                                                    |
+|--------------------------|-------------------------------|-------------------|----------------------------------------------------------------|
+| alias                    | [array](#array)               | **Required**      | The aliases of the current scene                               |
+| tags                     | [array](#array)               | **Required**      | The tags associated to the scene. The tag `scene` is required. |
+| ids.session              | [number](#number)             | **Required**      | The identifier of the session the scene is part of             |
+| ids.scene                | [number](#number)             | **Required**      | The unique identifier of the scene in the session              |
+| relationships.clues      | [relationship](#relationship) | _Optional_        | The clues that can be found in the scene                       |
+| relationships.characters | [relationship](#relationship) | _Optional_        | The characters that can be found in the scene                  |
+| relationships.locations  | [relationship](#relationship) | _Optional_        | The locations the scene happens in or is related to            |
+| time.start               | [date](#date)                 | _Optional_        | The **in-real-life** time the scene starts                     |
+| time.end                 | [date](#date)                 | _Optional_        | The **in-real-life** time the scene ends                       |
+| completed                | [boolean](#boolean)           | _Optional_        | Identifies if the scene is fully written                       |
 
 full example
 ```yaml
@@ -740,15 +741,16 @@ time:
 
 ### Player Characters
 
-| Key                      | Type                           | Required/Optional | Description                                                                                 |
-|--------------------------|--------------------------------|-------------------|---------------------------------------------------------------------------------------------|
-| alias                    | [array](#array)                | **Required**      | The aliases of the current player character                                                 |
-| tags                     | [array](#array)                | **Required**      | The tags associated to the player character. The tag `character/pc` is required.            |
-| dates.dob                | [date](#date)                  | _Optional_        | The **in-game** date of birth of the player character                                       |
-| dates.death              | [date](#date)                  | _Optional_        | The **in-game** date of death of the player character                                       |
-| relationships.factions   | [relationship](#relationship)  | _Optional_        | The type of membership the current player character has with factions                       |
-| relationships.locations  | [relationship](#relationship)  | _Optional_        | The relationship the current player character has with locations                            |
-| completed                | [boolean](#boolean)            | _Optional_        | Identifies if the session is fully written                                                  |
+| Key                      | Type                           | Required/Optional | Description                                                                      |
+|--------------------------|--------------------------------|-------------------|----------------------------------------------------------------------------------|
+| alias                    | [array](#array)                | **Required**      | The aliases of the current player character                                      |
+| tags                     | [array](#array)                | **Required**      | The tags associated to the player character. The tag `character/pc` is required. |
+| dates.dob                | [date](#date)                  | _Optional_        | The **in-game** date of birth of the player character                            |
+| dates.death              | [date](#date)                  | _Optional_        | The **in-game** date of death of the player character                            |
+| relationships.characters | [relationship](#relationship)  | _Optional_        | The type of membership the current player character has with other characters    |
+| relationships.factions   | [relationship](#relationship)  | _Optional_        | The type of membership the current player character has with factions            |
+| relationships.locations  | [relationship](#relationship)  | _Optional_        | The relationship the current player character has with locations                 |
+| completed                | [boolean](#boolean)            | _Optional_        | Identifies if the session is fully written                                       |
 
 full example
 ```yaml
@@ -776,7 +778,6 @@ completed: false
 | goals                    | [text](#text)                  | _Optional+        | The short description of the goals of the  non player character                                 |
 | dates.dob                | [date](#date)                  | _Optional_        | The **in-game** date of birth of the non player character                                       |
 | dates.death              | [date](#date)                  | _Optional_        | The **in-game** date of death of the non player character                                       |
-| relationships.clues      | [relationship](#relationship)  | _Optional_        | The knowledge the current non player character has of any clue                                  |
 | relationships.characters | [relationship](#relationship)  | _Optional_        | The description of the relation the current non player character has with non player characters |
 | relationships.factions   | [relationship](#relationship)  | _Optional_        | The type of membership the current non player character has with factions                       |
 | relationships.locations  | [relationship](#relationship)  | _Optional_        | The relationship the current non player character has with locations                            |
@@ -838,7 +839,6 @@ completed: false
 | tags                 | [array](#array)                | **Required**      | The tags associated to the location. The tag `location` is required. |
 | synopsis             | [text](#text)                  | **Required**      | The short description of the location                                |
 | address              | [text](#text)                  | _Optional_        | The physical address of the location                                 |
-| relationships.clues  | [relationship](#relationship)  | _Optional_        | The clues the current location contains                              |
 | completed            | [boolean](#boolean)            | _Optional_        | Identifies if the location is fully written                          |
 
 full example
