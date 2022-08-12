@@ -532,7 +532,6 @@ var SessionData = class extends AbstractData {
     this.nextSession = nextSession;
     this.id = data.ids.session;
     this.adventureId = data.ids.adventure;
-    this.type = data.ids.type;
     this.synopsis = data.synopsis;
     if (data.dates.session !== null && data.dates.session !== void 0)
       this.date = this.functions.formatDate(data.dates.session, "short");
@@ -544,8 +543,7 @@ SessionData.frontmatter = {
   "synopsis": true,
   "ids": {
     "adventure": true,
-    "session": true,
-    "type": false
+    "session": true
   },
   "dates": {
     "session": true,
@@ -888,10 +886,9 @@ var SessionListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
       this.dv.span("## Sessions");
-      this.dv.table(["&#35;", "Session", "Type", "Synopsis", "Date", "Play Date", "Notes"], data.elements.map((session) => [
+      this.dv.table(["&#35;", "Session", "Synopsis", "Date", "Play Date", "Notes"], data.elements.map((session) => [
         session.id,
         session.link,
-        session.type,
         session.synopsis,
         session.date,
         session.irl,

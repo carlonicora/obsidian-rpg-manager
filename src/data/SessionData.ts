@@ -12,7 +12,6 @@ export interface SessionListInterface extends GenericDataListInterface{
 export interface SessionDataInterface extends GenericDataInterface {
 	id: number;
 	adventureId: number;
-	type: string;
 	synopsis: string;
 	date: string;
 	irl: string;
@@ -36,7 +35,6 @@ export class SessionList extends AbstractDataList implements SessionListInterfac
 export class SessionData extends AbstractData implements SessionDataInterface {
 	public id: number;
 	public adventureId: number;
-	public type: string;
 	public synopsis: string;
 	public date: string;
 	public irl: string;
@@ -46,7 +44,6 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 		'ids': {
 			'adventure': true,
 			'session': true,
-			'type': false,
 		},
 		'dates': {
 			'session': true,
@@ -66,7 +63,6 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 
 		this.id = data.ids.session;
 		this.adventureId = data.ids.adventure;
-		this.type = data.ids.type;
 		this.synopsis = data.synopsis;
 		if (data.dates.session !== null && data.dates.session !== undefined) this.date = this.functions.formatDate(data.dates.session, "short");
 		if (data.dates.irl !== null && data.dates.irl !== undefined) this.date = this.functions.formatDate(data.dates.irl);

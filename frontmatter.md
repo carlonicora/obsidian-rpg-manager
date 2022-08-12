@@ -683,7 +683,6 @@ completed: false
 | synopsis      | [text](#text)       | **Required**                                                | The short description of the session                               |
 | ids.adventure | [number](#number)   | **Required**                                                | The identifier of the adventure the session is part of             |
 | ids.session   | [number](#number)   | **Required**                                                | The unique identifier of the session in the campaign               |
-| ids.type      | [text](#text)       | _Optional_                                                  | The type of the session in an ABT Plot Structure                   |
 | dates.session | [date](#date)       | _Optional_                                                  | The **in-game** date when the event of the session happen          |
 | dates.irl     | [date](#date)       | _Optional_                                                  | The **in-real-life** date in which the session is scheduled        |
 | completed     | [boolean](#boolean) | _Optional_                                                  | Identifies if the session is fully written                         |
@@ -697,7 +696,6 @@ synopsis: "**BUT** they will realise there is a [[Demagorgon]] waiting for them 
 ids:
  adventure: 5
  session: 3
- type: BUT
 dates:
  session: 1984-03-21
  irl: 2022-08-01
