@@ -65,6 +65,6 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 		this.adventureId = data.ids.adventure;
 		this.synopsis = data.synopsis;
 		if (data.dates.session !== null && data.dates.session !== undefined) this.date = this.functions.formatDate(data.dates.session, "short");
-		if (data.dates.irl !== null && data.dates.irl !== undefined) this.date = this.functions.formatDate(data.dates.irl);
+		if (data.dates.irl !== null && data.dates.irl !== undefined) this.irl = this.functions.formatDate(data.dates.irl);
 	}
 }

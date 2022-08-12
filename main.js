@@ -536,7 +536,7 @@ var SessionData = class extends AbstractData {
     if (data.dates.session !== null && data.dates.session !== void 0)
       this.date = this.functions.formatDate(data.dates.session, "short");
     if (data.dates.irl !== null && data.dates.irl !== void 0)
-      this.date = this.functions.formatDate(data.dates.irl);
+      this.irl = this.functions.formatDate(data.dates.irl);
   }
 };
 SessionData.frontmatter = {
