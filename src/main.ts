@@ -30,6 +30,13 @@ export default class RpgManager extends Plugin {
 		);
 	}
 
+	async onunload() {
+		super.onunload();
+
+		this.app.workspace.off('resolved', this.refreshViews);
+		this.app.workspace.off('modify', this.refreshViews);
+	}
+
 	refreshViews(){
 		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}

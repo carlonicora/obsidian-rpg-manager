@@ -6,7 +6,9 @@ if you want to view the source, please visit the github repository of this plugi
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __reflectGet = Reflect.get;
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -20,6 +22,7 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __superGet = (cls, obj, key) => __reflectGet(__getProtoOf(cls), key, obj);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -1667,6 +1670,13 @@ var RpgManager = class extends import_obsidian4.Plugin {
       this.registerPriorityCodeblockPostProcessor("RpgManager", -100, (source, el, ctx) => __async(this, null, function* () {
         return this.createRpgView(source, el, ctx, ctx.sourcePath);
       }));
+    });
+  }
+  onunload() {
+    return __async(this, null, function* () {
+      __superGet(RpgManager.prototype, this, "onunload").call(this);
+      this.app.workspace.off("resolved", this.refreshViews);
+      this.app.workspace.off("modify", this.refreshViews);
     });
   }
   refreshViews() {
