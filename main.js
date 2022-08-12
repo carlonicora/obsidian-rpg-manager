@@ -1564,6 +1564,7 @@ var SessionModel = class extends AbstractModel {
 var SessionNavigationModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
+      this.synopsis();
       this.sessionNavigator();
     });
   }

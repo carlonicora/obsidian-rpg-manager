@@ -5,6 +5,7 @@ import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 
 export class SessionNavigationModel extends AbstractModel {
 	public async render() {
+		this.synopsis();
 		this.sessionNavigator();
 	}
 
