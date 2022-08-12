@@ -1,5 +1,4 @@
 import {App, TFile} from "obsidian";
-import * as Data from '../data';
 import {
 	AdventureData,
 	CampaignData,
@@ -35,7 +34,7 @@ export class MetadataValidator {
 			}
 		});
 
-		if (response === true){
+		if (response === true && current.tags != null){
 			if (current.tags.indexOf('adventure') !== -1){
 				response = this.validateFrontmatterElement(AdventureData.frontmatter, current.file.frontmatter);
 			} else if (current.tags.indexOf('campaign') !== -1){
@@ -67,14 +66,14 @@ export class MetadataValidator {
 		frontmatter: object,
 	): boolean|string
 	{
-		let response: boolean = true;
+		let response = true;
 		let error = '';
 
 		Object.entries(element).forEach(([key, value]) => {
 
 			if (value === false || (frontmatter !== null && key in frontmatter)){
 				if (typeof value === 'object'){
-					let temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key as keyof typeof frontmatter]);
+					const temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key as keyof typeof frontmatter]);
 					if (temporaryResponse !== true){
 						error += temporaryResponse;
 						response = false

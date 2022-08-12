@@ -1,4 +1,4 @@
-import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild, MarkdownRenderer} from "obsidian";
+import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
 import {RpgFunctions} from "../functions/RpgFunctions";
 import {MetadataValidator} from "../validators/MetadataValidator";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
@@ -46,6 +46,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 						this.functions,
 						campaigns[0],
 					);
+
 				} else {
 					this.campaign = null;
 				}

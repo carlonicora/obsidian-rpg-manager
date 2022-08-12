@@ -1,7 +1,6 @@
 import {RpgFunctions} from "../functions/RpgFunctions";
 import {GenericDataInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
 import {CampaignDataInterface} from "../data/CampaignData";
-import {Component, MarkdownRenderer} from "obsidian";
 
 export abstract class AbstractData implements GenericDataInterface{
 	public link: string;

@@ -636,7 +636,7 @@ var MetadataValidator = class {
         }
       }
     });
-    if (response === true) {
+    if (response === true && current.tags != null) {
       if (current.tags.indexOf("adventure") !== -1) {
         response = this.validateFrontmatterElement(AdventureData.frontmatter, current.file.frontmatter);
       } else if (current.tags.indexOf("campaign") !== -1) {
@@ -667,7 +667,7 @@ var MetadataValidator = class {
     Object.entries(element).forEach(([key, value]) => {
       if (value === false || frontmatter !== null && key in frontmatter) {
         if (typeof value === "object") {
-          let temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key]);
+          const temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key]);
           if (temporaryResponse !== true) {
             error += temporaryResponse;
             response = false;
@@ -932,7 +932,8 @@ var TimelineView = class extends AbstractListView {
     });
   }
   header(campaign) {
-    return '<div class="rpgm-container"><div class="rpgm-header"' + ((campaign == null ? void 0 : campaign.imageSrc) !== null ? campaign == null ? void 0 : campaign.imageSrc : "") + '><div class="rpgm-header-overlay"><div class="rpgm-header-title">Timeline</div><div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div><div class="rpgm-current-date">' + (campaign !== null ? this.functions.formatDate(campaign.currentDate, "long") : "") + '</div></div></div><div class="rpgm-timeline"><ul>';
+    const campaignImage = (campaign == null ? void 0 : campaign.imageSrc) != null ? `style="background-image: url('` + campaign.imageSrc + `');"` : "";
+    return '<div class="rpgm-container"><div class="rpgm-header"' + campaignImage + '><div class="rpgm-header-overlay"><div class="rpgm-header-title">Timeline</div><div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div><div class="rpgm-current-date">' + (campaign !== null ? this.functions.formatDate(campaign.currentDate, "long") : "") + '</div></div></div><div class="rpgm-timeline"><ul>';
   }
   footer() {
     return "</ul></div></div>";

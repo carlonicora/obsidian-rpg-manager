@@ -48,8 +48,10 @@ export class TimelineView extends AbstractListView {
 	private header(
 		campaign: CampaignDataInterface|null,
 	): string {
+		const campaignImage = (campaign?.imageSrc != null ? 'style="background-image: url(\'' + campaign.imageSrc + '\');"' : '');
+
 		return '<div class="rpgm-container">' +
-			'<div class="rpgm-header"' + (campaign?.imageSrc !== null ? campaign?.imageSrc : '') + '>' +
+			'<div class="rpgm-header"' + campaignImage + '>' +
 			'<div class="rpgm-header-overlay">' +
 			'<div class="rpgm-header-title">Timeline</div>' +
 			'<div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div>' +
