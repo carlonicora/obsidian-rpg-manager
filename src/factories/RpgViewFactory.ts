@@ -19,9 +19,9 @@ export enum viewType{
 	ClueList,
 	CharacterInfo,
 	FactionList,
-	SceneNavigator,
 	SessionNavigator,
 	SceneList,
+	SceneNavigation,
 }
 
 export class RpgViewFactory {

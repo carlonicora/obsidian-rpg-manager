@@ -17,9 +17,7 @@ export class RpgModelFactory {
 		let modelName = source.replace(/[\n\r]/g, '').toLowerCase();
 		modelName = modelName[0].toUpperCase() + modelName.substring(1);
 
-		if (modelName === 'Sessionnavigation'){
-			modelName = 'SessionNavigation';
-		}
+		modelName = modelName.replace('navigation', 'Navigation');
 
 		try {
 			//@ts-ignore

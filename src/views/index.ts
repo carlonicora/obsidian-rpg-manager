@@ -1,5 +1,5 @@
 export {SessionNavigatorView} from "./SessionNavigatorView";
-export {SceneNavigatorView} from "./SceneNavigatorView";
+export {SceneNavigationView} from "./SceneNavigationView";
 export {FactionListView} from "./Lists/FactionListView";
 export {CharacterInfoView} from "./CharacterInfoView";
 export {ClueListView} from "./Lists/ClueListView";

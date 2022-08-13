@@ -12,3 +12,4 @@ export * from './SceneModel';
 export * from './SessionModel';
 export * from './SessionNavigationModel';
 export * from './TimelineModel';
+export * from './SceneNavigationModel';

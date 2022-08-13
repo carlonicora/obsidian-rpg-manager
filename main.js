@@ -210,6 +210,7 @@ __export(models_exports, {
   NpcModel: () => NpcModel,
   PcModel: () => PcModel,
   SceneModel: () => SceneModel,
+  SceneNavigationModel: () => SceneNavigationModel,
   SessionModel: () => SessionModel,
   SessionNavigationModel: () => SessionNavigationModel,
   TimelineModel: () => TimelineModel
@@ -696,7 +697,7 @@ __export(views_exports, {
   ImageView: () => ImageView,
   LocationListView: () => LocationListView,
   SceneListView: () => SceneListView,
-  SceneNavigatorView: () => SceneNavigatorView,
+  SceneNavigationView: () => SceneNavigationView,
   SessionListView: () => SessionListView,
   SessionNavigatorView: () => SessionNavigatorView,
   SynopsisView: () => SynopsisView,
@@ -739,8 +740,8 @@ var SessionNavigatorView = class extends AbstractSingleView {
   }
 };
 
-// src/views/SceneNavigatorView.ts
-var SceneNavigatorView = class extends AbstractSingleView {
+// src/views/SceneNavigationView.ts
+var SceneNavigationView = class extends AbstractSingleView {
   render(data) {
     return __async(this, null, function* () {
       const tableElements = [];
@@ -1004,9 +1005,9 @@ var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["ClueList"] = 10] = "ClueList";
   viewType2[viewType2["CharacterInfo"] = 11] = "CharacterInfo";
   viewType2[viewType2["FactionList"] = 12] = "FactionList";
-  viewType2[viewType2["SceneNavigator"] = 13] = "SceneNavigator";
-  viewType2[viewType2["SessionNavigator"] = 14] = "SessionNavigator";
-  viewType2[viewType2["SceneList"] = 15] = "SceneList";
+  viewType2[viewType2["SessionNavigator"] = 13] = "SessionNavigator";
+  viewType2[viewType2["SceneList"] = 14] = "SceneList";
+  viewType2[viewType2["SceneNavigation"] = 15] = "SceneNavigation";
   return viewType2;
 })(viewType || {});
 var RpgViewFactory = class {
@@ -1502,31 +1503,9 @@ var PcModel = class extends AbstractModel {
 var SceneModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
-      this.sceneNavigator();
       this.characterList();
       this.locationList();
       this.clueList();
-    });
-  }
-  sceneNavigator() {
-    return __async(this, null, function* () {
-      const current = this.dv.current();
-      if (current != void 0 && current.ids != void 0 && current.ids.scene != void 0 && current.ids.session != void 0) {
-        const sessions = this.dv.pages("#session").where((session2) => {
-          var _a, _b, _c;
-          return session2.file.folder !== "Templates" && session2.ids != void 0 && ((_a = session2.ids) == null ? void 0 : _a.session) != void 0 && ((_b = session2.ids) == null ? void 0 : _b.session) === ((_c = current == null ? void 0 : current.ids) == null ? void 0 : _c.session);
-        });
-        const session = sessions != void 0 && sessions.length === 1 ? sessions[0] : null;
-        const adventures = this.dv.pages("#adventure").where((adventure2) => adventure2.file.folder !== "Templates" && adventure2.ids !== void 0 && adventure2.ids.adventure === session.ids.adventure);
-        const adventure = adventures != void 0 && adventures.length === 1 ? adventures[0] : null;
-        const previousScenes = this.dv.pages("#scene").where((scene) => scene.file.folder !== "Templates" && scene.ids != void 0 && scene.ids.session === (current == null ? void 0 : current.ids.session) && scene.ids.scene === (current == null ? void 0 : current.ids.scene) - 1);
-        const previousScene = previousScenes != void 0 && previousScenes.length === 1 ? previousScenes[0] : null;
-        const nextScenes = this.dv.pages("#scene").where((scene) => scene.file.folder !== "Templates" && scene.ids != void 0 && scene.ids.session === (current == null ? void 0 : current.ids.session) && scene.ids.scene === (current == null ? void 0 : current.ids.scene) + 1);
-        const nextScene = nextScenes != void 0 && nextScenes.length === 1 ? nextScenes[0] : null;
-        const data = new SceneData(this.functions, current, session != void 0 ? new SessionData(this.functions, session) : null, adventure != void 0 ? new AdventureData(this.functions, adventure) : null, previousScene != void 0 ? new SceneData(this.functions, previousScene) : null, nextScene != void 0 ? new SceneData(this.functions, nextScene) : null, this.campaign);
-        const view = RpgViewFactory.createSingle(13 /* SceneNavigator */, this.dv);
-        view.render(data);
-      }
     });
   }
   characterList() {
@@ -1555,7 +1534,7 @@ var SessionModel = class extends AbstractModel {
   }
   sceneList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getSceneList(), 15 /* SceneList */);
+      this.writeList(this.io.getSceneList(), 14 /* SceneList */);
     });
   }
 };
@@ -1579,7 +1558,7 @@ var SessionNavigationModel = class extends AbstractModel {
         const nextSessions = this.dv.pages("#session").where((session) => session.file.folder !== "Templates" && session.ids.adventure != void 0 && session.ids.session != void 0 && session.ids.adventure === current.ids.adventure && session.ids.session === current.ids.session + 1);
         const nextSession = nextSessions != void 0 && nextSessions.length === 1 ? nextSessions[0] : null;
         const data = new SessionData(this.functions, current, this.campaign, adventure != void 0 ? new AdventureData(this.functions, adventure) : null, previousSession != void 0 ? new SessionData(this.functions, previousSession) : null, nextSession != void 0 ? new SessionData(this.functions, nextSession) : null);
-        const view = RpgViewFactory.createSingle(14 /* SessionNavigator */, this.dv);
+        const view = RpgViewFactory.createSingle(13 /* SessionNavigator */, this.dv);
         view.render(data);
       }
     });
@@ -1633,14 +1612,43 @@ var TimelineModel = class extends AbstractModel {
   }
 };
 
+// src/models/SceneNavigationModel.ts
+var SceneNavigationModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.synopsis();
+      this.sceneNavigation();
+    });
+  }
+  sceneNavigation() {
+    return __async(this, null, function* () {
+      const current = this.dv.current();
+      if (current != void 0 && current.ids != void 0 && current.ids.scene != void 0 && current.ids.session != void 0) {
+        const sessions = this.dv.pages("#session").where((session2) => {
+          var _a, _b, _c;
+          return session2.file.folder !== "Templates" && session2.ids != void 0 && ((_a = session2.ids) == null ? void 0 : _a.session) != void 0 && ((_b = session2.ids) == null ? void 0 : _b.session) === ((_c = current == null ? void 0 : current.ids) == null ? void 0 : _c.session);
+        });
+        const session = sessions != void 0 && sessions.length === 1 ? sessions[0] : null;
+        const adventures = this.dv.pages("#adventure").where((adventure2) => adventure2.file.folder !== "Templates" && adventure2.ids !== void 0 && adventure2.ids.adventure === session.ids.adventure);
+        const adventure = adventures != void 0 && adventures.length === 1 ? adventures[0] : null;
+        const previousScenes = this.dv.pages("#scene").where((scene) => scene.file.folder !== "Templates" && scene.ids != void 0 && scene.ids.session === (current == null ? void 0 : current.ids.session) && scene.ids.scene === (current == null ? void 0 : current.ids.scene) - 1);
+        const previousScene = previousScenes != void 0 && previousScenes.length === 1 ? previousScenes[0] : null;
+        const nextScenes = this.dv.pages("#scene").where((scene) => scene.file.folder !== "Templates" && scene.ids != void 0 && scene.ids.session === (current == null ? void 0 : current.ids.session) && scene.ids.scene === (current == null ? void 0 : current.ids.scene) + 1);
+        const nextScene = nextScenes != void 0 && nextScenes.length === 1 ? nextScenes[0] : null;
+        const data = new SceneData(this.functions, current, session != void 0 ? new SessionData(this.functions, session) : null, adventure != void 0 ? new AdventureData(this.functions, adventure) : null, previousScene != void 0 ? new SceneData(this.functions, previousScene) : null, nextScene != void 0 ? new SceneData(this.functions, nextScene) : null, this.campaign);
+        const view = RpgViewFactory.createSingle(15 /* SceneNavigation */, this.dv);
+        view.render(data);
+      }
+    });
+  }
+};
+
 // src/factories/RpgModelFactory.ts
 var RpgModelFactory = class {
   static create(functions, app, container, source, component, sourcePath) {
     let modelName = source.replace(/[\n\r]/g, "").toLowerCase();
     modelName = modelName[0].toUpperCase() + modelName.substring(1);
-    if (modelName === "Sessionnavigation") {
-      modelName = "SessionNavigation";
-    }
+    modelName = modelName.replace("navigation", "Navigation");
     try {
       return new models_exports[modelName + "Model"](functions, app, container, source, component, sourcePath);
     } catch (e) {

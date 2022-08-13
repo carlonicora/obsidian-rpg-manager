@@ -1,7 +1,7 @@
 import {AbstractSingleView} from "../abstracts/AbstractSingleView";
 import {SceneDataInterface} from "../data/SceneData";
 
-export class SceneNavigatorView extends AbstractSingleView {
+export class SceneNavigationView extends AbstractSingleView {
 	async render(
 		data: SceneDataInterface
 	): Promise<void> {

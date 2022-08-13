@@ -82,21 +82,22 @@ session
 RpgManager supports the creation of different views. These views are associated to the page element, and they feed from 
 the Frontmatter metadata in the page. The available functions are:
 
-| Function             | Description                                                                                                                                    |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `campaign`           | Lists the adventures, sessions and characters for the campaign                                                                                 |
-| `adventure`          | Lists the adventure sessions                                                                                                                   |
-| `sessionNavigation`  | Displays the session navigator                                                                                                                 |
-| `session`            | Lists the session scenes                                                                                                                       |
-| `scene`              | Displays the scene navigator and lists the characters, locations and clues for the scene                                                       |
-| `npc`                | Displays the non player character information and lists the list of factions, characters, events, clues and locations related to the character |
-| `pc`                 | Displays the player character information and lists the list of factions, characters and locations related to the character                    |
-| `clue`               | Displays the clue information and lists the characters, locations and events related to the clue                                               |
-| `event`              | Displays the event information and lists the characters, clues and locations related to the event                                              |
-| `location`           | Displays the location information and lists the characters, clues and events related to the location                                           |
-| `faction`            | Displays the faction information and lists the characters and locations related to the faction                                                 |
-| `timeline`           | Displays a timeline of every event, session and character date in the campaign                                                                 |
-| `notes`              | Currently does not display any specific type of information (_under development_)                                                              |
+| Function            | Description                                                                                                                                    |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `campaign`          | Lists the adventures, sessions and characters for the campaign                                                                                 |
+| `adventure`         | Lists the adventure sessions                                                                                                                   |
+| `sessionNavigation` | Displays the session navigator                                                                                                                 |
+| `session`           | Lists the session scenes                                                                                                                       |
+| `sceneNavigation`   | Displays the scene navigator                                                                                                                   |
+| `scene`             | Displays the scene navigator and lists the characters, locations and clues for the scene                                                       |
+| `npc`               | Displays the non player character information and lists the list of factions, characters, events, clues and locations related to the character |
+| `pc`                | Displays the player character information and lists the list of factions, characters and locations related to the character                    |
+| `clue`              | Displays the clue information and lists the characters, locations and events related to the clue                                               |
+| `event`             | Displays the event information and lists the characters, clues and locations related to the event                                              |
+| `location`          | Displays the location information and lists the characters, clues and events related to the location                                           |
+| `faction`           | Displays the faction information and lists the characters and locations related to the faction                                                 |
+| `timeline`          | Displays a timeline of every event, session and character date in the campaign                                                                 |
+| `notes`             | Currently does not display any specific type of information (_under development_)                                                              |
 
 example
 ```
