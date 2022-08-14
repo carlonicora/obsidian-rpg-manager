@@ -13,7 +13,7 @@ export class ClueListView extends AbstractListView {
 				.map(clue => [
 					clue.image,
 					clue.link,
-					clue.found,
+					clue.found === false ? '==no==' : clue.found,
 					clue.synopsis,
 				])
 		);

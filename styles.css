@@ -142,3 +142,32 @@
   font-size: 1.1em;
   font-weight: 400;
 }
+
+.rpgm-scene-goal, .rpgm-scene-action {
+  border: solid 1px #d9d9d9;
+  padding: 10px 25px;
+  font-size: 1em;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+.rpgm-scene-goal p, .rpgm-scene-action p {
+  margin-top: 10px;
+}
+.rpgm-scene-goal .title, .rpgm-scene-action .title {
+  font-size: 0.7em;
+  font-variant: all-small-caps;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-top: -10px;
+  text-align: right;
+  margin-right: -20px;
+  color: #808080;
+}
+
+.rpgm-scene-goal {
+  background-color: #fff;
+}
+
+.rpgm-scene-action {
+  background-color: #f9f9f9;
+}

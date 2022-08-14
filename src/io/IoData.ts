@@ -226,6 +226,15 @@ export class IoData {
 		)
 	}
 
+	public getScene(
+	): SceneData
+	{
+		return new SceneData(
+			this.functions,
+			this.current,
+		)
+	}
+
 	public getRelationshipList(
 		type: DataType,
 		parentType: DataType|null = null,

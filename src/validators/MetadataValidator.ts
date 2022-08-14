@@ -64,6 +64,7 @@ export class MetadataValidator {
 	private static validateFrontmatterElement(
 		element: object,
 		frontmatter: object,
+		parentElement: string|null = null,
 	): boolean|string
 	{
 		let response = true;
@@ -71,17 +72,17 @@ export class MetadataValidator {
 
 		Object.entries(element).forEach(([key, value]) => {
 
-			if (value === false || (frontmatter !== null && key in frontmatter)){
-				if (typeof value === 'object'){
-					const temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key as keyof typeof frontmatter]);
-					if (temporaryResponse !== true){
-						error += temporaryResponse;
-						response = false
-					}
-				}
-			} else {
-				error += '<li>' + key + ' missing</li>';
+			if (frontmatter == null || !(key in frontmatter || value === false)){
+				error += '<li>' + (parentElement !== null ? parentElement + '.' : '') + key + ' missing</li>';
 				response = false;
+			}
+
+			if (typeof value === 'object'){
+				const temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key as keyof typeof frontmatter], key);
+				if (temporaryResponse !== true){
+					error += temporaryResponse;
+					response = false
+				}
 			}
 		});
 

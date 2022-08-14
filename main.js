@@ -50,7 +50,7 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 
 // src/functions/RpgFunctions.ts
 var import_obsidian = require("obsidian");
@@ -217,7 +217,7 @@ __export(models_exports, {
 });
 
 // src/abstracts/AbstractModel.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 
 // src/data/index.ts
 var data_exports = {};
@@ -490,6 +490,7 @@ var SceneData = class extends AbstractImageData {
     this.nextScene = nextScene;
     this.campaign = campaign;
     this.duration = "";
+    this.action = data.action != void 0 ? data.action : "";
     this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
     this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
     this.sceneId = ((_b = data.ids) == null ? void 0 : _b.scene) != void 0 ? data.ids.scene : 0;
@@ -502,6 +503,7 @@ var SceneData = class extends AbstractImageData {
 };
 SceneData.frontmatter = {
   "synopsis": true,
+  "action": true,
   "ids": {
     "session": true,
     "scene": true
@@ -663,21 +665,20 @@ var MetadataValidator = class {
     }
     return response;
   }
-  static validateFrontmatterElement(element, frontmatter) {
+  static validateFrontmatterElement(element, frontmatter, parentElement = null) {
     let response = true;
     let error = "";
     Object.entries(element).forEach(([key, value]) => {
-      if (value === false || frontmatter !== null && key in frontmatter) {
-        if (typeof value === "object") {
-          const temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key]);
-          if (temporaryResponse !== true) {
-            error += temporaryResponse;
-            response = false;
-          }
-        }
-      } else {
-        error += "<li>" + key + " missing</li>";
+      if (frontmatter == null || !(key in frontmatter || value === false)) {
+        error += "<li>" + (parentElement !== null ? parentElement + "." : "") + key + " missing</li>";
         response = false;
+      }
+      if (typeof value === "object") {
+        const temporaryResponse = this.validateFrontmatterElement(value, frontmatter[key], key);
+        if (temporaryResponse !== true) {
+          error += temporaryResponse;
+          response = false;
+        }
       }
     });
     return response === true ? true : error;
@@ -696,6 +697,7 @@ __export(views_exports, {
   FactionListView: () => FactionListView,
   ImageView: () => ImageView,
   LocationListView: () => LocationListView,
+  SceneActionView: () => SceneActionView,
   SceneListView: () => SceneListView,
   SceneNavigationView: () => SceneNavigationView,
   SessionListView: () => SessionListView,
@@ -811,7 +813,7 @@ var ClueListView = class extends AbstractListView {
       this.dv.table(["", "Clue", "Found", "Synopsis"], data.elements.map((clue) => [
         clue.image,
         clue.link,
-        clue.found,
+        clue.found === false ? "==no==" : clue.found,
         clue.synopsis
       ]));
       this.spacer();
@@ -990,6 +992,27 @@ var SceneListView = class extends AbstractListView {
   }
 };
 
+// src/views/SceneActionView.ts
+var import_obsidian3 = require("obsidian");
+var SceneActionView = class extends AbstractSingleView {
+  render(data) {
+    return __async(this, null, function* () {
+      const goalDiv = this.container.createDiv();
+      goalDiv.addClass("rpgm-scene-goal");
+      const goalTitle = goalDiv.createDiv();
+      goalTitle.addClass("title");
+      goalTitle.innerText = "Scene Goal";
+      import_obsidian3.MarkdownRenderer.renderMarkdown(data.synopsis !== "" ? data.synopsis : "==Missing Scene Synopsis (Goal)==", goalDiv, this.dv.currentFilePath, null);
+      const actionDiv = this.container.createDiv();
+      actionDiv.addClass("rpgm-scene-action");
+      const actionTitle = actionDiv.createDiv();
+      actionTitle.addClass("title");
+      actionTitle.innerText = "Player Character's Action";
+      import_obsidian3.MarkdownRenderer.renderMarkdown(data.action !== "" ? data.action : "==Missing Scene Action==", actionDiv, this.dv.currentFilePath, null);
+    });
+  }
+};
+
 // src/factories/RpgViewFactory.ts
 var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["AdventureList"] = 0] = "AdventureList";
@@ -1008,6 +1031,7 @@ var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["SessionNavigator"] = 13] = "SessionNavigator";
   viewType2[viewType2["SceneList"] = 14] = "SceneList";
   viewType2[viewType2["SceneNavigation"] = 15] = "SceneNavigation";
+  viewType2[viewType2["SceneAction"] = 16] = "SceneAction";
   return viewType2;
 })(viewType || {});
 var RpgViewFactory = class {
@@ -1134,6 +1158,9 @@ var IoData = class {
   getSynopsis(title = null) {
     return new SynopsisData(this.functions, this.current, title);
   }
+  getScene() {
+    return new SceneData(this.functions, this.current);
+  }
   getRelationshipList(type, parentType = null, sorting = null) {
     const response = new data_exports[DataType[type] + "List"](this.campaign);
     this.variableSingular = DataType[type].toLowerCase();
@@ -1166,7 +1193,7 @@ var IoData = class {
 };
 
 // src/abstracts/AbstractModel.ts
-var AbstractModel = class extends import_obsidian3.MarkdownRenderChild {
+var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
   constructor(functions, app, container, source, component, sourcePath) {
     super(container);
     this.functions = functions;
@@ -1616,9 +1643,12 @@ var TimelineModel = class extends AbstractModel {
 var SceneNavigationModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
-      this.synopsis();
+      this.action();
       this.sceneNavigation();
     });
+  }
+  action() {
+    this.writeData(this.io.getScene(), 16 /* SceneAction */);
   }
   sceneNavigation() {
     return __async(this, null, function* () {
@@ -1658,7 +1688,7 @@ var RpgModelFactory = class {
 };
 
 // src/main.ts
-var RpgManager = class extends import_obsidian4.Plugin {
+var RpgManager = class extends import_obsidian5.Plugin {
   constructor() {
     super(...arguments);
     this.areFunctionsLoaded = false;
@@ -1666,7 +1696,7 @@ var RpgManager = class extends import_obsidian4.Plugin {
   onload() {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
-      this.refreshViews = (0, import_obsidian4.debounce)(this.refreshViews, 2500, true);
+      this.refreshViews = (0, import_obsidian5.debounce)(this.refreshViews, 2500, true);
       this.registerEvent(this.app.metadataCache.on("resolved", function() {
         this.refreshViews();
       }.bind(this)));

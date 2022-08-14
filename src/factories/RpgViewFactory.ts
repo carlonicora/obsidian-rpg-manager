@@ -22,6 +22,7 @@ export enum viewType{
 	SessionNavigator,
 	SceneList,
 	SceneNavigation,
+	SceneAction,
 }
 
 export class RpgViewFactory {

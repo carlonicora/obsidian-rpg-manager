@@ -705,18 +705,20 @@ completed: true
 
 ### Scenes
 
-| Key                      | Type                          | Required/Optional | Description                                                    |
-|--------------------------|-------------------------------|-------------------|----------------------------------------------------------------|
-| alias                    | [array](#array)               | **Required**      | The aliases of the current scene                               |
-| tags                     | [array](#array)               | **Required**      | The tags associated to the scene. The tag `scene` is required. |
-| ids.session              | [number](#number)             | **Required**      | The identifier of the session the scene is part of             |
-| ids.scene                | [number](#number)             | **Required**      | The unique identifier of the scene in the session              |
-| relationships.clues      | [relationship](#relationship) | _Optional_        | The clues that can be found in the scene                       |
-| relationships.characters | [relationship](#relationship) | _Optional_        | The characters that can be found in the scene                  |
-| relationships.locations  | [relationship](#relationship) | _Optional_        | The locations the scene happens in or is related to            |
-| time.start               | [date](#date)                 | _Optional_        | The **in-real-life** time the scene starts                     |
-| time.end                 | [date](#date)                 | _Optional_        | The **in-real-life** time the scene ends                       |
-| completed                | [boolean](#boolean)           | _Optional_        | Identifies if the scene is fully written                       |
+| Key                      | Type                          | Required/Optional | Description                                                           |
+|--------------------------|-------------------------------|-------------------|-----------------------------------------------------------------------|
+| alias                    | [array](#array)               | **Required**      | The aliases of the current scene                                      |
+| tags                     | [array](#array)               | **Required**      | The tags associated to the scene. The tag `scene` is required.        |
+| synopsis                 | [text](#text)                 | **Required**      | The goal of the scene                                                 |
+| action                   | [text](#text)                 | **Required**      | The action the player characters are expected to perform in the scene |
+| ids.session              | [number](#number)             | **Required**      | The identifier of the session the scene is part of                    |
+| ids.scene                | [number](#number)             | **Required**      | The unique identifier of the scene in the session                     |
+| relationships.clues      | [relationship](#relationship) | _Optional_        | The clues that can be found in the scene                              |
+| relationships.characters | [relationship](#relationship) | _Optional_        | The characters that can be found in the scene                         |
+| relationships.locations  | [relationship](#relationship) | _Optional_        | The locations the scene happens in or is related to                   |
+| time.start               | [date](#date)                 | _Optional_        | The **in-real-life** time the scene starts                            |
+| time.end                 | [date](#date)                 | _Optional_        | The **in-real-life** time the scene ends                              |
+| completed                | [boolean](#boolean)           | _Optional_        | Identifies if the scene is fully written                              |
 
 full example
 ```yaml

@@ -13,3 +13,4 @@ export {TimelineView} from './TimelineView';
 export {CharacterListView} from './Lists/CharacterListView';
 export {LocationListView} from './Lists/LocationListView';
 export {SceneListView} from './Lists/SceneListView';
+export {SceneActionView} from './SceneActionView';

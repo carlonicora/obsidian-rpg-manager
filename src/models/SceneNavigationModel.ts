@@ -6,8 +6,16 @@ import {SceneData} from "../data";
 
 export class SceneNavigationModel extends AbstractModel {
 	public async render() {
-		this.synopsis();
+		this.action();
 		this.sceneNavigation();
+	}
+
+	protected action(
+	){
+		this.writeData(
+			this.io.getScene(),
+			viewType.SceneAction,
+		)
 	}
 
 	private async sceneNavigation(

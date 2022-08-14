@@ -1,6 +1,7 @@
 $black: #202020;
 $white: #fff;
 $off-white: #eeeeee;
+$super-off-white: #f9f9f9;
 $dark-grey: #808080;
 $light-grey: #d9d9d9;
 $purple: #B97CFC;
@@ -180,4 +181,34 @@ $blue: #2020ff;
 		font-size: 1.1em;
 		font-weight: 400;
 	}
+}
+
+.rpgm-scene-goal, .rpgm-scene-action {
+	border: solid 1px $light-grey;
+	padding: 10px 25px;
+	font-size: 1.0em;
+	margin-top: 20px;
+	margin-bottom: 40px;
+
+	p {
+		margin-top: 10px;
+	}
+
+	.title {
+		font-size: 0.7em;
+		font-variant: all-small-caps;
+		overflow: hidden;
+		white-space: nowrap;
+		margin-top: -10px;
+		text-align: right;
+		margin-right: -20px;
+		color: $dark-grey;
+	}
+}
+
+.rpgm-scene-goal{
+	background-color: $white;
+}
+.rpgm-scene-action{
+	background-color: $super-off-white;
 }
