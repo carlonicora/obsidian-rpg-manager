@@ -21,19 +21,19 @@ which means that it does not (yet) extend into stats or dice rolling. It is a to
 
 ### Elements
 
-| Element| Codeblock| Description |
-|---|---|---|
-|**Campaign**| `campaign` | The overarching story plot for a series of `Adventures`               |
-|**Adventure**| `adventure` | A single, self contain storyarc divided in `Sessions`                 |
-|**Session**| `session` + `sessionNavigator` | A single session of a role playing game containing a series of `Scenes` |
-|**Scene**| `scene` | A part of a `Session` in which the player characters are expected to do something|
-|**Player Character**| `pc` | The record sheet of a player character|
-|**Non Player Character**| `npc` | The record sheet of a non-playing character|
-|**Faction**| `faction` | A group of player and non-player characters|
-|**Location**| `location` | A physical location in the game|
-|**Event**| `event` | Something that happened in the game. This is something that happened **without the player characters** and it is used to give more details to the storyteller and to simplify the creation of investigative campaigns|
-|**Clue**| `clue` | An object or a detail the player character can encounter in the game that will help them understand something and advance the game|
-|**Note**| `note` | A note, usually associated to a `Session`, that helps the storyteller to keep track of the player characters' decisions|
+| Element                  | Codeblock                      | Description                                                                                                                                                                                                           |
+|--------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Campaign**             | `campaign`                     | The overarching story plot for a series of `Adventures`                                                                                                                                                               |
+| **Adventure**            | `adventure`                    | A single, self contain storyarc divided in `Sessions`                                                                                                                                                                 |
+| **Session**              | `session` + `sessionNavigator` | A single session of a role playing game containing a series of `Scenes`                                                                                                                                               |
+| **Scene**                | `scene` + `sceneNavigator`     | A part of a `Session` in which the player characters are expected to do something                                                                                                                                     |
+| **Player Character**     | `pc`                           | The record sheet of a player character                                                                                                                                                                                |
+| **Non Player Character** | `npc`                          | The record sheet of a non-playing character                                                                                                                                                                           |
+| **Faction**              | `faction`                      | A group of player and non-player characters                                                                                                                                                                           |
+| **Location**             | `location`                     | A physical location in the game                                                                                                                                                                                       |
+| **Event**                | `event`                        | Something that happened in the game. This is something that happened **without the player characters** and it is used to give more details to the storyteller and to simplify the creation of investigative campaigns |
+| **Clue**                 | `clue`                         | An object or a detail the player character can encounter in the game that will help them understand something and advance the game                                                                                    |
+| **Note**                 | `note`                         | A note, usually associated to a `Session`, that helps the storyteller to keep track of the player characters' decisions                                                                                               |
 
 ## Usage
 
