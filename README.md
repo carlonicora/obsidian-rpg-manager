@@ -9,6 +9,26 @@ The plugin works well in conjunction with a [structured plotting style](https://
 The plugin collects data and Frontmatter metadata from the notes and organise them into easy-to access references in 
 form of tables and links.
 
+## TL;DR
+
+1. Create a new note
+2. Select the template you want to use (
+[campaign](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Campaign%20Template.md), 
+[adventure](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Adventure%20Template.md), 
+[session](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Session%20Template.md), 
+[scene](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Scene%20Template.md), 
+[player character](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Player%20Character%20Template.md), 
+[non player character](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Non%20Player%20Character%20Template.md),
+[event](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Event%20Template.md), 
+[clue](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Clue%20Template.md), 
+[location](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Location%20Template.md),
+[faction](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Faction%20Template.md) or
+[timeline](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Timeline%20Template.md))
+3. Add the information in the Frontmatter metadata
+4. See everything linking together
+5. Navigate your campaign easily
+6. **Send feedback**
+
 ## Plotting Logic
 
 The plotting style used in this plugin is based on a series of `elements` that helps the creation of storylines.
