@@ -725,6 +725,8 @@ full example
 ---
 alias: []
 tags: [scene]
+synopsis: ""
+action: ""
 ids:
  session: 3
  scene: 4
@@ -771,17 +773,17 @@ completed: false
 ### Non Player Characters
 
 | Key                      | Type                           | Required/Optional | Description                                                                                     |
-|--------------------------|--------------------------------|-------------------|-------------------------------------------------------------------------------------------------|
-| alias                    | [array](#array)                | **Required**      | The aliases of the current non player character                                                 |
-| tags                     | [array](#array)                | **Required**      | The tags associated to the non player character. The tag `character/npc` is required.           |
-| synopsis                 | [text](#text)                  | **Required**      | The short description of the non player character                                               |
-| goals                    | [text](#text)                  | _Optional+        | The short description of the goals of the  non player character                                 |
-| dates.dob                | [date](#date)                  | _Optional_        | The **in-game** date of birth of the non player character                                       |
-| dates.death              | [date](#date)                  | _Optional_        | The **in-game** date of death of the non player character                                       |
-| relationships.characters | [relationship](#relationship)  | _Optional_        | The description of the relation the current non player character has with non player characters |
-| relationships.factions   | [relationship](#relationship)  | _Optional_        | The type of membership the current non player character has with factions                       |
-| relationships.locations  | [relationship](#relationship)  | _Optional_        | The relationship the current non player character has with locations                            |
-| completed                | [boolean](#boolean)            | _Optional_        | Identifies if the non player character is fully written                                         |
+|--------------------------|--------------------------------|------------------|-------------------------------------------------------------------------------------------------|
+| alias                    | [array](#array)                | **Required**     | The aliases of the current non player character                                                 |
+| tags                     | [array](#array)                | **Required**     | The tags associated to the non player character. The tag `character/npc` is required.           |
+| synopsis                 | [text](#text)                  | **Required**     | The short description of the non player character                                               |
+| goals                    | [text](#text)                  | _Optional_       | The short description of the goals of the  non player character                                 |
+| dates.dob                | [date](#date)                  | _Optional_       | The **in-game** date of birth of the non player character                                       |
+| dates.death              | [date](#date)                  | _Optional_       | The **in-game** date of death of the non player character                                       |
+| relationships.characters | [relationship](#relationship)  | _Optional_       | The description of the relation the current non player character has with non player characters |
+| relationships.factions   | [relationship](#relationship)  | _Optional_       | The type of membership the current non player character has with factions                       |
+| relationships.locations  | [relationship](#relationship)  | _Optional_       | The relationship the current non player character has with locations                            |
+| completed                | [boolean](#boolean)            | _Optional_       | Identifies if the non player character is fully written                                         |
 
 full example
 ```yaml
