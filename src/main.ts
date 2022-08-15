@@ -1,13 +1,9 @@
-import {
-	App,
-	Component, debounce,
-	MarkdownPostProcessorContext,
-	Plugin, PluginSettingTab, Setting
-} from 'obsidian';
+import {App, Component, debounce, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting} from 'obsidian';
 
 import {Api} from "./api";
 import {RpgModelFactory} from "./factories/RpgModelFactory";
 import {RpgViewFactory} from "./factories/RpgViewFactory";
+import {DataType} from "./io/IoData";
 
 export interface RpgManagerSettings {
 	campaignTag: string;
@@ -71,6 +67,16 @@ export default class RpgManager extends Plugin {
 		this.registerPriorityCodeblockPostProcessor("RpgManager", -100, async (source: string, el, ctx) =>
 			this.createRpgView(source, el, ctx, ctx.sourcePath)
 		);
+
+		for (const type in DataType) {
+			this.addCommand({
+				id: "rpg-manager-create-" + type.toLowerCase(),
+				name: "Create a new " + type,
+				callback: () => {
+					this.api.fileFactory.create(DataType[type as keyof typeof DataType]);
+				},
+			});
+		}
 	}
 
 	async onunload() {

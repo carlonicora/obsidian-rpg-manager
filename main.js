@@ -54,12 +54,939 @@ var import_obsidian5 = require("obsidian");
 
 // src/api.ts
 var import_obsidian = require("obsidian");
+
+// src/abstracts/AbstractData.ts
+var AbstractData = class {
+  constructor(api, data) {
+    this.api = api;
+    this.data = data;
+    this.link = data.file.link;
+    this.name = data.file.name;
+    this.path = data.file.path;
+  }
+};
+var AbstractImageData = class extends AbstractData {
+  constructor(api, data) {
+    super(api, data);
+    this.imageSrc = api.getImageLink(data);
+    this.image = this.imageSrc !== null ? api.getImage(data) : "";
+  }
+  getImage(width = 75, height = 75) {
+    if (this.imageSrc === null)
+      return "";
+    return this.api.getImage(this.data, width, height);
+  }
+};
+var AbstractDataList = class {
+  constructor(campaign) {
+    this.campaign = campaign;
+  }
+  add(data) {
+    this.elements.push(data);
+  }
+  map(data) {
+    const response = /* @__PURE__ */ new Map();
+    const character = this.elements.find((t) => t.link === data.link);
+    if (character !== void 0) {
+      Object.entries(character).forEach(([key, value]) => {
+        response.set(key, value);
+      });
+    }
+    return response;
+  }
+};
+
+// src/data/SessionData.ts
+var SessionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var SessionData = class extends AbstractData {
+  constructor(api, data, campaign = null, adventure = null, previousSession = null, nextSession = null) {
+    super(api, data);
+    this.campaign = campaign;
+    this.adventure = adventure;
+    this.previousSession = previousSession;
+    this.nextSession = nextSession;
+    this.id = this.api.getId(data.tags, this.api.settings.sessionTag);
+    this.adventureId = this.api.getParentId(data.tags, this.api.settings.sessionTag);
+    this.synopsis = data.synopsis;
+    if (data.dates.session !== null && data.dates.session !== void 0)
+      this.date = this.api.formatDate(data.dates.session, "short");
+    if (data.dates.irl !== null && data.dates.irl !== void 0)
+      this.irl = this.api.formatDate(data.dates.irl);
+  }
+};
+SessionData.frontmatter = {
+  "synopsis": true,
+  "ids": {
+    "adventure": true,
+    "session": true
+  },
+  "dates": {
+    "session": true,
+    "irl": false
+  }
+};
+
+// src/data/AdventureData.ts
+var AdventureList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var AdventureData = class extends AbstractData {
+  constructor(api, data) {
+    super(api, data);
+    this.id = this.api.getId(data.tags, this.api.settings.adventureTag);
+    this.synopsis = data.synopsis;
+  }
+};
+AdventureData.frontmatter = {
+  "synopsis": true,
+  "ids": {
+    "adventure": true
+  }
+};
+
+// src/data/CharacterData.ts
+var CharacterList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var CharacterData = class extends AbstractImageData {
+  constructor(api, data, campaign, useAdditionalInformation = null) {
+    super(api, data);
+    this.campaign = campaign;
+    this.age = "";
+    this.image = this.api.getImage(data);
+    if (campaign !== null)
+      this.age = this.api.calculateAge(data, campaign.currentDate);
+    this.isDead = data.dates.death != void 0;
+    this.goals = data.goals != void 0 ? data.goals : null;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+CharacterData.frontmatter = {
+  "pc": {
+    "dates": {
+      "dob": true,
+      "death": true
+    },
+    "relationships": {
+      "characters": true,
+      "factions": true,
+      "locations": true
+    }
+  },
+  "npc": {
+    "synopsis": true,
+    "goals": true,
+    "dates": {
+      "dob": true,
+      "death": true
+    },
+    "relationships": {
+      "characters": true,
+      "factions": true,
+      "locations": true
+    }
+  }
+};
+
+// src/data/ClueData.ts
+var ClueList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var ClueData = class extends AbstractImageData {
+  constructor(api, data, useAdditionalInformation = null) {
+    super(api, data);
+    this.image = this.api.getImage(data);
+    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
+      this.found = this.api.formatDate(data.dates.found, "long");
+    } else {
+      this.found = false;
+    }
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+ClueData.frontmatter = {
+  "synopsis": true,
+  "dates": {
+    "found": false
+  },
+  "relationships": {
+    "characters": true,
+    "locations": true
+  }
+};
+
+// src/data/ImageData.ts
+var ImageData = class extends AbstractImageData {
+  constructor(api, data, width = 75, height = 75) {
+    super(api, data);
+    this.image = this.imageSrc !== null ? this.api.getImage(data, width, height) : "";
+  }
+};
+
+// src/data/SynopsisData.ts
+var SynopsisData = class extends AbstractData {
+  constructor(api, data, title = null) {
+    var _a, _b;
+    super(api, data);
+    this.title = title;
+    this.synopsis = data.synopsis !== null ? data.synopsis : "";
+    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.api.formatDate(data.dates.death, "short") : "";
+    this.isCharacter = data.tags.indexOf("character/npc") !== -1;
+  }
+};
+
+// src/data/LocationData.ts
+var LocationList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var LocationData = class extends AbstractImageData {
+  constructor(api, data, useAdditionalInformation = null) {
+    super(api, data);
+    this.address = data.address;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+LocationData.frontmatter = {
+  "synopsis": true,
+  "address": false
+};
+
+// src/data/index.ts
+var data_exports = {};
+__export(data_exports, {
+  AdventureData: () => AdventureData,
+  AdventureList: () => AdventureList,
+  CampaignData: () => CampaignData,
+  CharacterData: () => CharacterData,
+  CharacterList: () => CharacterList,
+  ClueData: () => ClueData,
+  ClueList: () => ClueList,
+  EventData: () => EventData,
+  EventList: () => EventList,
+  FactionData: () => FactionData,
+  FactionList: () => FactionList,
+  ImageData: () => ImageData,
+  LocationData: () => LocationData,
+  LocationList: () => LocationList,
+  SceneData: () => SceneData,
+  SceneList: () => SceneList,
+  SessionData: () => SessionData,
+  SessionList: () => SessionList,
+  SynopsisData: () => SynopsisData,
+  TimelineData: () => TimelineData,
+  TimelineList: () => TimelineList
+});
+
+// src/data/CampaignData.ts
+var CampaignData = class extends AbstractImageData {
+  constructor(api, data) {
+    super(api, data);
+    this.currentDate = data.dates.current;
+    this.id = this.api.getId(data.tags, api.settings.campaignTag);
+  }
+};
+CampaignData.frontmatter = {
+  "dates": {
+    "current": true
+  }
+};
+
+// src/data/EventData.ts
+var EventList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var EventData = class extends AbstractImageData {
+  constructor(api, data, campaign, useAdditionalInformation = null) {
+    super(api, data);
+    this.campaign = campaign;
+    if (data.dates.event != null)
+      this.date = this.api.formatDate(data.dates.event, "short");
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+EventData.frontmatter = {
+  "synopsis": true,
+  "dates": {
+    "event": true
+  },
+  "relationships": {
+    "characters": true,
+    "clues": true,
+    "locations": true
+  }
+};
+
+// src/data/FactionData.ts
+var FactionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var FactionData = class extends AbstractImageData {
+  constructor(api, data, campaign, useAdditionalInformation = null) {
+    super(api, data);
+    this.campaign = campaign;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+FactionData.frontmatter = {
+  "synopsis": true,
+  "relationships": {
+    "locations": true
+  }
+};
+
+// src/data/SceneData.ts
+var SceneList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+var SceneData = class extends AbstractImageData {
+  constructor(api, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
+    var _a;
+    super(api, data);
+    this.session = session;
+    this.adventure = adventure;
+    this.previousScene = previousScene;
+    this.nextScene = nextScene;
+    this.campaign = campaign;
+    this.duration = "";
+    this.action = data.action != void 0 ? data.action : "";
+    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
+    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
+    this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
+    this.startTime = this.api.formatTime(data.time.start);
+    this.endTime = this.api.formatTime(data.time.end);
+    if (this.startTime !== "" && this.endTime !== "") {
+      this.duration = this.api.calculateDuration(data.time.start, data.time.end);
+    }
+  }
+};
+SceneData.frontmatter = {
+  "synopsis": true,
+  "action": true,
+  "ids": {
+    "session": true,
+    "scene": true
+  },
+  "relationships": {
+    "characters": true,
+    "clues": true,
+    "locations": true
+  },
+  "time": {
+    "start": false,
+    "end": false
+  }
+};
+
+// src/data/TimelineData.ts
+var TimelineList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+  sort() {
+    this.elements.sort((a, b) => {
+      return a.datetime - b.datetime;
+    });
+  }
+};
+var TimelineData = class extends AbstractImageData {
+  constructor(api, data, type) {
+    super(api, data);
+    this.type = type;
+    this.image = this.api.getImage(data, 70);
+    this.synopsis = data.synopsis;
+    switch (type) {
+      case "event":
+        this.datetime = data.dates.event;
+        break;
+      case "death":
+        this.datetime = data.dates.death;
+        break;
+      case "birth":
+        this.datetime = data.dates.dob;
+        break;
+      case "session":
+        this.datetime = data.dates.session;
+        break;
+      case "clue":
+        this.datetime = data.dates.found;
+        break;
+    }
+    this.date = this.api.formatDate(this.datetime, "short");
+    this.time = this.api.formatTime(this.datetime);
+  }
+  getEventColour() {
+    switch (this.type) {
+      case "event":
+        return "";
+        break;
+      case "birth":
+        return " green";
+        break;
+      case "death":
+        return " red";
+        break;
+      case "session":
+        return " blue";
+        break;
+      case "clue":
+        return " purple";
+        break;
+    }
+    return "";
+  }
+};
+
+// src/factories/DataFactory.ts
+var DataFactory = class {
+  static create(type, api, campaign, current, record, additionalInformation) {
+    return this["create" + DataType[type]](api, campaign, current, record, additionalInformation);
+  }
+  static createCharacter(api, campaign, current, record, additionalInformation) {
+    return new CharacterData(api, record, campaign, additionalInformation);
+  }
+  static createLocation(api, campaign, current, record, additionalInformation) {
+    return new LocationData(api, record, additionalInformation);
+  }
+  static createEvent(api, campaign, current, record, additionalInformation) {
+    return new EventData(api, record, campaign, additionalInformation);
+  }
+  static createClue(api, campaign, current, record, additionalInformation) {
+    return new ClueData(api, record, additionalInformation);
+  }
+  static createFaction(api, campaign, current, record, additionalInformation) {
+    return new FactionData(api, record, campaign, additionalInformation);
+  }
+};
+
+// src/io/IoData.ts
+var DataType = /* @__PURE__ */ ((DataType2) => {
+  DataType2[DataType2["Campaign"] = 0] = "Campaign";
+  DataType2[DataType2["Adventure"] = 1] = "Adventure";
+  DataType2[DataType2["Session"] = 2] = "Session";
+  DataType2[DataType2["Scene"] = 3] = "Scene";
+  DataType2[DataType2["Character"] = 4] = "Character";
+  DataType2[DataType2["NonPlayerCharacter"] = 5] = "NonPlayerCharacter";
+  DataType2[DataType2["Location"] = 6] = "Location";
+  DataType2[DataType2["Event"] = 7] = "Event";
+  DataType2[DataType2["Clue"] = 8] = "Clue";
+  DataType2[DataType2["Faction"] = 9] = "Faction";
+  return DataType2;
+})(DataType || {});
+var IoData = class {
+  constructor(api, campaign, dv, current) {
+    this.api = api;
+    this.campaign = campaign;
+    this.dv = dv;
+    this.current = current;
+    this.id = null;
+    var _a;
+    this.outlinks = [];
+    this.readOutlinks();
+    const corePlugin = (_a = this.api.app.internalPlugins) == null ? void 0 : _a.plugins["templates"];
+    this.templateFolder = corePlugin.instance.options.folder;
+    this.current.tags.forEach((tag) => {
+      if (tag.startsWith(this.api.settings.campaignTag)) {
+        this.getId(this.api.settings.campaignTag);
+      } else if (tag.startsWith(this.api.settings.adventureTag)) {
+        this.getId(this.api.settings.adventureTag);
+      } else if (tag.startsWith(this.api.settings.sessionTag)) {
+        this.getId(this.api.settings.sessionTag);
+      } else if (tag.startsWith(this.api.settings.sceneTag)) {
+        this.getId(this.api.settings.sceneTag);
+      }
+    });
+  }
+  readOutlinks() {
+    if (this.current != void 0) {
+      this.current.file.outlinks.forEach((file) => {
+        const page = this.dv.page(file.path);
+        if (page != void 0) {
+          this.outlinks.push(page);
+        }
+      });
+    }
+  }
+  isAlreadyPresent(list, element) {
+    let response = false;
+    list.elements.forEach((existingElement) => {
+      if (element.file.path === existingElement.path) {
+        response = true;
+        return true;
+      }
+    });
+    return response;
+  }
+  hasMainTag(page, type) {
+    if (page.tags == void 0) {
+      return false;
+    }
+    switch (type) {
+      case 4 /* Character */:
+        return page.tags.indexOf(this.api.settings.npcTag) !== -1 || page.tags.indexOf(this.api.settings.pcTag) !== -1;
+        break;
+      case 8 /* Clue */:
+        return page.tags.indexOf(this.api.settings.clueTag) !== -1;
+        break;
+      case 6 /* Location */:
+        return page.tags.indexOf(this.api.settings.locationTag) !== -1;
+        break;
+      case 9 /* Faction */:
+        return page.tags.indexOf(this.api.settings.factionTag) !== -1;
+        break;
+      case 7 /* Event */:
+        return page.tags.indexOf(this.api.settings.eventTag) !== -1;
+        break;
+      default:
+        return false;
+        break;
+    }
+  }
+  getCorrectTag(type) {
+    var _a;
+    let response = "";
+    switch (type) {
+      case 4 /* Character */:
+        response = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ")";
+        break;
+      case 8 /* Clue */:
+        response = "#" + this.api.settings.clueTag;
+        break;
+      case 6 /* Location */:
+        response = "#" + this.api.settings.locationTag;
+        break;
+      case 9 /* Faction */:
+        response = "#" + this.api.settings.factionTag;
+        break;
+      case 7 /* Event */:
+        response = "#" + this.api.settings.eventTag;
+        break;
+    }
+    response += " and #" + this.api.settings.campaignIdentifier + "/" + ((_a = this.campaign) == null ? void 0 : _a.id);
+    return response;
+  }
+  getId(identifyingTag) {
+    this.current.tags.forEach((tag) => {
+      if (tag.startsWith(identifyingTag)) {
+        this.id = tag.substring(tag.lastIndexOf("/") + 1);
+      }
+    });
+  }
+  getAdventureList() {
+    const response = new AdventureList(this.campaign);
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -adventure.ids.adventure).forEach((adventure) => {
+        response.add(new AdventureData(this.api, adventure));
+      });
+    }
+    return response;
+  }
+  getAdventure(adventureId) {
+    let response = null;
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.adventureTag + "/" + adventureId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      const adventures = this.dv.pages(query);
+      if (adventures !== null && adventures.length === 1) {
+        response = new AdventureData(this.api, adventures[0]);
+      }
+    }
+    return response;
+  }
+  getSession(adventureId, sessionId) {
+    let response = null;
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.sessionTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      const sessions = this.dv.pages(query);
+      if (sessions !== null && sessions.length === 1) {
+        response = new SessionData(this.api, sessions[0], this.campaign);
+      }
+    }
+    return response;
+  }
+  getSessionList(adventureId = null) {
+    const response = new SessionList(this.campaign);
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.sessionTag + (adventureId !== null ? "/" + adventureId : "") + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      this.dv.pages(query).where((session) => session.file.folder !== this.templateFolder).sort((session) => -this.api.getId(session.tags, this.api.settings.sessionTag)).forEach((session) => {
+        response.add(new SessionData(this.api, session));
+      });
+    }
+    return response;
+  }
+  getSceneList() {
+    const response = new SceneList(this.campaign);
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.sceneTag + "/" + this.id + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      this.dv.pages(query).where((page) => page.file.folder !== this.templateFolder).sort((scene) => this.api.getId(scene.tags, this.api.settings.sceneTag)).forEach((scene) => {
+        response.add(new SceneData(this.api, scene));
+      });
+    }
+    return response;
+  }
+  getCharacterList() {
+    const response = new CharacterList(this.campaign);
+    if (this.campaign !== null) {
+      const query = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ") and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      this.dv.pages(query).where((character) => character.file.folder !== this.templateFolder).sort((character) => character.file.name).forEach((character) => {
+        response.add(new CharacterData(this.api, character, this.campaign));
+      });
+    }
+    return response;
+  }
+  getClue() {
+    return new ClueData(this.api, this.current);
+  }
+  getImage(width = 75, height = 75) {
+    return new ImageData(this.api, this.current, width, height);
+  }
+  getSynopsis(title = null) {
+    return new SynopsisData(this.api, this.current, title);
+  }
+  getScene(adventureId = null, sessionId = null, sceneId = null) {
+    let response = null;
+    if (adventureId === null || sessionId === null || sceneId === null) {
+      response = new SceneData(this.api, this.current);
+    } else {
+      if (this.campaign !== null) {
+        const query = "#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + "/" + sceneId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+        const scenes = this.dv.pages(query);
+        if (scenes !== null && scenes.length === 1) {
+          response = new SceneData(this.api, scenes[0]);
+        }
+      }
+    }
+    return response;
+  }
+  getRelationshipList(type, parentType = null, sorting = null) {
+    const response = new data_exports[DataType[type] + "List"](this.campaign);
+    if (this.campaign !== null) {
+      this.variableSingular = DataType[type].toLowerCase();
+      this.variablePlural = this.variableSingular + "s";
+      const defaultSorting = function(page) {
+        return page.file.name;
+      };
+      let comparison;
+      if (parentType === null) {
+        comparison = function(page) {
+          return page.file.folder !== this.templateFolder && this.current.relationships != void 0 && this.current.relationships[this.variablePlural] != void 0 && this.current.relationships[this.variablePlural][page.file.name] !== void 0;
+        }.bind(this);
+      } else {
+        this.variableParentSingular = DataType[parentType].toLowerCase();
+        this.variableParentPlural = this.variableParentSingular + "s";
+        comparison = function(page) {
+          return page.file.folder !== this.templateFolder && page.relationships != void 0 && page.relationships[this.variableParentPlural] != void 0 && page.relationships[this.variableParentPlural][this.current.file.name] !== void 0;
+        }.bind(this);
+      }
+      const query = this.getCorrectTag(type);
+      this.dv.pages(query).where(comparison).sort(sorting !== null ? sorting : defaultSorting).forEach((page) => {
+        response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, parentType === null ? this.current.relationships[this.variablePlural][page.file.name] : page.relationships[DataType[parentType].toLowerCase() + "s"][this.current.file.name]));
+      });
+      this.outlinks.forEach((page) => {
+        if (this.hasMainTag(page, type) && !this.isAlreadyPresent(response, page)) {
+          response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, "_in main description_"));
+        }
+      });
+    }
+    return response;
+  }
+};
+
+// src/views/templates/index.ts
+var templates_exports = {};
+__export(templates_exports, {
+  AdventureTemplate: () => AdventureTemplate,
+  CampaignTemplate: () => CampaignTemplate,
+  CharacterTemplate: () => CharacterTemplate,
+  ClueTemplate: () => ClueTemplate,
+  EventTemplate: () => EventTemplate,
+  FactionTemplate: () => FactionTemplate,
+  LocationTemplate: () => LocationTemplate,
+  NonPlayerCharacterTemplate: () => NonPlayerCharacterTemplate,
+  SceneTemplate: () => SceneTemplate,
+  SessionTemplate: () => SessionTemplate
+});
+
+// src/abstracts/AbstractTemplate.ts
+var AbstractTemplate = class {
+  constructor(settings) {
+    this.settings = settings;
+  }
+  generateData() {
+    let response = "";
+    response += this.generateFrontmatter();
+    response += this.generateTemplate();
+    return response;
+  }
+  generateFrontmatter() {
+    let response = "---\n";
+    response += "alias: []\n";
+    response += this.generateFrontmatterTags();
+    response += this.generateFrontmatterSynopsis();
+    response += this.generateFrontmatterAction();
+    response += this.generateFrontmatterGoals();
+    response += this.generateFrontmatterAddress();
+    const dates = this.generateFrontmatterDates();
+    if (dates !== null) {
+      response += "dates:\n" + dates;
+    }
+    const times = this.generateFrontmatterTimes();
+    if (times !== null) {
+      response += "times:\n" + times;
+    }
+    const relationships = this.generateFrontmatterRelationships();
+    if (relationships !== null) {
+      response += "relationships: \n" + relationships;
+    }
+    response += "completed: false\n";
+    response += "---\n";
+    return response;
+  }
+  generateFrontmatterRelationships() {
+    return null;
+  }
+  generateFrontmatterDates() {
+    return null;
+  }
+  generateFrontmatterTimes() {
+    return null;
+  }
+  generateFrontmatterSynopsis() {
+    return "";
+  }
+  generateFrontmatterAddress() {
+    return "";
+  }
+  generateFrontmatterAction() {
+    return "";
+  }
+  generateFrontmatterGoals() {
+    return "";
+  }
+};
+
+// src/views/templates/FactionTemplate.ts
+var FactionTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.factionTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterRelationships() {
+    return " locations: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your faction\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nfaction\n```\n---\n\n## Additional Information\n";
+  }
+};
+
+// src/views/templates/LocationTemplate.ts
+var LocationTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.locationTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterAddress() {
+    return 'address: ""\n';
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your location\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nlocation\n```\n---\n\n## Additional Information\n";
+  }
+};
+
+// src/views/templates/ClueTemplate.ts
+var ClueTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.clueTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterRelationships() {
+    return " characters: \n locations: \n";
+  }
+  generateFrontmatterDates() {
+    return " found: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your clue\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nclue\n```\n---\n\n## Additional Information\n";
+  }
+};
+
+// src/views/templates/EventTemplate.ts
+var EventTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.eventTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterRelationships() {
+    return " characters: \n clues: \n locations: \n";
+  }
+  generateFrontmatterDates() {
+    return " event: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your event\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nevent\n```\n---\n\n## Additional Information\n";
+  }
+};
+
+// src/views/templates/NonPlayerCharacterTemplate.ts
+var NonPlayerCharacterTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.npcTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterGoals() {
+    return 'goals: ""\n';
+  }
+  generateFrontmatterRelationships() {
+    return " characters: \n factions: \n locations: \n";
+  }
+  generateFrontmatterDates() {
+    return " dob: \n death: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your non player character\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n---\n```RpgManager\nnpc\n```\n---\n\n## Notes\n\n\n## Story\n";
+  }
+};
+
+// src/views/templates/CharacterTemplate.ts
+var CharacterTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.pcTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterRelationships() {
+    return " characters: \n factions: \n locations: \n";
+  }
+  generateFrontmatterDates() {
+    return " dob: \n death: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your player character\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n---\n```RpgManager\npc\n```\n---\n\n## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+  }
+};
+
+// src/views/templates/SceneTemplate.ts
+var SceneTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.sceneTag + "/{adventureId}/{sessionId}/{sceneId}, " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterAction() {
+    return 'action: ""\n';
+  }
+  generateFrontmatterRelationships() {
+    return " clues: \n characters: \n locations: \n";
+  }
+  generateFrontmatterTimes() {
+    return " start: \n end: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your scene\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Replace the `{adventureId}` of the scene tag (" + this.settings.sceneTag + "/**{adventureId}**/{sessionId}/{sceneId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/**{sessionId}**/{sceneId}) with an existing session id\n- [ ] Replace the `{sceneId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/{sessionId}/**{sceneId}**) with a valid number unique to the session\n- [ ] Remove these tasks\n\n\n---\n```RpgManager\nsceneNavigation\n```\n---\n## Trigger\n\n\n## Notes\n- \n\n---\n```RpgManager\nscene\n```\n---\n";
+  }
+};
+
+// src/views/templates/SessionTemplate.ts
+var SessionTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.sessionTag + "/{adventureId}/{sessionId}, " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateFrontmatterDates() {
+    return " session: \n irl: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your session\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Replace the `{adventureId}` of the session tag (" + this.settings.sessionTag + "/**{adventureId}**/{sessionId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the session tag (" + this.settings.sessionTag + "/{adventureId}/**{sessionId}**) with a valid number unique to the adventure\n- [ ] Remove these tasks\n\n---\n```RpgManager\nsessionNavigation\n```\n---\n## Introduction\n\n## Plot\n### ABT Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n### Story Circle Plot\n\n>\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n---\n```RpgManager\nsession\n```\n---\n";
+  }
+};
+
+// src/views/templates/AdventureTemplate.ts
+var AdventureTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.adventureTag + "/{adventureId}, " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+  }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your adventure\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Replace the `{adventureId}` of the adventure tag (" + this.settings.adventureTag + "/**{adventureId}**) with a valid number unique to the campaign\n- [ ] Remove these tasks\n\n## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n## Notes\n- \n\n---\n```RpgManager\nadventure\n```";
+  }
+};
+
+// src/views/templates/CampaignTemplate.ts
+var CampaignTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.settings.campaignTag + "/{campaignId}]\n";
+  }
+  generateFrontmatterDates() {
+    return " current: \n";
+  }
+  generateTemplate() {
+    return "\n- [ ] Update the name of your campaign\n- [ ] Replace the `{campaignId}` of the campaign tag (" + this.settings.campaignTag + "/**{campaignId}**) with a valid number unique to the vault\n- [ ] Remove these tasks\n\n## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n---\n```RpgManager\ncampaign\n```";
+  }
+};
+
+// src/factories/FileFactory.ts
+var FileFactory = class {
+  constructor(api) {
+    this.api = api;
+  }
+  create(type) {
+    return __async(this, null, function* () {
+      const template = new templates_exports[DataType[type] + "Template"](this.api.settings);
+      const data = template.generateData();
+      const newFile = yield this.api.app.vault.create(DataType[type] + ".md", data);
+      const leaf = this.api.app.workspace.getLeaf(false);
+      yield leaf.openFile(newFile);
+    });
+  }
+};
+
+// src/api.ts
 var Api = class extends import_obsidian.Component {
   constructor(app, settings) {
     super();
     this.app = app;
     this.settings = settings;
     this.initialiseRoots();
+    this.fileFactory = new FileFactory(this);
   }
   initialiseRoots() {
     const filePath = this.app.vault.getFiles()[0].path;
@@ -606,664 +1533,6 @@ var RpgViewFactory = class {
   }
 };
 
-// src/abstracts/AbstractData.ts
-var AbstractData = class {
-  constructor(api, data) {
-    this.api = api;
-    this.data = data;
-    this.link = data.file.link;
-    this.name = data.file.name;
-    this.path = data.file.path;
-  }
-};
-var AbstractImageData = class extends AbstractData {
-  constructor(api, data) {
-    super(api, data);
-    this.imageSrc = api.getImageLink(data);
-    this.image = this.imageSrc !== null ? api.getImage(data) : "";
-  }
-  getImage(width = 75, height = 75) {
-    if (this.imageSrc === null)
-      return "";
-    return this.api.getImage(this.data, width, height);
-  }
-};
-var AbstractDataList = class {
-  constructor(campaign) {
-    this.campaign = campaign;
-  }
-  add(data) {
-    this.elements.push(data);
-  }
-  map(data) {
-    const response = /* @__PURE__ */ new Map();
-    const character = this.elements.find((t) => t.link === data.link);
-    if (character !== void 0) {
-      Object.entries(character).forEach(([key, value]) => {
-        response.set(key, value);
-      });
-    }
-    return response;
-  }
-};
-
-// src/data/CampaignData.ts
-var CampaignData = class extends AbstractImageData {
-  constructor(api, data) {
-    super(api, data);
-    this.currentDate = data.dates.current;
-    this.id = this.api.getId(data.tags, api.settings.campaignTag);
-  }
-};
-CampaignData.frontmatter = {
-  "dates": {
-    "current": true
-  }
-};
-
-// src/data/SessionData.ts
-var SessionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var SessionData = class extends AbstractData {
-  constructor(api, data, campaign = null, adventure = null, previousSession = null, nextSession = null) {
-    super(api, data);
-    this.campaign = campaign;
-    this.adventure = adventure;
-    this.previousSession = previousSession;
-    this.nextSession = nextSession;
-    this.id = this.api.getId(data.tags, this.api.settings.sessionTag);
-    this.adventureId = this.api.getParentId(data.tags, this.api.settings.sessionTag);
-    this.synopsis = data.synopsis;
-    if (data.dates.session !== null && data.dates.session !== void 0)
-      this.date = this.api.formatDate(data.dates.session, "short");
-    if (data.dates.irl !== null && data.dates.irl !== void 0)
-      this.irl = this.api.formatDate(data.dates.irl);
-  }
-};
-SessionData.frontmatter = {
-  "synopsis": true,
-  "ids": {
-    "adventure": true,
-    "session": true
-  },
-  "dates": {
-    "session": true,
-    "irl": false
-  }
-};
-
-// src/data/AdventureData.ts
-var AdventureList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var AdventureData = class extends AbstractData {
-  constructor(api, data) {
-    super(api, data);
-    this.id = this.api.getId(data.tags, this.api.settings.adventureTag);
-    this.synopsis = data.synopsis;
-  }
-};
-AdventureData.frontmatter = {
-  "synopsis": true,
-  "ids": {
-    "adventure": true
-  }
-};
-
-// src/data/CharacterData.ts
-var CharacterList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var CharacterData = class extends AbstractImageData {
-  constructor(api, data, campaign, useAdditionalInformation = null) {
-    super(api, data);
-    this.campaign = campaign;
-    this.age = "";
-    this.image = this.api.getImage(data);
-    if (campaign !== null)
-      this.age = this.api.calculateAge(data, campaign.currentDate);
-    this.isDead = data.dates.death != void 0;
-    this.goals = data.goals != void 0 ? data.goals : null;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-CharacterData.frontmatter = {
-  "pc": {
-    "dates": {
-      "dob": true,
-      "death": true
-    },
-    "relationships": {
-      "characters": true,
-      "factions": true,
-      "locations": true
-    }
-  },
-  "npc": {
-    "synopsis": true,
-    "goals": true,
-    "dates": {
-      "dob": true,
-      "death": true
-    },
-    "relationships": {
-      "characters": true,
-      "factions": true,
-      "locations": true
-    }
-  }
-};
-
-// src/data/ClueData.ts
-var ClueList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var ClueData = class extends AbstractImageData {
-  constructor(api, data, useAdditionalInformation = null) {
-    super(api, data);
-    this.image = this.api.getImage(data);
-    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
-      this.found = this.api.formatDate(data.dates.found, "long");
-    } else {
-      this.found = false;
-    }
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-ClueData.frontmatter = {
-  "synopsis": true,
-  "dates": {
-    "found": false
-  },
-  "relationships": {
-    "characters": true,
-    "locations": true
-  }
-};
-
-// src/data/ImageData.ts
-var ImageData = class extends AbstractImageData {
-  constructor(api, data, width = 75, height = 75) {
-    super(api, data);
-    this.image = this.imageSrc !== null ? this.api.getImage(data, width, height) : "";
-  }
-};
-
-// src/data/SynopsisData.ts
-var SynopsisData = class extends AbstractData {
-  constructor(api, data, title = null) {
-    var _a, _b;
-    super(api, data);
-    this.title = title;
-    this.synopsis = data.synopsis !== null ? data.synopsis : "";
-    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.api.formatDate(data.dates.death, "short") : "";
-    this.isCharacter = data.tags.indexOf("character/npc") !== -1;
-  }
-};
-
-// src/data/LocationData.ts
-var LocationList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var LocationData = class extends AbstractImageData {
-  constructor(api, data, useAdditionalInformation = null) {
-    super(api, data);
-    this.address = data.address;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-LocationData.frontmatter = {
-  "synopsis": true,
-  "address": false
-};
-
-// src/data/index.ts
-var data_exports = {};
-__export(data_exports, {
-  AdventureData: () => AdventureData,
-  AdventureList: () => AdventureList,
-  CampaignData: () => CampaignData,
-  CharacterData: () => CharacterData,
-  CharacterList: () => CharacterList,
-  ClueData: () => ClueData,
-  ClueList: () => ClueList,
-  EventData: () => EventData,
-  EventList: () => EventList,
-  FactionData: () => FactionData,
-  FactionList: () => FactionList,
-  ImageData: () => ImageData,
-  LocationData: () => LocationData,
-  LocationList: () => LocationList,
-  SceneData: () => SceneData,
-  SceneList: () => SceneList,
-  SessionData: () => SessionData,
-  SessionList: () => SessionList,
-  SynopsisData: () => SynopsisData,
-  TimelineData: () => TimelineData,
-  TimelineList: () => TimelineList
-});
-
-// src/data/EventData.ts
-var EventList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var EventData = class extends AbstractImageData {
-  constructor(api, data, campaign, useAdditionalInformation = null) {
-    super(api, data);
-    this.campaign = campaign;
-    if (data.dates.event != null)
-      this.date = this.api.formatDate(data.dates.event, "short");
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-EventData.frontmatter = {
-  "synopsis": true,
-  "dates": {
-    "event": true
-  },
-  "relationships": {
-    "characters": true,
-    "clues": true,
-    "locations": true
-  }
-};
-
-// src/data/FactionData.ts
-var FactionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var FactionData = class extends AbstractImageData {
-  constructor(api, data, campaign, useAdditionalInformation = null) {
-    super(api, data);
-    this.campaign = campaign;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-FactionData.frontmatter = {
-  "synopsis": true,
-  "relationships": {
-    "locations": true
-  }
-};
-
-// src/data/SceneData.ts
-var SceneList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-var SceneData = class extends AbstractImageData {
-  constructor(api, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
-    var _a;
-    super(api, data);
-    this.session = session;
-    this.adventure = adventure;
-    this.previousScene = previousScene;
-    this.nextScene = nextScene;
-    this.campaign = campaign;
-    this.duration = "";
-    this.action = data.action != void 0 ? data.action : "";
-    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
-    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
-    this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
-    this.startTime = this.api.formatTime(data.time.start);
-    this.endTime = this.api.formatTime(data.time.end);
-    if (this.startTime !== "" && this.endTime !== "") {
-      this.duration = this.api.calculateDuration(data.time.start, data.time.end);
-    }
-  }
-};
-SceneData.frontmatter = {
-  "synopsis": true,
-  "action": true,
-  "ids": {
-    "session": true,
-    "scene": true
-  },
-  "relationships": {
-    "characters": true,
-    "clues": true,
-    "locations": true
-  },
-  "time": {
-    "start": false,
-    "end": false
-  }
-};
-
-// src/data/TimelineData.ts
-var TimelineList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-  sort() {
-    this.elements.sort((a, b) => {
-      return a.datetime - b.datetime;
-    });
-  }
-};
-var TimelineData = class extends AbstractImageData {
-  constructor(api, data, type) {
-    super(api, data);
-    this.type = type;
-    this.image = this.api.getImage(data, 70);
-    this.synopsis = data.synopsis;
-    switch (type) {
-      case "event":
-        this.datetime = data.dates.event;
-        break;
-      case "death":
-        this.datetime = data.dates.death;
-        break;
-      case "birth":
-        this.datetime = data.dates.dob;
-        break;
-      case "session":
-        this.datetime = data.dates.session;
-        break;
-      case "clue":
-        this.datetime = data.dates.found;
-        break;
-    }
-    this.date = this.api.formatDate(this.datetime, "short");
-    this.time = this.api.formatTime(this.datetime);
-  }
-  getEventColour() {
-    switch (this.type) {
-      case "event":
-        return "";
-        break;
-      case "birth":
-        return " green";
-        break;
-      case "death":
-        return " red";
-        break;
-      case "session":
-        return " blue";
-        break;
-      case "clue":
-        return " purple";
-        break;
-    }
-    return "";
-  }
-};
-
-// src/factories/DataFactory.ts
-var DataFactory = class {
-  static create(type, api, campaign, current, record, additionalInformation) {
-    return this["create" + DataType[type]](api, campaign, current, record, additionalInformation);
-  }
-  static createCharacter(api, campaign, current, record, additionalInformation) {
-    return new CharacterData(api, record, campaign, additionalInformation);
-  }
-  static createLocation(api, campaign, current, record, additionalInformation) {
-    return new LocationData(api, record, additionalInformation);
-  }
-  static createEvent(api, campaign, current, record, additionalInformation) {
-    return new EventData(api, record, campaign, additionalInformation);
-  }
-  static createClue(api, campaign, current, record, additionalInformation) {
-    return new ClueData(api, record, additionalInformation);
-  }
-  static createFaction(api, campaign, current, record, additionalInformation) {
-    return new FactionData(api, record, campaign, additionalInformation);
-  }
-};
-
-// src/io/IoData.ts
-var DataType = /* @__PURE__ */ ((DataType2) => {
-  DataType2[DataType2["Character"] = 0] = "Character";
-  DataType2[DataType2["Location"] = 1] = "Location";
-  DataType2[DataType2["Event"] = 2] = "Event";
-  DataType2[DataType2["Clue"] = 3] = "Clue";
-  DataType2[DataType2["Faction"] = 4] = "Faction";
-  return DataType2;
-})(DataType || {});
-var IoData = class {
-  constructor(api, campaign, dv, current) {
-    this.api = api;
-    this.campaign = campaign;
-    this.dv = dv;
-    this.current = current;
-    this.id = null;
-    var _a;
-    this.outlinks = [];
-    this.readOutlinks();
-    const corePlugin = (_a = this.api.app.internalPlugins) == null ? void 0 : _a.plugins["templates"];
-    this.templateFolder = corePlugin.instance.options.folder;
-    this.current.tags.forEach((tag) => {
-      if (tag.startsWith(this.api.settings.campaignTag)) {
-        this.getId(this.api.settings.campaignTag);
-      } else if (tag.startsWith(this.api.settings.adventureTag)) {
-        this.getId(this.api.settings.adventureTag);
-      } else if (tag.startsWith(this.api.settings.sessionTag)) {
-        this.getId(this.api.settings.sessionTag);
-      } else if (tag.startsWith(this.api.settings.sceneTag)) {
-        this.getId(this.api.settings.sceneTag);
-      }
-    });
-  }
-  readOutlinks() {
-    if (this.current != void 0) {
-      this.current.file.outlinks.forEach((file) => {
-        const page = this.dv.page(file.path);
-        if (page != void 0) {
-          this.outlinks.push(page);
-        }
-      });
-    }
-  }
-  isAlreadyPresent(list, element) {
-    let response = false;
-    list.elements.forEach((existingElement) => {
-      if (element.file.path === existingElement.path) {
-        response = true;
-        return true;
-      }
-    });
-    return response;
-  }
-  hasMainTag(page, type) {
-    if (page.tags == void 0) {
-      return false;
-    }
-    switch (type) {
-      case 0 /* Character */:
-        return page.tags.indexOf(this.api.settings.npcTag) !== -1 || page.tags.indexOf(this.api.settings.pcTag) !== -1;
-        break;
-      case 3 /* Clue */:
-        return page.tags.indexOf(this.api.settings.clueTag) !== -1;
-        break;
-      case 1 /* Location */:
-        return page.tags.indexOf(this.api.settings.locationTag) !== -1;
-        break;
-      case 4 /* Faction */:
-        return page.tags.indexOf(this.api.settings.factionTag) !== -1;
-        break;
-      case 2 /* Event */:
-        return page.tags.indexOf(this.api.settings.eventTag) !== -1;
-        break;
-      default:
-        return false;
-        break;
-    }
-  }
-  getCorrectTag(type) {
-    var _a;
-    let response = "";
-    switch (type) {
-      case 0 /* Character */:
-        response = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ")";
-        break;
-      case 3 /* Clue */:
-        response = "#" + this.api.settings.clueTag;
-        break;
-      case 1 /* Location */:
-        response = "#" + this.api.settings.locationTag;
-        break;
-      case 4 /* Faction */:
-        response = "#" + this.api.settings.factionTag;
-        break;
-      case 2 /* Event */:
-        response = "#" + this.api.settings.eventTag;
-        break;
-    }
-    response += " and #" + this.api.settings.campaignIdentifier + "/" + ((_a = this.campaign) == null ? void 0 : _a.id);
-    return response;
-  }
-  getId(identifyingTag) {
-    this.current.tags.forEach((tag) => {
-      if (tag.startsWith(identifyingTag)) {
-        this.id = tag.substring(tag.lastIndexOf("/") + 1);
-      }
-    });
-  }
-  getAdventureList() {
-    const response = new AdventureList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -adventure.ids.adventure).forEach((adventure) => {
-        response.add(new AdventureData(this.api, adventure));
-      });
-    }
-    return response;
-  }
-  getAdventure(adventureId) {
-    let response = null;
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.adventureTag + "/" + adventureId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      const adventures = this.dv.pages(query);
-      if (adventures !== null && adventures.length === 1) {
-        response = new AdventureData(this.api, adventures[0]);
-      }
-    }
-    return response;
-  }
-  getSession(adventureId, sessionId) {
-    let response = null;
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.sessionTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      const sessions = this.dv.pages(query);
-      if (sessions !== null && sessions.length === 1) {
-        response = new SessionData(this.api, sessions[0], this.campaign);
-      }
-    }
-    return response;
-  }
-  getSessionList(adventureId = null) {
-    const response = new SessionList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.sessionTag + (adventureId !== null ? "/" + adventureId : "") + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((session) => session.file.folder !== this.templateFolder).sort((session) => -this.api.getId(session.tags, this.api.settings.sessionTag)).forEach((session) => {
-        response.add(new SessionData(this.api, session));
-      });
-    }
-    return response;
-  }
-  getSceneList() {
-    const response = new SceneList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.sceneTag + "/" + this.id + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((page) => page.file.folder !== this.templateFolder).sort((scene) => this.api.getId(scene.tags, this.api.settings.sceneTag)).forEach((scene) => {
-        response.add(new SceneData(this.api, scene));
-      });
-    }
-    return response;
-  }
-  getCharacterList() {
-    const response = new CharacterList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ") and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((character) => character.file.folder !== this.templateFolder).sort((character) => character.file.name).forEach((character) => {
-        response.add(new CharacterData(this.api, character, this.campaign));
-      });
-    }
-    return response;
-  }
-  getClue() {
-    return new ClueData(this.api, this.current);
-  }
-  getImage(width = 75, height = 75) {
-    return new ImageData(this.api, this.current, width, height);
-  }
-  getSynopsis(title = null) {
-    return new SynopsisData(this.api, this.current, title);
-  }
-  getScene(adventureId = null, sessionId = null, sceneId = null) {
-    let response = null;
-    if (adventureId === null || sessionId === null || sceneId === null) {
-      response = new SceneData(this.api, this.current);
-    } else {
-      if (this.campaign !== null) {
-        const query = "#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + "/" + sceneId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-        const scenes = this.dv.pages(query);
-        if (scenes !== null && scenes.length === 1) {
-          response = new SceneData(this.api, scenes[0]);
-        }
-      }
-    }
-    return response;
-  }
-  getRelationshipList(type, parentType = null, sorting = null) {
-    const response = new data_exports[DataType[type] + "List"](this.campaign);
-    if (this.campaign !== null) {
-      this.variableSingular = DataType[type].toLowerCase();
-      this.variablePlural = this.variableSingular + "s";
-      const defaultSorting = function(page) {
-        return page.file.name;
-      };
-      let comparison;
-      if (parentType === null) {
-        comparison = function(page) {
-          return page.file.folder !== this.templateFolder && this.current.relationships != void 0 && this.current.relationships[this.variablePlural] != void 0 && this.current.relationships[this.variablePlural][page.file.name] !== void 0;
-        }.bind(this);
-      } else {
-        this.variableParentSingular = DataType[parentType].toLowerCase();
-        this.variableParentPlural = this.variableParentSingular + "s";
-        comparison = function(page) {
-          return page.file.folder !== this.templateFolder && page.relationships != void 0 && page.relationships[this.variableParentPlural] != void 0 && page.relationships[this.variableParentPlural][this.current.file.name] !== void 0;
-        }.bind(this);
-      }
-      const query = this.getCorrectTag(type);
-      this.dv.pages(query).where(comparison).sort(sorting !== null ? sorting : defaultSorting).forEach((page) => {
-        response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, parentType === null ? this.current.relationships[this.variablePlural][page.file.name] : page.relationships[DataType[parentType].toLowerCase() + "s"][this.current.file.name]));
-      });
-      this.outlinks.forEach((page) => {
-        if (this.hasMainTag(page, type) && !this.isAlreadyPresent(response, page)) {
-          response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, "_in main description_"));
-        }
-      });
-    }
-    return response;
-  }
-};
-
 // src/abstracts/AbstractModel.ts
 var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
   constructor(api, container, source, component, sourcePath) {
@@ -1399,17 +1668,17 @@ var ClueModel = class extends AbstractModel {
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */), 1 /* CharacterList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */);
     });
   }
   eventList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(2 /* Event */, 3 /* Clue */), 9 /* EventList */);
+      this.writeList(this.io.getRelationshipList(7 /* Event */, 8 /* Clue */), 9 /* EventList */);
     });
   }
 };
@@ -1436,17 +1705,17 @@ var EventModel = class extends AbstractModel {
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */), 1 /* CharacterList */);
     });
   }
   clueList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(3 /* Clue */), 10 /* ClueList */);
+      this.writeList(this.io.getRelationshipList(8 /* Clue */), 10 /* ClueList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */);
     });
   }
 };
@@ -1463,12 +1732,12 @@ var FactionModel = class extends AbstractModel {
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */, 4 /* Faction */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */, 9 /* Faction */), 1 /* CharacterList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */);
     });
   }
 };
@@ -1487,17 +1756,17 @@ var LocationModel = class extends AbstractModel {
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */, 1 /* Location */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */, 6 /* Location */), 1 /* CharacterList */);
     });
   }
   eventList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(2 /* Event */, 1 /* Location */), 9 /* EventList */);
+      this.writeList(this.io.getRelationshipList(7 /* Event */, 6 /* Location */), 9 /* EventList */);
     });
   }
   clueList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(3 /* Clue */, 1 /* Location */), 10 /* ClueList */);
+      this.writeList(this.io.getRelationshipList(8 /* Clue */, 6 /* Location */), 10 /* ClueList */);
     });
   }
 };
@@ -1536,27 +1805,27 @@ var NpcModel = class extends AbstractModel {
   }
   factionList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(4 /* Faction */), 12 /* FactionList */);
+      this.writeList(this.io.getRelationshipList(9 /* Faction */), 12 /* FactionList */);
     });
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */), 1 /* CharacterList */);
     });
   }
   eventList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(2 /* Event */, 0 /* Character */), 9 /* EventList */);
+      this.writeList(this.io.getRelationshipList(7 /* Event */, 4 /* Character */), 9 /* EventList */);
     });
   }
   clueList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(3 /* Clue */, 0 /* Character */), 10 /* ClueList */);
+      this.writeList(this.io.getRelationshipList(8 /* Clue */, 4 /* Character */), 10 /* ClueList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */);
     });
   }
 };
@@ -1573,17 +1842,17 @@ var PcModel = class extends AbstractModel {
   }
   factionList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(4 /* Faction */), 12 /* FactionList */);
+      this.writeList(this.io.getRelationshipList(9 /* Faction */), 12 /* FactionList */);
     });
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */), 1 /* CharacterList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */);
     });
   }
 };
@@ -1599,17 +1868,17 @@ var SceneModel = class extends AbstractModel {
   }
   characterList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(0 /* Character */), 1 /* CharacterList */);
+      this.writeList(this.io.getRelationshipList(4 /* Character */), 1 /* CharacterList */);
     });
   }
   locationList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(1 /* Location */), 8 /* LocationList */);
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */);
     });
   }
   clueList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getRelationshipList(3 /* Clue */), 10 /* ClueList */);
+      this.writeList(this.io.getRelationshipList(8 /* Clue */), 10 /* ClueList */);
     });
   }
 };
@@ -1783,6 +2052,15 @@ var RpgManager = class extends import_obsidian5.Plugin {
       this.registerPriorityCodeblockPostProcessor("RpgManager", -100, (source, el, ctx) => __async(this, null, function* () {
         return this.createRpgView(source, el, ctx, ctx.sourcePath);
       }));
+      for (const type in DataType) {
+        this.addCommand({
+          id: "rpg-manager-create-" + type.toLowerCase(),
+          name: "Create a new " + type,
+          callback: () => {
+            this.api.fileFactory.create(DataType[type]);
+          }
+        });
+      }
     });
   }
   onunload() {

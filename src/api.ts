@@ -2,6 +2,7 @@ import {App, Component, TFile, TAbstractFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
 import {DateTime} from "obsidian-dataview";
 import {RpgManagerSettings} from "./main";
+import {FileFactory} from "./factories/FileFactory";
 
 declare module 'obsidian' {
 	interface Vault {
@@ -19,14 +20,7 @@ declare module 'obsidian' {
 export class Api extends Component {
 	private root: string;
 	private attachmentRoot: string;
-
-	/*
-	public static create(
-		app: App,
-	): Api {
-		return new Api(app);
-	}
-	*/
+	public fileFactory: FileFactory;
 
 	constructor(
 		public app: App,
@@ -34,6 +28,8 @@ export class Api extends Component {
 	) {
 		super();
 		this.initialiseRoots();
+
+		this.fileFactory = new FileFactory(this);
 	}
 
 	private initialiseRoots() {

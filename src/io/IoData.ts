@@ -15,7 +15,12 @@ import {ArrayFunc} from "obsidian-dataview/lib/api/data-array";
 import {SceneData, SceneDataInterface, SceneList, SceneListInterface} from "../data";
 
 export enum DataType {
+	Campaign,
+	Adventure,
+	Session,
+	Scene,
 	Character,
+	NonPlayerCharacter,
 	Location,
 	Event,
 	Clue,

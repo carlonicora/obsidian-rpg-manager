@@ -1,6 +1,4 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
-import {SessionData} from "../data/SessionData";
-import {AdventureData} from "../data/AdventureData";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {SceneData} from "../data";
 
