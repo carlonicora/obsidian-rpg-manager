@@ -65,12 +65,12 @@ export class SceneNavigationModel extends AbstractModel {
 			const nextScene = nextScenes != undefined && nextScenes.length === 1 ? nextScenes[0] : null;
 
 			const data = new SceneData(
-				this.functions,
+				this.api,
 				current,
-				(session != undefined ? new SessionData(this.functions, session) : null),
-				(adventure != undefined ? new AdventureData(this.functions, adventure) : null),
-				(previousScene != undefined ? new SceneData(this.functions, previousScene) : null),
-				(nextScene != undefined ? new SceneData(this.functions, nextScene) : null),
+				(session != undefined ? new SessionData(this.api, session) : null),
+				(adventure != undefined ? new AdventureData(this.api, adventure) : null),
+				(previousScene != undefined ? new SceneData(this.api, previousScene) : null),
+				(nextScene != undefined ? new SceneData(this.api, nextScene) : null),
 				this.campaign,
 			)
 

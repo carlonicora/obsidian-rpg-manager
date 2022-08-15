@@ -1,7 +1,7 @@
 import {GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 import {SessionDataInterface} from "./SessionData";
@@ -14,8 +14,8 @@ export interface SceneListInterface extends GenericDataListInterface{
 export interface SceneDataInterface extends GenericDataInterface, GenericImageDataInterface {
 	synopsis: string;
 	action: string;
-	sessionId: number;
-	sceneId: number;
+	sessionId: string;
+	id: string;
 	startTime: string;
 	endTime: string;
 	duration: string;
@@ -40,8 +40,8 @@ export class SceneList extends AbstractDataList implements SceneListInterface {
 export class SceneData extends AbstractImageData implements SceneDataInterface {
 	public synopsis: string;
 	public action: string;
-	public sessionId: number;
-	public sceneId: number;
+	public sessionId: string;
+	public id: string;
 	public startTime: string;
 	public endTime: string;
 	public duration = '';
@@ -65,7 +65,7 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		public session: SessionDataInterface|null = null,
 		public adventure: AdventureDataInterface|null = null,
@@ -73,17 +73,18 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 		public nextScene: SceneDataInterface|null = null,
 		public campaign: CampaignDataInterface|null = null,
 	) {
-		super(functions, data);
+		super(api, data);
 
 		this.action = data.action != undefined ? data.action : '';
 		this.synopsis = data.synopsis != undefined ? data.synopsis : '';
 		this.sessionId = data.ids?.session != undefined ? data.ids.session : 0;
-		this.sceneId = data.ids?.scene != undefined ? data.ids.scene : 0;
-		this.startTime = this.functions.formatTime(data.time.start);
-		this.endTime = this.functions.formatTime(data.time.end);
+		this.id = this.api.getId(data.tags, this.api.settings.sceneTag);
+		this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
+		this.startTime = this.api.formatTime(data.time.start);
+		this.endTime = this.api.formatTime(data.time.end);
 
 		if (this.startTime !== '' && this.endTime !== ''){
-			this.duration = this.functions.calculateDuration(data.time.start, data.time.end);
+			this.duration = this.api.calculateDuration(data.time.start, data.time.end);
 		}
 	}
 }

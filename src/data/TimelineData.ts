@@ -2,7 +2,7 @@ import {
 	GenericDataListInterface, GenericImageDataInterface,
 } from "../interfaces/DataInterfaces";
 import {DateTime} from "obsidian-dataview";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -45,13 +45,13 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 	datetime: DateTime;
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		public type: string,
 	) {
-		super(functions, data);
+		super(api, data);
 
-		this.image = functions.getImage(data, 70);
+		this.image = this.api.getImage(data, 70);
 		this.synopsis = data.synopsis;
 
 		switch(type){
@@ -72,8 +72,8 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 				break;
 		}
 
-		this.date = this.functions.formatDate(this.datetime, "short");
-		this.time = this.functions.formatTime(this.datetime);
+		this.date = this.api.formatDate(this.datetime, "short");
+		this.time = this.api.formatTime(this.datetime);
 	}
 
 	getEventColour(

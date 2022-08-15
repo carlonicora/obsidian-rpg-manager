@@ -48,12 +48,12 @@ export class SessionNavigationModel extends AbstractModel {
 			const nextSession = nextSessions != undefined && nextSessions.length === 1 ? nextSessions[0] : null;
 
 			const data = new SessionData(
-				this.functions,
+				this.api,
 				current,
 				this.campaign,
-				(adventure != undefined ? new AdventureData(this.functions, adventure) : null),
-				(previousSession != undefined ? new SessionData(this.functions, previousSession) : null),
-				(nextSession != undefined ? new SessionData(this.functions, nextSession) : null),
+				(adventure != undefined ? new AdventureData(this.api, adventure) : null),
+				(previousSession != undefined ? new SessionData(this.api, previousSession) : null),
+				(nextSession != undefined ? new SessionData(this.api, nextSession) : null),
 
 			)
 

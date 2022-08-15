@@ -6,7 +6,8 @@ export class TimelineModel extends AbstractModel {
 	async render(){
 		const data = new TimelineList(this.campaign);
 
-		const events = this.dv.pages("#event")
+		let query = '#' + this.api.settings.eventTag + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		const events = this.dv.pages(query)
 			.where(event =>
 				event?.dates?.event !== undefined &&
 				event?.dates?.event !== null
@@ -15,14 +16,15 @@ export class TimelineModel extends AbstractModel {
 		events.forEach((event) => {
 			data.add(
 				new TimelineData(
-					this.functions,
+					this.api,
 					event,
 					'event',
 				)
 			)
 		});
 
-		let characters = this.dv.pages('#character')
+		query = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ') and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		let characters = this.dv.pages(query)
 			.where(character =>
 				character?.dates?.dob !== undefined &&
 				character?.dates?.dob !== null
@@ -31,7 +33,7 @@ export class TimelineModel extends AbstractModel {
 		characters.forEach((character) => {
 			data.add(
 				new TimelineData(
-					this.functions,
+					this.api,
 					character,
 					'birth',
 				)
@@ -47,14 +49,15 @@ export class TimelineModel extends AbstractModel {
 		characters.forEach((character) => {
 			data.add(
 				new TimelineData(
-					this.functions,
+					this.api,
 					character,
 					'death',
 				)
 			)
 		});
 
-		const sessions = this.dv.pages('#session')
+		query = '#' + this.api.settings.sessionTag + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		const sessions = this.dv.pages(query)
 			.where(session =>
 				session?.dates?.session !== undefined &&
 				session?.dates?.session !== null
@@ -63,14 +66,15 @@ export class TimelineModel extends AbstractModel {
 		sessions.forEach((session) => {
 			data.add(
 				new TimelineData(
-					this.functions,
+					this.api,
 					session,
 					'session',
 				)
 			)
 		});
 
-		const clues = this.dv.pages('#clue')
+		query = '#' + this.api.settings.clueTag + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		const clues = this.dv.pages(query)
 			.where(clue =>
 				clue?.dates?.found !== undefined &&
 				clue?.dates?.found !== null
@@ -79,7 +83,7 @@ export class TimelineModel extends AbstractModel {
 		clues.forEach((clue) => {
 			data.add(
 				new TimelineData(
-					this.functions,
+					this.api,
 					clue,
 					'clue',
 				)

@@ -55,7 +55,7 @@ export class TimelineView extends AbstractListView {
 			'<div class="rpgm-header-overlay">' +
 			'<div class="rpgm-header-title">Timeline</div>' +
 			'<div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div>' +
-			'<div class="rpgm-current-date">' + (campaign !== null ? this.functions.formatDate(campaign.currentDate, "long") : "") + '</div>' +
+			'<div class="rpgm-current-date">' + (campaign !== null ? this.api.formatDate(campaign.currentDate, "long") : "") + '</div>' +
 			'</div>' +
 			'</div>' +
 			'<div class="rpgm-timeline"><ul>';

@@ -24,7 +24,7 @@ export class NpcModel extends AbstractModel {
 		if (current !== undefined) {
 
 			const data = new CharacterData(
-				this.functions,
+				this.api,
 				current,
 				this.campaign,
 			)

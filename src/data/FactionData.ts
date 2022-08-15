@@ -1,7 +1,7 @@
 import {GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -35,12 +35,12 @@ export class FactionData extends AbstractImageData implements FactionDataInterfa
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface|null,
 		useAdditionalInformation: string|null = null,
 	) {
-		super(functions, data);
+		super(api, data);
 
 		this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
 	}

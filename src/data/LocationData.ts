@@ -1,7 +1,7 @@
 import {GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -35,11 +35,11 @@ export class LocationData extends AbstractImageData implements LocationDataInter
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		useAdditionalInformation: string|null = null,
 	) {
-		super(functions, data);
+		super(api, data);
 
 		this.address = data.address;
 

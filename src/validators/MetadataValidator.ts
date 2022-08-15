@@ -16,6 +16,7 @@ export class MetadataValidator {
 		current: Record<string, any>,
 	): boolean|string
 	{
+		return true;
 		let response: boolean|string = true;
 
 		app.vault.getFiles().forEach((file: TFile) => {

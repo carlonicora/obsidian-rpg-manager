@@ -1,12 +1,14 @@
 import {GenericDataInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractImageData} from "../abstracts/AbstractData";
 
 export interface CampaignDataInterface extends GenericDataInterface, GenericImageDataInterface {
+	id: string;
 	currentDate: string;
 }
 
 export class CampaignData extends AbstractImageData implements CampaignDataInterface {
+	public id: string;
 	public currentDate: string;
 
 	public static frontmatter = {
@@ -16,10 +18,12 @@ export class CampaignData extends AbstractImageData implements CampaignDataInter
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 	) {
-		super(functions, data);
+		super(api, data);
 		this.currentDate = data.dates.current;
+
+		this.id = this.api.getId(data.tags, api.settings.campaignTag)
 	}
 }

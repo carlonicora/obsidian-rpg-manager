@@ -1,4 +1,4 @@
-# Obsidian Role Playing Game Manager 
+# Role Playing Game Manager Obsidian Plugin 
 
 Obsidian Role Playing Game Manager is an Obsidian plugin that helps you plot and manage your tabletop role playing game 
 campaigns. It uses [Obsidian Dataview](https://github.com/blacksmithgu/obsidian-dataview) to reference information 
@@ -39,7 +39,9 @@ characters define the resulting story.
 This style is _setting agnostic_, which means that can be used with any tabletop role playing game, and _rules light_,
 which means that it does not (yet) extend into stats or dice rolling. It is a tool to plot stories.
 
-### Elements
+### Elements and Outlines
+
+Outlines are the plots of a Campaign, Adventure, Session or Scene.
 
 | Element                  | Codeblock                      | Description                                                                                                                                                                                                           |
 |--------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -47,6 +49,12 @@ which means that it does not (yet) extend into stats or dice rolling. It is a to
 | **Adventure**            | `adventure`                    | A single, self contain storyarc divided in `Sessions`                                                                                                                                                                 |
 | **Session**              | `session` + `sessionNavigator` | A single session of a role playing game containing a series of `Scenes`                                                                                                                                               |
 | **Scene**                | `scene` + `sceneNavigator`     | A part of a `Session` in which the player characters are expected to do something                                                                                                                                     |
+
+Elements are other information related to the campaign, which are not in a plot (Player Characters, Non Player 
+Characters, Factions, Locations, Events, Clues)
+
+| Element                  | Codeblock                      | Description                                                                                                                                                                                                           |
+|--------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Player Character**     | `pc`                           | The record sheet of a player character                                                                                                                                                                                |
 | **Non Player Character** | `npc`                          | The record sheet of a non-playing character                                                                                                                                                                           |
 | **Faction**              | `faction`                      | A group of player and non-player characters                                                                                                                                                                           |

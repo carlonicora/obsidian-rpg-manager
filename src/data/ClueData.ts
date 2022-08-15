@@ -2,7 +2,7 @@ import {
 	GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -42,15 +42,15 @@ export class ClueData extends AbstractImageData implements ClueDataInterface {
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		useAdditionalInformation: string|null = null,
 	) {
-		super(functions, data);
+		super(api, data);
 
-		this.image = functions.getImage(data);
+		this.image = this.api.getImage(data);
 		if (data.dates.found !== null && data.dates.found !== undefined && data.dates.found !== false){
-			this.found = functions.formatDate(data.dates.found, "long");
+			this.found = this.api.formatDate(data.dates.found, "long");
 		} else {
 			this.found = false;
 		}

@@ -1,6 +1,6 @@
 import {GenericDataInterface, GenericDataListInterface,
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractData, AbstractDataList} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 import {AdventureDataInterface} from "./AdventureData";
@@ -10,8 +10,8 @@ export interface SessionListInterface extends GenericDataListInterface{
 }
 
 export interface SessionDataInterface extends GenericDataInterface {
-	id: number;
-	adventureId: number;
+	id: string;
+	adventureId: string;
 	synopsis: string;
 	date: string;
 	irl: string;
@@ -33,8 +33,8 @@ export class SessionList extends AbstractDataList implements SessionListInterfac
 }
 
 export class SessionData extends AbstractData implements SessionDataInterface {
-	public id: number;
-	public adventureId: number;
+	public id: string;
+	public adventureId: string;
 	public synopsis: string;
 	public date: string;
 	public irl: string;
@@ -52,19 +52,20 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface|null = null,
 		public adventure: AdventureDataInterface|null = null,
 		public previousSession: SessionDataInterface|null = null,
 		public nextSession: SessionDataInterface|null = null,
 	) {
-		super(functions, data);
+		super(api, data);
 
-		this.id = data.ids.session;
-		this.adventureId = data.ids.adventure;
+		this.id = this.api.getId(data.tags, this.api.settings.sessionTag);
+		this.adventureId = this.api.getParentId(data.tags, this.api.settings.sessionTag);
+
 		this.synopsis = data.synopsis;
-		if (data.dates.session !== null && data.dates.session !== undefined) this.date = this.functions.formatDate(data.dates.session, "short");
-		if (data.dates.irl !== null && data.dates.irl !== undefined) this.irl = this.functions.formatDate(data.dates.irl);
+		if (data.dates.session !== null && data.dates.session !== undefined) this.date = this.api.formatDate(data.dates.session, "short");
+		if (data.dates.irl !== null && data.dates.irl !== undefined) this.irl = this.api.formatDate(data.dates.irl);
 	}
 }

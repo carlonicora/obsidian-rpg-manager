@@ -1,5 +1,5 @@
 import {DataType} from "../io/IoData";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {CampaignDataInterface} from "../data/CampaignData";
 import {GenericDataInterface} from "../interfaces/DataInterfaces";
 import {DataObject} from "obsidian-dataview";
@@ -10,7 +10,7 @@ import {ClueData, EventData, FactionData} from "../data";
 export class DataFactory {
 	public static create(
 		type: DataType,
-		functions: RpgFunctions,
+		api: Api,
 		campaign: CampaignDataInterface|null,
 		current: Record<string, any>,
 		record: DataObject,
@@ -18,11 +18,11 @@ export class DataFactory {
 	): GenericDataInterface
 	{
 		//@ts-ignore
-		return this['create' + DataType[type]](functions, campaign, current, record, additionalInformation);
+		return this['create' + DataType[type]](api, campaign, current, record, additionalInformation);
 	}
 
 	private static createCharacter(
-		functions: RpgFunctions,
+		api: Api,
 		campaign: CampaignDataInterface|null,
 		current: Record<string, any>,
 		record: DataObject,
@@ -30,7 +30,7 @@ export class DataFactory {
 	): CharacterData
 	{
 		return new CharacterData(
-			functions,
+			api,
 			record,
 			campaign,
 			additionalInformation,
@@ -38,7 +38,7 @@ export class DataFactory {
 	}
 
 	private static createLocation(
-		functions: RpgFunctions,
+		api: Api,
 		campaign: CampaignDataInterface|null,
 		current: Record<string, any>,
 		record: DataObject,
@@ -46,14 +46,14 @@ export class DataFactory {
 	): LocationData
 	{
 		return new LocationData(
-			functions,
+			api,
 			record,
 			additionalInformation,
 		)
 	}
 
 	private static createEvent(
-		functions: RpgFunctions,
+		api: Api,
 		campaign: CampaignDataInterface|null,
 		current: Record<string, any>,
 		record: DataObject,
@@ -61,7 +61,7 @@ export class DataFactory {
 	): EventData
 	{
 		return new EventData(
-			functions,
+			api,
 			record,
 			campaign,
 			additionalInformation,
@@ -69,7 +69,7 @@ export class DataFactory {
 	}
 
 	private static createClue(
-		functions: RpgFunctions,
+		api: Api,
 		campaign: CampaignDataInterface|null,
 		current: Record<string, any>,
 		record: DataObject,
@@ -77,14 +77,14 @@ export class DataFactory {
 	): ClueData
 	{
 		return new ClueData(
-			functions,
+			api,
 			record,
 			additionalInformation,
 		)
 	}
 
 	private static createFaction(
-		functions: RpgFunctions,
+		api: Api,
 		campaign: CampaignDataInterface|null,
 		current: Record<string, any>,
 		record: DataObject,
@@ -92,7 +92,7 @@ export class DataFactory {
 	): FactionData
 	{
 		return new FactionData(
-			functions,
+			api,
 			record,
 			campaign,
 			additionalInformation,

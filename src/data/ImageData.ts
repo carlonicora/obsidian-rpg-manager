@@ -1,16 +1,16 @@
 import {GenericImageDataInterface} from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractImageData} from "../abstracts/AbstractData";
 
 export class ImageData extends AbstractImageData implements GenericImageDataInterface {
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		width = 75,
 		height = 75,
 	) {
-		super(functions, data);
+		super(api, data);
 
-		this.image = (this.imageSrc !== null ? functions.getImage(data, width, height) : '');
+		this.image = (this.imageSrc !== null ? this.api.getImage(data, width, height) : '');
 	}
 }

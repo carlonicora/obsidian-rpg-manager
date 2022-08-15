@@ -1,13 +1,23 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {App, Component, MarkdownPostProcessorContext} from "obsidian";
 import * as Models from '../models';
 import {ErrorModel} from "../models";
+import {RpgManagerSettings} from "../main";
 
 export class RpgModelFactory {
+	private static api: Api;
+	private static app: App;
+	private static settings: RpgManagerSettings;
+
+	public static initialise(
+		api: Api,
+	): void
+	{
+		this.api = api;
+	}
+
 	public static create(
-		functions: RpgFunctions,
-		app: App,
 		container: HTMLElement,
 		source: string,
 		component: Component | MarkdownPostProcessorContext,
@@ -21,9 +31,9 @@ export class RpgModelFactory {
 
 		try {
 			//@ts-ignore
-			return new Models[modelName + 'Model'](functions, app, container, source, component, sourcePath);
+			return new Models[modelName + 'Model'](this.api, container, source, component, sourcePath);
 		} catch (e) {
-			return new ErrorModel(functions, app, container, source, component, sourcePath);
+			return new ErrorModel(this.api, container, source, component, sourcePath);
 		}
 	}
 }

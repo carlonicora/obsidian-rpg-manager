@@ -1,5 +1,4 @@
-import {RpgFunctions} from "../functions/RpgFunctions";
-import {App} from "obsidian";
+import {Api} from "../api";
 import {ListViewInterface} from "../abstracts/AbstractListView";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import * as Views from '../views'
@@ -26,16 +25,13 @@ export enum viewType{
 }
 
 export class RpgViewFactory {
-	private static functions: RpgFunctions;
-	private static app: App;
+	private static api: Api;
 
 	public static initialise(
-		functions: RpgFunctions,
-		app: App,
+		api: Api,
 	): void
 	{
-		this.functions = functions;
-		this.app = app;
+		this.api = api;
 	}
 
 	public static createList(
@@ -44,8 +40,7 @@ export class RpgViewFactory {
 	): ListViewInterface {
 		// @ts-ignore
 		return new Views[viewType[viewName] + 'View'](
-			this.functions,
-			this.app,
+			this.api,
 			dv
 		);
 	}
@@ -56,8 +51,7 @@ export class RpgViewFactory {
 	): SingleViewInterface {
 		// @ts-ignore
 		return new Views[viewType[viewName] + 'View'](
-			this.functions,
-			this.app,
+			this.api,
 			dv
 		);
 	}

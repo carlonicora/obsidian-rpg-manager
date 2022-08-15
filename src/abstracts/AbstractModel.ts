@@ -1,6 +1,5 @@
-import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
-import {RpgFunctions} from "../functions/RpgFunctions";
-import {MetadataValidator} from "../validators/MetadataValidator";
+import {Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
+import {Api} from "../api";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {CampaignData, CampaignDataInterface} from "../data/CampaignData";
@@ -14,8 +13,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 	protected io: IoData;
 
 	constructor(
-		protected functions: RpgFunctions,
-		protected app: App,
+		protected api: Api,
 		protected container: HTMLElement,
 		private source: string,
 		private component: Component | MarkdownPostProcessorContext,
@@ -29,7 +27,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 	private async renderComponent(wait = 500){
 		setTimeout(() => {
 			//@ts-ignore
-			this.dv = this.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
+			this.dv = this.api.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
 
 			const current = this.dv.current();
 			if (current != null){
@@ -38,12 +36,37 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 				return;
 			}
 
+			let campaignId: string|null = null;
+			this.current.tags.forEach((tag: string) => {
+				if (tag.startsWith(this.api.settings.campaignTag)){
+					campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
+				} else if (tag.startsWith(this.api.settings.campaignIdentifier)){
+					campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
+				}
+			});
+			if (campaignId !== null){
+				const campaigns = this.dv.pages('#' + this.api.settings.campaignTag + '/' + campaignId);
+
+				if (campaigns.length === 1) {
+					this.campaign = new CampaignData(
+						this.api,
+						campaigns[0],
+					);
+				}
+			}
+
+			this.io = new IoData(this.api, this.campaign, this.dv, this.current);
+			this.container.innerHTML = '';
+
+			this.render();
+
+			/*
 			const frontMatterValidation = MetadataValidator.validate(this.app, this.current);
 			if (typeof frontMatterValidation === 'boolean'){
 				const campaigns = this.dv.pages("#campaign and " + `-"Templates"`);
 				if (campaigns !== undefined && campaigns.length === 1){
 					this.campaign = new CampaignData(
-						this.functions,
+						this.api,
 						campaigns[0],
 					);
 
@@ -51,7 +74,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 					this.campaign = null;
 				}
 
-				this.io = new IoData(this.functions, this.campaign, this.dv, this.current);
+				this.io = new IoData(this.api,this.campaign, this.dv, this.current);
 
 				this.container.innerHTML = '';
 
@@ -73,12 +96,13 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 
 				this.container.innerHTML = error.outerHTML;
 			}
+			*/
 		}, wait);
 	}
 
 	onload() {
 		this.renderComponent(0);
-		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.redrawContainer));
+		this.registerEvent(this.api.app.workspace.on("rpgmanager:refresh-views", this.redrawContainer));
 	}
 
 	redrawContainer = () => {
@@ -88,7 +112,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 	};
 
 	private isActivePage(): boolean {
-		const views = this.app.workspace.getLayout().main.children;
+		const views = this.api.app.workspace.getLayout().main.children;
 
 		for (let viewCounter = 0; viewCounter < views.length; viewCounter++){
 			if (

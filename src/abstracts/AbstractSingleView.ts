@@ -1,5 +1,4 @@
-import {RpgFunctions} from "../functions/RpgFunctions";
-import {App} from "obsidian";
+import {Api} from "../api";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {GenericDataInterface} from "../interfaces/DataInterfaces";
 
@@ -13,8 +12,7 @@ export abstract class AbstractSingleView implements SingleViewInterface {
 	protected container: HTMLElement;
 
 	constructor(
-		protected functions: RpgFunctions,
-		protected app: App,
+		protected api: Api,
 		protected dv: DataviewInlineApi,
 	) {
 		this.container = dv.container;

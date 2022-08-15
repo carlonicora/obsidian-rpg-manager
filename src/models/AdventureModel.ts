@@ -1,15 +1,16 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {viewType} from "../factories/RpgViewFactory";
+import {AdventureData} from "../data";
 
 export class AdventureModel extends AbstractModel {
 	public async render() {
+		const adventure = new AdventureData(this.api, this.current);
 
-		this.sessionList(this.dv.current()?.ids.adventure)
-
+		this.sessionList(adventure.id)
 	}
 
 	private async sessionList(
-		adventureId: number,
+		adventureId: string,
 	) {
 		this.writeList(
 			this.io.getSessionList(adventureId),

@@ -2,7 +2,7 @@ import {
 	GenericDataInterface,
 	GenericDataListInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractData, AbstractDataList} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -11,7 +11,7 @@ export interface AdventureListInterface extends GenericDataListInterface{
 }
 
 export interface AdventureDataInterface extends GenericDataInterface {
-	id: number;
+	id: string;
 	synopsis: string;
 }
 
@@ -27,7 +27,7 @@ export class AdventureList extends AbstractDataList implements AdventureListInte
 }
 
 export class AdventureData extends AbstractData implements AdventureDataInterface {
-	public id: number;
+	public id: string;
 	public synopsis: string;
 
 	public static frontmatter = {
@@ -38,12 +38,12 @@ export class AdventureData extends AbstractData implements AdventureDataInterfac
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 	) {
-		super(functions, data);
+		super(api, data);
 
-		this.id = data.ids.adventure;
+		this.id = this.api.getId(data.tags, this.api.settings.adventureTag);
 		this.synopsis = data.synopsis;
 	}
 }

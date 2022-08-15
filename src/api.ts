@@ -1,6 +1,7 @@
 import {App, Component, TFile, TAbstractFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
 import {DateTime} from "obsidian-dataview";
+import {RpgManagerSettings} from "./main";
 
 declare module 'obsidian' {
 	interface Vault {
@@ -15,18 +16,21 @@ declare module 'obsidian' {
 	}
 }
 
-export class RpgFunctions extends Component {
+export class Api extends Component {
 	private root: string;
 	private attachmentRoot: string;
 
+	/*
 	public static create(
 		app: App,
-	): RpgFunctions {
-		return new RpgFunctions(app);
+	): Api {
+		return new Api(app);
 	}
+	*/
 
 	constructor(
-		private app: App,
+		public app: App,
+		public settings: RpgManagerSettings,
 	) {
 		super();
 		this.initialiseRoots();
@@ -121,6 +125,39 @@ export class RpgFunctions extends Component {
 		}
 
 		return "<img src=\"" + imageFile + "\" style=\"object-fit: cover;" + dimensions + "\">";
+	}
+
+	public getId(
+		tags: Array<string>,
+		elementTag: string,
+	): string
+	{
+		let response = '';
+
+		tags.forEach((tag: string) => {
+			if (response === '' && tag.startsWith(elementTag)){
+				response = tag.substring(tag.lastIndexOf('/') + 1);
+			}
+		});
+
+		return response;
+	}
+
+	public getParentId(
+		tags: Array<string>,
+		elementTag: string,
+	): string
+	{
+		let response = '';
+
+		tags.forEach((tag: string) => {
+			if (response === '' && tag.startsWith(elementTag)){
+				tag = tag.substring(0, tag.lastIndexOf('/'));
+				response = tag.substring(tag.lastIndexOf('/') + 1);
+			}
+		});
+
+		return response;
 	}
 
 	/**

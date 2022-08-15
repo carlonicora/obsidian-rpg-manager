@@ -1,5 +1,5 @@
 import {GenericSynopsisDataInterface} from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractData} from "../abstracts/AbstractData";
 
 export class SynopsisData extends AbstractData implements GenericSynopsisDataInterface {
@@ -8,14 +8,14 @@ export class SynopsisData extends AbstractData implements GenericSynopsisDataInt
 	public isCharacter: boolean;
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		public title: string|null=null,
 	) {
-		super(functions, data);
+		super(api, data);
 
 		this.synopsis = data.synopsis !== null ? data.synopsis : '';
-		this.death = data.dates?.death !== undefined && data.dates?.death !== undefined ? this.functions.formatDate(data.dates.death, "short") : '';
+		this.death = data.dates?.death !== undefined && data.dates?.death !== undefined ? this.api.formatDate(data.dates.death, "short") : '';
 		this.isCharacter = data.tags.indexOf('character/npc') !== -1;
 	}
 }

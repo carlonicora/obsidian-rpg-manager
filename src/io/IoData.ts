@@ -1,6 +1,6 @@
 import {SessionData, SessionList, SessionListInterface} from "../data/SessionData";
 import {CampaignDataInterface} from "../data/CampaignData";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {AdventureData, AdventureList, AdventureListInterface} from "../data/AdventureData";
 import {CharacterData, CharacterList, CharacterListInterface} from "../data/CharacterData";
@@ -30,23 +30,40 @@ export class IoData {
 	private variableParentSingular: string;
 	private variableParentPlural: string;
 
+	private id: string|null = null;
+	private templateFolder: string;
+
 	constructor(
-		private functions: RpgFunctions,
+		private api: Api,
 		private campaign: CampaignDataInterface|null,
 		private dv: DataviewInlineApi,
 		private current: Record<string, any>,
 	) {
 		this.outlinks = [];
 		this.readOutlinks();
+
+		const corePlugin = (this.api.app as any).internalPlugins?.plugins["templates"];
+		this.templateFolder = corePlugin.instance.options.folder;
+
+		this.current.tags.forEach((tag: string) => {
+			if (tag.startsWith(this.api.settings.campaignTag)){
+				this.getId(this.api.settings.campaignTag);
+			} else if (tag.startsWith(this.api.settings.adventureTag)){
+				this.getId(this.api.settings.adventureTag);
+			} else if (tag.startsWith(this.api.settings.sessionTag)){
+				this.getId(this.api.settings.sessionTag);
+			} else if (tag.startsWith(this.api.settings.sceneTag)){
+				this.getId(this.api.settings.sceneTag);
+			}
+		});
+
 	}
 
 	private readOutlinks(
 	) : void
 	{
-		const current = this.dv.current();
-
-		if (current != undefined){
-			current.file.outlinks.forEach((file: Record<string,any>) => {
+		if (this.current != undefined){
+			this.current.file.outlinks.forEach((file: Record<string,any>) => {
 				const page = this.dv.page(file.path);
 				if (page != undefined) {
 					this.outlinks.push(page);
@@ -83,12 +100,64 @@ export class IoData {
 
 		switch (type){
 			case DataType.Character:
-				return page.tags.indexOf('character/npc') !== -1 || page.tags.indexOf('character/npc') !== -1;
+				return page.tags.indexOf(this.api.settings.npcTag) !== -1 || page.tags.indexOf(this.api.settings.pcTag) !== -1;
+				break;
+			case DataType.Clue:
+				return page.tags.indexOf(this.api.settings.clueTag) !== -1;
+				break;
+			case DataType.Location:
+				return page.tags.indexOf(this.api.settings.locationTag) !== -1;
+				break;
+			case DataType.Faction:
+				return page.tags.indexOf(this.api.settings.factionTag) !== -1;
+				break;
+			case DataType.Event:
+				return page.tags.indexOf(this.api.settings.eventTag) !== -1;
 				break;
 			default:
-				return page.tags.indexOf(DataType[type].toLowerCase()) !== -1;
+				return false;
 				break;
 		}
+	}
+
+	private getCorrectTag(
+		type: DataType
+	): string
+	{
+		let response = '';
+
+		switch (type){
+			case DataType.Character:
+				response = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ')';
+				break;
+			case DataType.Clue:
+				response = '#' + this.api.settings.clueTag;
+				break;
+			case DataType.Location:
+				response = '#' + this.api.settings.locationTag;
+				break;
+			case DataType.Faction:
+				response = '#' + this.api.settings.factionTag;
+				break;
+			case DataType.Event:
+				response = '#' + this.api.settings.eventTag;
+				break;
+		}
+
+		response += ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+
+		return response;
+	}
+
+	private getId(
+		identifyingTag: string,
+	): void
+	{
+		this.current.tags.forEach((tag: string) => {
+			if (tag.startsWith(identifyingTag)){
+				this.id = tag.substring(tag.lastIndexOf('/') + 1);
+			}
+		});
 	}
 
 	public getAdventureList(
@@ -96,49 +165,53 @@ export class IoData {
 	{
 		const response = new AdventureList(this.campaign);
 
-		this.dv.pages("#adventure")
-			.where(adventure =>
-				adventure.file.folder !== "Templates" &&
-				adventure.ids !== null &&
-				adventure.ids.adventure !== null
-			)
-			.sort(adventure =>
-				-adventure.ids.adventure
-			)
-			.forEach((adventure) => {
-			response.add(
-				new AdventureData(
-					this.functions,
-					adventure,
+		if (this.campaign !== null) {
+			const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+
+			this.dv.pages(query)
+				.where(adventure =>
+					adventure.file.folder !== this.templateFolder
 				)
-			)
-		});
+				.sort(adventure =>
+					-adventure.ids.adventure
+				)
+				.forEach((adventure) => {
+					response.add(
+						new AdventureData(
+							this.api,
+							adventure,
+						)
+					)
+				});
+		}
 
 		return response;
 	}
 
 	public getSessionList(
-		adventureId: number|null = null,
+		adventureId: string|null = null,
 	): SessionListInterface
 	{
 		const response = new SessionList(this.campaign);
 
-		this.dv.pages("#session")
-			.where(session =>
-				session.file.folder !== "Templates" &&
-				session.ids !== null &&
-				session.ids.session !== null &&
-				(adventureId != null ? session.ids.adventure === adventureId : true)
-			).sort(session =>
-				-session.ids.session
-			).forEach((session) => {
-				response.add(
-					new SessionData(
-						this.functions,
-						session,
+		if (this.campaign !== null) {
+			const query = "#" + this.api.settings.sessionTag + (adventureId !== null ? '/' + adventureId : '') + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+
+			this.dv.pages(query)
+				.where(session =>
+					session.file.folder !== this.templateFolder
+				).sort(session =>
+					- this.api.getId(session.tags, this.api.settings.sessionTag)
+					//	-session.ids.session
+				).forEach((session) => {
+					response.add(
+						new SessionData(
+							this.api,
+							session,
+						)
 					)
-				)
-			});
+				});
+		}
 
 		return response;
 	}
@@ -147,23 +220,25 @@ export class IoData {
 	{
 		const response = new SceneList(this.campaign);
 
-		this.dv.pages("#scene")
-			.where(page =>
-				page.file.folder !== "Templates" &&
-				page.ids !== undefined &&
-				page.ids.session != undefined &&
-				page.ids.scene != undefined &&
-				page.ids.session === this.current.ids.session
-			)
-			.sort(page => page.ids.scene)
-			.forEach((scene) => {
-				response.add(
-					new SceneData(
-						this.functions,
-						scene,
-					)
+		if (this.campaign !== null) {
+			const query = "#" + this.api.settings.sceneTag + '/' + this.id + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+
+			this.dv.pages(query)
+				.where(page =>
+					page.file.folder !== this.templateFolder
 				)
-			});
+				.sort(scene =>
+					this.api.getId(scene.tags, this.api.settings.sceneTag)
+				)
+				.forEach((scene) => {
+					response.add(
+						new SceneData(
+							this.api,
+							scene,
+						)
+					)
+				});
+		}
 
 		return response;
 	}
@@ -173,22 +248,26 @@ export class IoData {
 	{
 		const response = new CharacterList(this.campaign);
 
-		this.dv.pages("#character")
-			.where(character =>
-				character.file.folder !== "Templates"
-			)
-			.sort(character =>
-				character.file.name
-			)
-			.forEach((character) => {
-				response.add(
-					new CharacterData(
-						this.functions,
-						character,
-						this.campaign
-					)
+		if (this.campaign !== null) {
+			const query = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ') and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
+
+			this.dv.pages(query)
+				.where(character =>
+					character.file.folder !== this.templateFolder
 				)
-			});
+				.sort(character =>
+					character.file.name
+				)
+				.forEach((character) => {
+					response.add(
+						new CharacterData(
+							this.api,
+							character,
+							this.campaign
+						)
+					)
+				});
+		}
 
 		return response;
 	}
@@ -197,7 +276,7 @@ export class IoData {
 	): ClueDataInterface
 	{
 		return new ClueData(
-			this.functions,
+			this.api,
 			this.current,
 		)
 	}
@@ -208,7 +287,7 @@ export class IoData {
 	): ImageData
 	{
 		return new ImageData(
-			this.functions,
+			this.api,
 			this.current,
 			width,
 			height,
@@ -220,7 +299,7 @@ export class IoData {
 	): SynopsisData
 	{
 		return new SynopsisData(
-			this.functions,
+			this.api,
 			this.current,
 			title
 		)
@@ -230,7 +309,7 @@ export class IoData {
 	): SceneData
 	{
 		return new SceneData(
-			this.functions,
+			this.api,
 			this.current,
 		)
 	}
@@ -244,74 +323,78 @@ export class IoData {
 		//@ts-ignore
 		const response = new Datas[DataType[type] + 'List'](this.campaign);
 
-		this.variableSingular = DataType[type].toLowerCase();
-		this.variablePlural = this.variableSingular + 's';
+		if (this.campaign !== null) {
+			this.variableSingular = DataType[type].toLowerCase();
+			this.variablePlural = this.variableSingular + 's';
 
-		const defaultSorting = function(page: Record<string, any>) {
-			return page.file.name
-		};
+			const defaultSorting = function (page: Record<string, any>) {
+				return page.file.name
+			};
 
-		let comparison: ArrayFunc<any, boolean>;
+			let comparison: ArrayFunc<any, boolean>;
 
-		if (parentType === null){
-			comparison = function (page: Record<string, any>): boolean {
-				return page.file.folder !== "Templates" &&
-					this.current.relationships != undefined &&
-					this.current.relationships[this.variablePlural] != undefined &&
-					this.current.relationships[this.variablePlural][page.file.name] !== undefined;
-			}.bind(this);
-		} else {
-			this.variableParentSingular = DataType[parentType].toLowerCase();
-			this.variableParentPlural = this.variableParentSingular + 's';
+			if (parentType === null) {
+				comparison = function (page: Record<string, any>): boolean {
+					return page.file.folder !== this.templateFolder &&
+						this.current.relationships != undefined &&
+						this.current.relationships[this.variablePlural] != undefined &&
+						this.current.relationships[this.variablePlural][page.file.name] !== undefined;
+				}.bind(this);
+			} else {
+				this.variableParentSingular = DataType[parentType].toLowerCase();
+				this.variableParentPlural = this.variableParentSingular + 's';
 
-			comparison = function (page: Record<string, any>): boolean {
-				return page.file.folder !== "Templates" &&
-					page.relationships != undefined &&
-					page.relationships[this.variableParentPlural] != undefined &&
-					page.relationships[this.variableParentPlural][this.current.file.name] !== undefined;
-			}.bind(this);
-		}
-
-		this.dv.pages("#" + this.variableSingular)
-			.where(
-				comparison
-			)
-			.sort(
-				(sorting !== null ? sorting : defaultSorting)
-			)
-			.forEach((page) => {
-				response.add(
-					DataFactory.create(
-						type,
-						this.functions,
-						this.campaign,
-						this.current,
-						page,
-						(parentType === null ?
-								this.current.relationships[this.variablePlural][page.file.name] :
-								page.relationships[DataType[parentType].toLowerCase() + 's'][this.current.file.name]
-						),
-					)
-				)
-			});
-
-		this.outlinks.forEach((page) => {
-			if (
-				this.hasMainTag(page, type) &&
-				!this.isAlreadyPresent(response, page)
-			){
-				response.add(
-					DataFactory.create(
-						type,
-						this.functions,
-						this.campaign,
-						this.current,
-						page,
-						'_in main description_',
-					)
-				)
+				comparison = function (page: Record<string, any>): boolean {
+					return page.file.folder !== this.templateFolder &&
+						page.relationships != undefined &&
+						page.relationships[this.variableParentPlural] != undefined &&
+						page.relationships[this.variableParentPlural][this.current.file.name] !== undefined;
+				}.bind(this);
 			}
-		});
+
+			const query = this.getCorrectTag(type);
+
+			this.dv.pages(query)
+				.where(
+					comparison
+				)
+				.sort(
+					(sorting !== null ? sorting : defaultSorting)
+				)
+				.forEach((page) => {
+					response.add(
+						DataFactory.create(
+							type,
+							this.api,
+							this.campaign,
+							this.current,
+							page,
+							(parentType === null ?
+									this.current.relationships[this.variablePlural][page.file.name] :
+									page.relationships[DataType[parentType].toLowerCase() + 's'][this.current.file.name]
+							),
+						)
+					)
+				});
+
+			this.outlinks.forEach((page) => {
+				if (
+					this.hasMainTag(page, type) &&
+					!this.isAlreadyPresent(response, page)
+				) {
+					response.add(
+						DataFactory.create(
+							type,
+							this.api,
+							this.campaign,
+							this.current,
+							page,
+							'_in main description_',
+						)
+					)
+				}
+			});
+		}
 
 		return response;
 	}

@@ -1,7 +1,7 @@
 import {GenericDataInterface,
 	GenericDataListInterface, GenericImageDataInterface
 } from "../interfaces/DataInterfaces";
-import {RpgFunctions} from "../functions/RpgFunctions";
+import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
@@ -62,16 +62,16 @@ export class CharacterData extends AbstractImageData implements CharacterDataInt
 	};
 
 	constructor(
-		functions: RpgFunctions,
+		api: Api,
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface|null,
 		useAdditionalInformation: string|null = null,
 	) {
-		super(functions, data);
+		super(api, data);
 
 		this.age = '';
-		this.image = functions.getImage(data);
-		if (campaign !== null) this.age = functions.calculateAge(data, campaign.currentDate);
+		this.image = this.api.getImage(data);
+		if (campaign !== null) this.age = this.api.calculateAge(data, campaign.currentDate);
 		this.isDead = data.dates.death != undefined;
 		this.goals = data.goals != undefined ? data.goals : null;
 
