@@ -10,7 +10,7 @@ export class AdventureModel extends AbstractModel {
 	}
 
 	private async sessionList(
-		adventureId: string,
+		adventureId: number,
 	) {
 		this.writeList(
 			this.io.getSessionList(adventureId),

@@ -130,7 +130,7 @@ export class Api extends Component {
 	public getId(
 		tags: Array<string>,
 		elementTag: string,
-	): string
+	): number
 	{
 		let response = '';
 
@@ -140,13 +140,13 @@ export class Api extends Component {
 			}
 		});
 
-		return response;
+		return +response;
 	}
 
 	public getParentId(
 		tags: Array<string>,
 		elementTag: string,
-	): string
+	): number
 	{
 		let response = '';
 
@@ -157,7 +157,25 @@ export class Api extends Component {
 			}
 		});
 
-		return response;
+		return +response;
+	}
+
+	public getGrandParentId(
+		tags: Array<string>,
+		elementTag: string,
+	): number
+	{
+		let response = '';
+
+		tags.forEach((tag: string) => {
+			if (response === '' && tag.startsWith(elementTag)){
+				tag = tag.substring(0, tag.lastIndexOf('/'));
+				tag = tag.substring(0, tag.lastIndexOf('/'));
+				response = tag.substring(tag.lastIndexOf('/') + 1);
+			}
+		});
+
+		return +response;
 	}
 
 	/**

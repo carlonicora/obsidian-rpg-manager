@@ -14,8 +14,8 @@ export interface SceneListInterface extends GenericDataListInterface{
 export interface SceneDataInterface extends GenericDataInterface, GenericImageDataInterface {
 	synopsis: string;
 	action: string;
-	sessionId: string;
-	id: string;
+	sessionId: number;
+	id: number;
 	startTime: string;
 	endTime: string;
 	duration: string;
@@ -40,8 +40,8 @@ export class SceneList extends AbstractDataList implements SceneListInterface {
 export class SceneData extends AbstractImageData implements SceneDataInterface {
 	public synopsis: string;
 	public action: string;
-	public sessionId: string;
-	public id: string;
+	public sessionId: number;
+	public id: number;
 	public startTime: string;
 	public endTime: string;
 	public duration = '';
@@ -78,7 +78,6 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 		this.action = data.action != undefined ? data.action : '';
 		this.synopsis = data.synopsis != undefined ? data.synopsis : '';
 		this.sessionId = data.ids?.session != undefined ? data.ids.session : 0;
-		this.id = this.api.getId(data.tags, this.api.settings.sceneTag);
 		this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
 		this.startTime = this.api.formatTime(data.time.start);
 		this.endTime = this.api.formatTime(data.time.end);

@@ -3,12 +3,12 @@ import {Api} from "../api";
 import {AbstractImageData} from "../abstracts/AbstractData";
 
 export interface CampaignDataInterface extends GenericDataInterface, GenericImageDataInterface {
-	id: string;
+	id: number;
 	currentDate: string;
 }
 
 export class CampaignData extends AbstractImageData implements CampaignDataInterface {
-	public id: string;
+	public id: number;
 	public currentDate: string;
 
 	public static frontmatter = {
@@ -24,6 +24,6 @@ export class CampaignData extends AbstractImageData implements CampaignDataInter
 		super(api, data);
 		this.currentDate = data.dates.current;
 
-		this.id = this.api.getId(data.tags, api.settings.campaignTag)
+		this.id = this.api.getId(data.tags, api.settings.campaignTag);
 	}
 }

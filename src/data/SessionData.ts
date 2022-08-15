@@ -10,8 +10,8 @@ export interface SessionListInterface extends GenericDataListInterface{
 }
 
 export interface SessionDataInterface extends GenericDataInterface {
-	id: string;
-	adventureId: string;
+	id: number;
+	adventureId: number;
 	synopsis: string;
 	date: string;
 	irl: string;
@@ -33,8 +33,8 @@ export class SessionList extends AbstractDataList implements SessionListInterfac
 }
 
 export class SessionData extends AbstractData implements SessionDataInterface {
-	public id: string;
-	public adventureId: string;
+	public id: number;
+	public adventureId: number;
 	public synopsis: string;
 	public date: string;
 	public irl: string;

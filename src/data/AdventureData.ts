@@ -11,7 +11,7 @@ export interface AdventureListInterface extends GenericDataListInterface{
 }
 
 export interface AdventureDataInterface extends GenericDataInterface {
-	id: string;
+	id: number;
 	synopsis: string;
 }
 
@@ -27,7 +27,7 @@ export class AdventureList extends AbstractDataList implements AdventureListInte
 }
 
 export class AdventureData extends AbstractData implements AdventureDataInterface {
-	public id: string;
+	public id: number;
 	public synopsis: string;
 
 	public static frontmatter = {

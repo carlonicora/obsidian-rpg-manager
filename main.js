@@ -137,7 +137,7 @@ var Api = class extends import_obsidian.Component {
         response = tag.substring(tag.lastIndexOf("/") + 1);
       }
     });
-    return response;
+    return +response;
   }
   getParentId(tags, elementTag) {
     let response = "";
@@ -147,7 +147,18 @@ var Api = class extends import_obsidian.Component {
         response = tag.substring(tag.lastIndexOf("/") + 1);
       }
     });
-    return response;
+    return +response;
+  }
+  getGrandParentId(tags, elementTag) {
+    let response = "";
+    tags.forEach((tag) => {
+      if (response === "" && tag.startsWith(elementTag)) {
+        tag = tag.substring(0, tag.lastIndexOf("/"));
+        tag = tag.substring(0, tag.lastIndexOf("/"));
+        response = tag.substring(tag.lastIndexOf("/") + 1);
+      }
+    });
+    return +response;
   }
   formatDate(date, type = null) {
     if (!date || date === void 0)
@@ -917,7 +928,6 @@ var SceneData = class extends AbstractImageData {
     this.action = data.action != void 0 ? data.action : "";
     this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
     this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
-    this.id = this.api.getId(data.tags, this.api.settings.sceneTag);
     this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
     this.startTime = this.api.formatTime(data.time.start);
     this.endTime = this.api.formatTime(data.time.end);
@@ -1144,6 +1154,28 @@ var IoData = class {
     }
     return response;
   }
+  getAdventure(adventureId) {
+    let response = null;
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.adventureTag + "/" + adventureId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      const adventures = this.dv.pages(query);
+      if (adventures !== null && adventures.length === 1) {
+        response = new AdventureData(this.api, adventures[0]);
+      }
+    }
+    return response;
+  }
+  getSession(adventureId, sessionId) {
+    let response = null;
+    if (this.campaign !== null) {
+      const query = "#" + this.api.settings.sessionTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+      const sessions = this.dv.pages(query);
+      if (sessions !== null && sessions.length === 1) {
+        response = new SessionData(this.api, sessions[0], this.campaign);
+      }
+    }
+    return response;
+  }
   getSessionList(adventureId = null) {
     const response = new SessionList(this.campaign);
     if (this.campaign !== null) {
@@ -1183,8 +1215,20 @@ var IoData = class {
   getSynopsis(title = null) {
     return new SynopsisData(this.api, this.current, title);
   }
-  getScene() {
-    return new SceneData(this.api, this.current);
+  getScene(adventureId = null, sessionId = null, sceneId = null) {
+    let response = null;
+    if (adventureId === null || sessionId === null || sceneId === null) {
+      response = new SceneData(this.api, this.current);
+    } else {
+      if (this.campaign !== null) {
+        const query = "#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + "/" + sceneId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+        const scenes = this.dv.pages(query);
+        if (scenes !== null && scenes.length === 1) {
+          response = new SceneData(this.api, scenes[0]);
+        }
+      }
+    }
+    return response;
   }
   getRelationshipList(type, parentType = null, sorting = null) {
     const response = new data_exports[DataType[type] + "List"](this.campaign);
@@ -1594,18 +1638,14 @@ var SessionNavigationModel = class extends AbstractModel {
   }
   sessionNavigator() {
     return __async(this, null, function* () {
-      const current = this.dv.current();
-      if (current != void 0 && current.ids != void 0 && current.ids.session != void 0 && current.ids.adventure != void 0) {
-        const adventures = this.dv.pages("#adventure").where((adventure2) => adventure2.file.folder !== "Templates" && adventure2.ids.adventure != void 0 && adventure2.ids.adventure == current.ids.adventure);
-        const adventure = adventures != void 0 && adventures.length === 1 ? adventures[0] : null;
-        const previousSessions = this.dv.pages("#session").where((session) => session.file.folder !== "Templates" && session.ids.adventure != void 0 && session.ids.session != void 0 && session.ids.adventure === current.ids.adventure && session.ids.session === current.ids.session - 1);
-        const previousSession = previousSessions != void 0 && previousSessions.length === 1 ? previousSessions[0] : null;
-        const nextSessions = this.dv.pages("#session").where((session) => session.file.folder !== "Templates" && session.ids.adventure != void 0 && session.ids.session != void 0 && session.ids.adventure === current.ids.adventure && session.ids.session === current.ids.session + 1);
-        const nextSession = nextSessions != void 0 && nextSessions.length === 1 ? nextSessions[0] : null;
-        const data = new SessionData(this.api, current, this.campaign, adventure != void 0 ? new AdventureData(this.api, adventure) : null, previousSession != void 0 ? new SessionData(this.api, previousSession) : null, nextSession != void 0 ? new SessionData(this.api, nextSession) : null);
-        const view = RpgViewFactory.createSingle(13 /* SessionNavigator */, this.dv);
-        view.render(data);
-      }
+      const adventureId = this.api.getParentId(this.current.tags, this.api.settings.sessionTag);
+      const sessionId = this.api.getId(this.current.tags, this.api.settings.sessionTag);
+      const adventure = this.io.getAdventure(adventureId);
+      const previousSession = this.io.getSession(adventureId, sessionId - 1);
+      const nextSession = this.io.getSession(adventureId, sessionId + 1);
+      const data = new SessionData(this.api, this.current, this.campaign, adventure, previousSession, nextSession);
+      const view = RpgViewFactory.createSingle(13 /* SessionNavigator */, this.dv);
+      view.render(data);
     });
   }
 };
@@ -1671,27 +1711,24 @@ var SceneNavigationModel = class extends AbstractModel {
     });
   }
   action() {
-    this.writeData(this.io.getScene(), 16 /* SceneAction */);
+    const scene = this.io.getScene();
+    if (scene !== null) {
+      this.writeData(scene, 16 /* SceneAction */);
+    }
   }
   sceneNavigation() {
     return __async(this, null, function* () {
-      const current = this.dv.current();
-      if (current != void 0 && current.ids != void 0 && current.ids.scene != void 0 && current.ids.session != void 0) {
-        const sessions = this.dv.pages("#session").where((session2) => {
-          var _a, _b, _c;
-          return session2.file.folder !== "Templates" && session2.ids != void 0 && ((_a = session2.ids) == null ? void 0 : _a.session) != void 0 && ((_b = session2.ids) == null ? void 0 : _b.session) === ((_c = current == null ? void 0 : current.ids) == null ? void 0 : _c.session);
-        });
-        const session = sessions != void 0 && sessions.length === 1 ? sessions[0] : null;
-        const adventures = this.dv.pages("#adventure").where((adventure2) => adventure2.file.folder !== "Templates" && adventure2.ids !== void 0 && adventure2.ids.adventure === session.ids.adventure);
-        const adventure = adventures != void 0 && adventures.length === 1 ? adventures[0] : null;
-        const previousScenes = this.dv.pages("#scene").where((scene) => scene.file.folder !== "Templates" && scene.ids != void 0 && scene.ids.session === (current == null ? void 0 : current.ids.session) && scene.ids.scene === (current == null ? void 0 : current.ids.scene) - 1);
-        const previousScene = previousScenes != void 0 && previousScenes.length === 1 ? previousScenes[0] : null;
-        const nextScenes = this.dv.pages("#scene").where((scene) => scene.file.folder !== "Templates" && scene.ids != void 0 && scene.ids.session === (current == null ? void 0 : current.ids.session) && scene.ids.scene === (current == null ? void 0 : current.ids.scene) + 1);
-        const nextScene = nextScenes != void 0 && nextScenes.length === 1 ? nextScenes[0] : null;
-        const data = new SceneData(this.api, current, session != void 0 ? new SessionData(this.api, session) : null, adventure != void 0 ? new AdventureData(this.api, adventure) : null, previousScene != void 0 ? new SceneData(this.api, previousScene) : null, nextScene != void 0 ? new SceneData(this.api, nextScene) : null, this.campaign);
-        const view = RpgViewFactory.createSingle(15 /* SceneNavigation */, this.dv);
-        view.render(data);
-      }
+      const adventureId = this.api.getGrandParentId(this.current.tags, this.api.settings.sceneTag);
+      const sessionId = this.api.getParentId(this.current.tags, this.api.settings.sceneTag);
+      const sceneId = this.api.getId(this.current.tags, this.api.settings.sceneTag);
+      const adventure = this.io.getAdventure(adventureId);
+      const session = this.io.getSession(adventureId, sessionId);
+      const previousScene = this.io.getScene(adventureId, sessionId, sceneId - 1);
+      const nextScene = this.io.getScene(adventureId, sessionId, sceneId + 1);
+      const data = new SceneData(this.api, this.current, session, adventure, previousScene, nextScene, this.campaign);
+      console.log(data);
+      const view = RpgViewFactory.createSingle(15 /* SceneNavigation */, this.dv);
+      view.render(data);
     });
   }
 };

@@ -11,54 +11,23 @@ export class SessionNavigationModel extends AbstractModel {
 
 	private async sessionNavigator(
 	) {
-		const current = this.dv.current();
+		const adventureId = this.api.getParentId(this.current.tags, this.api.settings.sessionTag);
+		const sessionId = this.api.getId(this.current.tags, this.api.settings.sessionTag);
 
-		if (
-			current != undefined &&
-			current.ids != undefined &&
-			current.ids.session != undefined &&
-			current.ids.adventure != undefined
-		) {
-			const adventures = this.dv.pages("#adventure")
-				.where(adventure =>
-					adventure.file.folder !== "Templates" &&
-					adventure.ids.adventure != undefined &&
-					adventure.ids.adventure == current.ids.adventure
-				);
-			const adventure = adventures != undefined && adventures.length === 1 ? adventures[0] : null;
+		const adventure = this.io.getAdventure(adventureId);
+		const previousSession = this.io.getSession(adventureId, sessionId - 1);
+		const nextSession = this.io.getSession(adventureId, sessionId + 1);
 
-			const previousSessions = this.dv.pages("#session")
-				.where(session =>
-					session.file.folder !== "Templates" &&
-					session.ids.adventure != undefined &&
-					session.ids.session != undefined &&
-					session.ids.adventure === current.ids.adventure &&
-					session.ids.session === current.ids.session - 1
-				);
-			const previousSession = previousSessions != undefined && previousSessions.length === 1 ? previousSessions[0] : null;
+		const data = new SessionData(
+			this.api,
+			this.current,
+			this.campaign,
+			adventure,
+			previousSession,
+			nextSession,
+		);
 
-			const nextSessions = this.dv.pages("#session")
-				.where(session =>
-					session.file.folder !== "Templates" &&
-					session.ids.adventure != undefined &&
-					session.ids.session != undefined &&
-					session.ids.adventure === current.ids.adventure &&
-					session.ids.session === current.ids.session + 1
-				);
-			const nextSession = nextSessions != undefined && nextSessions.length === 1 ? nextSessions[0] : null;
-
-			const data = new SessionData(
-				this.api,
-				current,
-				this.campaign,
-				(adventure != undefined ? new AdventureData(this.api, adventure) : null),
-				(previousSession != undefined ? new SessionData(this.api, previousSession) : null),
-				(nextSession != undefined ? new SessionData(this.api, nextSession) : null),
-
-			)
-
-			const view = RpgViewFactory.createSingle(viewType.SessionNavigator, this.dv);
-			view.render(data);
-		}
+		const view = RpgViewFactory.createSingle(viewType.SessionNavigator, this.dv);
+		view.render(data);
 	}
 }

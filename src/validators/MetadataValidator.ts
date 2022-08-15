@@ -1,4 +1,4 @@
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {
 	AdventureData,
 	CampaignData,
@@ -9,19 +9,20 @@ import {
 	LocationData,
 	SceneData, SessionData
 } from "../data";
+import {Api} from "../api";
 
 export class MetadataValidator {
 	public static validate(
-		app: App,
+		api: Api,
 		current: Record<string, any>,
 	): boolean|string
 	{
 		return true;
 		let response: boolean|string = true;
 
-		app.vault.getFiles().forEach((file: TFile) => {
+		api.app.vault.getFiles().forEach((file: TFile) => {
 			if (file.path === current.file.path){
-				const cache = app.metadataCache.getFileCache(file);
+				const cache = api.app.metadataCache.getFileCache(file);
 
 				if (cache != undefined && cache.frontmatter == undefined){
 					if (

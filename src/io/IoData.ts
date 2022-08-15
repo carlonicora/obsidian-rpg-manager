@@ -1,8 +1,8 @@
-import {SessionData, SessionList, SessionListInterface} from "../data/SessionData";
+import {SessionData, SessionDataInterface, SessionList, SessionListInterface} from "../data/SessionData";
 import {CampaignDataInterface} from "../data/CampaignData";
 import {Api} from "../api";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {AdventureData, AdventureList, AdventureListInterface} from "../data/AdventureData";
+import {AdventureData, AdventureDataInterface, AdventureList, AdventureListInterface} from "../data/AdventureData";
 import {CharacterData, CharacterList, CharacterListInterface} from "../data/CharacterData";
 import {ClueData, ClueDataInterface} from "../data/ClueData";
 import {ImageData} from "../data/ImageData";
@@ -12,7 +12,7 @@ import {DataObject} from "obsidian-dataview";
 import {DataFactory} from "../factories/DataFactory";
 import * as Datas from '../data';
 import {ArrayFunc} from "obsidian-dataview/lib/api/data-array";
-import {SceneData, SceneList, SceneListInterface} from "../data";
+import {SceneData, SceneDataInterface, SceneList, SceneListInterface} from "../data";
 
 export enum DataType {
 	Character,
@@ -188,8 +188,52 @@ export class IoData {
 		return response;
 	}
 
+	public getAdventure(
+		adventureId: number,
+	): AdventureDataInterface|null
+	{
+		let response: AdventureDataInterface|null = null;
+
+		if (this.campaign !== null) {
+			const query = '#' + this.api.settings.adventureTag + '/' + adventureId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
+
+			const adventures = this.dv.pages(query);
+
+			if (adventures !== null && adventures.length === 1){
+				response = new AdventureData(
+					this.api,
+					adventures[0],
+				)
+			}
+		}
+
+		return response;
+	}
+
+	public getSession(
+		adventureId: number,
+		sessionId: number,
+	): SessionDataInterface|null
+	{
+		let response: SessionDataInterface|null = null;
+
+		if (this.campaign !== null) {
+			const query = '#' + this.api.settings.sessionTag + '/' + adventureId + '/' + sessionId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
+			const sessions = this.dv.pages(query);
+
+			if (sessions !== null && sessions.length === 1){
+				response = new SessionData(
+					this.api, sessions[0],
+					this.campaign,
+				)
+			}
+		}
+
+		return response;
+	}
+
 	public getSessionList(
-		adventureId: string|null = null,
+		adventureId: number|null = null,
 	): SessionListInterface
 	{
 		const response = new SessionList(this.campaign);
@@ -306,12 +350,34 @@ export class IoData {
 	}
 
 	public getScene(
-	): SceneData
+		adventureId: number|null = null,
+		sessionId: number|null = null,
+		sceneId: number|null = null,
+	): SceneDataInterface|null
 	{
-		return new SceneData(
-			this.api,
-			this.current,
-		)
+		let response: SceneDataInterface|null = null;
+
+		if (adventureId === null || sessionId === null || sceneId === null) {
+			response = new SceneData(
+				this.api,
+				this.current,
+			)
+		} else {
+			if (this.campaign !== null) {
+				const query = '#' + this.api.settings.sceneTag + '/' + adventureId + '/' + sessionId + '/' + sceneId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
+				const scenes = this.dv.pages(query);
+
+				if (scenes !== null && scenes.length === 1){
+					response = new SceneData(
+						this.api,
+						scenes[0],
+					)
+				}
+			}
+
+		}
+
+		return response;
 	}
 
 	public getRelationshipList(
