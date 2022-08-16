@@ -79,8 +79,8 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 		this.synopsis = data.synopsis != undefined ? data.synopsis : '';
 		this.sessionId = data.ids?.session != undefined ? data.ids.session : 0;
 		this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
-		this.startTime = this.api.formatTime(data.time.start);
-		this.endTime = this.api.formatTime(data.time.end);
+		this.startTime = this.api.formatTime(data.time?.start);
+		this.endTime = this.api.formatTime(data.time?.end);
 
 		if (this.startTime !== '' && this.endTime !== ''){
 			this.duration = this.api.calculateDuration(data.time.start, data.time.end);

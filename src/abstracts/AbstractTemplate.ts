@@ -37,7 +37,7 @@ export abstract class AbstractTemplate  implements TemplateInterface{
 
 		const times = this.generateFrontmatterTimes();
 		if (times !== null) {
-			response += 'times:\n' + times;
+			response += 'time:\n' + times;
 		}
 
 		const relationships = this.generateFrontmatterRelationships();

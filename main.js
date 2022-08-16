@@ -758,7 +758,7 @@ var AbstractTemplate = class {
     }
     const times = this.generateFrontmatterTimes();
     if (times !== null) {
-      response += "times:\n" + times;
+      response += "time:\n" + times;
     }
     const relationships = this.generateFrontmatterRelationships();
     if (relationships !== null) {
