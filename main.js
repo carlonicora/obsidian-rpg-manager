@@ -2052,7 +2052,7 @@ var RpgManager = class extends import_obsidian5.Plugin {
       this.registerPriorityCodeblockPostProcessor("RpgManager", -100, (source, el, ctx) => __async(this, null, function* () {
         return this.createRpgView(source, el, ctx, ctx.sourcePath);
       }));
-      for (const type in DataType) {
+      Object.keys(DataType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
         this.addCommand({
           id: "rpg-manager-create-" + type.toLowerCase(),
           name: "Create a new " + type,
@@ -2060,7 +2060,7 @@ var RpgManager = class extends import_obsidian5.Plugin {
             this.api.fileFactory.create(DataType[type]);
           }
         });
-      }
+      });
     });
   }
   onunload() {

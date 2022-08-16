@@ -12,7 +12,7 @@ practice to keep the same number of spaces.
 
 PS: In the examples provided, I referece "Stranger Things". Spoilers for Season 1! Be warned :)
 
-## Element Types
+## YAML Value Types
 
 The Frontmatter metadata used by the [Rpg Manager Plugin](https://github.com/carlonicora/obsidian-rpg-manager) can be
 of various types. Listed below you will find the types useable and their explanation. 
@@ -165,35 +165,32 @@ alias: [Name, "Another Name", "Sometimes I use an alias that makes me remeber of
 
 (_Obsidian default_) Identifies the tags of a specific note. 
 [Rpg Manager Plugin](https://github.com/carlonicora/obsidian-rpg-manager) **requires** each note to contain the tag of 
-the type of the [element](README.md#elements) you are writing. The required tag is one of these:
-- campaign
-- adventure
-- session
-- scene
-- character/npc
-- character/pc
-- faction
-- location
-- event
-- clue
-- note
+the type of the [outline](README.md#outlines) or [element](README.md#elements) you are writing. The required tag is one of these:
+- rpgm/outline/campaign
+- rpgm/outline/adventure/{adventureId}
+- rpgm/outline/session/{adventureId}/{sessionId}
+- rpgm/outline/scene/{adventureId}/{sessionId}/{sceneId}
+- rpgm/outline/character/npc
+- rpgm/outline/character/pc
+- rpgm/outline/faction
+- rpgm/outline/location
+- rpgm/outline/event
+- rpgm/outline/clue
 
-One of the best practices used with [Rpg Manager Plugin](https://github.com/carlonicora/obsidian-rpg-manager) is to use 
-a specific tags to geolocate an element when necessary. This is normally in the format 
-`geolocation\country\city\location-name`. The geolocation is **not** required, but it will simplify your life if you 
-use lots of locations and you want them geolocated specifically.
+As you can run multiple campaings in the same vault, every [outline](README.md#outlines) and [element](README.md#elements) requires the reference to the campaign:
+- rpgm/campaign/{campaignId}
 
 examples
 
 ```yaml
 ---
-tags: [scene, geolocation\uk\london\my-house]
+tags: [rpgm/outline/scene/1/10/4, rpgm/campaign/1]
 ---
 ```
 
 ```yaml
 ---
-tags: [location, geolocation\uk\london\my-house]
+tags: [location, rpgm/campaign/1]
 ---
 ```
 
@@ -209,109 +206,6 @@ example
 ```yaml
 ---
 synopsis: "This is the synopsis for this element, it can contain [[links]]"
----
-```
-
-### ids
-
-- Type: [object](#object)
-
-Ids are object that contain specific `id` that are used to identify certain elements. They are used to dynamically 
-generate lists of Adventures, Sessions, Scenes and Notes.
-
-example
-```yaml
----
-ids: 
- adventure: 1
----
-```
-
-#### adventure
-
-- Type: [number](#number)
-
-Uniquely identifies an [adventure](#adventures) in a [campaign](#campaigns) or references a specific adventure a [session](#sessions) belongs 
-to (if in a session).
-
-adventure example
-```yaml
----
-ids:
- adventure: 1
----
-```
-
-session example
-```yaml
----
-ids:
- adventure: 1
- session: 10
----
-```
-
-#### session
-
-- Type: [number](#number)
-
-Uniquely identifies a [session](#sessions) in a campaign or references a specific session a [scene](#scenes) belongs to.
-It is the session number the storyteller runs for the players.
-
-session example
-```yaml
----
-ids:
- adventure: 1
- session: 10
----
-```
-
-scene example
-```yaml
----
-ids:
-    session: 9
-    scene: 11
----
-```
-
-#### scene
-
-- Type: [number](#number)
-
-Identifies the number of a [scene](#scenes) in a [session](#sessions). This number is unique in the context of a 
-session, thereofre there can be two different scenes that have the same scene number, as long as the session number is 
-different. 
-
-example
-```yaml
----
-ids:
-    session: 9
-    scene: 11
----
-
----
-ids:
-    session: 10
-    scene: 11
----
-```
-
-#### type
-
-- Type: [text](#text)
-
-If you are using the [ABT Plotting Structure](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md#abt) 
-to simplify your plot writing, this key identifies the stage of your session in the adventure storyarc. The value is 
-one amongst `NEED`, `AND`, BUT` or `THEREFORE`. 
-
-example
-```yaml
----
-ids:
- type: "AND"
 ---
 ```
 
@@ -462,6 +356,24 @@ example
 ---
 alias: ["Darth Vader"]
 goals: "Rid the universe from [[Jedi Knigths|Jedi]]"
+---
+
+```
+### action
+
+- Type: [text](#text)
+
+Used exclusively in a [scene](#scenes), this text identifies what are the actions the player characters are expected to 
+do to complete the scene. Setting this information helps the storyteller in creating a more immersive and active 
+session, where the players will feel their characters have doen lots of things. 
+
+You can use obsidian links in the text and the link will be displayed in the Reading View.
+
+example
+```yaml
+---
+alias: []
+action: "Jump over the fence (Maybe an agility check...)"
 ---
 ```
 
@@ -659,7 +571,6 @@ dates:
 | alias         | [array](#array)     | **Required**      | The aliases of the current adventure                                   |
 | tags          | [array](#array)     | **Required**      | The tags associated to the adventure. The tag `adventure` is required. |
 | synopsis      | [text](#text)       | **Required**      | The short description of the adventure                                 |
-| ids.adventure | [number](#number)   | **Required**      | The unique identifier of the adventure                                 |
 | completed     | [boolean](#boolean) | _Optional_        | Identifies if the advenure is fully written                            |
 
 full example
@@ -681,8 +592,6 @@ completed: false
 | alias         | [array](#array)     | **Required**                                                | The aliases of the current session                                 |
 | tags          | [array](#array)     | **Required**                                                | The tags associated to the session. The tag `session` is required. |
 | synopsis      | [text](#text)       | **Required**                                                | The short description of the session                               |
-| ids.adventure | [number](#number)   | **Required**                                                | The identifier of the adventure the session is part of             |
-| ids.session   | [number](#number)   | **Required**                                                | The unique identifier of the session in the campaign               |
 | dates.session | [date](#date)       | _Optional_                                                  | The **in-game** date when the event of the session happen          |
 | dates.irl     | [date](#date)       | _Optional_                                                  | The **in-real-life** date in which the session is scheduled        |
 | completed     | [boolean](#boolean) | _Optional_                                                  | Identifies if the session is fully written                         |
@@ -711,8 +620,6 @@ completed: true
 | tags                     | [array](#array)               | **Required**      | The tags associated to the scene. The tag `scene` is required.        |
 | synopsis                 | [text](#text)                 | **Required**      | The goal of the scene                                                 |
 | action                   | [text](#text)                 | **Required**      | The action the player characters are expected to perform in the scene |
-| ids.session              | [number](#number)             | **Required**      | The identifier of the session the scene is part of                    |
-| ids.scene                | [number](#number)             | **Required**      | The unique identifier of the scene in the session                     |
 | relationships.clues      | [relationship](#relationship) | _Optional_        | The clues that can be found in the scene                              |
 | relationships.characters | [relationship](#relationship) | _Optional_        | The characters that can be found in the scene                         |
 | relationships.locations  | [relationship](#relationship) | _Optional_        | The locations the scene happens in or is related to                   |
@@ -916,23 +823,5 @@ relationships:
   Jonathan Byers: "Knows his [[Joyce Byers|mother]] has the lights"
  locations:
   Byers House: "[[Joyce Byers]] keeps the [[Christmas Lights]] in [[Byers House|her house]]"
----
-```
-
-### Notes
-
-| Key          | Type               | Required/Optional | Description                                                          |
-|--------------|--------------------|-------------------|----------------------------------------------------------------------|
-| alias        | [array](#array)    | **Required**      | The aliases of the current session note                              |
-| tags         | [array](#array)    | **Required**      | The tags associated to the session note. The tag `note` is required. |
-| ids.session  | [number](#number)  | **Required**      | The identifier of the session the notes refers to                    |
-
-full example
-```yaml
----
-alias: []
-tags: [note]
-ids: 
- session: 10
 ---
 ```

@@ -4,34 +4,24 @@ Obsidian Role Playing Game Manager is an Obsidian plugin that helps you plot and
 campaigns. It uses [Obsidian Dataview](https://github.com/blacksmithgu/obsidian-dataview) to reference information 
 from different notes inside your vault to simplify the creation and run of complex campaigns.
 
-The plugin works well in conjunction with a [structured plotting style](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md) and with some [available templates]().
+The plugin works well in conjunction with a 
+[structured plotting style](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
 
 The plugin collects data and Frontmatter metadata from the notes and organise them into easy-to access references in 
 form of tables and links.
 
 ## TL;DR
 
-1. Create a new note
-2. Select the template you want to use (
-[campaign](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Campaign%20Template.md), 
-[adventure](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Adventure%20Template.md), 
-[session](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Session%20Template.md), 
-[scene](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Scene%20Template.md), 
-[player character](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Player%20Character%20Template.md), 
-[non player character](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Non%20Player%20Character%20Template.md),
-[event](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Event%20Template.md), 
-[clue](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Clue%20Template.md), 
-[location](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Location%20Template.md),
-[faction](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Faction%20Template.md) or
-[timeline](https://github.com/carlonicora/obsidian-rpgmanager-templates/blob/master/Timeline%20Template.md))
-3. Add the information in the Frontmatter metadata
-4. See everything linking together
-5. Navigate your campaign easily
-6. **Send feedback**
+1. Use the `Rpg Manager` commands to create a new outline or element
+2. Add the information in the Frontmatter metadata 
+3. See everything linking together 
+4. Navigate your campaign easily
+5. **Send feedback**
 
 ## Plotting Logic
 
-The plotting style used in this plugin is based on a series of `elements` that helps the creation of storylines.
+The plotting style used in this plugin is based on a series of `outlines` and  `elements` that helps the creation of a 
+storyline.
 
 A plot is the blueprint of how the story should go, but it is never written in stone, as the actions of the player 
 characters define the resulting story.
@@ -39,16 +29,19 @@ characters define the resulting story.
 This style is _setting agnostic_, which means that can be used with any tabletop role playing game, and _rules light_,
 which means that it does not (yet) extend into stats or dice rolling. It is a tool to plot stories.
 
-### Elements and Outlines
+### Outlines
 
-Outlines are the plots of a Campaign, Adventure, Session or Scene.
+Outlines are the plots of a Campaign, Adventure, Session or Scene. You can read more 
+[here](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
 
-| Element                  | Codeblock                      | Description                                                                                                                                                                                                           |
+| Element                  | Codeblocks                     | Description                                                                                                                                                                                                           |
 |--------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Campaign**             | `campaign`                     | The overarching story plot for a series of `Adventures`                                                                                                                                                               |
 | **Adventure**            | `adventure`                    | A single, self contain storyarc divided in `Sessions`                                                                                                                                                                 |
 | **Session**              | `session` + `sessionNavigator` | A single session of a role playing game containing a series of `Scenes`                                                                                                                                               |
 | **Scene**                | `scene` + `sceneNavigator`     | A part of a `Session` in which the player characters are expected to do something                                                                                                                                     |
+
+### Elements
 
 Elements are other information related to the campaign, which are not in a plot (Player Characters, Non Player 
 Characters, Factions, Locations, Events, Clues)
@@ -68,31 +61,13 @@ Characters, Factions, Locations, Events, Clues)
 ### Frontmatter Metadata
 
 A complete readme on the required structure of the Frontmatter metadata is available [here](frontmatter.md). As 
-Frontmatter metadata can be quite temperamental if you you write them incorrectly, please make sure to familiareise 
+Frontmatter metadata can be quite temperamental if you you write them incorrectly. Please make sure to familiarise 
 yourself on how to correctly write them and check their validity using the Reading View in Obsidian.
 
 ### Frontmatter Examples
 
 For more examples of the Frontmatter metadata to be used in each [element](#elements), please refer to the 
 [Frontmatter Metadata Documentation](frontmatter.md).
-
-### Frontmatter Metadata: pro and con
-
-This plugin heavily uses Frontmatter metadata. The metadata are used to criscross information from various sources and 
-display them when they are needed. While this works flawlessly, links between notes are not automatically managed in 
-Obsidian. This means that using this plugin "_as-is_" won't generate the correct Graph View in Obsidian. This is a 
-tradeoff which can be a deal-breaker for some of you. Unfortunately this is something that can't be solved at the 
-moment.
-
-The decision to use Frontmatter information for the relationships has been made to provide a platform to simplify the 
-plotting and running of campaigns. We have decided to prioritise the usage of metadata over links in the body of a note, 
-and hence the usage of Graph View, to display information where they matter during the running of the game.
-
-One possible solution to the cons of having the relationships in the Frontmatter is to copy the links in the body of a 
-note. 
-
-RpgManager includes the elements included in the body of the note in the list of elements; however, they do not have 
-any specific metadata information associated to them.
 
 ### RpgManager Codeblock
 
@@ -105,7 +80,7 @@ Example of a session codeblock
 session
 ```
 
-### RpgManager Available Functions
+### RpgManager Available Codeblock Functions
 
 RpgManager supports the creation of different views. These views are associated to the page element, and they feed from 
 the Frontmatter metadata in the page. The available functions are:
@@ -137,17 +112,12 @@ campaign
 ### Images
 
 Rpg Manager automatically includes images in the `Attachment` folder. To display an image in an element, the image must 
-have the same name of the note. Supported files extensions are `.jpg`, `.jpeg` and `.png`. 
+have the same name of the note. Supported files extensions are `.jpg`, `.jpeg`, `.png` and `.webp`. 
 
 ### Templates
 
-We have created a set of templates, one for each of the [elements](#elements), you can download and use to simplify 
-your life. Each templates comes with the correct Frontmatter metadata, but it is completely customiseable. To use the 
-templates, just download them from the [github repository](https://github.com/carlonicora/obsidian-rpgmanager-templates) 
-and import them in your `template` folder in Obsidian.
-
-The templates are simple obsidian templates and don't require any additional plugin. To use them, please make sure you
-enable the plugin "Templates" in the "Core Plugins" in your Obsidian vault.
+Using Rpg Manager Commands (`Create a new...`) you have access to pre-designed templates which contains the correct 
+frontmatter and codeblocks for each `outline` and `element`.
 
 ## Installation
 

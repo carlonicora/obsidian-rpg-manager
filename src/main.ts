@@ -68,7 +68,7 @@ export default class RpgManager extends Plugin {
 			this.createRpgView(source, el, ctx, ctx.sourcePath)
 		);
 
-		for (const type in DataType) {
+		Object.keys(DataType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 			this.addCommand({
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
@@ -76,7 +76,7 @@ export default class RpgManager extends Plugin {
 					this.api.fileFactory.create(DataType[type as keyof typeof DataType]);
 				},
 			});
-		}
+		});
 	}
 
 	async onunload() {
