@@ -50,18 +50,19 @@ export class IoData {
 		const corePlugin = (this.api.app as any).internalPlugins?.plugins["templates"];
 		this.templateFolder = corePlugin.instance.options.folder;
 
-		this.current.tags.forEach((tag: string) => {
-			if (tag.startsWith(this.api.settings.campaignTag)){
-				this.getId(this.api.settings.campaignTag);
-			} else if (tag.startsWith(this.api.settings.adventureTag)){
-				this.getId(this.api.settings.adventureTag);
-			} else if (tag.startsWith(this.api.settings.sessionTag)){
-				this.getId(this.api.settings.sessionTag);
-			} else if (tag.startsWith(this.api.settings.sceneTag)){
-				this.getId(this.api.settings.sceneTag);
-			}
-		});
-
+		if (this.current?.tags != null) {
+			this.current.tags.forEach((tag: string) => {
+				if (tag.startsWith(this.api.settings.campaignTag)) {
+					this.getId(this.api.settings.campaignTag);
+				} else if (tag.startsWith(this.api.settings.adventureTag)) {
+					this.getId(this.api.settings.adventureTag);
+				} else if (tag.startsWith(this.api.settings.sessionTag)) {
+					this.getId(this.api.settings.sessionTag);
+				} else if (tag.startsWith(this.api.settings.sceneTag)) {
+					this.getId(this.api.settings.sceneTag);
+				}
+			});
+		}
 	}
 
 	private readOutlinks(
@@ -158,11 +159,13 @@ export class IoData {
 		identifyingTag: string,
 	): void
 	{
-		this.current.tags.forEach((tag: string) => {
-			if (tag.startsWith(identifyingTag)){
-				this.id = tag.substring(tag.lastIndexOf('/') + 1);
-			}
-		});
+		if (this.current?.tags != null) {
+			this.current.tags.forEach((tag: string) => {
+				if (tag.startsWith(identifyingTag)) {
+					this.id = tag.substring(tag.lastIndexOf('/') + 1);
+				}
+			});
+		}
 	}
 
 	public getAdventureList(

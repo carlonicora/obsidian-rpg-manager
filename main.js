@@ -366,7 +366,7 @@ var SceneList = class extends AbstractDataList {
 };
 var SceneData = class extends AbstractImageData {
   constructor(api, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
-    var _a;
+    var _a, _b, _c;
     super(api, data);
     this.session = session;
     this.adventure = adventure;
@@ -378,8 +378,11 @@ var SceneData = class extends AbstractImageData {
     this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
     this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
     this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
-    this.startTime = this.api.formatTime(data.time.start);
-    this.endTime = this.api.formatTime(data.time.end);
+    this.startTime = this.api.formatTime((_b = data.time) == null ? void 0 : _b.start);
+    this.endTime = this.api.formatTime((_c = data.time) == null ? void 0 : _c.end);
+    this.id = this.api.getId(data.tags, this.api.settings.sceneTag);
+    this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
+    this.adventureId = this.api.getGrandParentId(data.tags, this.api.settings.sceneTag);
     if (this.startTime !== "" && this.endTime !== "") {
       this.duration = this.api.calculateDuration(data.time.start, data.time.end);
     }
@@ -506,22 +509,24 @@ var IoData = class {
     this.dv = dv;
     this.current = current;
     this.id = null;
-    var _a;
+    var _a, _b;
     this.outlinks = [];
     this.readOutlinks();
     const corePlugin = (_a = this.api.app.internalPlugins) == null ? void 0 : _a.plugins["templates"];
     this.templateFolder = corePlugin.instance.options.folder;
-    this.current.tags.forEach((tag) => {
-      if (tag.startsWith(this.api.settings.campaignTag)) {
-        this.getId(this.api.settings.campaignTag);
-      } else if (tag.startsWith(this.api.settings.adventureTag)) {
-        this.getId(this.api.settings.adventureTag);
-      } else if (tag.startsWith(this.api.settings.sessionTag)) {
-        this.getId(this.api.settings.sessionTag);
-      } else if (tag.startsWith(this.api.settings.sceneTag)) {
-        this.getId(this.api.settings.sceneTag);
-      }
-    });
+    if (((_b = this.current) == null ? void 0 : _b.tags) != null) {
+      this.current.tags.forEach((tag) => {
+        if (tag.startsWith(this.api.settings.campaignTag)) {
+          this.getId(this.api.settings.campaignTag);
+        } else if (tag.startsWith(this.api.settings.adventureTag)) {
+          this.getId(this.api.settings.adventureTag);
+        } else if (tag.startsWith(this.api.settings.sessionTag)) {
+          this.getId(this.api.settings.sessionTag);
+        } else if (tag.startsWith(this.api.settings.sceneTag)) {
+          this.getId(this.api.settings.sceneTag);
+        }
+      });
+    }
   }
   readOutlinks() {
     if (this.current != void 0) {
@@ -592,11 +597,14 @@ var IoData = class {
     return response;
   }
   getId(identifyingTag) {
-    this.current.tags.forEach((tag) => {
-      if (tag.startsWith(identifyingTag)) {
-        this.id = tag.substring(tag.lastIndexOf("/") + 1);
-      }
-    });
+    var _a;
+    if (((_a = this.current) == null ? void 0 : _a.tags) != null) {
+      this.current.tags.forEach((tag) => {
+        if (tag.startsWith(identifyingTag)) {
+          this.id = tag.substring(tag.lastIndexOf("/") + 1);
+        }
+      });
+    }
   }
   getAdventureList() {
     const response = new AdventureList(this.campaign);
@@ -1551,6 +1559,7 @@ var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
   renderComponent(wait = 500) {
     return __async(this, null, function* () {
       setTimeout(() => {
+        var _a;
         this.dv = this.api.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
         const current = this.dv.current();
         if (current != null) {
@@ -1559,13 +1568,15 @@ var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
           return;
         }
         let campaignId = null;
-        this.current.tags.forEach((tag) => {
-          if (tag.startsWith(this.api.settings.campaignTag)) {
-            campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
-          } else if (tag.startsWith(this.api.settings.campaignIdentifier)) {
-            campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
-          }
-        });
+        if (((_a = this.current) == null ? void 0 : _a.tags) != null) {
+          this.current.tags.forEach((tag) => {
+            if (tag.startsWith(this.api.settings.campaignTag)) {
+              campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
+            } else if (tag.startsWith(this.api.settings.campaignIdentifier)) {
+              campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
+            }
+          });
+        }
         if (campaignId !== null) {
           const campaigns = this.dv.pages("#" + this.api.settings.campaignTag + "/" + campaignId);
           if (campaigns.length === 1) {
@@ -1995,7 +2006,6 @@ var SceneNavigationModel = class extends AbstractModel {
       const previousScene = this.io.getScene(adventureId, sessionId, sceneId - 1);
       const nextScene = this.io.getScene(adventureId, sessionId, sceneId + 1);
       const data = new SceneData(this.api, this.current, session, adventure, previousScene, nextScene, this.campaign);
-      console.log(data);
       const view = RpgViewFactory.createSingle(15 /* SceneNavigation */, this.dv);
       view.render(data);
     });

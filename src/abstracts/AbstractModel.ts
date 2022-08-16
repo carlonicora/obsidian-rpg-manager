@@ -37,13 +37,15 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 			}
 
 			let campaignId: string|null = null;
-			this.current.tags.forEach((tag: string) => {
-				if (tag.startsWith(this.api.settings.campaignTag)){
-					campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
-				} else if (tag.startsWith(this.api.settings.campaignIdentifier)){
-					campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
-				}
-			});
+			if (this.current?.tags != null) {
+				this.current.tags.forEach((tag: string) => {
+					if (tag.startsWith(this.api.settings.campaignTag)) {
+						campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
+					} else if (tag.startsWith(this.api.settings.campaignIdentifier)) {
+						campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
+					}
+				});
+			}
 			if (campaignId !== null){
 				const campaigns = this.dv.pages('#' + this.api.settings.campaignTag + '/' + campaignId);
 

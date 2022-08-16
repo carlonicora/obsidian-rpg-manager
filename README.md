@@ -18,6 +18,8 @@ form of tables and links.
 4. Navigate your campaign easily
 5. **Send feedback**
 
+![](RpgManager.gif)
+
 ## Plotting Logic
 
 The plotting style used in this plugin is based on a series of `outlines` and  `elements` that helps the creation of a 

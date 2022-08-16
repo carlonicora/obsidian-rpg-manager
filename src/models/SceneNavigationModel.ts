@@ -41,8 +41,6 @@ export class SceneNavigationModel extends AbstractModel {
 			this.campaign,
 		);
 
-		console.log(data);
-
 		const view = RpgViewFactory.createSingle(viewType.SceneNavigation, this.dv);
 		view.render(data);
 	}
