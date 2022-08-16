@@ -1,9 +1,11 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {RpgManagerSettings} from "../main";
+import {IoData} from "../io/IoData";
 
 export abstract class AbstractTemplate  implements TemplateInterface{
 	constructor(
 		protected settings: RpgManagerSettings,
+		protected campaignId: string,
 	) {
 	}
 

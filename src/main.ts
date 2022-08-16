@@ -6,8 +6,9 @@ import {RpgViewFactory} from "./factories/RpgViewFactory";
 import {DataType} from "./io/IoData";
 
 export interface RpgManagerSettings {
-	campaignTag: string;
 	campaignIdentifier: string;
+	tooltip: boolean;
+	campaignTag: string;
 	adventureTag: string;
 	sessionTag: string;
 	sceneTag: string;
@@ -20,8 +21,9 @@ export interface RpgManagerSettings {
 }
 
 const DEFAULT_SETTINGS: RpgManagerSettings = {
-	campaignTag: 'rpgm/outline/campaign',
 	campaignIdentifier: 'rpgm/campaign',
+	tooltip: true,
+	campaignTag: 'rpgm/outline/campaign',
 	adventureTag: 'rpgm/outline/adventure',
 	sessionTag: 'rpgm/outline/session',
 	sceneTag: 'rpgm/outline/scene',
@@ -158,6 +160,18 @@ class RpgManagerSettingTab extends PluginSettingTab {
 					.onChange(async value => {
 						if (value.length == 0) return;
 
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(this.containerEl)
+			.setName("Enable tasklist on new outlines and elements")
+			.setDesc("Enable or disable the tasklist that helps the creation of new outlines and elements. After some usage switching it off is beneficial")
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.tooltip)
+					.onChange(async value => {
+						this.plugin.settings.tooltip = value;
 						await this.plugin.saveSettings();
 					})
 			);

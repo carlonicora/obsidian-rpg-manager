@@ -743,8 +743,9 @@ __export(templates_exports, {
 
 // src/abstracts/AbstractTemplate.ts
 var AbstractTemplate = class {
-  constructor(settings) {
+  constructor(settings, campaignId) {
     this.settings = settings;
+    this.campaignId = campaignId;
   }
   generateData() {
     let response = "";
@@ -802,7 +803,7 @@ var AbstractTemplate = class {
 // src/views/templates/FactionTemplate.ts
 var FactionTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.factionTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.factionTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -811,14 +812,23 @@ var FactionTemplate = class extends AbstractTemplate {
     return " locations: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your faction\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nfaction\n```\n---\n\n## Additional Information\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your faction\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Remove these tasks\n\n";
+    }
+    response += "```RpgManager\nfaction\n```\n---\n\n## Additional Information\n";
+    return response;
   }
 };
 
 // src/views/templates/LocationTemplate.ts
 var LocationTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.locationTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.locationTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -827,14 +837,23 @@ var LocationTemplate = class extends AbstractTemplate {
     return 'address: ""\n';
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your location\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nlocation\n```\n---\n\n## Additional Information\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your location\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Remove these tasks\n\n";
+    }
+    response += "```RpgManager\nlocation\n```\n---\n\n## Additional Information\n";
+    return response;
   }
 };
 
 // src/views/templates/ClueTemplate.ts
 var ClueTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.clueTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.clueTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -846,14 +865,23 @@ var ClueTemplate = class extends AbstractTemplate {
     return " found: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your clue\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nclue\n```\n---\n\n## Additional Information\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your clue\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Remove these tasks\n\n---\n";
+    }
+    response += "```RpgManager\nclue\n```\n---\n\n## Additional Information\n";
+    return response;
   }
 };
 
 // src/views/templates/EventTemplate.ts
 var EventTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.eventTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.eventTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -865,14 +893,23 @@ var EventTemplate = class extends AbstractTemplate {
     return " event: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your event\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n\n---\n```RpgManager\nevent\n```\n---\n\n## Additional Information\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your event\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Remove these tasks\n\n---\n";
+    }
+    response += "```RpgManager\nevent\n```\n---\n\n## Additional Information\n";
+    return response;
   }
 };
 
 // src/views/templates/NonPlayerCharacterTemplate.ts
 var NonPlayerCharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.npcTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.npcTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -887,14 +924,23 @@ var NonPlayerCharacterTemplate = class extends AbstractTemplate {
     return " dob: \n death: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your non player character\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n\n---\n```RpgManager\nnpc\n```\n---\n\n## Notes\n\n\n## Story\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your non player character\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Remove these tasks\n\n";
+    }
+    response += "```RpgManager\nnpc\n```\n---\n\n## Notes\n\n\n## Story\n";
+    return response;
   }
 };
 
 // src/views/templates/CharacterTemplate.ts
 var CharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.pcTag + ", " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.pcTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterRelationships() {
     return " characters: \n factions: \n locations: \n";
@@ -903,14 +949,23 @@ var CharacterTemplate = class extends AbstractTemplate {
     return " dob: \n death: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your player character\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n- [ ] Remove these tasks\n\n---\n```RpgManager\npc\n```\n---\n\n## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your player character\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Remove these tasks\n\n---\n";
+    }
+    response += '```RpgManager\npc\n```\n---\n\n## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+    return response;
   }
 };
 
 // src/views/templates/SceneTemplate.ts
 var SceneTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.sceneTag + "/{adventureId}/{sessionId}/{sceneId}, " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.sceneTag + "/{adventureId}/{sessionId}/{sceneId}, " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -925,14 +980,23 @@ var SceneTemplate = class extends AbstractTemplate {
     return " start: \n end: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your scene\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Replace the `{adventureId}` of the scene tag (" + this.settings.sceneTag + "/**{adventureId}**/{sessionId}/{sceneId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/**{sessionId}**/{sceneId}) with an existing session id\n- [ ] Replace the `{sceneId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/{sessionId}/**{sceneId}**) with a valid number unique to the session\n- [ ] Remove these tasks\n\n\n---\n```RpgManager\nsceneNavigation\n```\n---\n## Trigger\n\n\n## Notes\n- \n\n---\n```RpgManager\nscene\n```\n---\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your scene\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Replace the `{adventureId}` of the scene tag (" + this.settings.sceneTag + "/**{adventureId}**/{sessionId}/{sceneId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/**{sessionId}**/{sceneId}) with an existing session id\n- [ ] Replace the `{sceneId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/{sessionId}/**{sceneId}**) with a valid number unique to the session\n- [ ] Remove these tasks\n\n";
+    }
+    response += "```RpgManager\nsceneNavigation\n```\n---\n## Trigger\n\n\n## Notes\n- \n\n---\n```RpgManager\nscene\n```\n";
+    return response;
   }
 };
 
 // src/views/templates/SessionTemplate.ts
 var SessionTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.sessionTag + "/{adventureId}/{sessionId}, " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.sessionTag + "/{adventureId}/{sessionId}, " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -941,20 +1005,38 @@ var SessionTemplate = class extends AbstractTemplate {
     return " session: \n irl: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your session\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Replace the `{adventureId}` of the session tag (" + this.settings.sessionTag + "/**{adventureId}**/{sessionId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the session tag (" + this.settings.sessionTag + "/{adventureId}/**{sessionId}**) with a valid number unique to the adventure\n- [ ] Remove these tasks\n\n---\n```RpgManager\nsessionNavigation\n```\n---\n## Introduction\n\n## Plot\n### ABT Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n### Story Circle Plot\n\n>\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n---\n```RpgManager\nsession\n```\n---\n";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your session\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Replace the `{adventureId}` of the session tag (" + this.settings.sessionTag + "/**{adventureId}**/{sessionId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the session tag (" + this.settings.sessionTag + "/{adventureId}/**{sessionId}**) with a valid number unique to the adventure\n- [ ] Remove these tasks\n\n";
+    }
+    response += "```RpgManager\nsessionNavigation\n```\n---\n## Introduction\n\n## Plot\n### ABT Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n### Story Circle Plot\n\n>\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n---\n```RpgManager\nsession\n```\n";
+    return response;
   }
 };
 
 // src/views/templates/AdventureTemplate.ts
 var AdventureTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.adventureTag + "/{adventureId}, " + this.settings.campaignIdentifier + "/{campaignId}]\n";
+    return "tags: [" + this.settings.adventureTag + "/{adventureId}, " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your adventure\n- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n- [ ] Replace the `{adventureId}` of the adventure tag (" + this.settings.adventureTag + "/**{adventureId}**) with a valid number unique to the campaign\n- [ ] Remove these tasks\n\n## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n## Notes\n- \n\n---\n```RpgManager\nadventure\n```";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your adventure\n";
+      if (this.campaignId === "{campaignId}") {
+        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
+      }
+      response += "- [ ] Replace the `{adventureId}` of the adventure tag (" + this.settings.adventureTag + "/**{adventureId}**) with a valid number unique to the campaign\n- [ ] Remove these tasks\n\n";
+    }
+    response += "## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n## Notes\n- \n\n---\n```RpgManager\nadventure\n```";
+    return response;
   }
 };
 
@@ -967,7 +1049,12 @@ var CampaignTemplate = class extends AbstractTemplate {
     return " current: \n";
   }
   generateTemplate() {
-    return "\n- [ ] Update the name of your campaign\n- [ ] Replace the `{campaignId}` of the campaign tag (" + this.settings.campaignTag + "/**{campaignId}**) with a valid number unique to the vault\n- [ ] Remove these tasks\n\n## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n---\n```RpgManager\ncampaign\n```";
+    let response = "";
+    if (this.settings.tooltip) {
+      response += "\n- [ ] Update the name of your campaign\n- [ ] Replace the `{campaignId}` of the campaign tag (" + this.settings.campaignTag + "/**{campaignId}**) with a valid number unique to the vault\n- [ ] Remove these tasks\n\n";
+    }
+    response += "## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n---\n```RpgManager\ncampaign\n```";
+    return response;
   }
 };
 
@@ -978,9 +1065,30 @@ var FileFactory = class {
   }
   create(type) {
     return __async(this, null, function* () {
-      const template = new templates_exports[DataType[type] + "Template"](this.api.settings);
+      let multipleCampaigns = false;
+      let campaignId = "{campaignId}";
+      this.api.app.vault.getFiles().forEach((file) => {
+        if (!multipleCampaigns) {
+          const metadata = this.api.app.metadataCache.getFileCache(file);
+          if (metadata !== null) {
+            (metadata.tags || []).forEach((t) => {
+              if (t.tag.startsWith(this.api.settings.campaignIdentifier)) {
+                if (campaignId !== "{campaignId}" && !multipleCampaigns) {
+                  multipleCampaigns = true;
+                  campaignId = "{campaignId}";
+                }
+                campaignId = t.tag.substring(t.tag.lastIndexOf(this.api.settings.campaignIdentifier) + 1);
+              }
+            });
+          }
+        }
+      });
+      if (!multipleCampaigns && campaignId === "{campaignId}") {
+        campaignId = "1";
+      }
+      const template = new templates_exports[DataType[type] + "Template"](this.api.settings, campaignId);
       const data = template.generateData();
-      const newFile = yield this.api.app.vault.create(DataType[type] + ".md", data);
+      const newFile = yield this.api.app.vault.create(DataType[type] + " " + new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3) + ".md", data);
       const leaf = this.api.app.workspace.getLeaf(false);
       yield leaf.openFile(newFile);
     });
@@ -1067,32 +1175,38 @@ var Api = class extends import_obsidian.Component {
   }
   getId(tags, elementTag) {
     let response = "";
-    tags.forEach((tag) => {
-      if (response === "" && tag.startsWith(elementTag)) {
-        response = tag.substring(tag.lastIndexOf("/") + 1);
-      }
-    });
+    if (tags != null) {
+      tags.forEach((tag) => {
+        if (response === "" && tag.startsWith(elementTag)) {
+          response = tag.substring(tag.lastIndexOf("/") + 1);
+        }
+      });
+    }
     return +response;
   }
   getParentId(tags, elementTag) {
     let response = "";
-    tags.forEach((tag) => {
-      if (response === "" && tag.startsWith(elementTag)) {
-        tag = tag.substring(0, tag.lastIndexOf("/"));
-        response = tag.substring(tag.lastIndexOf("/") + 1);
-      }
-    });
+    if (tags != null) {
+      tags.forEach((tag) => {
+        if (response === "" && tag.startsWith(elementTag)) {
+          tag = tag.substring(0, tag.lastIndexOf("/"));
+          response = tag.substring(tag.lastIndexOf("/") + 1);
+        }
+      });
+    }
     return +response;
   }
   getGrandParentId(tags, elementTag) {
     let response = "";
-    tags.forEach((tag) => {
-      if (response === "" && tag.startsWith(elementTag)) {
-        tag = tag.substring(0, tag.lastIndexOf("/"));
-        tag = tag.substring(0, tag.lastIndexOf("/"));
-        response = tag.substring(tag.lastIndexOf("/") + 1);
-      }
-    });
+    if (tags != null) {
+      tags.forEach((tag) => {
+        if (response === "" && tag.startsWith(elementTag)) {
+          tag = tag.substring(0, tag.lastIndexOf("/"));
+          tag = tag.substring(0, tag.lastIndexOf("/"));
+          response = tag.substring(tag.lastIndexOf("/") + 1);
+        }
+      });
+    }
     return +response;
   }
   formatDate(date, type = null) {
@@ -2031,8 +2145,9 @@ var RpgModelFactory = class {
 
 // src/main.ts
 var DEFAULT_SETTINGS = {
-  campaignTag: "rpgm/outline/campaign",
   campaignIdentifier: "rpgm/campaign",
+  tooltip: true,
+  campaignTag: "rpgm/outline/campaign",
   adventureTag: "rpgm/outline/adventure",
   sessionTag: "rpgm/outline/session",
   sceneTag: "rpgm/outline/scene",
@@ -2121,6 +2236,10 @@ var RpgManagerSettingTab = class extends import_obsidian5.PluginSettingTab {
     new import_obsidian5.Setting(this.containerEl).setName("Campaign Relationship Tag").setDesc("The tag that identifies the Campaign the current note belongs to").addText((text) => text.setPlaceholder("rpgm/campaign").setValue(this.plugin.settings.campaignIdentifier).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian5.Setting(this.containerEl).setName("Enable tasklist on new outlines and elements").setDesc("Enable or disable the tasklist that helps the creation of new outlines and elements. After some usage switching it off is beneficial").addToggle((toggle) => toggle.setValue(this.plugin.settings.tooltip).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.tooltip = value;
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("h3", { text: "Outlines" });

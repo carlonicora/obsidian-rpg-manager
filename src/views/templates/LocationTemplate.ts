@@ -3,7 +3,7 @@ import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 export class LocationTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.locationTag + ', ' + this.settings.campaignIdentifier +'/{campaignId}]\n';
+		return 'tags: [' + this.settings.locationTag + ', ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -18,19 +18,26 @@ export class LocationTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		return '\n' +
-			'- [ ] Update the name of your location\n' +
-			'- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n' +
-			'- [ ] Remove these tasks\n' +
-			'\n' +
-			'\n' +
-			'\n' +
-			'---\n' +
-			'```RpgManager\n' +
+
+		let response = '';
+
+		if (this.settings.tooltip){
+			response += '\n' +
+			'- [ ] Update the name of your location\n';
+		if (this.campaignId === '{campaignId}') {
+			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
+		}
+		response += '- [ ] Remove these tasks\n' +
+			'\n'
+		}
+
+		response +='```RpgManager\n' +
 			'location\n' +
 			'```\n' +
 			'---\n' +
 			'\n' +
 			'## Additional Information\n';
+
+		return response;
 	}
 }

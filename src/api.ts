@@ -124,52 +124,58 @@ export class Api extends Component {
 	}
 
 	public getId(
-		tags: Array<string>,
+		tags: Array<string>|null,
 		elementTag: string,
 	): number
 	{
 		let response = '';
 
-		tags.forEach((tag: string) => {
-			if (response === '' && tag.startsWith(elementTag)){
-				response = tag.substring(tag.lastIndexOf('/') + 1);
-			}
-		});
+		if (tags != null) {
+			tags.forEach((tag: string) => {
+				if (response === '' && tag.startsWith(elementTag)) {
+					response = tag.substring(tag.lastIndexOf('/') + 1);
+				}
+			});
+		}
 
 		return +response;
 	}
 
 	public getParentId(
-		tags: Array<string>,
+		tags: Array<string>|null,
 		elementTag: string,
 	): number
 	{
 		let response = '';
 
-		tags.forEach((tag: string) => {
-			if (response === '' && tag.startsWith(elementTag)){
-				tag = tag.substring(0, tag.lastIndexOf('/'));
-				response = tag.substring(tag.lastIndexOf('/') + 1);
-			}
-		});
+		if (tags != null) {
+			tags.forEach((tag: string) => {
+				if (response === '' && tag.startsWith(elementTag)) {
+					tag = tag.substring(0, tag.lastIndexOf('/'));
+					response = tag.substring(tag.lastIndexOf('/') + 1);
+				}
+			});
+		}
 
 		return +response;
 	}
 
 	public getGrandParentId(
-		tags: Array<string>,
+		tags: Array<string>|null,
 		elementTag: string,
 	): number
 	{
 		let response = '';
 
-		tags.forEach((tag: string) => {
-			if (response === '' && tag.startsWith(elementTag)){
-				tag = tag.substring(0, tag.lastIndexOf('/'));
-				tag = tag.substring(0, tag.lastIndexOf('/'));
-				response = tag.substring(tag.lastIndexOf('/') + 1);
-			}
-		});
+		if (tags != null) {
+			tags.forEach((tag: string) => {
+				if (response === '' && tag.startsWith(elementTag)) {
+					tag = tag.substring(0, tag.lastIndexOf('/'));
+					tag = tag.substring(0, tag.lastIndexOf('/'));
+					response = tag.substring(tag.lastIndexOf('/') + 1);
+				}
+			});
+		}
 
 		return +response;
 	}

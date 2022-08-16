@@ -4,7 +4,7 @@ export class SceneTemplate extends AbstractTemplate {
 
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.sceneTag + '/{adventureId}/{sessionId}/{sceneId}, ' + this.settings.campaignIdentifier +'/{campaignId}]\n';
+		return 'tags: [' + this.settings.sceneTag + '/{adventureId}/{sessionId}/{sceneId}, ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -32,17 +32,23 @@ export class SceneTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		return '\n' +
-			'- [ ] Update the name of your scene\n' +
-			'- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n' +
-			'- [ ] Replace the `{adventureId}` of the scene tag (' + this.settings.sceneTag + '/**{adventureId}**/{sessionId}/{sceneId}) with an existing adventure id\n' +
+
+		let response = '';
+
+		if (this.settings.tooltip){
+			response += '\n' +
+			'- [ ] Update the name of your scene\n';
+		if (this.campaignId === '{campaignId}') {
+			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
+		}
+		response += '- [ ] Replace the `{adventureId}` of the scene tag (' + this.settings.sceneTag + '/**{adventureId}**/{sessionId}/{sceneId}) with an existing adventure id\n' +
 			'- [ ] Replace the `{sessionId}` of the scene tag (' + this.settings.sceneTag + '/{adventureId}/**{sessionId}**/{sceneId}) with an existing session id\n' +
 			'- [ ] Replace the `{sceneId}` of the scene tag (' + this.settings.sceneTag + '/{adventureId}/{sessionId}/**{sceneId}**) with a valid number unique to the session\n' +
 			'- [ ] Remove these tasks\n' +
-			'\n' +
-			'\n' +
-			'---\n' +
-			'```RpgManager\n' +
+			'\n'
+		}
+
+		response +='```RpgManager\n' +
 			'sceneNavigation\n' +
 			'```\n' +
 			'---\n' +
@@ -55,7 +61,8 @@ export class SceneTemplate extends AbstractTemplate {
 			'---\n' +
 			'```RpgManager\n' +
 			'scene\n' +
-			'```\n' +
-			'---\n';
+			'```\n';
+
+		return response;
 	}
 }

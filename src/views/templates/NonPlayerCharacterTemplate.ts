@@ -3,7 +3,7 @@ import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 export class NonPlayerCharacterTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.npcTag + ', ' + this.settings.campaignIdentifier +'/{campaignId}]\n';
+		return 'tags: [' + this.settings.npcTag + ', ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -32,14 +32,20 @@ export class NonPlayerCharacterTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		return '\n' +
-			'- [ ] Update the name of your non player character\n' +
-			'- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n' +
-			'- [ ] Remove these tasks\n' +
-			'\n' +
-			'\n' +
-			'---\n' +
-			'```RpgManager\n' +
+
+		let response = '';
+
+		if (this.settings.tooltip){
+			response += '\n' +
+			'- [ ] Update the name of your non player character\n';
+		if (this.campaignId === '{campaignId}') {
+			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
+		}
+		response += '- [ ] Remove these tasks\n' +
+			'\n'
+		}
+
+		response +='```RpgManager\n' +
 			'npc\n' +
 			'```\n' +
 			'---\n' +
@@ -48,5 +54,7 @@ export class NonPlayerCharacterTemplate extends AbstractTemplate {
 			'\n' +
 			'\n' +
 			'## Story\n';
+
+		return response;
 	}
 }

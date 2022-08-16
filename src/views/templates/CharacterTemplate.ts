@@ -4,7 +4,7 @@ export class CharacterTemplate extends AbstractTemplate {
 
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.pcTag + ', ' + this.settings.campaignIdentifier +'/{campaignId}]\n';
+		return 'tags: [' + this.settings.pcTag + ', ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterRelationships(
@@ -23,13 +23,21 @@ export class CharacterTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		return '\n' +
-			'- [ ] Update the name of your player character\n' +
-			'- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n' +
-			'- [ ] Remove these tasks\n' +
+
+		let response = '';
+
+		if (this.settings.tooltip){
+			response += '\n' +
+			'- [ ] Update the name of your player character\n';
+		if (this.campaignId === '{campaignId}') {
+			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
+		}
+		response += '- [ ] Remove these tasks\n' +
 			'\n' +
-			'---\n' +
-			'```RpgManager\n' +
+			'---\n'
+		}
+
+		response +='```RpgManager\n' +
 			'pc\n' +
 			'```\n' +
 			'---\n' +
@@ -103,6 +111,8 @@ export class CharacterTemplate extends AbstractTemplate {
 			'\n' +
 			'Do you have any allergy?\n' +
 			'>';
+
+		return response;
 	}
 
 }

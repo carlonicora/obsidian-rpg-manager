@@ -13,12 +13,17 @@ export class CampaignTemplate extends AbstractTemplate{
 
 	protected generateTemplate(
 	): string {
-		return '\n' +
-			'- [ ] Update the name of your campaign\n' +
-			'- [ ] Replace the `{campaignId}` of the campaign tag (' + this.settings.campaignTag + '/**{campaignId}**) with a valid number unique to the vault\n' +
-			'- [ ] Remove these tasks\n' +
-			'\n' +
-			'## Plot\n\n' +
+		let response = '';
+
+		if (this.settings.tooltip){
+			response += '\n' +
+				'- [ ] Update the name of your campaign\n' +
+				'- [ ] Replace the `{campaignId}` of the campaign tag (' + this.settings.campaignTag + '/**{campaignId}**) with a valid number unique to the vault\n' +
+				'- [ ] Remove these tasks\n' +
+				'\n';
+		}
+
+		response += '## Plot\n\n' +
 			'>\n' +
 			'>\n' +
 			'>\n' +
@@ -33,5 +38,7 @@ export class CampaignTemplate extends AbstractTemplate{
 			'```RpgManager\n' +
 			'campaign\n' +
 			'```';
+
+		return response;
 	}
 }

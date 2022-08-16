@@ -3,7 +3,7 @@ import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 export class SessionTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.sessionTag + '/{adventureId}/{sessionId}, ' + this.settings.campaignIdentifier +'/{campaignId}]\n';
+		return 'tags: [' + this.settings.sessionTag + '/{adventureId}/{sessionId}, ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -19,15 +19,22 @@ export class SessionTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		return '\n' +
-			'- [ ] Update the name of your session\n' +
-			'- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n' +
-			'- [ ] Replace the `{adventureId}` of the session tag (' + this.settings.sessionTag + '/**{adventureId}**/{sessionId}) with an existing adventure id\n' +
+
+		let response = '';
+
+		if (this.settings.tooltip){
+			response += '\n' +
+			'- [ ] Update the name of your session\n';
+		if (this.campaignId === '{campaignId}') {
+			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
+		}
+		response += '- [ ] Replace the `{adventureId}` of the session tag (' + this.settings.sessionTag + '/**{adventureId}**/{sessionId}) with an existing adventure id\n' +
 			'- [ ] Replace the `{sessionId}` of the session tag (' + this.settings.sessionTag + '/{adventureId}/**{sessionId}**) with a valid number unique to the adventure\n' +
 			'- [ ] Remove these tasks\n' +
-			'\n' +
-			'---\n' +
-			'```RpgManager\n' +
+			'\n'
+		}
+
+		response +='```RpgManager\n' +
 			'sessionNavigation\n' +
 			'```\n' +
 			'---\n' +
@@ -61,7 +68,8 @@ export class SessionTemplate extends AbstractTemplate {
 			'---\n' +
 			'```RpgManager\n' +
 			'session\n' +
-			'```\n' +
-			'---\n';
+			'```\n';
+
+		return response;
 	}
 }
