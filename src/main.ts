@@ -1,4 +1,12 @@
-import {App, Component, debounce, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting} from 'obsidian';
+import {
+	App,
+	Component,
+	debounce,
+	MarkdownPostProcessorContext,
+	Plugin,
+	PluginSettingTab,
+	Setting
+} from 'obsidian';
 
 import {Api} from "./api";
 import {RpgModelFactory} from "./factories/RpgModelFactory";
@@ -76,9 +84,10 @@ export default class RpgManager extends Plugin {
 				name: "Create a new " + type,
 				callback: () => {
 					this.api.fileFactory.create(DataType[type as keyof typeof DataType]);
+					//new SampleModal(this.app).open();
 				},
 			});
-		});
+		})
 	}
 
 	async onunload() {

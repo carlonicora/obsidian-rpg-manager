@@ -94,6 +94,35 @@ export class Api extends Component {
 		return null;
 	}
 
+	getImageElement(
+		page: Record<string, Literal>|undefined,
+		width: number|undefined =75,
+		height: number|undefined =75,
+	): HTMLImageElement|null
+	{
+		let imageFile = null;
+
+		if (page !== undefined) {
+			imageFile = this.getImageLink(page);
+		}
+
+		if (imageFile === null) {
+			return null;
+		}
+
+		if (width !== 75 && height === 75){
+			height = undefined;
+		} else if (width === 75 && height !== 75){
+			width = undefined;
+		}
+
+		const response = new Image(width, height);
+		response.src = imageFile;
+		response.style.objectFit = 'cover';
+
+		return response;
+	}
+
 	getImage(page: Record<string, Literal>|undefined, width=75, height=75){
 		let imageFile = null;
 

@@ -61,44 +61,6 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 			this.container.innerHTML = '';
 
 			this.render();
-
-			/*
-			const frontMatterValidation = MetadataValidator.validate(this.app, this.current);
-			if (typeof frontMatterValidation === 'boolean'){
-				const campaigns = this.dv.pages("#campaign and " + `-"Templates"`);
-				if (campaigns !== undefined && campaigns.length === 1){
-					this.campaign = new CampaignData(
-						this.api,
-						campaigns[0],
-					);
-
-				} else {
-					this.campaign = null;
-				}
-
-				this.io = new IoData(this.api,this.campaign, this.dv, this.current);
-
-				this.container.innerHTML = '';
-
-				this.render();
-			} else {
-				const error = document.createElement('div');
-				error.addClass('rpg-error');
-
-				if (frontMatterValidation === 'Invalid Frontmatter'){
-					const heading = document.createElement('h3');
-					heading.innerText = frontMatterValidation;
-					error.append(heading);
-				} else {
-					const heading = document.createElement('h3');
-					heading.innerText = 'Misconfigured Frontmatter for Rpg Manager';
-					error.append(heading);
-					error.innerHTML += '<ul>' + frontMatterValidation + '</ul>';
-				}
-
-				this.container.innerHTML = error.outerHTML;
-			}
-			*/
 		}, wait);
 	}
 

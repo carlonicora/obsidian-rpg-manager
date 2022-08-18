@@ -48,3 +48,39 @@ export class FileFactory {
 		await leaf.openFile(newFile);
 	}
 }
+
+/*
+class SampleModal extends Modal {
+	public confirm = false;
+	public button: HTMLButtonElement;
+	public title: HTMLInputElement;
+
+	constructor(app: App) {
+		super(app);
+	}
+
+	onOpen() {
+		const {contentEl} = this;
+
+		const h2 = contentEl.createEl('h2', {text: 'Create New Something'});
+		h2.addClass('rpgm-modal-title')
+
+		contentEl.createEl('p', {text: 'Title of your new something'});
+		this.title = contentEl.createEl('input');
+
+		this.button = contentEl.createEl('button', {text: 'create'});
+		this.button.addClass('mod-cta');
+		this.button.addEventListener('click', (e:Event) => {
+			this.confirm = true;
+			this.close();
+		});
+	}
+
+	onClose() {
+		console.log(this.title.value);
+
+		const {contentEl} = this;
+		contentEl.empty();
+	}
+}
+ */

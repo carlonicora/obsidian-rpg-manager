@@ -9,6 +9,7 @@ export interface GenericDataInterface {
 export interface GenericImageDataInterface extends GenericDataInterface{
 	imageSrc: string|null;
 	image: string;
+	imageSrcElement: HTMLImageElement|null;
 
 	getImage(
 		width: number,

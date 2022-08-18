@@ -23,7 +23,12 @@ export class CampaignTemplate extends AbstractTemplate{
 				'\n';
 		}
 
-		response += '## Plot\n\n' +
+		response +=
+			'---\n' +
+			'```RpgManager\n' +
+			'campaign\n' +
+			'```\n' +
+			'## Plot\n\n' +
 			'>\n' +
 			'>\n' +
 			'>\n' +

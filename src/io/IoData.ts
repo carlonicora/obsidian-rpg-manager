@@ -181,7 +181,7 @@ export class IoData {
 					adventure.file.folder !== this.templateFolder
 				)
 				.sort(adventure =>
-					-adventure.ids.adventure
+					-this.api.getId(adventure.tags, this.api.settings.adventureTag)
 				)
 				.forEach((adventure) => {
 					response.add(

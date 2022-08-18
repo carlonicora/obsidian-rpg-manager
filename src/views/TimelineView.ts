@@ -1,19 +1,50 @@
 import {AbstractListView} from "../abstracts/AbstractListView";
 import {Component, MarkdownRenderer} from "obsidian";
 import {TimelineDataInterface, TimelineListInterface} from "../data/TimelineData";
-import {CampaignDataInterface} from "../data/CampaignData";
 
 export class TimelineView extends AbstractListView {
 	async render(
 		data: TimelineListInterface
 	): Promise<void> {
-		let response : string = this.header(
-			data.campaign,
-		);
+
+		const container = this.dv.container.createDiv({cls: 'rpg-container'});
+
+		const header = container.createDiv({cls: 'rpgm-header'});
+		if (data.campaign?.imageSrc !== null) {
+			header.style.backgroundImage = 'url(\'' + data.campaign?.imageSrc + '\')';
+		}
+
+		const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
+
+		overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
+		overlay.createDiv({cls: 'rpgm-campaign-name', text: (data.campaign !== null ? data.campaign.name : "Campaign")});
+		overlay.createDiv({cls: 'rpgm-current-date', text: (data.campaign !== null ? this.api.formatDate(data.campaign.currentDate, "long") : "")});
+
+		const timeline = container.createDiv({cls: 'rpgm-timeline'});
+
+		const ul = timeline.createEl('ul');
 
 		data.elements.forEach((timeline: TimelineDataInterface) => {
-			const fileLink = document.createElement('h3');
-			const synopsis = document.createElement('span');
+			const li = ul.createEl('li');
+
+			const timeContainer = li.createDiv({cls: 'event-time-container'});
+
+			timeContainer.createDiv({cls: 'event-time', text: timeline.date + (timeline.time !== '00:00' ? '<br/>' + timeline.time : '')});
+
+			const type = timeContainer.createDiv({cls: 'event-type', text: timeline.type});
+			if (timeline.getEventColour() !== ''){
+				type.addClass(timeline.getEventColour());
+			}
+
+			const bullet = li.createDiv({cls: 'bullet'});
+			if (timeline.getEventColour() !== ''){
+				bullet.addClass(timeline.getEventColour());
+			}
+
+			const details = li.createDiv({cls: 'event-details'});
+
+			const fileLink = details.createEl('h3');
+			const synopsis = details.createSpan();
 
 			MarkdownRenderer.renderMarkdown(
 				timeline.synopsis,
@@ -28,41 +59,6 @@ export class TimelineView extends AbstractListView {
 				this.dv.currentFilePath,
 				null as unknown as Component,
 			);
-
-			response += '<li>' +
-				'<div class="bullet' + timeline.getEventColour() + '"></div>' +
-				'<div class="event-time">' + timeline.date + (timeline.time !== '00:00' ? '<br/>' + timeline.time : '') + '</div>' +
-				'<div class="event-type' + timeline.getEventColour() + '">' + timeline.type + '</div>' +
-				'<div class="event-details">' +
-				fileLink.outerHTML +
-				synopsis.outerHTML +
-				'</div>' +
-				'</li>'
 		});
-
-		response += this.footer();
-
-		this.dv.container.innerHTML = response;
-	}
-
-	private header(
-		campaign: CampaignDataInterface|null,
-	): string {
-		const campaignImage = (campaign?.imageSrc != null ? 'style="background-image: url(\'' + campaign.imageSrc + '\');"' : '');
-
-		return '<div class="rpgm-container">' +
-			'<div class="rpgm-header"' + campaignImage + '>' +
-			'<div class="rpgm-header-overlay">' +
-			'<div class="rpgm-header-title">Timeline</div>' +
-			'<div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div>' +
-			'<div class="rpgm-current-date">' + (campaign !== null ? this.api.formatDate(campaign.currentDate, "long") : "") + '</div>' +
-			'</div>' +
-			'</div>' +
-			'<div class="rpgm-timeline"><ul>';
-	}
-
-	private footer(
-	): string {
-		return '</ul></div></div>';
 	}
 }

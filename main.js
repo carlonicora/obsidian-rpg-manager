@@ -69,6 +69,7 @@ var AbstractImageData = class extends AbstractData {
   constructor(api, data) {
     super(api, data);
     this.imageSrc = api.getImageLink(data);
+    this.imageSrcElement = api.getImageElement(data);
     this.image = this.imageSrc !== null ? api.getImage(data) : "";
   }
   getImage(width = 75, height = 75) {
@@ -450,16 +451,16 @@ var TimelineData = class extends AbstractImageData {
         return "";
         break;
       case "birth":
-        return " green";
+        return "green";
         break;
       case "death":
-        return " red";
+        return "red";
         break;
       case "session":
-        return " blue";
+        return "blue";
         break;
       case "clue":
-        return " purple";
+        return "purple";
         break;
     }
     return "";
@@ -610,7 +611,7 @@ var IoData = class {
     const response = new AdventureList(this.campaign);
     if (this.campaign !== null) {
       const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -adventure.ids.adventure).forEach((adventure) => {
+      this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -this.api.getId(adventure.tags, this.api.settings.adventureTag)).forEach((adventure) => {
         response.add(new AdventureData(this.api, adventure));
       });
     }
@@ -1053,7 +1054,7 @@ var CampaignTemplate = class extends AbstractTemplate {
     if (this.settings.tooltip) {
       response += "\n- [ ] Update the name of your campaign\n- [ ] Replace the `{campaignId}` of the campaign tag (" + this.settings.campaignTag + "/**{campaignId}**) with a valid number unique to the vault\n- [ ] Remove these tasks\n\n";
     }
-    response += "## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n---\n```RpgManager\ncampaign\n```";
+    response += "---\n```RpgManager\ncampaign\n```\n## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n---\n```RpgManager\ncampaign\n```";
     return response;
   }
 };
@@ -1149,6 +1150,24 @@ var Api = class extends import_obsidian.Component {
       }
     }
     return null;
+  }
+  getImageElement(page, width = 75, height = 75) {
+    let imageFile = null;
+    if (page !== void 0) {
+      imageFile = this.getImageLink(page);
+    }
+    if (imageFile === null) {
+      return null;
+    }
+    if (width !== 75 && height === 75) {
+      height = void 0;
+    } else if (width === 75 && height !== 75) {
+      width = void 0;
+    }
+    const response = new Image(width, height);
+    response.src = imageFile;
+    response.style.objectFit = "cover";
+    return response;
   }
   getImage(page, width = 75, height = 75) {
     let imageFile = null;
@@ -1278,6 +1297,7 @@ var models_exports = {};
 __export(models_exports, {
   AdventureModel: () => AdventureModel,
   CampaignModel: () => CampaignModel,
+  CampaignNavigationModel: () => CampaignNavigationModel,
   ClueModel: () => ClueModel,
   ErrorModel: () => ErrorModel,
   EventModel: () => EventModel,
@@ -1300,6 +1320,7 @@ var import_obsidian4 = require("obsidian");
 var views_exports = {};
 __export(views_exports, {
   AdventureListView: () => AdventureListView,
+  CampaignNavigationView: () => CampaignNavigationView,
   CharacterInfoView: () => CharacterInfoView,
   CharacterListView: () => CharacterListView,
   ClueListView: () => ClueListView,
@@ -1531,24 +1552,37 @@ var import_obsidian2 = require("obsidian");
 var TimelineView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
-      let response = this.header(data.campaign);
-      data.elements.forEach((timeline) => {
-        const fileLink = document.createElement("h3");
-        const synopsis = document.createElement("span");
-        import_obsidian2.MarkdownRenderer.renderMarkdown(timeline.synopsis, synopsis, this.dv.currentFilePath, null);
-        import_obsidian2.MarkdownRenderer.renderMarkdown("[[" + timeline.name + "]]", fileLink, this.dv.currentFilePath, null);
-        response += '<li><div class="bullet' + timeline.getEventColour() + '"></div><div class="event-time">' + timeline.date + (timeline.time !== "00:00" ? "<br/>" + timeline.time : "") + '</div><div class="event-type' + timeline.getEventColour() + '">' + timeline.type + '</div><div class="event-details">' + fileLink.outerHTML + synopsis.outerHTML + "</div></li>";
+      var _a, _b;
+      const container = this.dv.container.createDiv({ cls: "rpg-container" });
+      const header = container.createDiv({ cls: "rpgm-header" });
+      if (((_a = data.campaign) == null ? void 0 : _a.imageSrc) !== null) {
+        header.style.backgroundImage = "url('" + ((_b = data.campaign) == null ? void 0 : _b.imageSrc) + "')";
+      }
+      const overlay = header.createDiv({ cls: "rpgm-header-overlay" });
+      overlay.createDiv({ cls: "rpgm-header-title", text: "Timeline" });
+      overlay.createDiv({ cls: "rpgm-campaign-name", text: data.campaign !== null ? data.campaign.name : "Campaign" });
+      overlay.createDiv({ cls: "rpgm-current-date", text: data.campaign !== null ? this.api.formatDate(data.campaign.currentDate, "long") : "" });
+      const timeline = container.createDiv({ cls: "rpgm-timeline" });
+      const ul = timeline.createEl("ul");
+      data.elements.forEach((timeline2) => {
+        const li = ul.createEl("li");
+        const timeContainer = li.createDiv({ cls: "event-time-container" });
+        timeContainer.createDiv({ cls: "event-time", text: timeline2.date + (timeline2.time !== "00:00" ? "<br/>" + timeline2.time : "") });
+        const type = timeContainer.createDiv({ cls: "event-type", text: timeline2.type });
+        if (timeline2.getEventColour() !== "") {
+          type.addClass(timeline2.getEventColour());
+        }
+        const bullet = li.createDiv({ cls: "bullet" });
+        if (timeline2.getEventColour() !== "") {
+          bullet.addClass(timeline2.getEventColour());
+        }
+        const details = li.createDiv({ cls: "event-details" });
+        const fileLink = details.createEl("h3");
+        const synopsis = details.createSpan();
+        import_obsidian2.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.dv.currentFilePath, null);
+        import_obsidian2.MarkdownRenderer.renderMarkdown("[[" + timeline2.name + "]]", fileLink, this.dv.currentFilePath, null);
       });
-      response += this.footer();
-      this.dv.container.innerHTML = response;
     });
-  }
-  header(campaign) {
-    const campaignImage = (campaign == null ? void 0 : campaign.imageSrc) != null ? `style="background-image: url('` + campaign.imageSrc + `');"` : "";
-    return '<div class="rpgm-container"><div class="rpgm-header"' + campaignImage + '><div class="rpgm-header-overlay"><div class="rpgm-header-title">Timeline</div><div class="rpgm-campaign-name">' + (campaign !== null ? campaign.name : "Campaign") + '</div><div class="rpgm-current-date">' + (campaign !== null ? this.api.formatDate(campaign.currentDate, "long") : "") + '</div></div></div><div class="rpgm-timeline"><ul>';
-  }
-  footer() {
-    return "</ul></div></div>";
   }
 };
 
@@ -1622,6 +1656,21 @@ var SceneActionView = class extends AbstractSingleView {
   }
 };
 
+// src/views/CampaignNavigationView.ts
+var CampaignNavigationView = class extends AbstractSingleView {
+  render(data) {
+    return __async(this, null, function* () {
+      const container = this.dv.container.createDiv({ cls: "rpg-container" });
+      const header = container.createDiv({ cls: "rpgm-header" });
+      if (data.imageSrc !== null) {
+        header.style.backgroundImage = "url('" + data.imageSrc + "')";
+      }
+      const overlay = header.createDiv({ cls: "rpgm-header-overlay" });
+      overlay.createDiv({ cls: "rpgm-header-title", text: data.name });
+    });
+  }
+};
+
 // src/factories/RpgViewFactory.ts
 var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["AdventureList"] = 0] = "AdventureList";
@@ -1641,6 +1690,7 @@ var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["SceneList"] = 14] = "SceneList";
   viewType2[viewType2["SceneNavigation"] = 15] = "SceneNavigation";
   viewType2[viewType2["SceneAction"] = 16] = "SceneAction";
+  viewType2[viewType2["CampaignNavigation"] = 17] = "CampaignNavigation";
   return viewType2;
 })(viewType || {});
 var RpgViewFactory = class {
@@ -2121,6 +2171,22 @@ var SceneNavigationModel = class extends AbstractModel {
       const nextScene = this.io.getScene(adventureId, sessionId, sceneId + 1);
       const data = new SceneData(this.api, this.current, session, adventure, previousScene, nextScene, this.campaign);
       const view = RpgViewFactory.createSingle(15 /* SceneNavigation */, this.dv);
+      view.render(data);
+    });
+  }
+};
+
+// src/models/CampaignNavigationModel.ts
+var CampaignNavigationModel = class extends AbstractModel {
+  render() {
+    return __async(this, null, function* () {
+      this.campaignNavigation();
+    });
+  }
+  campaignNavigation() {
+    return __async(this, null, function* () {
+      const data = new CampaignData(this.api, this.current);
+      const view = RpgViewFactory.createSingle(17 /* CampaignNavigation */, this.dv);
       view.render(data);
     });
   }

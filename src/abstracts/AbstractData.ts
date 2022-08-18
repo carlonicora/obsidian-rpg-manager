@@ -20,6 +20,7 @@ export abstract class AbstractData implements GenericDataInterface{
 export abstract class AbstractImageData extends AbstractData implements GenericImageDataInterface{
 	public imageSrc: string|null;
 	public image: string;
+	public imageSrcElement: HTMLImageElement|null;
 
 	constructor(
 		api: Api,
@@ -28,6 +29,7 @@ export abstract class AbstractImageData extends AbstractData implements GenericI
 		super(api, data);
 
 		this.imageSrc = api.getImageLink(data);
+		this.imageSrcElement = api.getImageElement(data);
 		this.image = (this.imageSrc !== null ? api.getImage(data) : '');
 	}
 

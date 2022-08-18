@@ -83,16 +83,16 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 				return '';
 				break;
 			case 'birth':
-				return ' green';
+				return 'green';
 				break;
 			case 'death':
-				return ' red';
+				return 'red';
 				break;
 			case 'session':
-				return ' blue';
+				return 'blue';
 				break;
 			case 'clue':
-				return ' purple';
+				return 'purple';
 				break;
 		}
 
