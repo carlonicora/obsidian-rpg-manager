@@ -6,7 +6,7 @@ export class TimelineModel extends AbstractModel {
 	async render(){
 		const data = new TimelineList(this.campaign);
 
-		let query = '#' + this.api.settings.eventTag + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		let query = '#' + this.api.settings.eventTag + '/' + this.campaign.id;
 		const events = this.dv.pages(query)
 			.where(event =>
 				event?.dates?.event !== undefined &&
@@ -23,7 +23,7 @@ export class TimelineModel extends AbstractModel {
 			)
 		});
 
-		query = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ') and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		query = '(#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
 		let characters = this.dv.pages(query)
 			.where(character =>
 				character?.dates?.dob !== undefined &&
@@ -40,7 +40,7 @@ export class TimelineModel extends AbstractModel {
 			)
 		});
 
-		characters = this.dv.pages('#character')
+		characters = this.dv.pages(query)
 			.where(character =>
 				character?.dates?.death !== undefined &&
 				character?.dates?.death !== null
@@ -56,7 +56,7 @@ export class TimelineModel extends AbstractModel {
 			)
 		});
 
-		query = '#' + this.api.settings.sessionTag + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		query = '#' + this.api.settings.sessionTag + '/' + this.campaign.id;
 		const sessions = this.dv.pages(query)
 			.where(session =>
 				session?.dates?.session !== undefined &&
@@ -73,7 +73,7 @@ export class TimelineModel extends AbstractModel {
 			)
 		});
 
-		query = '#' + this.api.settings.clueTag + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		query = '#' + this.api.settings.clueTag + '/' + this.campaign?.id;
 		const clues = this.dv.pages(query)
 			.where(clue =>
 				clue?.dates?.found !== undefined &&

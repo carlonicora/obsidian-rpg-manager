@@ -270,3 +270,16 @@ $blue: #2020ff;
 		margin-top: 50px;
 	}
 }
+
+.rpgm-button {
+	text-decoration: none;
+	border: solid 0.5px $dark-grey;
+	font-size: 0.9em;
+	padding: 7px 20px;
+	border-radius: 5px;
+	color: $light-grey;
+
+	:hover {
+		color: $blue;
+	}
+}

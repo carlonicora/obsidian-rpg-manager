@@ -141,8 +141,8 @@ export abstract class AbstractTemplateModal extends Modal {
 	private removeOptions(
 		select: HTMLSelectElement,
 	) {
-		var i, L = select.options.length - 1;
-		for(i = L; i >= 0; i--) {
+		const L = select.options.length - 1
+		for(let i = L; i >= 0; i--) {
 			select.remove(i);
 		}
 	}

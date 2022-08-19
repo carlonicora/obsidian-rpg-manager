@@ -239,6 +239,8 @@ export class Api extends Component {
 						tagLength = this.settings.locationTag.length;
 					} else if (tag.startsWith(this.settings.clueTag)) {
 						tagLength = this.settings.clueTag.length;
+					}else if (tag.startsWith(this.settings.timelineTag)) {
+						tagLength = this.settings.timelineTag.length;
 					}
 
 					if (tagLength !== 0 && tag.length > tagLength && type === DataType.Campaign){
@@ -247,14 +249,6 @@ export class Api extends Component {
 				}
 			}
 		});
-
-		if (response === '' && type === DataType.Campaign){
-			tags.forEach((tag: string) => {
-				if (response === '' && tag.startsWith(this.settings.campaignIdentifier)){
-					response = tag.substring(tag.lastIndexOf('/') + 1);
-				}
-			});
-		}
 
 		if (response === ''){
 			throw new Error();

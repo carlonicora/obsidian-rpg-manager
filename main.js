@@ -576,35 +576,28 @@ var IoData = class {
   }
   getCorrectTag(type) {
     let response = "";
-    let additional = "";
     switch (type) {
       case 4 /* Character */:
-        response = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ")";
-        additional = " or (#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
+        response = "(#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
         break;
       case 8 /* Clue */:
-        response = "#" + this.api.settings.clueTag;
-        additional = " or #" + this.api.settings.clueTag + "/" + this.campaign.id;
+        response = "#" + this.api.settings.clueTag + "/" + this.campaign.id;
         break;
       case 6 /* Location */:
-        response = "#" + this.api.settings.locationTag;
-        additional = " or #" + this.api.settings.locationTag + "/" + this.campaign.id;
+        response = "#" + this.api.settings.locationTag + "/" + this.campaign.id;
         break;
       case 9 /* Faction */:
-        response = "#" + this.api.settings.factionTag;
-        additional = " or #" + this.api.settings.factionTag + "/" + this.campaign.id;
+        response = "#" + this.api.settings.factionTag + "/" + this.campaign.id;
         break;
       case 7 /* Event */:
-        response = "#" + this.api.settings.eventTag;
-        additional = " or #" + this.api.settings.eventTag + "/" + this.campaign.id;
+        response = "#" + this.api.settings.eventTag + "/" + this.campaign.id;
         break;
     }
-    response += " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + additional;
     return response;
   }
   getAdventureList() {
     const response = new AdventureList(this.campaign);
-    const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+    const query = "#" + this.api.settings.adventureTag + "/" + this.campaign.id;
     this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -this.api.getTagId(adventure.tags, 1 /* Adventure */)).forEach((adventure) => {
       response.add(new AdventureData(this.api, adventure, this.campaign));
     });
@@ -612,7 +605,7 @@ var IoData = class {
   }
   getAdventure(adventureId) {
     let response = null;
-    const query = "(#" + this.api.settings.adventureTag + "/" + adventureId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.adventureTag + "/" + this.campaign.id + "/" + adventureId;
+    const query = "#" + this.api.settings.adventureTag + "/" + this.campaign.id + "/" + adventureId;
     const adventures = this.dv.pages(query);
     if (adventures !== null && adventures.length === 1) {
       response = new AdventureData(this.api, adventures[0], this.campaign);
@@ -621,7 +614,7 @@ var IoData = class {
   }
   getSession(adventureId, sessionId) {
     let response = null;
-    const query = "(#" + this.api.settings.sessionTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sessionTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
+    const query = "#" + this.api.settings.sessionTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
     const sessions = this.dv.pages(query);
     if (sessions !== null && sessions.length === 1) {
       response = new SessionData(this.api, sessions[0], this.campaign);
@@ -630,7 +623,7 @@ var IoData = class {
   }
   getSessionList(adventureId = null) {
     const response = new SessionList(this.campaign);
-    const query = "(#" + this.api.settings.sessionTag + (adventureId !== null ? "/" + adventureId : "") + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sessionTag + "/" + this.campaign.id + (adventureId !== null ? "/" + adventureId : "");
+    const query = "#" + this.api.settings.sessionTag + "/" + this.campaign.id + (adventureId !== null ? "/" + adventureId : "");
     this.dv.pages(query).where((session) => session.file.folder !== this.templateFolder).sort((session) => -this.api.getTagId(session.tags, 2 /* Session */)).forEach((session) => {
       response.add(new SessionData(this.api, session, this.campaign));
     });
@@ -638,7 +631,7 @@ var IoData = class {
   }
   getSceneList(adventureId, sessionId) {
     const response = new SceneList(this.campaign);
-    const query = "(#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
+    const query = "#" + this.api.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
     this.dv.pages(query).where((page) => page.file.folder !== this.templateFolder).sort((scene) => this.api.getTagId(scene.tags, 3 /* Scene */)).forEach((scene) => {
       response.add(new SceneData(this.api, scene, this.campaign));
     });
@@ -646,7 +639,7 @@ var IoData = class {
   }
   getCharacterList() {
     const response = new CharacterList(this.campaign);
-    const query = "((#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ") and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or (#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
+    const query = "(#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
     this.dv.pages(query).where((character) => character.file.folder !== this.templateFolder).sort((character) => character.file.name).forEach((character) => {
       response.add(new CharacterData(this.api, character, this.campaign));
     });
@@ -666,7 +659,7 @@ var IoData = class {
     if (adventureId === null || sessionId === null || sceneId === null) {
       response = new SceneData(this.api, this.current, this.campaign);
     } else {
-      const query = "(#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + "/" + sceneId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId + "/" + sceneId;
+      const query = "#" + this.api.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId + "/" + sceneId;
       const scenes = this.dv.pages(query);
       if (scenes !== null && scenes.length === 1) {
         response = new SceneData(this.api, scenes[0], this.campaign);
@@ -896,8 +889,8 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     contentEl.empty();
   }
   removeOptions(select) {
-    var i, L = select.options.length - 1;
-    for (i = L; i >= 0; i--) {
+    const L = select.options.length - 1;
+    for (let i = L; i >= 0; i--) {
       select.remove(i);
     }
   }
@@ -1386,6 +1379,15 @@ var FileFactory = class {
       }
     });
   }
+  silentCreate(type, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
+    return __async(this, null, function* () {
+      const template = new templates_exports[DataType[type] + "Template"](this.api.settings, name, campaignId, adventureId, sessionId, sceneId);
+      const data = template.generateData();
+      const newFile = yield this.api.app.vault.create(name + ".md", data);
+      const leaf = this.api.app.workspace.getLeaf(true);
+      yield leaf.openFile(newFile);
+    });
+  }
 };
 
 // src/api.ts
@@ -1565,6 +1567,8 @@ var Api = class extends import_obsidian3.Component {
             tagLength = this.settings.locationTag.length;
           } else if (tag.startsWith(this.settings.clueTag)) {
             tagLength = this.settings.clueTag.length;
+          } else if (tag.startsWith(this.settings.timelineTag)) {
+            tagLength = this.settings.timelineTag.length;
           }
           if (tagLength !== 0 && tag.length > tagLength && type === 0 /* Campaign */) {
             response = tag.substring(tagLength + 1);
@@ -1572,13 +1576,6 @@ var Api = class extends import_obsidian3.Component {
         }
       }
     });
-    if (response === "" && type === 0 /* Campaign */) {
-      tags.forEach((tag) => {
-        if (response === "" && tag.startsWith(this.settings.campaignIdentifier)) {
-          response = tag.substring(tag.lastIndexOf("/") + 1);
-        }
-      });
-    }
     if (response === "") {
       throw new Error();
     }
@@ -1986,7 +1983,44 @@ var SceneListView = class extends AbstractListView {
         scene.endTime,
         scene.duration
       ]));
+      this.dv.container.createEl("a", { cls: "rpgm-button", text: "Add new scene", href: "#" }).addEventListener("click", (e) => {
+        this.createNewScene();
+      });
       this.spacer();
+    });
+  }
+  createNewScene() {
+    return __async(this, null, function* () {
+      const current = this.dv.current();
+      if (current != null) {
+        let campaignId = null;
+        let adventureId = null;
+        let sessionId = null;
+        current.tags.forEach((tag) => {
+          if (tag.startsWith(this.api.settings.sessionTag)) {
+            const ids = tag.substring(this.api.settings.sessionTag.length + 1).split("/");
+            campaignId = +ids[0];
+            adventureId = +ids[1];
+            sessionId = +ids[2];
+          }
+        });
+        if (campaignId != null && adventureId != null && sessionId != null) {
+          let sceneId = 1;
+          this.dv.pages("#" + this.api.settings.sceneTag + "/" + campaignId + "/" + adventureId + "/" + sessionId).forEach((page) => {
+            page.tags.forEach((tag) => {
+              if (tag.startsWith(this.api.settings.sceneTag)) {
+                const currentScene = +tag.substring(tag.lastIndexOf("/") + 1);
+                if (currentScene >= sceneId) {
+                  sceneId = currentScene + 1;
+                }
+              }
+            });
+          });
+          const sessionIdText = sessionId < 10 ? "0" + sessionId : sessionId;
+          const sceneIdText = sceneId < 10 ? "0" + sceneId : sceneId;
+          this.api.fileFactory.silentCreate(3 /* Scene */, "s" + sessionIdText + "e" + sceneIdText, campaignId, adventureId, sessionId, sceneId);
+        }
+      }
     });
   }
 };
@@ -2449,43 +2483,43 @@ var SessionNavigationModel = class extends AbstractModel {
 var TimelineModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
-      var _a, _b, _c, _d;
+      var _a;
       const data = new TimelineList(this.campaign);
-      let query = "#" + this.api.settings.eventTag + " and #" + this.api.settings.campaignIdentifier + "/" + ((_a = this.campaign) == null ? void 0 : _a.id);
+      let query = "#" + this.api.settings.eventTag + "/" + this.campaign.id;
       const events = this.dv.pages(query).where((event) => {
-        var _a2, _b2;
-        return ((_a2 = event == null ? void 0 : event.dates) == null ? void 0 : _a2.event) !== void 0 && ((_b2 = event == null ? void 0 : event.dates) == null ? void 0 : _b2.event) !== null;
+        var _a2, _b;
+        return ((_a2 = event == null ? void 0 : event.dates) == null ? void 0 : _a2.event) !== void 0 && ((_b = event == null ? void 0 : event.dates) == null ? void 0 : _b.event) !== null;
       });
       events.forEach((event) => {
         data.add(new TimelineData(this.api, event, "event"));
       });
-      query = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ") and #" + this.api.settings.campaignIdentifier + "/" + ((_b = this.campaign) == null ? void 0 : _b.id);
+      query = "(#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
       let characters = this.dv.pages(query).where((character) => {
-        var _a2, _b2;
-        return ((_a2 = character == null ? void 0 : character.dates) == null ? void 0 : _a2.dob) !== void 0 && ((_b2 = character == null ? void 0 : character.dates) == null ? void 0 : _b2.dob) !== null;
+        var _a2, _b;
+        return ((_a2 = character == null ? void 0 : character.dates) == null ? void 0 : _a2.dob) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.dob) !== null;
       });
       characters.forEach((character) => {
         data.add(new TimelineData(this.api, character, "birth"));
       });
-      characters = this.dv.pages("#character").where((character) => {
-        var _a2, _b2;
-        return ((_a2 = character == null ? void 0 : character.dates) == null ? void 0 : _a2.death) !== void 0 && ((_b2 = character == null ? void 0 : character.dates) == null ? void 0 : _b2.death) !== null;
+      characters = this.dv.pages(query).where((character) => {
+        var _a2, _b;
+        return ((_a2 = character == null ? void 0 : character.dates) == null ? void 0 : _a2.death) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.death) !== null;
       });
       characters.forEach((character) => {
         data.add(new TimelineData(this.api, character, "death"));
       });
-      query = "#" + this.api.settings.sessionTag + " and #" + this.api.settings.campaignIdentifier + "/" + ((_c = this.campaign) == null ? void 0 : _c.id);
+      query = "#" + this.api.settings.sessionTag + "/" + this.campaign.id;
       const sessions = this.dv.pages(query).where((session) => {
-        var _a2, _b2;
-        return ((_a2 = session == null ? void 0 : session.dates) == null ? void 0 : _a2.session) !== void 0 && ((_b2 = session == null ? void 0 : session.dates) == null ? void 0 : _b2.session) !== null;
+        var _a2, _b;
+        return ((_a2 = session == null ? void 0 : session.dates) == null ? void 0 : _a2.session) !== void 0 && ((_b = session == null ? void 0 : session.dates) == null ? void 0 : _b.session) !== null;
       });
       sessions.forEach((session) => {
         data.add(new TimelineData(this.api, session, "session"));
       });
-      query = "#" + this.api.settings.clueTag + " and #" + this.api.settings.campaignIdentifier + "/" + ((_d = this.campaign) == null ? void 0 : _d.id);
+      query = "#" + this.api.settings.clueTag + "/" + ((_a = this.campaign) == null ? void 0 : _a.id);
       const clues = this.dv.pages(query).where((clue) => {
-        var _a2, _b2;
-        return ((_a2 = clue == null ? void 0 : clue.dates) == null ? void 0 : _a2.found) !== void 0 && ((_b2 = clue == null ? void 0 : clue.dates) == null ? void 0 : _b2.found) !== null;
+        var _a2, _b;
+        return ((_a2 = clue == null ? void 0 : clue.dates) == null ? void 0 : _a2.found) !== void 0 && ((_b = clue == null ? void 0 : clue.dates) == null ? void 0 : _b.found) !== null;
       });
       clues.forEach((clue) => {
         data.add(new TimelineData(this.api, clue, "clue"));
@@ -2562,7 +2596,6 @@ var RpgModelFactory = class {
 
 // src/main.ts
 var DEFAULT_SETTINGS = {
-  campaignIdentifier: "rpgm/campaign",
   campaignTag: "rpgm/outline/campaign",
   adventureTag: "rpgm/outline/adventure",
   sessionTag: "rpgm/outline/session",
@@ -2572,7 +2605,8 @@ var DEFAULT_SETTINGS = {
   locationTag: "rpgm/element/location",
   factionTag: "rpgm/element/faction",
   eventTag: "rpgm/element/event",
-  clueTag: "rpgm/element/clue"
+  clueTag: "rpgm/element/clue",
+  timelineTag: "rpgm/element/timeline"
 };
 var RpgManager = class extends import_obsidian7.Plugin {
   onload() {
@@ -2656,11 +2690,6 @@ var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("h2", { text: "Settings for Role Playing Game Manager" });
-    new import_obsidian7.Setting(this.containerEl).setName("Campaign Relationship Tag").setDesc("The tag that identifies the Campaign the current note belongs to. THIS IS BEING DEPRECATED!").addText((text) => text.setPlaceholder("rpgm/campaign").setValue(this.plugin.settings.campaignIdentifier).onChange((value) => __async(this, null, function* () {
-      if (value.length == 0)
-        return;
-      yield this.plugin.saveSettings();
-    })));
     containerEl.createEl("h3", { text: "Outlines" });
     containerEl.createEl("span", { text: "Outline Tags should always be followed by an id and the id of the parent. Example: `#" + this.plugin.settings.sessionTag + "/{session-id}/{adventure-id}`" });
     new import_obsidian7.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc("The tag identifying a Campaign").addText((text) => text.setPlaceholder("rpgm/outline/campaign").setValue(this.plugin.settings.campaignTag).onChange((value) => __async(this, null, function* () {
@@ -2711,6 +2740,11 @@ var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
       yield this.plugin.saveSettings();
     })));
     new import_obsidian7.Setting(this.containerEl).setName("Clue Tag").setDesc("The tag identifying a Clue").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
+      if (value.length == 0)
+        return;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian7.Setting(this.containerEl).setName("Timeline Tag").setDesc("The tag identifying a timeline").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();

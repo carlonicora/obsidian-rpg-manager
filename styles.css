@@ -221,3 +221,15 @@
   color: #fff;
   margin-top: 50px;
 }
+
+.rpgm-button {
+  text-decoration: none;
+  border: solid 0.5px #808080;
+  font-size: 0.9em;
+  padding: 7px 20px;
+  border-radius: 5px;
+  color: #d9d9d9;
+}
+.rpgm-button :hover {
+  color: #2020ff;
+}

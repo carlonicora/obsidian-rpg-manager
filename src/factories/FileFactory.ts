@@ -57,4 +57,27 @@ export class FileFactory {
 			}
 		}
 	}
+
+	async silentCreate(
+		type: DataType,
+		name: string,
+		campaignId: number,
+		adventureId: number|null = null,
+		sessionId: number|null = null,
+		sceneId: number|null = null,
+	): Promise<void> {
+		//@ts-ignore
+		const template: TemplateInterface = new Templates[DataType[type] + 'Template'](
+			this.api.settings,
+			name,
+			campaignId,
+			adventureId,
+			sessionId,
+			sceneId,
+		);
+		const data: string = template.generateData();
+		const newFile = await this.api.app.vault.create(name + '.md', data);
+		const leaf = this.api.app.workspace.getLeaf(true);
+		await leaf.openFile(newFile);
+	}
 }

@@ -14,7 +14,6 @@ import {RpgViewFactory} from "./factories/RpgViewFactory";
 import {DataType} from "./io/IoData";
 
 export interface RpgManagerSettings {
-	campaignIdentifier: string;
 	campaignTag: string;
 	adventureTag: string;
 	sessionTag: string;
@@ -25,10 +24,10 @@ export interface RpgManagerSettings {
 	factionTag: string;
 	eventTag: string;
 	clueTag: string;
+	timelineTag: string;
 }
 
 const DEFAULT_SETTINGS: RpgManagerSettings = {
-	campaignIdentifier: 'rpgm/campaign',
 	campaignTag: 'rpgm/outline/campaign',
 	adventureTag: 'rpgm/outline/adventure',
 	sessionTag: 'rpgm/outline/session',
@@ -39,6 +38,7 @@ const DEFAULT_SETTINGS: RpgManagerSettings = {
 	factionTag: 'rpgm/element/faction',
 	eventTag: 'rpgm/element/event',
 	clueTag: 'rpgm/element/clue',
+	timelineTag: 'rpgm/element/timeline',
 }
 
 export default class RpgManager extends Plugin {
@@ -162,20 +162,6 @@ class RpgManagerSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 		containerEl.createEl('h2', {text: 'Settings for Role Playing Game Manager'});
-
-		new Setting(this.containerEl)
-			.setName("Campaign Relationship Tag")
-			.setDesc("The tag that identifies the Campaign the current note belongs to. THIS IS BEING DEPRECATED!")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/campaign')
-					.setValue(this.plugin.settings.campaignIdentifier)
-					.onChange(async value => {
-						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
-					})
-			);
 
 		containerEl.createEl('h3', {text: 'Outlines'});
 		containerEl.createEl('span', {text: 'Outline Tags should always be followed by an id and the id of the parent. Example: `#' + this.plugin.settings.sessionTag + '/{session-id}/{adventure-id}`'});
@@ -316,6 +302,20 @@ class RpgManagerSettingTab extends PluginSettingTab {
 				text
 					.setPlaceholder('rpgm/element/clue')
 					.setValue(this.plugin.settings.clueTag)
+					.onChange(async value => {
+						if (value.length == 0) return;
+
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(this.containerEl)
+			.setName("Timeline Tag")
+			.setDesc("The tag identifying a timeline")
+			.addText(text =>
+				text
+					.setPlaceholder('rpgm/element/timeline')
+					.setValue(this.plugin.settings.timelineTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
 

@@ -131,32 +131,24 @@ export class IoData {
 	): string
 	{
 		let response = '';
-		let additional = '';
 
 		switch (type){
 			case DataType.Character:
-				response = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ')';
-				additional = ' or (#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
+				response = '(#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
 				break;
 			case DataType.Clue:
-				response = '#' + this.api.settings.clueTag;
-				additional = ' or #' + this.api.settings.clueTag + '/' + this.campaign.id;
+				response = '#' + this.api.settings.clueTag + '/' + this.campaign.id;
 				break;
 			case DataType.Location:
-				response = '#' + this.api.settings.locationTag;
-				additional = ' or #' + this.api.settings.locationTag + '/' + this.campaign.id;
+				response = '#' + this.api.settings.locationTag + '/' + this.campaign.id;
 				break;
 			case DataType.Faction:
-				response = '#' + this.api.settings.factionTag;
-				additional = ' or #' + this.api.settings.factionTag + '/' + this.campaign.id;
+				response = '#' + this.api.settings.factionTag + '/' + this.campaign.id;
 				break;
 			case DataType.Event:
-				response = '#' + this.api.settings.eventTag;
-				additional = ' or #' + this.api.settings.eventTag + '/' + this.campaign.id;
+				response = '#' + this.api.settings.eventTag + '/' + this.campaign.id;
 				break;
 		}
-
-		response += ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + additional;
 
 		return response;
 	}
@@ -166,7 +158,7 @@ export class IoData {
 	{
 		const response = new AdventureList(this.campaign);
 
-		const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+		const query = '#' + this.api.settings.adventureTag + '/' + this.campaign.id;
 
 		this.dv.pages(query)
 			.where(adventure =>
@@ -194,8 +186,7 @@ export class IoData {
 	{
 		let response: AdventureDataInterface|null = null;
 
-		const query = '(#' + this.api.settings.adventureTag + '/' + adventureId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
-			' or #' + this.api.settings.adventureTag + '/' + this.campaign.id + '/' + adventureId
+		const query = '#' + this.api.settings.adventureTag + '/' + this.campaign.id + '/' + adventureId
 
 		const adventures = this.dv.pages(query);
 
@@ -217,8 +208,7 @@ export class IoData {
 	{
 		let response: SessionDataInterface|null = null;
 
-		const query = '(#' + this.api.settings.sessionTag + '/' + adventureId + '/' + sessionId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
-			' or #' + this.api.settings.sessionTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId
+		const query = '#' + this.api.settings.sessionTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId
 		const sessions = this.dv.pages(query);
 
 		if (sessions !== null && sessions.length === 1){
@@ -237,8 +227,7 @@ export class IoData {
 	{
 		const response = new SessionList(this.campaign);
 
-		const query = "(#" + this.api.settings.sessionTag + (adventureId !== null ? '/' + adventureId : '') + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ')' +
-			' or #' + this.api.settings.sessionTag + '/' + this.campaign.id + (adventureId !== null ? '/' + adventureId : '')
+		const query = '#' + this.api.settings.sessionTag + '/' + this.campaign.id + (adventureId !== null ? '/' + adventureId : '')
 
 		this.dv.pages(query)
 			.where(session =>
@@ -264,8 +253,7 @@ export class IoData {
 	{
 		const response = new SceneList(this.campaign);
 
-		const query = "(#" + this.api.settings.sceneTag + '/' + adventureId + '/' + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ')' +
-			' or #' + this.api.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId;
+		const query = '#' + this.api.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId;
 
 		this.dv.pages(query)
 			.where(page =>
@@ -292,8 +280,7 @@ export class IoData {
 	{
 		const response = new CharacterList(this.campaign);
 
-		const query = '((#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ') and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
-			' or (#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
+		const query = '(#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
 
 		this.dv.pages(query)
 			.where(character =>
@@ -364,8 +351,7 @@ export class IoData {
 				this.campaign,
 			)
 		} else {
-			const query = '(#' + this.api.settings.sceneTag + '/' + adventureId + '/' + sessionId + '/' + sceneId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
-				' or #' + this.api.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId + '/' + sceneId;
+			const query = '#' + this.api.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId + '/' + sceneId;
 
 			const scenes = this.dv.pages(query);
 
