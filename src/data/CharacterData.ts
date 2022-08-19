@@ -64,14 +64,14 @@ export class CharacterData extends AbstractImageData implements CharacterDataInt
 	constructor(
 		api: Api,
 		data: Record<string, any>,
-		public campaign: CampaignDataInterface|null,
+		public campaign: CampaignDataInterface,
 		useAdditionalInformation: string|null = null,
 	) {
 		super(api, data);
 
 		this.age = '';
 		this.image = this.api.getImage(data);
-		if (campaign !== null) this.age = this.api.calculateAge(data, campaign.currentDate);
+		this.age = this.api.calculateAge(data, campaign.currentDate);
 		this.isDead = data.dates.death != undefined;
 		this.goals = data.goals != undefined ? data.goals : null;
 

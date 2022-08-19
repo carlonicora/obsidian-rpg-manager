@@ -15,7 +15,6 @@ import {DataType} from "./io/IoData";
 
 export interface RpgManagerSettings {
 	campaignIdentifier: string;
-	tooltip: boolean;
 	campaignTag: string;
 	adventureTag: string;
 	sessionTag: string;
@@ -30,7 +29,6 @@ export interface RpgManagerSettings {
 
 const DEFAULT_SETTINGS: RpgManagerSettings = {
 	campaignIdentifier: 'rpgm/campaign',
-	tooltip: true,
 	campaignTag: 'rpgm/outline/campaign',
 	adventureTag: 'rpgm/outline/adventure',
 	sessionTag: 'rpgm/outline/session',
@@ -83,8 +81,14 @@ export default class RpgManager extends Plugin {
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
 				callback: () => {
-					this.api.fileFactory.create(DataType[type as keyof typeof DataType]);
-					//new SampleModal(this.app).open();
+					this.api.fileFactory.initialise(DataType[type as keyof typeof DataType]);
+				},
+			});
+			this.addCommand({
+				id: "rpg-manager-fill-" + type.toLowerCase(),
+				name: "Fill with " + type,
+				callback: () => {
+					this.api.fileFactory.initialise(DataType[type as keyof typeof DataType], false);
 				},
 			});
 		})
@@ -161,7 +165,7 @@ class RpgManagerSettingTab extends PluginSettingTab {
 
 		new Setting(this.containerEl)
 			.setName("Campaign Relationship Tag")
-			.setDesc("The tag that identifies the Campaign the current note belongs to")
+			.setDesc("The tag that identifies the Campaign the current note belongs to. THIS IS BEING DEPRECATED!")
 			.addText(text =>
 				text
 					.setPlaceholder('rpgm/campaign')
@@ -169,18 +173,6 @@ class RpgManagerSettingTab extends PluginSettingTab {
 					.onChange(async value => {
 						if (value.length == 0) return;
 
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Enable tasklist on new outlines and elements")
-			.setDesc("Enable or disable the tasklist that helps the creation of new outlines and elements. After some usage switching it off is beneficial")
-			.addToggle(toggle =>
-				toggle
-					.setValue(this.plugin.settings.tooltip)
-					.onChange(async value => {
-						this.plugin.settings.tooltip = value;
 						await this.plugin.saveSettings();
 					})
 			);

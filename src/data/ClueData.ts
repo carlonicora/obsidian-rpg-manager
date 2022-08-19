@@ -44,6 +44,7 @@ export class ClueData extends AbstractImageData implements ClueDataInterface {
 	constructor(
 		api: Api,
 		data: Record<string, any>,
+		public campaign: CampaignDataInterface,
 		useAdditionalInformation: string|null = null,
 	) {
 		super(api, data);

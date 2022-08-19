@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {AbstractTemplateModal} from "../../abstracts/AbstractTemplateModal";
 
 export class NonPlayerCharacterTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.npcTag + ', ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
+		return 'tags: [' + this.settings.npcTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -32,29 +33,19 @@ export class NonPlayerCharacterTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-
-		let response = '';
-
-		if (this.settings.tooltip){
-			response += '\n' +
-			'- [ ] Update the name of your non player character\n';
-		if (this.campaignId === '{campaignId}') {
-			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
-		}
-		response += '- [ ] Remove these tasks\n' +
-			'\n'
-		}
-
-		response +='```RpgManager\n' +
-			'npc\n' +
-			'```\n' +
-			'---\n' +
-			'\n' +
-			'## Notes\n' +
-			'\n' +
-			'\n' +
-			'## Story\n';
+		let response = this.getRpgManagerCodeblock('npc');
+		response += this.getNotes();
+		response += this.getStory();
 
 		return response;
 	}
 }
+
+export class NonPlayerCharacterModal extends AbstractTemplateModal {
+	protected content(
+		contentEl: HTMLElement,
+	): void {
+		this.campaignBlock(contentEl);
+	}
+}
+

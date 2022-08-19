@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {AbstractTemplateModal} from "../../abstracts/AbstractTemplateModal";
 
 export class EventTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.eventTag + ', ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
+		return 'tags: [' + this.settings.eventTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -25,27 +26,18 @@ export class EventTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-
-		let response = '';
-
-		if (this.settings.tooltip){
-			response += '\n' +
-			'- [ ] Update the name of your event\n';
-		if (this.campaignId === '{campaignId}') {
-			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
-		}
-		response += '- [ ] Remove these tasks\n' +
-			'\n' +
-			'---\n'
-		}
-
-		response +='```RpgManager\n' +
-			'event\n' +
-			'```\n' +
-			'---\n' +
-			'\n' +
-			'## Additional Information\n';
+		let response = this.getRpgManagerCodeblock('event');
+		response += this.getAdditionalInformation();
 
 		return response;
 	}
 }
+
+export class EventModal extends AbstractTemplateModal {
+	protected content(
+		contentEl: HTMLElement,
+	): void {
+		this.campaignBlock(contentEl);
+	}
+}
+

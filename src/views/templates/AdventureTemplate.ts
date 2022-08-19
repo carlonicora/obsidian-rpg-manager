@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {AbstractTemplateModal} from "../../abstracts/AbstractTemplateModal";
 
 export class AdventureTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.adventureTag + '/{adventureId}, ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
+		return 'tags: [' + this.settings.adventureTag + '/' + this.campaignId + '/' + this.adventureId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -13,37 +14,20 @@ export class AdventureTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		let response = '';
-
-		if (this.settings.tooltip){
-			response += '\n' +
-				'- [ ] Update the name of your adventure\n';
-				if (this.campaignId === '{campaignId}') {
-					response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
-				}
-				response += '- [ ] Replace the `{adventureId}` of the adventure tag (' + this.settings.adventureTag + '/**{adventureId}**) with a valid number unique to the campaign\n' +
-				'- [ ] Remove these tasks\n' +
-				'\n';
-		}
-
-		response += '## Plot\n\n' +
-			'>\n' +
-			'>\n' +
-			'>\n' +
-			'>**AND** \n' +
-			'>\n' +
-			'>**BUT** \n' +
-			'>\n' +
-			'>**THEREFORE** \n' +
-			'>\n' +
-			'\n' +
-			'## Notes\n' +
-			'- \n\n' +
-			'---\n' +
-			'```RpgManager\n' +
-			'adventure\n' +
-			'```';
+		let response = this.getHeader('Plot');
+		response += this.getAbtPlot();
+		response += this.getNotes();
+		response += this.getRpgManagerCodeblock('adventure');
 
 		return response;
+	}
+}
+
+export class AdventureModal extends AbstractTemplateModal {
+	protected content(
+		contentEl: HTMLElement,
+	): void {
+		this.campaignBlock(contentEl);
+		this.initialiseAdventures();
 	}
 }

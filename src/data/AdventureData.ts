@@ -1,10 +1,8 @@
-import {
-	GenericDataInterface,
-	GenericDataListInterface
-} from "../interfaces/DataInterfaces";
+import {GenericDataInterface, GenericDataListInterface} from "../interfaces/DataInterfaces";
 import {Api} from "../api";
 import {AbstractData, AbstractDataList} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
+import {DataType} from "../io/IoData";
 
 export interface AdventureListInterface extends GenericDataListInterface{
 	elements: AdventureDataInterface[];
@@ -40,10 +38,11 @@ export class AdventureData extends AbstractData implements AdventureDataInterfac
 	constructor(
 		api: Api,
 		data: Record<string, any>,
+		public campaign: CampaignDataInterface,
 	) {
 		super(api, data);
 
-		this.id = this.api.getId(data.tags, this.api.settings.adventureTag);
+		this.id = this.api.getTagId(data.tags, DataType.Adventure);
 		this.synopsis = data.synopsis;
 	}
 }

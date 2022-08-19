@@ -4,11 +4,11 @@ import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {CampaignData, CampaignDataInterface} from "../data/CampaignData";
 import {GenericDataInterface, GenericDataListInterface} from "../interfaces/DataInterfaces";
-import {IoData} from "../io/IoData";
+import {DataType, IoData} from "../io/IoData";
 
 export abstract class AbstractModel extends MarkdownRenderChild {
 	protected dv: DataviewInlineApi;
-	protected campaign: CampaignDataInterface|null;
+	protected campaign: CampaignDataInterface;
 	protected current: Record<string, any>;
 	protected io: IoData;
 
@@ -33,32 +33,29 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 			if (current != null){
 				this.current = current;
 			} else {
+				console.log('Current is null');
 				return;
 			}
 
-			let campaignId: string|null = null;
-			if (this.current?.tags != null) {
-				this.current.tags.forEach((tag: string) => {
-					if (tag.startsWith(this.api.settings.campaignTag)) {
-						campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
-					} else if (tag.startsWith(this.api.settings.campaignIdentifier)) {
-						campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
-					}
-				});
-			}
-			if (campaignId !== null){
+			try {
+				const campaignId = this.api.getTagId(this.current.tags, DataType.Campaign);
 				const campaigns = this.dv.pages('#' + this.api.settings.campaignTag + '/' + campaignId);
 
-				if (campaigns.length === 1) {
-					this.campaign = new CampaignData(
-						this.api,
-						campaigns[0],
-					);
+				if (campaigns.length !== 1) {
+					console.log('Campaign is null');
+					return;
 				}
+
+				this.campaign = new CampaignData(
+					this.api,
+					campaigns[0],
+				);
+			} catch (e) {
+				return;
 			}
 
 			this.io = new IoData(this.api, this.campaign, this.dv, this.current);
-			this.container.innerHTML = '';
+			this.container.empty();
 
 			this.render();
 		}, wait);

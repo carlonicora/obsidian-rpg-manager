@@ -37,7 +37,7 @@ export class FactionData extends AbstractImageData implements FactionDataInterfa
 	constructor(
 		api: Api,
 		data: Record<string, any>,
-		public campaign: CampaignDataInterface|null,
+		public campaign: CampaignDataInterface,
 		useAdditionalInformation: string|null = null,
 	) {
 		super(api, data);

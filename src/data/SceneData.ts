@@ -1,11 +1,10 @@
-import {GenericDataInterface,
-	GenericDataListInterface, GenericImageDataInterface
-} from "../interfaces/DataInterfaces";
+import {GenericDataInterface, GenericDataListInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
 import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 import {SessionDataInterface} from "./SessionData";
 import {AdventureDataInterface} from "./AdventureData";
+import {DataType} from "../io/IoData";
 
 export interface SceneListInterface extends GenericDataListInterface{
 	elements: SceneDataInterface[];
@@ -69,24 +68,22 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 	constructor(
 		api: Api,
 		data: Record<string, any>,
-		public session: SessionDataInterface|null = null,
+		public campaign: CampaignDataInterface,
 		public adventure: AdventureDataInterface|null = null,
+		public session: SessionDataInterface|null = null,
 		public previousScene: SceneDataInterface|null = null,
 		public nextScene: SceneDataInterface|null = null,
-		public campaign: CampaignDataInterface|null = null,
 	) {
 		super(api, data);
 
 		this.action = data.action != undefined ? data.action : '';
 		this.synopsis = data.synopsis != undefined ? data.synopsis : '';
-		this.sessionId = data.ids?.session != undefined ? data.ids.session : 0;
-		this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
 		this.startTime = this.api.formatTime(data.time?.start);
 		this.endTime = this.api.formatTime(data.time?.end);
 
-		this.id = this.api.getId(data.tags, this.api.settings.sceneTag);
-		this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
-		this.adventureId = this.api.getGrandParentId(data.tags, this.api.settings.sceneTag);
+		this.id = this.api.getTagId(data.tags, DataType.Scene);
+		this.sessionId = this.api.getTagId(data.tags, DataType.Session);
+		this.adventureId = this.api.getTagId(data.tags, DataType.Adventure);
 
 		if (this.startTime !== '' && this.endTime !== ''){
 			this.duration = this.api.calculateDuration(data.time.start, data.time.end);

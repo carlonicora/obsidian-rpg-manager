@@ -23,7 +23,7 @@ export class DataFactory {
 
 	private static createCharacter(
 		api: Api,
-		campaign: CampaignDataInterface|null,
+		campaign: CampaignDataInterface,
 		current: Record<string, any>,
 		record: DataObject,
 		additionalInformation: string|null,
@@ -39,7 +39,7 @@ export class DataFactory {
 
 	private static createLocation(
 		api: Api,
-		campaign: CampaignDataInterface|null,
+		campaign: CampaignDataInterface,
 		current: Record<string, any>,
 		record: DataObject,
 		additionalInformation: string|null,
@@ -48,13 +48,14 @@ export class DataFactory {
 		return new LocationData(
 			api,
 			record,
+			campaign,
 			additionalInformation,
 		)
 	}
 
 	private static createEvent(
 		api: Api,
-		campaign: CampaignDataInterface|null,
+		campaign: CampaignDataInterface,
 		current: Record<string, any>,
 		record: DataObject,
 		additionalInformation: string|null,
@@ -70,7 +71,7 @@ export class DataFactory {
 
 	private static createClue(
 		api: Api,
-		campaign: CampaignDataInterface|null,
+		campaign: CampaignDataInterface,
 		current: Record<string, any>,
 		record: DataObject,
 		additionalInformation: string|null,
@@ -79,13 +80,14 @@ export class DataFactory {
 		return new ClueData(
 			api,
 			record,
+			campaign,
 			additionalInformation,
 		)
 	}
 
 	private static createFaction(
 		api: Api,
-		campaign: CampaignDataInterface|null,
+		campaign: CampaignDataInterface,
 		current: Record<string, any>,
 		record: DataObject,
 		additionalInformation: string|null,

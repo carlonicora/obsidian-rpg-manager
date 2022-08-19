@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {AbstractTemplateModal} from "../../abstracts/AbstractTemplateModal";
 
 export class CampaignTemplate extends AbstractTemplate{
     protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.campaignTag +'/{campaignId}]\n';
+		return 'tags: [' + this.settings.campaignTag +'/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterDates(
@@ -13,37 +14,18 @@ export class CampaignTemplate extends AbstractTemplate{
 
 	protected generateTemplate(
 	): string {
-		let response = '';
-
-		if (this.settings.tooltip){
-			response += '\n' +
-				'- [ ] Update the name of your campaign\n' +
-				'- [ ] Replace the `{campaignId}` of the campaign tag (' + this.settings.campaignTag + '/**{campaignId}**) with a valid number unique to the vault\n' +
-				'- [ ] Remove these tasks\n' +
-				'\n';
-		}
-
-		response +=
-			'---\n' +
-			'```RpgManager\n' +
-			'campaign\n' +
-			'```\n' +
-			'## Plot\n\n' +
-			'>\n' +
-			'>\n' +
-			'>\n' +
-			'>**AND** \n' +
-			'>\n' +
-			'>**BUT** \n' +
-			'>\n' +
-			'>**THEREFORE** \n' +
-			'>\n' +
-			'\n' +
-			'---\n' +
-			'```RpgManager\n' +
-			'campaign\n' +
-			'```';
+		let response = this.getRpgManagerCodeblock('campaignNavigation');
+		response += this.getHeader('Plot');
+		response += this.getAbtPlot();
+		response += this.getRpgManagerCodeblock('campaign');
 
 		return response;
+	}
+}
+
+export class CampaignModal extends AbstractTemplateModal {
+	protected content(
+		contentEl: HTMLElement,
+	): void {
 	}
 }

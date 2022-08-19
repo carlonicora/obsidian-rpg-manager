@@ -1,8 +1,9 @@
-import {App, Component, TFile, TAbstractFile} from "obsidian";
+import {App, Component, TAbstractFile, TFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
 import {DateTime} from "obsidian-dataview";
 import {RpgManagerSettings} from "./main";
 import {FileFactory} from "./factories/FileFactory";
+import {DataType} from "./io/IoData";
 
 declare module 'obsidian' {
 	interface Vault {
@@ -33,40 +34,42 @@ export class Api extends Component {
 	}
 
 	private initialiseRoots() {
-		const filePath = this.app.vault.getFiles()[0].path;
+		if (this.app.vault.getFiles().length !== 0) {
+			const filePath = this.app.vault.getFiles()[0].path;
 
-		let slashCount = 0;
-		let p = filePath.indexOf('/');
-		while (p !== -1) {
+			let slashCount = 0;
+			let p = filePath.indexOf('/');
+			while (p !== -1) {
+				slashCount++;
+				p = filePath.indexOf('/', p + 1);
+			}
+
 			slashCount++;
-			p = filePath.indexOf('/', p + 1);
+			const file = this.app.vault.getAbstractFileByPath(filePath);
+
+			if (file instanceof TFile) {
+				this.root = this.app.vault.getResourcePath(file);
+			}
+
+			if (this.root === null) {
+				console.log('Rpg Manager failed to find the root folder!');
+				return;
+			}
+
+			if (this.root.includes("?")) {
+				this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+			}
+
+			for (let removedSlash = slashCount; removedSlash > 0; removedSlash--) {
+				this.root = this.root.slice(0, this.root.lastIndexOf('/'));
+			}
+
+			if (!this.root.endsWith("/")) {
+				this.root += "/";
+			}
+
+			this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
 		}
-
-		slashCount++;
-		const file = this.app.vault.getAbstractFileByPath(filePath);
-
-		if (file instanceof TFile) {
-			this.root = this.app.vault.getResourcePath(file);
-		}
-
-		if (this.root === null){
-			console.log('Rpg Manager failed to find the root folder!');
-			return;
-		}
-
-		if (this.root.includes("?")){
-			this.root = this.root.substring(0, this.root.lastIndexOf("?"));
-		}
-
-		for (let removedSlash=slashCount; removedSlash > 0; removedSlash--){
-			this.root = this.root.slice(0,this.root.lastIndexOf('/'));
-		}
-
-		if (!this.root.endsWith("/")){
-			this.root += "/";
-		}
-
-		this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
 	}
 
 	fileExists(path: string): boolean {
@@ -87,6 +90,9 @@ export class Api extends Component {
 			const fileName = this.app.vault.config.attachmentFolderPath + '/' + page?.file.name + '.' + imageExtensions[extensionCount];
 
 			if (this.fileExists(fileName)){
+				if (this.root == null){
+					this.initialiseRoots();
+				}
 				return this.root + fileName;
 			}
 		}
@@ -152,58 +158,106 @@ export class Api extends Component {
 		return "<img src=\"" + imageFile + "\" style=\"object-fit: cover;" + dimensions + "\">";
 	}
 
-	public getId(
+	public getTagId(
 		tags: Array<string>|null,
-		elementTag: string,
-	): number
-	{
+		type: DataType,
+	): number {
+		if (tags == null) {
+			throw new Error();
+		}
+
 		let response = '';
 
-		if (tags != null) {
+		tags.forEach((tag: string) => {
+			if (response === ''){
+				if (tag.startsWith(this.settings.campaignTag)){
+					if (type === DataType.Campaign){
+						response = tag.substring(this.settings.campaignTag.length + 1);
+					} else {
+						throw new Error();
+					}
+				} else if (tag.startsWith(this.settings.adventureTag)){
+					const parts = tag.substring(this.settings.adventureTag.length + 1).split('/');
+					if (parts.length === 2){
+						if (type === DataType.Campaign){
+							response = parts[0];
+						} else if (type === DataType.Adventure){
+							response = parts[1];
+						}
+					} else if (parts.length === 1 && type === DataType.Adventure){
+						response = parts[0];
+					}
+				} else if (tag.startsWith(this.settings.sessionTag)){
+					const parts = tag.substring(this.settings.sessionTag.length + 1).split('/');
+					if (parts.length === 3){
+						if (type === DataType.Campaign){
+							response = parts[0];
+						} else if (type === DataType.Adventure){
+							response = parts[1];
+						} else if (type === DataType.Session){
+							response = parts[2];
+						}
+					} else if (parts.length === 2){
+						if (type === DataType.Adventure){
+							response = parts[0];
+						} else if (type === DataType.Session){
+							response = parts[1];
+						}
+					}
+				} else if (tag.startsWith(this.settings.sceneTag)){
+					const parts = tag.substring(this.settings.sceneTag.length + 1).split('/');
+					if (parts.length === 4){
+						if (type === DataType.Campaign){
+							response = parts[0];
+						} else if (type === DataType.Adventure){
+							response = parts[1];
+						} else if (type === DataType.Session){
+							response = parts[2];
+						} else if (type === DataType.Scene){
+							response = parts[3]
+						}
+					} else if (parts.length === 3){
+						if (type === DataType.Adventure){
+							response = parts[0];
+						} else if (type === DataType.Session){
+							response = parts[1];
+						} else if (type === DataType.Scene) {
+							response = parts[2]
+						}
+					}
+				} else {
+					let tagLength = 0;
+					if (tag.startsWith(this.settings.npcTag)) {
+						tagLength = this.settings.npcTag.length;
+					} else if (tag.startsWith(this.settings.pcTag)) {
+						tagLength = this.settings.pcTag.length;
+					} else if (tag.startsWith(this.settings.eventTag)) {
+						tagLength = this.settings.eventTag.length;
+					} else if (tag.startsWith(this.settings.factionTag)) {
+						tagLength = this.settings.factionTag.length;
+					} else if (tag.startsWith(this.settings.locationTag)) {
+						tagLength = this.settings.locationTag.length;
+					} else if (tag.startsWith(this.settings.clueTag)) {
+						tagLength = this.settings.clueTag.length;
+					}
+
+					if (tagLength !== 0 && tag.length > tagLength && type === DataType.Campaign){
+						response = tag.substring(tagLength+1);
+					}
+				}
+			}
+		});
+
+		if (response === '' && type === DataType.Campaign){
 			tags.forEach((tag: string) => {
-				if (response === '' && tag.startsWith(elementTag)) {
+				if (response === '' && tag.startsWith(this.settings.campaignIdentifier)){
 					response = tag.substring(tag.lastIndexOf('/') + 1);
 				}
 			});
 		}
 
-		return +response;
-	}
-
-	public getParentId(
-		tags: Array<string>|null,
-		elementTag: string,
-	): number
-	{
-		let response = '';
-
-		if (tags != null) {
-			tags.forEach((tag: string) => {
-				if (response === '' && tag.startsWith(elementTag)) {
-					tag = tag.substring(0, tag.lastIndexOf('/'));
-					response = tag.substring(tag.lastIndexOf('/') + 1);
-				}
-			});
-		}
-
-		return +response;
-	}
-
-	public getGrandParentId(
-		tags: Array<string>|null,
-		elementTag: string,
-	): number
-	{
-		let response = '';
-
-		if (tags != null) {
-			tags.forEach((tag: string) => {
-				if (response === '' && tag.startsWith(elementTag)) {
-					tag = tag.substring(0, tag.lastIndexOf('/'));
-					tag = tag.substring(0, tag.lastIndexOf('/'));
-					response = tag.substring(tag.lastIndexOf('/') + 1);
-				}
-			});
+		if (response === ''){
+			throw new Error();
 		}
 
 		return +response;

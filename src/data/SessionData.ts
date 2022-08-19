@@ -1,9 +1,9 @@
-import {GenericDataInterface, GenericDataListInterface,
-} from "../interfaces/DataInterfaces";
+import {GenericDataInterface, GenericDataListInterface,} from "../interfaces/DataInterfaces";
 import {Api} from "../api";
 import {AbstractData, AbstractDataList} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 import {AdventureDataInterface} from "./AdventureData";
+import {DataType} from "../io/IoData";
 
 export interface SessionListInterface extends GenericDataListInterface{
 	elements: SessionDataInterface[];
@@ -54,15 +54,15 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 	constructor(
 		api: Api,
 		data: Record<string, any>,
-		public campaign: CampaignDataInterface|null = null,
+		public campaign: CampaignDataInterface,
 		public adventure: AdventureDataInterface|null = null,
 		public previousSession: SessionDataInterface|null = null,
 		public nextSession: SessionDataInterface|null = null,
 	) {
 		super(api, data);
 
-		this.id = this.api.getId(data.tags, this.api.settings.sessionTag);
-		this.adventureId = this.api.getParentId(data.tags, this.api.settings.sessionTag);
+		this.id = this.api.getTagId(data.tags, DataType.Session);
+		this.adventureId = this.api.getTagId(data.tags, DataType.Adventure);
 
 		this.synopsis = data.synopsis;
 		if (data.dates.session !== null && data.dates.session !== undefined) this.date = this.api.formatDate(data.dates.session, "short");

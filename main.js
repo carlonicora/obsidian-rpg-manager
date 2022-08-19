@@ -50,10 +50,10 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian5 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 
 // src/api.ts
-var import_obsidian = require("obsidian");
+var import_obsidian3 = require("obsidian");
 
 // src/abstracts/AbstractData.ts
 var AbstractData = class {
@@ -105,14 +105,14 @@ var SessionList = class extends AbstractDataList {
   }
 };
 var SessionData = class extends AbstractData {
-  constructor(api, data, campaign = null, adventure = null, previousSession = null, nextSession = null) {
+  constructor(api, data, campaign, adventure = null, previousSession = null, nextSession = null) {
     super(api, data);
     this.campaign = campaign;
     this.adventure = adventure;
     this.previousSession = previousSession;
     this.nextSession = nextSession;
-    this.id = this.api.getId(data.tags, this.api.settings.sessionTag);
-    this.adventureId = this.api.getParentId(data.tags, this.api.settings.sessionTag);
+    this.id = this.api.getTagId(data.tags, 2 /* Session */);
+    this.adventureId = this.api.getTagId(data.tags, 1 /* Adventure */);
     this.synopsis = data.synopsis;
     if (data.dates.session !== null && data.dates.session !== void 0)
       this.date = this.api.formatDate(data.dates.session, "short");
@@ -140,9 +140,10 @@ var AdventureList = class extends AbstractDataList {
   }
 };
 var AdventureData = class extends AbstractData {
-  constructor(api, data) {
+  constructor(api, data, campaign) {
     super(api, data);
-    this.id = this.api.getId(data.tags, this.api.settings.adventureTag);
+    this.campaign = campaign;
+    this.id = this.api.getTagId(data.tags, 1 /* Adventure */);
     this.synopsis = data.synopsis;
   }
 };
@@ -166,8 +167,7 @@ var CharacterData = class extends AbstractImageData {
     this.campaign = campaign;
     this.age = "";
     this.image = this.api.getImage(data);
-    if (campaign !== null)
-      this.age = this.api.calculateAge(data, campaign.currentDate);
+    this.age = this.api.calculateAge(data, campaign.currentDate);
     this.isDead = data.dates.death != void 0;
     this.goals = data.goals != void 0 ? data.goals : null;
     this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
@@ -208,8 +208,9 @@ var ClueList = class extends AbstractDataList {
   }
 };
 var ClueData = class extends AbstractImageData {
-  constructor(api, data, useAdditionalInformation = null) {
+  constructor(api, data, campaign, useAdditionalInformation = null) {
     super(api, data);
+    this.campaign = campaign;
     this.image = this.api.getImage(data);
     if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
       this.found = this.api.formatDate(data.dates.found, "long");
@@ -258,8 +259,9 @@ var LocationList = class extends AbstractDataList {
   }
 };
 var LocationData = class extends AbstractImageData {
-  constructor(api, data, useAdditionalInformation = null) {
+  constructor(api, data, campaign, useAdditionalInformation = null) {
     super(api, data);
+    this.campaign = campaign;
     this.address = data.address;
     this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
   }
@@ -300,7 +302,7 @@ var CampaignData = class extends AbstractImageData {
   constructor(api, data) {
     super(api, data);
     this.currentDate = data.dates.current;
-    this.id = this.api.getId(data.tags, api.settings.campaignTag);
+    this.id = this.api.getTagId(data.tags, 0 /* Campaign */);
   }
 };
 CampaignData.frontmatter = {
@@ -366,24 +368,22 @@ var SceneList = class extends AbstractDataList {
   }
 };
 var SceneData = class extends AbstractImageData {
-  constructor(api, data, session = null, adventure = null, previousScene = null, nextScene = null, campaign = null) {
-    var _a, _b, _c;
+  constructor(api, data, campaign, adventure = null, session = null, previousScene = null, nextScene = null) {
+    var _a, _b;
     super(api, data);
-    this.session = session;
+    this.campaign = campaign;
     this.adventure = adventure;
+    this.session = session;
     this.previousScene = previousScene;
     this.nextScene = nextScene;
-    this.campaign = campaign;
     this.duration = "";
     this.action = data.action != void 0 ? data.action : "";
     this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
-    this.sessionId = ((_a = data.ids) == null ? void 0 : _a.session) != void 0 ? data.ids.session : 0;
-    this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
-    this.startTime = this.api.formatTime((_b = data.time) == null ? void 0 : _b.start);
-    this.endTime = this.api.formatTime((_c = data.time) == null ? void 0 : _c.end);
-    this.id = this.api.getId(data.tags, this.api.settings.sceneTag);
-    this.sessionId = this.api.getParentId(data.tags, this.api.settings.sceneTag);
-    this.adventureId = this.api.getGrandParentId(data.tags, this.api.settings.sceneTag);
+    this.startTime = this.api.formatTime((_a = data.time) == null ? void 0 : _a.start);
+    this.endTime = this.api.formatTime((_b = data.time) == null ? void 0 : _b.end);
+    this.id = this.api.getTagId(data.tags, 3 /* Scene */);
+    this.sessionId = this.api.getTagId(data.tags, 2 /* Session */);
+    this.adventureId = this.api.getTagId(data.tags, 1 /* Adventure */);
     if (this.startTime !== "" && this.endTime !== "") {
       this.duration = this.api.calculateDuration(data.time.start, data.time.end);
     }
@@ -476,13 +476,13 @@ var DataFactory = class {
     return new CharacterData(api, record, campaign, additionalInformation);
   }
   static createLocation(api, campaign, current, record, additionalInformation) {
-    return new LocationData(api, record, additionalInformation);
+    return new LocationData(api, record, campaign, additionalInformation);
   }
   static createEvent(api, campaign, current, record, additionalInformation) {
     return new EventData(api, record, campaign, additionalInformation);
   }
   static createClue(api, campaign, current, record, additionalInformation) {
-    return new ClueData(api, record, additionalInformation);
+    return new ClueData(api, record, campaign, additionalInformation);
   }
   static createFaction(api, campaign, current, record, additionalInformation) {
     return new FactionData(api, record, campaign, additionalInformation);
@@ -518,13 +518,13 @@ var IoData = class {
     if (((_b = this.current) == null ? void 0 : _b.tags) != null) {
       this.current.tags.forEach((tag) => {
         if (tag.startsWith(this.api.settings.campaignTag)) {
-          this.getId(this.api.settings.campaignTag);
+          this.api.getTagId(this.current.tags, 0 /* Campaign */);
         } else if (tag.startsWith(this.api.settings.adventureTag)) {
-          this.getId(this.api.settings.adventureTag);
+          this.api.getTagId(this.current.tags, 1 /* Adventure */);
         } else if (tag.startsWith(this.api.settings.sessionTag)) {
-          this.getId(this.api.settings.sessionTag);
+          this.api.getTagId(this.current.tags, 2 /* Session */);
         } else if (tag.startsWith(this.api.settings.sceneTag)) {
-          this.getId(this.api.settings.sceneTag);
+          this.api.getTagId(this.current.tags, 3 /* Scene */);
         }
       });
     }
@@ -575,102 +575,85 @@ var IoData = class {
     }
   }
   getCorrectTag(type) {
-    var _a;
     let response = "";
+    let additional = "";
     switch (type) {
       case 4 /* Character */:
         response = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ")";
+        additional = " or (#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
         break;
       case 8 /* Clue */:
         response = "#" + this.api.settings.clueTag;
+        additional = " or #" + this.api.settings.clueTag + "/" + this.campaign.id;
         break;
       case 6 /* Location */:
         response = "#" + this.api.settings.locationTag;
+        additional = " or #" + this.api.settings.locationTag + "/" + this.campaign.id;
         break;
       case 9 /* Faction */:
         response = "#" + this.api.settings.factionTag;
+        additional = " or #" + this.api.settings.factionTag + "/" + this.campaign.id;
         break;
       case 7 /* Event */:
         response = "#" + this.api.settings.eventTag;
+        additional = " or #" + this.api.settings.eventTag + "/" + this.campaign.id;
         break;
     }
-    response += " and #" + this.api.settings.campaignIdentifier + "/" + ((_a = this.campaign) == null ? void 0 : _a.id);
+    response += " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + additional;
     return response;
-  }
-  getId(identifyingTag) {
-    var _a;
-    if (((_a = this.current) == null ? void 0 : _a.tags) != null) {
-      this.current.tags.forEach((tag) => {
-        if (tag.startsWith(identifyingTag)) {
-          this.id = tag.substring(tag.lastIndexOf("/") + 1);
-        }
-      });
-    }
   }
   getAdventureList() {
     const response = new AdventureList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -this.api.getId(adventure.tags, this.api.settings.adventureTag)).forEach((adventure) => {
-        response.add(new AdventureData(this.api, adventure));
-      });
-    }
+    const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+    this.dv.pages(query).where((adventure) => adventure.file.folder !== this.templateFolder).sort((adventure) => -this.api.getTagId(adventure.tags, 1 /* Adventure */)).forEach((adventure) => {
+      response.add(new AdventureData(this.api, adventure, this.campaign));
+    });
     return response;
   }
   getAdventure(adventureId) {
     let response = null;
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.adventureTag + "/" + adventureId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      const adventures = this.dv.pages(query);
-      if (adventures !== null && adventures.length === 1) {
-        response = new AdventureData(this.api, adventures[0]);
-      }
+    const query = "(#" + this.api.settings.adventureTag + "/" + adventureId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.adventureTag + "/" + this.campaign.id + "/" + adventureId;
+    const adventures = this.dv.pages(query);
+    if (adventures !== null && adventures.length === 1) {
+      response = new AdventureData(this.api, adventures[0], this.campaign);
     }
     return response;
   }
   getSession(adventureId, sessionId) {
     let response = null;
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.sessionTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      const sessions = this.dv.pages(query);
-      if (sessions !== null && sessions.length === 1) {
-        response = new SessionData(this.api, sessions[0], this.campaign);
-      }
+    const query = "(#" + this.api.settings.sessionTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sessionTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
+    const sessions = this.dv.pages(query);
+    if (sessions !== null && sessions.length === 1) {
+      response = new SessionData(this.api, sessions[0], this.campaign);
     }
     return response;
   }
   getSessionList(adventureId = null) {
     const response = new SessionList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.sessionTag + (adventureId !== null ? "/" + adventureId : "") + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((session) => session.file.folder !== this.templateFolder).sort((session) => -this.api.getId(session.tags, this.api.settings.sessionTag)).forEach((session) => {
-        response.add(new SessionData(this.api, session));
-      });
-    }
+    const query = "(#" + this.api.settings.sessionTag + (adventureId !== null ? "/" + adventureId : "") + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sessionTag + "/" + this.campaign.id + (adventureId !== null ? "/" + adventureId : "");
+    this.dv.pages(query).where((session) => session.file.folder !== this.templateFolder).sort((session) => -this.api.getTagId(session.tags, 2 /* Session */)).forEach((session) => {
+      response.add(new SessionData(this.api, session, this.campaign));
+    });
     return response;
   }
-  getSceneList() {
+  getSceneList(adventureId, sessionId) {
     const response = new SceneList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "#" + this.api.settings.sceneTag + "/" + this.id + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((page) => page.file.folder !== this.templateFolder).sort((scene) => this.api.getId(scene.tags, this.api.settings.sceneTag)).forEach((scene) => {
-        response.add(new SceneData(this.api, scene));
-      });
-    }
+    const query = "(#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
+    this.dv.pages(query).where((page) => page.file.folder !== this.templateFolder).sort((scene) => this.api.getTagId(scene.tags, 3 /* Scene */)).forEach((scene) => {
+      response.add(new SceneData(this.api, scene, this.campaign));
+    });
     return response;
   }
   getCharacterList() {
     const response = new CharacterList(this.campaign);
-    if (this.campaign !== null) {
-      const query = "(#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ") and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-      this.dv.pages(query).where((character) => character.file.folder !== this.templateFolder).sort((character) => character.file.name).forEach((character) => {
-        response.add(new CharacterData(this.api, character, this.campaign));
-      });
-    }
+    const query = "((#" + this.api.settings.npcTag + " or #" + this.api.settings.pcTag + ") and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or (#" + this.api.settings.npcTag + "/" + this.campaign.id + " or #" + this.api.settings.pcTag + "/" + this.campaign.id + ")";
+    this.dv.pages(query).where((character) => character.file.folder !== this.templateFolder).sort((character) => character.file.name).forEach((character) => {
+      response.add(new CharacterData(this.api, character, this.campaign));
+    });
     return response;
   }
   getClue() {
-    return new ClueData(this.api, this.current);
+    return new ClueData(this.api, this.current, this.campaign);
   }
   getImage(width = 75, height = 75) {
     return new ImageData(this.api, this.current, width, height);
@@ -678,51 +661,47 @@ var IoData = class {
   getSynopsis(title = null) {
     return new SynopsisData(this.api, this.current, title);
   }
-  getScene(adventureId = null, sessionId = null, sceneId = null) {
+  getScene(adventureId, sessionId, sceneId) {
     let response = null;
     if (adventureId === null || sessionId === null || sceneId === null) {
-      response = new SceneData(this.api, this.current);
+      response = new SceneData(this.api, this.current, this.campaign);
     } else {
-      if (this.campaign !== null) {
-        const query = "#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + "/" + sceneId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
-        const scenes = this.dv.pages(query);
-        if (scenes !== null && scenes.length === 1) {
-          response = new SceneData(this.api, scenes[0]);
-        }
+      const query = "(#" + this.api.settings.sceneTag + "/" + adventureId + "/" + sessionId + "/" + sceneId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ") or #" + this.api.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId + "/" + sceneId;
+      const scenes = this.dv.pages(query);
+      if (scenes !== null && scenes.length === 1) {
+        response = new SceneData(this.api, scenes[0], this.campaign);
       }
     }
     return response;
   }
   getRelationshipList(type, parentType = null, sorting = null) {
     const response = new data_exports[DataType[type] + "List"](this.campaign);
-    if (this.campaign !== null) {
-      this.variableSingular = DataType[type].toLowerCase();
-      this.variablePlural = this.variableSingular + "s";
-      const defaultSorting = function(page) {
-        return page.file.name;
-      };
-      let comparison;
-      if (parentType === null) {
-        comparison = function(page) {
-          return page.file.folder !== this.templateFolder && this.current.relationships != void 0 && this.current.relationships[this.variablePlural] != void 0 && this.current.relationships[this.variablePlural][page.file.name] !== void 0;
-        }.bind(this);
-      } else {
-        this.variableParentSingular = DataType[parentType].toLowerCase();
-        this.variableParentPlural = this.variableParentSingular + "s";
-        comparison = function(page) {
-          return page.file.folder !== this.templateFolder && page.relationships != void 0 && page.relationships[this.variableParentPlural] != void 0 && page.relationships[this.variableParentPlural][this.current.file.name] !== void 0;
-        }.bind(this);
-      }
-      const query = this.getCorrectTag(type);
-      this.dv.pages(query).where(comparison).sort(sorting !== null ? sorting : defaultSorting).forEach((page) => {
-        response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, parentType === null ? this.current.relationships[this.variablePlural][page.file.name] : page.relationships[DataType[parentType].toLowerCase() + "s"][this.current.file.name]));
-      });
-      this.outlinks.forEach((page) => {
-        if (this.hasMainTag(page, type) && !this.isAlreadyPresent(response, page)) {
-          response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, "_in main description_"));
-        }
-      });
+    this.variableSingular = DataType[type].toLowerCase();
+    this.variablePlural = this.variableSingular + "s";
+    const defaultSorting = function(page) {
+      return page.file.name;
+    };
+    let comparison;
+    if (parentType === null) {
+      comparison = function(page) {
+        return page.file.folder !== this.templateFolder && this.current.relationships != void 0 && this.current.relationships[this.variablePlural] != void 0 && this.current.relationships[this.variablePlural][page.file.name] !== void 0;
+      }.bind(this);
+    } else {
+      this.variableParentSingular = DataType[parentType].toLowerCase();
+      this.variableParentPlural = this.variableParentSingular + "s";
+      comparison = function(page) {
+        return page.file.folder !== this.templateFolder && page.relationships != void 0 && page.relationships[this.variableParentPlural] != void 0 && page.relationships[this.variableParentPlural][this.current.file.name] !== void 0;
+      }.bind(this);
     }
+    const query = this.getCorrectTag(type);
+    this.dv.pages(query).where(comparison).sort(sorting !== null ? sorting : defaultSorting).forEach((page) => {
+      response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, parentType === null ? this.current.relationships[this.variablePlural][page.file.name] : page.relationships[DataType[parentType].toLowerCase() + "s"][this.current.file.name]));
+    });
+    this.outlinks.forEach((page) => {
+      if (this.hasMainTag(page, type) && !this.isAlreadyPresent(response, page)) {
+        response.add(DataFactory.create(type, this.api, this.campaign, this.current, page, "_in main description_"));
+      }
+    });
     return response;
   }
 };
@@ -730,23 +709,37 @@ var IoData = class {
 // src/views/templates/index.ts
 var templates_exports = {};
 __export(templates_exports, {
+  AdventureModal: () => AdventureModal,
   AdventureTemplate: () => AdventureTemplate,
+  CampaignModal: () => CampaignModal,
   CampaignTemplate: () => CampaignTemplate,
+  CharacterModal: () => CharacterModal,
   CharacterTemplate: () => CharacterTemplate,
+  ClueModal: () => ClueModal,
   ClueTemplate: () => ClueTemplate,
+  EventModal: () => EventModal,
   EventTemplate: () => EventTemplate,
+  FactionModal: () => FactionModal,
   FactionTemplate: () => FactionTemplate,
+  LocationModal: () => LocationModal,
   LocationTemplate: () => LocationTemplate,
+  NonPlayerCharacterModal: () => NonPlayerCharacterModal,
   NonPlayerCharacterTemplate: () => NonPlayerCharacterTemplate,
+  SceneModal: () => SceneModal,
   SceneTemplate: () => SceneTemplate,
+  SessionModal: () => SessionModal,
   SessionTemplate: () => SessionTemplate
 });
 
 // src/abstracts/AbstractTemplate.ts
 var AbstractTemplate = class {
-  constructor(settings, campaignId) {
+  constructor(settings, name, campaignId, adventureId, sessionId, sceneId) {
     this.settings = settings;
+    this.name = name;
     this.campaignId = campaignId;
+    this.adventureId = adventureId;
+    this.sessionId = sessionId;
+    this.sceneId = sceneId;
   }
   generateData() {
     let response = "";
@@ -799,12 +792,286 @@ var AbstractTemplate = class {
   generateFrontmatterGoals() {
     return "";
   }
+  getHeader(title, level = 2) {
+    return "#".repeat(level) + " " + title + "\n";
+  }
+  getRpgManagerCodeblock(funct) {
+    return "```RpgManager\n" + funct + "\n```\n";
+  }
+  getAbtPlot() {
+    return ">\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n";
+  }
+  getAdditionalInformation() {
+    return this.getHeader("Additional Information") + "\n";
+  }
+  getStoryCirclePlot() {
+    return ">\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n";
+  }
+  getNotes() {
+    return this.getHeader("Notes") + "- \n\n";
+  }
+  getStory() {
+    return this.getHeader("Story") + "\n\n";
+  }
+  getPlayerCharacterDetails() {
+    return '## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+  }
+};
+
+// src/abstracts/AbstractTemplateModal.ts
+var import_obsidian = require("obsidian");
+var RpgmElement = class {
+  constructor(type, id, name) {
+    this.type = type;
+    this.id = id;
+    this.name = name;
+  }
+};
+var AbstractTemplateModal = class extends import_obsidian.Modal {
+  constructor(api, type, create, name) {
+    super(api.app);
+    this.api = api;
+    this.type = type;
+    this.create = create;
+    this.name = name;
+    this.confirm = false;
+    this.newCampaignId = 1;
+    this.newAdventureId = 1;
+    this.newSessionId = 1;
+    this.newSceneId = 1;
+    this.confirm = false;
+  }
+  onOpen() {
+    super.onOpen();
+    const { contentEl } = this;
+    this.initialiseCampaigns();
+    if (this.campaigns.length < 1 && this.type !== 0 /* Campaign */) {
+      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Main campaign missing" });
+      contentEl.createSpan({ cls: "", text: "This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a " + DataType[this.type] + ", please initialise your first campaign." });
+    } else {
+      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
+      contentEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
+      this.title = contentEl.createEl("input", { type: "text" });
+      if (this.name !== null) {
+        this.title.value = this.name;
+      }
+      this.titleError = contentEl.createEl("p", { cls: "error" });
+      this.content(contentEl);
+      this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
+      this.button.addEventListener("click", (e) => {
+        this.confirmed = true;
+        this.save();
+      });
+    }
+  }
+  save() {
+    let validation = this.titleValidation();
+    if (this.type !== 0 /* Campaign */) {
+      validation = validation && this.campaignValidation();
+      if (this.type === 2 /* Session */ || this.type === 3 /* Scene */) {
+        if (this.type === 3 /* Scene */) {
+        }
+      }
+    }
+    if (validation) {
+      let campaignId = this.newCampaignId;
+      let adventureId = this.newAdventureId;
+      let sessionId = this.newSessionId;
+      const sceneId = this.newSceneId;
+      if (this.type !== 0 /* Campaign */) {
+        campaignId = +this.campaign.value;
+      }
+      if (this.type === 2 /* Session */ || this.type === 3 /* Scene */) {
+        adventureId = +this.adventure.value;
+        if (this.type === 3 /* Scene */) {
+          sessionId = +this.session.value;
+        }
+      }
+      this.api.fileFactory.create(this.type, this.create, this.title.value, campaignId, adventureId, sessionId, sceneId);
+      this.close();
+    }
+  }
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
+  }
+  titleValidation() {
+    let response = true;
+    this.titleError.style.display = "none";
+    if (this.title.value === "") {
+      this.titleError.style.display = "block";
+      this.titleError.textContent = "You must add a title for your " + DataType[this.type];
+      response = false;
+    }
+    return response;
+  }
+  initialiseCampaigns() {
+    this.campaigns = [];
+    this.api.app.vault.getFiles().forEach((file) => {
+      const metadata = this.api.app.metadataCache.getFileCache(file);
+      if (metadata !== null && metadata.frontmatter != null) {
+        (metadata.frontmatter.tags || []).forEach((tag) => {
+          if (tag.startsWith(this.api.settings.campaignTag)) {
+            const campaignId = +tag.substring(tag.lastIndexOf("/") + 1);
+            if (campaignId >= this.newCampaignId) {
+              this.newCampaignId = campaignId + 1;
+            }
+            this.campaigns.push(new RpgmElement(0 /* Campaign */, campaignId, file.basename));
+          }
+        });
+      }
+    });
+    this.campaigns.sort((n1, n2) => {
+      return n1.id - n2.id;
+    });
+  }
+  campaignBlock(contentEl) {
+    contentEl.createEl("p", { text: "Campaign" });
+    this.campaign = contentEl.createEl("select");
+    if (this.campaigns.length > 1) {
+      this.campaign.createEl("option", {
+        text: "",
+        value: ""
+      }).selected = true;
+    }
+    this.campaigns.forEach((campaign) => {
+      this.campaign.createEl("option", {
+        text: campaign.name,
+        value: campaign.id.toString()
+      }).selected = true;
+    });
+    this.campaign.addEventListener("change", (e) => {
+      this.initialiseAdventures();
+    });
+    this.campaignError = contentEl.createEl("p", { cls: "error" });
+  }
+  campaignValidation() {
+    let response = true;
+    this.campaignError.style.display = "none";
+    if (this.campaign.value === "") {
+      this.campaignError.style.display = "block";
+      this.campaignError.textContent = "You must select a valid campaign for your " + DataType[this.type];
+      response = false;
+    }
+    return response;
+  }
+  initialiseAdventures() {
+    this.newAdventureId = 1;
+    this.adventures = [];
+    this.api.app.vault.getFiles().forEach((file) => {
+      const metadata = this.api.app.metadataCache.getFileCache(file);
+      if (metadata !== null && metadata.frontmatter != null) {
+        (metadata.frontmatter.tags || []).forEach((tag) => {
+          if (tag.startsWith(this.api.settings.adventureTag + "/" + this.campaign.value)) {
+            const adventureId = +tag.substring(tag.lastIndexOf("/") + 1);
+            if (adventureId >= this.newAdventureId) {
+              this.newAdventureId = adventureId + 1;
+            }
+            this.adventures.push(new RpgmElement(1 /* Adventure */, adventureId, file.basename));
+          }
+        });
+      }
+    });
+    this.adventures.sort((n1, n2) => {
+      return n1.id - n2.id;
+    });
+  }
+  adventureBlock(contentEl) {
+    contentEl.createEl("p", { text: "Adventure" });
+    this.adventure = contentEl.createEl("select");
+    this.adventures.forEach((adventure) => {
+      this.adventure.createEl("option", {
+        text: adventure.name,
+        value: adventure.id.toString()
+      }).selected = true;
+    });
+    this.adventure.addEventListener("change", (e) => {
+      this.initialiseSessions();
+    });
+    this.adventureError = contentEl.createEl("p", { cls: "error" });
+  }
+  adventureValidation() {
+    let response = true;
+    this.adventureError.style.display = "none";
+    if (this.adventure.value === "") {
+      this.adventureError.style.display = "block";
+      this.adventureError.textContent = "You must select a valid adventure for your " + DataType[this.type];
+      response = false;
+    }
+    return response;
+  }
+  initialiseSessions() {
+    this.newSessionId = 1;
+    this.sessions = [];
+    this.api.app.vault.getFiles().forEach((file) => {
+      const metadata = this.api.app.metadataCache.getFileCache(file);
+      if (metadata !== null && metadata.frontmatter != null) {
+        (metadata.frontmatter.tags || []).forEach((tag) => {
+          if (tag.startsWith(this.api.settings.sessionTag + "/" + this.campaign.value + "/" + this.adventure.value)) {
+            const sessionId = +tag.substring(tag.lastIndexOf("/") + 1);
+            if (sessionId >= this.newSessionId) {
+              this.newSessionId = sessionId + 1;
+            }
+            this.sessions.push(new RpgmElement(2 /* Session */, sessionId, file.basename));
+          }
+        });
+      }
+    });
+    this.sessions.sort((n1, n2) => {
+      return n1.id - n2.id;
+    });
+  }
+  sessionBlock(contentEl) {
+    contentEl.createEl("p", { text: "Session" });
+    this.session = contentEl.createEl("select");
+    this.sessions.forEach((session) => {
+      this.session.createEl("option", {
+        text: session.name,
+        value: session.id.toString()
+      }).selected = true;
+    });
+    this.session.addEventListener("change", (e) => {
+      this.initialiseScenes();
+    });
+    this.sessionError = contentEl.createEl("p", { cls: "error" });
+  }
+  sessionValidation() {
+    let response = true;
+    this.sessionError.style.display = "none";
+    if (this.session.value === "") {
+      this.sessionError.style.display = "block";
+      this.sessionError.textContent = "You must select a valid session for your " + DataType[this.type];
+      response = false;
+    }
+    return response;
+  }
+  initialiseScenes() {
+    this.newSceneId = 1;
+    this.scenes = [];
+    this.api.app.vault.getFiles().forEach((file) => {
+      const metadata = this.api.app.metadataCache.getFileCache(file);
+      if (metadata !== null && metadata.frontmatter != null) {
+        (metadata.frontmatter.tags || []).forEach((tag) => {
+          if (tag.startsWith(this.api.settings.sceneTag + "/" + this.campaign.value + "/" + this.adventure.value + "/" + this.session.value)) {
+            const sceneId = +tag.substring(tag.lastIndexOf("/") + 1);
+            if (sceneId >= this.newSceneId) {
+              this.newSceneId = sceneId + 1;
+            }
+            this.scenes.push(new RpgmElement(3 /* Scene */, sceneId, file.basename));
+          }
+        });
+      }
+    });
+    this.scenes.sort((n1, n2) => {
+      return n1.id - n2.id;
+    });
+  }
 };
 
 // src/views/templates/FactionTemplate.ts
 var FactionTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.factionTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.factionTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -813,23 +1080,21 @@ var FactionTemplate = class extends AbstractTemplate {
     return " locations: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your faction\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Remove these tasks\n\n";
-    }
-    response += "```RpgManager\nfaction\n```\n---\n\n## Additional Information\n";
+    let response = this.getRpgManagerCodeblock("faction");
+    response += this.getAdditionalInformation();
     return response;
+  }
+};
+var FactionModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
   }
 };
 
 // src/views/templates/LocationTemplate.ts
 var LocationTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.locationTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.locationTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -838,23 +1103,21 @@ var LocationTemplate = class extends AbstractTemplate {
     return 'address: ""\n';
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your location\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Remove these tasks\n\n";
-    }
-    response += "```RpgManager\nlocation\n```\n---\n\n## Additional Information\n";
+    let response = this.getRpgManagerCodeblock("location");
+    response += this.getAdditionalInformation();
     return response;
+  }
+};
+var LocationModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
   }
 };
 
 // src/views/templates/ClueTemplate.ts
 var ClueTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.clueTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.clueTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -866,23 +1129,21 @@ var ClueTemplate = class extends AbstractTemplate {
     return " found: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your clue\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Remove these tasks\n\n---\n";
-    }
-    response += "```RpgManager\nclue\n```\n---\n\n## Additional Information\n";
+    let response = this.getRpgManagerCodeblock("clue");
+    response += this.getAdditionalInformation();
     return response;
+  }
+};
+var ClueModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
   }
 };
 
 // src/views/templates/EventTemplate.ts
 var EventTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.eventTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.eventTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -894,23 +1155,21 @@ var EventTemplate = class extends AbstractTemplate {
     return " event: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your event\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Remove these tasks\n\n---\n";
-    }
-    response += "```RpgManager\nevent\n```\n---\n\n## Additional Information\n";
+    let response = this.getRpgManagerCodeblock("event");
+    response += this.getAdditionalInformation();
     return response;
+  }
+};
+var EventModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
   }
 };
 
 // src/views/templates/NonPlayerCharacterTemplate.ts
 var NonPlayerCharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.npcTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.npcTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -925,23 +1184,22 @@ var NonPlayerCharacterTemplate = class extends AbstractTemplate {
     return " dob: \n death: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your non player character\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Remove these tasks\n\n";
-    }
-    response += "```RpgManager\nnpc\n```\n---\n\n## Notes\n\n\n## Story\n";
+    let response = this.getRpgManagerCodeblock("npc");
+    response += this.getNotes();
+    response += this.getStory();
     return response;
+  }
+};
+var NonPlayerCharacterModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
   }
 };
 
 // src/views/templates/CharacterTemplate.ts
 var CharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.pcTag + ", " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.pcTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterRelationships() {
     return " characters: \n factions: \n locations: \n";
@@ -950,23 +1208,21 @@ var CharacterTemplate = class extends AbstractTemplate {
     return " dob: \n death: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your player character\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Remove these tasks\n\n---\n";
-    }
-    response += '```RpgManager\npc\n```\n---\n\n## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+    let response = this.getRpgManagerCodeblock("pc");
+    response += this.getPlayerCharacterDetails();
     return response;
+  }
+};
+var CharacterModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
   }
 };
 
 // src/views/templates/SceneTemplate.ts
 var SceneTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.sceneTag + "/{adventureId}/{sessionId}/{sceneId}, " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.sceneTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId + "/" + this.sceneId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -981,23 +1237,29 @@ var SceneTemplate = class extends AbstractTemplate {
     return " start: \n end: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your scene\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Replace the `{adventureId}` of the scene tag (" + this.settings.sceneTag + "/**{adventureId}**/{sessionId}/{sceneId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/**{sessionId}**/{sceneId}) with an existing session id\n- [ ] Replace the `{sceneId}` of the scene tag (" + this.settings.sceneTag + "/{adventureId}/{sessionId}/**{sceneId}**) with a valid number unique to the session\n- [ ] Remove these tasks\n\n";
-    }
-    response += "```RpgManager\nsceneNavigation\n```\n---\n## Trigger\n\n\n## Notes\n- \n\n---\n```RpgManager\nscene\n```\n";
+    let response = this.getRpgManagerCodeblock("sceneNavigation");
+    response += this.getHeader("Trigger");
+    response += "\n\n";
+    response += this.getNotes();
+    response += this.getRpgManagerCodeblock("scene");
     return response;
+  }
+};
+var SceneModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+    this.initialiseAdventures();
+    this.adventureBlock(contentEl);
+    this.initialiseSessions();
+    this.sessionBlock(contentEl);
+    this.initialiseScenes();
   }
 };
 
 // src/views/templates/SessionTemplate.ts
 var SessionTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.sessionTag + "/{adventureId}/{sessionId}, " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.sessionTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
@@ -1006,98 +1268,108 @@ var SessionTemplate = class extends AbstractTemplate {
     return " session: \n irl: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your session\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Replace the `{adventureId}` of the session tag (" + this.settings.sessionTag + "/**{adventureId}**/{sessionId}) with an existing adventure id\n- [ ] Replace the `{sessionId}` of the session tag (" + this.settings.sessionTag + "/{adventureId}/**{sessionId}**) with a valid number unique to the adventure\n- [ ] Remove these tasks\n\n";
-    }
-    response += "```RpgManager\nsessionNavigation\n```\n---\n## Introduction\n\n## Plot\n### ABT Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n### Story Circle Plot\n\n>\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n---\n```RpgManager\nsession\n```\n";
+    let response = this.getRpgManagerCodeblock("sessionNavigation");
+    response += this.getHeader("Introduction");
+    response += "\n";
+    response += this.getHeader("Plot");
+    response += this.getHeader("ABT Plot", 3);
+    response += this.getAbtPlot();
+    response += this.getHeader("Story Circle Plot", 3);
+    response += this.getStoryCirclePlot();
+    response += this.getRpgManagerCodeblock("session");
     return response;
+  }
+};
+var SessionModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+    this.initialiseAdventures();
+    this.adventureBlock(contentEl);
+    this.initialiseSessions();
   }
 };
 
 // src/views/templates/AdventureTemplate.ts
 var AdventureTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.adventureTag + "/{adventureId}, " + this.settings.campaignIdentifier + "/" + this.campaignId + "]\n";
+    return "tags: [" + this.settings.adventureTag + "/" + this.campaignId + "/" + this.adventureId + "]\n";
   }
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your adventure\n";
-      if (this.campaignId === "{campaignId}") {
-        response += "- [ ] Replace the `{campaignId}` of the campaign tag identifier (" + this.settings.campaignIdentifier + "/**{campaignId}**) with an existing campaign id\n";
-      }
-      response += "- [ ] Replace the `{adventureId}` of the adventure tag (" + this.settings.adventureTag + "/**{adventureId}**) with a valid number unique to the campaign\n- [ ] Remove these tasks\n\n";
-    }
-    response += "## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n## Notes\n- \n\n---\n```RpgManager\nadventure\n```";
+    let response = this.getHeader("Plot");
+    response += this.getAbtPlot();
+    response += this.getNotes();
+    response += this.getRpgManagerCodeblock("adventure");
     return response;
+  }
+};
+var AdventureModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+    this.initialiseAdventures();
   }
 };
 
 // src/views/templates/CampaignTemplate.ts
 var CampaignTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
-    return "tags: [" + this.settings.campaignTag + "/{campaignId}]\n";
+    return "tags: [" + this.settings.campaignTag + "/" + this.campaignId + "]\n";
   }
   generateFrontmatterDates() {
     return " current: \n";
   }
   generateTemplate() {
-    let response = "";
-    if (this.settings.tooltip) {
-      response += "\n- [ ] Update the name of your campaign\n- [ ] Replace the `{campaignId}` of the campaign tag (" + this.settings.campaignTag + "/**{campaignId}**) with a valid number unique to the vault\n- [ ] Remove these tasks\n\n";
-    }
-    response += "---\n```RpgManager\ncampaign\n```\n## Plot\n\n>\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n---\n```RpgManager\ncampaign\n```";
+    let response = this.getRpgManagerCodeblock("campaignNavigation");
+    response += this.getHeader("Plot");
+    response += this.getAbtPlot();
+    response += this.getRpgManagerCodeblock("campaign");
     return response;
+  }
+};
+var CampaignModal = class extends AbstractTemplateModal {
+  content(contentEl) {
   }
 };
 
 // src/factories/FileFactory.ts
+var import_obsidian2 = require("obsidian");
 var FileFactory = class {
   constructor(api) {
     this.api = api;
   }
-  create(type) {
+  initialise(type, create = true) {
     return __async(this, null, function* () {
-      let multipleCampaigns = false;
-      let campaignId = "{campaignId}";
-      this.api.app.vault.getFiles().forEach((file) => {
-        if (!multipleCampaigns) {
-          const metadata = this.api.app.metadataCache.getFileCache(file);
-          if (metadata !== null) {
-            (metadata.tags || []).forEach((t) => {
-              if (t.tag.startsWith(this.api.settings.campaignIdentifier)) {
-                if (campaignId !== "{campaignId}" && !multipleCampaigns) {
-                  multipleCampaigns = true;
-                  campaignId = "{campaignId}";
-                }
-                campaignId = t.tag.substring(t.tag.lastIndexOf(this.api.settings.campaignIdentifier) + 1);
-              }
-            });
-          }
-        }
-      });
-      if (!multipleCampaigns && campaignId === "{campaignId}") {
-        campaignId = "1";
+      var _a;
+      let name = null;
+      if (create === false) {
+        name = (_a = this.api.app.workspace.getActiveFile()) == null ? void 0 : _a.basename;
       }
-      const template = new templates_exports[DataType[type] + "Template"](this.api.settings, campaignId);
+      new templates_exports[DataType[type] + "Modal"](this.api, type, create, name).open();
+    });
+  }
+  create(type, create, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
+    return __async(this, null, function* () {
+      const template = new templates_exports[DataType[type] + "Template"](this.api.settings, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
-      const newFile = yield this.api.app.vault.create(DataType[type] + " " + new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3) + ".md", data);
-      const leaf = this.api.app.workspace.getLeaf(false);
-      yield leaf.openFile(newFile);
+      if (create) {
+        const newFile = yield this.api.app.vault.create(name + ".md", data);
+        const leaf = this.api.app.workspace.getLeaf(false);
+        yield leaf.openFile(newFile);
+      } else {
+        const activeView = this.api.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
+        if (activeView != null) {
+          const editor = activeView.editor;
+          editor.setValue(data);
+        }
+      }
     });
   }
 };
 
 // src/api.ts
-var Api = class extends import_obsidian.Component {
+var Api = class extends import_obsidian3.Component {
   constructor(app, settings) {
     super();
     this.app = app;
@@ -1106,37 +1378,39 @@ var Api = class extends import_obsidian.Component {
     this.fileFactory = new FileFactory(this);
   }
   initialiseRoots() {
-    const filePath = this.app.vault.getFiles()[0].path;
-    let slashCount = 0;
-    let p = filePath.indexOf("/");
-    while (p !== -1) {
+    if (this.app.vault.getFiles().length !== 0) {
+      const filePath = this.app.vault.getFiles()[0].path;
+      let slashCount = 0;
+      let p = filePath.indexOf("/");
+      while (p !== -1) {
+        slashCount++;
+        p = filePath.indexOf("/", p + 1);
+      }
       slashCount++;
-      p = filePath.indexOf("/", p + 1);
+      const file = this.app.vault.getAbstractFileByPath(filePath);
+      if (file instanceof import_obsidian3.TFile) {
+        this.root = this.app.vault.getResourcePath(file);
+      }
+      if (this.root === null) {
+        console.log("Rpg Manager failed to find the root folder!");
+        return;
+      }
+      if (this.root.includes("?")) {
+        this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+      }
+      for (let removedSlash = slashCount; removedSlash > 0; removedSlash--) {
+        this.root = this.root.slice(0, this.root.lastIndexOf("/"));
+      }
+      if (!this.root.endsWith("/")) {
+        this.root += "/";
+      }
+      this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
     }
-    slashCount++;
-    const file = this.app.vault.getAbstractFileByPath(filePath);
-    if (file instanceof import_obsidian.TFile) {
-      this.root = this.app.vault.getResourcePath(file);
-    }
-    if (this.root === null) {
-      console.log("Rpg Manager failed to find the root folder!");
-      return;
-    }
-    if (this.root.includes("?")) {
-      this.root = this.root.substring(0, this.root.lastIndexOf("?"));
-    }
-    for (let removedSlash = slashCount; removedSlash > 0; removedSlash--) {
-      this.root = this.root.slice(0, this.root.lastIndexOf("/"));
-    }
-    if (!this.root.endsWith("/")) {
-      this.root += "/";
-    }
-    this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
   }
   fileExists(path) {
     const abstractFile = this.app.vault.getAbstractFileByPath(path);
     let response = false;
-    if (abstractFile instanceof import_obsidian.TAbstractFile) {
+    if (abstractFile instanceof import_obsidian3.TAbstractFile) {
       response = abstractFile ? true : false;
     }
     return response;
@@ -1146,6 +1420,9 @@ var Api = class extends import_obsidian.Component {
     for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
       const fileName = this.app.vault.config.attachmentFolderPath + "/" + (page == null ? void 0 : page.file.name) + "." + imageExtensions[extensionCount];
       if (this.fileExists(fileName)) {
+        if (this.root == null) {
+          this.initialiseRoots();
+        }
         return this.root + fileName;
       }
     }
@@ -1192,39 +1469,98 @@ var Api = class extends import_obsidian.Component {
     }
     return '<img src="' + imageFile + '" style="object-fit: cover;' + dimensions + '">';
   }
-  getId(tags, elementTag) {
+  getTagId(tags, type) {
+    if (tags == null) {
+      throw new Error();
+    }
     let response = "";
-    if (tags != null) {
+    tags.forEach((tag) => {
+      if (response === "") {
+        if (tag.startsWith(this.settings.campaignTag)) {
+          if (type === 0 /* Campaign */) {
+            response = tag.substring(this.settings.campaignTag.length + 1);
+          } else {
+            throw new Error();
+          }
+        } else if (tag.startsWith(this.settings.adventureTag)) {
+          const parts = tag.substring(this.settings.adventureTag.length + 1).split("/");
+          if (parts.length === 2) {
+            if (type === 0 /* Campaign */) {
+              response = parts[0];
+            } else if (type === 1 /* Adventure */) {
+              response = parts[1];
+            }
+          } else if (parts.length === 1 && type === 1 /* Adventure */) {
+            response = parts[0];
+          }
+        } else if (tag.startsWith(this.settings.sessionTag)) {
+          const parts = tag.substring(this.settings.sessionTag.length + 1).split("/");
+          if (parts.length === 3) {
+            if (type === 0 /* Campaign */) {
+              response = parts[0];
+            } else if (type === 1 /* Adventure */) {
+              response = parts[1];
+            } else if (type === 2 /* Session */) {
+              response = parts[2];
+            }
+          } else if (parts.length === 2) {
+            if (type === 1 /* Adventure */) {
+              response = parts[0];
+            } else if (type === 2 /* Session */) {
+              response = parts[1];
+            }
+          }
+        } else if (tag.startsWith(this.settings.sceneTag)) {
+          const parts = tag.substring(this.settings.sceneTag.length + 1).split("/");
+          if (parts.length === 4) {
+            if (type === 0 /* Campaign */) {
+              response = parts[0];
+            } else if (type === 1 /* Adventure */) {
+              response = parts[1];
+            } else if (type === 2 /* Session */) {
+              response = parts[2];
+            } else if (type === 3 /* Scene */) {
+              response = parts[3];
+            }
+          } else if (parts.length === 3) {
+            if (type === 1 /* Adventure */) {
+              response = parts[0];
+            } else if (type === 2 /* Session */) {
+              response = parts[1];
+            } else if (type === 3 /* Scene */) {
+              response = parts[2];
+            }
+          }
+        } else {
+          let tagLength = 0;
+          if (tag.startsWith(this.settings.npcTag)) {
+            tagLength = this.settings.npcTag.length;
+          } else if (tag.startsWith(this.settings.pcTag)) {
+            tagLength = this.settings.pcTag.length;
+          } else if (tag.startsWith(this.settings.eventTag)) {
+            tagLength = this.settings.eventTag.length;
+          } else if (tag.startsWith(this.settings.factionTag)) {
+            tagLength = this.settings.factionTag.length;
+          } else if (tag.startsWith(this.settings.locationTag)) {
+            tagLength = this.settings.locationTag.length;
+          } else if (tag.startsWith(this.settings.clueTag)) {
+            tagLength = this.settings.clueTag.length;
+          }
+          if (tagLength !== 0 && tag.length > tagLength && type === 0 /* Campaign */) {
+            response = tag.substring(tagLength + 1);
+          }
+        }
+      }
+    });
+    if (response === "" && type === 0 /* Campaign */) {
       tags.forEach((tag) => {
-        if (response === "" && tag.startsWith(elementTag)) {
+        if (response === "" && tag.startsWith(this.settings.campaignIdentifier)) {
           response = tag.substring(tag.lastIndexOf("/") + 1);
         }
       });
     }
-    return +response;
-  }
-  getParentId(tags, elementTag) {
-    let response = "";
-    if (tags != null) {
-      tags.forEach((tag) => {
-        if (response === "" && tag.startsWith(elementTag)) {
-          tag = tag.substring(0, tag.lastIndexOf("/"));
-          response = tag.substring(tag.lastIndexOf("/") + 1);
-        }
-      });
-    }
-    return +response;
-  }
-  getGrandParentId(tags, elementTag) {
-    let response = "";
-    if (tags != null) {
-      tags.forEach((tag) => {
-        if (response === "" && tag.startsWith(elementTag)) {
-          tag = tag.substring(0, tag.lastIndexOf("/"));
-          tag = tag.substring(0, tag.lastIndexOf("/"));
-          response = tag.substring(tag.lastIndexOf("/") + 1);
-        }
-      });
+    if (response === "") {
+      throw new Error();
     }
     return +response;
   }
@@ -1314,7 +1650,7 @@ __export(models_exports, {
 });
 
 // src/abstracts/AbstractModel.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // src/views/index.ts
 var views_exports = {};
@@ -1548,7 +1884,7 @@ var AdventureListView = class extends AbstractListView {
 };
 
 // src/views/TimelineView.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 var TimelineView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -1579,8 +1915,8 @@ var TimelineView = class extends AbstractListView {
         const details = li.createDiv({ cls: "event-details" });
         const fileLink = details.createEl("h3");
         const synopsis = details.createSpan();
-        import_obsidian2.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.dv.currentFilePath, null);
-        import_obsidian2.MarkdownRenderer.renderMarkdown("[[" + timeline2.name + "]]", fileLink, this.dv.currentFilePath, null);
+        import_obsidian4.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.dv.currentFilePath, null);
+        import_obsidian4.MarkdownRenderer.renderMarkdown("[[" + timeline2.name + "]]", fileLink, this.dv.currentFilePath, null);
       });
     });
   }
@@ -1636,7 +1972,7 @@ var SceneListView = class extends AbstractListView {
 };
 
 // src/views/SceneActionView.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 var SceneActionView = class extends AbstractSingleView {
   render(data) {
     return __async(this, null, function* () {
@@ -1645,13 +1981,13 @@ var SceneActionView = class extends AbstractSingleView {
       const goalTitle = goalDiv.createDiv();
       goalTitle.addClass("title");
       goalTitle.innerText = "Scene Goal";
-      import_obsidian3.MarkdownRenderer.renderMarkdown(data.synopsis !== "" ? data.synopsis : "==Missing Scene Synopsis (Goal)==", goalDiv, this.dv.currentFilePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(data.synopsis !== "" ? data.synopsis : "==Missing Scene Synopsis (Goal)==", goalDiv, this.dv.currentFilePath, null);
       const actionDiv = this.container.createDiv();
       actionDiv.addClass("rpgm-scene-action");
       const actionTitle = actionDiv.createDiv();
       actionTitle.addClass("title");
       actionTitle.innerText = "Player Character's Action";
-      import_obsidian3.MarkdownRenderer.renderMarkdown(data.action !== "" ? data.action : "==Missing Scene Action==", actionDiv, this.dv.currentFilePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(data.action !== "" ? data.action : "==Missing Scene Action==", actionDiv, this.dv.currentFilePath, null);
     });
   }
 };
@@ -1706,7 +2042,7 @@ var RpgViewFactory = class {
 };
 
 // src/abstracts/AbstractModel.ts
-var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
+var AbstractModel = class extends import_obsidian6.MarkdownRenderChild {
   constructor(api, container, source, component, sourcePath) {
     super(container);
     this.api = api;
@@ -1723,32 +2059,27 @@ var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
   renderComponent(wait = 500) {
     return __async(this, null, function* () {
       setTimeout(() => {
-        var _a;
         this.dv = this.api.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
         const current = this.dv.current();
         if (current != null) {
           this.current = current;
         } else {
+          console.log("Current is null");
           return;
         }
-        let campaignId = null;
-        if (((_a = this.current) == null ? void 0 : _a.tags) != null) {
-          this.current.tags.forEach((tag) => {
-            if (tag.startsWith(this.api.settings.campaignTag)) {
-              campaignId = tag.substring(this.api.settings.campaignTag.length + 1);
-            } else if (tag.startsWith(this.api.settings.campaignIdentifier)) {
-              campaignId = tag.substring(this.api.settings.campaignIdentifier.length + 1);
-            }
-          });
-        }
-        if (campaignId !== null) {
+        try {
+          const campaignId = this.api.getTagId(this.current.tags, 0 /* Campaign */);
           const campaigns = this.dv.pages("#" + this.api.settings.campaignTag + "/" + campaignId);
-          if (campaigns.length === 1) {
-            this.campaign = new CampaignData(this.api, campaigns[0]);
+          if (campaigns.length !== 1) {
+            console.log("Campaign is null");
+            return;
           }
+          this.campaign = new CampaignData(this.api, campaigns[0]);
+        } catch (e) {
+          return;
         }
         this.io = new IoData(this.api, this.campaign, this.dv, this.current);
-        this.container.innerHTML = "";
+        this.container.empty();
         this.render();
       }, wait);
     });
@@ -1789,7 +2120,7 @@ var AbstractModel = class extends import_obsidian4.MarkdownRenderChild {
 var AdventureModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
-      const adventure = new AdventureData(this.api, this.current);
+      const adventure = new AdventureData(this.api, this.current, this.campaign);
       this.sessionList(adventure.id);
     });
   }
@@ -2067,7 +2398,7 @@ var SessionModel = class extends AbstractModel {
   }
   sceneList() {
     return __async(this, null, function* () {
-      this.writeList(this.io.getSceneList(), 14 /* SceneList */);
+      this.writeList(this.io.getSceneList(this.api.getTagId(this.current.tags, 1 /* Adventure */), this.api.getTagId(this.current.tags, 2 /* Session */)), 14 /* SceneList */);
     });
   }
 };
@@ -2082,8 +2413,8 @@ var SessionNavigationModel = class extends AbstractModel {
   }
   sessionNavigator() {
     return __async(this, null, function* () {
-      const adventureId = this.api.getParentId(this.current.tags, this.api.settings.sessionTag);
-      const sessionId = this.api.getId(this.current.tags, this.api.settings.sessionTag);
+      const adventureId = this.api.getTagId(this.current.tags, 1 /* Adventure */);
+      const sessionId = this.api.getTagId(this.current.tags, 2 /* Session */);
       const adventure = this.io.getAdventure(adventureId);
       const previousSession = this.io.getSession(adventureId, sessionId - 1);
       const nextSession = this.io.getSession(adventureId, sessionId + 1);
@@ -2155,21 +2486,21 @@ var SceneNavigationModel = class extends AbstractModel {
     });
   }
   action() {
-    const scene = this.io.getScene();
+    const scene = this.io.getScene(this.api.getTagId(this.current.tags, 1 /* Adventure */), this.api.getTagId(this.current.tags, 2 /* Session */), this.api.getTagId(this.current.tags, 3 /* Scene */));
     if (scene !== null) {
       this.writeData(scene, 16 /* SceneAction */);
     }
   }
   sceneNavigation() {
     return __async(this, null, function* () {
-      const adventureId = this.api.getGrandParentId(this.current.tags, this.api.settings.sceneTag);
-      const sessionId = this.api.getParentId(this.current.tags, this.api.settings.sceneTag);
-      const sceneId = this.api.getId(this.current.tags, this.api.settings.sceneTag);
+      const adventureId = this.api.getTagId(this.current.tags, 1 /* Adventure */);
+      const sessionId = this.api.getTagId(this.current.tags, 2 /* Session */);
+      const sceneId = this.api.getTagId(this.current.tags, 3 /* Scene */);
       const adventure = this.io.getAdventure(adventureId);
       const session = this.io.getSession(adventureId, sessionId);
       const previousScene = this.io.getScene(adventureId, sessionId, sceneId - 1);
       const nextScene = this.io.getScene(adventureId, sessionId, sceneId + 1);
-      const data = new SceneData(this.api, this.current, session, adventure, previousScene, nextScene, this.campaign);
+      const data = new SceneData(this.api, this.current, this.campaign, adventure, session, previousScene, nextScene);
       const view = RpgViewFactory.createSingle(15 /* SceneNavigation */, this.dv);
       view.render(data);
     });
@@ -2224,7 +2555,7 @@ var DEFAULT_SETTINGS = {
   eventTag: "rpgm/element/event",
   clueTag: "rpgm/element/clue"
 };
-var RpgManager = class extends import_obsidian5.Plugin {
+var RpgManager = class extends import_obsidian7.Plugin {
   onload() {
     return __async(this, null, function* () {
       yield this.loadSettings();
@@ -2233,7 +2564,7 @@ var RpgManager = class extends import_obsidian5.Plugin {
       this.api = new Api(this.app, this.settings);
       RpgViewFactory.initialise(this.api);
       RpgModelFactory.initialise(this.api);
-      this.refreshViews = (0, import_obsidian5.debounce)(this.refreshViews, 2500, true);
+      this.refreshViews = (0, import_obsidian7.debounce)(this.refreshViews, 2500, true);
       this.registerEvent(this.app.metadataCache.on("resolved", function() {
         this.refreshViews();
       }.bind(this)));
@@ -2248,7 +2579,14 @@ var RpgManager = class extends import_obsidian5.Plugin {
           id: "rpg-manager-create-" + type.toLowerCase(),
           name: "Create a new " + type,
           callback: () => {
-            this.api.fileFactory.create(DataType[type]);
+            this.api.fileFactory.initialise(DataType[type]);
+          }
+        });
+        this.addCommand({
+          id: "rpg-manager-fill-" + type.toLowerCase(),
+          name: "Fill with " + type,
+          callback: () => {
+            this.api.fileFactory.initialise(DataType[type], false);
           }
         });
       });
@@ -2290,7 +2628,7 @@ var RpgManager = class extends import_obsidian5.Plugin {
     });
   }
 };
-var RpgManagerSettingTab = class extends import_obsidian5.PluginSettingTab {
+var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -2299,65 +2637,65 @@ var RpgManagerSettingTab = class extends import_obsidian5.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("h2", { text: "Settings for Role Playing Game Manager" });
-    new import_obsidian5.Setting(this.containerEl).setName("Campaign Relationship Tag").setDesc("The tag that identifies the Campaign the current note belongs to").addText((text) => text.setPlaceholder("rpgm/campaign").setValue(this.plugin.settings.campaignIdentifier).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Campaign Relationship Tag").setDesc("The tag that identifies the Campaign the current note belongs to").addText((text) => text.setPlaceholder("rpgm/campaign").setValue(this.plugin.settings.campaignIdentifier).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Enable tasklist on new outlines and elements").setDesc("Enable or disable the tasklist that helps the creation of new outlines and elements. After some usage switching it off is beneficial").addToggle((toggle) => toggle.setValue(this.plugin.settings.tooltip).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Enable tasklist on new outlines and elements").setDesc("Enable or disable the tasklist that helps the creation of new outlines and elements. After some usage switching it off is beneficial").addToggle((toggle) => toggle.setValue(this.plugin.settings.tooltip).onChange((value) => __async(this, null, function* () {
       this.plugin.settings.tooltip = value;
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("h3", { text: "Outlines" });
     containerEl.createEl("span", { text: "Outline Tags should always be followed by an id and the id of the parent. Example: `#" + this.plugin.settings.sessionTag + "/{session-id}/{adventure-id}`" });
-    new import_obsidian5.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc("The tag identifying a Campaign").addText((text) => text.setPlaceholder("rpgm/outline/campaign").setValue(this.plugin.settings.campaignTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc("The tag identifying a Campaign").addText((text) => text.setPlaceholder("rpgm/outline/campaign").setValue(this.plugin.settings.campaignTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc("The tag identifying an Adventure (`#" + this.plugin.settings.adventureTag + "/{adventure-id}`)").addText((text) => text.setPlaceholder("rpgm/outline/adventure").setValue(this.plugin.settings.adventureTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc("The tag identifying an Adventure (`#" + this.plugin.settings.adventureTag + "/{adventure-id}`)").addText((text) => text.setPlaceholder("rpgm/outline/adventure").setValue(this.plugin.settings.adventureTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Session Outline Tag").setDesc("The tag identifying a Session (`#" + this.plugin.settings.sessionTag + "/{session-id}/{adventure-id}`)").addText((text) => text.setPlaceholder("rpgm/outline/session").setValue(this.plugin.settings.sessionTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Session Outline Tag").setDesc("The tag identifying a Session (`#" + this.plugin.settings.sessionTag + "/{session-id}/{adventure-id}`)").addText((text) => text.setPlaceholder("rpgm/outline/session").setValue(this.plugin.settings.sessionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc("The tag identifying a Session (`#" + this.plugin.settings.sceneTag + "/{scene-id}/{session-id}`)").addText((text) => text.setPlaceholder("rpgm/outline/scene").setValue(this.plugin.settings.sceneTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc("The tag identifying a Session (`#" + this.plugin.settings.sceneTag + "/{scene-id}/{session-id}`)").addText((text) => text.setPlaceholder("rpgm/outline/scene").setValue(this.plugin.settings.sceneTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("h3", { text: "Elements" });
     containerEl.createEl("span", { text: "Please Note: Player Characters and Non Player Characters must have the same element prefix (ie: `rpgm/character`)." });
-    new import_obsidian5.Setting(this.containerEl).setName("Player Character Tag").setDesc("The tag identifying a Player Character").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Player Character Tag").setDesc("The tag identifying a Player Character").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Non Player Character Tag").setDesc("The tag identifying a Non Player Character").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Non Player Character Tag").setDesc("The tag identifying a Non Player Character").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Location Tag").setDesc("The tag identifying a Location").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Location Tag").setDesc("The tag identifying a Location").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Faction Tag").setDesc("The tag identifying a Faction").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Faction Tag").setDesc("The tag identifying a Faction").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Event Tag").setDesc("The tag identifying an Event").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Event Tag").setDesc("The tag identifying an Event").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian5.Setting(this.containerEl).setName("Clue Tag").setDesc("The tag identifying a Clue").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Clue Tag").setDesc("The tag identifying a Clue").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();

@@ -1,6 +1,7 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {RpgViewFactory, viewType} from "../factories/RpgViewFactory";
 import {SceneData} from "../data";
+import {DataType} from "../io/IoData";
 
 export class SceneNavigationModel extends AbstractModel {
 	public async render() {
@@ -10,7 +11,11 @@ export class SceneNavigationModel extends AbstractModel {
 
 	protected action(
 	){
-		const scene = this.io.getScene();
+		const scene = this.io.getScene(
+			this.api.getTagId(this.current.tags, DataType.Adventure),
+			this.api.getTagId(this.current.tags, DataType.Session),
+			this.api.getTagId(this.current.tags, DataType.Scene),
+		);
 
 		if (scene !== null) {
 			this.writeData(
@@ -22,9 +27,9 @@ export class SceneNavigationModel extends AbstractModel {
 
 	private async sceneNavigation(
 	) {
-		const adventureId = this.api.getGrandParentId(this.current.tags, this.api.settings.sceneTag);
-		const sessionId = this.api.getParentId(this.current.tags, this.api.settings.sceneTag);
-		const sceneId = this.api.getId(this.current.tags, this.api.settings.sceneTag);
+		const adventureId = this.api.getTagId(this.current.tags, DataType.Adventure);
+		const sessionId = this.api.getTagId(this.current.tags, DataType.Session);
+		const sceneId = this.api.getTagId(this.current.tags, DataType.Scene);
 
 		const adventure = this.io.getAdventure(adventureId);
 		const session = this.io.getSession(adventureId, sessionId);
@@ -34,11 +39,11 @@ export class SceneNavigationModel extends AbstractModel {
 		const data = new SceneData(
 			this.api,
 			this.current,
-			session,
+			this.campaign,
 			adventure,
+			session,
 			previousScene,
 			nextScene,
-			this.campaign,
 		);
 
 		const view = RpgViewFactory.createSingle(viewType.SceneNavigation, this.dv);

@@ -234,10 +234,39 @@ $blue: #2020ff;
 		box-shadow: 0 0 0 0 transparent;
 	}
 
+	p {
+		font-weight: 500;
+		color: $dark-grey;
+		padding-top: 25px;
+		margin-bottom: 0px;
+		font-size: 1.2em;
+	}
+
+	p.error {
+		color: $red;
+		display: none;
+		font-size: 0.9em;
+		font-weight: 200;
+		margin: 0px;
+		padding: 0px;
+		margin-top: -10px;
+	}
+
+	select, select:focus {
+		border: none;
+		border-bottom: solid 1px #eeeeee;
+		border-radius: 0px;
+		width: 100%;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		box-shadow: 0 0 0 0 transparent;
+	}
+
 	button {
 		right: 0px;
 		float: right;
-		background-color: $green;
+		background-color: $dark-grey;
 		color: $white;
+		margin-top: 50px;
 	}
 }

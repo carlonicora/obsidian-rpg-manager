@@ -40,7 +40,7 @@ export class IoData {
 
 	constructor(
 		private api: Api,
-		private campaign: CampaignDataInterface|null,
+		private campaign: CampaignDataInterface,
 		private dv: DataviewInlineApi,
 		private current: Record<string, any>,
 	) {
@@ -53,13 +53,13 @@ export class IoData {
 		if (this.current?.tags != null) {
 			this.current.tags.forEach((tag: string) => {
 				if (tag.startsWith(this.api.settings.campaignTag)) {
-					this.getId(this.api.settings.campaignTag);
+					this.api.getTagId(this.current.tags, DataType.Campaign);
 				} else if (tag.startsWith(this.api.settings.adventureTag)) {
-					this.getId(this.api.settings.adventureTag);
+					this.api.getTagId(this.current.tags, DataType.Adventure);
 				} else if (tag.startsWith(this.api.settings.sessionTag)) {
-					this.getId(this.api.settings.sessionTag);
+					this.api.getTagId(this.current.tags, DataType.Session);
 				} else if (tag.startsWith(this.api.settings.sceneTag)) {
-					this.getId(this.api.settings.sceneTag);
+					this.api.getTagId(this.current.tags, DataType.Scene);
 				}
 			});
 		}
@@ -131,41 +131,34 @@ export class IoData {
 	): string
 	{
 		let response = '';
+		let additional = '';
 
 		switch (type){
 			case DataType.Character:
 				response = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ')';
+				additional = ' or (#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
 				break;
 			case DataType.Clue:
 				response = '#' + this.api.settings.clueTag;
+				additional = ' or #' + this.api.settings.clueTag + '/' + this.campaign.id;
 				break;
 			case DataType.Location:
 				response = '#' + this.api.settings.locationTag;
+				additional = ' or #' + this.api.settings.locationTag + '/' + this.campaign.id;
 				break;
 			case DataType.Faction:
 				response = '#' + this.api.settings.factionTag;
+				additional = ' or #' + this.api.settings.factionTag + '/' + this.campaign.id;
 				break;
 			case DataType.Event:
 				response = '#' + this.api.settings.eventTag;
+				additional = ' or #' + this.api.settings.eventTag + '/' + this.campaign.id;
 				break;
 		}
 
-		response += ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign?.id;
+		response += ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + additional;
 
 		return response;
-	}
-
-	private getId(
-		identifyingTag: string,
-	): void
-	{
-		if (this.current?.tags != null) {
-			this.current.tags.forEach((tag: string) => {
-				if (tag.startsWith(identifyingTag)) {
-					this.id = tag.substring(tag.lastIndexOf('/') + 1);
-				}
-			});
-		}
 	}
 
 	public getAdventureList(
@@ -173,25 +166,24 @@ export class IoData {
 	{
 		const response = new AdventureList(this.campaign);
 
-		if (this.campaign !== null) {
-			const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+		const query = "#" + this.api.settings.adventureTag + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
 
-			this.dv.pages(query)
-				.where(adventure =>
-					adventure.file.folder !== this.templateFolder
-				)
-				.sort(adventure =>
-					-this.api.getId(adventure.tags, this.api.settings.adventureTag)
-				)
-				.forEach((adventure) => {
-					response.add(
-						new AdventureData(
-							this.api,
-							adventure,
-						)
+		this.dv.pages(query)
+			.where(adventure =>
+				adventure.file.folder !== this.templateFolder
+			)
+			.sort(adventure =>
+				-this.api.getTagId(adventure.tags, DataType.Adventure)
+			)
+			.forEach((adventure) => {
+				response.add(
+					new AdventureData(
+						this.api,
+						adventure,
+						this.campaign,
 					)
-				});
-		}
+				)
+			});
 
 		return response;
 	}
@@ -202,17 +194,17 @@ export class IoData {
 	{
 		let response: AdventureDataInterface|null = null;
 
-		if (this.campaign !== null) {
-			const query = '#' + this.api.settings.adventureTag + '/' + adventureId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
+		const query = '(#' + this.api.settings.adventureTag + '/' + adventureId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
+			' or #' + this.api.settings.adventureTag + '/' + this.campaign.id + '/' + adventureId
 
-			const adventures = this.dv.pages(query);
+		const adventures = this.dv.pages(query);
 
-			if (adventures !== null && adventures.length === 1){
-				response = new AdventureData(
-					this.api,
-					adventures[0],
-				)
-			}
+		if (adventures !== null && adventures.length === 1){
+			response = new AdventureData(
+				this.api,
+				adventures[0],
+				this.campaign,
+			)
 		}
 
 		return response;
@@ -225,16 +217,15 @@ export class IoData {
 	{
 		let response: SessionDataInterface|null = null;
 
-		if (this.campaign !== null) {
-			const query = '#' + this.api.settings.sessionTag + '/' + adventureId + '/' + sessionId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
-			const sessions = this.dv.pages(query);
+		const query = '(#' + this.api.settings.sessionTag + '/' + adventureId + '/' + sessionId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
+			' or #' + this.api.settings.sessionTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId
+		const sessions = this.dv.pages(query);
 
-			if (sessions !== null && sessions.length === 1){
-				response = new SessionData(
-					this.api, sessions[0],
-					this.campaign,
-				)
-			}
+		if (sessions !== null && sessions.length === 1){
+			response = new SessionData(
+				this.api, sessions[0],
+				this.campaign,
+			)
 		}
 
 		return response;
@@ -246,51 +237,52 @@ export class IoData {
 	{
 		const response = new SessionList(this.campaign);
 
-		if (this.campaign !== null) {
-			const query = "#" + this.api.settings.sessionTag + (adventureId !== null ? '/' + adventureId : '') + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+		const query = "(#" + this.api.settings.sessionTag + (adventureId !== null ? '/' + adventureId : '') + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ')' +
+			' or #' + this.api.settings.sessionTag + '/' + this.campaign.id + (adventureId !== null ? '/' + adventureId : '')
 
-			this.dv.pages(query)
-				.where(session =>
-					session.file.folder !== this.templateFolder
-				).sort(session =>
-					- this.api.getId(session.tags, this.api.settings.sessionTag)
-					//	-session.ids.session
-				).forEach((session) => {
-					response.add(
-						new SessionData(
-							this.api,
-							session,
-						)
+		this.dv.pages(query)
+			.where(session =>
+				session.file.folder !== this.templateFolder
+			).sort(session =>
+				- this.api.getTagId(session.tags, DataType.Session)
+			).forEach((session) => {
+				response.add(
+					new SessionData(
+						this.api,
+						session,
+						this.campaign
 					)
-				});
-		}
+				)
+			});
 
 		return response;
 	}
 	public getSceneList(
+		adventureId: number,
+		sessionId: number
 	): SceneListInterface
 	{
 		const response = new SceneList(this.campaign);
 
-		if (this.campaign !== null) {
-			const query = "#" + this.api.settings.sceneTag + '/' + this.id + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id;
+		const query = "(#" + this.api.settings.sceneTag + '/' + adventureId + '/' + sessionId + " and #" + this.api.settings.campaignIdentifier + "/" + this.campaign.id + ')' +
+			' or #' + this.api.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId;
 
-			this.dv.pages(query)
-				.where(page =>
-					page.file.folder !== this.templateFolder
-				)
-				.sort(scene =>
-					this.api.getId(scene.tags, this.api.settings.sceneTag)
-				)
-				.forEach((scene) => {
-					response.add(
-						new SceneData(
-							this.api,
-							scene,
-						)
+		this.dv.pages(query)
+			.where(page =>
+				page.file.folder !== this.templateFolder
+			)
+			.sort(scene =>
+				this.api.getTagId(scene.tags, DataType.Scene)
+			)
+			.forEach((scene) => {
+				response.add(
+					new SceneData(
+						this.api,
+						scene,
+						this.campaign,
 					)
-				});
-		}
+				)
+			});
 
 		return response;
 	}
@@ -300,26 +292,25 @@ export class IoData {
 	{
 		const response = new CharacterList(this.campaign);
 
-		if (this.campaign !== null) {
-			const query = '(#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ') and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
+		const query = '((#' + this.api.settings.npcTag + ' or #' + this.api.settings.pcTag + ') and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
+			' or (#' + this.api.settings.npcTag + '/' + this.campaign.id + ' or #' + this.api.settings.pcTag + '/' + this.campaign.id + ')';
 
-			this.dv.pages(query)
-				.where(character =>
-					character.file.folder !== this.templateFolder
-				)
-				.sort(character =>
-					character.file.name
-				)
-				.forEach((character) => {
-					response.add(
-						new CharacterData(
-							this.api,
-							character,
-							this.campaign
-						)
+		this.dv.pages(query)
+			.where(character =>
+				character.file.folder !== this.templateFolder
+			)
+			.sort(character =>
+				character.file.name
+			)
+			.forEach((character) => {
+				response.add(
+					new CharacterData(
+						this.api,
+						character,
+						this.campaign
 					)
-				});
-		}
+				)
+			});
 
 		return response;
 	}
@@ -330,6 +321,7 @@ export class IoData {
 		return new ClueData(
 			this.api,
 			this.current,
+			this.campaign,
 		)
 	}
 
@@ -358,9 +350,9 @@ export class IoData {
 	}
 
 	public getScene(
-		adventureId: number|null = null,
-		sessionId: number|null = null,
-		sceneId: number|null = null,
+		adventureId: number,
+		sessionId: number,
+		sceneId: number,
 	): SceneDataInterface|null
 	{
 		let response: SceneDataInterface|null = null;
@@ -369,18 +361,20 @@ export class IoData {
 			response = new SceneData(
 				this.api,
 				this.current,
+				this.campaign,
 			)
 		} else {
-			if (this.campaign !== null) {
-				const query = '#' + this.api.settings.sceneTag + '/' + adventureId + '/' + sessionId + '/' + sceneId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id;
-				const scenes = this.dv.pages(query);
+			const query = '(#' + this.api.settings.sceneTag + '/' + adventureId + '/' + sessionId + '/' + sceneId + ' and #' + this.api.settings.campaignIdentifier + '/' + this.campaign.id + ')' +
+				' or #' + this.api.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId + '/' + sceneId;
 
-				if (scenes !== null && scenes.length === 1){
-					response = new SceneData(
-						this.api,
-						scenes[0],
-					)
-				}
+			const scenes = this.dv.pages(query);
+
+			if (scenes !== null && scenes.length === 1){
+				response = new SceneData(
+					this.api,
+					scenes[0],
+					this.campaign,
+				)
 			}
 
 		}
@@ -397,78 +391,76 @@ export class IoData {
 		//@ts-ignore
 		const response = new Datas[DataType[type] + 'List'](this.campaign);
 
-		if (this.campaign !== null) {
-			this.variableSingular = DataType[type].toLowerCase();
-			this.variablePlural = this.variableSingular + 's';
+		this.variableSingular = DataType[type].toLowerCase();
+		this.variablePlural = this.variableSingular + 's';
 
-			const defaultSorting = function (page: Record<string, any>) {
-				return page.file.name
-			};
+		const defaultSorting = function (page: Record<string, any>) {
+			return page.file.name
+		};
 
-			let comparison: ArrayFunc<any, boolean>;
+		let comparison: ArrayFunc<any, boolean>;
 
-			if (parentType === null) {
-				comparison = function (page: Record<string, any>): boolean {
-					return page.file.folder !== this.templateFolder &&
-						this.current.relationships != undefined &&
-						this.current.relationships[this.variablePlural] != undefined &&
-						this.current.relationships[this.variablePlural][page.file.name] !== undefined;
-				}.bind(this);
-			} else {
-				this.variableParentSingular = DataType[parentType].toLowerCase();
-				this.variableParentPlural = this.variableParentSingular + 's';
+		if (parentType === null) {
+			comparison = function (page: Record<string, any>): boolean {
+				return page.file.folder !== this.templateFolder &&
+					this.current.relationships != undefined &&
+					this.current.relationships[this.variablePlural] != undefined &&
+					this.current.relationships[this.variablePlural][page.file.name] !== undefined;
+			}.bind(this);
+		} else {
+			this.variableParentSingular = DataType[parentType].toLowerCase();
+			this.variableParentPlural = this.variableParentSingular + 's';
 
-				comparison = function (page: Record<string, any>): boolean {
-					return page.file.folder !== this.templateFolder &&
-						page.relationships != undefined &&
-						page.relationships[this.variableParentPlural] != undefined &&
-						page.relationships[this.variableParentPlural][this.current.file.name] !== undefined;
-				}.bind(this);
-			}
-
-			const query = this.getCorrectTag(type);
-
-			this.dv.pages(query)
-				.where(
-					comparison
-				)
-				.sort(
-					(sorting !== null ? sorting : defaultSorting)
-				)
-				.forEach((page) => {
-					response.add(
-						DataFactory.create(
-							type,
-							this.api,
-							this.campaign,
-							this.current,
-							page,
-							(parentType === null ?
-									this.current.relationships[this.variablePlural][page.file.name] :
-									page.relationships[DataType[parentType].toLowerCase() + 's'][this.current.file.name]
-							),
-						)
-					)
-				});
-
-			this.outlinks.forEach((page) => {
-				if (
-					this.hasMainTag(page, type) &&
-					!this.isAlreadyPresent(response, page)
-				) {
-					response.add(
-						DataFactory.create(
-							type,
-							this.api,
-							this.campaign,
-							this.current,
-							page,
-							'_in main description_',
-						)
-					)
-				}
-			});
+			comparison = function (page: Record<string, any>): boolean {
+				return page.file.folder !== this.templateFolder &&
+					page.relationships != undefined &&
+					page.relationships[this.variableParentPlural] != undefined &&
+					page.relationships[this.variableParentPlural][this.current.file.name] !== undefined;
+			}.bind(this);
 		}
+
+		const query = this.getCorrectTag(type);
+
+		this.dv.pages(query)
+			.where(
+				comparison
+			)
+			.sort(
+				(sorting !== null ? sorting : defaultSorting)
+			)
+			.forEach((page) => {
+				response.add(
+					DataFactory.create(
+						type,
+						this.api,
+						this.campaign,
+						this.current,
+						page,
+						(parentType === null ?
+								this.current.relationships[this.variablePlural][page.file.name] :
+								page.relationships[DataType[parentType].toLowerCase() + 's'][this.current.file.name]
+						),
+					)
+				)
+			});
+
+		this.outlinks.forEach((page) => {
+			if (
+				this.hasMainTag(page, type) &&
+				!this.isAlreadyPresent(response, page)
+			) {
+				response.add(
+					DataFactory.create(
+						type,
+						this.api,
+						this.campaign,
+						this.current,
+						page,
+						'_in main description_',
+					)
+				)
+			}
+		});
 
 		return response;
 	}

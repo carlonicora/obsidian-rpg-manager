@@ -4,7 +4,7 @@ import {AdventureData} from "../data";
 
 export class AdventureModel extends AbstractModel {
 	public async render() {
-		const adventure = new AdventureData(this.api, this.current);
+		const adventure = new AdventureData(this.api, this.current, this.campaign);
 
 		this.sessionList(adventure.id)
 	}

@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {AbstractTemplateModal} from "../../abstracts/AbstractTemplateModal";
 
 export class ClueTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.clueTag + ', ' + this.settings.campaignIdentifier +'/' + this.campaignId + ']\n';
+		return 'tags: [' + this.settings.clueTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
@@ -24,27 +25,17 @@ export class ClueTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-
-		let response = '';
-
-		if (this.settings.tooltip){
-			response += '\n' +
-			'- [ ] Update the name of your clue\n';
-		if (this.campaignId === '{campaignId}') {
-			response += '- [ ] Replace the `{campaignId}` of the campaign tag identifier (' + this.settings.campaignIdentifier + '/**{campaignId}**) with an existing campaign id\n';
-		}
-		response += '- [ ] Remove these tasks\n' +
-			'\n' +
-			'---\n'
-		}
-
-		response +='```RpgManager\n' +
-			'clue\n' +
-			'```\n' +
-			'---\n' +
-			'\n' +
-			'## Additional Information\n';
+		let response = this.getRpgManagerCodeblock('clue');
+		response += this.getAdditionalInformation();
 
 		return response;
+	}
+}
+
+export class ClueModal extends AbstractTemplateModal {
+	protected content(
+		contentEl: HTMLElement,
+	): void {
+		this.campaignBlock(contentEl);
 	}
 }

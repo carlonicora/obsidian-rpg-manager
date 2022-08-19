@@ -37,6 +37,7 @@ export class LocationData extends AbstractImageData implements LocationDataInter
 	constructor(
 		api: Api,
 		data: Record<string, any>,
+		public campaign: CampaignDataInterface,
 		useAdditionalInformation: string|null = null,
 	) {
 		super(api, data);

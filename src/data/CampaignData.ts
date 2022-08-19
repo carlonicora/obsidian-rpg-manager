@@ -1,6 +1,7 @@
 import {GenericDataInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
 import {Api} from "../api";
 import {AbstractImageData} from "../abstracts/AbstractData";
+import {DataType} from "../io/IoData";
 
 export interface CampaignDataInterface extends GenericDataInterface, GenericImageDataInterface {
 	id: number;
@@ -24,6 +25,6 @@ export class CampaignData extends AbstractImageData implements CampaignDataInter
 		super(api, data);
 		this.currentDate = data.dates.current;
 
-		this.id = this.api.getId(data.tags, api.settings.campaignTag);
+		this.id = this.api.getTagId(data.tags, DataType.Campaign);
 	}
 }

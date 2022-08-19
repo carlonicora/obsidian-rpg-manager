@@ -189,11 +189,37 @@
   margin-bottom: 10px;
   box-shadow: 0 0 0 0 transparent;
 }
+.modal-container .modal p {
+  font-weight: 500;
+  color: #808080;
+  padding-top: 25px;
+  margin-bottom: 0px;
+  font-size: 1.2em;
+}
+.modal-container .modal p.error {
+  color: #ff2020;
+  display: none;
+  font-size: 0.9em;
+  font-weight: 200;
+  margin: 0px;
+  padding: 0px;
+  margin-top: -10px;
+}
+.modal-container .modal select, .modal-container .modal select:focus {
+  border: none;
+  border-bottom: solid 1px #eeeeee;
+  border-radius: 0px;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 0 0 transparent;
+}
 .modal-container .modal button {
   right: 0px;
   float: right;
-  background-color: #B0E8E2;
+  background-color: #808080;
   color: #fff;
+  margin-top: 50px;
 }
 
 /*# sourceMappingURL=styles.css.map */
