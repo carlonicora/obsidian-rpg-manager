@@ -138,6 +138,15 @@ export abstract class AbstractTemplateModal extends Modal {
 		contentEl.empty();
 	}
 
+	private removeOptions(
+		select: HTMLSelectElement,
+	) {
+		var i, L = select.options.length - 1;
+		for(i = L; i >= 0; i--) {
+			select.remove(i);
+		}
+	}
+
 	protected titleValidation(
 	): boolean {
 		let response = true;
@@ -252,18 +261,27 @@ export abstract class AbstractTemplateModal extends Modal {
 	): void {
 		contentEl.createEl('p', {text: 'Adventure'});
 		this.adventure = contentEl.createEl('select');
-		this.adventures.forEach((adventure: RpgmElementInterface) => {
-			this.adventure.createEl('option', {
-				text: adventure.name,
-				value: adventure.id.toString(),
-			}).selected=true;
-		});
+		this.refreshAdventureBlock();
 
 		this.adventure.addEventListener('change', (e: Event) => {
 			this.initialiseSessions();
+			this.refreshSessionBlock();
 		});
 
 		this.adventureError = contentEl.createEl('p', {cls: 'error'});
+	}
+
+	protected refreshAdventureBlock(
+	): void {
+		if (this.adventure != null) {
+			this.removeOptions(this.adventure);
+			this.adventures.forEach((adventure: RpgmElementInterface) => {
+				this.adventure.createEl('option', {
+					text: adventure.name,
+					value: adventure.id.toString(),
+				}).selected = true;
+			});
+		}
 	}
 
 	protected adventureValidation(
@@ -289,6 +307,7 @@ export abstract class AbstractTemplateModal extends Modal {
 			if (metadata !== null && metadata.frontmatter != null) {
 				(metadata.frontmatter.tags || []).forEach((tag: string) => {
 					if (tag.startsWith(this.api.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
+						console.log(tag);
 						const sessionId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sessionId >= this.newSessionId){
 							this.newSessionId = sessionId+1;
@@ -313,18 +332,26 @@ export abstract class AbstractTemplateModal extends Modal {
 	): void {
 		contentEl.createEl('p', {text: 'Session'});
 		this.session = contentEl.createEl('select');
-		this.sessions.forEach((session: RpgmElementInterface) => {
-			this.session.createEl('option', {
-				text: session.name,
-				value: session.id.toString(),
-			}).selected = true;
-		});
+		this.refreshSessionBlock();
 
 		this.session.addEventListener('change', (e: Event) => {
 			this.initialiseScenes();
 		});
 
 		this.sessionError = contentEl.createEl('p', {cls: 'error'});
+	}
+
+	protected refreshSessionBlock(
+	): void {
+		if (this.session != null) {
+			this.removeOptions(this.session);
+			this.sessions.forEach((session: RpgmElementInterface) => {
+				this.session.createEl('option', {
+					text: session.name,
+					value: session.id.toString(),
+				}).selected = true;
+			});
+		}
 	}
 
 	protected sessionValidation(

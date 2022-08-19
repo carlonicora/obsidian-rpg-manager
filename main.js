@@ -895,6 +895,12 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     const { contentEl } = this;
     contentEl.empty();
   }
+  removeOptions(select) {
+    var i, L = select.options.length - 1;
+    for (i = L; i >= 0; i--) {
+      select.remove(i);
+    }
+  }
   titleValidation() {
     let response = true;
     this.titleError.style.display = "none";
@@ -979,16 +985,23 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
   adventureBlock(contentEl) {
     contentEl.createEl("p", { text: "Adventure" });
     this.adventure = contentEl.createEl("select");
-    this.adventures.forEach((adventure) => {
-      this.adventure.createEl("option", {
-        text: adventure.name,
-        value: adventure.id.toString()
-      }).selected = true;
-    });
+    this.refreshAdventureBlock();
     this.adventure.addEventListener("change", (e) => {
       this.initialiseSessions();
+      this.refreshSessionBlock();
     });
     this.adventureError = contentEl.createEl("p", { cls: "error" });
+  }
+  refreshAdventureBlock() {
+    if (this.adventure != null) {
+      this.removeOptions(this.adventure);
+      this.adventures.forEach((adventure) => {
+        this.adventure.createEl("option", {
+          text: adventure.name,
+          value: adventure.id.toString()
+        }).selected = true;
+      });
+    }
   }
   adventureValidation() {
     let response = true;
@@ -1008,6 +1021,7 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
       if (metadata !== null && metadata.frontmatter != null) {
         (metadata.frontmatter.tags || []).forEach((tag) => {
           if (tag.startsWith(this.api.settings.sessionTag + "/" + this.campaign.value + "/" + this.adventure.value)) {
+            console.log(tag);
             const sessionId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (sessionId >= this.newSessionId) {
               this.newSessionId = sessionId + 1;
@@ -1024,16 +1038,22 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
   sessionBlock(contentEl) {
     contentEl.createEl("p", { text: "Session" });
     this.session = contentEl.createEl("select");
-    this.sessions.forEach((session) => {
-      this.session.createEl("option", {
-        text: session.name,
-        value: session.id.toString()
-      }).selected = true;
-    });
+    this.refreshSessionBlock();
     this.session.addEventListener("change", (e) => {
       this.initialiseScenes();
     });
     this.sessionError = contentEl.createEl("p", { cls: "error" });
+  }
+  refreshSessionBlock() {
+    if (this.session != null) {
+      this.removeOptions(this.session);
+      this.sessions.forEach((session) => {
+        this.session.createEl("option", {
+          text: session.name,
+          value: session.id.toString()
+        }).selected = true;
+      });
+    }
   }
   sessionValidation() {
     let response = true;
@@ -2543,7 +2563,6 @@ var RpgModelFactory = class {
 // src/main.ts
 var DEFAULT_SETTINGS = {
   campaignIdentifier: "rpgm/campaign",
-  tooltip: true,
   campaignTag: "rpgm/outline/campaign",
   adventureTag: "rpgm/outline/adventure",
   sessionTag: "rpgm/outline/session",
@@ -2637,13 +2656,9 @@ var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("h2", { text: "Settings for Role Playing Game Manager" });
-    new import_obsidian7.Setting(this.containerEl).setName("Campaign Relationship Tag").setDesc("The tag that identifies the Campaign the current note belongs to").addText((text) => text.setPlaceholder("rpgm/campaign").setValue(this.plugin.settings.campaignIdentifier).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Campaign Relationship Tag").setDesc("The tag that identifies the Campaign the current note belongs to. THIS IS BEING DEPRECATED!").addText((text) => text.setPlaceholder("rpgm/campaign").setValue(this.plugin.settings.campaignIdentifier).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
-    })));
-    new import_obsidian7.Setting(this.containerEl).setName("Enable tasklist on new outlines and elements").setDesc("Enable or disable the tasklist that helps the creation of new outlines and elements. After some usage switching it off is beneficial").addToggle((toggle) => toggle.setValue(this.plugin.settings.tooltip).onChange((value) => __async(this, null, function* () {
-      this.plugin.settings.tooltip = value;
       yield this.plugin.saveSettings();
     })));
     containerEl.createEl("h3", { text: "Outlines" });
