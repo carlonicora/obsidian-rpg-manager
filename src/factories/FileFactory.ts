@@ -47,7 +47,7 @@ export class FileFactory {
 
 		if (create) {
 			const newFile = await this.api.app.vault.create(name + '.md', data);
-			const leaf = this.api.app.workspace.getLeaf(false);
+			const leaf = this.api.app.workspace.getLeaf(true);
 			await leaf.openFile(newFile);
 		} else {
 			const activeView = this.api.app.workspace.getActiveViewOfType(MarkdownView);

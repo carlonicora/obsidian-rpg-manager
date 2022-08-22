@@ -26,6 +26,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 
 	private async renderComponent(wait = 500){
 		setTimeout(() => {
+			let continueRendering = true;
 			//@ts-ignore
 			this.dv = this.api.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
 
@@ -34,30 +35,37 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 				this.current = current;
 			} else {
 				console.log('Current is null');
-				return;
+				continueRendering = false;
 			}
 
-			try {
-				const campaignId = this.api.getTagId(this.current.tags, DataType.Campaign);
-				const campaigns = this.dv.pages('#' + this.api.settings.campaignTag + '/' + campaignId);
+			if (continueRendering) {
+				try {
+					const campaignId = this.api.getTagId(this.current.tags, DataType.Campaign);
+					const campaigns = this.dv.pages('#' + this.api.settings.campaignTag + '/' + campaignId);
 
-				if (campaigns.length !== 1) {
-					console.log('Campaign is null');
-					return;
+					if (campaigns.length !== 1) {
+						console.log('Campaign is null');
+						continueRendering = false;
+					}
+
+					if (continueRendering) {
+						this.campaign = new CampaignData(
+							this.api,
+							campaigns[0],
+						);
+					}
+				} catch (e) {
+					console.log('something else');
+					continueRendering = false;
 				}
-
-				this.campaign = new CampaignData(
-					this.api,
-					campaigns[0],
-				);
-			} catch (e) {
-				return;
 			}
 
-			this.io = new IoData(this.api, this.campaign, this.dv, this.current);
-			this.container.empty();
+			if (continueRendering) {
+				this.io = new IoData(this.api, this.campaign, this.dv, this.current);
+				this.container.empty();
 
-			this.render();
+				this.render();
+			}
 		}, wait);
 	}
 

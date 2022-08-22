@@ -25,6 +25,7 @@ export enum DataType {
 	Event,
 	Clue,
 	Faction,
+	Note,
 }
 
 export class IoData {

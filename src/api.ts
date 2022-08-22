@@ -1,9 +1,9 @@
 import {App, Component, TAbstractFile, TFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
 import {DateTime} from "obsidian-dataview";
-import {RpgManagerSettings} from "./main";
 import {FileFactory} from "./factories/FileFactory";
 import {DataType} from "./io/IoData";
+import {RpgManagerSettings} from "./Settings";
 
 declare module 'obsidian' {
 	interface Vault {

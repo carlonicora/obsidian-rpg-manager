@@ -4,6 +4,7 @@ export interface GenericDataInterface {
 	link: string;
 	name: string;
 	path: string;
+	completed: boolean;
 }
 
 export interface GenericImageDataInterface extends GenericDataInterface{

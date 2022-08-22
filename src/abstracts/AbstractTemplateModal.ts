@@ -57,6 +57,7 @@ export abstract class AbstractTemplateModal extends Modal {
 	onOpen() {
 		super.onOpen();
 		const {contentEl} = this;
+		contentEl.addClass('rpgm-modal');
 
 		this.initialiseCampaigns();
 

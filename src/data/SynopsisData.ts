@@ -16,6 +16,12 @@ export class SynopsisData extends AbstractData implements GenericSynopsisDataInt
 
 		this.synopsis = data.synopsis !== null ? data.synopsis : '';
 		this.death = data.dates?.death !== undefined && data.dates?.death !== undefined ? this.api.formatDate(data.dates.death, "short") : '';
-		this.isCharacter = data.tags.indexOf('character/npc') !== -1;
+
+		this.isCharacter = false;
+		data.tags.forEach((tag: string) => {
+			if (tag.startsWith(this.api.settings.npcTag)){
+				this.isCharacter = true;
+			}
+		});
 	}
 }

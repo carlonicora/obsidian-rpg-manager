@@ -12,8 +12,8 @@ export class SceneListView extends AbstractListView {
 		this.dv.table(["&#35;", "Scene", "Synopsis", "Start", "End", "Duration"],
 			data.elements
 				.map(scene => [
-					scene.id,
-					scene.link,
+					scene.completed ? scene.id : '**' + scene.id + '**',
+					scene.link + (scene.completed ? '' : ' (*to complete*)'),
 					scene.synopsis,
 					scene.startTime,
 					scene.endTime,

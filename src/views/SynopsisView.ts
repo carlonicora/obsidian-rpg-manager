@@ -1,5 +1,5 @@
-import {GenericSynopsisDataInterface} from "../../interfaces/DataInterfaces";
-import {AbstractSingleView} from "../../abstracts/AbstractSingleView";
+import {GenericSynopsisDataInterface} from "../interfaces/DataInterfaces";
+import {AbstractSingleView} from "../abstracts/AbstractSingleView";
 
 export class SynopsisView extends AbstractSingleView {
 	async render(

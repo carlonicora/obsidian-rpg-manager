@@ -6,6 +6,7 @@ export abstract class AbstractData implements GenericDataInterface{
 	public link: string;
 	public name: string;
 	public path: string;
+	public completed: boolean;
 
 	constructor(
 		protected api: Api,
@@ -14,6 +15,7 @@ export abstract class AbstractData implements GenericDataInterface{
 		this.link = data.file.link;
 		this.name = data.file.name;
 		this.path = data.file.path;
+		this.completed = (data.completed != null) ? data.completed : true;
 	}
 }
 

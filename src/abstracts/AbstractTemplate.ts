@@ -1,5 +1,5 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
-import {RpgManagerSettings} from "../main";
+import {RpgManagerSettings} from "../Settings";
 
 export abstract class AbstractTemplate  implements TemplateInterface{
 	constructor(

@@ -3,7 +3,7 @@ import {Api} from "../api";
 import {App, Component, MarkdownPostProcessorContext} from "obsidian";
 import * as Models from '../models';
 import {ErrorModel} from "../models";
-import {RpgManagerSettings} from "../main";
+import {RpgManagerSettings} from "../Settings";
 
 export class RpgModelFactory {
 	private static api: Api;

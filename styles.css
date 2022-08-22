@@ -177,10 +177,10 @@
   background-color: #f9f9f9;
 }
 
-.modal-container .modal h2.rpgm-modal-title {
+.rpgm-modal h2.rpgm-modal-title {
   font-size: 1.5em;
 }
-.modal-container .modal input[type=text], .modal-container .modal input[type=text]:focus {
+.rpgm-modal input[type=text], .rpgm-modal input[type=text]:focus {
   border: none;
   border-bottom: solid 1px #eeeeee;
   border-radius: 0px;
@@ -189,14 +189,14 @@
   margin-bottom: 10px;
   box-shadow: 0 0 0 0 transparent;
 }
-.modal-container .modal p {
+.rpgm-modal p {
   font-weight: 500;
   color: #808080;
   padding-top: 25px;
   margin-bottom: 0px;
   font-size: 1.2em;
 }
-.modal-container .modal p.error {
+.rpgm-modal p.error {
   color: #ff2020;
   display: none;
   font-size: 0.9em;
@@ -205,7 +205,7 @@
   padding: 0px;
   margin-top: -10px;
 }
-.modal-container .modal select, .modal-container .modal select:focus {
+.rpgm-modal select, .rpgm-modal select:focus {
   border: none;
   border-bottom: solid 1px #eeeeee;
   border-radius: 0px;
@@ -214,7 +214,7 @@
   margin-bottom: 10px;
   box-shadow: 0 0 0 0 transparent;
 }
-.modal-container .modal button {
+.rpgm-modal button {
   right: 0px;
   float: right;
   background-color: #808080;
@@ -233,3 +233,5 @@
 .rpgm-button :hover {
   color: #2020ff;
 }
+
+/*# sourceMappingURL=styles.css.map */

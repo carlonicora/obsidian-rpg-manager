@@ -8,9 +8,14 @@ export class SessionNavigatorView extends AbstractSingleView {
 		const tableElements = [];
 
 		tableElements.push(["Adventure", data.adventure ? data.adventure.link : '']);
-		tableElements.push(["Introduction", "[[#Introduction]]"]);
-		tableElements.push(["ABT Plot", "[[#ABT Plot]]"]);
-		tableElements.push(["Story Circle Plot", "[[#Story Circle Plot]]"]);
+
+		/*
+		const query = this.api.settings.noteTag + '/' + data.campaign?.id + '/' + data.adventureId + '/' + data.id;
+		const pages = this.dv.pages(query);
+		if (pages.length === 1){
+		} else {
+		}
+		 */
 		tableElements.push(["Notes", "[[Notes - " + data.name + "]]"]);
 
 		if (data.previousSession != null){
