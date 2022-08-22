@@ -174,19 +174,19 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-					metadata.frontmatter.tags.forEach((tag: string) => {
-						if (tag.startsWith(this.api.settings.campaignTag)) {
-							const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
-							if (campaignId >= this.newCampaignId){
-								this.newCampaignId = campaignId+1;
-							}
-							this.campaigns.push(new RpgmElement(
-								DataType.Campaign,
-								campaignId,
-								file.basename,
-							));
+				metadata.frontmatter.tags.forEach((tag: string|object) => {
+					if (typeof tag === 'string' && tag.startsWith(this.api.settings.campaignTag)) {
+						const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
+						if (campaignId >= this.newCampaignId){
+							this.newCampaignId = campaignId+1;
 						}
-					});
+						this.campaigns.push(new RpgmElement(
+							DataType.Campaign,
+							campaignId,
+							file.basename,
+						));
+					}
+				});
 			}
 		});
 
@@ -246,11 +246,12 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-				metadata.frontmatter.tags.forEach((tag: string) => {
-					if (tag.startsWith(this.api.settings.adventureTag + '/' + this.campaign.value)) {
+
+				metadata.frontmatter.tags.forEach((tag: string|object) => {
+					if (typeof tag === 'string' && tag.startsWith(this.api.settings.adventureTag + '/' + this.campaign.value)) {
 						const adventureId = +tag.substring(tag.lastIndexOf('/') + 1);
-						if (adventureId >= this.newAdventureId){
-							this.newAdventureId = adventureId+1;
+						if (adventureId >= this.newAdventureId) {
+							this.newAdventureId = adventureId + 1;
 						}
 						this.adventures.push(new RpgmElement(
 							DataType.Adventure,
@@ -321,11 +322,11 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-				metadata.frontmatter.tags.forEach((tag: string) => {
-					if (tag.startsWith(this.api.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
+				metadata.frontmatter.tags.forEach((tag: string|object) => {
+					if (typeof tag === 'string' && tag.startsWith(this.api.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
 						const sessionId = +tag.substring(tag.lastIndexOf('/') + 1);
-						if (sessionId >= this.newSessionId){
-							this.newSessionId = sessionId+1;
+						if (sessionId >= this.newSessionId) {
+							this.newSessionId = sessionId + 1;
 						}
 						this.sessions.push(new RpgmElement(
 							DataType.Session,
@@ -395,11 +396,11 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-				metadata.frontmatter.tags.forEach((tag: string) => {
-					if (tag.startsWith(this.api.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
+				metadata.frontmatter.tags.forEach((tag: string|object) => {
+					if (typeof tag === 'string' && tag.startsWith(this.api.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
 						const sceneId = +tag.substring(tag.lastIndexOf('/') + 1);
-						if (sceneId >= this.newSceneId){
-							this.newSceneId = sceneId+1;
+						if (sceneId >= this.newSceneId) {
+							this.newSceneId = sceneId + 1;
 						}
 						this.scenes.push(new RpgmElement(
 							DataType.Scene,

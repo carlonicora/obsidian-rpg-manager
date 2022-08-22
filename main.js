@@ -918,7 +918,7 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
         metadata.frontmatter.tags.forEach((tag) => {
-          if (tag.startsWith(this.api.settings.campaignTag)) {
+          if (typeof tag === "string" && tag.startsWith(this.api.settings.campaignTag)) {
             const campaignId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (campaignId >= this.newCampaignId) {
               this.newCampaignId = campaignId + 1;
@@ -969,7 +969,7 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
         metadata.frontmatter.tags.forEach((tag) => {
-          if (tag.startsWith(this.api.settings.adventureTag + "/" + this.campaign.value)) {
+          if (typeof tag === "string" && tag.startsWith(this.api.settings.adventureTag + "/" + this.campaign.value)) {
             const adventureId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (adventureId >= this.newAdventureId) {
               this.newAdventureId = adventureId + 1;
@@ -1021,7 +1021,7 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
         metadata.frontmatter.tags.forEach((tag) => {
-          if (tag.startsWith(this.api.settings.sessionTag + "/" + this.campaign.value + "/" + this.adventure.value)) {
+          if (typeof tag === "string" && tag.startsWith(this.api.settings.sessionTag + "/" + this.campaign.value + "/" + this.adventure.value)) {
             const sessionId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (sessionId >= this.newSessionId) {
               this.newSessionId = sessionId + 1;
@@ -1072,7 +1072,7 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
         metadata.frontmatter.tags.forEach((tag) => {
-          if (tag.startsWith(this.api.settings.sceneTag + "/" + this.campaign.value + "/" + this.adventure.value + "/" + this.session.value)) {
+          if (typeof tag === "string" && tag.startsWith(this.api.settings.sceneTag + "/" + this.campaign.value + "/" + this.adventure.value + "/" + this.session.value)) {
             const sceneId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (sceneId >= this.newSceneId) {
               this.newSceneId = sceneId + 1;
