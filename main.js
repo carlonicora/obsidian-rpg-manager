@@ -507,6 +507,7 @@ var DataType = /* @__PURE__ */ ((DataType2) => {
   DataType2[DataType2["Event"] = 7] = "Event";
   DataType2[DataType2["Clue"] = 8] = "Clue";
   DataType2[DataType2["Faction"] = 9] = "Faction";
+  DataType2[DataType2["Note"] = 10] = "Note";
   return DataType2;
 })(DataType || {});
 var IoData = class {
@@ -915,8 +916,8 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     this.campaigns = [];
     this.api.app.vault.getFiles().forEach((file) => {
       const metadata = this.api.app.metadataCache.getFileCache(file);
-      if (metadata !== null && metadata.frontmatter != null) {
-        (metadata.frontmatter.tags || []).forEach((tag) => {
+      if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
+        metadata.frontmatter.tags.forEach((tag) => {
           if (tag.startsWith(this.api.settings.campaignTag)) {
             const campaignId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (campaignId >= this.newCampaignId) {
@@ -1716,9 +1717,6 @@ var SessionNavigatorView = class extends AbstractSingleView {
     return __async(this, null, function* () {
       const tableElements = [];
       tableElements.push(["Adventure", data.adventure ? data.adventure.link : ""]);
-      tableElements.push(["Introduction", "[[#Introduction]]"]);
-      tableElements.push(["ABT Plot", "[[#ABT Plot]]"]);
-      tableElements.push(["Story Circle Plot", "[[#Story Circle Plot]]"]);
       tableElements.push(["Notes", "[[Notes - " + data.name + "]]"]);
       if (data.previousSession != null) {
         tableElements.push(["<< Previous Session", data.previousSession.link]);
@@ -2622,7 +2620,8 @@ var DEFAULT_SETTINGS = {
   factionTag: "rpgm/element/faction",
   eventTag: "rpgm/element/event",
   clueTag: "rpgm/element/clue",
-  timelineTag: "rpgm/element/timeline"
+  timelineTag: "rpgm/element/timeline",
+  noteTag: "rpgm/element/note"
 };
 var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
   constructor(app, plugin) {
@@ -2729,6 +2728,11 @@ var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
       yield this.plugin.saveSettings();
     })));
     new import_obsidian7.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
+      if (value.length == 0)
+        return;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian7.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
