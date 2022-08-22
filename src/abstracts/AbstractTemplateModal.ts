@@ -168,20 +168,24 @@ export abstract class AbstractTemplateModal extends Modal {
 
 		this.api.app.vault.getFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
-			if (metadata !== null && metadata.frontmatter != null) {
-				(metadata.frontmatter.tags || []).forEach((tag: string) => {
-					if (tag.startsWith(this.api.settings.campaignTag)) {
-						const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
-						if (campaignId >= this.newCampaignId){
-							this.newCampaignId = campaignId+1;
+			if (
+				metadata !== null &&
+				metadata.frontmatter != null &&
+				metadata.frontmatter.tags != null &&
+				metadata.frontmatter.tags.length > 0) {
+					metadata.frontmatter.tags.forEach((tag: string) => {
+						if (tag.startsWith(this.api.settings.campaignTag)) {
+							const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
+							if (campaignId >= this.newCampaignId){
+								this.newCampaignId = campaignId+1;
+							}
+							this.campaigns.push(new RpgmElement(
+								DataType.Campaign,
+								campaignId,
+								file.basename,
+							));
 						}
-						this.campaigns.push(new RpgmElement(
-							DataType.Campaign,
-							campaignId,
-							file.basename,
-						));
-					}
-				});
+					});
 			}
 		});
 
