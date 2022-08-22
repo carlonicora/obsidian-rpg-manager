@@ -1,5 +1,5 @@
 import {AbstractListView} from "../../abstracts/AbstractListView";
-import {SessionDataInterface, SessionListInterface} from "../../data/SessionData";
+import {SessionListInterface} from "../../data/SessionData";
 
 export class SessionListView extends AbstractListView {
 	async render(

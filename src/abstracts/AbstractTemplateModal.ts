@@ -172,7 +172,8 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata !== null &&
 				metadata.frontmatter != null &&
 				metadata.frontmatter.tags != null &&
-				metadata.frontmatter.tags.length > 0) {
+				metadata.frontmatter.tags.length > 0
+			) {
 					metadata.frontmatter.tags.forEach((tag: string) => {
 						if (tag.startsWith(this.api.settings.campaignTag)) {
 							const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
@@ -239,8 +240,13 @@ export abstract class AbstractTemplateModal extends Modal {
 
 		this.api.app.vault.getFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
-			if (metadata !== null && metadata.frontmatter != null) {
-				(metadata.frontmatter.tags || []).forEach((tag: string) => {
+			if (
+				metadata !== null &&
+				metadata.frontmatter != null &&
+				metadata.frontmatter.tags != null &&
+				metadata.frontmatter.tags.length > 0
+			) {
+				metadata.frontmatter.tags.forEach((tag: string) => {
 					if (tag.startsWith(this.api.settings.adventureTag + '/' + this.campaign.value)) {
 						const adventureId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (adventureId >= this.newAdventureId){
@@ -309,10 +315,14 @@ export abstract class AbstractTemplateModal extends Modal {
 
 		this.api.app.vault.getFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
-			if (metadata !== null && metadata.frontmatter != null) {
-				(metadata.frontmatter.tags || []).forEach((tag: string) => {
+			if (
+				metadata !== null &&
+				metadata.frontmatter != null &&
+				metadata.frontmatter.tags != null &&
+				metadata.frontmatter.tags.length > 0
+			) {
+				metadata.frontmatter.tags.forEach((tag: string) => {
 					if (tag.startsWith(this.api.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
-						console.log(tag);
 						const sessionId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sessionId >= this.newSessionId){
 							this.newSessionId = sessionId+1;
@@ -379,8 +389,13 @@ export abstract class AbstractTemplateModal extends Modal {
 
 		this.api.app.vault.getFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
-			if (metadata !== null && metadata.frontmatter != null) {
-				(metadata.frontmatter.tags || []).forEach((tag: string) => {
+			if (
+				metadata !== null &&
+				metadata.frontmatter != null &&
+				metadata.frontmatter.tags != null &&
+				metadata.frontmatter.tags.length > 0
+			) {
+				metadata.frontmatter.tags.forEach((tag: string) => {
 					if (tag.startsWith(this.api.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
 						const sceneId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sceneId >= this.newSceneId){

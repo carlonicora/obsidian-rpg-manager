@@ -1,7 +1,6 @@
 import {Api} from "../api";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {GenericDataListInterface} from "../interfaces/DataInterfaces";
-import {Component, MarkdownRenderer} from "obsidian";
 
 export interface ListViewInterface {
 	render(

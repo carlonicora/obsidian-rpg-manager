@@ -34,7 +34,6 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 			if (current != null){
 				this.current = current;
 			} else {
-				console.log('Current is null');
 				continueRendering = false;
 			}
 
@@ -44,7 +43,6 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 					const campaigns = this.dv.pages('#' + this.api.settings.campaignTag + '/' + campaignId);
 
 					if (campaigns.length !== 1) {
-						console.log('Campaign is null');
 						continueRendering = false;
 					}
 
@@ -55,7 +53,6 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 						);
 					}
 				} catch (e) {
-					console.log('something else');
 					continueRendering = false;
 				}
 			}
