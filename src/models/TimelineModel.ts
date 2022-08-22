@@ -93,6 +93,6 @@ export class TimelineModel extends AbstractModel {
 		data.sort();
 
 		const view = RpgViewFactory.createList(viewType.Timeline, this.dv);
-		view.render(data);
+		view.render(data, null);
 	}
 }

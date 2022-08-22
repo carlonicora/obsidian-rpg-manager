@@ -9,6 +9,8 @@ export class LocationModel extends AbstractModel {
 		this.characterList();
 		this.eventList();
 		this.clueList();
+		this.locationList();
+		this.parentLocationList();
 	}
 
 	private async characterList(
@@ -41,6 +43,29 @@ export class LocationModel extends AbstractModel {
 				DataType.Location,
 			),
 			viewType.ClueList,
+		);
+	}
+
+	private async locationList(
+	) {
+		this.writeList(
+			this.io.getRelationshipList(
+				DataType.Location,
+			),
+			viewType.LocationList,
+			'Sub-locations'
+		);
+	}
+
+	private async parentLocationList(
+	) {
+		this.writeList(
+			this.io.getRelationshipList(
+				DataType.Location,
+				DataType.Location,
+			),
+			viewType.LocationList,
+			'Part of'
 		);
 	}
 }

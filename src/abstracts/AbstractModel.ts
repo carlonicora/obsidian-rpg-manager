@@ -95,10 +95,11 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 	protected writeList(
 		data: GenericDataListInterface,
 		typeOfView: viewType,
+		title: string|null = null,
 	): void {
 		if (data.elements.length > 0) {
 			const view = RpgViewFactory.createList(typeOfView, this.dv);
-			view.render(data);
+			view.render(data, title);
 		}
 	}
 

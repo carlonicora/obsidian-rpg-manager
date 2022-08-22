@@ -3,10 +3,11 @@ import {LocationListInterface} from "../../data/LocationData";
 
 export class LocationListView extends AbstractListView {
 	async render(
-		data: LocationListInterface
+		data: LocationListInterface,
+		title: string|null=null,
 	): Promise<void>
 	{
-		this.dv.span("## Locations");
+		this.dv.span('## ' + (title == null ? 'Locations' : title));
 
 		this.dv.table(["", "Name", "Synopsis"],
 			data.elements

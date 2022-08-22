@@ -1131,6 +1131,9 @@ var LocationTemplate = class extends AbstractTemplate {
     response += this.getAdditionalInformation();
     return response;
   }
+  generateFrontmatterRelationships() {
+    return " locations: \n";
+  }
 };
 var LocationModal = class extends AbstractTemplateModal {
   content(contentEl) {
@@ -1962,9 +1965,9 @@ var CharacterListView = class extends AbstractListView {
 
 // src/views/Lists/LocationListView.ts
 var LocationListView = class extends AbstractListView {
-  render(data) {
+  render(data, title = null) {
     return __async(this, null, function* () {
-      this.dv.span("## Locations");
+      this.dv.span("## " + (title == null ? "Locations" : title));
       this.dv.table(["", "Name", "Synopsis"], data.elements.map((character) => [
         character.image,
         character.link,
@@ -2055,13 +2058,15 @@ var SceneActionView = class extends AbstractSingleView {
 var CampaignNavigationView = class extends AbstractSingleView {
   render(data) {
     return __async(this, null, function* () {
-      const container = this.dv.container.createDiv({ cls: "rpg-container" });
-      const header = container.createDiv({ cls: "rpgm-header" });
       if (data.imageSrc !== null) {
+        const container = this.dv.container.createDiv({ cls: "rpg-container" });
+        const header = container.createDiv({ cls: "rpgm-header" });
         header.style.backgroundImage = "url('" + data.imageSrc + "')";
+        const overlay = header.createDiv({ cls: "rpgm-header-overlay" });
+        overlay.createDiv({ cls: "rpgm-header-title", text: data.name });
+      } else {
+        this.dv.container.createEl("h1", { text: data.name });
       }
-      const overlay = header.createDiv({ cls: "rpgm-header-overlay" });
-      overlay.createDiv({ cls: "rpgm-header-title", text: data.name });
     });
   }
 };
@@ -2162,10 +2167,10 @@ var AbstractModel = class extends import_obsidian6.MarkdownRenderChild {
     }
     return false;
   }
-  writeList(data, typeOfView) {
+  writeList(data, typeOfView, title = null) {
     if (data.elements.length > 0) {
       const view = RpgViewFactory.createList(typeOfView, this.dv);
-      view.render(data);
+      view.render(data, title);
     }
   }
   writeData(data, typeOfView) {
@@ -2322,6 +2327,8 @@ var LocationModel = class extends AbstractModel {
       this.characterList();
       this.eventList();
       this.clueList();
+      this.locationList();
+      this.parentLocationList();
     });
   }
   characterList() {
@@ -2337,6 +2344,16 @@ var LocationModel = class extends AbstractModel {
   clueList() {
     return __async(this, null, function* () {
       this.writeList(this.io.getRelationshipList(8 /* Clue */, 6 /* Location */), 10 /* ClueList */);
+    });
+  }
+  locationList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(6 /* Location */), 8 /* LocationList */, "Sub-locations");
+    });
+  }
+  parentLocationList() {
+    return __async(this, null, function* () {
+      this.writeList(this.io.getRelationshipList(6 /* Location */, 6 /* Location */), 8 /* LocationList */, "Part of");
     });
   }
 };
@@ -2536,7 +2553,7 @@ var TimelineModel = class extends AbstractModel {
       });
       data.sort();
       const view = RpgViewFactory.createList(2 /* Timeline */, this.dv);
-      view.render(data);
+      view.render(data, null);
     });
   }
 };

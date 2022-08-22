@@ -5,6 +5,7 @@ import {GenericDataListInterface} from "../interfaces/DataInterfaces";
 export interface ListViewInterface {
 	render(
 		data: GenericDataListInterface,
+		title: string|null,
 	): void;
 }
 
@@ -20,6 +21,7 @@ export abstract class AbstractListView implements ListViewInterface {
 
 	public abstract render(
 		data: GenericDataListInterface,
+		title: string|null,
 	): void;
 
 	spacer() {

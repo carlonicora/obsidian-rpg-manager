@@ -24,6 +24,11 @@ export class LocationTemplate extends AbstractTemplate {
 
 		return response;
 	}
+
+	protected generateFrontmatterRelationships(
+	): string|null {
+		return ' locations: \n';
+	}
 }
 
 export class LocationModal extends AbstractTemplateModal {
