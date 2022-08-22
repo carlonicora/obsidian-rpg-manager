@@ -8,7 +8,6 @@ export class SceneNavigationView extends AbstractSingleView {
 		const tableElements = [];
 		tableElements.push(["Adventure", data.adventure != undefined ? data.adventure.link : '']);
 		tableElements.push(["Session", data.session != undefined ? data.session.link : '']);
-		tableElements.push(["Session Notes", data.session != undefined ? "[[Notes - " + data.session.name + "]]" : '']);
 
 		if (data.previousScene != undefined){
 			tableElements.push(["<< Previous Scene", data.previousScene.link]);

@@ -8,7 +8,7 @@ export class SessionListView extends AbstractListView {
 	{
 		this.dv.span("## Sessions");
 
-		this.dv.table(["&#35;", "Session", "Synopsis", "Date", "Play Date", "Notes"],
+		this.dv.table(["&#35;", "Session", "Synopsis", "Date", "Play Date"],
 			data.elements
 				.map(session => [
 					session.id,
@@ -16,7 +16,6 @@ export class SessionListView extends AbstractListView {
 					session.synopsis,
 					session.date,
 					session.irl,
-					("[[Notes - " + session.name + "|>>]]"),
 				])
 		);
 

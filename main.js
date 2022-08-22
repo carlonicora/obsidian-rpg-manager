@@ -1716,7 +1716,6 @@ var SessionNavigatorView = class extends AbstractSingleView {
     return __async(this, null, function* () {
       const tableElements = [];
       tableElements.push(["Adventure", data.adventure ? data.adventure.link : ""]);
-      tableElements.push(["Notes", "[[Notes - " + data.name + "]]"]);
       if (data.previousSession != null) {
         tableElements.push(["<< Previous Session", data.previousSession.link]);
       }
@@ -1737,7 +1736,6 @@ var SceneNavigationView = class extends AbstractSingleView {
       const tableElements = [];
       tableElements.push(["Adventure", data.adventure != void 0 ? data.adventure.link : ""]);
       tableElements.push(["Session", data.session != void 0 ? data.session.link : ""]);
-      tableElements.push(["Session Notes", data.session != void 0 ? "[[Notes - " + data.session.name + "]]" : ""]);
       if (data.previousScene != void 0) {
         tableElements.push(["<< Previous Scene", data.previousScene.link]);
       }
@@ -1876,13 +1874,12 @@ var SessionListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
       this.dv.span("## Sessions");
-      this.dv.table(["&#35;", "Session", "Synopsis", "Date", "Play Date", "Notes"], data.elements.map((session) => [
+      this.dv.table(["&#35;", "Session", "Synopsis", "Date", "Play Date"], data.elements.map((session) => [
         session.id,
         session.link,
         session.synopsis,
         session.date,
-        session.irl,
-        "[[Notes - " + session.name + "|>>]]"
+        session.irl
       ]));
       this.spacer();
     });

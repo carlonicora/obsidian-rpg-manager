@@ -9,15 +9,6 @@ export class SessionNavigatorView extends AbstractSingleView {
 
 		tableElements.push(["Adventure", data.adventure ? data.adventure.link : '']);
 
-		/*
-		const query = this.api.settings.noteTag + '/' + data.campaign?.id + '/' + data.adventureId + '/' + data.id;
-		const pages = this.dv.pages(query);
-		if (pages.length === 1){
-		} else {
-		}
-		 */
-		tableElements.push(["Notes", "[[Notes - " + data.name + "]]"]);
-
 		if (data.previousSession != null){
 			tableElements.push(["<< Previous Session", data.previousSession.link]);
 		}
