@@ -1385,7 +1385,7 @@ var FileFactory = class {
         const activeView = this.api.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
         if (activeView != null) {
           const editor = activeView.editor;
-          editor.setValue(data);
+          editor.setValue(data + "\n" + editor.getValue());
         }
       }
     });

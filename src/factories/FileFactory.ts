@@ -53,7 +53,7 @@ export class FileFactory {
 			const activeView = this.api.app.workspace.getActiveViewOfType(MarkdownView);
 			if (activeView != null) {
 				const editor = activeView.editor;
-				editor.setValue(data);
+				editor.setValue(data + '\n' + editor.getValue());
 			}
 		}
 	}
