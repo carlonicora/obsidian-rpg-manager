@@ -174,7 +174,9 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-				metadata.frontmatter.tags.forEach((tag: string|object) => {
+				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
+
+				tags.forEach((tag: string|object) => {
 					if (typeof tag === 'string' && tag.startsWith(this.api.settings.campaignTag)) {
 						const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (campaignId >= this.newCampaignId){
@@ -246,8 +248,9 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
+				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
-				metadata.frontmatter.tags.forEach((tag: string|object) => {
+				tags.forEach((tag: string|object) => {
 					if (typeof tag === 'string' && tag.startsWith(this.api.settings.adventureTag + '/' + this.campaign.value)) {
 						const adventureId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (adventureId >= this.newAdventureId) {
@@ -322,7 +325,9 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-				metadata.frontmatter.tags.forEach((tag: string|object) => {
+				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
+
+				tags.forEach((tag: string|object) => {
 					if (typeof tag === 'string' && tag.startsWith(this.api.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
 						const sessionId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sessionId >= this.newSessionId) {
@@ -396,7 +401,9 @@ export abstract class AbstractTemplateModal extends Modal {
 				metadata.frontmatter.tags != null &&
 				metadata.frontmatter.tags.length > 0
 			) {
-				metadata.frontmatter.tags.forEach((tag: string|object) => {
+				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
+
+				tags.forEach((tag: string|object) => {
 					if (typeof tag === 'string' && tag.startsWith(this.api.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
 						const sceneId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sceneId >= this.newSceneId) {

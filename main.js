@@ -917,7 +917,8 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     this.api.app.vault.getFiles().forEach((file) => {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        metadata.frontmatter.tags.forEach((tag) => {
+        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
+        tags.forEach((tag) => {
           if (typeof tag === "string" && tag.startsWith(this.api.settings.campaignTag)) {
             const campaignId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (campaignId >= this.newCampaignId) {
@@ -968,7 +969,8 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     this.api.app.vault.getFiles().forEach((file) => {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        metadata.frontmatter.tags.forEach((tag) => {
+        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
+        tags.forEach((tag) => {
           if (typeof tag === "string" && tag.startsWith(this.api.settings.adventureTag + "/" + this.campaign.value)) {
             const adventureId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (adventureId >= this.newAdventureId) {
@@ -1020,7 +1022,8 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     this.api.app.vault.getFiles().forEach((file) => {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        metadata.frontmatter.tags.forEach((tag) => {
+        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
+        tags.forEach((tag) => {
           if (typeof tag === "string" && tag.startsWith(this.api.settings.sessionTag + "/" + this.campaign.value + "/" + this.adventure.value)) {
             const sessionId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (sessionId >= this.newSessionId) {
@@ -1071,7 +1074,8 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
     this.api.app.vault.getFiles().forEach((file) => {
       const metadata = this.api.app.metadataCache.getFileCache(file);
       if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        metadata.frontmatter.tags.forEach((tag) => {
+        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
+        tags.forEach((tag) => {
           if (typeof tag === "string" && tag.startsWith(this.api.settings.sceneTag + "/" + this.campaign.value + "/" + this.adventure.value + "/" + this.session.value)) {
             const sceneId = +tag.substring(tag.lastIndexOf("/") + 1);
             if (sceneId >= this.newSceneId) {
