@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-rpg-manager",
-	"version": "0.3.11",
+	"version": "0.3.12",
 	"description": "A plugin to manage your Tabletop Role Playing Game campaigns for Obsidian.",
 	"main": "src/main.ts",
 	"scripts": {
