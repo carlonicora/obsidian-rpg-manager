@@ -15,8 +15,8 @@ export class SessionNavigationModel extends AbstractModel {
 		const sessionId = this.api.getTagId(this.current.tags, DataType.Session);
 
 		const adventure = this.io.getAdventure(adventureId);
-		const previousSession = this.io.getSession(adventureId, sessionId - 1);
-		const nextSession = this.io.getSession(adventureId, sessionId + 1);
+		const previousSession = this.io.getSession(null, sessionId - 1);
+		const nextSession = this.io.getSession(null, sessionId + 1);
 
 		const data = new SessionData(
 			this.api,

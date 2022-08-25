@@ -203,18 +203,28 @@ export class IoData {
 	}
 
 	public getSession(
-		adventureId: number,
+		adventureId: number|null,
 		sessionId: number,
 	): SessionDataInterface|null
 	{
 		let response: SessionDataInterface|null = null;
 
-		const query = '#' + this.api.settings.sessionTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId
-		const sessions = this.dv.pages(query);
+		let sessions;
+		if (adventureId != null) {
+			const query = '#' + this.api.settings.sessionTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId
+			sessions = this.dv.pages(query);
+		} else {
+			const query = '#' + this.api.settings.sessionTag + '/' + this.campaign.id
+			sessions = this.dv.pages(query)
+				.where(session =>
+					this.api.getTagId(session.tags, DataType.Session) === sessionId
+				);
+		}
 
 		if (sessions !== null && sessions.length === 1){
 			response = new SessionData(
-				this.api, sessions[0],
+				this.api,
+				sessions[0],
 				this.campaign,
 			)
 		}

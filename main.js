@@ -621,8 +621,14 @@ var IoData = class {
   }
   getSession(adventureId, sessionId) {
     let response = null;
-    const query = "#" + this.api.settings.sessionTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
-    const sessions = this.dv.pages(query);
+    let sessions;
+    if (adventureId != null) {
+      const query = "#" + this.api.settings.sessionTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId;
+      sessions = this.dv.pages(query);
+    } else {
+      const query = "#" + this.api.settings.sessionTag + "/" + this.campaign.id;
+      sessions = this.dv.pages(query).where((session) => this.api.getTagId(session.tags, 2 /* Session */) === sessionId);
+    }
     if (sessions !== null && sessions.length === 1) {
       response = new SessionData(this.api, sessions[0], this.campaign);
     }
@@ -1690,6 +1696,7 @@ __export(views_exports, {
   CampaignNavigationView: () => CampaignNavigationView,
   CharacterInfoView: () => CharacterInfoView,
   CharacterListView: () => CharacterListView,
+  CharacterStatsView: () => CharacterStatsView,
   ClueListView: () => ClueListView,
   ClueStatusView: () => ClueStatusView,
   EventListView: () => EventListView,
@@ -2071,6 +2078,78 @@ var CampaignNavigationView = class extends AbstractSingleView {
   }
 };
 
+// src/views/CharacterStatsView.ts
+var CharacterStatsView = class extends AbstractSingleView {
+  render(stats) {
+    return __async(this, null, function* () {
+      const table = this.dv.container.createEl("table");
+      let tr = table.createEl("tr");
+      tr.createEl("th", { text: "Body" });
+      tr.createEl("th", { text: stats.body.trait.toString() });
+      tr.createEl("th", { text: "Mind" });
+      tr.createEl("th", { text: stats.mind.trait.toString() });
+      tr.createEl("th", { text: "Spirit" });
+      tr.createEl("th", { text: stats.spirit.trait.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Athletics" });
+      tr.createEl("td", { text: stats.body.athletics.toString() });
+      tr.createEl("td", { text: "Cryptography" });
+      tr.createEl("td", { text: stats.mind.cryptography.toString() });
+      tr.createEl("td", { text: "Craft" });
+      tr.createEl("td", { text: stats.spirit.craft.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Drive" });
+      tr.createEl("td", { text: stats.body.drive.toString() });
+      tr.createEl("td", { text: "Fast Talk" });
+      tr.createEl("td", { text: stats.mind.fastTalk.toString() });
+      tr.createEl("td", { text: "Empathy" });
+      tr.createEl("td", { text: stats.spirit.empathy.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Firearms" });
+      tr.createEl("td", { text: stats.body.firearms.toString() });
+      tr.createEl("td", { text: "Investigation" });
+      tr.createEl("td", { text: stats.mind.investigation.toString() });
+      tr.createEl("td", { text: "Leadership" });
+      tr.createEl("td", { text: stats.spirit.leadership.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Hand to Hand" });
+      tr.createEl("td", { text: stats.body.handToHand.toString() });
+      tr.createEl("td", { text: "Language" });
+      tr.createEl("td", { text: stats.mind.language.toString() });
+      tr.createEl("td", { text: "Occult" });
+      tr.createEl("td", { text: stats.spirit.occult.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Intimidate" });
+      tr.createEl("td", { text: stats.body.intimidate.toString() });
+      tr.createEl("td", { text: "Library" });
+      tr.createEl("td", { text: stats.mind.library.toString() });
+      tr.createEl("td", { text: "Persuasion" });
+      tr.createEl("td", { text: stats.spirit.persuasion.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Melee" });
+      tr.createEl("td", { text: stats.body.melee.toString() });
+      tr.createEl("td", { text: "medicine" });
+      tr.createEl("td", { text: stats.mind.medicine.toString() });
+      tr.createEl("td", { text: "Stealth" });
+      tr.createEl("td", { text: stats.spirit.stealth.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Pilot" });
+      tr.createEl("td", { text: stats.body.pilot.toString() });
+      tr.createEl("td", { text: "Perception" });
+      tr.createEl("td", { text: stats.mind.perception.toString() });
+      tr.createEl("td", { text: "Survival" });
+      tr.createEl("td", { text: stats.spirit.survival.toString() });
+      tr = table.createEl("tr");
+      tr.createEl("td", { text: "Repair" });
+      tr.createEl("td", { text: stats.body.repair.toString() });
+      tr.createEl("td", { text: "Technology" });
+      tr.createEl("td", { text: stats.mind.technology.toString() });
+      tr.createEl("td", { text: "Willpower" });
+      tr.createEl("td", { text: stats.spirit.willpower.toString() });
+    });
+  }
+};
+
 // src/factories/RpgViewFactory.ts
 var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["AdventureList"] = 0] = "AdventureList";
@@ -2091,6 +2170,7 @@ var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["SceneNavigation"] = 15] = "SceneNavigation";
   viewType2[viewType2["SceneAction"] = 16] = "SceneAction";
   viewType2[viewType2["CampaignNavigation"] = 17] = "CampaignNavigation";
+  viewType2[viewType2["CharacterStats"] = 18] = "CharacterStats";
   return viewType2;
 })(viewType || {});
 var RpgViewFactory = class {
@@ -2366,6 +2446,68 @@ var NotesModel = class extends AbstractModel {
   }
 };
 
+// src/data/RawData.ts
+var RawTrait = class {
+  constructor(trait) {
+    this.trait = trait;
+  }
+  getAbilityValue(ability) {
+    let response = this.trait;
+    if (ability == null || ability === 0) {
+      response -= 10;
+    } else {
+      response += ability;
+    }
+    return response;
+  }
+};
+var RawBody = class extends RawTrait {
+  constructor(trait) {
+    super(trait.trait);
+    this.athletics = this.getAbilityValue(trait.athletics);
+    this.drive = this.getAbilityValue(trait.drive);
+    this.firearms = this.getAbilityValue(trait.firearms);
+    this.handToHand = this.getAbilityValue(trait.handToHand);
+    this.intimidate = this.getAbilityValue(trait.intimidate);
+    this.melee = this.getAbilityValue(trait.melee);
+    this.pilot = this.getAbilityValue(trait.pilot);
+    this.repair = this.getAbilityValue(trait.repair);
+  }
+};
+var RawMind = class extends RawTrait {
+  constructor(trait) {
+    super(trait.trait);
+    this.cryptography = this.getAbilityValue(trait.cryptography);
+    this.fastTalk = this.getAbilityValue(trait.fastTalk);
+    this.investigation = this.getAbilityValue(trait.investigation);
+    this.language = this.getAbilityValue(trait.language);
+    this.library = this.getAbilityValue(trait.library);
+    this.medicine = this.getAbilityValue(trait.medicine);
+    this.perception = this.getAbilityValue(trait.perception);
+    this.technology = this.getAbilityValue(trait.technology);
+  }
+};
+var RawSpirit = class extends RawTrait {
+  constructor(trait) {
+    super(trait.trait);
+    this.craft = this.getAbilityValue(trait.craft);
+    this.empathy = this.getAbilityValue(trait.empathy);
+    this.leadership = this.getAbilityValue(trait.leadership);
+    this.occult = this.getAbilityValue(trait.occult);
+    this.persuasion = this.getAbilityValue(trait.persuasion);
+    this.stealth = this.getAbilityValue(trait.stealth);
+    this.survival = this.getAbilityValue(trait.survival);
+    this.willpower = this.getAbilityValue(trait.willpower);
+  }
+};
+var RawStats = class {
+  constructor(data) {
+    this.body = new RawBody(data.raw.body);
+    this.mind = new RawMind(data.raw.mind);
+    this.spirit = new RawSpirit(data.raw.spirit);
+  }
+};
+
 // src/models/NpcModel.ts
 var NpcModel = class extends AbstractModel {
   render() {
@@ -2378,6 +2520,15 @@ var NpcModel = class extends AbstractModel {
       this.eventList();
       this.clueList();
       this.locationList();
+    });
+  }
+  characterRecordSheet() {
+    return __async(this, null, function* () {
+      if (this.current.raw != null) {
+        const stats = new RawStats(this.current);
+        const view = RpgViewFactory.createSingle(18 /* CharacterStats */, this.dv);
+        view.render(stats);
+      }
     });
   }
   info() {
@@ -2497,8 +2648,8 @@ var SessionNavigationModel = class extends AbstractModel {
       const adventureId = this.api.getTagId(this.current.tags, 1 /* Adventure */);
       const sessionId = this.api.getTagId(this.current.tags, 2 /* Session */);
       const adventure = this.io.getAdventure(adventureId);
-      const previousSession = this.io.getSession(adventureId, sessionId - 1);
-      const nextSession = this.io.getSession(adventureId, sessionId + 1);
+      const previousSession = this.io.getSession(null, sessionId - 1);
+      const nextSession = this.io.getSession(null, sessionId + 1);
       const data = new SessionData(this.api, this.current, this.campaign, adventure, previousSession, nextSession);
       const view = RpgViewFactory.createSingle(13 /* SessionNavigator */, this.dv);
       view.render(data);
