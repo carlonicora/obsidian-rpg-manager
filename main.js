@@ -156,6 +156,50 @@ AdventureData.frontmatter = {
 };
 
 // src/data/CharacterData.ts
+var Pronoun = /* @__PURE__ */ ((Pronoun3) => {
+  Pronoun3[Pronoun3["they"] = 0] = "they";
+  Pronoun3[Pronoun3["she"] = 1] = "she";
+  Pronoun3[Pronoun3["he"] = 2] = "he";
+  return Pronoun3;
+})(Pronoun || {});
+var PronounFactory = class {
+  static create(pronoun) {
+    let response = null;
+    if (pronoun != null) {
+      switch (pronoun.toLowerCase()) {
+        case "t":
+        case "they":
+          response = 0 /* they */;
+          break;
+        case "s":
+        case "she":
+          response = 1 /* she */;
+          break;
+        case "h":
+        case "he":
+          response = 2 /* he */;
+          break;
+        default:
+          response = null;
+          break;
+      }
+    }
+    return response;
+  }
+  static read(pronoun) {
+    switch (pronoun) {
+      case 0 /* they */:
+        return "They/Them";
+        break;
+      case 1 /* she */:
+        return "She/Her";
+        break;
+      case 2 /* he */:
+        return "He/Him";
+        break;
+    }
+  }
+};
 var CharacterList = class extends AbstractDataList {
   constructor(campaign) {
     super(campaign);
@@ -171,6 +215,7 @@ var CharacterData = class extends AbstractImageData {
     this.age = this.api.calculateAge(data, campaign.currentDate);
     this.isDead = data.dates.death != void 0;
     this.goals = data.goals != void 0 ? data.goals : null;
+    this.pronoun = PronounFactory.create(data.pronoun);
     this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
   }
 };
@@ -250,8 +295,9 @@ var SynopsisData = class extends AbstractData {
     this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? this.api.formatDate(data.dates.death, "short") : "";
     this.isCharacter = false;
     data.tags.forEach((tag) => {
-      if (tag.startsWith(this.api.settings.npcTag)) {
+      if (tag.startsWith(this.api.settings.npcTag) || tag.startsWith(this.api.settings.pcTag)) {
         this.isCharacter = true;
+        this.pronoun = PronounFactory.create(data.pronoun);
       }
     });
   }
@@ -294,6 +340,8 @@ __export(data_exports, {
   ImageData: () => ImageData,
   LocationData: () => LocationData,
   LocationList: () => LocationList,
+  Pronoun: () => Pronoun,
+  PronounFactory: () => PronounFactory,
   SceneData: () => SceneData,
   SceneList: () => SceneList,
   SessionData: () => SessionData,
@@ -760,7 +808,7 @@ var AbstractTemplate = class {
     response += this.generateFrontmatterSynopsis();
     response += this.generateFrontmatterAction();
     response += this.generateFrontmatterGoals();
-    response += this.generateFrontmatterAddress();
+    response += this.generateFrontmatterAdditionalInformation();
     const dates = this.generateFrontmatterDates();
     if (dates !== null) {
       response += "dates:\n" + dates;
@@ -789,7 +837,7 @@ var AbstractTemplate = class {
   generateFrontmatterSynopsis() {
     return "";
   }
-  generateFrontmatterAddress() {
+  generateFrontmatterAdditionalInformation() {
     return "";
   }
   generateFrontmatterAction() {
@@ -1129,7 +1177,7 @@ var LocationTemplate = class extends AbstractTemplate {
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
   }
-  generateFrontmatterAddress() {
+  generateFrontmatterAdditionalInformation() {
     return 'address: ""\n';
   }
   generateTemplate() {
@@ -1210,6 +1258,9 @@ var NonPlayerCharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterGoals() {
     return 'goals: ""\n';
   }
+  generateFrontmatterAdditionalInformation() {
+    return "pronoun: #t/s/h\n";
+  }
   generateFrontmatterRelationships() {
     return " characters: \n factions: \n locations: \n";
   }
@@ -1239,6 +1290,9 @@ var CharacterTemplate = class extends AbstractTemplate {
   }
   generateFrontmatterDates() {
     return " dob: \n death: \n";
+  }
+  generateFrontmatterAdditionalInformation() {
+    return "pronoun: #t/s/h\n";
   }
   generateTemplate() {
     let response = this.getRpgManagerCodeblock("pc");
@@ -1696,7 +1750,6 @@ __export(views_exports, {
   CampaignNavigationView: () => CampaignNavigationView,
   CharacterInfoView: () => CharacterInfoView,
   CharacterListView: () => CharacterListView,
-  CharacterStatsView: () => CharacterStatsView,
   ClueListView: () => ClueListView,
   ClueStatusView: () => ClueStatusView,
   EventListView: () => EventListView,
@@ -1796,8 +1849,9 @@ var CharacterInfoView = class extends AbstractSingleView {
     return __async(this, null, function* () {
       this.dv.table(["**" + data.name + "**", ""], [
         ["Status", data.isDead ? "Dead" : "Alive"],
-        [data.isDead ? "Age at Death" : "Age", data.age !== "" ? data.age : "==Dob or campaign date missing=="],
-        ["Goals", data.goals ? data.goals : "==Goals missing=="]
+        ["Pronoun", data.pronoun != null ? PronounFactory.read(data.pronoun) : '<span class="rpgm-missing">pronoun missing in frontmatter</span>'],
+        [data.isDead ? "Age at Death" : "Age", data.age !== "" ? data.age : '<span class="rpgm-missing">Dob or campaign date missing</span>'],
+        ["Goals", data.goals ? data.goals : '<span class="rpgm-missing">Goals missing</span>']
       ]);
       this.spacer();
     });
@@ -1812,7 +1866,7 @@ var ClueListView = class extends AbstractListView {
       this.dv.table(["", "Clue", "Found", "Synopsis"], data.elements.map((clue) => [
         clue.image,
         clue.link,
-        clue.found === false ? "==no==" : clue.found,
+        clue.found === false ? '<span class="rpgm-missing">no</span>' : clue.found,
         clue.synopsis
       ]));
       this.spacer();
@@ -1849,12 +1903,12 @@ var SynopsisView = class extends AbstractSingleView {
       let response = "";
       if (data.synopsis !== "") {
         if (data.isCharacter) {
-          response = data.link + (data.death !== "" ? " was " : " is ") + data.synopsis;
+          response = data.link + (data.pronoun != null ? " (" + PronounFactory.read(data.pronoun) + ")" : "") + (data.death !== "" ? " was " : " is ") + data.synopsis;
         } else {
           response = data.synopsis;
         }
       } else {
-        response = "==Synopsis missing==";
+        response = '<span class="rpgm-missing">Synopsis missing</span>';
       }
       this.dv.span(response);
       this.spacer();
@@ -2050,13 +2104,13 @@ var SceneActionView = class extends AbstractSingleView {
       const goalTitle = goalDiv.createDiv();
       goalTitle.addClass("title");
       goalTitle.innerText = "Scene Goal";
-      import_obsidian5.MarkdownRenderer.renderMarkdown(data.synopsis !== "" ? data.synopsis : "==Missing Scene Synopsis (Goal)==", goalDiv, this.dv.currentFilePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(data.synopsis !== "" ? data.synopsis : '<span class="rpgm-missing">Missing Scene Synopsis (Goal)</span>', goalDiv, this.dv.currentFilePath, null);
       const actionDiv = this.container.createDiv();
       actionDiv.addClass("rpgm-scene-action");
       const actionTitle = actionDiv.createDiv();
       actionTitle.addClass("title");
       actionTitle.innerText = "Player Character's Action";
-      import_obsidian5.MarkdownRenderer.renderMarkdown(data.action !== "" ? data.action : "==Missing Scene Action==", actionDiv, this.dv.currentFilePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(data.action !== "" ? data.action : '<span class="rpgm-missing">Missing Scene Action</span>', actionDiv, this.dv.currentFilePath, null);
     });
   }
 };
@@ -2074,78 +2128,6 @@ var CampaignNavigationView = class extends AbstractSingleView {
       } else {
         this.dv.container.createEl("h1", { text: data.name });
       }
-    });
-  }
-};
-
-// src/views/CharacterStatsView.ts
-var CharacterStatsView = class extends AbstractSingleView {
-  render(stats) {
-    return __async(this, null, function* () {
-      const table = this.dv.container.createEl("table");
-      let tr = table.createEl("tr");
-      tr.createEl("th", { text: "Body" });
-      tr.createEl("th", { text: stats.body.trait.toString() });
-      tr.createEl("th", { text: "Mind" });
-      tr.createEl("th", { text: stats.mind.trait.toString() });
-      tr.createEl("th", { text: "Spirit" });
-      tr.createEl("th", { text: stats.spirit.trait.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Athletics" });
-      tr.createEl("td", { text: stats.body.athletics.toString() });
-      tr.createEl("td", { text: "Cryptography" });
-      tr.createEl("td", { text: stats.mind.cryptography.toString() });
-      tr.createEl("td", { text: "Craft" });
-      tr.createEl("td", { text: stats.spirit.craft.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Drive" });
-      tr.createEl("td", { text: stats.body.drive.toString() });
-      tr.createEl("td", { text: "Fast Talk" });
-      tr.createEl("td", { text: stats.mind.fastTalk.toString() });
-      tr.createEl("td", { text: "Empathy" });
-      tr.createEl("td", { text: stats.spirit.empathy.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Firearms" });
-      tr.createEl("td", { text: stats.body.firearms.toString() });
-      tr.createEl("td", { text: "Investigation" });
-      tr.createEl("td", { text: stats.mind.investigation.toString() });
-      tr.createEl("td", { text: "Leadership" });
-      tr.createEl("td", { text: stats.spirit.leadership.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Hand to Hand" });
-      tr.createEl("td", { text: stats.body.handToHand.toString() });
-      tr.createEl("td", { text: "Language" });
-      tr.createEl("td", { text: stats.mind.language.toString() });
-      tr.createEl("td", { text: "Occult" });
-      tr.createEl("td", { text: stats.spirit.occult.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Intimidate" });
-      tr.createEl("td", { text: stats.body.intimidate.toString() });
-      tr.createEl("td", { text: "Library" });
-      tr.createEl("td", { text: stats.mind.library.toString() });
-      tr.createEl("td", { text: "Persuasion" });
-      tr.createEl("td", { text: stats.spirit.persuasion.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Melee" });
-      tr.createEl("td", { text: stats.body.melee.toString() });
-      tr.createEl("td", { text: "medicine" });
-      tr.createEl("td", { text: stats.mind.medicine.toString() });
-      tr.createEl("td", { text: "Stealth" });
-      tr.createEl("td", { text: stats.spirit.stealth.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Pilot" });
-      tr.createEl("td", { text: stats.body.pilot.toString() });
-      tr.createEl("td", { text: "Perception" });
-      tr.createEl("td", { text: stats.mind.perception.toString() });
-      tr.createEl("td", { text: "Survival" });
-      tr.createEl("td", { text: stats.spirit.survival.toString() });
-      tr = table.createEl("tr");
-      tr.createEl("td", { text: "Repair" });
-      tr.createEl("td", { text: stats.body.repair.toString() });
-      tr.createEl("td", { text: "Technology" });
-      tr.createEl("td", { text: stats.mind.technology.toString() });
-      tr.createEl("td", { text: "Willpower" });
-      tr.createEl("td", { text: stats.spirit.willpower.toString() });
     });
   }
 };
@@ -2170,7 +2152,6 @@ var viewType = /* @__PURE__ */ ((viewType2) => {
   viewType2[viewType2["SceneNavigation"] = 15] = "SceneNavigation";
   viewType2[viewType2["SceneAction"] = 16] = "SceneAction";
   viewType2[viewType2["CampaignNavigation"] = 17] = "CampaignNavigation";
-  viewType2[viewType2["CharacterStats"] = 18] = "CharacterStats";
   return viewType2;
 })(viewType || {});
 var RpgViewFactory = class {
@@ -2446,68 +2427,6 @@ var NotesModel = class extends AbstractModel {
   }
 };
 
-// src/data/RawData.ts
-var RawTrait = class {
-  constructor(trait) {
-    this.trait = trait;
-  }
-  getAbilityValue(ability) {
-    let response = this.trait;
-    if (ability == null || ability === 0) {
-      response -= 10;
-    } else {
-      response += ability;
-    }
-    return response;
-  }
-};
-var RawBody = class extends RawTrait {
-  constructor(trait) {
-    super(trait.trait);
-    this.athletics = this.getAbilityValue(trait.athletics);
-    this.drive = this.getAbilityValue(trait.drive);
-    this.firearms = this.getAbilityValue(trait.firearms);
-    this.handToHand = this.getAbilityValue(trait.handToHand);
-    this.intimidate = this.getAbilityValue(trait.intimidate);
-    this.melee = this.getAbilityValue(trait.melee);
-    this.pilot = this.getAbilityValue(trait.pilot);
-    this.repair = this.getAbilityValue(trait.repair);
-  }
-};
-var RawMind = class extends RawTrait {
-  constructor(trait) {
-    super(trait.trait);
-    this.cryptography = this.getAbilityValue(trait.cryptography);
-    this.fastTalk = this.getAbilityValue(trait.fastTalk);
-    this.investigation = this.getAbilityValue(trait.investigation);
-    this.language = this.getAbilityValue(trait.language);
-    this.library = this.getAbilityValue(trait.library);
-    this.medicine = this.getAbilityValue(trait.medicine);
-    this.perception = this.getAbilityValue(trait.perception);
-    this.technology = this.getAbilityValue(trait.technology);
-  }
-};
-var RawSpirit = class extends RawTrait {
-  constructor(trait) {
-    super(trait.trait);
-    this.craft = this.getAbilityValue(trait.craft);
-    this.empathy = this.getAbilityValue(trait.empathy);
-    this.leadership = this.getAbilityValue(trait.leadership);
-    this.occult = this.getAbilityValue(trait.occult);
-    this.persuasion = this.getAbilityValue(trait.persuasion);
-    this.stealth = this.getAbilityValue(trait.stealth);
-    this.survival = this.getAbilityValue(trait.survival);
-    this.willpower = this.getAbilityValue(trait.willpower);
-  }
-};
-var RawStats = class {
-  constructor(data) {
-    this.body = new RawBody(data.raw.body);
-    this.mind = new RawMind(data.raw.mind);
-    this.spirit = new RawSpirit(data.raw.spirit);
-  }
-};
-
 // src/models/NpcModel.ts
 var NpcModel = class extends AbstractModel {
   render() {
@@ -2520,15 +2439,6 @@ var NpcModel = class extends AbstractModel {
       this.eventList();
       this.clueList();
       this.locationList();
-    });
-  }
-  characterRecordSheet() {
-    return __async(this, null, function* () {
-      if (this.current.raw != null) {
-        const stats = new RawStats(this.current);
-        const view = RpgViewFactory.createSingle(18 /* CharacterStats */, this.dv);
-        view.render(stats);
-      }
     });
   }
   info() {
@@ -2572,6 +2482,7 @@ var NpcModel = class extends AbstractModel {
 var PcModel = class extends AbstractModel {
   render() {
     return __async(this, null, function* () {
+      this.synopsis();
       this.image(300, 300);
       this.factionList();
       this.characterList();

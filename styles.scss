@@ -11,6 +11,13 @@ $orange: #EB8B6E;
 $red: #ff2020;
 $blue: #2020ff;
 
+.rpgm-missing {
+	font-weight: 100;
+	font-style: italic;
+	color: $dark-grey;
+	font-size: 0.9em;
+}
+
 .rpgm-container {
 	//max-width: 350px;
 	//max-height: 630px;

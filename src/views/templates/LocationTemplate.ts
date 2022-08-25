@@ -12,7 +12,7 @@ export class LocationTemplate extends AbstractTemplate {
 		return 'synopsis: ""\n';
 	}
 
-	protected generateFrontmatterAddress(
+	protected generateFrontmatterAdditionalInformation(
 	): string {
 		return 'address: ""\n';
 	}

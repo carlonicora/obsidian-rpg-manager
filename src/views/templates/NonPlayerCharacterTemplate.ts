@@ -17,6 +17,11 @@ export class NonPlayerCharacterTemplate extends AbstractTemplate {
 		return 'goals: ""\n';
 	}
 
+	protected generateFrontmatterAdditionalInformation(
+	): string {
+		return 'pronoun: #t/s/h\n';
+	}
+
 	protected generateFrontmatterRelationships(
 	): string|null {
 		return ' characters: \n' +

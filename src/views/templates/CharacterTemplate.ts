@@ -22,6 +22,11 @@ export class CharacterTemplate extends AbstractTemplate {
 			' death: \n';
 	}
 
+	protected generateFrontmatterAdditionalInformation(
+	): string {
+		return 'pronoun: #t/s/h\n';
+	}
+
 	protected generateTemplate(
 	): string {
 		let response = this.getRpgManagerCodeblock('pc');

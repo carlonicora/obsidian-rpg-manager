@@ -33,7 +33,7 @@ export abstract class AbstractTemplate  implements TemplateInterface{
 		response += this.generateFrontmatterSynopsis();
 		response += this.generateFrontmatterAction();
 		response += this.generateFrontmatterGoals();
-		response += this.generateFrontmatterAddress();
+		response += this.generateFrontmatterAdditionalInformation();
 
 		const dates = this.generateFrontmatterDates();
 		if (dates !== null) {
@@ -76,7 +76,7 @@ export abstract class AbstractTemplate  implements TemplateInterface{
 		return '';
 	}
 
-	protected generateFrontmatterAddress(
+	protected generateFrontmatterAdditionalInformation(
 	): string {
 		return '';
 	}

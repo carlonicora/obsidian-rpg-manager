@@ -5,6 +5,59 @@ import {Api} from "../api";
 import {AbstractDataList, AbstractImageData} from "../abstracts/AbstractData";
 import {CampaignDataInterface} from "./CampaignData";
 
+export enum Pronoun {
+	they,
+	she,
+	he,
+}
+
+export class PronounFactory {
+	public static create(
+		pronoun: string|null,
+	): Pronoun|null {
+
+		let response: Pronoun|null = null;
+
+		if (pronoun != null) {
+			switch(pronoun.toLowerCase()) {
+				case 't':
+				case 'they':
+					response = Pronoun.they;
+					break;
+				case 's':
+				case 'she':
+					response = Pronoun.she;
+					break;
+				case 'h':
+				case 'he':
+					response = Pronoun.he;
+					break;
+				default:
+					response = null;
+					break;
+			}
+		}
+
+		return response;
+	}
+
+	public static read(
+		pronoun: Pronoun
+	): string {
+		switch (pronoun) {
+			case Pronoun.they:
+				return 'They/Them';
+				break;
+			case Pronoun.she:
+				return 'She/Her';
+				break;
+			case Pronoun.he:
+				return 'He/Him';
+				break;
+		}
+	}
+}
+
 export interface CharacterListInterface extends GenericDataListInterface{
 	elements: CharacterDataInterface[];
 }
@@ -14,6 +67,7 @@ export interface CharacterDataInterface extends GenericDataInterface, GenericIma
 	isDead: boolean;
 	synopsis: string;
 	goals: string|null;
+	pronoun: Pronoun|null;
 }
 
 export class CharacterList extends AbstractDataList implements CharacterListInterface {
@@ -33,6 +87,7 @@ export class CharacterData extends AbstractImageData implements CharacterDataInt
 	public synopsis: string;
 	public isDead: boolean;
 	public goals: string|null;
+	public pronoun: Pronoun|null;
 
 	public static frontmatter = {
 		'pc': {
@@ -74,6 +129,7 @@ export class CharacterData extends AbstractImageData implements CharacterDataInt
 		this.age = this.api.calculateAge(data, campaign.currentDate);
 		this.isDead = data.dates.death != undefined;
 		this.goals = data.goals != undefined ? data.goals : null;
+		this.pronoun = PronounFactory.create(data.pronoun);
 
 		this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
 	}

@@ -1,11 +1,13 @@
 import {GenericSynopsisDataInterface} from "../interfaces/DataInterfaces";
 import {Api} from "../api";
 import {AbstractData} from "../abstracts/AbstractData";
+import {Pronoun, PronounFactory} from "./CharacterData";
 
 export class SynopsisData extends AbstractData implements GenericSynopsisDataInterface {
 	public synopsis: string;
 	public death: string;
 	public isCharacter: boolean;
+	public pronoun: Pronoun|null;
 
 	constructor(
 		api: Api,
@@ -19,8 +21,9 @@ export class SynopsisData extends AbstractData implements GenericSynopsisDataInt
 
 		this.isCharacter = false;
 		data.tags.forEach((tag: string) => {
-			if (tag.startsWith(this.api.settings.npcTag)){
+			if (tag.startsWith(this.api.settings.npcTag) || tag.startsWith(this.api.settings.pcTag)){
 				this.isCharacter = true;
+				this.pronoun = PronounFactory.create(data.pronoun);
 			}
 		});
 	}

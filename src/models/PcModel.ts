@@ -4,6 +4,7 @@ import {DataType} from "../io/IoData";
 
 export class PcModel extends AbstractModel {
 	public async render() {
+		this.synopsis();
 		this.image(300,300);
 		this.factionList();
 		this.characterList();

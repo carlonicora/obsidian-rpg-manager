@@ -1,5 +1,6 @@
 import {GenericSynopsisDataInterface} from "../interfaces/DataInterfaces";
 import {AbstractSingleView} from "../abstracts/AbstractSingleView";
+import {CharacterData, CharacterDataInterface, PronounFactory} from "../data";
 
 export class SynopsisView extends AbstractSingleView {
 	async render(
@@ -18,13 +19,14 @@ export class SynopsisView extends AbstractSingleView {
 		if (data.synopsis !== '') {
 			if (data.isCharacter) {
 				response = data.link +
+					(data.pronoun != null ? ' (' + PronounFactory.read(data.pronoun) + ')' : '') +
 					(data.death !== '' ? " was " : " is ") +
 					data.synopsis;
 			} else {
 				response = data.synopsis;
 			}
 		} else {
-			response  = "==Synopsis missing==";
+			response  = '<span class="rpgm-missing">Synopsis missing</span>';
 		}
 
 		this.dv.span(response);

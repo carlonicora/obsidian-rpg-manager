@@ -14,7 +14,7 @@ export class SceneActionView  extends AbstractSingleView {
 		goalTitle.innerText = 'Scene Goal';
 
 		MarkdownRenderer.renderMarkdown(
-			(data.synopsis !== '' ? data.synopsis : '==Missing Scene Synopsis (Goal)=='),
+			(data.synopsis !== '' ? data.synopsis : '<span class="rpgm-missing">Missing Scene Synopsis (Goal)</span>'),
 			goalDiv,
 			this.dv.currentFilePath,
 			null as unknown as Component,
@@ -28,7 +28,7 @@ export class SceneActionView  extends AbstractSingleView {
 		actionTitle.innerText = 'Player Character\'s Action';
 
 		MarkdownRenderer.renderMarkdown(
-			(data.action !== '' ? data.action : '==Missing Scene Action=='),
+			(data.action !== '' ? data.action : '<span class="rpgm-missing">Missing Scene Action</span>'),
 			actionDiv,
 			this.dv.currentFilePath,
 			null as unknown as Component,
