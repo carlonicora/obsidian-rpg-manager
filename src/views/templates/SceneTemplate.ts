@@ -1,5 +1,4 @@
 import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
-import {AbstractTemplateModal} from "../../abstracts/AbstractTemplateModal";
 
 export class SceneTemplate extends AbstractTemplate {
 

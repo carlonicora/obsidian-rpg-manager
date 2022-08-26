@@ -1,6 +1,6 @@
 import {GenericSynopsisDataInterface} from "../interfaces/DataInterfaces";
 import {AbstractSingleView} from "../abstracts/AbstractSingleView";
-import {CharacterData, CharacterDataInterface, PronounFactory} from "../data";
+import {PronounFactory} from "../data";
 
 export class SynopsisView extends AbstractSingleView {
 	async render(
