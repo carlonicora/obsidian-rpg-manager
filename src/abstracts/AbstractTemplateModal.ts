@@ -22,6 +22,7 @@ export abstract class AbstractTemplateModal extends Modal {
 	public button: HTMLButtonElement;
 	public title: HTMLInputElement;
 	public titleError: HTMLParagraphElement;
+	public createFrontMatterOnly: HTMLInputElement;
 
 	public campaign: HTMLSelectElement;
 	public campaignError: HTMLParagraphElement;
@@ -75,6 +76,13 @@ export abstract class AbstractTemplateModal extends Modal {
 
 			this.content(contentEl);
 
+			const cfmo = contentEl.createDiv({cls: 'createFrontMatterOnly'});
+			this.createFrontMatterOnly = cfmo.createEl('input', {type: 'checkbox'});
+			this.createFrontMatterOnly.id = 'createFrontMatterOnly';
+
+			const labelFrontMatterOnly = cfmo.createEl('label', {text: 'Create Frontmatter only'});
+			labelFrontMatterOnly.htmlFor = 'createFrontMatterOnly';
+
 			this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
 
 			this.button.addEventListener('click', (e: Event) => {
@@ -123,6 +131,7 @@ export abstract class AbstractTemplateModal extends Modal {
 			this.api.fileFactory.create(
 				this.type,
 				this.create,
+				this.createFrontMatterOnly.checked,
 				this.title.value,
 				campaignId,
 				adventureId,

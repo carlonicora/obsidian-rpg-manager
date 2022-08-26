@@ -1,5 +1,6 @@
 import {DataType} from "../io/IoData";
 import {Api} from "../api";
+import * as Modals from '../views/modals';
 import * as Templates from '../views/templates';
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {MarkdownView} from "obsidian";
@@ -22,12 +23,13 @@ export class FileFactory {
 		}
 
 		//@ts-ignore
-		new Templates[DataType[type] + 'Modal'](this.api, type, create, name).open();
+		new Modals[DataType[type] + 'Modal'](this.api, type, create, name).open();
 	}
 
 	async create(
 		type: DataType,
 		create: boolean,
+		createFrontMatterOnly: boolean,
 		name: string,
 		campaignId: number,
 		adventureId: number|null = null,
@@ -37,6 +39,7 @@ export class FileFactory {
 		//@ts-ignore
 		const template: TemplateInterface = new Templates[DataType[type] + 'Template'](
 			this.api.settings,
+			createFrontMatterOnly,
 			name,
 			campaignId,
 			adventureId,

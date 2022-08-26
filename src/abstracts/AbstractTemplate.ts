@@ -4,6 +4,7 @@ import {RpgManagerSettings} from "../Settings";
 export abstract class AbstractTemplate  implements TemplateInterface{
 	constructor(
 		protected settings: RpgManagerSettings,
+		protected createFrontMatterOnly: boolean,
 		protected name: string,
 		protected campaignId: number,
 		protected adventureId: number|null,
@@ -19,7 +20,10 @@ export abstract class AbstractTemplate  implements TemplateInterface{
 		let response = '';
 
 		response += this.generateFrontmatter();
-		response += this.generateTemplate();
+
+		if (this.createFrontMatterOnly !== true) {
+			response += this.generateTemplate();
+		}
 
 		return response;
 	}

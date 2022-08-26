@@ -35,11 +35,3 @@ export class CharacterTemplate extends AbstractTemplate {
 		return response;
 	}
 }
-
-export class CharacterModal extends AbstractTemplateModal {
-	protected content(
-		contentEl: HTMLElement,
-	): void {
-		this.campaignBlock(contentEl);
-	}
-}

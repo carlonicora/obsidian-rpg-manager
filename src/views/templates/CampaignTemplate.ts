@@ -22,10 +22,3 @@ export class CampaignTemplate extends AbstractTemplate{
 		return response;
 	}
 }
-
-export class CampaignModal extends AbstractTemplateModal {
-	protected content(
-		contentEl: HTMLElement,
-	): void {
-	}
-}

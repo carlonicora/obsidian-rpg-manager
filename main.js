@@ -760,117 +760,20 @@ var IoData = class {
   }
 };
 
-// src/views/templates/index.ts
-var templates_exports = {};
-__export(templates_exports, {
+// src/views/modals/index.ts
+var modals_exports = {};
+__export(modals_exports, {
   AdventureModal: () => AdventureModal,
-  AdventureTemplate: () => AdventureTemplate,
   CampaignModal: () => CampaignModal,
-  CampaignTemplate: () => CampaignTemplate,
   CharacterModal: () => CharacterModal,
-  CharacterTemplate: () => CharacterTemplate,
   ClueModal: () => ClueModal,
-  ClueTemplate: () => ClueTemplate,
   EventModal: () => EventModal,
-  EventTemplate: () => EventTemplate,
   FactionModal: () => FactionModal,
-  FactionTemplate: () => FactionTemplate,
   LocationModal: () => LocationModal,
-  LocationTemplate: () => LocationTemplate,
   NonPlayerCharacterModal: () => NonPlayerCharacterModal,
-  NonPlayerCharacterTemplate: () => NonPlayerCharacterTemplate,
   SceneModal: () => SceneModal,
-  SceneTemplate: () => SceneTemplate,
-  SessionModal: () => SessionModal,
-  SessionTemplate: () => SessionTemplate
+  SessionModal: () => SessionModal
 });
-
-// src/abstracts/AbstractTemplate.ts
-var AbstractTemplate = class {
-  constructor(settings, name, campaignId, adventureId, sessionId, sceneId) {
-    this.settings = settings;
-    this.name = name;
-    this.campaignId = campaignId;
-    this.adventureId = adventureId;
-    this.sessionId = sessionId;
-    this.sceneId = sceneId;
-  }
-  generateData() {
-    let response = "";
-    response += this.generateFrontmatter();
-    response += this.generateTemplate();
-    return response;
-  }
-  generateFrontmatter() {
-    let response = "---\n";
-    response += "alias: []\n";
-    response += this.generateFrontmatterTags();
-    response += this.generateFrontmatterSynopsis();
-    response += this.generateFrontmatterAction();
-    response += this.generateFrontmatterGoals();
-    response += this.generateFrontmatterAdditionalInformation();
-    const dates = this.generateFrontmatterDates();
-    if (dates !== null) {
-      response += "dates:\n" + dates;
-    }
-    const times = this.generateFrontmatterTimes();
-    if (times !== null) {
-      response += "time:\n" + times;
-    }
-    const relationships = this.generateFrontmatterRelationships();
-    if (relationships !== null) {
-      response += "relationships: \n" + relationships;
-    }
-    response += "completed: false\n";
-    response += "---\n";
-    return response;
-  }
-  generateFrontmatterRelationships() {
-    return null;
-  }
-  generateFrontmatterDates() {
-    return null;
-  }
-  generateFrontmatterTimes() {
-    return null;
-  }
-  generateFrontmatterSynopsis() {
-    return "";
-  }
-  generateFrontmatterAdditionalInformation() {
-    return "";
-  }
-  generateFrontmatterAction() {
-    return "";
-  }
-  generateFrontmatterGoals() {
-    return "";
-  }
-  getHeader(title, level = 2) {
-    return "#".repeat(level) + " " + title + "\n";
-  }
-  getRpgManagerCodeblock(funct) {
-    return "```RpgManager\n" + funct + "\n```\n";
-  }
-  getAbtPlot() {
-    return ">\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n";
-  }
-  getAdditionalInformation() {
-    return this.getHeader("Additional Information") + "\n";
-  }
-  getStoryCirclePlot() {
-    return ">\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n";
-  }
-  getNotes() {
-    return this.getHeader("Notes") + "- \n\n";
-  }
-  getStory() {
-    return this.getHeader("Story") + "\n\n";
-  }
-  getPlayerCharacterDetails() {
-    return '## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
-  }
-};
 
 // src/abstracts/AbstractTemplateModal.ts
 var import_obsidian = require("obsidian");
@@ -912,6 +815,11 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
       }
       this.titleError = contentEl.createEl("p", { cls: "error" });
       this.content(contentEl);
+      const cfmo = contentEl.createDiv({ cls: "createFrontMatterOnly" });
+      this.createFrontMatterOnly = cfmo.createEl("input", { type: "checkbox" });
+      this.createFrontMatterOnly.id = "createFrontMatterOnly";
+      const labelFrontMatterOnly = cfmo.createEl("label", { text: "Create Frontmatter only" });
+      labelFrontMatterOnly.htmlFor = "createFrontMatterOnly";
       this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
       this.button.addEventListener("click", (e) => {
         this.confirmed = true;
@@ -942,7 +850,7 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
           sessionId = +this.session.value;
         }
       }
-      this.api.fileFactory.create(this.type, this.create, this.title.value, campaignId, adventureId, sessionId, sceneId);
+      this.api.fileFactory.create(this.type, this.create, this.createFrontMatterOnly.checked, this.title.value, campaignId, adventureId, sessionId, sceneId);
       this.close();
     }
   }
@@ -1146,6 +1054,189 @@ var AbstractTemplateModal = class extends import_obsidian.Modal {
   }
 };
 
+// src/views/modals/FactionModal.ts
+var FactionModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+  }
+};
+
+// src/views/modals/LocationModal.ts
+var LocationModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+  }
+};
+
+// src/views/modals/ClueModal.ts
+var ClueModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+  }
+};
+
+// src/views/modals/EventModal.ts
+var EventModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+  }
+};
+
+// src/views/modals/NonPlayerCharacterModal.ts
+var NonPlayerCharacterModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+  }
+};
+
+// src/views/modals/CharacterModal.ts
+var CharacterModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+  }
+};
+
+// src/views/modals/SceneModal.ts
+var SceneModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+    this.initialiseAdventures();
+    this.adventureBlock(contentEl);
+    this.initialiseSessions();
+    this.sessionBlock(contentEl);
+    this.initialiseScenes();
+  }
+};
+
+// src/views/modals/SessionModal.ts
+var SessionModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+    this.initialiseAdventures();
+    this.adventureBlock(contentEl);
+    this.initialiseSessions();
+  }
+};
+
+// src/views/modals/AdventureModal.ts
+var AdventureModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+    this.campaignBlock(contentEl);
+    this.initialiseAdventures();
+  }
+};
+
+// src/views/modals/CampaignModal.ts
+var CampaignModal = class extends AbstractTemplateModal {
+  content(contentEl) {
+  }
+};
+
+// src/views/templates/index.ts
+var templates_exports = {};
+__export(templates_exports, {
+  AdventureTemplate: () => AdventureTemplate,
+  CampaignTemplate: () => CampaignTemplate,
+  CharacterTemplate: () => CharacterTemplate,
+  ClueTemplate: () => ClueTemplate,
+  EventTemplate: () => EventTemplate,
+  FactionTemplate: () => FactionTemplate,
+  LocationTemplate: () => LocationTemplate,
+  NonPlayerCharacterTemplate: () => NonPlayerCharacterTemplate,
+  SceneTemplate: () => SceneTemplate,
+  SessionTemplate: () => SessionTemplate
+});
+
+// src/abstracts/AbstractTemplate.ts
+var AbstractTemplate = class {
+  constructor(settings, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
+    this.settings = settings;
+    this.createFrontMatterOnly = createFrontMatterOnly;
+    this.name = name;
+    this.campaignId = campaignId;
+    this.adventureId = adventureId;
+    this.sessionId = sessionId;
+    this.sceneId = sceneId;
+  }
+  generateData() {
+    let response = "";
+    response += this.generateFrontmatter();
+    if (this.createFrontMatterOnly !== true) {
+      response += this.generateTemplate();
+    }
+    return response;
+  }
+  generateFrontmatter() {
+    let response = "---\n";
+    response += "alias: []\n";
+    response += this.generateFrontmatterTags();
+    response += this.generateFrontmatterSynopsis();
+    response += this.generateFrontmatterAction();
+    response += this.generateFrontmatterGoals();
+    response += this.generateFrontmatterAdditionalInformation();
+    const dates = this.generateFrontmatterDates();
+    if (dates !== null) {
+      response += "dates:\n" + dates;
+    }
+    const times = this.generateFrontmatterTimes();
+    if (times !== null) {
+      response += "time:\n" + times;
+    }
+    const relationships = this.generateFrontmatterRelationships();
+    if (relationships !== null) {
+      response += "relationships: \n" + relationships;
+    }
+    response += "completed: false\n";
+    response += "---\n";
+    return response;
+  }
+  generateFrontmatterRelationships() {
+    return null;
+  }
+  generateFrontmatterDates() {
+    return null;
+  }
+  generateFrontmatterTimes() {
+    return null;
+  }
+  generateFrontmatterSynopsis() {
+    return "";
+  }
+  generateFrontmatterAdditionalInformation() {
+    return "";
+  }
+  generateFrontmatterAction() {
+    return "";
+  }
+  generateFrontmatterGoals() {
+    return "";
+  }
+  getHeader(title, level = 2) {
+    return "#".repeat(level) + " " + title + "\n";
+  }
+  getRpgManagerCodeblock(funct) {
+    return "```RpgManager\n" + funct + "\n```\n";
+  }
+  getAbtPlot() {
+    return ">\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n";
+  }
+  getAdditionalInformation() {
+    return this.getHeader("Additional Information") + "\n";
+  }
+  getStoryCirclePlot() {
+    return ">\n>**YOU**: \n>**NEED**: \n>**GO**: \n>**SEARCH**: \n>**FIND**: \n>**TAKE**: \n>**RETURN**: \n>**CHANGE**: \n>\n\n";
+  }
+  getNotes() {
+    return this.getHeader("Notes") + "- \n\n";
+  }
+  getStory() {
+    return this.getHeader("Story") + "\n\n";
+  }
+  getPlayerCharacterDetails() {
+    return '## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+  }
+};
+
 // src/views/templates/FactionTemplate.ts
 var FactionTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
@@ -1161,11 +1252,6 @@ var FactionTemplate = class extends AbstractTemplate {
     let response = this.getRpgManagerCodeblock("faction");
     response += this.getAdditionalInformation();
     return response;
-  }
-};
-var FactionModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
   }
 };
 
@@ -1189,11 +1275,6 @@ var LocationTemplate = class extends AbstractTemplate {
     return " locations: \n";
   }
 };
-var LocationModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-  }
-};
 
 // src/views/templates/ClueTemplate.ts
 var ClueTemplate = class extends AbstractTemplate {
@@ -1215,11 +1296,6 @@ var ClueTemplate = class extends AbstractTemplate {
     return response;
   }
 };
-var ClueModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-  }
-};
 
 // src/views/templates/EventTemplate.ts
 var EventTemplate = class extends AbstractTemplate {
@@ -1239,11 +1315,6 @@ var EventTemplate = class extends AbstractTemplate {
     let response = this.getRpgManagerCodeblock("event");
     response += this.getAdditionalInformation();
     return response;
-  }
-};
-var EventModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
   }
 };
 
@@ -1274,11 +1345,6 @@ var NonPlayerCharacterTemplate = class extends AbstractTemplate {
     return response;
   }
 };
-var NonPlayerCharacterModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-  }
-};
 
 // src/views/templates/CharacterTemplate.ts
 var CharacterTemplate = class extends AbstractTemplate {
@@ -1298,11 +1364,6 @@ var CharacterTemplate = class extends AbstractTemplate {
     let response = this.getRpgManagerCodeblock("pc");
     response += this.getPlayerCharacterDetails();
     return response;
-  }
-};
-var CharacterModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
   }
 };
 
@@ -1332,16 +1393,6 @@ var SceneTemplate = class extends AbstractTemplate {
     return response;
   }
 };
-var SceneModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-    this.initialiseAdventures();
-    this.adventureBlock(contentEl);
-    this.initialiseSessions();
-    this.sessionBlock(contentEl);
-    this.initialiseScenes();
-  }
-};
 
 // src/views/templates/SessionTemplate.ts
 var SessionTemplate = class extends AbstractTemplate {
@@ -1367,14 +1418,6 @@ var SessionTemplate = class extends AbstractTemplate {
     return response;
   }
 };
-var SessionModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-    this.initialiseAdventures();
-    this.adventureBlock(contentEl);
-    this.initialiseSessions();
-  }
-};
 
 // src/views/templates/AdventureTemplate.ts
 var AdventureTemplate = class extends AbstractTemplate {
@@ -1390,12 +1433,6 @@ var AdventureTemplate = class extends AbstractTemplate {
     response += this.getNotes();
     response += this.getRpgManagerCodeblock("adventure");
     return response;
-  }
-};
-var AdventureModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-    this.initialiseAdventures();
   }
 };
 
@@ -1415,10 +1452,6 @@ var CampaignTemplate = class extends AbstractTemplate {
     return response;
   }
 };
-var CampaignModal = class extends AbstractTemplateModal {
-  content(contentEl) {
-  }
-};
 
 // src/factories/FileFactory.ts
 var import_obsidian2 = require("obsidian");
@@ -1433,12 +1466,12 @@ var FileFactory = class {
       if (create === false) {
         name = (_a = this.api.app.workspace.getActiveFile()) == null ? void 0 : _a.basename;
       }
-      new templates_exports[DataType[type] + "Modal"](this.api, type, create, name).open();
+      new modals_exports[DataType[type] + "Modal"](this.api, type, create, name).open();
     });
   }
-  create(type, create, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
+  create(type, create, createFrontMatterOnly, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
     return __async(this, null, function* () {
-      const template = new templates_exports[DataType[type] + "Template"](this.api.settings, name, campaignId, adventureId, sessionId, sceneId);
+      const template = new templates_exports[DataType[type] + "Template"](this.api.settings, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
       if (create) {
         const newFile = yield this.api.app.vault.create(name + ".md", data);
@@ -1828,7 +1861,7 @@ var AbstractListView = class {
   }
 };
 
-// src/views/Lists/FactionListView.ts
+// src/views/lists/FactionListView.ts
 var FactionListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -1858,7 +1891,7 @@ var CharacterInfoView = class extends AbstractSingleView {
   }
 };
 
-// src/views/Lists/ClueListView.ts
+// src/views/lists/ClueListView.ts
 var ClueListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -1874,7 +1907,7 @@ var ClueListView = class extends AbstractListView {
   }
 };
 
-// src/views/Lists/EventListView.ts
+// src/views/lists/EventListView.ts
 var EventListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -1937,7 +1970,7 @@ var ClueStatusView = class extends AbstractSingleView {
   }
 };
 
-// src/views/Lists/SessionListView.ts
+// src/views/lists/SessionListView.ts
 var SessionListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -1954,7 +1987,7 @@ var SessionListView = class extends AbstractListView {
   }
 };
 
-// src/views/Lists/AdventureListView.ts
+// src/views/lists/AdventureListView.ts
 var AdventureListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -2008,7 +2041,7 @@ var TimelineView = class extends AbstractListView {
   }
 };
 
-// src/views/Lists/CharacterListView.ts
+// src/views/lists/CharacterListView.ts
 var CharacterListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {
@@ -2024,7 +2057,7 @@ var CharacterListView = class extends AbstractListView {
   }
 };
 
-// src/views/Lists/LocationListView.ts
+// src/views/lists/LocationListView.ts
 var LocationListView = class extends AbstractListView {
   render(data, title = null) {
     return __async(this, null, function* () {
@@ -2039,7 +2072,7 @@ var LocationListView = class extends AbstractListView {
   }
 };
 
-// src/views/Lists/SceneListView.ts
+// src/views/lists/SceneListView.ts
 var SceneListView = class extends AbstractListView {
   render(data) {
     return __async(this, null, function* () {

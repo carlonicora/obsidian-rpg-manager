@@ -196,6 +196,15 @@
   margin-bottom: 10px;
   box-shadow: 0 0 0 0 transparent;
 }
+.rpgm-modal .createFrontMatterOnly {
+  margin-top: 10px;
+}
+.rpgm-modal .createFrontMatterOnly input[type=checkbox], .rpgm-modal .createFrontMatterOnly label {
+  float: left;
+  margin-top: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .rpgm-modal p {
   font-weight: 500;
   color: #808080;
@@ -240,3 +249,5 @@
 .rpgm-button :hover {
   color: #2020ff;
 }
+
+/*# sourceMappingURL=styles.css.map */

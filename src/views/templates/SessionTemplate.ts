@@ -33,14 +33,3 @@ export class SessionTemplate extends AbstractTemplate {
 		return response;
 	}
 }
-
-export class SessionModal extends AbstractTemplateModal {
-	protected content(
-		contentEl: HTMLElement,
-	): void {
-		this.campaignBlock(contentEl);
-		this.initialiseAdventures();
-		this.adventureBlock(contentEl);
-		this.initialiseSessions();
-	}
-}

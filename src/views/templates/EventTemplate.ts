@@ -33,11 +33,3 @@ export class EventTemplate extends AbstractTemplate {
 	}
 }
 
-export class EventModal extends AbstractTemplateModal {
-	protected content(
-		contentEl: HTMLElement,
-	): void {
-		this.campaignBlock(contentEl);
-	}
-}
-

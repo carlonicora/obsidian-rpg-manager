@@ -22,12 +22,3 @@ export class AdventureTemplate extends AbstractTemplate {
 		return response;
 	}
 }
-
-export class AdventureModal extends AbstractTemplateModal {
-	protected content(
-		contentEl: HTMLElement,
-	): void {
-		this.campaignBlock(contentEl);
-		this.initialiseAdventures();
-	}
-}

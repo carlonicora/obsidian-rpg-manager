@@ -25,11 +25,3 @@ export class FactionTemplate extends AbstractTemplate {
 		return response;
 	}
 }
-
-export class FactionModal extends AbstractTemplateModal {
-	protected content(
-		contentEl: HTMLElement,
-	): void {
-		this.campaignBlock(contentEl);
-	}
-}
