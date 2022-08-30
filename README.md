@@ -93,7 +93,7 @@ the Frontmatter metadata in the page. The available functions are:
 | `adventure`         | Lists the adventure sessions                                                                                                                   |
 | `sessionNavigation` | Displays the session navigator                                                                                                                 |
 | `session`           | Lists the session scenes                                                                                                                       |
-| `sceneNavigation`   | Displays the session navigator                                                                                                                 |
+| `sessionNavigation` | Displays the session navigator                                                                                                                 |
 | `scene`             | Displays the scene navigator and lists the characters, locations and clues for the scene                                                       |
 | `sceneNavigation`   | Displays the scene navigator and lists the scene goal and player characters expected action                                                    |
 | `npc`               | Displays the non player character information and lists the list of factions, characters, events, clues and locations related to the character |
