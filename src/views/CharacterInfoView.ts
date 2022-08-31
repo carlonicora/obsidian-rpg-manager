@@ -7,10 +7,13 @@ export class CharacterInfoView extends AbstractSingleView {
 	): Promise<void> {
 		const content = [];
 		content.push(["Status", (data.isDead ? "Dead" : "Alive")]);
-		content.push(["Pronoun", (data.pronoun != null ? PronounFactory.read(data.pronoun) : '<span class="rpgm-missing">pronoun missing in frontmatter</span>')]);
+
+		if (data.pronoun != null) {
+			content.push(["Pronoun", PronounFactory.read(data.pronoun)]);
+		}
 
 		if (data.age !== "") {
-			content.push([(data.isDead ? "Age at Death" : "Age"), (data.age !== "" ? data.age : '<span class="rpgm-missing">Dob or campaign date missing</span>')]);
+			content.push([(data.isDead ? "Age at Death" : "Age"), data.age]);
 		}
 
 		content.push(["Goals", (data.goals ? data.goals : '<span class="rpgm-missing">Goals missing</span>')]);
