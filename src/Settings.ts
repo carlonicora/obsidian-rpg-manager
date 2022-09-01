@@ -43,7 +43,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 
 		containerEl.empty();
-		containerEl.createEl('h2', {text: 'Settings for Role Playing Game Manager'});
+		containerEl.createEl('h2', {text: 'CampaignSetting for Role Playing Game Manager'});
 
 		containerEl.createEl('h3', {text: 'Outlines'});
 		containerEl.createEl('span', {text: createFragment(frag => {

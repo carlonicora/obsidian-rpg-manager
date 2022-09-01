@@ -1,6 +1,6 @@
-import {GenericImageDataInterface} from "../interfaces/DataInterfaces";
-import {Api} from "../api";
+import {Api} from "../Api";
 import {AbstractImageData} from "../abstracts/AbstractData";
+import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
 
 export class ImageData extends AbstractImageData implements GenericImageDataInterface {
 	constructor(

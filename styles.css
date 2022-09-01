@@ -249,3 +249,32 @@
 .rpgm-button :hover {
   color: #2020ff;
 }
+
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block > div .rpgm-table {
+  margin-left: 0px !important;
+  margin-right: 0px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.rpgm-table {
+  width: 100%;
+  max-width: 100%;
+}
+.rpgm-table .inline {
+  white-space: nowrap;
+}
+.rpgm-table tr > th {
+  white-space: nowrap;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.rpgm-table tr > td {
+  border: none;
+}
+.rpgm-table tr > td .inline {
+  white-space: nowrap;
+}
+
+/*# sourceMappingURL=styles.css.map */

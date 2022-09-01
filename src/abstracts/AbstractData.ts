@@ -1,8 +1,9 @@
-import {Api} from "../api";
-import {GenericDataInterface, GenericImageDataInterface} from "../interfaces/DataInterfaces";
-import {CampaignDataInterface} from "../data/CampaignData";
+import {Api} from "../Api";
+import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
+import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
+import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
 
-export abstract class AbstractData implements GenericDataInterface{
+export abstract class AbstractData implements GenericDataInterface {
 	public link: string;
 	public name: string;
 	public path: string;
@@ -19,7 +20,7 @@ export abstract class AbstractData implements GenericDataInterface{
 	}
 }
 
-export abstract class AbstractImageData extends AbstractData implements GenericImageDataInterface{
+export abstract class AbstractImageData extends AbstractData implements GenericImageDataInterface {
 	public imageSrc: string|null;
 	public image: string;
 	public imageSrcElement: HTMLImageElement|null;

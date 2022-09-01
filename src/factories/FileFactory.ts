@@ -1,9 +1,9 @@
-import {DataType} from "../io/IoData";
-import {Api} from "../api";
-import * as Modals from '../views/modals';
-import * as Templates from '../views/templates';
-import {TemplateInterface} from "../interfaces/TemplateInterface";
+import {Api} from "../Api";
+import * as Modals from '../settings/Agnostic/modals';
+import * as Templates from '../settings/Agnostic/templates';
+import {TemplateInterface} from "../interfaces/data/TemplateInterface";
 import {MarkdownView} from "obsidian";
+import {DataType} from "../enums/DataType";
 
 export class FileFactory {
 	constructor(

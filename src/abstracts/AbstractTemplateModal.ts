@@ -1,6 +1,6 @@
 import {CachedMetadata, Modal, TFile} from "obsidian";
-import {Api} from "../api";
-import {DataType} from "../io/IoData";
+import {Api} from "../Api";
+import {DataType} from "../enums/DataType";
 
 export interface RpgmElementInterface {
 	type: DataType;
