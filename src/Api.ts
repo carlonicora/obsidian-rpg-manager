@@ -5,19 +5,6 @@ import {FileFactory} from "./factories/FileFactory";
 import {RpgManagerSettings} from "./Settings";
 import {DataType} from "./enums/DataType";
 
-declare module 'obsidian' {
-	interface Vault {
-		getAvailablePathForAttachments: (
-			fileName: string,
-			extension?: string,
-			currentFile?: TFile
-		) => Promise<string>;
-		config: {
-			attachmentFolderPath: string;
-		};
-	}
-}
-
 export class Api extends Component {
 	private root: string;
 	private attachmentRoot: string;
