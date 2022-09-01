@@ -23,7 +23,7 @@ export interface SceneDataInterface extends GenericDataInterface, GenericImageDa
 	adventure: AdventureDataInterface|null;
 	previousScene: SceneDataInterface|null;
 	nextScene: SceneDataInterface|null;
-	campaign: CampaignDataInterface|null;
+	campaign: CampaignDataInterface;
 }
 
 export class SceneList extends AbstractDataList implements SceneListInterface {

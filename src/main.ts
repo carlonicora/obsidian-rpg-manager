@@ -15,10 +15,16 @@ export default class RpgManager extends Plugin {
 	settings: RpgManagerSettings;
 
 	private api: Api;
+	private hasDataview = true;
 
 	async onload() {
 		await this.loadSettings();
 		console.log('Loading RpgManager ' + this.manifest.version);
+
+		if (!this.app.plugins.enabledPlugins.has("dataview")) {
+			console.log('RPG Manager requires Dataview installed');
+			this.hasDataview = false;
+		}
 
 		this.addSettingTab(new RpgManagerSettingTab(this.app, this));
 
@@ -32,7 +38,7 @@ export default class RpgManager extends Plugin {
 			this.api,
 		)
 
-		this.refreshViews = debounce(this.refreshViews, 2500, true) as unknown as () => Promise<void>
+		this.refreshViews = debounce(this.refreshViews, 500, true) as unknown as () => Promise<void>
 
 		this.registerEvent(this.app.metadataCache.on('resolved', (function(){
 			this.refreshViews();
@@ -81,7 +87,10 @@ export default class RpgManager extends Plugin {
 		component: Component | MarkdownPostProcessorContext,
 		sourcePath: string
 	) {
-		//@ts-ignore
+		if (!this.hasDataview){
+			el.createDiv({text: 'RPG Manager requires the Dataview plugin to be installed'}).style.color = '#990000';
+			return;
+		}
 		this.app.plugins.plugins.dataview.api.index.touch();
 
 		component.addChild(RpgModelFactory.create(el, source, component, sourcePath));

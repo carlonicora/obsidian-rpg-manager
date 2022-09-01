@@ -18,7 +18,7 @@ export interface SessionDataInterface extends GenericDataInterface {
 	previousSession: SessionDataInterface|null,
 	nextSession: SessionDataInterface|null;
 	adventure: AdventureDataInterface|null;
-	campaign: CampaignDataInterface|null;
+	campaign: CampaignDataInterface;
 }
 
 export class SessionList extends AbstractDataList implements SessionListInterface {

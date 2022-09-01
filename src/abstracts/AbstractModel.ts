@@ -27,8 +27,7 @@ export abstract class AbstractModel extends MarkdownRenderChild {
 	private async renderComponent(wait = 500){
 		setTimeout(() => {
 			let continueRendering = true;
-			//@ts-ignore
-			this.dv = this.api.app.plugins.plugins.dataview.localApi(this.sourcePath, this.component, this.container);
+			this.dv = (<any>this.api.app.plugins.plugins.dataview).localApi(this.sourcePath, this.component, this.container);
 
 			const current = this.dv.current();
 			if (current != null){

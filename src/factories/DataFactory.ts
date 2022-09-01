@@ -7,7 +7,17 @@ import {CharacterData} from "../data/CharacterData";
 import {LocationData} from "../data/LocationData";
 import {ClueData, EventData, FactionData} from "../data";
 
+
+
 export class DataFactory {
+	static DataFactoryFunctions: { [name: string]: Function } = {
+		Character: DataFactory.createCharacter,
+		Location: DataFactory.createLocation,
+		Faction: DataFactory.createFaction,
+		Event: DataFactory.createEvent,
+		Clue: DataFactory.createClue,
+	};
+
 	public static create(
 		type: DataType,
 		api: Api,
@@ -17,8 +27,7 @@ export class DataFactory {
 		additionalInformation: string|null,
 	): GenericDataInterface
 	{
-		//@ts-ignore
-		return this['create' + DataType[type]](api, campaign, current, record, additionalInformation);
+		return this.DataFactoryFunctions[DataType[type]](api, campaign, current, record, additionalInformation);
 	}
 
 	private static createCharacter(

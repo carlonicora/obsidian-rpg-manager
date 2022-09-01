@@ -1,7 +1,19 @@
 import "obsidian";
 import {DataviewApi} from "obsidian-dataview/lib/api/plugin-api";
+import {TFile} from "obsidian";
 
 declare module "obsidian" {
+	interface Vault {
+		getAvailablePathForAttachments: (
+			fileName: string,
+			extension?: string,
+			currentFile?: TFile
+		) => Promise<string>;
+		config: {
+			attachmentFolderPath: string;
+		};
+	}
+
 	interface MetadataCache {
 		trigger(...args: Parameters<MetadataCache["on"]>): void;
 		trigger(name: string, ...data: any[]): void;
@@ -12,7 +24,7 @@ declare module "obsidian" {
 		plugins: {
 			enabledPlugins: Set<string>;
 			plugins: {
-				dataview?: {
+				dataview: {
 					api: DataviewApi;
 				};
 			};

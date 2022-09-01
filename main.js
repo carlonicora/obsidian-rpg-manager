@@ -522,9 +522,9 @@ var TimelineData = class extends AbstractImageData {
 };
 
 // src/factories/DataFactory.ts
-var DataFactory = class {
+var _DataFactory = class {
   static create(type, api, campaign, current, record, additionalInformation) {
-    return this["create" + DataType[type]](api, campaign, current, record, additionalInformation);
+    return this.DataFactoryFunctions[DataType[type]](api, campaign, current, record, additionalInformation);
   }
   static createCharacter(api, campaign, current, record, additionalInformation) {
     return new CharacterData(api, record, campaign, additionalInformation);
@@ -541,6 +541,14 @@ var DataFactory = class {
   static createFaction(api, campaign, current, record, additionalInformation) {
     return new FactionData(api, record, campaign, additionalInformation);
   }
+};
+var DataFactory = _DataFactory;
+DataFactory.DataFactoryFunctions = {
+  Character: _DataFactory.createCharacter,
+  Location: _DataFactory.createLocation,
+  Faction: _DataFactory.createFaction,
+  Event: _DataFactory.createEvent,
+  Clue: _DataFactory.createClue
 };
 
 // src/io/IoData.ts
@@ -1882,9 +1890,11 @@ var CharacterInfoView = class extends AbstractSingleView {
     return __async(this, null, function* () {
       const content = [];
       content.push(["Status", data.isDead ? "Dead" : "Alive"]);
-      content.push(["Pronoun", data.pronoun != null ? PronounFactory.read(data.pronoun) : '<span class="rpgm-missing">pronoun missing in frontmatter</span>']);
+      if (data.pronoun != null) {
+        content.push(["Pronoun", PronounFactory.read(data.pronoun)]);
+      }
       if (data.age !== "") {
-        content.push([data.isDead ? "Age at Death" : "Age", data.age !== "" ? data.age : '<span class="rpgm-missing">Dob or campaign date missing</span>']);
+        content.push([data.isDead ? "Age at Death" : "Age", data.age]);
       }
       content.push(["Goals", data.goals ? data.goals : '<span class="rpgm-missing">Goals missing</span>']);
       this.dv.table(["**" + data.name + "**", ""], content);
@@ -2853,15 +2863,23 @@ var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
 
 // src/main.ts
 var RpgManager = class extends import_obsidian8.Plugin {
+  constructor() {
+    super(...arguments);
+    this.hasDataview = true;
+  }
   onload() {
     return __async(this, null, function* () {
       yield this.loadSettings();
       console.log("Loading RpgManager " + this.manifest.version);
+      if (!this.app.plugins.enabledPlugins.has("dataview")) {
+        console.log("RPG Manager requires Dataview installed");
+        this.hasDataview = false;
+      }
       this.addSettingTab(new RpgManagerSettingTab(this.app, this));
       this.api = new Api(this.app, this.settings);
       RpgViewFactory.initialise(this.api);
       RpgModelFactory.initialise(this.api);
-      this.refreshViews = (0, import_obsidian8.debounce)(this.refreshViews, 2500, true);
+      this.refreshViews = (0, import_obsidian8.debounce)(this.refreshViews, 500, true);
       this.registerEvent(this.app.metadataCache.on("resolved", function() {
         this.refreshViews();
       }.bind(this)));
@@ -2901,6 +2919,10 @@ var RpgManager = class extends import_obsidian8.Plugin {
   }
   createRpgView(source, el, component, sourcePath) {
     return __async(this, null, function* () {
+      if (!this.hasDataview) {
+        el.createDiv({ text: "RPG Manager requires the Dataview plugin to be installed" }).style.color = "#990000";
+        return;
+      }
       this.app.plugins.plugins.dataview.api.index.touch();
       component.addChild(RpgModelFactory.create(el, source, component, sourcePath));
     });
