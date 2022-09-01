@@ -4,12 +4,12 @@ import {ResponseTable} from "../../../data/ResponseTable";
 import {SessionDataInterface} from "../../../interfaces/data/SessionDataInterface";
 import {ContentType} from "../../../enums/ContentType";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
-import {Factory} from "../../../Factory";
+import {ContentFactory} from "../../../factories/ContentFactory";
 
 export class AdventureModel extends AbstractModel {
 	public generateData(
 	): ResponseDataInterface {
-		const adventure = new AdventureData(this.api, this.current, this.campaign);
+		const adventure = new AdventureData(this.current, this.campaign);
 
 		this.sessionList(adventure.id);
 
@@ -24,19 +24,19 @@ export class AdventureModel extends AbstractModel {
 		const sessionListTable = new ResponseTable();
 		sessionListTable.addTitle('Sessions');
 		sessionListTable.addHeaders([
-			Factory.createContent('#', ContentType.String, true),
-			Factory.createContent('Session', ContentType.String),
-			Factory.createContent('Synopsis', ContentType.String),
-			Factory.createContent('Date', ContentType.String),
-			Factory.createContent('Play Date', ContentType.String),
+			ContentFactory.create('#', ContentType.String, true),
+			ContentFactory.create('Session', ContentType.String),
+			ContentFactory.create('Synopsis', ContentType.String),
+			ContentFactory.create('Date', ContentType.String),
+			ContentFactory.create('Play Date', ContentType.String),
 		]);
 		sessionList.elements.forEach((session: SessionDataInterface) => {
 			sessionListTable.addContent([
-				Factory.createContent(session.id, ContentType.Number, true),
-				Factory.createContent(session.link, ContentType.Link),
-				Factory.createContent(session.synopsis, ContentType.Markdown),
-				Factory.createContent(session.date, ContentType.String, true),
-				Factory.createContent(session.irl, ContentType.String, true),
+				ContentFactory.create(session.id, ContentType.Number, true),
+				ContentFactory.create(session.link, ContentType.Link),
+				ContentFactory.create(session.synopsis, ContentType.Markdown),
+				ContentFactory.create(session.date, ContentType.String, true),
+				ContentFactory.create(session.irl, ContentType.String, true),
 			])
 		});
 		this.data.addElement(sessionListTable);

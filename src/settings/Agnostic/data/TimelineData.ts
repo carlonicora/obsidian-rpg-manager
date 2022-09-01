@@ -1,26 +1,7 @@
 import {DateTime} from "obsidian-dataview";
-import {Api} from "../../../Api";
-import {AbstractDataList, AbstractImageData} from "../../../abstracts/AbstractData";
-import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
+import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {TimelineDataInterface} from "../../../interfaces/data/TimelineDataInterface";
-import {TimelineListInterface} from "../../../interfaces/data/TimelineListInterface";
-
-export class TimelineList extends AbstractDataList implements TimelineListInterface {
-	public elements: TimelineDataInterface[];
-
-	constructor(
-		campaign: CampaignDataInterface|null,
-	) {
-		super(campaign);
-		this.elements = [];
-	}
-
-	sort(){
-		this.elements.sort((a,b) => {
-			return a.datetime - b.datetime;
-		});
-	}
-}
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class TimelineData extends AbstractImageData implements TimelineDataInterface {
 	synopsis: string;
@@ -29,13 +10,12 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 	datetime: DateTime;
 
 	constructor(
-		api: Api,
 		data: Record<string, any>,
 		public type: string,
 	) {
-		super(api, data);
+		super(data);
 
-		this.image = this.api.getImage(data, 70);
+		this.image = RpgFunctions.getImage(data, 70);
 		this.synopsis = data.synopsis;
 
 		switch(type){
@@ -56,8 +36,8 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 				break;
 		}
 
-		this.date = this.api.formatDate(this.datetime, "short");
-		this.time = this.api.formatTime(this.datetime);
+		this.date = RpgFunctions.formatDate(this.datetime, "short");
+		this.time = RpgFunctions.formatTime(this.datetime);
 	}
 
 	getEventColour(

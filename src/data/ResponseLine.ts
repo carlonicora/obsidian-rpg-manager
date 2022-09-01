@@ -3,7 +3,7 @@ import {ResponseType} from "../enums/ResponseType";
 import {ContentType} from "../enums/ContentType";
 import {StringResponseInterface} from "../interfaces/response/StringResponseInterface";
 import {ContentInterface} from "../interfaces/content/ContentInterface";
-import {Factory} from "../Factory";
+import {ContentFactory} from "../factories/ContentFactory";
 
 export class ResponseLine extends AbstractResponse implements StringResponseInterface {
 	public content: ContentInterface;
@@ -12,7 +12,7 @@ export class ResponseLine extends AbstractResponse implements StringResponseInte
 	) {
 		super();
 		this.responseType = ResponseType.String;
-		this.content = Factory.createContent('', ContentType.String);
+		this.content = ContentFactory.create('', ContentType.String);
 	}
 
 	public addContent(

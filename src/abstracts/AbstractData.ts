@@ -1,7 +1,7 @@
-import {Api} from "../Api";
 import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
 import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
 import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
+import {RpgFunctions} from "../RpgFunctions";
 
 export abstract class AbstractData implements GenericDataInterface {
 	public link: string;
@@ -10,7 +10,6 @@ export abstract class AbstractData implements GenericDataInterface {
 	public completed: boolean;
 
 	constructor(
-		protected api: Api,
 		protected data: Record<string, any>,
 	) {
 		this.link = data.file.link;
@@ -26,14 +25,13 @@ export abstract class AbstractImageData extends AbstractData implements GenericI
 	public imageSrcElement: HTMLImageElement|null;
 
 	constructor(
-		api: Api,
 		data: Record<string, any>,
 	) {
-		super(api, data);
+		super(data);
 
-		this.imageSrc = api.getImageLink(data);
-		this.imageSrcElement = api.getImageElement(data);
-		this.image = (this.imageSrc !== null ? api.getImage(data) : '');
+		this.imageSrc = RpgFunctions.getImageLink(data);
+		this.imageSrcElement = RpgFunctions.getImageElement(data);
+		this.image = (this.imageSrc !== null ? RpgFunctions.getImage(data) : '');
 	}
 
 	getImage(
@@ -42,7 +40,7 @@ export abstract class AbstractImageData extends AbstractData implements GenericI
 	): string {
 		if (this.imageSrc === null) return "";
 
-		return this.api.getImage(this.data, width, height);
+		return RpgFunctions.getImage(this.data, width, height);
 	}
 }
 

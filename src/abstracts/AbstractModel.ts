@@ -1,25 +1,27 @@
-import {Api} from "../Api";
 import {ResponseData} from "../data/ResponseData";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
-import {IoDataInterface} from "../interfaces/IoDataInterface";
+import {IoInterface} from "../interfaces/IoInterface";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {Factory} from "../Factory";
+import {IoFactory, SingleIoKey} from "../factories/Iofactory";
+import {App} from "obsidian";
 
 export abstract class AbstractModel implements ModelInterface {
 	protected data: ResponseDataInterface;
-	protected io: IoDataInterface;
+	protected io: IoInterface;
 
 	constructor(
-		protected api: Api,
+		protected app: App,
 		protected campaign: CampaignDataInterface,
 		protected current: Record<string, any>,
 		private dv: DataviewInlineApi,
 		protected source: string,
 	) {
 		this.data = new ResponseData();
-		this.io = Factory.createIoData(this.api, this.campaign, this.current, this.dv);
+
+		const ioName:SingleIoKey<any> = this.campaign.settings + 'Io';
+		this.io = IoFactory.create(ioName, this.app, this.campaign, this.dv, this.current);
 	}
 
 	abstract generateData(

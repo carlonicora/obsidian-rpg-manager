@@ -1,6 +1,7 @@
-import {CachedMetadata, Modal, TFile} from "obsidian";
-import {Api} from "../Api";
+import {App, CachedMetadata, Modal, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
+import {RpgFunctions} from "../RpgFunctions";
+import {FileFactory} from "../factories/FileFactory";
 
 export interface RpgmElementInterface {
 	type: DataType;
@@ -44,13 +45,12 @@ export abstract class AbstractTemplateModal extends Modal {
 	protected confirmed: boolean;
 
 	constructor(
-		protected api: Api,
+		public app: App,
 		protected type: DataType,
 		private create: boolean,
 		private name: string|null,
 	) {
-		super(api.app);
-
+		super(app);
 
 		this.confirm = false;
 	}
@@ -128,7 +128,8 @@ export abstract class AbstractTemplateModal extends Modal {
 				}
 			}
 
-			this.api.fileFactory.create(
+			const fileFactory = new FileFactory(this.app);
+			fileFactory.create(
 				this.type,
 				this.create,
 				this.createFrontMatterOnly.checked,
@@ -175,8 +176,8 @@ export abstract class AbstractTemplateModal extends Modal {
 	):void {
 		this.campaigns = [];
 
-		this.api.app.vault.getFiles().forEach((file: TFile) => {
-			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
+		this.app.vault.getFiles().forEach((file: TFile) => {
+			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (
 				metadata !== null &&
 				metadata.frontmatter != null &&
@@ -186,7 +187,7 @@ export abstract class AbstractTemplateModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(this.api.settings.campaignTag)) {
+					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.campaignTag)) {
 						const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (campaignId >= this.newCampaignId){
 							this.newCampaignId = campaignId+1;
@@ -249,8 +250,8 @@ export abstract class AbstractTemplateModal extends Modal {
 		this.newAdventureId = 1;
 		this.adventures = [];
 
-		this.api.app.vault.getFiles().forEach((file: TFile) => {
-			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
+		this.app.vault.getFiles().forEach((file: TFile) => {
+			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (
 				metadata !== null &&
 				metadata.frontmatter != null &&
@@ -260,7 +261,7 @@ export abstract class AbstractTemplateModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(this.api.settings.adventureTag + '/' + this.campaign.value)) {
+					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.adventureTag + '/' + this.campaign.value)) {
 						const adventureId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (adventureId >= this.newAdventureId) {
 							this.newAdventureId = adventureId + 1;
@@ -326,8 +327,8 @@ export abstract class AbstractTemplateModal extends Modal {
 		this.newSessionId = 1;
 		this.sessions = [];
 
-		this.api.app.vault.getFiles().forEach((file: TFile) => {
-			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
+		this.app.vault.getFiles().forEach((file: TFile) => {
+			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (
 				metadata !== null &&
 				metadata.frontmatter != null &&
@@ -337,7 +338,7 @@ export abstract class AbstractTemplateModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(this.api.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
+					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
 						const sessionId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sessionId >= this.newSessionId) {
 							this.newSessionId = sessionId + 1;
@@ -402,8 +403,8 @@ export abstract class AbstractTemplateModal extends Modal {
 		this.newSceneId = 1;
 		this.scenes = [];
 
-		this.api.app.vault.getFiles().forEach((file: TFile) => {
-			const metadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
+		this.app.vault.getFiles().forEach((file: TFile) => {
+			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (
 				metadata !== null &&
 				metadata.frontmatter != null &&
@@ -413,7 +414,7 @@ export abstract class AbstractTemplateModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(this.api.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
+					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
 						const sceneId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sceneId >= this.newSceneId) {
 							this.newSceneId = sceneId + 1;

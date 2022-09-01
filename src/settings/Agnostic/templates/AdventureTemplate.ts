@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class AdventureTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.adventureTag + '/' + this.campaignId + '/' + this.adventureId + ']\n';
+		return 'tags: [' + RpgFunctions.settings.adventureTag + '/' + this.campaignId + '/' + this.adventureId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(

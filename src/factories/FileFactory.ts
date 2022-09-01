@@ -1,13 +1,13 @@
-import {Api} from "../Api";
 import * as Modals from '../settings/Agnostic/modals';
 import * as Templates from '../settings/Agnostic/templates';
 import {TemplateInterface} from "../interfaces/data/TemplateInterface";
-import {MarkdownView} from "obsidian";
+import {App, MarkdownView} from "obsidian";
 import {DataType} from "../enums/DataType";
+import {RpgFunctions} from "../RpgFunctions";
 
 export class FileFactory {
 	constructor(
-		private api: Api,
+		private app: App,
 	) {
 	}
 
@@ -19,7 +19,7 @@ export class FileFactory {
 		let name: string|null|undefined = null;
 
 		if (create === false){
-			name = this.api.app.workspace.getActiveFile()?.basename;
+			name = this.app.workspace.getActiveFile()?.basename;
 		}
 
 		//@ts-ignore
@@ -38,7 +38,7 @@ export class FileFactory {
 	): Promise<void> {
 		//@ts-ignore
 		const template: TemplateInterface = new Templates[DataType[type] + 'Template'](
-			this.api.settings,
+			RpgFunctions.settings,
 			createFrontMatterOnly,
 			name,
 			campaignId,
@@ -49,11 +49,11 @@ export class FileFactory {
 		const data: string = template.generateData();
 
 		if (create) {
-			const newFile = await this.api.app.vault.create(name + '.md', data);
-			const leaf = this.api.app.workspace.getLeaf(true);
+			const newFile = await this.app.vault.create(name + '.md', data);
+			const leaf = this.app.workspace.getLeaf(true);
 			await leaf.openFile(newFile);
 		} else {
-			const activeView = this.api.app.workspace.getActiveViewOfType(MarkdownView);
+			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (activeView != null) {
 				const editor = activeView.editor;
 				editor.setValue(data + '\n' + editor.getValue());
@@ -71,7 +71,7 @@ export class FileFactory {
 	): Promise<void> {
 		//@ts-ignore
 		const template: TemplateInterface = new Templates[DataType[type] + 'Template'](
-			this.api.settings,
+			RpgFunctions.settings,
 			name,
 			campaignId,
 			adventureId,
@@ -79,8 +79,8 @@ export class FileFactory {
 			sceneId,
 		);
 		const data: string = template.generateData();
-		const newFile = await this.api.app.vault.create(name + '.md', data);
-		const leaf = this.api.app.workspace.getLeaf(true);
+		const newFile = await this.app.vault.create(name + '.md', data);
+		const leaf = this.app.workspace.getLeaf(true);
 		await leaf.openFile(newFile);
 	}
 }

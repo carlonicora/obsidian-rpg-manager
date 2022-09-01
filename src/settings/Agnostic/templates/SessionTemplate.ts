@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class SessionTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId + ']\n';
+		return 'tags: [' + RpgFunctions.settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(

@@ -1,13 +1,7 @@
-import {ViewInterface} from "../../../interfaces/ViewInterface";
-import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {StringResponseInterface} from "../../../interfaces/response/StringResponseInterface";
+import {AbstractView} from "../../../abstracts/AbstractView";
 
-export class StringView implements ViewInterface {
-	constructor(
-		private sourcePath: string,
-	) {
-	}
-
+export class StringView extends AbstractView {
 	render(
 		container: HTMLElement,
 		data: StringResponseInterface,

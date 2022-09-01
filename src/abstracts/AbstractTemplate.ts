@@ -1,9 +1,7 @@
 import {TemplateInterface} from "../interfaces/data/TemplateInterface";
-import {RpgManagerSettings} from "../Settings";
 
 export abstract class AbstractTemplate  implements TemplateInterface{
 	constructor(
-		protected settings: RpgManagerSettings,
 		protected createFrontMatterOnly: boolean,
 		protected name: string,
 		protected campaignId: number,

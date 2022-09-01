@@ -1,13 +1,8 @@
-import {ViewInterface} from "../../../interfaces/ViewInterface";
 import {TableResponseInterface} from "../../../interfaces/response/TableResponseInterface";
 import {ContentInterface} from "../../../interfaces/content/ContentInterface";
+import {AbstractView} from "../../../abstracts/AbstractView";
 
-export class TableView implements ViewInterface {
-	constructor(
-		private sourcePath: string,
-	) {
-	}
-
+export class TableView extends AbstractView {
 	public render(
 		container: HTMLElement,
 		data: TableResponseInterface,

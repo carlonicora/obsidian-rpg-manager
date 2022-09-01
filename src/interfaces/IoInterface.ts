@@ -12,7 +12,7 @@ import {GenericImageDataInterface} from "./data/GenericImageDataInterface";
 import {GenericSynopsisDataInterface} from "./data/GenericSynopsisDataInterface";
 import {GenericDataListInterface} from "./data/GenericDataListInterface";
 
-export interface IoDataInterface {
+export interface IoInterface {
 	getAdventureList(
 	): AdventureListInterface;
 

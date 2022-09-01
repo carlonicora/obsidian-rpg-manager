@@ -1,26 +1,26 @@
-import {App, Component, TAbstractFile, TFile} from "obsidian";
+import {App, TAbstractFile, TFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
-import {DateTime} from "obsidian-dataview";
-import {FileFactory} from "./factories/FileFactory";
-import {RpgManagerSettings} from "./Settings";
 import {DataType} from "./enums/DataType";
+import {DateTime} from "obsidian-dataview";
+import {RpgManagerSettings} from "./main";
 
-export class Api extends Component {
-	private root: string;
-	private attachmentRoot: string;
-	public fileFactory: FileFactory;
+export class RpgFunctions {
+	private static app: App;
+	public static settings: RpgManagerSettings;
+	private static root: string;
+	private static attachmentRoot: string;
 
-	constructor(
-		public app: App,
-		public settings: RpgManagerSettings,
-	) {
-		super();
+	public static initialise(
+		app: App,
+		settings: RpgManagerSettings,
+	): void {
+		this.app = app;
+		this.settings = settings;
+
 		this.initialiseRoots();
-
-		this.fileFactory = new FileFactory(this);
 	}
 
-	private initialiseRoots() {
+	private static initialiseRoots() {
 		if (this.app.vault.getFiles().length !== 0) {
 			const filePath = this.app.vault.getFiles()[0].path;
 
@@ -59,7 +59,7 @@ export class Api extends Component {
 		}
 	}
 
-	fileExists(path: string): boolean {
+	private static fileExists(path: string): boolean {
 		const abstractFile = this.app.vault.getAbstractFileByPath(path);
 		let response = false;
 
@@ -70,7 +70,7 @@ export class Api extends Component {
 		return response;
 	}
 
-	getImageLink(page: Record<string, Literal>|undefined){
+	public static getImageLink(page: Record<string, Literal>|undefined){
 		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
 
 		for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++){
@@ -87,7 +87,7 @@ export class Api extends Component {
 		return null;
 	}
 
-	getImageElement(
+	public static getImageElement(
 		page: Record<string, Literal>|undefined,
 		width: number|undefined =75,
 		height: number|undefined =75,
@@ -116,7 +116,7 @@ export class Api extends Component {
 		return response;
 	}
 
-	getImage(page: Record<string, Literal>|undefined, width=75, height=75){
+	public static getImage(page: Record<string, Literal>|undefined, width=75, height=75){
 		let imageFile = null;
 
 		if (page !== undefined) {
@@ -145,7 +145,7 @@ export class Api extends Component {
 		return "<img src=\"" + imageFile + "\" style=\"object-fit: cover;" + dimensions + "\">";
 	}
 
-	public getTagId(
+	public static getTagId(
 		tags: Array<string>|null,
 		type: DataType,
 	): number {
@@ -250,7 +250,7 @@ export class Api extends Component {
 	 * @param date
 	 * @returns {string|*}
 	 */
-	formatDate(date: DateTime|undefined, type: string|null = null): string{
+	public static formatDate(date: DateTime|undefined, type: string|null = null): string{
 		if (!date || date === undefined) return "";
 
 		let options = null;
@@ -281,7 +281,7 @@ export class Api extends Component {
 		}
 	}
 
-	formatTime(date: DateTime|undefined){
+	public static formatTime(date: DateTime|undefined){
 		if (!date || date === undefined) return "";
 
 		const options = {
@@ -293,7 +293,7 @@ export class Api extends Component {
 		return date.toLocaleString(options);
 	}
 
-	calculateDuration(start:DateTime, end:DateTime){
+	public static calculateDuration(start:DateTime, end:DateTime){
 		if (!start || !end) return "";
 
 		const dtStart = new Date(start);
@@ -308,11 +308,11 @@ export class Api extends Component {
 		return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
 	}
 
-	getDeathStatus(page: Record<string, Literal>){
+	public static getDeathStatus(page: Record<string, Literal>){
 		return (page.dates.death !== null ? "<br/>_(Deceased " + this.formatDate(page.dates.death) + ")_ " : "");
 	}
 
-	calculateAge(
+	public static calculateAge(
 		page: Record<string, Literal>|undefined,
 		currentDate: DateTime,
 	): string {

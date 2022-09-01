@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class ClueTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.clueTag + '/' + this.campaignId + ']\n';
+		return 'tags: [' + RpgFunctions.settings.clueTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(

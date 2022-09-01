@@ -1,9 +1,10 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class NonPlayerCharacterTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + this.settings.npcTag + '/' + this.campaignId + ']\n';
+		return 'tags: [' + RpgFunctions.settings.npcTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(
