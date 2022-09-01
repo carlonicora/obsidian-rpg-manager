@@ -15,8 +15,7 @@ export class SessionNavigatorView {
 			tableElements.push(["Next Session >>", data.nextSession.link]);
 		}
 
-		//@ts-ignore
-		const table = this.dv.markdownTable(["Campaign", "" + data.campaign.link],tableElements);
+		const table = (<any>this.dv).markdownTable(["Campaign", "" + data.campaign.link],tableElements);
 
 		this.dv.paragraph(table);
 
