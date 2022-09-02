@@ -52,10 +52,10 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian6 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 
 // src/Controller.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // src/enums/DataType.ts
 var DataType = /* @__PURE__ */ ((DataType2) => {
@@ -997,13 +997,16 @@ var IoFactory = class {
 };
 
 // src/abstracts/AbstractModel.ts
+var import_obsidian2 = require("obsidian");
 var AbstractModel = class {
-  constructor(app, campaign, current, dv, source) {
+  constructor(app, campaign, current, dv, source, sourcePath, contentEl) {
     this.app = app;
     this.campaign = campaign;
     this.current = current;
     this.dv = dv;
     this.source = source;
+    this.sourcePath = sourcePath;
+    this.contentEl = contentEl;
     this.io = IoFactory.create(CampaignSetting[this.campaign.settings] + "Io", this.app, this.campaign, this.dv, this.current);
     this.dataType = RpgFunctions.getDataType(this.current.tags);
     if (this.dataType != null) {
@@ -1016,6 +1019,54 @@ var AbstractModel = class {
       this.specificData.session = this.io.getSession(this.specificData.adventureId, this.specificData.sessionId);
       this.specificData.previousScene = this.io.getScene(this.specificData.adventureId, this.specificData.sessionId, this.specificData.id - 1);
       this.specificData.nextScene = this.io.getScene(this.specificData.adventureId, this.specificData.sessionId, this.specificData.id + 1);
+    }
+  }
+  generateBreadcrumb() {
+    let breadcrumb;
+    if (this.contentEl.children[0].hasClass("rpgm-breadcrumb")) {
+      breadcrumb = this.contentEl.children[0].children[0];
+      breadcrumb.empty();
+    } else {
+      breadcrumb = document.createElement("div");
+      breadcrumb.addClass("rpgm-breadcrumb");
+      this.contentEl.prepend(breadcrumb);
+    }
+    const campaignBreadcrumb = breadcrumb.createSpan({ cls: "element" });
+    import_obsidian2.MarkdownRenderer.renderMarkdown(this.campaign.link.toString(), campaignBreadcrumb, this.sourcePath, null);
+    if (this.dataType !== 0 /* Campaign */) {
+      this.generateSeparator(breadcrumb);
+      switch (this.dataType) {
+        case 1 /* Adventure */:
+          this.generateElement(breadcrumb, this.specificData);
+          break;
+        case 2 /* Session */:
+          this.generateElement(breadcrumb, this.specificData.adventure);
+          this.generateSeparator(breadcrumb);
+          this.generateElement(breadcrumb, this.specificData);
+          break;
+        case 3 /* Scene */:
+          this.generateElement(breadcrumb, this.specificData.adventure);
+          this.generateSeparator(breadcrumb);
+          this.generateElement(breadcrumb, this.specificData.session);
+          this.generateSeparator(breadcrumb);
+          this.generateElement(breadcrumb, this.specificData);
+          break;
+        default:
+          this.generateElement(breadcrumb, this.specificData);
+          break;
+      }
+    }
+    breadcrumb.createDiv().style.clear = "both";
+  }
+  generateSeparator(containerEl) {
+    const span = containerEl.createSpan({ cls: "separator" });
+    const p = span.createEl("p");
+    p.textContent = " > ";
+  }
+  generateElement(containerEl, content) {
+    if (content != null) {
+      const span = containerEl.createSpan({ cls: "element" });
+      import_obsidian2.MarkdownRenderer.renderMarkdown(content.link.toString(), span, this.sourcePath, null);
     }
   }
 };
@@ -1072,11 +1123,11 @@ var StringContent = class extends AbstractContent {
 };
 
 // src/data/content/LinkContent.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 var LinkContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian2.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian3.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1091,11 +1142,11 @@ var NumberContent = class extends AbstractContent {
 };
 
 // src/data/content/ObjectContent.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 var ObjectContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian3.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian4.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1103,11 +1154,11 @@ var ObjectContent = class extends AbstractContent {
 };
 
 // src/data/content/MarkdownContent.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 var MarkdownContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian4.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1571,13 +1622,13 @@ var ModelsMap = {
   AgnosticTimeline: TimelineModel
 };
 var ModelFactory = class {
-  static create(k, app, campaign, current, dv, source) {
-    return new ModelsMap[k](app, campaign, current, dv, source);
+  static create(k, app, campaign, current, dv, source, sourcePath, contentEl) {
+    return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl);
   }
 };
 
 // src/Controller.ts
-var Controller = class extends import_obsidian5.MarkdownRenderChild {
+var Controller = class extends import_obsidian6.MarkdownRenderChild {
   constructor(app, container, source, component, sourcePath) {
     super(container);
     this.app = app;
@@ -1600,7 +1651,7 @@ var Controller = class extends import_obsidian5.MarkdownRenderChild {
       model = model[0].toUpperCase() + model.substring(1);
       model = model.replace("navigation", "Navigation");
       const modelName = CampaignSetting[this.campaign.settings] + model;
-      this.model = ModelFactory.create(modelName, this.app, this.campaign, this.current, this.dv, this.source);
+      this.model = ModelFactory.create(modelName, this.app, this.campaign, this.current, this.dv, this.source, this.sourcePath, this.contentEl);
     }
   }
   onload() {
@@ -1618,11 +1669,12 @@ var Controller = class extends import_obsidian5.MarkdownRenderChild {
   }
   render() {
     return __async(this, null, function* () {
-      this.initialise();
-      if (this.isActive) {
-        this.render = (0, import_obsidian5.debounce)(this.render, 1e3, true);
-        const activeLeaf = this.app.workspace.getActiveViewOfType(import_obsidian5.MarkdownView);
-        if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
+      const activeLeaf = this.app.workspace.getActiveViewOfType(import_obsidian6.MarkdownView);
+      if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
+        this.contentEl = activeLeaf.contentEl;
+        this.initialise();
+        if (this.isActive) {
+          this.render = (0, import_obsidian6.debounce)(this.render, 1e3, true);
           this.container.empty();
           this.model.generateData().elements.forEach((element) => {
             const viewName = CampaignSetting[this.campaign.settings] + ResponseType[element.responseType];
@@ -1636,7 +1688,7 @@ var Controller = class extends import_obsidian5.MarkdownRenderChild {
 };
 
 // src/main.ts
-var RpgManager = class extends import_obsidian6.Plugin {
+var RpgManager = class extends import_obsidian7.Plugin {
   onload() {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
@@ -1709,7 +1761,7 @@ var DEFAULT_SETTINGS = {
   timelineTag: "rpgm/element/timeline",
   noteTag: "rpgm/element/note"
 };
-var RpgManagerSettingTab = class extends import_obsidian6.PluginSettingTab {
+var RpgManagerSettingTab = class extends import_obsidian7.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -1729,7 +1781,7 @@ var RpgManagerSettingTab = class extends import_obsidian6.PluginSettingTab {
       frag.createEl("span");
       frag.appendText(" ");
     }) });
-    new import_obsidian6.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian7.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying the campaign");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -1740,7 +1792,7 @@ var RpgManagerSettingTab = class extends import_obsidian6.PluginSettingTab {
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian7.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying an Adventure");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -1751,7 +1803,7 @@ var RpgManagerSettingTab = class extends import_obsidian6.PluginSettingTab {
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian7.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Session");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -1762,7 +1814,7 @@ var RpgManagerSettingTab = class extends import_obsidian6.PluginSettingTab {
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian7.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Scene");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -1783,42 +1835,42 @@ var RpgManagerSettingTab = class extends import_obsidian6.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian6.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian6.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian7.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();

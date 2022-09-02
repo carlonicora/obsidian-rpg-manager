@@ -334,3 +334,17 @@ $blue: #2020ff;
 		white-space: nowrap;
 	}
 }
+
+.rpgm-breadcrumb {
+	width: 100%;
+	font-size: 0.9em;
+
+	.separator, .element {
+		float: left;
+	}
+
+	.separator {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}

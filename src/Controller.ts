@@ -20,6 +20,7 @@ export class Controller extends MarkdownRenderChild {
 	private current: Record<string, any>;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
+	private contentEl: HTMLElement;
 
 	constructor(
 		protected app: App,
@@ -56,6 +57,8 @@ export class Controller extends MarkdownRenderChild {
 				this.current,
 				this.dv,
 				this.source,
+				this.sourcePath,
+				this.contentEl,
 			);
 		}
 	}
@@ -81,13 +84,14 @@ export class Controller extends MarkdownRenderChild {
 	}
 
 	private async render(){
-		this.initialise();
+		const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
+			this.contentEl = activeLeaf.contentEl;
+			this.initialise();
 
-		if (this.isActive) {
-			this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
+			if (this.isActive) {
+				this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
 
-			const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
-			if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
 				this.container.empty();
 
 				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {

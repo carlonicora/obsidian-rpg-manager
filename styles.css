@@ -277,4 +277,16 @@
   white-space: nowrap;
 }
 
+.rpgm-breadcrumb {
+  width: 100%;
+  font-size: 0.9em;
+}
+.rpgm-breadcrumb .separator, .rpgm-breadcrumb .element {
+  float: left;
+}
+.rpgm-breadcrumb .separator {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 /*# sourceMappingURL=styles.css.map */

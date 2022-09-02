@@ -50,7 +50,9 @@ export class ModelFactory {
 		current: Record<string, any>,
 		dv: DataviewInlineApi,
 		source: string,
+		sourcePath: string,
+		contentEl: HTMLElement,
 	): ModelClassType<K> {
-		return new ModelsMap[k](app, campaign, current, dv, source);
+		return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl);
 	}
 }
