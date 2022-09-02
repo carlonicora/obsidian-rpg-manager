@@ -1,25 +1,26 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
+import {ResponseData} from "../../../data/ResponseData";
+import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
+import {CampaignSetting} from "../../../enums/CampaignSetting";
+import {RpgFunctions} from "../../../RpgFunctions";
+import {DataType} from "../../../enums/DataType";
 
 export class SessionModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
-		return this.data;
-	}
+		const response = new ResponseData();
 
-	/*
-	public async render() {
-		this.sceneList();
-	}
-
-	async sceneList(
-	) {
-		this.writeList(
-			this.io.getSceneList(
-				this.api.getTagId(this.current.tags, DataType.Adventure),
-				this.api.getTagId(this.current.tags, DataType.Session),
-			),
-			ViewType.SceneList
+		response.addElement(
+			ComponentFactory.create(
+				CampaignSetting[this.campaign.settings] + 'SceneTable' as SingleComponentKey<any>,
+				this.io,
+				this.io.getSceneList(
+					RpgFunctions.getTagId(this.current.tags, DataType.Adventure),
+					RpgFunctions.getTagId(this.current.tags, DataType.Session),
+				),
+			)
 		);
+
+		return response;
 	}
-	 */
 }

@@ -145,6 +145,42 @@ export class RpgFunctions {
 		return "<img src=\"" + imageFile + "\" style=\"object-fit: cover;" + dimensions + "\">";
 	}
 
+	public static getDataType(
+		tags: Array<string>|null,
+	): DataType|null {
+		let response: DataType|null = null;
+
+		(tags || []).forEach((tag: string) => {
+			if (tag.startsWith(this.settings.campaignTag)){
+				response = DataType.Campaign;
+			} else if (tag.startsWith(this.settings.adventureTag)){
+				response = DataType.Adventure;
+			} else if (tag.startsWith(this.settings.sessionTag)){
+				response = DataType.Session;
+			} else if (tag.startsWith(this.settings.sceneTag)){
+				response = DataType.Scene;
+			} else if (tag.startsWith(this.settings.npcTag)){
+				response = DataType.NonPlayerCharacter;
+			} else if (tag.startsWith(this.settings.pcTag)){
+				response = DataType.Character;
+			} else if (tag.startsWith(this.settings.clueTag)){
+				response = DataType.Clue;
+			} else if (tag.startsWith(this.settings.locationTag)){
+				response = DataType.Location;
+			} else if (tag.startsWith(this.settings.factionTag)){
+				response = DataType.Faction;
+			} else if (tag.startsWith(this.settings.eventTag)){
+				response = DataType.Event;
+			} else if (tag.startsWith(this.settings.timelineTag)){
+				response = DataType.Timeline;
+			} else if (tag.startsWith(this.settings.noteTag)){
+				response = DataType.Note;
+			}
+		});
+
+		return response;
+	}
+
 	public static getTagId(
 		tags: Array<string>|null,
 		type: DataType,

@@ -11,10 +11,10 @@ import {RpgFunctions} from "./RpgFunctions";
 import {SingleViewKey, ViewFactory} from "./factories/ViewFactory";
 import {ResponseType} from "./enums/ResponseType";
 import {ModelFactory, SingleModelKey} from "./factories/ModelFactory";
-import {ErrorFactory} from "./factories/ErrorFactory";
+import {CampaignSetting} from "./enums/CampaignSetting";
 
 export class Controller extends MarkdownRenderChild {
-	private isActive = true;
+	private isActive = false;
 	private dv: DataviewInlineApi;
 	private campaign: CampaignDataInterface;
 	private current: Record<string, any>;
@@ -29,19 +29,26 @@ export class Controller extends MarkdownRenderChild {
 		private sourcePath: string,
 	) {
 		super(container);
-		this.render = debounce(this.render, 500, true) as unknown as () => Promise<void>
 
 		this.dv = (<any>this.app.plugins.plugins.dataview).localApi(this.sourcePath, this.component, this.container);
+	}
 
+	private initialise(
+	): void {
 		const current = this.dv.current();
 		if (current == null){
-			ErrorFactory.create('Current is null');
 			this.isActive = false;
 		} else {
+			this.isActive = true;
 			this.current = current;
 			this.loadCampaign();
 
-			const modelName:SingleModelKey<any> = this.campaign.settings + this.source;
+			let model = this.source.replace(/[\n\r]/g, '').toLowerCase();
+			model = model[0].toUpperCase() + model.substring(1);
+			model = model.replace('navigation', 'Navigation');
+
+			const modelName:SingleModelKey<any> = CampaignSetting[this.campaign.settings] + model;
+
 			this.model = ModelFactory.create(
 				modelName,
 				this.app,
@@ -54,10 +61,9 @@ export class Controller extends MarkdownRenderChild {
 	}
 
 	onload() {
-		if (this.isActive) {
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", (function(){
 			this.render();
-			this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render));
-		}
+		}).bind(this)));
 	}
 
 	private loadCampaign(
@@ -75,16 +81,22 @@ export class Controller extends MarkdownRenderChild {
 	}
 
 	private async render(){
-		const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
-		if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
-			this.container.empty();
+		this.initialise();
 
-			this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
-				const viewName:SingleViewKey<any> = this.campaign.settings + ResponseType[element.responseType];
-				const view: ViewInterface = ViewFactory.create(viewName, this.sourcePath);
+		if (this.isActive) {
+			this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
 
-				view.render(this.container, element);
-			});
+			const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
+				this.container.empty();
+
+				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
+					const viewName: SingleViewKey<any> = CampaignSetting[this.campaign.settings] + ResponseType[element.responseType];
+					const view: ViewInterface = ViewFactory.create(viewName, this.sourcePath);
+
+					view.render(this.container, element);
+				});
+			}
 		}
 	}
 }

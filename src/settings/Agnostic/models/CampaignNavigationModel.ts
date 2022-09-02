@@ -1,9 +1,11 @@
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {AbstractModel} from "../../../abstracts/AbstractModel";
+import {ResponseData} from "../../../data/ResponseData";
 
 export class CampaignNavigationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
-		return this.data;
+		const response = new ResponseData();
+		return response;
 	}
 
 	/*

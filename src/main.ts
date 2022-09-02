@@ -1,4 +1,4 @@
-import {App, Component, debounce, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting} from 'obsidian';
+import {App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting} from 'obsidian';
 import {Controller} from "./Controller";
 import {RpgFunctions} from "./RpgFunctions";
 
@@ -7,7 +7,6 @@ export default class RpgManager extends Plugin {
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
-		this.refreshViews = debounce(this.refreshViews, 500, true) as unknown as () => Promise<void>
 
 		await this.loadSettings();
 
@@ -58,11 +57,26 @@ export default class RpgManager extends Plugin {
 
 	private registerEvents(
 	) : void {
+
 		this.registerEvent(this.app.metadataCache.on('resolved', (function(){
+			console.log('EVENT: RESOLVED');
 			this.refreshViews();
 		}).bind(this)));
 
+		/*
 		this.registerEvent(this.app.vault.on('modify', (function(){
+			console.log('EVENT: MODIFY');
+			this.refreshViews();
+		}).bind(this)));
+		*/
+
+		this.registerEvent(this.app.workspace.on('file-open', (function(){
+			console.log('EVENT: FILE-OPEN');
+			this.refreshViews();
+		}).bind(this)));
+
+		this.registerEvent(this.app.workspace.on('dataview:refresh-views', (function(){
+			console.log('EVENT: REFRESH-VIEWS');
 			this.refreshViews();
 		}).bind(this)));
 	}

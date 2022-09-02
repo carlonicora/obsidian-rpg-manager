@@ -6,8 +6,6 @@ import {DataType} from "../../../enums/DataType";
 import {SessionDataInterface} from "../../../interfaces/data/SessionDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
 
-
-
 export class SceneData extends AbstractImageData implements SceneDataInterface {
 	public synopsis: string;
 	public action: string;
@@ -21,6 +19,7 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 	constructor(
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface,
+		additionalInformation: string,
 		public adventure: AdventureDataInterface|null = null,
 		public session: SessionDataInterface|null = null,
 		public previousScene: SceneDataInterface|null = null,

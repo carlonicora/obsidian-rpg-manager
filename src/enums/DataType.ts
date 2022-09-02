@@ -10,4 +10,5 @@ export enum DataType {
 	Clue,
 	Faction,
 	Note,
+	Timeline,
 }

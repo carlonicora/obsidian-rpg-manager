@@ -6,7 +6,6 @@ import {
 	CharacterData,
 	CharacterList,
 	ClueData,
-	SceneData,
 	SceneList,
 	SessionData,
 	SessionList,
@@ -29,8 +28,8 @@ import {GenericDataListInterface} from "../interfaces/data/GenericDataListInterf
 import {App} from "obsidian";
 import {RpgFunctions} from "../RpgFunctions";
 import {DataFactory, SingleDataKey} from "../factories/DataFactory";
-import {SingleModelKey} from "../factories/ModelFactory";
 import {DataListFactory, SingleDataListKey} from "../factories/DataListFactory";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 export abstract class AbstractIo implements IoInterface {
 	protected outlinks: DataObject[];
@@ -94,37 +93,6 @@ export abstract class AbstractIo implements IoInterface {
 		});
 
 		return response;
-	}
-
-	protected hasMainTag(
-		page: Record<string, any>,
-		type: DataType
-	): boolean
-	{
-		if (page.tags == undefined){
-			return false;
-		}
-
-		switch (type){
-			case DataType.Character:
-				return page.tags.indexOf(RpgFunctions.settings.npcTag) !== -1 || page.tags.indexOf(RpgFunctions.settings.pcTag) !== -1;
-				break;
-			case DataType.Clue:
-				return page.tags.indexOf(RpgFunctions.settings.clueTag) !== -1;
-				break;
-			case DataType.Location:
-				return page.tags.indexOf(RpgFunctions.settings.locationTag) !== -1;
-				break;
-			case DataType.Faction:
-				return page.tags.indexOf(RpgFunctions.settings.factionTag) !== -1;
-				break;
-			case DataType.Event:
-				return page.tags.indexOf(RpgFunctions.settings.eventTag) !== -1;
-				break;
-			default:
-				return false;
-				break;
-		}
 	}
 
 	protected getCorrectTag(
@@ -263,10 +231,11 @@ export abstract class AbstractIo implements IoInterface {
 			)
 			.forEach((scene) => {
 				response.add(
-					new SceneData(
+					DataFactory.create(
+						CampaignSetting[this.campaign.settings] + 'Scene' as SingleDataKey<any>,
 						scene,
 						this.campaign,
-					)
+					) as SceneDataInterface
 				)
 			});
 
@@ -336,20 +305,22 @@ export abstract class AbstractIo implements IoInterface {
 		let response: SceneDataInterface|null = null;
 
 		if (adventureId === null || sessionId === null || sceneId === null) {
-			response = new SceneData(
+			response = DataFactory.create(
+				CampaignSetting[this.campaign.settings] + 'Scene' as SingleDataKey<any>,
 				this.current,
 				this.campaign,
-			)
+			) as SceneDataInterface;
 		} else {
 			const query = '#' + RpgFunctions.settings.sceneTag + '/' + this.campaign.id + '/' + adventureId + '/' + sessionId + '/' + sceneId;
 
 			const scenes = this.dv.pages(query);
 
 			if (scenes !== null && scenes.length === 1){
-				response = new SceneData(
-					scenes[0],
+				response = DataFactory.create(
+					CampaignSetting[this.campaign.settings] + 'Scene' as SingleDataKey<any>,
+					this.current,
 					this.campaign,
-				)
+				) as SceneDataInterface;
 			}
 
 		}
@@ -363,8 +334,7 @@ export abstract class AbstractIo implements IoInterface {
 		sorting: ArrayFunc<any, any>|null = null,
 	): GenericDataListInterface
 	{
-		const dataListName:SingleDataListKey<any> = this.campaign.settings + DataType[type];
-		const response = DataListFactory.create(dataListName, this.campaign);
+		const response = DataListFactory.create(CampaignSetting[this.campaign.settings] + DataType[type] as SingleDataListKey<any>, this.campaign);
 
 		this.variableSingular = DataType[type].toLowerCase();
 		this.variablePlural = this.variableSingular + 's';
@@ -377,8 +347,7 @@ export abstract class AbstractIo implements IoInterface {
 
 		if (parentType === null) {
 			comparison = function (page: Record<string, any>): boolean {
-				return page.file.folder !== this.templateFolder &&
-					this.current.relationships != undefined &&
+				return this.current.relationships != undefined &&
 					this.current.relationships[this.variablePlural] != undefined &&
 					this.current.relationships[this.variablePlural][page.file.name] !== undefined;
 			}.bind(this);
@@ -387,8 +356,7 @@ export abstract class AbstractIo implements IoInterface {
 			this.variableParentPlural = this.variableParentSingular + 's';
 
 			comparison = function (page: Record<string, any>): boolean {
-				return page.file.folder !== this.templateFolder &&
-					page.relationships != undefined &&
+				return page.relationships != undefined &&
 					page.relationships[this.variableParentPlural] != undefined &&
 					page.relationships[this.variableParentPlural][this.current.file.name] !== undefined;
 			}.bind(this);
@@ -404,12 +372,12 @@ export abstract class AbstractIo implements IoInterface {
 				(sorting !== null ? sorting : defaultSorting)
 			)
 			.forEach((page) => {
-				const dataName:SingleDataKey<any> = this.campaign.settings + DataType[type];
+				const dataName:SingleDataKey<any> = CampaignSetting[this.campaign.settings] + DataType[type];
 				response.add(
 					DataFactory.create(
 						dataName,
+						page,
 						this.campaign,
-						this.current,
 						(
 							parentType === null ?
 								this.current.relationships[this.variablePlural][page.file.name] :
@@ -421,16 +389,14 @@ export abstract class AbstractIo implements IoInterface {
 
 		this.outlinks.forEach((page) => {
 			if (
-				this.hasMainTag(page, type) &&
+				(page.tags != undefined && type === RpgFunctions.getDataType(page.tags)) &&
 				!this.isAlreadyPresent(response, page)
 			) {
-				const dataName:SingleDataKey<any> = this.campaign.settings + DataType[type];
-
 				response.add(
 					DataFactory.create(
-						dataName,
+						CampaignSetting[this.campaign.settings] + DataType[type] as SingleDataKey<any>,
+						page,
 						this.campaign,
-						this.current,
 						'_in main description_',
 					)
 				)

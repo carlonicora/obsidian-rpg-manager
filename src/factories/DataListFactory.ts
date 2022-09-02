@@ -10,15 +10,15 @@ import {
 } from "../settings/Agnostic/data";
 
 const DataListsMap = {
-	AgnosticAdventureList: AdventureList,
-	AgnosticCharacterList: CharacterList,
-	AgnosticClueList: ClueList,
-	AgnosticEventList: EventList,
-	AgnosticFactionList: FactionList,
-	AgnosticLocationList: LocationList,
-	AgnosticSceneList: SceneList,
-	AgnosticSessionList: SessionList,
-	AgnosticTimelineList: TimelineList,
+	AgnosticAdventure: AdventureList,
+	AgnosticCharacter: CharacterList,
+	AgnosticClue: ClueList,
+	AgnosticEvent: EventList,
+	AgnosticFaction: FactionList,
+	AgnosticLocation: LocationList,
+	AgnosticScene: SceneList,
+	AgnosticSession: SessionList,
+	AgnosticTimeline: TimelineList,
 };
 type DataListsMapType = typeof DataListsMap;
 type DataListKeys = keyof DataListsMapType;

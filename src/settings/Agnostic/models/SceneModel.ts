@@ -1,47 +1,44 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
+import {ResponseData} from "../../../data/ResponseData";
+import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
+import {CampaignSetting} from "../../../enums/CampaignSetting";
+import {DataType} from "../../../enums/DataType";
 
 export class SceneModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
-		return this.data;
-	}
+		const response = new ResponseData();
 
-	/*
-	public async render() {
-		this.characterList();
-		this.locationList();
-		this.clueList();
-	}
-
-	private async characterList(
-	) {
-		this.writeList(
-			this.io.getRelationshipList(
-				DataType.Character,
-			),
-			ViewType.CharacterList,
+		response.addElement(
+			ComponentFactory.create(
+				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				this.io,
+				this.io.getRelationshipList(
+					DataType.Character,
+				),
+			)
 		);
-	}
 
-	private async locationList(
-	) {
-		this.writeList(
-			this.io.getRelationshipList(
-				DataType.Location,
-			),
-			ViewType.LocationList,
+		response.addElement(
+			ComponentFactory.create(
+				CampaignSetting[this.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
+				this.io,
+				this.io.getRelationshipList(
+					DataType.Faction,
+				),
+			)
 		);
-	}
 
-	private async clueList(
-	) {
-		this.writeList(
-			this.io.getRelationshipList(
-				DataType.Clue,
-			),
-			ViewType.ClueList,
+		response.addElement(
+			ComponentFactory.create(
+				CampaignSetting[this.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
+				this.io,
+				this.io.getRelationshipList(
+					DataType.Clue,
+				),
+			)
 		);
-	}
 
-	 */
+		return response;
+	}
 }

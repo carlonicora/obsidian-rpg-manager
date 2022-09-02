@@ -1,9 +1,11 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
+import {ResponseData} from "../../../data/ResponseData";
 
 export class ErrorModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
-		return this.data;
+		const response = new ResponseData();
+		return response;
 	}
 
 	/*
