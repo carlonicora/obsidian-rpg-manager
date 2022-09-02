@@ -1,7 +1,7 @@
-import {AbstractDataList} from "../../../abstracts/AbstractData";
 import {SceneListInterface} from "../../../interfaces/data/SceneListInterface";
 import {SceneDataInterface} from "../../../interfaces/data/SceneDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
+import {AbstractDataList} from "../../../abstracts/AbstractDataList";
 
 export class SceneList extends AbstractDataList implements SceneListInterface {
 	public elements: SceneDataInterface[];

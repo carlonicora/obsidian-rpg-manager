@@ -1,7 +1,7 @@
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class ClueData extends AbstractImageData implements ClueDataInterface {
 	public found: string|boolean;

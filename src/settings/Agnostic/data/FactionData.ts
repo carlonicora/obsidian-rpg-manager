@@ -1,8 +1,6 @@
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {FactionDataInterface} from "../../../interfaces/data/FactionDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
-
-
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class FactionData extends AbstractImageData implements FactionDataInterface {
 	public synopsis: string;

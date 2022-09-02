@@ -1,6 +1,6 @@
-import {AbstractImageData} from "../abstracts/AbstractData";
 import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
 import {RpgFunctions} from "../RpgFunctions";
+import {AbstractImageData} from "../abstracts/AbstractImageData";
 
 export class ImageData extends AbstractImageData implements GenericImageDataInterface {
 	constructor(

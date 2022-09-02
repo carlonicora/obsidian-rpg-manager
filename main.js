@@ -74,6 +74,17 @@ var DataType = /* @__PURE__ */ ((DataType2) => {
   return DataType2;
 })(DataType || {});
 
+// src/abstracts/AbstractData.ts
+var AbstractData = class {
+  constructor(data) {
+    this.data = data;
+    this.link = data.file.link;
+    this.name = data.file.name;
+    this.path = data.file.path;
+    this.completed = data.completed != null ? data.completed : true;
+  }
+};
+
 // src/RpgFunctions.ts
 var import_obsidian = require("obsidian");
 var RpgFunctions = class {
@@ -359,29 +370,17 @@ var RpgFunctions = class {
   }
 };
 
-// src/abstracts/AbstractData.ts
-var AbstractData = class {
-  constructor(data) {
-    this.data = data;
-    this.link = data.file.link;
-    this.name = data.file.name;
-    this.path = data.file.path;
-    this.completed = data.completed != null ? data.completed : true;
-  }
-};
-var AbstractImageData = class extends AbstractData {
-  constructor(data) {
+// src/settings/Agnostic/data/AdventureData.ts
+var AdventureData = class extends AbstractData {
+  constructor(data, campaign) {
     super(data);
-    this.imageSrc = RpgFunctions.getImageLink(data);
-    this.imageSrcElement = RpgFunctions.getImageElement(data);
-    this.image = this.imageSrc !== null ? RpgFunctions.getImage(data) : "";
-  }
-  getImage(width = 75, height = 75) {
-    if (this.imageSrc === null)
-      return "";
-    return RpgFunctions.getImage(this.data, width, height);
+    this.campaign = campaign;
+    this.id = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
+    this.synopsis = data.synopsis;
   }
 };
+
+// src/abstracts/AbstractDataList.ts
 var AbstractDataList = class {
   constructor(campaign) {
     this.campaign = campaign;
@@ -398,16 +397,6 @@ var AbstractDataList = class {
       });
     }
     return response;
-  }
-};
-
-// src/settings/Agnostic/data/AdventureData.ts
-var AdventureData = class extends AbstractData {
-  constructor(data, campaign) {
-    super(data);
-    this.campaign = campaign;
-    this.id = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
-    this.synopsis = data.synopsis;
   }
 };
 
@@ -431,6 +420,21 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
 var ErrorFactory = class {
   static create(errorMessage) {
     console.log("RpgManager Error: " + errorMessage);
+  }
+};
+
+// src/abstracts/AbstractImageData.ts
+var AbstractImageData = class extends AbstractData {
+  constructor(data) {
+    super(data);
+    this.imageSrc = RpgFunctions.getImageLink(data);
+    this.imageSrcElement = RpgFunctions.getImageElement(data);
+    this.image = this.imageSrc !== null ? RpgFunctions.getImage(data) : "";
+  }
+  getImage(width = 75, height = 75) {
+    if (this.imageSrc === null)
+      return "";
+    return RpgFunctions.getImage(this.data, width, height);
   }
 };
 

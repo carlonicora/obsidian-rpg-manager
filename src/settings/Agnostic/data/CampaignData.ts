@@ -1,9 +1,9 @@
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
 import {ErrorFactory} from "../../../factories/ErrorFactory";
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class CampaignData extends AbstractImageData implements CampaignDataInterface {
 	public id: number;

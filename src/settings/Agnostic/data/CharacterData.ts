@@ -1,9 +1,9 @@
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {Pronoun} from "../../../enums/Pronoun";
 import {CharacterDataInterface} from "../../../interfaces/data/CharacterDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
 import {PronounFactory} from "../../../factories/PronounFactory";
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class CharacterData extends AbstractImageData implements CharacterDataInterface {
 	public image: string;

@@ -1,7 +1,7 @@
-import {AbstractDataList} from "../../../abstracts/AbstractData";
 import {TimelineListInterface} from "../../../interfaces/data/TimelineListInterface";
 import {TimelineDataInterface} from "../../../interfaces/data/TimelineDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
+import {AbstractDataList} from "../../../abstracts/AbstractDataList";
 
 export class TimelineList extends AbstractDataList implements TimelineListInterface {
 	public elements: TimelineDataInterface[];

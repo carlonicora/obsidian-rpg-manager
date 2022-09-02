@@ -1,7 +1,7 @@
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {EventDataInterface} from "../../../interfaces/data/EventDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class EventData extends AbstractImageData implements EventDataInterface {
 	public date: string;

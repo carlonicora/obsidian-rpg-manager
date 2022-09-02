@@ -1,7 +1,7 @@
 import {DateTime} from "obsidian-dataview";
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {TimelineDataInterface} from "../../../interfaces/data/TimelineDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class TimelineData extends AbstractImageData implements TimelineDataInterface {
 	synopsis: string;

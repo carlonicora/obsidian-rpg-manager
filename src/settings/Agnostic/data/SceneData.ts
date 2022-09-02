@@ -1,10 +1,10 @@
-import {AbstractImageData} from "../../../abstracts/AbstractData";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 import {AdventureDataInterface} from "../../../interfaces/data/AdventureDataInterface";
 import {SceneDataInterface} from "../../../interfaces/data/SceneDataInterface";
 import {DataType} from "../../../enums/DataType";
 import {SessionDataInterface} from "../../../interfaces/data/SessionDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
+import {AbstractImageData} from "../../../abstracts/AbstractImageData";
 
 export class SceneData extends AbstractImageData implements SceneDataInterface {
 	public synopsis: string;
