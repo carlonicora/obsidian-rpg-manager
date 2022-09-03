@@ -36,7 +36,7 @@ export class DataFactory {
 		k: SingleDataKey<K>,
 		current: Record<string, any>,
 		campaign: CampaignDataInterface,
-		additionalInformation = '',
+		additionalInformation:string|null = null,
 	): DataClassType<K> {
 		return new DatasMap[k](current, campaign, additionalInformation);
 	}

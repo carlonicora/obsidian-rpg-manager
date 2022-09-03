@@ -1,6 +1,6 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {GenericDataListInterface} from "../../../interfaces/data/GenericDataListInterface";
-import {ResponseTable} from "../../../data/ResponseTable";
+import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";

@@ -1,6 +1,6 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../../../data/ResponseData";
+import {ResponseData} from "../../../data/responses/ResponseData";
 
 export class SessionNavigationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
@@ -35,6 +35,5 @@ export class SessionNavigationModel extends AbstractModel {
 		const view = ViewFactory.createSingle(ViewType.SessionNavigator, this.dv);
 		view.render(data);
 	}
-
-	 */
+	*/
 }

@@ -96,6 +96,7 @@ export class Controller extends MarkdownRenderChild {
 
 				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
 					const viewName: SingleViewKey<any> = CampaignSetting[this.campaign.settings] + ResponseType[element.responseType];
+
 					const view: ViewInterface = ViewFactory.create(viewName, this.sourcePath);
 
 					view.render(this.container, element);

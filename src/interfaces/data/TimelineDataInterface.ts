@@ -1,5 +1,6 @@
 import {GenericImageDataInterface} from "./GenericImageDataInterface";
 import {DateTime} from "obsidian-dataview";
+import {CampaignDataInterface} from "./CampaignDataInterface";
 
 export interface TimelineDataInterface extends GenericImageDataInterface {
 	synopsis: string;
@@ -7,6 +8,8 @@ export interface TimelineDataInterface extends GenericImageDataInterface {
 	date: string;
 	type: string;
 	datetime: DateTime;
+
+	campaign: CampaignDataInterface;
 
 	getEventColour(): string;
 }

@@ -1,5 +1,5 @@
-import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
+import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
+import {ResponseElementInterface} from "../../interfaces/response/ResponseElementInterface";
 
 export class ResponseData implements ResponseDataInterface {
 	public elements: ResponseElementInterface[];

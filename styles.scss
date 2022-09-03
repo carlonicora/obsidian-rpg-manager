@@ -196,6 +196,36 @@ $blue: #2020ff;
 	}
 }
 
+.rpgm-box {
+	border: solid 1px $light-grey;
+	padding: 10px 25px;
+	font-size: 1.0em;
+	margin-top: 20px;
+	margin-bottom: 40px;
+
+	p {
+		margin-top: 10px;
+	}
+
+	.title {
+		font-size: 0.7em;
+		font-variant: all-small-caps;
+		overflow: hidden;
+		white-space: nowrap;
+		margin-top: -10px;
+		text-align: right;
+		margin-right: -20px;
+		color: $dark-grey;
+	}
+
+	&.white{
+		background-color: $white;
+	}
+	&.off-white{
+		background-color: $super-off-white;
+	}
+}
+
 .rpgm-scene-goal, .rpgm-scene-action {
 	border: solid 1px $light-grey;
 	padding: 10px 25px;

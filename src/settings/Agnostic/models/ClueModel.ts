@@ -3,11 +3,24 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
-import {ResponseData} from "../../../data/ResponseData";
+import {ResponseData} from "../../../data/responses/ResponseData";
+import {ResponseLine} from "../../../data/responses/ResponseLine";
+import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
+import {ContentFactory} from "../../../factories/ContentFactory";
+import {ContentType} from "../../../enums/ContentType";
 
 export class ClueModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
+
+		const status = new ResponseLine();
+		status.content =ContentFactory.create(
+			((<ClueDataInterface>this.specificData).synopsis != null && (<ClueDataInterface>this.specificData).synopsis !== ''
+				? (<ClueDataInterface>this.specificData).synopsis
+				: '<span class="rpgm-missing">Synopsis missing</span>'),
+			ContentType.Markdown,
+		);
+		response.addElement(status);
 
 		response.addElement(
 			ComponentFactory.create(
@@ -48,13 +61,6 @@ export class ClueModel extends AbstractModel {
 		this.status();
 		this.image(450);
 		this.synopsis();
-	}
-
-	private status() {
-		this.writeData(
-			this.io.getClue(),
-			ViewType.ClueStatus,
-		)
 	}
 	*/
 }

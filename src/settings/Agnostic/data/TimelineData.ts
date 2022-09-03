@@ -2,6 +2,7 @@ import {DateTime} from "obsidian-dataview";
 import {TimelineDataInterface} from "../../../interfaces/data/TimelineDataInterface";
 import {RpgFunctions} from "../../../RpgFunctions";
 import {AbstractImageData} from "../../../abstracts/AbstractImageData";
+import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 
 export class TimelineData extends AbstractImageData implements TimelineDataInterface {
 	synopsis: string;
@@ -9,8 +10,10 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 	date: string;
 	datetime: DateTime;
 
+
 	constructor(
 		data: Record<string, any>,
+		public campaign: CampaignDataInterface,
 		public type: string,
 	) {
 		super(data);

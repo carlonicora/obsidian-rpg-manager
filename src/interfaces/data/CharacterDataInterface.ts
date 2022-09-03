@@ -8,4 +8,6 @@ export interface CharacterDataInterface extends GenericDataInterface, GenericIma
 	synopsis: string;
 	goals: string|null;
 	pronoun: Pronoun|null;
+	dob: string|null;
+	death: string|null;
 }

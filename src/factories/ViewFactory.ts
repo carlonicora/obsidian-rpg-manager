@@ -1,9 +1,13 @@
 import {StringView} from "../settings/Agnostic/views/StringView";
 import {TableView} from "../settings/Agnostic/views";
+import {BannerView} from "../settings/Agnostic/views/BannerView";
+import {BoxView} from "../settings/Agnostic/views/BoxView";
 
 const ViewsMap = {
 	AgnosticString: StringView,
 	AgnosticTable: TableView,
+	AgnosticBanner: BannerView,
+	AgnosticBox: BoxView
 };
 type ViewsMapType = typeof ViewsMap;
 type ViewKeys = keyof ViewsMapType;

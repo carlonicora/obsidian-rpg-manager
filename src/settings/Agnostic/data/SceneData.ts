@@ -19,7 +19,7 @@ export class SceneData extends AbstractImageData implements SceneDataInterface {
 	constructor(
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface,
-		additionalInformation: string,
+		additionalInformation: string|null,
 		public adventure: AdventureDataInterface|null = null,
 		public session: SessionDataInterface|null = null,
 		public previousScene: SceneDataInterface|null = null,

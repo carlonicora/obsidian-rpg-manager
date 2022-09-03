@@ -36,7 +36,6 @@ export abstract class AbstractModel implements ModelInterface {
 				CampaignSetting[this.campaign.settings] + DataType[this.dataType] as SingleDataKey<any>,
 				this.current,
 				this.campaign,
-				'',
 			);
 		}
 

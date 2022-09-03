@@ -2,7 +2,7 @@ import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
-import {ResponseData} from "../../../data/ResponseData";
+import {ResponseData} from "../../../data/responses/ResponseData";
 
 export class CampaignModel extends AbstractModel {
 	public generateData(

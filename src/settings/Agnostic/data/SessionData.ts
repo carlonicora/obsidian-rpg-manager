@@ -15,7 +15,7 @@ export class SessionData extends AbstractData implements SessionDataInterface {
 	constructor(
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface,
-		public additionalInformation: string = '',
+		public additionalInformation: string|null = '',
 		public adventure: AdventureDataInterface|null = null,
 		public previousSession: SessionDataInterface|null = null,
 		public nextSession: SessionDataInterface|null = null,

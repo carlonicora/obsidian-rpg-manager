@@ -10,6 +10,10 @@ import {EventTableComponent} from "../settings/Agnostic/components/EventTableCom
 import {ClueTableComponent} from "../settings/Agnostic/components/ClueTableComponent";
 import {FactionTableComponent} from "../settings/Agnostic/components/FactionTableComponent";
 import {SceneTableComponent} from "../settings/Agnostic/components/SceneTableComponent";
+import {BannerComponent} from "../settings/Agnostic/components/BannerComponent";
+import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
+import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
+import {CharacterSynopsisComponent} from "../settings/Agnostic/components/CharacterSynopsisComponent";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -20,6 +24,8 @@ const ComponentsMap = {
 	AgnosticClueTable: ClueTableComponent,
 	AgnosticFactionTable: FactionTableComponent,
 	AgnosticSceneTable: SceneTableComponent,
+	AgnosticBanner: BannerComponent,
+	AgnosticCharacterSynopsis: CharacterSynopsisComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;
@@ -29,7 +35,7 @@ export class ComponentFactory {
 	static create<K extends ComponentKeys>(
 		k: SingleComponentKey<K>,
 		io: IoInterface,
-		data: GenericDataListInterface,
+		data: GenericDataListInterface|GenericDataInterface|GenericImageDataInterface,
 		title: string|null = null,
 	): ResponseElementInterface|null {
 		const component: ComponentInterface = new ComponentsMap[k](io);

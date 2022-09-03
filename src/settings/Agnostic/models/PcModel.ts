@@ -1,6 +1,6 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../../../data/ResponseData";
+import {ResponseData} from "../../../data/responses/ResponseData";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
@@ -8,6 +8,14 @@ import {DataType} from "../../../enums/DataType";
 export class PcModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
+
+		response.addElement(
+			ComponentFactory.create(
+				CampaignSetting[this.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
+				this.io,
+				this.specificData,
+			)
+		);
 
 		response.addElement(
 			ComponentFactory.create(

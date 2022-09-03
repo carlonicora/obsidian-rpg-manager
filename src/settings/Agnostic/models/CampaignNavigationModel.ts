@@ -1,28 +1,21 @@
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {AbstractModel} from "../../../abstracts/AbstractModel";
-import {ResponseData} from "../../../data/ResponseData";
+import {ResponseData} from "../../../data/responses/ResponseData";
+import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
+import {CampaignSetting} from "../../../enums/CampaignSetting";
 
 export class CampaignNavigationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
-		return response;
-	}
 
-	/*
-	public async render() {
-		//this.campaignNavigation();
-	}
-
-	private async campaignNavigation(
-	) {
-		const data = new CampaignData(
-			this.api,
-			this.current,
+		response.addElement(
+			ComponentFactory.create(
+				CampaignSetting[this.campaign.settings] + 'Banner' as SingleComponentKey<any>,
+				this.io,
+				this.campaign,
+			)
 		);
 
-		const view = ViewFactory.createSingle(ViewType.CampaignNavigation, this.dv);
-		view.render(data);
+		return response;
 	}
-
-	 */
 }
