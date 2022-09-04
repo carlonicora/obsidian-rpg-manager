@@ -38,15 +38,10 @@ export default class RpgManager extends Plugin {
 			this.api,
 		)
 
-		this.refreshViews = debounce(this.refreshViews, 500, true) as unknown as () => Promise<void>
+		this.refreshViews = debounce(this.refreshViews.bind(this), 500, true) as unknown as () => Promise<void>
 
-		this.registerEvent(this.app.metadataCache.on('resolved', (function(){
-			this.refreshViews();
-		}).bind(this)));
-
-		this.registerEvent(this.app.vault.on('modify', (function(){
-			this.refreshViews();
-		}).bind(this)));
+		this.registerEvent(this.app.metadataCache.on('resolved', this.refreshViews));
+		this.registerEvent(this.app.vault.on('modify', this.refreshViews));
 
 		this.registerPriorityCodeblockPostProcessor("RpgManager", -100, async (source: string, el, ctx) =>
 			this.createRpgView(source, el, ctx, ctx.sourcePath)

@@ -1541,14 +1541,13 @@ var Api = class extends import_obsidian3.Component {
       if (!this.root.endsWith("/")) {
         this.root += "/";
       }
-      this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
     }
   }
   fileExists(path) {
     const abstractFile = this.app.vault.getAbstractFileByPath(path);
     let response = false;
     if (abstractFile instanceof import_obsidian3.TAbstractFile) {
-      response = abstractFile ? true : false;
+      response = true;
     }
     return response;
   }
@@ -2879,13 +2878,9 @@ var RpgManager = class extends import_obsidian8.Plugin {
       this.api = new Api(this.app, this.settings);
       RpgViewFactory.initialise(this.api);
       RpgModelFactory.initialise(this.api);
-      this.refreshViews = (0, import_obsidian8.debounce)(this.refreshViews, 500, true);
-      this.registerEvent(this.app.metadataCache.on("resolved", function() {
-        this.refreshViews();
-      }.bind(this)));
-      this.registerEvent(this.app.vault.on("modify", function() {
-        this.refreshViews();
-      }.bind(this)));
+      this.refreshViews = (0, import_obsidian8.debounce)(this.refreshViews.bind(this), 500, true);
+      this.registerEvent(this.app.metadataCache.on("resolved", this.refreshViews));
+      this.registerEvent(this.app.vault.on("modify", this.refreshViews));
       this.registerPriorityCodeblockPostProcessor("RpgManager", -100, (source, el, ctx) => __async(this, null, function* () {
         return this.createRpgView(source, el, ctx, ctx.sourcePath);
       }));

@@ -1,4 +1,4 @@
-import {App, Component, TAbstractFile, TFile} from "obsidian";
+import {App, Component, FileSystemAdapter, TAbstractFile, TFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
 import {DateTime} from "obsidian-dataview";
 import {FileFactory} from "./factories/FileFactory";
@@ -7,7 +7,6 @@ import {RpgManagerSettings} from "./Settings";
 
 export class Api extends Component {
 	private root: string;
-	private attachmentRoot: string;
 	public fileFactory: FileFactory;
 
 	constructor(
@@ -54,8 +53,6 @@ export class Api extends Component {
 			if (!this.root.endsWith("/")) {
 				this.root += "/";
 			}
-
-			this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
 		}
 	}
 
@@ -64,7 +61,7 @@ export class Api extends Component {
 		let response = false;
 
 		if (abstractFile instanceof TAbstractFile) {
-			response = (abstractFile ? true : false);
+			response = true;
 		}
 
 		return response;
