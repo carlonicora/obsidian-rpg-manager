@@ -1,9 +1,9 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
-import {AdventureData} from "../data";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {ResponseData} from "../../../data/responses/ResponseData";
+import {AdventureData} from "../data/AdventureData";
 
 export class AdventureModel extends AbstractModel {
 	public generateData(

@@ -8,6 +8,8 @@ export class SceneNavigationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
+		response.addElement(this.generateBreadcrumb());
+
 		const goalElement = new ResponseBox();
 		goalElement.content = (<SceneDataInterface>this.specificData).synopsis;
 		goalElement.title = 'Scene Goal';

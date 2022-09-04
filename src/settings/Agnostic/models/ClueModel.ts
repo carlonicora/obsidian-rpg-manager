@@ -13,6 +13,8 @@ export class ClueModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
+		response.addElement(this.generateBreadcrumb());
+
 		const status = new ResponseLine();
 		status.content =ContentFactory.create(
 			((<ClueDataInterface>this.specificData).synopsis != null && (<ClueDataInterface>this.specificData).synopsis !== ''

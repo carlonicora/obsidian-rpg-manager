@@ -13,6 +13,8 @@ export class FactionModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
+		response.addElement(this.generateBreadcrumb());
+
 		const status = new ResponseLine();
 		status.content =ContentFactory.create(
 			((<FactionDataInterface>this.specificData).synopsis != null && (<FactionDataInterface>this.specificData).synopsis !== ''

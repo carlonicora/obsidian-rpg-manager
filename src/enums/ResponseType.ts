@@ -4,4 +4,5 @@ export enum ResponseType {
 	Banner,
 	Scene,
 	Box,
+	Breadcrumb,
 }

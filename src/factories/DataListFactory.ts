@@ -1,13 +1,13 @@
 import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
-import {
-	AdventureList,
-	CharacterList,
-	ClueList,
-	EventList,
-	FactionList,
-	LocationList,
-	SceneList, SessionList, TimelineList
-} from "../settings/Agnostic/data";
+import {AdventureList} from "../settings/Agnostic/data/AdventureList";
+import {CharacterList} from "../settings/Agnostic/data/CharacterList";
+import {ClueList} from "../settings/Agnostic/data/ClueList";
+import {EventList} from "../settings/Agnostic/data/EventList";
+import {FactionList} from "../settings/Agnostic/data/FactionList";
+import {LocationList} from "../settings/Agnostic/data/LocationList";
+import {SceneList} from "../settings/Agnostic/data/SceneList";
+import {SessionList} from "../settings/Agnostic/data/SessionList";
+import {TimelineList} from "../settings/Agnostic/data/TimelineList";
 
 const DataListsMap = {
 	AgnosticAdventure: AdventureList,

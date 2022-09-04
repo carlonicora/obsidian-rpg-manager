@@ -1,15 +1,15 @@
-import {
-	AdventureData,
-	CampaignData,
-	CharacterData,
-	ClueData,
-	EventData,
-	FactionData,
-	LocationData, SceneData, SessionData
-} from "../settings/Agnostic/data";
 import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
 import {VampireCharacterData} from "../settings/Vampire/data";
 import {RawCharacterData} from "../settings/Raw/data";
+import {CampaignData} from "../settings/Agnostic/data/CampaignData";
+import {AdventureData} from "../settings/Agnostic/data/AdventureData";
+import {SessionData} from "../settings/Agnostic/data/SessionData";
+import {SceneData} from "../settings/Agnostic/data/SceneData";
+import {CharacterData} from "../settings/Agnostic/data/CharacterData";
+import {ClueData} from "../settings/Agnostic/data/ClueData";
+import {EventData} from "../settings/Agnostic/data/EventData";
+import {FactionData} from "../settings/Agnostic/data/FactionData";
+import {LocationData} from "../settings/Agnostic/data/LocationData";
 
 const DatasMap = {
 	AgnosticCampaign: CampaignData,

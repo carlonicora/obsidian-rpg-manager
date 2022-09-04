@@ -182,35 +182,6 @@
   background-color: #f9f9f9;
 }
 
-.rpgm-scene-goal, .rpgm-scene-action {
-  border: solid 1px #d9d9d9;
-  padding: 10px 25px;
-  font-size: 1em;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-.rpgm-scene-goal p, .rpgm-scene-action p {
-  margin-top: 10px;
-}
-.rpgm-scene-goal .title, .rpgm-scene-action .title {
-  font-size: 0.7em;
-  font-variant: all-small-caps;
-  overflow: hidden;
-  white-space: nowrap;
-  margin-top: -10px;
-  text-align: right;
-  margin-right: -20px;
-  color: #808080;
-}
-
-.rpgm-scene-goal {
-  background-color: #fff;
-}
-
-.rpgm-scene-action {
-  background-color: #f9f9f9;
-}
-
 .rpgm-modal h2.rpgm-modal-title {
   font-size: 1.5em;
 }
@@ -307,13 +278,42 @@
 .rpgm-breadcrumb {
   width: 100%;
   font-size: 0.9em;
+  text-align: center;
 }
-.rpgm-breadcrumb .separator, .rpgm-breadcrumb .element {
-  float: left;
+.rpgm-breadcrumb h2 {
+  margin-bottom: 0px;
 }
-.rpgm-breadcrumb .separator {
-  padding-left: 10px;
+.rpgm-breadcrumb .line {
+  margin-left: 0%;
+  margin-right: 0%;
+}
+.rpgm-breadcrumb .line .separator {
   padding-right: 10px;
+  padding-left: 10px;
+}
+.rpgm-breadcrumb .line .crumb, .rpgm-breadcrumb .line .separator {
+  display: inline-block;
+}
+.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .line .separator .value {
+  text-align: left;
+}
+.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .separator .title {
+  font-weight: 100;
+  font-size: 0.7em;
+  font-variant-caps: small-caps;
+  color: #808080;
+}
+.rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value {
+  font-weight: 300;
+  font-size: 0.9em;
+  text-align: left;
+}
+.rpgm-breadcrumb .line .crumb .value p, .rpgm-breadcrumb .line .separator .value p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.rpgm-breadcrumb .reset {
+  clear: both;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -9,6 +9,8 @@ export class PcModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
+		response.addElement(this.generateBreadcrumb());
+
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,

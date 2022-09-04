@@ -226,36 +226,6 @@ $blue: #2020ff;
 	}
 }
 
-.rpgm-scene-goal, .rpgm-scene-action {
-	border: solid 1px $light-grey;
-	padding: 10px 25px;
-	font-size: 1.0em;
-	margin-top: 20px;
-	margin-bottom: 40px;
-
-	p {
-		margin-top: 10px;
-	}
-
-	.title {
-		font-size: 0.7em;
-		font-variant: all-small-caps;
-		overflow: hidden;
-		white-space: nowrap;
-		margin-top: -10px;
-		text-align: right;
-		margin-right: -20px;
-		color: $dark-grey;
-	}
-}
-
-.rpgm-scene-goal{
-	background-color: $white;
-}
-.rpgm-scene-action{
-	background-color: $super-off-white;
-}
-
 .rpgm-modal {
 	h2.rpgm-modal-title {
 		font-size: 1.5em;
@@ -368,13 +338,50 @@ $blue: #2020ff;
 .rpgm-breadcrumb {
 	width: 100%;
 	font-size: 0.9em;
+	text-align: center;
 
-	.separator, .element {
-		float: left;
+	h2 {
+		margin-bottom: 0px;
 	}
 
-	.separator {
-		padding-left: 10px;
-		padding-right: 10px;
+	.line {
+		margin-left: 0%;
+		margin-right: 0%;
+
+		.separator {
+			padding-right: 10px;
+			padding-left: 10px;
+		}
+
+		.crumb, .separator {
+			display: inline-block;
+
+			.title, .value {
+				text-align: left;
+			}
+
+			.title {
+
+				font-weight: 100;
+				font-size: 0.7em;
+				font-variant-caps: small-caps;
+				color: $dark-grey;
+			}
+
+			.value {
+				font-weight: 300;
+				font-size: 0.9em;
+				text-align: left;
+
+				p {
+					margin-top: 0px;
+					margin-bottom: 0px;
+				}
+			}
+		}
+	}
+
+	.reset {
+		clear: both;
 	}
 }

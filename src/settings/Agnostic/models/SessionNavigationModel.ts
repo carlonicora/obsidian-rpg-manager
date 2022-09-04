@@ -5,6 +5,9 @@ import {ResponseData} from "../../../data/responses/ResponseData";
 export class SessionNavigationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
+
+		response.addElement(this.generateBreadcrumb());
+
 		return response;
 	}
 

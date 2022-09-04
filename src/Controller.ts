@@ -1,7 +1,6 @@
 import {App, Component, debounce, MarkdownPostProcessorContext, MarkdownRenderChild, MarkdownView} from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
 import {DataType} from "./enums/DataType";
-import {CampaignData} from "./settings/Agnostic/data";
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
@@ -12,6 +11,7 @@ import {SingleViewKey, ViewFactory} from "./factories/ViewFactory";
 import {ResponseType} from "./enums/ResponseType";
 import {ModelFactory, SingleModelKey} from "./factories/ModelFactory";
 import {CampaignSetting} from "./enums/CampaignSetting";
+import {CampaignData} from "./settings/Agnostic/data/CampaignData";
 
 export class Controller extends MarkdownRenderChild {
 	private isActive = false;

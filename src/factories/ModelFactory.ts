@@ -1,22 +1,22 @@
 import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
-import {
-	AdventureModel,
-	CampaignModel,
-	CampaignNavigationModel,
-	ClueModel,
-	ErrorModel,
-	EventModel,
-	FactionModel,
-	LocationModel,
-	NotesModel,
-	NpcModel,
-	PcModel,
-	SceneModel,
-	SceneNavigationModel,
-	SessionModel, SessionNavigationModel, TimelineModel
-} from "../settings/Agnostic/models";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {App} from "obsidian";
+import {AdventureModel} from "../settings/Agnostic/models/AdventureModel";
+import {CampaignModel} from "../settings/Agnostic/models/CampaignModel";
+import {CampaignNavigationModel} from "../settings/Agnostic/models/CampaignNavigationModel";
+import {ClueModel} from "../settings/Agnostic/models/ClueModel";
+import {ErrorModel} from "../settings/Agnostic/models/ErrorModel";
+import {EventModel} from "../settings/Agnostic/models/EventModel";
+import {FactionModel} from "../settings/Agnostic/models/FactionModel";
+import {LocationModel} from "../settings/Agnostic/models/LocationModel";
+import {NotesModel} from "../settings/Agnostic/models/NotesModel";
+import {NpcModel} from "../settings/Agnostic/models/NpcModel";
+import {PcModel} from "../settings/Agnostic/models/PcModel";
+import {SceneModel} from "../settings/Agnostic/models/SceneModel";
+import {SceneNavigationModel} from "../settings/Agnostic/models/SceneNavigationModel";
+import {SessionModel} from "../settings/Agnostic/models/SessionModel";
+import {SessionNavigationModel} from "../settings/Agnostic/models/SessionNavigationModel";
+import {TimelineModel} from "../settings/Agnostic/models/TimelineModel";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,

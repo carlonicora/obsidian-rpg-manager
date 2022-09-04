@@ -13,6 +13,8 @@ export class LocationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
+		response.addElement(this.generateBreadcrumb());
+
 		if ((<LocationDataInterface>this.specificData).address != null && (<LocationDataInterface>this.specificData).address !== '') {
 			const status = new ResponseLine();
 			status.content = ContentFactory.create(

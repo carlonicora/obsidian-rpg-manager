@@ -4,7 +4,8 @@ import {ResponseBanner} from "../../../data/responses/ResponseBanner";
 import {GenericImageDataInterface} from "../../../interfaces/data/GenericImageDataInterface";
 import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
 import {TimelineDataInterface} from "../../../interfaces/data/TimelineDataInterface";
-import {CampaignData, TimelineData} from "../data";
+import {CampaignData} from "../data/CampaignData";
+import {TimelineData} from "../data/TimelineData";
 
 export class BannerComponent extends AbstractComponent{
 	generateData(

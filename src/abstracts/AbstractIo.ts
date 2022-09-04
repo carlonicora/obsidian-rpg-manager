@@ -1,16 +1,5 @@
 import {IoInterface} from "../interfaces/IoInterface";
 import {DataObject} from "obsidian-dataview";
-import {
-	AdventureData,
-	AdventureList,
-	CharacterData,
-	CharacterList,
-	ClueData,
-	SceneList,
-	SessionData,
-	SessionList,
-	SynopsisData
-} from "../settings/Agnostic/data";
 import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {DataType} from "../enums/DataType";
 import {ImageData} from "../data/ImageData";
@@ -30,6 +19,15 @@ import {RpgFunctions} from "../RpgFunctions";
 import {DataFactory, SingleDataKey} from "../factories/DataFactory";
 import {DataListFactory, SingleDataListKey} from "../factories/DataListFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
+import {AdventureList} from "../settings/Agnostic/data/AdventureList";
+import {AdventureData} from "../settings/Agnostic/data/AdventureData";
+import {SessionData} from "../settings/Agnostic/data/SessionData";
+import {SessionList} from "../settings/Agnostic/data/SessionList";
+import {SceneList} from "../settings/Agnostic/data/SceneList";
+import {CharacterList} from "../settings/Agnostic/data/CharacterList";
+import {CharacterData} from "../settings/Agnostic/data/CharacterData";
+import {ClueData} from "../settings/Agnostic/data/ClueData";
+import {SynopsisData} from "../settings/Agnostic/data/SynopsisData";
 
 export abstract class AbstractIo implements IoInterface {
 	protected outlinks: DataObject[];
@@ -297,9 +295,9 @@ export abstract class AbstractIo implements IoInterface {
 	}
 
 	public getScene(
-		adventureId: number,
-		sessionId: number,
-		sceneId: number,
+		adventureId: number|null,
+		sessionId: number|null,
+		sceneId: number|null,
 	): SceneDataInterface|null
 	{
 		let response: SceneDataInterface|null = null;
@@ -318,7 +316,7 @@ export abstract class AbstractIo implements IoInterface {
 			if (scenes !== null && scenes.length === 1){
 				response = DataFactory.create(
 					CampaignSetting[this.campaign.settings] + 'Scene' as SingleDataKey<any>,
-					this.current,
+					scenes[0],
 					this.campaign,
 				) as SceneDataInterface;
 			}

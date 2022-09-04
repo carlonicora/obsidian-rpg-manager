@@ -74,17 +74,6 @@ var DataType = /* @__PURE__ */ ((DataType2) => {
   return DataType2;
 })(DataType || {});
 
-// src/abstracts/AbstractData.ts
-var AbstractData = class {
-  constructor(data) {
-    this.data = data;
-    this.link = data.file.link;
-    this.name = data.file.name;
-    this.path = data.file.path;
-    this.completed = data.completed != null ? data.completed : true;
-  }
-};
-
 // src/RpgFunctions.ts
 var import_obsidian = require("obsidian");
 var RpgFunctions = class {
@@ -370,379 +359,6 @@ var RpgFunctions = class {
   }
 };
 
-// src/settings/Agnostic/data/AdventureData.ts
-var AdventureData = class extends AbstractData {
-  constructor(data, campaign) {
-    super(data);
-    this.campaign = campaign;
-    this.id = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
-    this.synopsis = data.synopsis;
-  }
-};
-
-// src/abstracts/AbstractDataList.ts
-var AbstractDataList = class {
-  constructor(campaign) {
-    this.campaign = campaign;
-  }
-  add(data) {
-    this.elements.push(data);
-  }
-  map(data) {
-    const response = /* @__PURE__ */ new Map();
-    const character = this.elements.find((t) => t.link === data.link);
-    if (character !== void 0) {
-      Object.entries(character).forEach(([key, value]) => {
-        response.set(key, value);
-      });
-    }
-    return response;
-  }
-};
-
-// src/settings/Agnostic/data/AdventureList.ts
-var AdventureList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/enums/CampaignSetting.ts
-var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
-  CampaignSetting2[CampaignSetting2["Agnostic"] = 0] = "Agnostic";
-  CampaignSetting2[CampaignSetting2["Raw"] = 1] = "Raw";
-  CampaignSetting2[CampaignSetting2["Vampire"] = 2] = "Vampire";
-  return CampaignSetting2;
-})(CampaignSetting || {});
-
-// src/factories/ErrorFactory.ts
-var ErrorFactory = class {
-  static create(errorMessage) {
-    console.log("RpgManager Error: " + errorMessage);
-  }
-};
-
-// src/abstracts/AbstractImageData.ts
-var AbstractImageData = class extends AbstractData {
-  constructor(data) {
-    super(data);
-    this.imageSrc = RpgFunctions.getImageLink(data);
-    this.imageSrcElement = RpgFunctions.getImageElement(data);
-    this.image = this.imageSrc !== null ? RpgFunctions.getImage(data) : "";
-  }
-  getImage(width = 75, height = 75) {
-    if (this.imageSrc === null)
-      return "";
-    return RpgFunctions.getImage(this.data, width, height);
-  }
-};
-
-// src/settings/Agnostic/data/CampaignData.ts
-var CampaignData = class extends AbstractImageData {
-  constructor(data) {
-    super(data);
-    this.currentDate = data.dates.current;
-    this.id = RpgFunctions.getTagId(data.tags, 0 /* Campaign */);
-    if (data.settings == null) {
-      this.settings = 0 /* Agnostic */;
-    } else {
-      try {
-        this.settings = CampaignSetting[data.settings];
-      } catch (e) {
-        ErrorFactory.create("Campaign Settings is not correct");
-        this.settings = 0 /* Agnostic */;
-      }
-    }
-  }
-};
-
-// src/factories/PronounFactory.ts
-var PronounFactory = class {
-  static create(pronoun) {
-    let response = null;
-    if (pronoun != null) {
-      switch (pronoun.toLowerCase()) {
-        case "t":
-        case "they":
-          response = 0 /* they */;
-          break;
-        case "s":
-        case "she":
-          response = 1 /* she */;
-          break;
-        case "h":
-        case "he":
-          response = 2 /* he */;
-          break;
-        default:
-          response = null;
-          break;
-      }
-    }
-    return response;
-  }
-  static readPronoun(pronoun) {
-    switch (pronoun) {
-      case 0 /* they */:
-        return "They/Them";
-        break;
-      case 1 /* she */:
-        return "She/Her";
-        break;
-      case 2 /* he */:
-        return "He/Him";
-        break;
-    }
-  }
-};
-
-// src/settings/Agnostic/data/CharacterData.ts
-var CharacterData = class extends AbstractImageData {
-  constructor(data, campaign, useAdditionalInformation = null) {
-    super(data);
-    this.campaign = campaign;
-    this.age = "";
-    this.image = RpgFunctions.getImage(data);
-    this.age = RpgFunctions.calculateAge(data, campaign.currentDate);
-    this.isDead = data.dates.death != void 0;
-    this.goals = data.goals != void 0 ? data.goals : null;
-    this.pronoun = PronounFactory.create(data.pronoun);
-    if (data.dates.dob != void 0) {
-      this.dob = RpgFunctions.formatDate(data.dates.dob);
-    }
-    if (data.dates.death != void 0) {
-      this.death = RpgFunctions.formatDate(data.dates.death);
-    }
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/settings/Agnostic/data/CharacterList.ts
-var CharacterList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/ClueData.ts
-var ClueData = class extends AbstractImageData {
-  constructor(data, campaign, useAdditionalInformation = null) {
-    super(data);
-    this.campaign = campaign;
-    this.image = RpgFunctions.getImage(data);
-    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
-      this.found = RpgFunctions.formatDate(data.dates.found, "long");
-    } else {
-      this.found = false;
-    }
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/settings/Agnostic/data/ClueList.ts
-var ClueList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/EventData.ts
-var EventData = class extends AbstractImageData {
-  constructor(data, campaign, useAdditionalInformation = null) {
-    super(data);
-    this.campaign = campaign;
-    if (data.dates.event != null)
-      this.date = RpgFunctions.formatDate(data.dates.event, "short");
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/settings/Agnostic/data/EventList.ts
-var EventList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/FactionData.ts
-var FactionData = class extends AbstractImageData {
-  constructor(data, campaign, useAdditionalInformation = null) {
-    super(data);
-    this.campaign = campaign;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/settings/Agnostic/data/FactionList.ts
-var FactionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/LocationData.ts
-var LocationData = class extends AbstractImageData {
-  constructor(data, campaign, useAdditionalInformation = null) {
-    super(data);
-    this.campaign = campaign;
-    this.address = data.address;
-    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
-  }
-};
-
-// src/settings/Agnostic/data/LocationList.ts
-var LocationList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/SceneData.ts
-var SceneData = class extends AbstractImageData {
-  constructor(data, campaign, additionalInformation, adventure = null, session = null, previousScene = null, nextScene = null) {
-    var _a, _b;
-    super(data);
-    this.campaign = campaign;
-    this.adventure = adventure;
-    this.session = session;
-    this.previousScene = previousScene;
-    this.nextScene = nextScene;
-    this.duration = "";
-    this.action = data.action != void 0 ? data.action : "";
-    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
-    this.startTime = RpgFunctions.formatTime((_a = data.time) == null ? void 0 : _a.start);
-    this.endTime = RpgFunctions.formatTime((_b = data.time) == null ? void 0 : _b.end);
-    this.id = RpgFunctions.getTagId(data.tags, 3 /* Scene */);
-    this.sessionId = RpgFunctions.getTagId(data.tags, 2 /* Session */);
-    this.adventureId = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
-    if (this.startTime !== "" && this.endTime !== "") {
-      this.duration = RpgFunctions.calculateDuration(data.time.start, data.time.end);
-    }
-  }
-};
-
-// src/settings/Agnostic/data/SceneList.ts
-var SceneList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/SessionData.ts
-var SessionData = class extends AbstractData {
-  constructor(data, campaign, additionalInformation = "", adventure = null, previousSession = null, nextSession = null) {
-    super(data);
-    this.campaign = campaign;
-    this.additionalInformation = additionalInformation;
-    this.adventure = adventure;
-    this.previousSession = previousSession;
-    this.nextSession = nextSession;
-    this.id = RpgFunctions.getTagId(data.tags, 2 /* Session */);
-    this.adventureId = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
-    this.synopsis = data.synopsis;
-    if (data.dates.session !== null && data.dates.session !== void 0)
-      this.date = RpgFunctions.formatDate(data.dates.session, "short");
-    if (data.dates.irl !== null && data.dates.irl !== void 0)
-      this.irl = RpgFunctions.formatDate(data.dates.irl);
-  }
-};
-
-// src/settings/Agnostic/data/SessionList.ts
-var SessionList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-};
-
-// src/settings/Agnostic/data/SynopsisData.ts
-var SynopsisData = class extends AbstractData {
-  constructor(data, title = null) {
-    var _a, _b;
-    super(data);
-    this.title = title;
-    this.synopsis = data.synopsis !== null ? data.synopsis : "";
-    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? RpgFunctions.formatDate(data.dates.death, "short") : "";
-    this.isCharacter = false;
-    data.tags.forEach((tag) => {
-      if (tag.startsWith(RpgFunctions.settings.npcTag) || tag.startsWith(RpgFunctions.settings.pcTag)) {
-        this.isCharacter = true;
-        this.pronoun = PronounFactory.create(data.pronoun);
-      }
-    });
-  }
-};
-
-// src/settings/Agnostic/data/TimelineData.ts
-var TimelineData = class extends AbstractImageData {
-  constructor(data, campaign, type) {
-    super(data);
-    this.campaign = campaign;
-    this.type = type;
-    this.image = RpgFunctions.getImage(data, 70);
-    this.synopsis = data.synopsis;
-    switch (type) {
-      case "event":
-        this.datetime = data.dates.event;
-        break;
-      case "death":
-        this.datetime = data.dates.death;
-        break;
-      case "birth":
-        this.datetime = data.dates.dob;
-        break;
-      case "session":
-        this.datetime = data.dates.session;
-        break;
-      case "clue":
-        this.datetime = data.dates.found;
-        break;
-    }
-    this.date = RpgFunctions.formatDate(this.datetime, "short");
-    this.time = RpgFunctions.formatTime(this.datetime);
-  }
-  getEventColour() {
-    switch (this.type) {
-      case "event":
-        return "";
-        break;
-      case "birth":
-        return "green";
-        break;
-      case "death":
-        return "red";
-        break;
-      case "session":
-        return "blue";
-        break;
-      case "clue":
-        return "purple";
-        break;
-    }
-    return "";
-  }
-};
-
-// src/settings/Agnostic/data/TimelineList.ts
-var TimelineList = class extends AbstractDataList {
-  constructor(campaign) {
-    super(campaign);
-    this.elements = [];
-  }
-  sort() {
-    this.elements.sort((a, b) => {
-      return a.datetime - b.datetime;
-    });
-  }
-};
-
 // src/abstracts/AbstractView.ts
 var AbstractView = class {
   constructor(sourcePath) {
@@ -817,12 +433,55 @@ var BoxView = class extends AbstractView {
   }
 };
 
+// src/settings/Agnostic/views/BreadcrumbView.ts
+var import_obsidian3 = require("obsidian");
+var BreadcrumbView = class extends AbstractView {
+  render(container, data) {
+    const breadcrumbContainer = container.createDiv({ cls: "rpgm-breadcrumb" });
+    breadcrumbContainer.createEl("h2").textContent = data.mainTitle;
+    const breadcrumbLine = breadcrumbContainer.createDiv({ cls: "line" });
+    this.renderBreadcrumb(breadcrumbContainer, breadcrumbLine, data);
+  }
+  renderBreadcrumb(breadcrumb, line, data, isFirstLine = true) {
+    let lineToUse = line;
+    if (data.isInNewLine) {
+      breadcrumb.createDiv({ cls: "reset" });
+      lineToUse = breadcrumb.createDiv({ cls: "line" });
+      isFirstLine = false;
+    }
+    const crumb = lineToUse.createDiv({ cls: "crumb" });
+    crumb.createDiv({ cls: "title", text: data.title ? data.title : " " });
+    const value = crumb.createDiv({ cls: "value" });
+    let link = data.link;
+    if (data.linkText != null) {
+      if (link.indexOf("|") !== -1) {
+        link = link.substring(0, link.indexOf("|") + 1) + data.linkText + "]]";
+      } else {
+        link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
+      }
+    }
+    import_obsidian3.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
+    if (data.nextBreadcrumb != null) {
+      if (data.nextBreadcrumb.isInNewLine === false) {
+        const separator = lineToUse.createDiv({ cls: "separator" });
+        separator.createDiv({ cls: "title", text: " " });
+        const separatorText = separator.createDiv({ cls: "value" });
+        separatorText.createEl("p").textContent = isFirstLine ? ">" : "|";
+      }
+      this.renderBreadcrumb(breadcrumb, lineToUse, data.nextBreadcrumb, isFirstLine);
+    } else {
+      breadcrumb.createDiv({ cls: "reset" });
+    }
+  }
+};
+
 // src/factories/ViewFactory.ts
 var ViewsMap = {
   AgnosticString: StringView,
   AgnosticTable: TableView,
   AgnosticBanner: BannerView,
-  AgnosticBox: BoxView
+  AgnosticBox: BoxView,
+  AgnosticBreadcrumb: BreadcrumbView
 };
 var ViewFactory = class {
   static create(k, sourcePath) {
@@ -837,8 +496,35 @@ var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
   ResponseType2[ResponseType2["Banner"] = 2] = "Banner";
   ResponseType2[ResponseType2["Scene"] = 3] = "Scene";
   ResponseType2[ResponseType2["Box"] = 4] = "Box";
+  ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
   return ResponseType2;
 })(ResponseType || {});
+
+// src/abstracts/AbstractData.ts
+var AbstractData = class {
+  constructor(data) {
+    this.data = data;
+    this.link = data.file.link;
+    this.name = data.file.name;
+    this.path = data.file.path;
+    this.completed = data.completed != null ? data.completed : true;
+  }
+};
+
+// src/abstracts/AbstractImageData.ts
+var AbstractImageData = class extends AbstractData {
+  constructor(data) {
+    super(data);
+    this.imageSrc = RpgFunctions.getImageLink(data);
+    this.imageSrcElement = RpgFunctions.getImageElement(data);
+    this.image = this.imageSrc !== null ? RpgFunctions.getImage(data) : "";
+  }
+  getImage(width = 75, height = 75) {
+    if (this.imageSrc === null)
+      return "";
+    return RpgFunctions.getImage(this.data, width, height);
+  }
+};
 
 // src/data/ImageData.ts
 var ImageData = class extends AbstractImageData {
@@ -848,12 +534,205 @@ var ImageData = class extends AbstractImageData {
   }
 };
 
+// src/factories/PronounFactory.ts
+var PronounFactory = class {
+  static create(pronoun) {
+    let response = null;
+    if (pronoun != null) {
+      switch (pronoun.toLowerCase()) {
+        case "t":
+        case "they":
+          response = 0 /* they */;
+          break;
+        case "s":
+        case "she":
+          response = 1 /* she */;
+          break;
+        case "h":
+        case "he":
+          response = 2 /* he */;
+          break;
+        default:
+          response = null;
+          break;
+      }
+    }
+    return response;
+  }
+  static readPronoun(pronoun) {
+    switch (pronoun) {
+      case 0 /* they */:
+        return "They/Them";
+        break;
+      case 1 /* she */:
+        return "She/Her";
+        break;
+      case 2 /* he */:
+        return "He/Him";
+        break;
+    }
+  }
+};
+
+// src/settings/Agnostic/data/CharacterData.ts
+var CharacterData = class extends AbstractImageData {
+  constructor(data, campaign, useAdditionalInformation = null) {
+    super(data);
+    this.campaign = campaign;
+    this.age = "";
+    this.image = RpgFunctions.getImage(data);
+    this.age = RpgFunctions.calculateAge(data, campaign.currentDate);
+    this.isDead = data.dates.death != void 0;
+    this.goals = data.goals != void 0 ? data.goals : null;
+    this.pronoun = PronounFactory.create(data.pronoun);
+    if (data.dates.dob != void 0) {
+      this.dob = RpgFunctions.formatDate(data.dates.dob);
+    }
+    if (data.dates.death != void 0) {
+      this.death = RpgFunctions.formatDate(data.dates.death);
+    }
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
 // src/settings/Vampire/data/VampireCharacterData.ts
 var VampireCharacterData = class extends CharacterData {
 };
 
 // src/settings/Raw/data/RawCharacterData.ts
 var RawCharacterData = class extends CharacterData {
+};
+
+// src/enums/CampaignSetting.ts
+var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
+  CampaignSetting2[CampaignSetting2["Agnostic"] = 0] = "Agnostic";
+  CampaignSetting2[CampaignSetting2["Raw"] = 1] = "Raw";
+  CampaignSetting2[CampaignSetting2["Vampire"] = 2] = "Vampire";
+  return CampaignSetting2;
+})(CampaignSetting || {});
+
+// src/factories/ErrorFactory.ts
+var ErrorFactory = class {
+  static create(errorMessage) {
+    console.log("RpgManager Error: " + errorMessage);
+  }
+};
+
+// src/settings/Agnostic/data/CampaignData.ts
+var CampaignData = class extends AbstractImageData {
+  constructor(data) {
+    super(data);
+    this.currentDate = data.dates.current;
+    this.id = RpgFunctions.getTagId(data.tags, 0 /* Campaign */);
+    if (data.settings == null) {
+      this.settings = 0 /* Agnostic */;
+    } else {
+      try {
+        this.settings = CampaignSetting[data.settings];
+      } catch (e) {
+        ErrorFactory.create("Campaign Settings is not correct");
+        this.settings = 0 /* Agnostic */;
+      }
+    }
+  }
+};
+
+// src/settings/Agnostic/data/AdventureData.ts
+var AdventureData = class extends AbstractData {
+  constructor(data, campaign) {
+    super(data);
+    this.campaign = campaign;
+    this.id = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
+    this.synopsis = data.synopsis;
+  }
+};
+
+// src/settings/Agnostic/data/SessionData.ts
+var SessionData = class extends AbstractData {
+  constructor(data, campaign, additionalInformation = "", adventure = null, previousSession = null, nextSession = null) {
+    super(data);
+    this.campaign = campaign;
+    this.additionalInformation = additionalInformation;
+    this.adventure = adventure;
+    this.previousSession = previousSession;
+    this.nextSession = nextSession;
+    this.id = RpgFunctions.getTagId(data.tags, 2 /* Session */);
+    this.adventureId = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
+    this.synopsis = data.synopsis;
+    if (data.dates.session !== null && data.dates.session !== void 0)
+      this.date = RpgFunctions.formatDate(data.dates.session, "short");
+    if (data.dates.irl !== null && data.dates.irl !== void 0)
+      this.irl = RpgFunctions.formatDate(data.dates.irl);
+  }
+};
+
+// src/settings/Agnostic/data/SceneData.ts
+var SceneData = class extends AbstractImageData {
+  constructor(data, campaign, additionalInformation, adventure = null, session = null, previousScene = null, nextScene = null) {
+    var _a, _b;
+    super(data);
+    this.campaign = campaign;
+    this.adventure = adventure;
+    this.session = session;
+    this.previousScene = previousScene;
+    this.nextScene = nextScene;
+    this.duration = "";
+    this.action = data.action != void 0 ? data.action : "";
+    this.synopsis = data.synopsis != void 0 ? data.synopsis : "";
+    this.startTime = RpgFunctions.formatTime((_a = data.time) == null ? void 0 : _a.start);
+    this.endTime = RpgFunctions.formatTime((_b = data.time) == null ? void 0 : _b.end);
+    this.id = RpgFunctions.getTagId(data.tags, 3 /* Scene */);
+    this.sessionId = RpgFunctions.getTagId(data.tags, 2 /* Session */);
+    this.adventureId = RpgFunctions.getTagId(data.tags, 1 /* Adventure */);
+    if (this.startTime !== "" && this.endTime !== "") {
+      this.duration = RpgFunctions.calculateDuration(data.time.start, data.time.end);
+    }
+  }
+};
+
+// src/settings/Agnostic/data/ClueData.ts
+var ClueData = class extends AbstractImageData {
+  constructor(data, campaign, useAdditionalInformation = null) {
+    super(data);
+    this.campaign = campaign;
+    this.image = RpgFunctions.getImage(data);
+    if (data.dates.found !== null && data.dates.found !== void 0 && data.dates.found !== false) {
+      this.found = RpgFunctions.formatDate(data.dates.found, "long");
+    } else {
+      this.found = false;
+    }
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/settings/Agnostic/data/EventData.ts
+var EventData = class extends AbstractImageData {
+  constructor(data, campaign, useAdditionalInformation = null) {
+    super(data);
+    this.campaign = campaign;
+    if (data.dates.event != null)
+      this.date = RpgFunctions.formatDate(data.dates.event, "short");
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/settings/Agnostic/data/FactionData.ts
+var FactionData = class extends AbstractImageData {
+  constructor(data, campaign, useAdditionalInformation = null) {
+    super(data);
+    this.campaign = campaign;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
+};
+
+// src/settings/Agnostic/data/LocationData.ts
+var LocationData = class extends AbstractImageData {
+  constructor(data, campaign, useAdditionalInformation = null) {
+    super(data);
+    this.campaign = campaign;
+    this.address = data.address;
+    this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
+  }
 };
 
 // src/factories/DataFactory.ts
@@ -877,6 +756,103 @@ var DataFactory = class {
   }
 };
 
+// src/abstracts/AbstractDataList.ts
+var AbstractDataList = class {
+  constructor(campaign) {
+    this.campaign = campaign;
+  }
+  add(data) {
+    this.elements.push(data);
+  }
+  map(data) {
+    const response = /* @__PURE__ */ new Map();
+    const character = this.elements.find((t) => t.link === data.link);
+    if (character !== void 0) {
+      Object.entries(character).forEach(([key, value]) => {
+        response.set(key, value);
+      });
+    }
+    return response;
+  }
+};
+
+// src/settings/Agnostic/data/AdventureList.ts
+var AdventureList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/CharacterList.ts
+var CharacterList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/ClueList.ts
+var ClueList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/EventList.ts
+var EventList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/FactionList.ts
+var FactionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/LocationList.ts
+var LocationList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/SceneList.ts
+var SceneList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/SessionList.ts
+var SessionList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+};
+
+// src/settings/Agnostic/data/TimelineList.ts
+var TimelineList = class extends AbstractDataList {
+  constructor(campaign) {
+    super(campaign);
+    this.elements = [];
+  }
+  sort() {
+    this.elements.sort((a, b) => {
+      return a.datetime - b.datetime;
+    });
+  }
+};
+
 // src/factories/DataListFactory.ts
 var DataListsMap = {
   AgnosticAdventure: AdventureList,
@@ -892,6 +868,24 @@ var DataListsMap = {
 var DataListFactory = class {
   static create(k, campaign) {
     return new DataListsMap[k](campaign);
+  }
+};
+
+// src/settings/Agnostic/data/SynopsisData.ts
+var SynopsisData = class extends AbstractData {
+  constructor(data, title = null) {
+    var _a, _b;
+    super(data);
+    this.title = title;
+    this.synopsis = data.synopsis !== null ? data.synopsis : "";
+    this.death = ((_a = data.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = data.dates) == null ? void 0 : _b.death) !== void 0 ? RpgFunctions.formatDate(data.dates.death, "short") : "";
+    this.isCharacter = false;
+    data.tags.forEach((tag) => {
+      if (tag.startsWith(RpgFunctions.settings.npcTag) || tag.startsWith(RpgFunctions.settings.pcTag)) {
+        this.isCharacter = true;
+        this.pronoun = PronounFactory.create(data.pronoun);
+      }
+    });
   }
 };
 
@@ -1034,7 +1028,7 @@ var AbstractIo = class {
       const query = "#" + RpgFunctions.settings.sceneTag + "/" + this.campaign.id + "/" + adventureId + "/" + sessionId + "/" + sceneId;
       const scenes = this.dv.pages(query);
       if (scenes !== null && scenes.length === 1) {
-        response = DataFactory.create(CampaignSetting[this.campaign.settings] + "Scene", this.current, this.campaign);
+        response = DataFactory.create(CampaignSetting[this.campaign.settings] + "Scene", scenes[0], this.campaign);
       }
     }
     return response;
@@ -1086,8 +1080,25 @@ var IoFactory = class {
   }
 };
 
+// src/abstracts/AbstractResponse.ts
+var AbstractResponse = class {
+  addTitle(title) {
+    this.title = title;
+  }
+};
+
+// src/data/responses/ResponseBreadcrumb.ts
+var ResponseBreadcrumb = class extends AbstractResponse {
+  constructor() {
+    super();
+    this.title = null;
+    this.isInNewLine = false;
+    this.mainTitle = null;
+    this.responseType = 5 /* Breadcrumb */;
+  }
+};
+
 // src/abstracts/AbstractModel.ts
-var import_obsidian3 = require("obsidian");
 var AbstractModel = class {
   constructor(app, campaign, current, dv, source, sourcePath, contentEl) {
     this.app = app;
@@ -1098,66 +1109,123 @@ var AbstractModel = class {
     this.sourcePath = sourcePath;
     this.contentEl = contentEl;
     this.io = IoFactory.create(CampaignSetting[this.campaign.settings] + "Io", this.app, this.campaign, this.dv, this.current);
-    this.dataType = RpgFunctions.getDataType(this.current.tags);
-    if (this.dataType != null) {
-      this.specificData = DataFactory.create(CampaignSetting[this.campaign.settings] + DataType[this.dataType], this.current, this.campaign);
-    }
-    if (this.dataType === 2 /* Session */) {
-      this.specificData.adventure = this.io.getAdventure(this.specificData.adventureId);
-    } else if (this.dataType === 3 /* Scene */) {
-      this.specificData.adventure = this.io.getAdventure(this.specificData.adventureId);
-      this.specificData.session = this.io.getSession(this.specificData.adventureId, this.specificData.sessionId);
-      this.specificData.previousScene = this.io.getScene(this.specificData.adventureId, this.specificData.sessionId, this.specificData.id - 1);
-      this.specificData.nextScene = this.io.getScene(this.specificData.adventureId, this.specificData.sessionId, this.specificData.id + 1);
+    const dt = RpgFunctions.getDataType(this.current.tags);
+    if (dt != null) {
+      this.dataType = dt;
+      if (this.dataType != null) {
+        this.specificData = DataFactory.create(CampaignSetting[this.campaign.settings] + DataType[this.dataType], this.current, this.campaign);
+      }
+      if (this.dataType === 2 /* Session */) {
+        this.specificData.adventure = this.io.getAdventure(this.specificData.adventureId);
+        this.specificData.previousSession = this.io.getSession(null, this.specificData.id - 1);
+        this.specificData.nextSession = this.io.getSession(null, this.specificData.id + 1);
+      } else if (this.dataType === 3 /* Scene */) {
+        this.specificData.adventure = this.io.getAdventure(this.specificData.adventureId);
+        this.specificData.session = this.io.getSession(this.specificData.adventureId, this.specificData.sessionId);
+        this.specificData.previousScene = this.io.getScene(this.specificData.adventureId, this.specificData.sessionId, this.specificData.id - 1);
+        this.specificData.nextScene = this.io.getScene(this.specificData.adventureId, this.specificData.sessionId, this.specificData.id + 1);
+      }
     }
   }
   generateBreadcrumb() {
-    let breadcrumb;
-    if (this.contentEl.children[0].hasClass("rpgm-breadcrumb")) {
-      breadcrumb = this.contentEl.children[0].children[0];
-      breadcrumb.empty();
-    } else {
-      breadcrumb = document.createElement("div");
-      breadcrumb.addClass("rpgm-breadcrumb");
-      this.contentEl.prepend(breadcrumb);
-    }
-    const campaignBreadcrumb = breadcrumb.createSpan({ cls: "element" });
-    import_obsidian3.MarkdownRenderer.renderMarkdown(this.campaign.link.toString(), campaignBreadcrumb, this.sourcePath, null);
+    const response = new ResponseBreadcrumb();
+    response.link = this.campaign.link.toString();
+    response.title = DataType[0 /* Campaign */];
     if (this.dataType !== 0 /* Campaign */) {
-      this.generateSeparator(breadcrumb);
+      response.mainTitle = DataType[this.dataType];
+      let adventure;
+      let session;
+      let sessionBreadcrumb, sceneBreadcrumb;
+      const adventureBreadcrumb = new ResponseBreadcrumb();
+      const elementBreadcrumb = new ResponseBreadcrumb();
       switch (this.dataType) {
         case 1 /* Adventure */:
-          this.generateElement(breadcrumb, this.specificData);
+          adventureBreadcrumb.link = this.specificData.link.toString();
+          response.nextBreadcrumb = adventureBreadcrumb;
           break;
         case 2 /* Session */:
-          this.generateElement(breadcrumb, this.specificData.adventure);
-          this.generateSeparator(breadcrumb);
-          this.generateElement(breadcrumb, this.specificData);
+          adventure = this.specificData.adventure;
+          if (adventure != null) {
+            adventureBreadcrumb.link = adventure.link.toString();
+            adventureBreadcrumb.title = DataType[1 /* Adventure */];
+            response.nextBreadcrumb = adventureBreadcrumb;
+            sessionBreadcrumb = new ResponseBreadcrumb();
+            sessionBreadcrumb.link = this.specificData.link.toString();
+            sessionBreadcrumb.title = DataType[2 /* Session */];
+            adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
+            const previousSession = this.specificData.previousSession;
+            const nextSession = this.specificData.nextSession;
+            const previousSessionBreadcrumb = new ResponseBreadcrumb();
+            const nextSessionBreadcrumb = new ResponseBreadcrumb();
+            if (previousSession != null) {
+              previousSessionBreadcrumb.link = previousSession.link.toString();
+              previousSessionBreadcrumb.linkText = "<< prev session";
+              previousSessionBreadcrumb.isInNewLine = true;
+              sessionBreadcrumb.nextBreadcrumb = previousSessionBreadcrumb;
+            }
+            const sessionNotesBreadcrumb = new ResponseBreadcrumb();
+            sessionNotesBreadcrumb.link = "[[link]]";
+            sessionNotesBreadcrumb.linkText = "notes";
+            if (previousSession != null) {
+              previousSessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+            } else {
+              sessionNotesBreadcrumb.isInNewLine = true;
+              sessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+            }
+            if (nextSession != null) {
+              nextSessionBreadcrumb.link = nextSession.link.toString();
+              nextSessionBreadcrumb.linkText = "next session >>";
+              sessionNotesBreadcrumb.nextBreadcrumb = nextSessionBreadcrumb;
+            }
+          }
           break;
         case 3 /* Scene */:
-          this.generateElement(breadcrumb, this.specificData.adventure);
-          this.generateSeparator(breadcrumb);
-          this.generateElement(breadcrumb, this.specificData.session);
-          this.generateSeparator(breadcrumb);
-          this.generateElement(breadcrumb, this.specificData);
+          adventure = this.specificData.adventure;
+          if (adventure != null) {
+            adventureBreadcrumb.link = adventure.link.toString();
+            adventureBreadcrumb.title = DataType[1 /* Adventure */];
+            response.nextBreadcrumb = adventureBreadcrumb;
+            session = this.specificData.session;
+            if (session != null) {
+              sessionBreadcrumb = new ResponseBreadcrumb();
+              sessionBreadcrumb.link = session.link.toString();
+              sessionBreadcrumb.title = DataType[2 /* Session */];
+              adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
+              sceneBreadcrumb = new ResponseBreadcrumb();
+              sceneBreadcrumb.link = this.specificData.link.toString();
+              sceneBreadcrumb.title = DataType[3 /* Scene */];
+              sessionBreadcrumb.nextBreadcrumb = sceneBreadcrumb;
+              const previousScene = this.specificData.previousScene;
+              const nextScene = this.specificData.nextScene;
+              const previousSceneBreadcrumb = new ResponseBreadcrumb();
+              const nextSceneBreadcrumb = new ResponseBreadcrumb();
+              if (previousScene != null) {
+                previousSceneBreadcrumb.link = previousScene.link.toString();
+                previousSceneBreadcrumb.linkText = "<< prev scene";
+                previousSceneBreadcrumb.isInNewLine = true;
+                sceneBreadcrumb.nextBreadcrumb = previousSceneBreadcrumb;
+              }
+              if (nextScene != null) {
+                nextSceneBreadcrumb.link = nextScene.link.toString();
+                nextSceneBreadcrumb.linkText = "next scene >>";
+                if (previousScene != null) {
+                  previousSceneBreadcrumb.nextBreadcrumb = nextSceneBreadcrumb;
+                } else {
+                  nextSceneBreadcrumb.isInNewLine = true;
+                  sceneBreadcrumb.nextBreadcrumb = nextSceneBreadcrumb;
+                }
+              }
+            }
+          }
           break;
         default:
-          this.generateElement(breadcrumb, this.specificData);
+          elementBreadcrumb.link = this.specificData.link.toString();
+          elementBreadcrumb.title = DataType[this.dataType];
+          response.nextBreadcrumb = elementBreadcrumb;
           break;
       }
     }
-    breadcrumb.createDiv().style.clear = "both";
-  }
-  generateSeparator(containerEl) {
-    const span = containerEl.createSpan({ cls: "separator" });
-    const p = span.createEl("p");
-    p.textContent = " > ";
-  }
-  generateElement(containerEl, content) {
-    if (content != null) {
-      const span = containerEl.createSpan({ cls: "element" });
-      import_obsidian3.MarkdownRenderer.renderMarkdown(content.link.toString(), span, this.sourcePath, null);
-    }
+    return response;
   }
 };
 
@@ -1165,13 +1233,6 @@ var AbstractModel = class {
 var AbstractComponent = class {
   constructor(io) {
     this.io = io;
-  }
-};
-
-// src/abstracts/AbstractResponse.ts
-var AbstractResponse = class {
-  addTitle(title) {
-    this.title = title;
   }
 };
 
@@ -1512,6 +1573,56 @@ var ResponseBanner = class extends AbstractResponse {
   }
 };
 
+// src/settings/Agnostic/data/TimelineData.ts
+var TimelineData = class extends AbstractImageData {
+  constructor(data, campaign, type) {
+    super(data);
+    this.campaign = campaign;
+    this.type = type;
+    this.image = RpgFunctions.getImage(data, 70);
+    this.synopsis = data.synopsis;
+    switch (type) {
+      case "event":
+        this.datetime = data.dates.event;
+        break;
+      case "death":
+        this.datetime = data.dates.death;
+        break;
+      case "birth":
+        this.datetime = data.dates.dob;
+        break;
+      case "session":
+        this.datetime = data.dates.session;
+        break;
+      case "clue":
+        this.datetime = data.dates.found;
+        break;
+    }
+    this.date = RpgFunctions.formatDate(this.datetime, "short");
+    this.time = RpgFunctions.formatTime(this.datetime);
+  }
+  getEventColour() {
+    switch (this.type) {
+      case "event":
+        return "";
+        break;
+      case "birth":
+        return "green";
+        break;
+      case "death":
+        return "red";
+        break;
+      case "session":
+        return "blue";
+        break;
+      case "clue":
+        return "purple";
+        break;
+    }
+    return "";
+  }
+};
+
 // src/settings/Agnostic/components/BannerComponent.ts
 var BannerComponent = class extends AbstractComponent {
   generateData(data, title) {
@@ -1617,10 +1728,20 @@ var CampaignModel = class extends AbstractModel {
   }
 };
 
+// src/settings/Agnostic/models/CampaignNavigationModel.ts
+var CampaignNavigationModel = class extends AbstractModel {
+  generateData() {
+    const response = new ResponseData();
+    response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "Banner", this.io, this.campaign));
+    return response;
+  }
+};
+
 // src/settings/Agnostic/models/ClueModel.ts
 var ClueModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     const status = new ResponseLine();
     status.content = ContentFactory.create(this.specificData.synopsis != null && this.specificData.synopsis !== "" ? this.specificData.synopsis : '<span class="rpgm-missing">Synopsis missing</span>', 4 /* Markdown */);
     response.addElement(status);
@@ -1646,6 +1767,7 @@ var ErrorModel = class extends AbstractModel {
 var EventModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     const status = new ResponseLine();
     status.content = ContentFactory.create(this.specificData.synopsis != null && this.specificData.synopsis !== "" ? this.specificData.synopsis : '<span class="rpgm-missing">Synopsis missing</span>', 4 /* Markdown */);
     response.addElement(status);
@@ -1660,6 +1782,7 @@ var EventModel = class extends AbstractModel {
 var FactionModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     const status = new ResponseLine();
     status.content = ContentFactory.create(this.specificData.synopsis != null && this.specificData.synopsis !== "" ? this.specificData.synopsis : '<span class="rpgm-missing">Synopsis missing</span>', 4 /* Markdown */);
     response.addElement(status);
@@ -1673,6 +1796,7 @@ var FactionModel = class extends AbstractModel {
 var LocationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     if (this.specificData.address != null && this.specificData.address !== "") {
       const status = new ResponseLine();
       status.content = ContentFactory.create("## " + this.specificData.address, 4 /* Markdown */);
@@ -1699,6 +1823,7 @@ var NotesModel = class extends AbstractModel {
 var NpcModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "CharacterSynopsis", this.io, this.specificData));
     response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "FactionTable", this.io, this.io.getRelationshipList(9 /* Faction */)));
     response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "CharacterTable", this.io, this.io.getRelationshipList(4 /* Character */)));
@@ -1713,6 +1838,7 @@ var NpcModel = class extends AbstractModel {
 var PcModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "CharacterSynopsis", this.io, this.specificData));
     response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "FactionTable", this.io, this.io.getRelationshipList(9 /* Faction */)));
     response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "CharacterTable", this.io, this.io.getRelationshipList(4 /* Character */)));
@@ -1732,31 +1858,6 @@ var SceneModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/SessionModel.ts
-var SessionModel = class extends AbstractModel {
-  generateData() {
-    const response = new ResponseData();
-    response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "SceneTable", this.io, this.io.getSceneList(RpgFunctions.getTagId(this.current.tags, 1 /* Adventure */), RpgFunctions.getTagId(this.current.tags, 2 /* Session */))));
-    return response;
-  }
-};
-
-// src/settings/Agnostic/models/SessionNavigationModel.ts
-var SessionNavigationModel = class extends AbstractModel {
-  generateData() {
-    const response = new ResponseData();
-    return response;
-  }
-};
-
-// src/settings/Agnostic/models/TimelineModel.ts
-var TimelineModel = class extends AbstractModel {
-  generateData() {
-    const response = new ResponseData();
-    return response;
-  }
-};
-
 // src/data/responses/ResponseBox.ts
 var ResponseBox = class extends AbstractResponse {
   constructor() {
@@ -1770,6 +1871,7 @@ var ResponseBox = class extends AbstractResponse {
 var SceneNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     const goalElement = new ResponseBox();
     goalElement.content = this.specificData.synopsis;
     goalElement.title = "Scene Goal";
@@ -1784,11 +1886,28 @@ var SceneNavigationModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/CampaignNavigationModel.ts
-var CampaignNavigationModel = class extends AbstractModel {
+// src/settings/Agnostic/models/SessionModel.ts
+var SessionModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "Banner", this.io, this.campaign));
+    response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "SceneTable", this.io, this.io.getSceneList(RpgFunctions.getTagId(this.current.tags, 1 /* Adventure */), RpgFunctions.getTagId(this.current.tags, 2 /* Session */))));
+    return response;
+  }
+};
+
+// src/settings/Agnostic/models/SessionNavigationModel.ts
+var SessionNavigationModel = class extends AbstractModel {
+  generateData() {
+    const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
+    return response;
+  }
+};
+
+// src/settings/Agnostic/models/TimelineModel.ts
+var TimelineModel = class extends AbstractModel {
+  generateData() {
+    const response = new ResponseData();
     return response;
   }
 };

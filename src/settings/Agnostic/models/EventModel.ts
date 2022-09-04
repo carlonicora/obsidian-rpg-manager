@@ -13,6 +13,8 @@ export class EventModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
+		response.addElement(this.generateBreadcrumb());
+
 		const status = new ResponseLine();
 		status.content =ContentFactory.create(
 			((<EventDataInterface>this.specificData).synopsis != null && (<EventDataInterface>this.specificData).synopsis !== ''
