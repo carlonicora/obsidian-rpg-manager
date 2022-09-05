@@ -3,6 +3,7 @@ import {TableView} from "../settings/Agnostic/views/TableView";
 import {BannerView} from "../settings/Agnostic/views/BannerView";
 import {BoxView} from "../settings/Agnostic/views/BoxView";
 import {BreadcrumbView} from "../settings/Agnostic/views/BreadcrumbView";
+import {TimelineView} from "../settings/Agnostic/views/TimelineView";
 
 const ViewsMap = {
 	AgnosticString: StringView,
@@ -10,6 +11,7 @@ const ViewsMap = {
 	AgnosticBanner: BannerView,
 	AgnosticBox: BoxView,
 	AgnosticBreadcrumb: BreadcrumbView,
+	AgnosticTimeline: TimelineView,
 };
 type ViewsMapType = typeof ViewsMap;
 type ViewKeys = keyof ViewsMapType;

@@ -1,6 +1,11 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
+import {ResponseLine} from "../../../data/responses/ResponseLine";
+import {ContentFactory} from "../../../factories/ContentFactory";
+import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
+import {ContentType} from "../../../enums/ContentType";
+import {SessionDataInterface} from "../../../interfaces/data/SessionDataInterface";
 
 export class SessionNavigationModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
@@ -8,35 +13,15 @@ export class SessionNavigationModel extends AbstractModel {
 
 		response.addElement(this.generateBreadcrumb());
 
+		const status = new ResponseLine();
+		status.content =ContentFactory.create(
+			((<SessionDataInterface>this.specificData).synopsis != null && (<SessionDataInterface>this.specificData).synopsis !== ''
+				? (<SessionDataInterface>this.specificData).synopsis
+				: '<span class="rpgm-missing">Synopsis missing</span>'),
+			ContentType.Markdown,
+		);
+		response.addElement(status);
+
 		return response;
 	}
-
-	/*
-	public async render() {
-		this.synopsis();
-		this.sessionNavigator();
-	}
-
-	private async sessionNavigator(
-	) {
-		const adventureId = this.api.getTagId(this.current.tags, DataType.Adventure);
-		const sessionId = this.api.getTagId(this.current.tags, DataType.Session);
-
-		const adventure = this.io.getAdventure(adventureId);
-		const previousSession = this.io.getSession(null, sessionId - 1);
-		const nextSession = this.io.getSession(null, sessionId + 1);
-
-		const data = new SessionData(
-			this.api,
-			this.current,
-			this.campaign,
-			adventure,
-			previousSession,
-			nextSession,
-		);
-
-		const view = ViewFactory.createSingle(ViewType.SessionNavigator, this.dv);
-		view.render(data);
-	}
-	*/
 }

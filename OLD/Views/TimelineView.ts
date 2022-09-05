@@ -4,18 +4,6 @@ export class TimelineView {
 		data: TimelineListInterface
 	): Promise<void> {
 
-		const container = this.dv.container.createDiv({cls: 'rpg-container'});
-
-		const header = container.createDiv({cls: 'rpgm-header'});
-		if (data.campaign?.imageSrc !== null) {
-			header.style.backgroundImage = 'url(\'' + data.campaign?.imageSrc + '\')';
-		}
-
-		const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
-
-		overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
-		overlay.createDiv({cls: 'rpgm-campaign-name', text: (data.campaign !== null ? data.campaign.name : "Campaign")});
-		overlay.createDiv({cls: 'rpgm-current-date', text: (data.campaign !== null ? this.api.formatDate(data.campaign.currentDate, "long") : "")});
 
 		const timeline = container.createDiv({cls: 'rpgm-timeline'});
 

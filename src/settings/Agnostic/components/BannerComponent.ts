@@ -14,14 +14,16 @@ export class BannerComponent extends AbstractComponent{
 	): ResponseElementInterface | null {
 		const response = new ResponseBanner();
 
-		response.image = data.imageSrc;
+
 
 		if (data instanceof CampaignData) {
+			response.image = data.imageSrc;
 			response.title = data.name;
 			response.date = (<CampaignDataInterface>data).currentDate;
 		} else if (data instanceof TimelineData) {
+			response.image = data.campaign.imageSrc;
 			response.title = 'Timeline';
-			response.date = (<TimelineDataInterface>data).date;
+			response.date = (<TimelineDataInterface>data).campaign.currentDate;
 			response.subtitle = (<TimelineDataInterface>data).campaign.name;
 		}
 

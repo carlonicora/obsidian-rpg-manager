@@ -26,10 +26,11 @@ export abstract class AbstractModel implements ModelInterface {
 		protected app: App,
 		protected campaign: CampaignDataInterface,
 		protected current: Record<string, any>,
-		private dv: DataviewInlineApi,
+		protected dv: DataviewInlineApi,
 		protected source: string,
 		protected sourcePath: string,
 		protected contentEl: HTMLElement,
+		protected sourceMeta: any,
 	) {
 		this.io = IoFactory.create(CampaignSetting[this.campaign.settings] + 'Io' as SingleIoKey<any>, this.app, this.campaign, this.dv, this.current);
 
@@ -97,6 +98,7 @@ export abstract class AbstractModel implements ModelInterface {
 			switch (this.dataType) {
 				case DataType.Adventure:
 					adventureBreadcrumb.link = (<AdventureDataInterface>this.specificData).link.toString();
+					adventureBreadcrumb.title = DataType[DataType.Adventure];
 					response.nextBreadcrumb = adventureBreadcrumb;
 					break;
 				case DataType.Session:

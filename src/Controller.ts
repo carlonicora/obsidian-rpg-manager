@@ -1,4 +1,12 @@
-import {App, Component, debounce, MarkdownPostProcessorContext, MarkdownRenderChild, MarkdownView} from "obsidian";
+import {
+	App,
+	Component,
+	debounce,
+	MarkdownPostProcessorContext,
+	MarkdownRenderChild,
+	MarkdownView,
+	parseYaml
+} from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
 import {DataType} from "./enums/DataType";
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
@@ -44,14 +52,18 @@ export class Controller extends MarkdownRenderChild {
 			this.current = current;
 			this.loadCampaign();
 
-			let model = this.source.replace(/[\n\r]/g, '').toLowerCase();
-			model = model[0].toUpperCase() + model.substring(1);
-			model = model.replace('navigation', 'Navigation');
+			const sourceLines = this.source.split('\n');
+			let modelName = sourceLines[0].toLowerCase();
+			modelName = modelName[0].toUpperCase() + modelName.substring(1);
+			modelName = modelName.replace('navigation', 'Navigation');
+			const modelIdentifier:SingleModelKey<any> = CampaignSetting[this.campaign.settings] + modelName;
 
-			const modelName:SingleModelKey<any> = CampaignSetting[this.campaign.settings] + model;
+			sourceLines.shift();
+
+			const sourceMeta = parseYaml(sourceLines.join('\n'));
 
 			this.model = ModelFactory.create(
-				modelName,
+				modelIdentifier,
 				this.app,
 				this.campaign,
 				this.current,
@@ -59,14 +71,14 @@ export class Controller extends MarkdownRenderChild {
 				this.source,
 				this.sourcePath,
 				this.contentEl,
+				sourceMeta,
 			);
 		}
 	}
 
 	onload() {
-		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", (function(){
-			this.render();
-		}).bind(this)));
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
+		this.render();
 	}
 
 	private loadCampaign(
@@ -85,12 +97,13 @@ export class Controller extends MarkdownRenderChild {
 
 	private async render(){
 		const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
+
 		if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
 			this.contentEl = activeLeaf.contentEl;
 			this.initialise();
 
 			if (this.isActive) {
-				this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
+				//this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
 
 				this.container.empty();
 

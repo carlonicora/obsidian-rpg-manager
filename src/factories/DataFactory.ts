@@ -10,6 +10,7 @@ import {ClueData} from "../settings/Agnostic/data/ClueData";
 import {EventData} from "../settings/Agnostic/data/EventData";
 import {FactionData} from "../settings/Agnostic/data/FactionData";
 import {LocationData} from "../settings/Agnostic/data/LocationData";
+import {TimelineData} from "../settings/Agnostic/data/TimelineData";
 
 const DatasMap = {
 	AgnosticCampaign: CampaignData,
@@ -24,6 +25,7 @@ const DatasMap = {
 	AgnosticLocation: LocationData,
 	RawCharacter: RawCharacterData,
 	VampireCharacter: VampireCharacterData,
+	AgnosticTimeline: TimelineData,
 };
 type DatasMapType = typeof DatasMap;
 type DataKeys = keyof DatasMapType;

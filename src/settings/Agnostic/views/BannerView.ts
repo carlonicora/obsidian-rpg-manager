@@ -1,5 +1,6 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
 import {BannerResponseInterface} from "../../../interfaces/response/BannerResponseInterface";
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class BannerView extends AbstractView {
 	public render(
@@ -14,6 +15,9 @@ export class BannerView extends AbstractView {
 
 			const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
 			overlay.createDiv({cls: 'rpgm-header-title', text: data.title});
+
+			overlay.createDiv({cls: 'rpgm-campaign-name', text: (data.subtitle != null ? data.subtitle : '')});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (data.date !== null ? RpgFunctions.formatDate(data.date, "long") : "")});
 		} else {
 			container.createEl('h1', {text: data.title});
 		}

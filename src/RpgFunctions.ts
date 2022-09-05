@@ -8,7 +8,6 @@ export class RpgFunctions {
 	private static app: App;
 	public static settings: RpgManagerSettings;
 	private static root: string;
-	private static attachmentRoot: string;
 
 	public static initialise(
 		app: App,
@@ -54,8 +53,6 @@ export class RpgFunctions {
 			if (!this.root.endsWith("/")) {
 				this.root += "/";
 			}
-
-			this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
 		}
 	}
 
@@ -64,7 +61,7 @@ export class RpgFunctions {
 		let response = false;
 
 		if (abstractFile instanceof TAbstractFile) {
-			response = (abstractFile ? true : false);
+			response = true;
 		}
 
 		return response;

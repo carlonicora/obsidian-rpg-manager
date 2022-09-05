@@ -6,10 +6,8 @@ export interface TimelineDataInterface extends GenericImageDataInterface {
 	synopsis: string;
 	time: string;
 	date: string;
-	type: string;
+	additionalInformation: string|null;
 	datetime: DateTime;
 
 	campaign: CampaignDataInterface;
-
-	getEventColour(): string;
 }

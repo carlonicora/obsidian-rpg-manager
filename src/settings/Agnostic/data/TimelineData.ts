@@ -14,14 +14,14 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 	constructor(
 		data: Record<string, any>,
 		public campaign: CampaignDataInterface,
-		public type: string,
+		public additionalInformation: string|null = '',
 	) {
 		super(data);
 
 		this.image = RpgFunctions.getImage(data, 70);
 		this.synopsis = data.synopsis;
 
-		switch(type){
+		switch(this.additionalInformation){
 			case 'event':
 				this.datetime = data.dates.event;
 				break;
@@ -41,28 +41,5 @@ export class TimelineData extends AbstractImageData implements TimelineDataInter
 
 		this.date = RpgFunctions.formatDate(this.datetime, "short");
 		this.time = RpgFunctions.formatTime(this.datetime);
-	}
-
-	getEventColour(
-	): string {
-		switch (this.type){
-			case 'event':
-				return '';
-				break;
-			case 'birth':
-				return 'green';
-				break;
-			case 'death':
-				return 'red';
-				break;
-			case 'session':
-				return 'blue';
-				break;
-			case 'clue':
-				return 'purple';
-				break;
-		}
-
-		return '';
 	}
 }

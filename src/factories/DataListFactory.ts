@@ -7,7 +7,6 @@ import {FactionList} from "../settings/Agnostic/data/FactionList";
 import {LocationList} from "../settings/Agnostic/data/LocationList";
 import {SceneList} from "../settings/Agnostic/data/SceneList";
 import {SessionList} from "../settings/Agnostic/data/SessionList";
-import {TimelineList} from "../settings/Agnostic/data/TimelineList";
 
 const DataListsMap = {
 	AgnosticAdventure: AdventureList,
@@ -18,7 +17,6 @@ const DataListsMap = {
 	AgnosticLocation: LocationList,
 	AgnosticScene: SceneList,
 	AgnosticSession: SessionList,
-	AgnosticTimeline: TimelineList,
 };
 type DataListsMapType = typeof DataListsMap;
 type DataListKeys = keyof DataListsMapType;

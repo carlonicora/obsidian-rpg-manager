@@ -52,10 +52,10 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian8 = require("obsidian");
+var import_obsidian9 = require("obsidian");
 
 // src/Controller.ts
-var import_obsidian7 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 
 // src/enums/DataType.ts
 var DataType = /* @__PURE__ */ ((DataType2) => {
@@ -109,14 +109,13 @@ var RpgFunctions = class {
       if (!this.root.endsWith("/")) {
         this.root += "/";
       }
-      this.attachmentRoot = this.root + this.app.vault.config.attachmentFolderPath + "/";
     }
   }
   static fileExists(path) {
     const abstractFile = this.app.vault.getAbstractFileByPath(path);
     let response = false;
     if (abstractFile instanceof import_obsidian.TAbstractFile) {
-      response = abstractFile ? true : false;
+      response = true;
     }
     return response;
   }
@@ -413,6 +412,8 @@ var BannerView = class extends AbstractView {
       header.style.backgroundImage = "url('" + data.image + "')";
       const overlay = header.createDiv({ cls: "rpgm-header-overlay" });
       overlay.createDiv({ cls: "rpgm-header-title", text: data.title });
+      overlay.createDiv({ cls: "rpgm-campaign-name", text: data.subtitle != null ? data.subtitle : "" });
+      overlay.createDiv({ cls: "rpgm-current-date", text: data.date !== null ? RpgFunctions.formatDate(data.date, "long") : "" });
     } else {
       container.createEl("h1", { text: data.title });
     }
@@ -475,13 +476,53 @@ var BreadcrumbView = class extends AbstractView {
   }
 };
 
+// src/settings/Agnostic/views/TimelineView.ts
+var import_obsidian4 = require("obsidian");
+var TimelineView = class extends AbstractView {
+  render(container, data) {
+    const timeline = container.createDiv({ cls: "rpgm-timeline" });
+    const ul = timeline.createEl("ul");
+    data.elements.forEach((timeline2) => {
+      const li = ul.createEl("li");
+      const timeContainer = li.createDiv({ cls: "event-time-container" });
+      timeContainer.createDiv({ cls: "event-time", text: timeline2.date + (timeline2.time !== "00:00" ? "\n" + timeline2.time : "") });
+      const type = timeContainer.createDiv({ cls: "event-type", text: timeline2.type });
+      const bullet = li.createDiv({ cls: "bullet" });
+      switch (timeline2.type) {
+        case "birth":
+          type.addClass("green");
+          bullet.addClass("green");
+          break;
+        case "death":
+          type.addClass("red");
+          bullet.addClass("red");
+          break;
+        case "session":
+          type.addClass("blue");
+          bullet.addClass("blue");
+          break;
+        case "clue":
+          type.addClass("purple");
+          bullet.addClass("purple");
+          break;
+      }
+      const details = li.createDiv({ cls: "event-details" });
+      const fileLink = details.createEl("h3");
+      const synopsis = details.createSpan();
+      import_obsidian4.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
+      import_obsidian4.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
+    });
+  }
+};
+
 // src/factories/ViewFactory.ts
 var ViewsMap = {
   AgnosticString: StringView,
   AgnosticTable: TableView,
   AgnosticBanner: BannerView,
   AgnosticBox: BoxView,
-  AgnosticBreadcrumb: BreadcrumbView
+  AgnosticBreadcrumb: BreadcrumbView,
+  AgnosticTimeline: TimelineView
 };
 var ViewFactory = class {
   static create(k, sourcePath) {
@@ -497,6 +538,7 @@ var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
   ResponseType2[ResponseType2["Scene"] = 3] = "Scene";
   ResponseType2[ResponseType2["Box"] = 4] = "Box";
   ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
+  ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
   return ResponseType2;
 })(ResponseType || {});
 
@@ -712,6 +754,8 @@ var EventData = class extends AbstractImageData {
     this.campaign = campaign;
     if (data.dates.event != null)
       this.date = RpgFunctions.formatDate(data.dates.event, "short");
+    if (data.dates.event != null)
+      this.time = RpgFunctions.formatTime(data.dates.event);
     this.synopsis = useAdditionalInformation !== null ? useAdditionalInformation : data.synopsis;
   }
 };
@@ -735,6 +779,36 @@ var LocationData = class extends AbstractImageData {
   }
 };
 
+// src/settings/Agnostic/data/TimelineData.ts
+var TimelineData = class extends AbstractImageData {
+  constructor(data, campaign, additionalInformation = "") {
+    super(data);
+    this.campaign = campaign;
+    this.additionalInformation = additionalInformation;
+    this.image = RpgFunctions.getImage(data, 70);
+    this.synopsis = data.synopsis;
+    switch (this.additionalInformation) {
+      case "event":
+        this.datetime = data.dates.event;
+        break;
+      case "death":
+        this.datetime = data.dates.death;
+        break;
+      case "birth":
+        this.datetime = data.dates.dob;
+        break;
+      case "session":
+        this.datetime = data.dates.session;
+        break;
+      case "clue":
+        this.datetime = data.dates.found;
+        break;
+    }
+    this.date = RpgFunctions.formatDate(this.datetime, "short");
+    this.time = RpgFunctions.formatTime(this.datetime);
+  }
+};
+
 // src/factories/DataFactory.ts
 var DatasMap = {
   AgnosticCampaign: CampaignData,
@@ -748,7 +822,8 @@ var DatasMap = {
   AgnosticFaction: FactionData,
   AgnosticLocation: LocationData,
   RawCharacter: RawCharacterData,
-  VampireCharacter: VampireCharacterData
+  VampireCharacter: VampireCharacterData,
+  AgnosticTimeline: TimelineData
 };
 var DataFactory = class {
   static create(k, current, campaign, additionalInformation = null) {
@@ -1100,7 +1175,7 @@ var ResponseBreadcrumb = class extends AbstractResponse {
 
 // src/abstracts/AbstractModel.ts
 var AbstractModel = class {
-  constructor(app, campaign, current, dv, source, sourcePath, contentEl) {
+  constructor(app, campaign, current, dv, source, sourcePath, contentEl, sourceMeta) {
     this.app = app;
     this.campaign = campaign;
     this.current = current;
@@ -1108,6 +1183,7 @@ var AbstractModel = class {
     this.source = source;
     this.sourcePath = sourcePath;
     this.contentEl = contentEl;
+    this.sourceMeta = sourceMeta;
     this.io = IoFactory.create(CampaignSetting[this.campaign.settings] + "Io", this.app, this.campaign, this.dv, this.current);
     const dt = RpgFunctions.getDataType(this.current.tags);
     if (dt != null) {
@@ -1141,6 +1217,7 @@ var AbstractModel = class {
       switch (this.dataType) {
         case 1 /* Adventure */:
           adventureBreadcrumb.link = this.specificData.link.toString();
+          adventureBreadcrumb.title = DataType[1 /* Adventure */];
           response.nextBreadcrumb = adventureBreadcrumb;
           break;
         case 2 /* Session */:
@@ -1274,11 +1351,11 @@ var StringContent = class extends AbstractContent {
 };
 
 // src/data/content/LinkContent.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 var LinkContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian4.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1293,11 +1370,11 @@ var NumberContent = class extends AbstractContent {
 };
 
 // src/data/content/ObjectContent.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 var ObjectContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian5.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian6.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1305,11 +1382,11 @@ var ObjectContent = class extends AbstractContent {
 };
 
 // src/data/content/MarkdownContent.ts
-var import_obsidian6 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 var MarkdownContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian6.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
+      import_obsidian7.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1573,67 +1650,18 @@ var ResponseBanner = class extends AbstractResponse {
   }
 };
 
-// src/settings/Agnostic/data/TimelineData.ts
-var TimelineData = class extends AbstractImageData {
-  constructor(data, campaign, type) {
-    super(data);
-    this.campaign = campaign;
-    this.type = type;
-    this.image = RpgFunctions.getImage(data, 70);
-    this.synopsis = data.synopsis;
-    switch (type) {
-      case "event":
-        this.datetime = data.dates.event;
-        break;
-      case "death":
-        this.datetime = data.dates.death;
-        break;
-      case "birth":
-        this.datetime = data.dates.dob;
-        break;
-      case "session":
-        this.datetime = data.dates.session;
-        break;
-      case "clue":
-        this.datetime = data.dates.found;
-        break;
-    }
-    this.date = RpgFunctions.formatDate(this.datetime, "short");
-    this.time = RpgFunctions.formatTime(this.datetime);
-  }
-  getEventColour() {
-    switch (this.type) {
-      case "event":
-        return "";
-        break;
-      case "birth":
-        return "green";
-        break;
-      case "death":
-        return "red";
-        break;
-      case "session":
-        return "blue";
-        break;
-      case "clue":
-        return "purple";
-        break;
-    }
-    return "";
-  }
-};
-
 // src/settings/Agnostic/components/BannerComponent.ts
 var BannerComponent = class extends AbstractComponent {
   generateData(data, title) {
     const response = new ResponseBanner();
-    response.image = data.imageSrc;
     if (data instanceof CampaignData) {
+      response.image = data.imageSrc;
       response.title = data.name;
       response.date = data.currentDate;
     } else if (data instanceof TimelineData) {
+      response.image = data.campaign.imageSrc;
       response.title = "Timeline";
-      response.date = data.date;
+      response.date = data.campaign.currentDate;
       response.subtitle = data.campaign.name;
     }
     return response;
@@ -1900,7 +1928,36 @@ var SessionNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
+    const status = new ResponseLine();
+    status.content = ContentFactory.create(this.specificData.synopsis != null && this.specificData.synopsis !== "" ? this.specificData.synopsis : '<span class="rpgm-missing">Synopsis missing</span>', 4 /* Markdown */);
+    response.addElement(status);
     return response;
+  }
+};
+
+// src/data/responses/TimelineResponse.ts
+var TimelineResponse = class extends AbstractResponse {
+  constructor() {
+    super();
+    this.responseType = 6 /* Timeline */;
+    this.elements = [];
+  }
+  sort() {
+    this.elements.sort((a, b) => {
+      return a.fullDate - b.fullDate;
+    });
+  }
+};
+
+// src/data/responses/TimelineElementResponse.ts
+var TimelineElementResponse = class {
+  constructor(fullDate, date, time, type, synopsis, link) {
+    this.fullDate = fullDate;
+    this.date = date;
+    this.time = time;
+    this.type = type;
+    this.synopsis = synopsis;
+    this.link = link;
   }
 };
 
@@ -1908,6 +1965,96 @@ var SessionNavigationModel = class extends AbstractModel {
 var TimelineModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
+    response.addElement(ComponentFactory.create(CampaignSetting[this.campaign.settings] + "Banner", this.io, this.specificData));
+    const timeline = new TimelineResponse();
+    if (this.sourceMeta.events === true) {
+      this.addEvents(timeline);
+    }
+    if (this.sourceMeta.clues === true) {
+      this.addClues(timeline);
+    }
+    if (this.sourceMeta.births === true) {
+      this.addBirths(timeline);
+    }
+    if (this.sourceMeta.deaths === true) {
+      this.addDeaths(timeline);
+    }
+    if (this.sourceMeta.sessions === true) {
+      this.addSessions(timeline);
+    }
+    timeline.sort();
+    response.addElement(timeline);
+    return response;
+  }
+  addEvents(timeline) {
+    const query = "#" + RpgFunctions.settings.eventTag + "/" + this.campaign.id;
+    const events = this.dv.pages(query).where((event) => {
+      var _a, _b;
+      return ((_a = event == null ? void 0 : event.dates) == null ? void 0 : _a.event) !== void 0 && ((_b = event == null ? void 0 : event.dates) == null ? void 0 : _b.event) !== null;
+    });
+    events.forEach((event) => {
+      const evt = DataFactory.create(CampaignSetting[this.campaign.settings] + "Event", event, this.campaign);
+      timeline.elements.push(new TimelineElementResponse(new Date(evt.date + " " + evt.time), evt.date, evt.time, "event", evt.synopsis, evt.link));
+    });
+  }
+  addClues(timeline) {
+    var _a;
+    const query = "#" + RpgFunctions.settings.clueTag + "/" + ((_a = this.campaign) == null ? void 0 : _a.id);
+    const clues = this.dv.pages(query).where((clue) => {
+      var _a2, _b;
+      return ((_a2 = clue == null ? void 0 : clue.dates) == null ? void 0 : _a2.found) !== void 0 && ((_b = clue == null ? void 0 : clue.dates) == null ? void 0 : _b.found) !== null;
+    });
+    clues.forEach((clue) => {
+      const clt = DataFactory.create(CampaignSetting[this.campaign.settings] + "Clue", clue, this.campaign);
+      const found = clt.found;
+      const date = typeof found === "boolean" ? "00:00" : found;
+      timeline.elements.push(new TimelineElementResponse(new Date(date), date, "00:00", "clue", clt.synopsis, clt.link));
+    });
+  }
+  addBirths(timeline) {
+    const query = "(#" + RpgFunctions.settings.npcTag + "/" + this.campaign.id + " or #" + RpgFunctions.settings.pcTag + "/" + this.campaign.id + ")";
+    let characters = this.dv.pages(query).where((character) => {
+      var _a, _b;
+      return ((_a = character == null ? void 0 : character.dates) == null ? void 0 : _a.dob) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.dob) !== null;
+    });
+    characters.forEach((character) => {
+      const char = DataFactory.create(CampaignSetting[this.campaign.settings] + "Character", character, this.campaign);
+      const dobString = char.dob;
+      const dob = dobString == null ? "00:00" : dobString;
+      timeline.elements.push(new TimelineElementResponse(new Date(dob), dob, "00:00", "birth", char.synopsis, char.link));
+    });
+  }
+  addDeaths(timeline) {
+    const query = "(#" + RpgFunctions.settings.npcTag + "/" + this.campaign.id + " or #" + RpgFunctions.settings.pcTag + "/" + this.campaign.id + ")";
+    let characters = this.dv.pages(query).where((character) => {
+      var _a, _b;
+      return ((_a = character == null ? void 0 : character.dates) == null ? void 0 : _a.death) !== void 0 && ((_b = character == null ? void 0 : character.dates) == null ? void 0 : _b.death) !== null;
+    });
+    characters.forEach((character) => {
+      const char = DataFactory.create(CampaignSetting[this.campaign.settings] + "Character", character, this.campaign);
+      const deathString = char.dob;
+      const death = deathString == null ? "00:00" : deathString;
+      timeline.elements.push(new TimelineElementResponse(new Date(death), death, "00:00", "death", char.synopsis, char.link));
+    });
+  }
+  addSessions(timeline) {
+    const query = "#" + RpgFunctions.settings.sessionTag + "/" + this.campaign.id;
+    const sessions = this.dv.pages(query).where((session) => {
+      var _a, _b;
+      return ((_a = session == null ? void 0 : session.dates) == null ? void 0 : _a.session) !== void 0 && ((_b = session == null ? void 0 : session.dates) == null ? void 0 : _b.session) !== null;
+    });
+    sessions.forEach((session) => {
+      const sess = DataFactory.create(CampaignSetting[this.campaign.settings] + "Session", session, this.campaign);
+      timeline.elements.push(new TimelineElementResponse(new Date(sess.date), sess.date, "00:00", "session", sess.synopsis, sess.link));
+    });
+  }
+};
+
+// src/settings/Agnostic/models/AdventureNavigationModel.ts
+var AdventureNavigationModel = class extends AbstractModel {
+  generateData() {
+    const response = new ResponseData();
+    response.addElement(this.generateBreadcrumb());
     return response;
   }
 };
@@ -1915,6 +2062,7 @@ var TimelineModel = class extends AbstractModel {
 // src/factories/ModelFactory.ts
 var ModelsMap = {
   AgnosticAdventure: AdventureModel,
+  AgnosticAdventureNavigation: AdventureNavigationModel,
   AgnosticCampaign: CampaignModel,
   AgnosticCampaignNavigation: CampaignNavigationModel,
   AgnosticClue: ClueModel,
@@ -1932,13 +2080,13 @@ var ModelsMap = {
   AgnosticTimeline: TimelineModel
 };
 var ModelFactory = class {
-  static create(k, app, campaign, current, dv, source, sourcePath, contentEl) {
-    return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl);
+  static create(k, app, campaign, current, dv, source, sourcePath, contentEl, sourceMeta) {
+    return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl, sourceMeta);
   }
 };
 
 // src/Controller.ts
-var Controller = class extends import_obsidian7.MarkdownRenderChild {
+var Controller = class extends import_obsidian8.MarkdownRenderChild {
   constructor(app, container, source, component, sourcePath) {
     super(container);
     this.app = app;
@@ -1957,17 +2105,19 @@ var Controller = class extends import_obsidian7.MarkdownRenderChild {
       this.isActive = true;
       this.current = current;
       this.loadCampaign();
-      let model = this.source.replace(/[\n\r]/g, "").toLowerCase();
-      model = model[0].toUpperCase() + model.substring(1);
-      model = model.replace("navigation", "Navigation");
-      const modelName = CampaignSetting[this.campaign.settings] + model;
-      this.model = ModelFactory.create(modelName, this.app, this.campaign, this.current, this.dv, this.source, this.sourcePath, this.contentEl);
+      const sourceLines = this.source.split("\n");
+      let modelName = sourceLines[0].toLowerCase();
+      modelName = modelName[0].toUpperCase() + modelName.substring(1);
+      modelName = modelName.replace("navigation", "Navigation");
+      const modelIdentifier = CampaignSetting[this.campaign.settings] + modelName;
+      sourceLines.shift();
+      const sourceMeta = (0, import_obsidian8.parseYaml)(sourceLines.join("\n"));
+      this.model = ModelFactory.create(modelIdentifier, this.app, this.campaign, this.current, this.dv, this.source, this.sourcePath, this.contentEl, sourceMeta);
     }
   }
   onload() {
-    this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", function() {
-      this.render();
-    }.bind(this)));
+    this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
+    this.render();
   }
   loadCampaign() {
     const campaignId = RpgFunctions.getTagId(this.current.tags, 0 /* Campaign */);
@@ -1979,12 +2129,11 @@ var Controller = class extends import_obsidian7.MarkdownRenderChild {
   }
   render() {
     return __async(this, null, function* () {
-      const activeLeaf = this.app.workspace.getActiveViewOfType(import_obsidian7.MarkdownView);
+      const activeLeaf = this.app.workspace.getActiveViewOfType(import_obsidian8.MarkdownView);
       if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
         this.contentEl = activeLeaf.contentEl;
         this.initialise();
         if (this.isActive) {
-          this.render = (0, import_obsidian7.debounce)(this.render, 1e3, true);
           this.container.empty();
           this.model.generateData().elements.forEach((element) => {
             const viewName = CampaignSetting[this.campaign.settings] + ResponseType[element.responseType];
@@ -1998,7 +2147,7 @@ var Controller = class extends import_obsidian7.MarkdownRenderChild {
 };
 
 // src/main.ts
-var RpgManager = class extends import_obsidian8.Plugin {
+var RpgManager = class extends import_obsidian9.Plugin {
   onload() {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
@@ -2036,18 +2185,9 @@ var RpgManager = class extends import_obsidian8.Plugin {
     });
   }
   registerEvents() {
-    this.registerEvent(this.app.metadataCache.on("resolved", function() {
-      console.log("EVENT: RESOLVED");
-      this.refreshViews();
-    }.bind(this)));
-    this.registerEvent(this.app.workspace.on("file-open", function() {
-      console.log("EVENT: FILE-OPEN");
-      this.refreshViews();
-    }.bind(this)));
-    this.registerEvent(this.app.workspace.on("dataview:refresh-views", function() {
-      console.log("EVENT: REFRESH-VIEWS");
-      this.refreshViews();
-    }.bind(this)));
+    this.registerEvent(this.app.metadataCache.on("resolved", this.refreshViews.bind(this)));
+    this.registerEvent(this.app.workspace.on("file-open", this.refreshViews.bind(this)));
+    this.registerEvent(this.app.workspace.on("dataview:refresh-views", this.refreshViews.bind(this)));
   }
   registerCodeBlock() {
     this.registerMarkdownCodeBlockProcessor("RpgManager", (source, el, ctx) => __async(this, null, function* () {
@@ -2071,7 +2211,7 @@ var DEFAULT_SETTINGS = {
   timelineTag: "rpgm/element/timeline",
   noteTag: "rpgm/element/note"
 };
-var RpgManagerSettingTab = class extends import_obsidian8.PluginSettingTab {
+var RpgManagerSettingTab = class extends import_obsidian9.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -2091,7 +2231,7 @@ var RpgManagerSettingTab = class extends import_obsidian8.PluginSettingTab {
       frag.createEl("span");
       frag.appendText(" ");
     }) });
-    new import_obsidian8.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian9.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying the campaign");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -2102,7 +2242,7 @@ var RpgManagerSettingTab = class extends import_obsidian8.PluginSettingTab {
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian9.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying an Adventure");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -2113,7 +2253,7 @@ var RpgManagerSettingTab = class extends import_obsidian8.PluginSettingTab {
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian9.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Session");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -2124,7 +2264,7 @@ var RpgManagerSettingTab = class extends import_obsidian8.PluginSettingTab {
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian9.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Scene");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -2145,42 +2285,42 @@ var RpgManagerSettingTab = class extends import_obsidian8.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian8.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();
     })));
-    new import_obsidian8.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian9.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.saveSettings();

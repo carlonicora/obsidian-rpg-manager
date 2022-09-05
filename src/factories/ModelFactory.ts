@@ -17,9 +17,11 @@ import {SceneNavigationModel} from "../settings/Agnostic/models/SceneNavigationM
 import {SessionModel} from "../settings/Agnostic/models/SessionModel";
 import {SessionNavigationModel} from "../settings/Agnostic/models/SessionNavigationModel";
 import {TimelineModel} from "../settings/Agnostic/models/TimelineModel";
+import {AdventureNavigationModel} from "../settings/Agnostic/models/AdventureNavigationModel";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
+	AgnosticAdventureNavigation: AdventureNavigationModel,
 	AgnosticCampaign: CampaignModel,
 	AgnosticCampaignNavigation: CampaignNavigationModel,
 	AgnosticClue: ClueModel,
@@ -52,7 +54,8 @@ export class ModelFactory {
 		source: string,
 		sourcePath: string,
 		contentEl: HTMLElement,
+		sourceMeta: any,
 	): ModelClassType<K> {
-		return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl);
+		return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl, sourceMeta);
 	}
 }

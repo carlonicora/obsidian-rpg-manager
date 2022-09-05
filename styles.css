@@ -279,6 +279,9 @@
   width: 100%;
   font-size: 0.9em;
   text-align: center;
+  border-bottom: 1px solid #d9d9d9;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
 }
 .rpgm-breadcrumb h2 {
   margin-bottom: 0px;

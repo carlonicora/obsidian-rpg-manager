@@ -3,6 +3,11 @@ import {Controller} from "./Controller";
 import {RpgFunctions} from "./RpgFunctions";
 
 export default class RpgManager extends Plugin {
+	/*
+	@TODO: Review Modal windows
+	@TODO: Review Template creation (Adding RpgManager where it belongs)
+	@TODO: complete Note Navigation and Creation for sessions
+	 */
 	settings: RpgManagerSettings;
 
 	async onload() {
@@ -58,27 +63,11 @@ export default class RpgManager extends Plugin {
 	private registerEvents(
 	) : void {
 
-		this.registerEvent(this.app.metadataCache.on('resolved', (function(){
-			console.log('EVENT: RESOLVED');
-			this.refreshViews();
-		}).bind(this)));
+		this.registerEvent(this.app.metadataCache.on('resolved', this.refreshViews.bind(this)));
 
-		/*
-		this.registerEvent(this.app.vault.on('modify', (function(){
-			console.log('EVENT: MODIFY');
-			this.refreshViews();
-		}).bind(this)));
-		*/
+		this.registerEvent(this.app.workspace.on('file-open', this.refreshViews.bind(this)));
 
-		this.registerEvent(this.app.workspace.on('file-open', (function(){
-			console.log('EVENT: FILE-OPEN');
-			this.refreshViews();
-		}).bind(this)));
-
-		this.registerEvent(this.app.workspace.on('dataview:refresh-views', (function(){
-			console.log('EVENT: REFRESH-VIEWS');
-			this.refreshViews();
-		}).bind(this)));
+		this.registerEvent(this.app.workspace.on('dataview:refresh-views', this.refreshViews.bind(this)));
 	}
 
 	private registerCodeBlock(
