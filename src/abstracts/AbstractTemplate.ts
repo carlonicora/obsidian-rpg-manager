@@ -1,4 +1,4 @@
-import {TemplateInterface} from "../interfaces/data/TemplateInterface";
+import {TemplateInterface} from "../interfaces/TemplateInterface";
 
 export abstract class AbstractTemplate  implements TemplateInterface {
 	constructor(

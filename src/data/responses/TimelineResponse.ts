@@ -15,7 +15,7 @@ export class TimelineResponse extends AbstractResponse implements TimelineRespon
 
 	sort(){
 		this.elements.sort((a: TimelineElementResponseInterface,b: TimelineElementResponseInterface) => {
-			return a.fullDate - b.fullDate;
+			return a.fullDate.valueOf() - b.fullDate.valueOf();
 		});
 	}
 }

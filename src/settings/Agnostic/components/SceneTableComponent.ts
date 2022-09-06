@@ -4,6 +4,7 @@ import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {RpgDataInterface, SceneInterface} from "../../../Data";
+import {RpgFunctions} from "../../../RpgFunctions";
 
 export class SceneTableComponent extends AbstractComponent {
 	generateData(
@@ -31,8 +32,8 @@ export class SceneTableComponent extends AbstractComponent {
 				ContentFactory.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
 				ContentFactory.create(scene.link, ContentType.Link),
 				ContentFactory.create(scene.synopsis, ContentType.Markdown),
-				ContentFactory.create(scene.startTime, ContentType.String, true),
-				ContentFactory.create(scene.endTime, ContentType.String, true),
+				ContentFactory.create(RpgFunctions.formatTime(scene.startTime), ContentType.String, true),
+				ContentFactory.create(RpgFunctions.formatTime(scene.endTime), ContentType.String, true),
 				ContentFactory.create(scene.duration, ContentType.String, true),
 			])
 		});

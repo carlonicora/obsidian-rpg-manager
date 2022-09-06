@@ -28,8 +28,8 @@ export class SessionTableComponent extends AbstractComponent {
 				ContentFactory.create(session.sessionId, ContentType.Number, true),
 				ContentFactory.create(session.link, ContentType.Link),
 				ContentFactory.create(session.synopsis, ContentType.Markdown),
-				ContentFactory.create(session.date, ContentType.String, true),
-				ContentFactory.create(session.irl, ContentType.String, true),
+				ContentFactory.create(session.date?.toDateString(), ContentType.String, true),
+				ContentFactory.create(session.irl?.toDateString(), ContentType.String, true),
 			])
 		});
 		return response;

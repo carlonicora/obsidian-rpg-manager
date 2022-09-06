@@ -1,12 +1,9 @@
-import {App, CachedMetadata, Component, FrontMatterCache, TFile} from "obsidian";
+import {App, CachedMetadata, Component, FrontMatterCache, LinkCache, TFile} from "obsidian";
 import {DataType} from "./enums/DataType";
 import {RpgFunctions} from "./RpgFunctions";
 import {CampaignSetting} from "./enums/CampaignSetting";
-import {DateTime} from "obsidian-dataview";
 import {PronounFactory} from "./factories/PronounFactory";
 import {Pronoun} from "./enums/Pronoun";
-import {ArrayFunc} from "obsidian-dataview/lib/api/data-array";
-import {forEachComment} from "tsutils";
 
 export class RpgData extends Component {
 	public static index: RpgData;
@@ -54,6 +51,7 @@ export class RpgData extends Component {
 
 		if (index != null){
 			this.data.elements.splice(index, 1);
+			this.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
 
@@ -67,6 +65,7 @@ export class RpgData extends Component {
 
 		if (data != null && metadata != null) {
 			data.reload(file, metadata);
+			this.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
 
@@ -74,6 +73,7 @@ export class RpgData extends Component {
 		file: TFile,
 	): void {
 		this.loadElement(file);
+		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
 	private fillNeighbours(
@@ -111,32 +111,34 @@ export class RpgData extends Component {
 				) {
 					switch (fileType) {
 						case DataType.Campaign:
-							this.data.addElement(new Campaign(file, metadata));
+							this.data.addElement(new Campaign(DataType.Campaign, file, metadata));
 							break;
 						case DataType.Adventure:
-							this.data.addElement(new Adventure(file, metadata));
+							this.data.addElement(new Adventure(DataType.Adventure, file, metadata));
 							break;
 						case DataType.Session:
-							this.data.addElement(new Session(file, metadata));
+							this.data.addElement(new Session(DataType.Session, file, metadata));
 							break;
 						case DataType.Scene:
-							this.data.addElement(new Scene(file, metadata));
+							this.data.addElement(new Scene(DataType.Scene, file, metadata));
 							break;
 						case DataType.NonPlayerCharacter:
+							this.data.addElement(new Character(DataType.NonPlayerCharacter, file, metadata));
+							break;
 						case DataType.Character:
-							this.data.addElement(new Character(file, metadata));
+							this.data.addElement(new Character(DataType.Character, file, metadata));
 							break;
 						case DataType.Clue:
-							this.data.addElement(new Clue(file, metadata));
+							this.data.addElement(new Clue(DataType.Clue, file, metadata));
 							break;
 						case DataType.Event:
-							this.data.addElement(new Event(file, metadata));
+							this.data.addElement(new Event(DataType.Event, file, metadata));
 							break;
 						case DataType.Faction:
-							this.data.addElement(new Faction(file, metadata));
+							this.data.addElement(new Faction(DataType.Faction, file, metadata));
 							break;
 						case DataType.Location:
-							this.data.addElement(new Location(file, metadata));
+							this.data.addElement(new Location(DataType.Location, file, metadata));
 							break;
 					}
 				}
@@ -160,6 +162,14 @@ export class RpgData extends Component {
 		);
 
 		return campaigns.length === 1 ? (<CampaignInterface>campaigns[0]) : null;
+	}
+
+	public getCampaigns(
+	): CampaignInterface[] {
+		return this.data
+			.where((data: RpgDataInterface) =>
+				data.type === DataType.Campaign
+			) as CampaignInterface[];
 	}
 
 	public getAdventure(
@@ -290,29 +300,30 @@ export class RpgData extends Component {
 		currentElement: RpgDataInterface,
 		type: DataType,
 		parentType: DataType|null = null,
-		sorting: ArrayFunc<any, any>|null = null,
+		//sorting: ArrayFunc<any, any>|null = null,
 	): RpgDataInterface[]
 	{
 		const response: RpgDataInterface[] = [];
 
 		const variableSingular = DataType[type].toLowerCase();
 		const variablePlural = variableSingular + 's';
-		const variableParentSingular = parentType != null ? DataType[parentType].toLowerCase() : null;
-		const variableParentPlural = parentType != null ? variableParentSingular + 's' : null;
 
 		let comparison;
 
 		if (parentType === null) {
 			comparison = function (data: RpgDataInterface): boolean {
 				return currentElement.frontmatter?.relationships != undefined &&
-					currentElement.frontmatter?.relationships[this.variablePlural] != undefined &&
-					currentElement.frontmatter?.relationships[this.variablePlural][data.name] !== undefined;
+					currentElement.frontmatter?.relationships[variablePlural] != undefined &&
+					currentElement.frontmatter?.relationships[variablePlural][data.name] !== undefined;
 			}.bind(this);
 		} else {
+			const variableParentSingular = DataType[parentType].toLowerCase();
+			const variableParentPlural = variableParentSingular + 's';
 			comparison = function (data: RpgDataInterface): boolean {
-				return data.frontmatter?.relationships != undefined &&
-					data.frontmatter?.relationships[this.variableParentPlural] != undefined &&
-					data.frontmatter?.relationships[this.variableParentPlural][currentElement.name] !== undefined;
+				return (type !== DataType.Character ? data.type === type : (data.type === DataType.Character || data.type === DataType.NonPlayerCharacter)) &&
+					data.frontmatter?.relationships != undefined &&
+					data.frontmatter?.relationships[variableParentPlural] != undefined &&
+					data.frontmatter?.relationships[variableParentPlural][currentElement.name] !== undefined;
 			}.bind(this);
 		}
 
@@ -328,27 +339,27 @@ export class RpgData extends Component {
 				response.push(data)
 			})
 
-		/*
-		this.outlinks.forEach((page) => {
-			if (
-				(page.tags != undefined && type === RpgFunctions.getDataType(page.tags)) &&
-				!this.isAlreadyPresent(response, page)
-			) {
-				response.add(
-					DataFactory.create(
-						CampaignSetting[this.campaign.settings] + DataType[type] as SingleDataKey<any>,
-						page,
-						this.campaign,
-						'_in main description_',
-					)
-				)
+		currentElement.links.forEach((link: string) => {
+			const data = this.getElementByName(link);
+
+			if (data != null && data.type === type && !this.contains(response, data)) {
+				data.additionalInformation = null;
+				response.push(data);
 			}
 		});
 
 		return response;
-		*/
+	}
 
-		return [];
+	private contains(
+		list: RpgDataInterface[],
+		newElement: RpgDataInterface
+	): boolean {
+		let response = false;
+		list.forEach((data:RpgDataInterface) => {
+			if (data.obsidianId === newElement.obsidianId) response = true;
+		});
+		return response;
 	}
 }
 
@@ -415,11 +426,11 @@ export interface RpgDataInterface {
 	name: string;
 	path: string;
 	completed: boolean;
+	links: Array<string>;
 
 	synopsis: string|null;
 	additionalInformation: string|null;
 	image: string|null;
-	imageSrcElement: HTMLImageElement|null;
 
 	frontmatter: FrontMatterCache|undefined;
 
@@ -433,6 +444,8 @@ export interface RpgDataInterface {
 	getRelationships(
 		type: DataType
 	): RpgDataInterface[];
+
+	get imageSrcElement(): HTMLElement|null;
 }
 
 
@@ -444,11 +457,12 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	public name: string;
 	public path: string;
 
+	public links: Array<string>;
+
 	public completed: boolean;
 	public synopsis: string|null = null;
 	public additionalInformation: string|null = null;
 	public image: string|null = null;
-	public imageSrcElement: HTMLImageElement|null;
 
 	public campaign: CampaignInterface;
 
@@ -460,6 +474,7 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		metadata: CachedMetadata,
 	) {
 		if (type !== DataType.Campaign) this.campaign = RpgData.index.getCampaign(RpgFunctions.getTagId(metadata.frontmatter?.tags, DataType.Campaign))!;
+		this.reload(file, metadata);
 	}
 
 	public reload(
@@ -472,16 +487,26 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		this.name = file.basename;
 		this.path = file.path;
 
+		this.links = [];
+
+		(metadata.links || []).forEach((link: LinkCache) => {
+			this.links.push(link.link);
+		});
+
 		this.frontmatter = metadata.frontmatter;
 
 		this.completed = metadata.frontmatter?.completed ? metadata.frontmatter?.completed : true;
 		this.synopsis = metadata.frontmatter?.synopsis;
 		this.image = RpgFunctions.getImg(this.name);
-
-		if (this.image != null) {
-			this.imageSrcElement = RpgFunctions.getImgElement(this.image);
-		}
 	}
+
+	public get imageSrcElement(
+	): HTMLElement|null {
+		if (this.image == null) return null;
+
+		return RpgFunctions.getImgElement(this.image);
+	}
+
 
 	public getRelationships(
 		type: DataType
@@ -495,7 +520,6 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 				if (data != null){
 					data.additionalInformation = <string>value;
 					response.push(data);
-
 				}
 			});
 		}
@@ -530,23 +554,14 @@ export abstract class AbstractOutlineRpgData extends AbstractRpgData implements 
 
 export interface CampaignInterface extends RpgDataInterface,OutlineRpgDataInterface{
 	campaignId: number;
-	currentDate: DateTime|null;
+	currentDate: Date|null;
 	settings: CampaignSetting;
 }
 
 export class Campaign extends AbstractOutlineRpgData implements CampaignInterface {
 	public campaignId: number;
-	public currentDate: DateTime|null;
+	public currentDate: Date|null;
 	public settings: CampaignSetting;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Campaign, file, metadata);
-
-		this.reload(file, metadata);
-	}
 
 	public reload(
 		file: TFile,
@@ -555,7 +570,7 @@ export class Campaign extends AbstractOutlineRpgData implements CampaignInterfac
 		super.reload(file, metadata);
 
 		if (this.frontmatter?.tags) this.campaignId = RpgFunctions.getTagId(this.frontmatter?.tags, this.type);
-		if (this.frontmatter?.dates?.currentDate) this.currentDate = new Date(this.frontmatter?.dates?.currentDate);
+		if (this.frontmatter?.dates?.current) this.currentDate = new Date(this.frontmatter?.dates?.current);
 		this.settings = this.frontmatter?.settings ? CampaignSetting[this.frontmatter?.settings as keyof typeof CampaignSetting] : CampaignSetting.Agnostic;
 	}
 
@@ -570,15 +585,6 @@ export interface AdventureInterface extends RpgDataInterface,OutlineRpgDataInter
 
 export class Adventure extends AbstractOutlineRpgData implements RpgDataInterface {
 	public adventureId: number;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Adventure, file, metadata);
-
-		this.reload(file, metadata);
-	}
 
 	public reload(
 		file: TFile,
@@ -612,15 +618,6 @@ export class Session extends AbstractOutlineRpgData implements SessionInterface 
 	public previousSession: SessionInterface|null;
 	public nextSession: SessionInterface|null;
 
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Session, file, metadata);
-
-		this.reload(file, metadata);
-	}
-
 	public reload(
 		file: TFile,
 		metadata: CachedMetadata,
@@ -645,8 +642,8 @@ export class Session extends AbstractOutlineRpgData implements SessionInterface 
 export interface SceneInterface extends RpgDataInterface,OutlineRpgDataInterface {
 	sceneId: number;
 	action: string|null;
-	startTime: DateTime|null;
-	endTime: DateTime|null;
+	startTime: Date|null;
+	endTime: Date|null;
 
 	adventure: AdventureInterface;
 	session: SessionInterface;
@@ -659,22 +656,13 @@ export interface SceneInterface extends RpgDataInterface,OutlineRpgDataInterface
 export class Scene extends AbstractOutlineRpgData implements SceneInterface {
 	public sceneId: number;
 	public action: string|null;
-	public startTime: DateTime|null;
-	public endTime: DateTime|null;
+	public startTime: Date|null;
+	public endTime: Date|null;
 
 	public adventure: AdventureInterface;
 	public session: SessionInterface;
 	public previousScene: SceneInterface|null;
 	public nextScene: SceneInterface|null;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Scene, file, metadata);
-
-		this.reload(file, metadata);
-	}
 
 	public reload(
 		file: TFile,
@@ -687,6 +675,7 @@ export class Scene extends AbstractOutlineRpgData implements SceneInterface {
 		this.session = RpgData.index.getSession(this.campaign.campaignId, this.adventure.adventureId, RpgFunctions.getTagId(this.frontmatter?.tags, DataType.Session))!;
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
+		this.action = this.frontmatter?.action;
 	}
 
 	public initialiseNeighbours(
@@ -702,7 +691,7 @@ export class Scene extends AbstractOutlineRpgData implements SceneInterface {
 		let response = '';
 
 		if (this.startTime && this.endTime){
-			const duration = this.endTime - this.startTime;
+			const duration = this.endTime.getTime() - this.startTime.getTime();
 			const hours = Math.floor(duration/(1000*60*60));
 			const minutes = Math.floor(duration/(1000*60))%60;
 
@@ -714,8 +703,8 @@ export class Scene extends AbstractOutlineRpgData implements SceneInterface {
 }
 
 export interface CharacterInterface extends RpgDataInterface {
-	dob: DateTime|null;
-	death: DateTime|null;
+	dob: Date|null;
+	death: Date|null;
 	goals: string|null;
 	pronoun: Pronoun|null;
 
@@ -724,19 +713,10 @@ export interface CharacterInterface extends RpgDataInterface {
 }
 
 export class Character extends AbstractRpgData implements CharacterInterface {
-	public dob: DateTime|null;
-	public death: DateTime|null;
+	public dob: Date|null;
+	public death: Date|null;
 	public goals: string|null;
 	public pronoun: Pronoun|null;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(RpgFunctions.getDataType(metadata?.frontmatter?.tags) as DataType, file, metadata);
-
-		this.reload(file, metadata);
-	}
 
 	public reload(
 		file: TFile,
@@ -756,6 +736,8 @@ export class Character extends AbstractRpgData implements CharacterInterface {
 
 		const end = this.death ? this.death : this.campaign.currentDate;
 
+		if (end == null) return null;
+
 		const ageDifMs = end.valueOf() - this.dob.valueOf();
 		const ageDate = new Date(ageDifMs);
 
@@ -769,22 +751,13 @@ export class Character extends AbstractRpgData implements CharacterInterface {
 }
 
 export interface ClueInterface extends RpgDataInterface {
-	found: DateTime|null;
+	found: Date|null;
 
 	get isFound(): boolean;
 }
 
 export class Clue extends AbstractRpgData implements RpgDataInterface {
-	public found: DateTime|null;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Clue, file, metadata);
-
-		this.reload(file, metadata);
-	}
+	public found: Date|null;
 
 	public reload(
 		file: TFile,
@@ -802,20 +775,11 @@ export class Clue extends AbstractRpgData implements RpgDataInterface {
 }
 
 export interface EventInterface extends RpgDataInterface {
-	date: DateTime;
+	date: Date|null;
 }
 
 export class Event extends AbstractRpgData implements EventInterface {
-	public date: DateTime;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Event, file, metadata);
-
-		this.reload(file, metadata);
-	}
+	public date: Date|null;
 
 	public reload(
 		file: TFile,
@@ -831,21 +795,6 @@ export interface FactionInterface extends RpgDataInterface {
 }
 
 export class Faction extends AbstractRpgData implements FactionInterface {
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Faction, file, metadata);
-
-		this.reload(file, metadata);
-	}
-
-	public reload(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super.reload(file, metadata);
-	}
 }
 
 export interface LocationInterface extends RpgDataInterface {
@@ -854,15 +803,6 @@ export interface LocationInterface extends RpgDataInterface {
 
 export class Location extends AbstractRpgData implements LocationInterface {
 	public address: string|null;
-
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Location, file, metadata);
-
-		this.reload(file, metadata);
-	}
 
 	public reload(
 		file: TFile,
@@ -878,19 +818,4 @@ export interface TimelineInterface extends RpgDataInterface {
 }
 
 export class Timeline extends AbstractRpgData implements TimelineInterface {
-	constructor(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super(DataType.Timeline, file, metadata);
-
-		this.reload(file, metadata);
-	}
-
-	public reload(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super.reload(file, metadata);
-	}
 }

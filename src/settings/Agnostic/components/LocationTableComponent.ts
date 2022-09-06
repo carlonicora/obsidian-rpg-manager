@@ -26,7 +26,7 @@ export class LocationTableComponent extends AbstractComponent {
 			response.addContent([
 				ContentFactory.create(location.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(location.link, ContentType.Link, true),
-				ContentFactory.create(location.synopsis, ContentType.Markdown),
+				ContentFactory.create(location.additionalInformation ?? location.synopsis, ContentType.Markdown),
 			])
 		});
 

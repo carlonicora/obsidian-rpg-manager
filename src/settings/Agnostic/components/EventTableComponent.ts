@@ -27,8 +27,8 @@ export class EventTableComponent extends AbstractComponent {
 			response.addContent([
 				ContentFactory.create(event.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(event.link, ContentType.Link, true),
-				ContentFactory.create(event.date, ContentType.String),
-				ContentFactory.create(event.synopsis, ContentType.Markdown),
+				ContentFactory.create(event.date?.toDateString(), ContentType.String),
+				ContentFactory.create(event.additionalInformation ?? event.synopsis, ContentType.Markdown),
 			])
 		});
 

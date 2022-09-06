@@ -17,7 +17,7 @@ export class BannerView extends AbstractView {
 			overlay.createDiv({cls: 'rpgm-header-title', text: data.title});
 
 			overlay.createDiv({cls: 'rpgm-campaign-name', text: (data.subtitle != null ? data.subtitle : '')});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (data.date !== null ? RpgFunctions.formatDate(data.date, "long") : "")});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (data.date !== null ? data.date : "")});
 		} else {
 			container.createEl('h1', {text: data.title});
 		}

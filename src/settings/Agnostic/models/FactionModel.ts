@@ -39,7 +39,6 @@ export class FactionModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				//CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
 				RpgData.index.getRelationshipList(
 					this.currentElement,

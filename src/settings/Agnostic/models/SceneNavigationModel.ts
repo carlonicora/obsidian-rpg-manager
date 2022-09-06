@@ -13,14 +13,12 @@ export class SceneNavigationModel extends AbstractModel {
 		response.addElement(this.generateBreadcrumb());
 
 		const goalElement = new ResponseBox();
-		//goalElement.content = (<SceneDataInterface>this.specificData).synopsis;
 		goalElement.content = this.currentElement.synopsis;
 		goalElement.title = 'Scene Goal';
 		goalElement.colour = 'white';
 		response.addElement(goalElement);
 
 		const actionsElement = new ResponseBox();
-		//actionsElement.content = (<SceneDataInterface>this.specificData).action;
 		actionsElement.content = this.currentElement.action;
 		actionsElement.title = 'Player Character\'s Action';
 		actionsElement.colour = 'off-white';

@@ -7,8 +7,7 @@ import {RpgData} from "./Data";
 
 export default class RpgManager extends Plugin {
 	/*
-	@TODO: Move everything to RpgData
-	@TODO: Image
+	@TODO: Sorting!!!
 	@TODO: Clue Status
 	@TODO: Change the ABT/StoryCircle information and moving them in the codeblock
 	@TODO: Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
@@ -35,11 +34,7 @@ export default class RpgManager extends Plugin {
 
 	async onLayoutReady(){
 		RpgData.initialise(this.app);
-		const a = RpgData.index.getElementByObsidianId('Non-Player Characters/Music/Erik Kim.md')
-		if (a !== null) {
-			const B = a.getRelationships(DataType.Character);
-			console.log(B);
-		}
+		//console.log(RpgData.index);
 	}
 
 	async onunload() {
@@ -82,10 +77,7 @@ export default class RpgManager extends Plugin {
 	) : void {
 
 		this.registerEvent(this.app.metadataCache.on('resolved', this.refreshViews.bind(this)));
-
 		this.registerEvent(this.app.workspace.on('file-open', this.refreshViews.bind(this)));
-
-		this.registerEvent(this.app.workspace.on('dataview:refresh-views', this.refreshViews.bind(this)));
 	}
 
 	private registerCodeBlock(

@@ -27,8 +27,8 @@ export class CharacterTableComponent extends AbstractComponent {
 			response.addContent([
 				ContentFactory.create(character.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(character.link, ContentType.Link, true),
-				ContentFactory.create(character.age, ContentType.String, true),
-				ContentFactory.create(character.synopsis, ContentType.Markdown),
+				ContentFactory.create(character.age?.toString(), ContentType.String, true),
+				ContentFactory.create(character.additionalInformation ?? character.synopsis, ContentType.Markdown),
 			])
 		});
 

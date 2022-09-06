@@ -27,8 +27,8 @@ export class ClueTableComponent extends AbstractComponent {
 			response.addContent([
 				ContentFactory.create(clue.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(clue.link, ContentType.Link, true),
-				ContentFactory.create((clue.found === false ? '<span class="rpgm-missing">no</span>' : clue.found), ContentType.Markdown),
-				ContentFactory.create(clue.synopsis, ContentType.Markdown),
+				ContentFactory.create((clue.isFound ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
+				ContentFactory.create(clue.additionalInformation ?? clue.synopsis, ContentType.Markdown),
 			])
 		});
 

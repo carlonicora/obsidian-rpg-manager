@@ -3,8 +3,8 @@ import {DataType} from "../enums/DataType";
 import {ModalFactory, SingleModalKey} from "./ModalFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {SingleTemplateKey, TemplateFactory} from "./TemplateFactory";
-import {DataviewApi} from "obsidian-dataview/lib/api/plugin-api";
 import {RpgFunctions} from "../RpgFunctions";
+import {Campaign, CampaignInterface, RpgData} from "../Data";
 
 export class FileFactory {
 	static async initialise(
@@ -96,11 +96,10 @@ export class FileFactory {
 		let response: CampaignSetting = CampaignSetting.Agnostic;
 
 		if (campaignId != null){
-			const io:DataviewApi = app.plugins.plugins.dataview.api;
-			const campaigns = io.pages('#' + RpgFunctions.settings.campaignTag + '/' + campaignId);
+			const campaign: CampaignInterface|null = RpgData.index.getCampaign(campaignId);
 
-			if (campaigns != null && campaigns.length === 1){
-				response = CampaignSetting[campaigns[0].settings as keyof typeof CampaignSetting];
+			if (campaign != null){
+				response = campaign.settings;
 			}
 		}
 

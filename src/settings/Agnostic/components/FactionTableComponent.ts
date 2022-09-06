@@ -26,7 +26,7 @@ export class FactionTableComponent extends AbstractComponent {
 			response.addContent([
 				ContentFactory.create(faction.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(faction.link, ContentType.Link, true),
-				ContentFactory.create(faction.synopsis, ContentType.Markdown),
+				ContentFactory.create(faction.additionalInformation ?? faction.synopsis, ContentType.Markdown),
 			])
 		});
 

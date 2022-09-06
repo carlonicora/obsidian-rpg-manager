@@ -102,371 +102,6 @@ var TableView = class extends AbstractView {
   }
 };
 
-// src/RpgFunctions.ts
-var import_obsidian = require("obsidian");
-
-// src/enums/DataType.ts
-var DataType = /* @__PURE__ */ ((DataType2) => {
-  DataType2[DataType2["Campaign"] = 0] = "Campaign";
-  DataType2[DataType2["Adventure"] = 1] = "Adventure";
-  DataType2[DataType2["Session"] = 2] = "Session";
-  DataType2[DataType2["Scene"] = 3] = "Scene";
-  DataType2[DataType2["Character"] = 4] = "Character";
-  DataType2[DataType2["NonPlayerCharacter"] = 5] = "NonPlayerCharacter";
-  DataType2[DataType2["Location"] = 6] = "Location";
-  DataType2[DataType2["Event"] = 7] = "Event";
-  DataType2[DataType2["Clue"] = 8] = "Clue";
-  DataType2[DataType2["Faction"] = 9] = "Faction";
-  DataType2[DataType2["Note"] = 10] = "Note";
-  DataType2[DataType2["Timeline"] = 11] = "Timeline";
-  return DataType2;
-})(DataType || {});
-
-// src/RpgFunctions.ts
-var RpgFunctions = class {
-  static initialise(app2, settings) {
-    this.app = app2;
-    this.settings = settings;
-    this.initialiseRoots();
-  }
-  static initialiseRoots() {
-    if (this.app.vault.getFiles().length !== 0) {
-      const filePath = this.app.vault.getFiles()[0].path;
-      let slashCount = 0;
-      let p = filePath.indexOf("/");
-      while (p !== -1) {
-        slashCount++;
-        p = filePath.indexOf("/", p + 1);
-      }
-      slashCount++;
-      const file = this.app.vault.getAbstractFileByPath(filePath);
-      if (file instanceof import_obsidian.TFile) {
-        this.root = this.app.vault.getResourcePath(file);
-      }
-      if (this.root === null) {
-        console.log("Rpg Manager failed to find the root folder!");
-        return;
-      }
-      if (this.root.includes("?")) {
-        this.root = this.root.substring(0, this.root.lastIndexOf("?"));
-      }
-      for (let removedSlash = slashCount; removedSlash > 0; removedSlash--) {
-        this.root = this.root.slice(0, this.root.lastIndexOf("/"));
-      }
-      if (!this.root.endsWith("/")) {
-        this.root += "/";
-      }
-    }
-  }
-  static fileExists(path) {
-    const abstractFile = this.app.vault.getAbstractFileByPath(path);
-    let response = false;
-    if (abstractFile instanceof import_obsidian.TAbstractFile) {
-      response = true;
-    }
-    return response;
-  }
-  static getImg(name) {
-    const imageExtensions = ["jpeg", "jpg", "png", "webp"];
-    for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
-      const fileName = this.app.vault.config.attachmentFolderPath + "/" + name + "." + imageExtensions[extensionCount];
-      if (this.fileExists(fileName)) {
-        if (this.root == null) {
-          this.initialiseRoots();
-        }
-        return this.root + fileName;
-      }
-    }
-    return null;
-  }
-  static getImgElement(imgSrc, width = 75, height = 75) {
-    if (width !== 75 && height === 75) {
-      height = void 0;
-    } else if (width === 75 && height !== 75) {
-      width = void 0;
-    }
-    const response = new Image(width, height);
-    response.src = imgSrc;
-    response.style.objectFit = "cover";
-    return response;
-  }
-  static getImageLink(page) {
-    const imageExtensions = ["jpeg", "jpg", "png", "webp"];
-    for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
-      const fileName = this.app.vault.config.attachmentFolderPath + "/" + (page == null ? void 0 : page.file.name) + "." + imageExtensions[extensionCount];
-      if (this.fileExists(fileName)) {
-        if (this.root == null) {
-          this.initialiseRoots();
-        }
-        return this.root + fileName;
-      }
-    }
-    return null;
-  }
-  static getImageElement(page, width = 75, height = 75) {
-    let imageFile = null;
-    if (page !== void 0) {
-      imageFile = this.getImageLink(page);
-    }
-    if (imageFile === null) {
-      return null;
-    }
-    if (width !== 75 && height === 75) {
-      height = void 0;
-    } else if (width === 75 && height !== 75) {
-      width = void 0;
-    }
-    const response = new Image(width, height);
-    response.src = imageFile;
-    response.style.objectFit = "cover";
-    return response;
-  }
-  static getImage(page, width = 75, height = 75) {
-    let imageFile = null;
-    if (page !== void 0) {
-      imageFile = this.getImageLink(page);
-    }
-    let minimalDimensions = false;
-    let dimensions = "width: " + width + "px; height: " + height + "px;";
-    if (width !== 75 && height === 75) {
-      dimensions = "width: " + width + "px;";
-    } else if (width === 75 && height !== 75) {
-      dimensions = "height: " + height + "px;";
-    } else if (width === 75 && height === 75) {
-      minimalDimensions = true;
-    }
-    if (imageFile === null) {
-      if (!minimalDimensions) {
-        return "";
-      } else {
-        return '<div style="' + dimensions + '"></div>';
-      }
-    }
-    return '<img src="' + imageFile + '" style="object-fit: cover;' + dimensions + '">';
-  }
-  static getDataTypeFromTagCache(tags) {
-    let response = null;
-    tags.forEach((tag) => {
-      if (tag.tag.startsWith(this.settings.campaignTag)) {
-        response = 0 /* Campaign */;
-      } else if (tag.tag.startsWith(this.settings.adventureTag)) {
-        response = 1 /* Adventure */;
-      } else if (tag.tag.startsWith(this.settings.sessionTag)) {
-        response = 2 /* Session */;
-      } else if (tag.tag.startsWith(this.settings.sceneTag)) {
-        response = 3 /* Scene */;
-      } else if (tag.tag.startsWith(this.settings.npcTag)) {
-        response = 5 /* NonPlayerCharacter */;
-      } else if (tag.tag.startsWith(this.settings.pcTag)) {
-        response = 4 /* Character */;
-      } else if (tag.tag.startsWith(this.settings.clueTag)) {
-        response = 8 /* Clue */;
-      } else if (tag.tag.startsWith(this.settings.locationTag)) {
-        response = 6 /* Location */;
-      } else if (tag.tag.startsWith(this.settings.factionTag)) {
-        response = 9 /* Faction */;
-      } else if (tag.tag.startsWith(this.settings.eventTag)) {
-        response = 7 /* Event */;
-      } else if (tag.tag.startsWith(this.settings.timelineTag)) {
-        response = 11 /* Timeline */;
-      } else if (tag.tag.startsWith(this.settings.noteTag)) {
-        response = 10 /* Note */;
-      }
-    });
-    return response;
-  }
-  static getDataType(tags) {
-    let response = null;
-    (tags || []).forEach((tag) => {
-      if (tag.startsWith(this.settings.campaignTag)) {
-        response = 0 /* Campaign */;
-      } else if (tag.startsWith(this.settings.adventureTag)) {
-        response = 1 /* Adventure */;
-      } else if (tag.startsWith(this.settings.sessionTag)) {
-        response = 2 /* Session */;
-      } else if (tag.startsWith(this.settings.sceneTag)) {
-        response = 3 /* Scene */;
-      } else if (tag.startsWith(this.settings.npcTag)) {
-        response = 5 /* NonPlayerCharacter */;
-      } else if (tag.startsWith(this.settings.pcTag)) {
-        response = 4 /* Character */;
-      } else if (tag.startsWith(this.settings.clueTag)) {
-        response = 8 /* Clue */;
-      } else if (tag.startsWith(this.settings.locationTag)) {
-        response = 6 /* Location */;
-      } else if (tag.startsWith(this.settings.factionTag)) {
-        response = 9 /* Faction */;
-      } else if (tag.startsWith(this.settings.eventTag)) {
-        response = 7 /* Event */;
-      } else if (tag.startsWith(this.settings.timelineTag)) {
-        response = 11 /* Timeline */;
-      } else if (tag.startsWith(this.settings.noteTag)) {
-        response = 10 /* Note */;
-      }
-    });
-    return response;
-  }
-  static getTagIdFromTagCache(tags, type) {
-    const stringTags = [];
-    tags.forEach((tag) => {
-      stringTags.push(tag.tag);
-    });
-    return this.getTagId(stringTags, type);
-  }
-  static getTagId(tags, type) {
-    if (tags == null) {
-      throw new Error();
-    }
-    let response = "";
-    tags.forEach((tag) => {
-      if (response === "") {
-        if (tag.startsWith(this.settings.campaignTag)) {
-          if (type === 0 /* Campaign */) {
-            response = tag.substring(this.settings.campaignTag.length + 1);
-          } else {
-            throw new Error();
-          }
-        } else if (tag.startsWith(this.settings.adventureTag)) {
-          const parts = tag.substring(this.settings.adventureTag.length + 1).split("/");
-          if (parts.length === 2) {
-            if (type === 0 /* Campaign */) {
-              response = parts[0];
-            } else if (type === 1 /* Adventure */) {
-              response = parts[1];
-            }
-          } else if (parts.length === 1 && type === 1 /* Adventure */) {
-            response = parts[0];
-          }
-        } else if (tag.startsWith(this.settings.sessionTag)) {
-          const parts = tag.substring(this.settings.sessionTag.length + 1).split("/");
-          if (parts.length === 3) {
-            if (type === 0 /* Campaign */) {
-              response = parts[0];
-            } else if (type === 1 /* Adventure */) {
-              response = parts[1];
-            } else if (type === 2 /* Session */) {
-              response = parts[2];
-            }
-          } else if (parts.length === 2) {
-            if (type === 1 /* Adventure */) {
-              response = parts[0];
-            } else if (type === 2 /* Session */) {
-              response = parts[1];
-            }
-          }
-        } else if (tag.startsWith(this.settings.sceneTag)) {
-          const parts = tag.substring(this.settings.sceneTag.length + 1).split("/");
-          if (parts.length === 4) {
-            if (type === 0 /* Campaign */) {
-              response = parts[0];
-            } else if (type === 1 /* Adventure */) {
-              response = parts[1];
-            } else if (type === 2 /* Session */) {
-              response = parts[2];
-            } else if (type === 3 /* Scene */) {
-              response = parts[3];
-            }
-          } else if (parts.length === 3) {
-            if (type === 1 /* Adventure */) {
-              response = parts[0];
-            } else if (type === 2 /* Session */) {
-              response = parts[1];
-            } else if (type === 3 /* Scene */) {
-              response = parts[2];
-            }
-          }
-        } else {
-          let tagLength = 0;
-          if (tag.startsWith(this.settings.npcTag)) {
-            tagLength = this.settings.npcTag.length;
-          } else if (tag.startsWith(this.settings.pcTag)) {
-            tagLength = this.settings.pcTag.length;
-          } else if (tag.startsWith(this.settings.eventTag)) {
-            tagLength = this.settings.eventTag.length;
-          } else if (tag.startsWith(this.settings.factionTag)) {
-            tagLength = this.settings.factionTag.length;
-          } else if (tag.startsWith(this.settings.locationTag)) {
-            tagLength = this.settings.locationTag.length;
-          } else if (tag.startsWith(this.settings.clueTag)) {
-            tagLength = this.settings.clueTag.length;
-          } else if (tag.startsWith(this.settings.timelineTag)) {
-            tagLength = this.settings.timelineTag.length;
-          }
-          if (tagLength !== 0 && tag.length > tagLength && type === 0 /* Campaign */) {
-            response = tag.substring(tagLength + 1);
-          }
-        }
-      }
-    });
-    if (response === "") {
-      throw new Error();
-    }
-    return +response;
-  }
-  static formatDate(date, type = null) {
-    if (!date || date === void 0)
-      return "";
-    let options = null;
-    if (type === "long") {
-      options = {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      };
-      return date.toLocaleString(options);
-    }
-    if (type === "short") {
-      options = {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-      };
-    }
-    if (options !== null) {
-      return date.toLocaleString(options);
-    } else {
-      return date.toISODate();
-    }
-  }
-  static formatTime(date) {
-    if (!date || date === void 0)
-      return "";
-    const options = {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit"
-    };
-    return date.toLocaleString(options);
-  }
-  static calculateDuration(start, end) {
-    if (!start || !end)
-      return "";
-    const dtStart = new Date(start);
-    const dtEnd = new Date(end);
-    const difference = dtEnd.valueOf() - dtStart.valueOf();
-    const minutes = difference / 6e4;
-    const remaining = difference - minutes * 6e4;
-    const seconds = remaining > 0 ? remaining / 1e3 : 0;
-    return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
-  }
-  static getDeathStatus(page) {
-    return page.dates.death !== null ? "<br/>_(Deceased " + this.formatDate(page.dates.death) + ")_ " : "";
-  }
-  static calculateAge(page, currentDate) {
-    if (page === void 0)
-      return "";
-    if (!(page == null ? void 0 : page.dates.dob))
-      return "";
-    const end = page.dates.death || currentDate;
-    const startDate = new Date(page.dates.dob);
-    const endDate = new Date(end);
-    const ageDifMs = endDate.valueOf() - startDate.valueOf();
-    const ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970).toString();
-  }
-};
-
 // src/settings/Agnostic/views/BannerView.ts
 var BannerView = class extends AbstractView {
   render(container, data) {
@@ -477,7 +112,7 @@ var BannerView = class extends AbstractView {
       const overlay = header.createDiv({ cls: "rpgm-header-overlay" });
       overlay.createDiv({ cls: "rpgm-header-title", text: data.title });
       overlay.createDiv({ cls: "rpgm-campaign-name", text: data.subtitle != null ? data.subtitle : "" });
-      overlay.createDiv({ cls: "rpgm-current-date", text: data.date !== null ? RpgFunctions.formatDate(data.date, "long") : "" });
+      overlay.createDiv({ cls: "rpgm-current-date", text: data.date !== null ? data.date : "" });
     } else {
       container.createEl("h1", { text: data.title });
     }
@@ -485,7 +120,7 @@ var BannerView = class extends AbstractView {
 };
 
 // src/settings/Agnostic/views/BoxView.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian = require("obsidian");
 var BoxView = class extends AbstractView {
   render(container, data) {
     const boxDiv = container.createDiv();
@@ -494,12 +129,12 @@ var BoxView = class extends AbstractView {
     const boxTitle = boxDiv.createDiv();
     boxTitle.addClass("title");
     boxTitle.innerText = data.title;
-    import_obsidian2.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
+    import_obsidian.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
   }
 };
 
 // src/settings/Agnostic/views/BreadcrumbView.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian2 = require("obsidian");
 var BreadcrumbView = class extends AbstractView {
   render(container, data) {
     const breadcrumbContainer = container.createDiv({ cls: "rpgm-breadcrumb" });
@@ -525,7 +160,7 @@ var BreadcrumbView = class extends AbstractView {
         link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
       }
     }
-    import_obsidian3.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
+    import_obsidian2.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
     if (data.nextBreadcrumb != null) {
       if (data.nextBreadcrumb.isInNewLine === false) {
         const separator = lineToUse.createDiv({ cls: "separator" });
@@ -541,7 +176,7 @@ var BreadcrumbView = class extends AbstractView {
 };
 
 // src/settings/Agnostic/views/TimelineView.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 var TimelineView = class extends AbstractView {
   render(container, data) {
     const timeline = container.createDiv({ cls: "rpgm-timeline" });
@@ -573,8 +208,8 @@ var TimelineView = class extends AbstractView {
       const details = li.createDiv({ cls: "event-details" });
       const fileLink = details.createEl("h3");
       const synopsis = details.createSpan();
-      import_obsidian4.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
-      import_obsidian4.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
+      import_obsidian3.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
+      import_obsidian3.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
     });
   }
 };
@@ -605,6 +240,23 @@ var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
   ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
   return ResponseType2;
 })(ResponseType || {});
+
+// src/enums/DataType.ts
+var DataType = /* @__PURE__ */ ((DataType2) => {
+  DataType2[DataType2["Campaign"] = 0] = "Campaign";
+  DataType2[DataType2["Adventure"] = 1] = "Adventure";
+  DataType2[DataType2["Session"] = 2] = "Session";
+  DataType2[DataType2["Scene"] = 3] = "Scene";
+  DataType2[DataType2["Character"] = 4] = "Character";
+  DataType2[DataType2["NonPlayerCharacter"] = 5] = "NonPlayerCharacter";
+  DataType2[DataType2["Location"] = 6] = "Location";
+  DataType2[DataType2["Event"] = 7] = "Event";
+  DataType2[DataType2["Clue"] = 8] = "Clue";
+  DataType2[DataType2["Faction"] = 9] = "Faction";
+  DataType2[DataType2["Note"] = 10] = "Note";
+  DataType2[DataType2["Timeline"] = 11] = "Timeline";
+  return DataType2;
+})(DataType || {});
 
 // src/abstracts/AbstractResponse.ts
 var AbstractResponse = class {
@@ -767,11 +419,11 @@ var StringContent = class extends AbstractContent {
 };
 
 // src/data/content/LinkContent.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 var LinkContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian5.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian4.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -786,11 +438,11 @@ var NumberContent = class extends AbstractContent {
 };
 
 // src/data/content/ObjectContent.ts
-var import_obsidian6 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 var ObjectContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian6.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -798,11 +450,11 @@ var ObjectContent = class extends AbstractContent {
 };
 
 // src/data/content/MarkdownContent.ts
-var import_obsidian7 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 var MarkdownContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian7.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
+      import_obsidian6.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -866,12 +518,13 @@ var SessionTableComponent = class extends AbstractComponent {
       ContentFactory.create("Play Date", 0 /* String */)
     ]);
     data.forEach((session) => {
+      var _a, _b;
       response.addContent([
         ContentFactory.create(session.sessionId, 1 /* Number */, true),
         ContentFactory.create(session.link, 2 /* Link */),
         ContentFactory.create(session.synopsis, 4 /* Markdown */),
-        ContentFactory.create(session.date, 0 /* String */, true),
-        ContentFactory.create(session.irl, 0 /* String */, true)
+        ContentFactory.create((_a = session.date) == null ? void 0 : _a.toDateString(), 0 /* String */, true),
+        ContentFactory.create((_b = session.irl) == null ? void 0 : _b.toDateString(), 0 /* String */, true)
       ]);
     });
     return response;
@@ -917,11 +570,12 @@ var CharacterTableComponent = class extends AbstractComponent {
       ContentFactory.create("Synopsis", 0 /* String */)
     ]);
     data.forEach((character) => {
+      var _a, _b;
       response.addContent([
         ContentFactory.create(character.imageSrcElement, 5 /* Image */, true),
         ContentFactory.create(character.link, 2 /* Link */, true),
-        ContentFactory.create(character.age, 0 /* String */, true),
-        ContentFactory.create(character.synopsis, 4 /* Markdown */)
+        ContentFactory.create((_a = character.age) == null ? void 0 : _a.toString(), 0 /* String */, true),
+        ContentFactory.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
       ]);
     });
     return response;
@@ -942,10 +596,11 @@ var LocationTableComponent = class extends AbstractComponent {
       ContentFactory.create("Synopsis", 0 /* String */)
     ]);
     data.forEach((location) => {
+      var _a;
       response.addContent([
         ContentFactory.create(location.imageSrcElement, 5 /* Image */, true),
         ContentFactory.create(location.link, 2 /* Link */, true),
-        ContentFactory.create(location.synopsis, 4 /* Markdown */)
+        ContentFactory.create((_a = location.additionalInformation) != null ? _a : location.synopsis, 4 /* Markdown */)
       ]);
     });
     return response;
@@ -967,11 +622,12 @@ var EventTableComponent = class extends AbstractComponent {
       ContentFactory.create("Synopsis", 0 /* String */)
     ]);
     data.forEach((event) => {
+      var _a, _b;
       response.addContent([
         ContentFactory.create(event.imageSrcElement, 5 /* Image */, true),
         ContentFactory.create(event.link, 2 /* Link */, true),
-        ContentFactory.create(event.date, 0 /* String */),
-        ContentFactory.create(event.synopsis, 4 /* Markdown */)
+        ContentFactory.create((_a = event.date) == null ? void 0 : _a.toDateString(), 0 /* String */),
+        ContentFactory.create((_b = event.additionalInformation) != null ? _b : event.synopsis, 4 /* Markdown */)
       ]);
     });
     return response;
@@ -993,11 +649,12 @@ var ClueTableComponent = class extends AbstractComponent {
       ContentFactory.create("Synopsis", 0 /* String */)
     ]);
     data.forEach((clue) => {
+      var _a, _b;
       response.addContent([
         ContentFactory.create(clue.imageSrcElement, 5 /* Image */, true),
         ContentFactory.create(clue.link, 2 /* Link */, true),
-        ContentFactory.create(clue.found === false ? '<span class="rpgm-missing">no</span>' : clue.found, 4 /* Markdown */),
-        ContentFactory.create(clue.synopsis, 4 /* Markdown */)
+        ContentFactory.create(clue.isFound ? (_a = clue.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
+        ContentFactory.create((_b = clue.additionalInformation) != null ? _b : clue.synopsis, 4 /* Markdown */)
       ]);
     });
     return response;
@@ -1018,13 +675,213 @@ var FactionTableComponent = class extends AbstractComponent {
       ContentFactory.create("Synopsis", 0 /* String */)
     ]);
     data.forEach((faction) => {
+      var _a;
       response.addContent([
         ContentFactory.create(faction.imageSrcElement, 5 /* Image */, true),
         ContentFactory.create(faction.link, 2 /* Link */, true),
-        ContentFactory.create(faction.synopsis, 4 /* Markdown */)
+        ContentFactory.create((_a = faction.additionalInformation) != null ? _a : faction.synopsis, 4 /* Markdown */)
       ]);
     });
     return response;
+  }
+};
+
+// src/RpgFunctions.ts
+var import_obsidian7 = require("obsidian");
+var RpgFunctions = class {
+  static initialise(app2, settings) {
+    this.app = app2;
+    this.settings = settings;
+    this.initialiseRoots();
+  }
+  static initialiseRoots() {
+    if (this.app.vault.getFiles().length !== 0) {
+      const filePath = this.app.vault.getFiles()[0].path;
+      let slashCount = 0;
+      let p = filePath.indexOf("/");
+      while (p !== -1) {
+        slashCount++;
+        p = filePath.indexOf("/", p + 1);
+      }
+      slashCount++;
+      const file = this.app.vault.getAbstractFileByPath(filePath);
+      if (file instanceof import_obsidian7.TFile) {
+        this.root = this.app.vault.getResourcePath(file);
+      }
+      if (this.root === null) {
+        console.log("Rpg Manager failed to find the root folder!");
+        return;
+      }
+      if (this.root.includes("?")) {
+        this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+      }
+      for (let removedSlash = slashCount; removedSlash > 0; removedSlash--) {
+        this.root = this.root.slice(0, this.root.lastIndexOf("/"));
+      }
+      if (!this.root.endsWith("/")) {
+        this.root += "/";
+      }
+    }
+  }
+  static fileExists(path) {
+    const abstractFile = this.app.vault.getAbstractFileByPath(path);
+    let response = false;
+    if (abstractFile instanceof import_obsidian7.TAbstractFile) {
+      response = true;
+    }
+    return response;
+  }
+  static getImg(name) {
+    const imageExtensions = ["jpeg", "jpg", "png", "webp"];
+    for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
+      const fileName = this.app.vault.config.attachmentFolderPath + "/" + name + "." + imageExtensions[extensionCount];
+      if (this.fileExists(fileName)) {
+        if (this.root == null) {
+          this.initialiseRoots();
+        }
+        return this.root + fileName;
+      }
+    }
+    return null;
+  }
+  static getImgElement(imgSrc, width = 75, height = 75) {
+    if (width !== 75 && height === 75) {
+      height = void 0;
+    } else if (width === 75 && height !== 75) {
+      width = void 0;
+    }
+    const response = new Image(width, height);
+    response.src = imgSrc;
+    response.style.objectFit = "cover";
+    return response;
+  }
+  static getDataType(tags) {
+    let response = null;
+    (tags || []).forEach((tag) => {
+      if (tag.startsWith(this.settings.campaignTag)) {
+        response = 0 /* Campaign */;
+      } else if (tag.startsWith(this.settings.adventureTag)) {
+        response = 1 /* Adventure */;
+      } else if (tag.startsWith(this.settings.sessionTag)) {
+        response = 2 /* Session */;
+      } else if (tag.startsWith(this.settings.sceneTag)) {
+        response = 3 /* Scene */;
+      } else if (tag.startsWith(this.settings.npcTag)) {
+        response = 5 /* NonPlayerCharacter */;
+      } else if (tag.startsWith(this.settings.pcTag)) {
+        response = 4 /* Character */;
+      } else if (tag.startsWith(this.settings.clueTag)) {
+        response = 8 /* Clue */;
+      } else if (tag.startsWith(this.settings.locationTag)) {
+        response = 6 /* Location */;
+      } else if (tag.startsWith(this.settings.factionTag)) {
+        response = 9 /* Faction */;
+      } else if (tag.startsWith(this.settings.eventTag)) {
+        response = 7 /* Event */;
+      } else if (tag.startsWith(this.settings.timelineTag)) {
+        response = 11 /* Timeline */;
+      } else if (tag.startsWith(this.settings.noteTag)) {
+        response = 10 /* Note */;
+      }
+    });
+    return response;
+  }
+  static getTagId(tags, type) {
+    if (tags == null) {
+      throw new Error();
+    }
+    let response = "";
+    tags.forEach((tag) => {
+      if (response === "") {
+        if (tag.startsWith(this.settings.campaignTag)) {
+          if (type === 0 /* Campaign */) {
+            response = tag.substring(this.settings.campaignTag.length + 1);
+          } else {
+            throw new Error();
+          }
+        } else if (tag.startsWith(this.settings.adventureTag)) {
+          const parts = tag.substring(this.settings.adventureTag.length + 1).split("/");
+          if (parts.length === 2) {
+            if (type === 0 /* Campaign */) {
+              response = parts[0];
+            } else if (type === 1 /* Adventure */) {
+              response = parts[1];
+            }
+          } else if (parts.length === 1 && type === 1 /* Adventure */) {
+            response = parts[0];
+          }
+        } else if (tag.startsWith(this.settings.sessionTag)) {
+          const parts = tag.substring(this.settings.sessionTag.length + 1).split("/");
+          if (parts.length === 3) {
+            if (type === 0 /* Campaign */) {
+              response = parts[0];
+            } else if (type === 1 /* Adventure */) {
+              response = parts[1];
+            } else if (type === 2 /* Session */) {
+              response = parts[2];
+            }
+          } else if (parts.length === 2) {
+            if (type === 1 /* Adventure */) {
+              response = parts[0];
+            } else if (type === 2 /* Session */) {
+              response = parts[1];
+            }
+          }
+        } else if (tag.startsWith(this.settings.sceneTag)) {
+          const parts = tag.substring(this.settings.sceneTag.length + 1).split("/");
+          if (parts.length === 4) {
+            if (type === 0 /* Campaign */) {
+              response = parts[0];
+            } else if (type === 1 /* Adventure */) {
+              response = parts[1];
+            } else if (type === 2 /* Session */) {
+              response = parts[2];
+            } else if (type === 3 /* Scene */) {
+              response = parts[3];
+            }
+          } else if (parts.length === 3) {
+            if (type === 1 /* Adventure */) {
+              response = parts[0];
+            } else if (type === 2 /* Session */) {
+              response = parts[1];
+            } else if (type === 3 /* Scene */) {
+              response = parts[2];
+            }
+          }
+        } else {
+          let tagLength = 0;
+          if (tag.startsWith(this.settings.npcTag)) {
+            tagLength = this.settings.npcTag.length;
+          } else if (tag.startsWith(this.settings.pcTag)) {
+            tagLength = this.settings.pcTag.length;
+          } else if (tag.startsWith(this.settings.eventTag)) {
+            tagLength = this.settings.eventTag.length;
+          } else if (tag.startsWith(this.settings.factionTag)) {
+            tagLength = this.settings.factionTag.length;
+          } else if (tag.startsWith(this.settings.locationTag)) {
+            tagLength = this.settings.locationTag.length;
+          } else if (tag.startsWith(this.settings.clueTag)) {
+            tagLength = this.settings.clueTag.length;
+          } else if (tag.startsWith(this.settings.timelineTag)) {
+            tagLength = this.settings.timelineTag.length;
+          }
+          if (tagLength !== 0 && tag.length > tagLength && type === 0 /* Campaign */) {
+            response = tag.substring(tagLength + 1);
+          }
+        }
+      }
+    });
+    if (response === "") {
+      throw new Error();
+    }
+    return +response;
+  }
+  static formatTime(date) {
+    if (date == null)
+      return "";
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
   }
 };
 
@@ -1049,8 +906,8 @@ var SceneTableComponent = class extends AbstractComponent {
         ContentFactory.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
         ContentFactory.create(scene.link, 2 /* Link */),
         ContentFactory.create(scene.synopsis, 4 /* Markdown */),
-        ContentFactory.create(scene.startTime, 0 /* String */, true),
-        ContentFactory.create(scene.endTime, 0 /* String */, true),
+        ContentFactory.create(RpgFunctions.formatTime(scene.startTime), 0 /* String */, true),
+        ContentFactory.create(RpgFunctions.formatTime(scene.endTime), 0 /* String */, true),
         ContentFactory.create(scene.duration, 0 /* String */, true)
       ]);
     });
@@ -1151,6 +1008,7 @@ var RpgData = class extends import_obsidian8.Component {
     }
     if (index != null) {
       this.data.elements.splice(index, 1);
+      this.app.workspace.trigger("rpgmanager:refresh-views");
     }
   }
   renameDataCache(file, oldPath) {
@@ -1158,10 +1016,12 @@ var RpgData = class extends import_obsidian8.Component {
     const data = this.getElementByObsidianId(oldPath);
     if (data != null && metadata != null) {
       data.reload(file, metadata);
+      this.app.workspace.trigger("rpgmanager:refresh-views");
     }
   }
   refreshDataCache(file) {
     this.loadElement(file);
+    this.app.workspace.trigger("rpgmanager:refresh-views");
   }
   fillNeighbours() {
     this.getOutlines().forEach((data) => {
@@ -1182,32 +1042,34 @@ var RpgData = class extends import_obsidian8.Component {
         if (!restrictType || (restrictedToType !== null && restrictedToType === fileType || restrictedToType === null && (fileType !== 0 /* Campaign */ && fileType !== 1 /* Adventure */ && fileType !== 2 /* Session */ && fileType !== 3 /* Scene */))) {
           switch (fileType) {
             case 0 /* Campaign */:
-              this.data.addElement(new Campaign(file, metadata));
+              this.data.addElement(new Campaign(0 /* Campaign */, file, metadata));
               break;
             case 1 /* Adventure */:
-              this.data.addElement(new Adventure(file, metadata));
+              this.data.addElement(new Adventure(1 /* Adventure */, file, metadata));
               break;
             case 2 /* Session */:
-              this.data.addElement(new Session(file, metadata));
+              this.data.addElement(new Session(2 /* Session */, file, metadata));
               break;
             case 3 /* Scene */:
-              this.data.addElement(new Scene(file, metadata));
+              this.data.addElement(new Scene(3 /* Scene */, file, metadata));
               break;
             case 5 /* NonPlayerCharacter */:
+              this.data.addElement(new Character(5 /* NonPlayerCharacter */, file, metadata));
+              break;
             case 4 /* Character */:
-              this.data.addElement(new Character(file, metadata));
+              this.data.addElement(new Character(4 /* Character */, file, metadata));
               break;
             case 8 /* Clue */:
-              this.data.addElement(new Clue(file, metadata));
+              this.data.addElement(new Clue(8 /* Clue */, file, metadata));
               break;
             case 7 /* Event */:
-              this.data.addElement(new Event(file, metadata));
+              this.data.addElement(new Event(7 /* Event */, file, metadata));
               break;
             case 9 /* Faction */:
-              this.data.addElement(new Faction(file, metadata));
+              this.data.addElement(new Faction(9 /* Faction */, file, metadata));
               break;
             case 6 /* Location */:
-              this.data.addElement(new Location(file, metadata));
+              this.data.addElement(new Location(6 /* Location */, file, metadata));
               break;
           }
         }
@@ -1220,6 +1082,9 @@ var RpgData = class extends import_obsidian8.Component {
   getCampaign(campaignId) {
     const campaigns = this.data.where((campaign) => campaign.type === 0 /* Campaign */ && campaign.campaignId === campaignId);
     return campaigns.length === 1 ? campaigns[0] : null;
+  }
+  getCampaigns() {
+    return this.data.where((data) => data.type === 0 /* Campaign */);
   }
   getAdventure(campaignId, adventureId) {
     const adventures = this.data.where((adventure) => adventure.type === 1 /* Adventure */ && adventure.campaign.campaignId === campaignId && adventure.adventureId === adventureId);
@@ -1256,8 +1121,48 @@ var RpgData = class extends import_obsidian8.Component {
   getSceneList(campaignId, adventureId, sessionId) {
     return this.data.where((data) => data.type === 3 /* Scene */ && data.campaign.campaignId === campaignId && data.adventure.adventureId === adventureId && data.session.sessionId === sessionId);
   }
-  getRelationshipList(currentElement, type, parentType = null, sorting = null) {
-    return [];
+  getType(type) {
+    return this.data.where((data) => data.type === type);
+  }
+  getRelationshipList(currentElement, type, parentType = null) {
+    const response = [];
+    const variableSingular = DataType[type].toLowerCase();
+    const variablePlural = variableSingular + "s";
+    let comparison;
+    if (parentType === null) {
+      comparison = function(data) {
+        var _a, _b, _c;
+        return ((_a = currentElement.frontmatter) == null ? void 0 : _a.relationships) != void 0 && ((_b = currentElement.frontmatter) == null ? void 0 : _b.relationships[variablePlural]) != void 0 && ((_c = currentElement.frontmatter) == null ? void 0 : _c.relationships[variablePlural][data.name]) !== void 0;
+      }.bind(this);
+    } else {
+      const variableParentSingular = DataType[parentType].toLowerCase();
+      const variableParentPlural = variableParentSingular + "s";
+      comparison = function(data) {
+        var _a, _b, _c;
+        return (type !== 4 /* Character */ ? data.type === type : data.type === 4 /* Character */ || data.type === 5 /* NonPlayerCharacter */) && ((_a = data.frontmatter) == null ? void 0 : _a.relationships) != void 0 && ((_b = data.frontmatter) == null ? void 0 : _b.relationships[variableParentPlural]) != void 0 && ((_c = data.frontmatter) == null ? void 0 : _c.relationships[variableParentPlural][currentElement.name]) !== void 0;
+      }.bind(this);
+    }
+    this.getElements(comparison).forEach((data) => {
+      var _a, _b;
+      data.additionalInformation = parentType === null ? (_a = currentElement.frontmatter) == null ? void 0 : _a.relationships[variablePlural][data.name] : (_b = data.frontmatter) == null ? void 0 : _b.relationships[DataType[parentType].toLowerCase() + "s"][currentElement.name];
+      response.push(data);
+    });
+    currentElement.links.forEach((link) => {
+      const data = this.getElementByName(link);
+      if (data != null && data.type === type && !this.contains(response, data)) {
+        data.additionalInformation = null;
+        response.push(data);
+      }
+    });
+    return response;
+  }
+  contains(list, newElement) {
+    let response = false;
+    list.forEach((data) => {
+      if (data.obsidianId === newElement.obsidianId)
+        response = true;
+    });
+    return response;
   }
 };
 var RpgDataList = class {
@@ -1299,6 +1204,7 @@ var AbstractRpgData = class {
     var _a;
     if (type !== 0 /* Campaign */)
       this.campaign = RpgData.index.getCampaign(RpgFunctions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, 0 /* Campaign */));
+    this.reload(file, metadata);
   }
   reload(file, metadata) {
     var _a, _b, _c;
@@ -1306,13 +1212,19 @@ var AbstractRpgData = class {
     this.link = "[[" + file.basename + "]]";
     this.name = file.basename;
     this.path = file.path;
+    this.links = [];
+    (metadata.links || []).forEach((link) => {
+      this.links.push(link.link);
+    });
     this.frontmatter = metadata.frontmatter;
     this.completed = ((_a = metadata.frontmatter) == null ? void 0 : _a.completed) ? (_b = metadata.frontmatter) == null ? void 0 : _b.completed : true;
     this.synopsis = (_c = metadata.frontmatter) == null ? void 0 : _c.synopsis;
     this.image = RpgFunctions.getImg(this.name);
-    if (this.image != null) {
-      this.imageSrcElement = RpgFunctions.getImgElement(this.image);
-    }
+  }
+  get imageSrcElement() {
+    if (this.image == null)
+      return null;
+    return RpgFunctions.getImgElement(this.image);
   }
   getRelationships(type) {
     var _a;
@@ -1340,27 +1252,19 @@ var AbstractOutlineRpgData = class extends AbstractRpgData {
   }
 };
 var Campaign = class extends AbstractOutlineRpgData {
-  constructor(file, metadata) {
-    super(0 /* Campaign */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     super.reload(file, metadata);
     if ((_a = this.frontmatter) == null ? void 0 : _a.tags)
       this.campaignId = RpgFunctions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, this.type);
-    if ((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.currentDate)
-      this.currentDate = new Date((_f = (_e = this.frontmatter) == null ? void 0 : _e.dates) == null ? void 0 : _f.currentDate);
+    if ((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current)
+      this.currentDate = new Date((_f = (_e = this.frontmatter) == null ? void 0 : _e.dates) == null ? void 0 : _f.current);
     this.settings = ((_g = this.frontmatter) == null ? void 0 : _g.settings) ? CampaignSetting[(_h = this.frontmatter) == null ? void 0 : _h.settings] : 0 /* Agnostic */;
   }
   initialiseNeighbours() {
   }
 };
 var Adventure = class extends AbstractOutlineRpgData {
-  constructor(file, metadata) {
-    super(1 /* Adventure */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a, _b;
     super.reload(file, metadata);
@@ -1371,10 +1275,6 @@ var Adventure = class extends AbstractOutlineRpgData {
   }
 };
 var Session = class extends AbstractOutlineRpgData {
-  constructor(file, metadata) {
-    super(2 /* Session */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f;
     super.reload(file, metadata);
@@ -1391,18 +1291,15 @@ var Session = class extends AbstractOutlineRpgData {
   }
 };
 var Scene = class extends AbstractOutlineRpgData {
-  constructor(file, metadata) {
-    super(3 /* Scene */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     super.reload(file, metadata);
     this.sceneId = RpgFunctions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, this.type);
     this.adventure = RpgData.index.getAdventure(this.campaign.campaignId, RpgFunctions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
     this.session = RpgData.index.getSession(this.campaign.campaignId, this.adventure.adventureId, RpgFunctions.getTagId((_c = this.frontmatter) == null ? void 0 : _c.tags, 2 /* Session */));
     this.startTime = this.initialiseDate((_e = (_d = this.frontmatter) == null ? void 0 : _d.time) == null ? void 0 : _e.start);
     this.endTime = this.initialiseDate((_g = (_f = this.frontmatter) == null ? void 0 : _f.time) == null ? void 0 : _g.end);
+    this.action = (_h = this.frontmatter) == null ? void 0 : _h.action;
   }
   initialiseNeighbours() {
     if (this.campaign != null && this.adventure != null && this.session != null) {
@@ -1413,7 +1310,7 @@ var Scene = class extends AbstractOutlineRpgData {
   get duration() {
     let response = "";
     if (this.startTime && this.endTime) {
-      const duration = this.endTime - this.startTime;
+      const duration = this.endTime.getTime() - this.startTime.getTime();
       const hours = Math.floor(duration / (1e3 * 60 * 60));
       const minutes = Math.floor(duration / (1e3 * 60)) % 60;
       response = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
@@ -1422,11 +1319,6 @@ var Scene = class extends AbstractOutlineRpgData {
   }
 };
 var Character = class extends AbstractRpgData {
-  constructor(file, metadata) {
-    var _a;
-    super(RpgFunctions.getDataType((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags), file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f, _g;
     super.reload(file, metadata);
@@ -1439,6 +1331,8 @@ var Character = class extends AbstractRpgData {
     if (this.dob == null || this.death == null && this.campaign.currentDate == null)
       return null;
     const end = this.death ? this.death : this.campaign.currentDate;
+    if (end == null)
+      return null;
     const ageDifMs = end.valueOf() - this.dob.valueOf();
     const ageDate = new Date(ageDifMs);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
@@ -1448,10 +1342,6 @@ var Character = class extends AbstractRpgData {
   }
 };
 var Clue = class extends AbstractRpgData {
-  constructor(file, metadata) {
-    super(8 /* Clue */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a, _b;
     super.reload(file, metadata);
@@ -1462,10 +1352,6 @@ var Clue = class extends AbstractRpgData {
   }
 };
 var Event = class extends AbstractRpgData {
-  constructor(file, metadata) {
-    super(7 /* Event */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a, _b;
     super.reload(file, metadata);
@@ -1473,19 +1359,8 @@ var Event = class extends AbstractRpgData {
   }
 };
 var Faction = class extends AbstractRpgData {
-  constructor(file, metadata) {
-    super(9 /* Faction */, file, metadata);
-    this.reload(file, metadata);
-  }
-  reload(file, metadata) {
-    super.reload(file, metadata);
-  }
 };
 var Location = class extends AbstractRpgData {
-  constructor(file, metadata) {
-    super(6 /* Location */, file, metadata);
-    this.reload(file, metadata);
-  }
   reload(file, metadata) {
     var _a;
     super.reload(file, metadata);
@@ -1493,13 +1368,6 @@ var Location = class extends AbstractRpgData {
   }
 };
 var Timeline = class extends AbstractRpgData {
-  constructor(file, metadata) {
-    super(11 /* Timeline */, file, metadata);
-    this.reload(file, metadata);
-  }
-  reload(file, metadata) {
-    super.reload(file, metadata);
-  }
 };
 
 // src/settings/Agnostic/components/BannerComponent.ts
@@ -1509,11 +1377,11 @@ var BannerComponent = class extends AbstractComponent {
     if (data instanceof Campaign) {
       response.image = data.image;
       response.title = data.name;
-      response.date = data.currentDate;
+      response.date = data.currentDate ? data.currentDate.toDateString() : "";
     } else if (data instanceof Timeline) {
       response.image = data.campaign.image;
       response.title = "Timeline";
-      response.date = data.campaign.currentDate;
+      response.date = data.campaign.currentDate ? data.campaign.currentDate.toDateString() : "";
       response.subtitle = data.campaign.name;
     }
     return response;
@@ -1535,11 +1403,12 @@ var ResponseLine = class extends AbstractResponse {
 // src/settings/Agnostic/components/CharacterSynopsisComponent.ts
 var CharacterSynopsisComponent = class extends AbstractComponent {
   generateData(data, title) {
+    var _a;
     let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';
     if (data.synopsis != null && data.synopsis !== "") {
       fullSynopsis = "";
       if (data.isDead) {
-        fullSynopsis = "_Deceased " + data.death + "_\n";
+        fullSynopsis = "_Deceased " + ((_a = data.death) == null ? void 0 : _a.toDateString()) + "_\n";
       }
       fullSynopsis += data.link.toString();
       const pronoun = data.pronoun;
@@ -1795,7 +1664,7 @@ var TimelineResponse = class extends AbstractResponse {
   }
   sort() {
     this.elements.sort((a, b) => {
-      return a.fullDate - b.fullDate;
+      return a.fullDate.valueOf() - b.fullDate.valueOf();
     });
   }
 };
@@ -1841,35 +1710,45 @@ var TimelineModel = class extends AbstractModel {
     const events = RpgData.index.getElements((data) => data.type === 7 /* Event */ && data.date != null);
     events.forEach((event) => {
       var _a;
-      timeline.elements.push(new TimelineElementResponse(event.date, event.date.toDateString(), event.date.toTimeString(), "event", (_a = event.synopsis) != null ? _a : "", event.link));
+      if (event.date != null) {
+        timeline.elements.push(new TimelineElementResponse(event.date, event.date.toDateString(), event.date.toTimeString(), "event", (_a = event.synopsis) != null ? _a : "", event.link));
+      }
     });
   }
   addClues(timeline) {
     const clues = RpgData.index.getElements((data) => data.type === 8 /* Clue */ && data.isFound === true);
     clues.forEach((clue) => {
       var _a;
-      timeline.elements.push(new TimelineElementResponse(clue.found, clue.found.toDateString(), "00:00", "clue", (_a = clue.synopsis) != null ? _a : "", clue.link));
+      if (clue.found != null) {
+        timeline.elements.push(new TimelineElementResponse(clue.found, clue.found.toDateString(), "00:00", "clue", (_a = clue.synopsis) != null ? _a : "", clue.link));
+      }
     });
   }
   addBirths(timeline) {
     const characters = RpgData.index.getElements((data) => (data.type === 4 /* Character */ || data.type === 5 /* NonPlayerCharacter */) && data.dob != null);
     characters.forEach((character) => {
       var _a;
-      timeline.elements.push(new TimelineElementResponse(character.dob, character.dob.toDateString(), "00:00", "birth", (_a = character.synopsis) != null ? _a : "", character.link));
+      if (character.dob != null) {
+        timeline.elements.push(new TimelineElementResponse(character.dob, character.dob.toDateString(), "00:00", "birth", (_a = character.synopsis) != null ? _a : "", character.link));
+      }
     });
   }
   addDeaths(timeline) {
     const characters = RpgData.index.getElements((data) => (data.type === 4 /* Character */ || data.type === 5 /* NonPlayerCharacter */) && data.death != null);
     characters.forEach((character) => {
       var _a;
-      timeline.elements.push(new TimelineElementResponse(character.death, character.death.toDateString(), "00:00", "death", (_a = character.synopsis) != null ? _a : "", character.link));
+      if (character.death != null) {
+        timeline.elements.push(new TimelineElementResponse(character.death, character.death.toDateString(), "00:00", "death", (_a = character.synopsis) != null ? _a : "", character.link));
+      }
     });
   }
   addSessions(timeline) {
     const sessions = RpgData.index.getElements((data) => data.type === 2 /* Session */ && data.date != null);
     sessions.forEach((session) => {
       var _a;
-      timeline.elements.push(new TimelineElementResponse(session.date, session.date.toDateString(), "00:00", "session", (_a = session.synopsis) != null ? _a : "", session.link));
+      if (session.date != null) {
+        timeline.elements.push(new TimelineElementResponse(session.date, session.date.toDateString(), "00:00", "session", (_a = session.synopsis) != null ? _a : "", session.link));
+      }
     });
   }
 };
@@ -2721,10 +2600,9 @@ var FileFactory = class {
   static getSettings(campaignId) {
     let response = 0 /* Agnostic */;
     if (campaignId != null) {
-      const io = app.plugins.plugins.dataview.api;
-      const campaigns = io.pages("#" + RpgFunctions.settings.campaignTag + "/" + campaignId);
-      if (campaigns != null && campaigns.length === 1) {
-        response = CampaignSetting[campaigns[0].settings];
+      const campaign = RpgData.index.getCampaign(campaignId);
+      if (campaign != null) {
+        response = campaign.settings;
       }
     }
     return response;
@@ -2748,11 +2626,6 @@ var RpgManager = class extends import_obsidian12.Plugin {
   onLayoutReady() {
     return __async(this, null, function* () {
       RpgData.initialise(this.app);
-      const a = RpgData.index.getElementByObsidianId("Non-Player Characters/Music/Erik Kim.md");
-      if (a !== null) {
-        const B = a.getRelationships(4 /* Character */);
-        console.log(B);
-      }
     });
   }
   onunload() {
@@ -2783,7 +2656,6 @@ var RpgManager = class extends import_obsidian12.Plugin {
   registerEvents() {
     this.registerEvent(this.app.metadataCache.on("resolved", this.refreshViews.bind(this)));
     this.registerEvent(this.app.workspace.on("file-open", this.refreshViews.bind(this)));
-    this.registerEvent(this.app.workspace.on("dataview:refresh-views", this.refreshViews.bind(this)));
   }
   registerCodeBlock() {
     this.registerMarkdownCodeBlockProcessor("RpgManager", (source, el, ctx) => __async(this, null, function* () {

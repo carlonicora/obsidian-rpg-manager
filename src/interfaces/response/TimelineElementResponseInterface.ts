@@ -1,7 +1,5 @@
-import {DateTime} from "obsidian-dataview";
-
 export class TimelineElementResponseInterface {
-	fullDate: DateTime;
+	fullDate: Date;
 	date: string;
 	time: string;
 	type: string;

@@ -16,7 +16,7 @@ export class CharacterSynopsisComponent extends AbstractComponent{
 		if (data.synopsis != null && data.synopsis !== '') {
 			fullSynopsis = '';
 			if (data.isDead) {
-				fullSynopsis = '_Deceased ' + data.death + '_\n';
+				fullSynopsis = '_Deceased ' + data.death?.toDateString() + '_\n';
 			}
 			fullSynopsis += data.link.toString();
 			const pronoun = data.pronoun;
