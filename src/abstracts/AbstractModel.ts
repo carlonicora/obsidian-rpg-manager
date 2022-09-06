@@ -1,27 +1,16 @@
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ModelInterface} from "../interfaces/ModelInterface";
-import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
-import {IoInterface} from "../interfaces/IoInterface";
-import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {IoFactory, SingleIoKey} from "../factories/Iofactory";
 import {App} from "obsidian";
-import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
-import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
-import {RpgFunctions} from "../RpgFunctions";
-import {DataFactory, SingleDataKey} from "../factories/DataFactory";
-import {SessionDataInterface} from "../interfaces/data/SessionDataInterface";
-import {SceneDataInterface} from "../interfaces/data/SceneDataInterface";
 import {BreadcrumbResponseInterface} from "../interfaces/response/BreadcrumbResponseInterface";
 import {ResponseBreadcrumb} from "../data/responses/ResponseBreadcrumb";
-import {AdventureDataInterface} from "../interfaces/data/AdventureDataInterface";
 import {RpgDataInterface, SceneInterface, SessionInterface} from "../Data";
 
 export abstract class AbstractModel implements ModelInterface {
-	protected io: IoInterface;
+	//protected io: IoInterface;
 
 	protected dataType: DataType;
-	protected specificData: GenericDataInterface;
+	//protected specificData: GenericDataInterface;
 
 	constructor(
 		protected app: App,

@@ -3,8 +3,7 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {AdventureData} from "../data/AdventureData";
-import {Adventure, AdventureInterface} from "../../../Data";
+import {AdventureInterface, RpgData} from "../../../Data";
 
 export class AdventureModel extends AbstractModel {
 	protected currentElement: AdventureInterface;
@@ -13,15 +12,10 @@ export class AdventureModel extends AbstractModel {
 	): ResponseDataInterface {
 		const response = new ResponseData();
 
-		//const adventure = new AdventureData(this.current, this.campaign);
-
 		response.addElement(
 			ComponentFactory.create(
-				//CampaignSetting[this.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
 				CampaignSetting[this.currentElement.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
-				this.io,
-				//this.io.getSessionList(adventure.id),
-				this.io.getSessionList(this.currentElement.adventureId),
+				RpgData.index.getSessionList(this.currentElement.adventureId)
 			)
 		);
 

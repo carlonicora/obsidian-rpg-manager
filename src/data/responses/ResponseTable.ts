@@ -1,7 +1,7 @@
 import {AbstractResponse} from "../../abstracts/AbstractResponse";
 import {ResponseType} from "../../enums/ResponseType";
 import {TableResponseInterface} from "../../interfaces/response/TableResponseInterface";
-import {ContentInterface} from "../../interfaces/content/ContentInterface";
+import {ContentInterface} from "../../interfaces/ContentInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public headers: Array<ContentInterface>;

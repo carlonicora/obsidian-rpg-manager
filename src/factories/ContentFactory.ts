@@ -1,5 +1,5 @@
 import {ContentType} from "../enums/ContentType";
-import {ContentInterface} from "../interfaces/content/ContentInterface";
+import {ContentInterface} from "../interfaces/ContentInterface";
 import {StringContent} from "../data/content/StringContent";
 import {LinkContent} from "../data/content/LinkContent";
 import {NumberContent} from "../data/content/NumberContent";

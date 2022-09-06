@@ -1,10 +1,12 @@
-import {App, CachedMetadata, Component, FrontMatterCache, MetadataCache, TAbstractFile, TFile} from "obsidian";
+import {App, CachedMetadata, Component, FrontMatterCache, TFile} from "obsidian";
 import {DataType} from "./enums/DataType";
 import {RpgFunctions} from "./RpgFunctions";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {DateTime} from "obsidian-dataview";
 import {PronounFactory} from "./factories/PronounFactory";
 import {Pronoun} from "./enums/Pronoun";
+import {ArrayFunc} from "obsidian-dataview/lib/api/data-array";
+import {forEachComment} from "tsutils";
 
 export class RpgData extends Component {
 	public static index: RpgData;
@@ -91,7 +93,7 @@ export class RpgData extends Component {
 
 	private loadElement(
 		file: TFile,
-		restrictType: boolean = false,
+		restrictType = false,
 		restrictedToType: DataType|null = null,
 	): void {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
@@ -226,6 +228,128 @@ export class RpgData extends Component {
 
 		return list.length === 1 ? (<RpgDataInterface>list[0]) : null;
 	}
+
+	public getElements(
+		predicate: any,
+	): RpgDataInterface[] {
+		return this.data.where(predicate) as RpgDataInterface[];
+	}
+
+	public getSessionList(
+		adventureId: number|null = null,
+	): SessionInterface[] {
+		return this.data
+			.where((data: SessionInterface) =>
+				data.type === DataType.Session &&
+				(adventureId ? data.adventure.adventureId === adventureId : true)
+			) as SessionInterface[];
+	}
+
+	public getAdventureList(
+		campaignId: number|null = null,
+	): AdventureInterface[] {
+		return this.data
+			.where((data: AdventureInterface) =>
+				data.type === DataType.Adventure &&
+				(campaignId ? data.campaign.campaignId === campaignId : true)
+			) as AdventureInterface[];
+	}
+
+	public getCharacterList(
+	): CharacterInterface[] {
+		return this.data
+			.where((data: CharacterInterface) =>
+				(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter)
+			) as CharacterInterface[];
+	}
+
+	public getSceneList(
+		campaignId: number,
+		adventureId: number,
+		sessionId: number,
+	): SceneInterface[] {
+		return this.data
+			.where((data: SceneInterface) =>
+				data.type === DataType.Scene &&
+				data.campaign.campaignId === campaignId &&
+				data.adventure.adventureId === adventureId &&
+				data.session.sessionId === sessionId
+			) as SceneInterface[];
+	}
+
+	public getType(
+		type: DataType,
+	): RpgDataInterface[] {
+		return this.data
+			.where((data: RpgDataInterface) =>
+				data.type === type,
+			) as RpgDataInterface[];
+	}
+
+	public getRelationshipList(
+		currentElement: RpgDataInterface,
+		type: DataType,
+		parentType: DataType|null = null,
+		sorting: ArrayFunc<any, any>|null = null,
+	): RpgDataInterface[]
+	{
+		const response: RpgDataInterface[] = [];
+
+		const variableSingular = DataType[type].toLowerCase();
+		const variablePlural = variableSingular + 's';
+		const variableParentSingular = parentType != null ? DataType[parentType].toLowerCase() : null;
+		const variableParentPlural = parentType != null ? variableParentSingular + 's' : null;
+
+		let comparison;
+
+		if (parentType === null) {
+			comparison = function (data: RpgDataInterface): boolean {
+				return currentElement.frontmatter?.relationships != undefined &&
+					currentElement.frontmatter?.relationships[this.variablePlural] != undefined &&
+					currentElement.frontmatter?.relationships[this.variablePlural][data.name] !== undefined;
+			}.bind(this);
+		} else {
+			comparison = function (data: RpgDataInterface): boolean {
+				return data.frontmatter?.relationships != undefined &&
+					data.frontmatter?.relationships[this.variableParentPlural] != undefined &&
+					data.frontmatter?.relationships[this.variableParentPlural][currentElement.name] !== undefined;
+			}.bind(this);
+		}
+
+		this.getElements(comparison)
+			//.sort(
+			//	(sorting !== null ? sorting : defaultSorting)
+			//)
+			.forEach((data: RpgDataInterface) => {
+				data.additionalInformation = parentType === null ?
+					currentElement.frontmatter?.relationships[variablePlural][data.name] :
+					data.frontmatter?.relationships[DataType[parentType].toLowerCase() + 's'][currentElement.name];
+
+				response.push(data)
+			})
+
+		/*
+		this.outlinks.forEach((page) => {
+			if (
+				(page.tags != undefined && type === RpgFunctions.getDataType(page.tags)) &&
+				!this.isAlreadyPresent(response, page)
+			) {
+				response.add(
+					DataFactory.create(
+						CampaignSetting[this.campaign.settings] + DataType[type] as SingleDataKey<any>,
+						page,
+						this.campaign,
+						'_in main description_',
+					)
+				)
+			}
+		});
+
+		return response;
+		*/
+
+		return [];
+	}
 }
 
 export interface RpgDataListInterface {
@@ -293,7 +417,11 @@ export interface RpgDataInterface {
 	completed: boolean;
 
 	synopsis: string|null;
+	additionalInformation: string|null;
 	image: string|null;
+	imageSrcElement: HTMLImageElement|null;
+
+	frontmatter: FrontMatterCache|undefined;
 
 	campaign: CampaignInterface;
 
@@ -301,6 +429,10 @@ export interface RpgDataInterface {
 		file: TFile,
 		metadata: CachedMetadata,
 	): void;
+
+	getRelationships(
+		type: DataType
+	): RpgDataInterface[];
 }
 
 
@@ -314,11 +446,13 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 
 	public completed: boolean;
 	public synopsis: string|null = null;
+	public additionalInformation: string|null = null;
 	public image: string|null = null;
+	public imageSrcElement: HTMLImageElement|null;
 
 	public campaign: CampaignInterface;
 
-	protected frontmatter: FrontMatterCache|undefined;
+	public frontmatter: FrontMatterCache|undefined;
 
 	constructor(
 		public type: DataType,
@@ -343,6 +477,30 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		this.completed = metadata.frontmatter?.completed ? metadata.frontmatter?.completed : true;
 		this.synopsis = metadata.frontmatter?.synopsis;
 		this.image = RpgFunctions.getImg(this.name);
+
+		if (this.image != null) {
+			this.imageSrcElement = RpgFunctions.getImgElement(this.image);
+		}
+	}
+
+	public getRelationships(
+		type: DataType
+	): RpgDataInterface[] {
+		const response: RpgDataInterface[] = [];
+
+		const relationships: any = this.frontmatter?.relationships[DataType[type].toLowerCase() + 's'];
+		if (relationships != null){
+			Object.entries(relationships).forEach(([key, value], index) => {
+				const data = RpgData.index.getElementByName(key);
+				if (data != null){
+					data.additionalInformation = <string>value;
+					response.push(data);
+
+				}
+			});
+		}
+
+		return response;
 	}
 
 	protected initialiseDate(
@@ -597,7 +755,6 @@ export class Character extends AbstractRpgData implements CharacterInterface {
 		if (this.dob == null || (this.death == null && this.campaign.currentDate == null)) return null;
 
 		const end = this.death ? this.death : this.campaign.currentDate;
-		const duration = end - this.dob;
 
 		const ageDifMs = end.valueOf() - this.dob.valueOf();
 		const ageDate = new Date(ageDifMs);
@@ -714,5 +871,26 @@ export class Location extends AbstractRpgData implements LocationInterface {
 		super.reload(file, metadata);
 
 		this.address = this.frontmatter?.address;
+	}
+}
+
+export interface TimelineInterface extends RpgDataInterface {
+}
+
+export class Timeline extends AbstractRpgData implements TimelineInterface {
+	constructor(
+		file: TFile,
+		metadata: CachedMetadata,
+	) {
+		super(DataType.Timeline, file, metadata);
+
+		this.reload(file, metadata);
+	}
+
+	public reload(
+		file: TFile,
+		metadata: CachedMetadata,
+	) {
+		super.reload(file, metadata);
 	}
 }

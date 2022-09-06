@@ -87,6 +87,25 @@ export class RpgFunctions {
 		return null;
 	}
 
+	public static getImgElement(
+		imgSrc: string,
+		width: number|undefined =75,
+		height: number|undefined =75,
+	): HTMLImageElement|null
+	{
+		if (width !== 75 && height === 75){
+			height = undefined;
+		} else if (width === 75 && height !== 75){
+			width = undefined;
+		}
+
+		const response = new Image(width, height);
+		response.src = imgSrc;
+		response.style.objectFit = 'cover';
+
+		return response;
+	}
+
 	public static getImageLink(page: Record<string, Literal>|undefined){
 		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
 

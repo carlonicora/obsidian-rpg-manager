@@ -1,17 +1,16 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
-import {GenericDataListInterface} from "../../../interfaces/data/GenericDataListInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
+import {ClueInterface, RpgDataInterface} from "../../../Data";
 
 export class ClueTableComponent extends AbstractComponent {
 	generateData(
-		data: GenericDataListInterface,
+		data: RpgDataInterface[],
 		title:string|null,
 	): ResponseElementInterface | null {
-		if (data.elements.length === 0){
+		if (data.length === 0){
 			return null;
 		}
 
@@ -24,7 +23,7 @@ export class ClueTableComponent extends AbstractComponent {
 			ContentFactory.create('Found', ContentType.String),
 			ContentFactory.create('Synopsis', ContentType.String),
 		]);
-		data.elements.forEach((clue: ClueDataInterface) => {
+		data.forEach((clue: ClueInterface) => {
 			response.addContent([
 				ContentFactory.create(clue.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(clue.link, ContentType.Link, true),

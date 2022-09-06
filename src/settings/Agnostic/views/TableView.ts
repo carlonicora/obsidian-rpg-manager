@@ -1,5 +1,5 @@
 import {TableResponseInterface} from "../../../interfaces/response/TableResponseInterface";
-import {ContentInterface} from "../../../interfaces/content/ContentInterface";
+import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {AbstractView} from "../../../abstracts/AbstractView";
 
 export class TableView extends AbstractView {

@@ -1,18 +1,14 @@
 import {ComponentInterface} from "../interfaces/ComponentInterface";
-import {IoInterface} from "../interfaces/IoInterface";
-import {GenericDataListInterface} from "../interfaces/data/GenericDataListInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
-import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
-import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
+import {RpgDataInterface} from "../Data";
 
 export abstract class AbstractComponent implements ComponentInterface {
 	constructor(
-		protected io: IoInterface,
 	) {
 	}
 
 	abstract generateData(
-		data: GenericDataListInterface|GenericDataInterface|GenericImageDataInterface,
+		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null,
 	): ResponseElementInterface|null;
 }

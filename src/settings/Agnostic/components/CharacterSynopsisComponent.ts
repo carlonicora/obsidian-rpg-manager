@@ -1,14 +1,14 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
-import {CharacterDataInterface} from "../../../interfaces/data/CharacterDataInterface";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {PronounFactory} from "../../../factories/PronounFactory";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
+import {CharacterInterface} from "../../../Data";
 
 export class CharacterSynopsisComponent extends AbstractComponent{
 	generateData(
-		data: CharacterDataInterface,
+		data: CharacterInterface,
 		title: string | null,
 	): ResponseElementInterface | null {
 		let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';

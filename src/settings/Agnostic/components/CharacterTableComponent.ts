@@ -1,17 +1,16 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
-import {GenericDataListInterface} from "../../../interfaces/data/GenericDataListInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {CharacterDataInterface} from "../../../interfaces/data/CharacterDataInterface";
+import {CharacterInterface} from "../../../Data";
 
 export class CharacterTableComponent extends AbstractComponent {
 	generateData(
-		data: GenericDataListInterface,
+		data: CharacterInterface[],
 		title:string|null,
 	): ResponseElementInterface|null {
-		if (data.elements.length === 0){
+		if (data.length === 0){
 			return null;
 		}
 
@@ -24,7 +23,7 @@ export class CharacterTableComponent extends AbstractComponent {
 			ContentFactory.create('Age', ContentType.String),
 			ContentFactory.create('Synopsis', ContentType.String),
 		]);
-		data.elements.forEach((character: CharacterDataInterface) => {
+		data.forEach((character: CharacterInterface) => {
 			response.addContent([
 				ContentFactory.create(character.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(character.link, ContentType.Link, true),

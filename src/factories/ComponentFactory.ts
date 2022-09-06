@@ -1,8 +1,6 @@
 import {SessionTableComponent} from "../settings/Agnostic/components/SessionTableComponent";
-import {GenericDataListInterface} from "../interfaces/data/GenericDataListInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ComponentInterface} from "../interfaces/ComponentInterface";
-import {IoInterface} from "../interfaces/IoInterface";
 import {AdventureTableComponent} from "../settings/Agnostic/components/AdventureTableComponent";
 import {CharacterTableComponent} from "../settings/Agnostic/components/CharacterTableComponent";
 import {LocationTableComponent} from "../settings/Agnostic/components/LocationTableComponent";
@@ -11,9 +9,8 @@ import {ClueTableComponent} from "../settings/Agnostic/components/ClueTableCompo
 import {FactionTableComponent} from "../settings/Agnostic/components/FactionTableComponent";
 import {SceneTableComponent} from "../settings/Agnostic/components/SceneTableComponent";
 import {BannerComponent} from "../settings/Agnostic/components/BannerComponent";
-import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
-import {GenericImageDataInterface} from "../interfaces/data/GenericImageDataInterface";
 import {CharacterSynopsisComponent} from "../settings/Agnostic/components/CharacterSynopsisComponent";
+import {RpgDataInterface} from "../Data";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -34,11 +31,10 @@ export type SingleComponentKey<K> = [K] extends (K extends ComponentKeys ? [K] :
 export class ComponentFactory {
 	static create<K extends ComponentKeys>(
 		k: SingleComponentKey<K>,
-		io: IoInterface,
-		data: GenericDataListInterface|GenericDataInterface|GenericImageDataInterface,
+		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null = null,
 	): ResponseElementInterface|null {
-		const component: ComponentInterface = new ComponentsMap[k](io);
+		const component: ComponentInterface = new ComponentsMap[k]();
 		return component.generateData(data, title);
 	}
 }

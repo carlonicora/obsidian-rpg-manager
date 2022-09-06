@@ -3,7 +3,6 @@ import {DataType} from "../enums/DataType";
 import {ModalFactory, SingleModalKey} from "./ModalFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {SingleTemplateKey, TemplateFactory} from "./TemplateFactory";
-import {IoInterface} from "../interfaces/IoInterface";
 import {DataviewApi} from "obsidian-dataview/lib/api/plugin-api";
 import {RpgFunctions} from "../RpgFunctions";
 

@@ -1,4 +1,4 @@
-import {ContentInterface} from "../interfaces/content/ContentInterface";
+import {ContentInterface} from "../interfaces/ContentInterface";
 
 export abstract class AbstractContent implements ContentInterface {
 	protected content: any|null;

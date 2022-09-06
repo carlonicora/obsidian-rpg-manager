@@ -1,11 +1,9 @@
 import {ResponseElementInterface} from "./response/ResponseElementInterface";
-import {GenericDataListInterface} from "./data/GenericDataListInterface";
-import {GenericDataInterface} from "./data/GenericDataInterface";
-import {GenericImageDataInterface} from "./data/GenericImageDataInterface";
+import {RpgDataInterface} from "../Data";
 
 export interface ComponentInterface {
 	generateData(
-		data: GenericDataListInterface|GenericDataInterface|GenericImageDataInterface,
+		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null,
 	): ResponseElementInterface|null;
 }

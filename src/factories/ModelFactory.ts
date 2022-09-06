@@ -1,5 +1,3 @@
-import {CampaignDataInterface} from "../interfaces/data/CampaignDataInterface";
-import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
 import {App} from "obsidian";
 import {AdventureModel} from "../settings/Agnostic/models/AdventureModel";
 import {CampaignModel} from "../settings/Agnostic/models/CampaignModel";

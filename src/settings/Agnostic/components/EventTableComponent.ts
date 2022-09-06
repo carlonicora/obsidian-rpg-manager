@@ -1,17 +1,16 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
-import {GenericDataListInterface} from "../../../interfaces/data/GenericDataListInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {EventDataInterface} from "../../../interfaces/data/EventDataInterface";
+import {EventInterface, RpgDataInterface} from "../../../Data";
 
 export class EventTableComponent extends AbstractComponent {
 	generateData(
-		data: GenericDataListInterface,
+		data: RpgDataInterface[],
 		title:string|null,
 	): ResponseElementInterface | null {
-		if (data.elements.length === 0){
+		if (data.length === 0){
 			return null;
 		}
 
@@ -24,7 +23,7 @@ export class EventTableComponent extends AbstractComponent {
 			ContentFactory.create('Date', ContentType.String),
 			ContentFactory.create('Synopsis', ContentType.String),
 		]);
-		data.elements.forEach((event: EventDataInterface) => {
+		data.forEach((event: EventInterface) => {
 			response.addContent([
 				ContentFactory.create(event.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(event.link, ContentType.Link, true),

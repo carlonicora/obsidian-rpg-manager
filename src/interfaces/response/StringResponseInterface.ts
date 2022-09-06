@@ -1,5 +1,5 @@
 import {ResponseElementInterface} from "./ResponseElementInterface";
-import {ContentInterface} from "../content/ContentInterface";
+import {ContentInterface} from "../ContentInterface";
 
 export interface StringResponseInterface extends ResponseElementInterface {
 	content: ContentInterface;

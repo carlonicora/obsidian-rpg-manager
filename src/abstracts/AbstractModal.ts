@@ -4,9 +4,6 @@ import {RpgFunctions} from "../RpgFunctions";
 import {FileFactory} from "../factories/FileFactory";
 import {ModalElementInterface} from "../interfaces/ModalElementInterface";
 import {ModalElement} from "../data/ModalElement";
-import {IoFactory} from "../factories/Iofactory";
-import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {DataviewApi} from "obsidian-dataview/lib/api/plugin-api";
 
 export abstract class AbstractModal extends Modal {
 	public confirm = false;

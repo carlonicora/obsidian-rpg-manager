@@ -7,9 +7,11 @@ import {DataType} from "../../../enums/DataType";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {FactionDataInterface} from "../../../interfaces/data/FactionDataInterface";
+import {FactionInterface, RpgData} from "../../../Data";
 
 export class FactionModel extends AbstractModel {
+	protected currentElement: FactionInterface;
+
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
@@ -17,8 +19,8 @@ export class FactionModel extends AbstractModel {
 
 		const status = new ResponseLine();
 		status.content =ContentFactory.create(
-			((<FactionDataInterface>this.specificData).synopsis != null && (<FactionDataInterface>this.specificData).synopsis !== ''
-				? (<FactionDataInterface>this.specificData).synopsis
+			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
+				? this.currentElement.synopsis
 				: '<span class="rpgm-missing">Synopsis missing</span>'),
 			ContentType.Markdown,
 		);
@@ -26,9 +28,9 @@ export class FactionModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Character,
 					DataType.Faction,
 				),
@@ -37,9 +39,10 @@ export class FactionModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				//CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Location,
 				),
 			)

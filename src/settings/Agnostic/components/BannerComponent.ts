@@ -1,30 +1,24 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseBanner} from "../../../data/responses/ResponseBanner";
-import {GenericImageDataInterface} from "../../../interfaces/data/GenericImageDataInterface";
-import {CampaignDataInterface} from "../../../interfaces/data/CampaignDataInterface";
-import {TimelineDataInterface} from "../../../interfaces/data/TimelineDataInterface";
-import {CampaignData} from "../data/CampaignData";
-import {TimelineData} from "../data/TimelineData";
+import {Campaign, RpgDataInterface, Timeline} from "../../../Data";
 
 export class BannerComponent extends AbstractComponent{
 	generateData(
-		data: GenericImageDataInterface,
+		data: RpgDataInterface,
 		title: string | null,
 	): ResponseElementInterface | null {
 		const response = new ResponseBanner();
 
-
-
-		if (data instanceof CampaignData) {
-			response.image = data.imageSrc;
+		if (data instanceof Campaign) {
+			response.image = data.image;
 			response.title = data.name;
-			response.date = (<CampaignDataInterface>data).currentDate;
-		} else if (data instanceof TimelineData) {
-			response.image = data.campaign.imageSrc;
+			response.date = data.currentDate;
+		} else if (data instanceof Timeline) {
+			response.image = data.campaign.image;
 			response.title = 'Timeline';
-			response.date = (<TimelineDataInterface>data).campaign.currentDate;
-			response.subtitle = (<TimelineDataInterface>data).campaign.name;
+			response.date = data.campaign.currentDate;
+			response.subtitle = data.campaign.name;
 		}
 
 		return response;

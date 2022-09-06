@@ -2,7 +2,7 @@ import {AbstractResponse} from "../../abstracts/AbstractResponse";
 import {ResponseType} from "../../enums/ResponseType";
 import {ContentType} from "../../enums/ContentType";
 import {StringResponseInterface} from "../../interfaces/response/StringResponseInterface";
-import {ContentInterface} from "../../interfaces/content/ContentInterface";
+import {ContentInterface} from "../../interfaces/ContentInterface";
 import {ContentFactory} from "../../factories/ContentFactory";
 
 export class ResponseLine extends AbstractResponse implements StringResponseInterface {

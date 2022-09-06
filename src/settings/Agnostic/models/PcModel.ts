@@ -4,8 +4,11 @@ import {ResponseData} from "../../../data/responses/ResponseData";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
+import {CharacterInterface, RpgData} from "../../../Data";
 
 export class PcModel extends AbstractModel {
+	protected currentElement: CharacterInterface;
+
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
@@ -13,17 +16,16 @@ export class PcModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
-				this.io,
-				this.specificData,
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
+				this.currentElement,
 			)
 		);
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Faction,
 				),
 			)
@@ -31,9 +33,9 @@ export class PcModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Character,
 				),
 			)
@@ -41,9 +43,9 @@ export class PcModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Location,
 				),
 			)
@@ -60,36 +62,5 @@ export class PcModel extends AbstractModel {
 		this.characterList();
 		this.locationList();
 	}
-
-	private async factionList(
-	) {
-		this.writeList(
-			this.io.getRelationshipList(
-				DataType.Faction,
-			),
-			ViewType.FactionList,
-		);
-	}
-
-	private async characterList(
-	) {
-		this.writeList(
-			this.io.getRelationshipList(
-				DataType.Character,
-			),
-			ViewType.CharacterList,
-		);
-	}
-
-	private async locationList(
-	) {
-		this.writeList(
-			this.io.getRelationshipList(
-				DataType.Location,
-			),
-			ViewType.LocationList,
-		);
-	}
-
 	 */
 }

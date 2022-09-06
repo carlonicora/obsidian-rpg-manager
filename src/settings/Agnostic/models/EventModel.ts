@@ -7,8 +7,7 @@ import {DataType} from "../../../enums/DataType";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {EventDataInterface} from "../../../interfaces/data/EventDataInterface";
-import {EventInterface} from "../../../Data";
+import {EventInterface, RpgData} from "../../../Data";
 
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;
@@ -20,8 +19,8 @@ export class EventModel extends AbstractModel {
 
 		const status = new ResponseLine();
 		status.content =ContentFactory.create(
-			((<EventDataInterface>this.specificData).synopsis != null && (<EventDataInterface>this.specificData).synopsis !== ''
-				? (<EventDataInterface>this.specificData).synopsis
+			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
+				? this.currentElement.synopsis
 				: '<span class="rpgm-missing">Synopsis missing</span>'),
 			ContentType.Markdown,
 		);
@@ -29,10 +28,9 @@ export class EventModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				//CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Character,
 				),
 			)
@@ -40,9 +38,9 @@ export class EventModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Clue,
 				),
 			)
@@ -50,9 +48,9 @@ export class EventModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Location,
 				),
 			)
@@ -64,7 +62,6 @@ export class EventModel extends AbstractModel {
 	/*
 	public async render() {
 		this.image(450);
-		this.synopsis();
 	}
 
 	 */

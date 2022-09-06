@@ -1,17 +1,16 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
-import {GenericDataListInterface} from "../../../interfaces/data/GenericDataListInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {SceneDataInterface} from "../../../interfaces/data/SceneDataInterface";
+import {RpgDataInterface, SceneInterface} from "../../../Data";
 
 export class SceneTableComponent extends AbstractComponent {
 	generateData(
-		data: GenericDataListInterface,
+		data: RpgDataInterface[],
 		title: string | null,
 	): ResponseElementInterface | null {
-		if (data.elements.length === 0){
+		if (data.length === 0){
 			return null;
 		}
 
@@ -27,9 +26,9 @@ export class SceneTableComponent extends AbstractComponent {
 			ContentFactory.create('End', ContentType.String),
 			ContentFactory.create('Duration', ContentType.String),
 		]);
-		data.elements.forEach((scene: SceneDataInterface) => {
+		data.forEach((scene: SceneInterface) => {
 			response.addContent([
-				ContentFactory.create(scene.completed ? scene.id.toString() : '**' + scene.id + '**', ContentType.Markdown, true),
+				ContentFactory.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
 				ContentFactory.create(scene.link, ContentType.Link),
 				ContentFactory.create(scene.synopsis, ContentType.Markdown),
 				ContentFactory.create(scene.startTime, ContentType.String, true),

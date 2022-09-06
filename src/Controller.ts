@@ -4,27 +4,23 @@ import {
 	MarkdownPostProcessorContext,
 	MarkdownRenderChild,
 	MarkdownView,
+	debounce,
 	parseYaml
 } from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
-import {DataType} from "./enums/DataType";
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
-import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
-import {CampaignDataInterface} from "./interfaces/data/CampaignDataInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {RpgFunctions} from "./RpgFunctions";
 import {SingleViewKey, ViewFactory} from "./factories/ViewFactory";
 import {ResponseType} from "./enums/ResponseType";
 import {ModelFactory, SingleModelKey} from "./factories/ModelFactory";
 import {CampaignSetting} from "./enums/CampaignSetting";
-import {CampaignData} from "./settings/Agnostic/data/CampaignData";
 import {RpgData, RpgDataInterface} from "./Data";
 
 export class Controller extends MarkdownRenderChild {
 	private isActive = false;
-	private dv: DataviewInlineApi;
-	private campaign: CampaignDataInterface;
+	//private dv: DataviewInlineApi;
+	//private campaign: CampaignDataInterface;
 	private current: Record<string, any>;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
@@ -41,7 +37,7 @@ export class Controller extends MarkdownRenderChild {
 	) {
 		super(container);
 
-		this.dv = (<any>this.app.plugins.plugins.dataview).localApi(this.sourcePath, this.component, this.container);
+		//this.dv = (<any>this.app.plugins.plugins.dataview).localApi(this.sourcePath, this.component, this.container);
 	}
 
 	private initialise(
@@ -61,7 +57,8 @@ export class Controller extends MarkdownRenderChild {
 			let modelName = sourceLines[0].toLowerCase();
 			modelName = modelName[0].toUpperCase() + modelName.substring(1);
 			modelName = modelName.replace('navigation', 'Navigation');
-			const modelIdentifier:SingleModelKey<any> = CampaignSetting[this.campaign.settings] + modelName;
+			//const modelIdentifier:SingleModelKey<any> = CampaignSetting[this.campaign.settings] + modelName;
+			const modelIdentifier:SingleModelKey<any> = CampaignSetting[this.currentElement.campaign.settings] + modelName;
 
 			sourceLines.shift();
 
@@ -111,12 +108,13 @@ export class Controller extends MarkdownRenderChild {
 			this.initialise();
 
 			if (this.isActive) {
-				//this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
+				this.render = debounce(this.render, 1000, true) as unknown as () => Promise<void>
 
 				this.container.empty();
 
 				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
-					const viewName: SingleViewKey<any> = CampaignSetting[this.campaign.settings] + ResponseType[element.responseType];
+					//const viewName: SingleViewKey<any> = CampaignSetting[this.campaign.settings] + ResponseType[element.responseType];
+					const viewName: SingleViewKey<any> = CampaignSetting[this.currentElement.campaign.settings] + ResponseType[element.responseType];
 
 					const view: ViewInterface = ViewFactory.create(viewName, this.sourcePath);
 

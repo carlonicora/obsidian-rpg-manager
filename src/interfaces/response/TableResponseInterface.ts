@@ -1,5 +1,5 @@
 import {ResponseElementInterface} from "./ResponseElementInterface";
-import {ContentInterface} from "../content/ContentInterface";
+import {ContentInterface} from "../ContentInterface";
 
 export interface TableResponseInterface extends ResponseElementInterface {
 	headers: Array<ContentInterface>;

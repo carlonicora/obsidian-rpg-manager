@@ -3,25 +3,32 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ResponseData} from "../../../data/responses/ResponseData";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
-import {RpgFunctions} from "../../../RpgFunctions";
 import {TimelineResponse} from "../../../data/responses/TimelineResponse";
 import {TimelineElementResponse} from "../../../data/responses/TimelineElementResponse";
-import {DataFactory, SingleDataKey} from "../../../factories/DataFactory";
-import {EventDataInterface} from "../../../interfaces/data/EventDataInterface";
-import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
 import {TimelineResponseInterface} from "../../../interfaces/response/TimelineResponseInterface";
-import {CharacterDataInterface} from "../../../interfaces/data/CharacterDataInterface";
-import {SessionDataInterface} from "../../../interfaces/data/SessionDataInterface";
+import {
+	CharacterInterface,
+	ClueInterface,
+	EventInterface,
+	RpgData,
+	SessionInterface,
+	TimelineInterface
+} from "../../../Data";
+import {DataType} from "../../../enums/DataType";
 
 export class TimelineModel extends AbstractModel {
+	protected currentElement: TimelineInterface;
+
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'Banner' as SingleComponentKey<any>,
-				this.io,
-				this.specificData,
+				//CampaignSetting[this.campaign.settings] + 'Banner' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'Banner' as SingleComponentKey<any>,
+				//this.io,
+				//this.specificData,
+				this.currentElement,
 			)
 		);
 
@@ -56,14 +63,20 @@ export class TimelineModel extends AbstractModel {
 	private addEvents(
 		timeline: TimelineResponseInterface,
 	): void {
-		const query = '#' + RpgFunctions.settings.eventTag + '/' + this.campaign.id;
-		const events = this.dv.pages(query)
-			.where(event =>
-				event?.dates?.event !== undefined &&
-				event?.dates?.event !== null
-			);
+		const events = RpgData.index.getElements((data: EventInterface) =>
+			data.type === DataType.Event &&
+			data.date != null
+		);
+		//const query = '#' + RpgFunctions.settings.eventTag + '/' + this.campaign.id;
+		//const events = this.dv.pages(query)
+		//	.where(event =>
+		//		event?.dates?.event !== undefined &&
+		//		event?.dates?.event !== null
+		//	);
 
-		events.forEach((event) => {
+		//events.forEach((event) => {
+		events.forEach((event: EventInterface) => {
+			/*
 			const evt = DataFactory.create(
 				CampaignSetting[this.campaign.settings] + 'Event' as SingleDataKey<any>,
 				event,
@@ -79,12 +92,24 @@ export class TimelineModel extends AbstractModel {
 					(<EventDataInterface>evt).link,
 				)
 			)
+			*/
+			timeline.elements.push(
+				new TimelineElementResponse(
+					event.date,
+					(<Date>event.date).toDateString(),
+					(<Date>event.date).toTimeString(),
+					'event',
+					event.synopsis ?? '',
+					event.link,
+				)
+			)
 		});
 	}
 
 	private addClues(
 		timeline: TimelineResponseInterface,
 	): void {
+		/*
 		const query = '#' + RpgFunctions.settings.clueTag + '/' + this.campaign?.id;
 		const clues = this.dv.pages(query)
 			.where(clue =>
@@ -111,11 +136,30 @@ export class TimelineModel extends AbstractModel {
 				)
 			)
 		});
+		 */
+
+		const clues = RpgData.index.getElements((data: ClueInterface) =>
+			data.type === DataType.Clue &&
+			data.isFound === true
+		);
+		clues.forEach((clue: ClueInterface) => {
+			timeline.elements.push(
+				new TimelineElementResponse(
+					clue.found,
+					(<Date>clue.found).toDateString(),
+					'00:00',
+					'clue',
+					clue.synopsis ?? '',
+					clue.link,
+				)
+			)
+		});
 	}
 
 	private addBirths(
 		timeline: TimelineResponseInterface,
 	): void {
+		/*
 		const query = '(#' + RpgFunctions.settings.npcTag + '/' + this.campaign.id + ' or #' + RpgFunctions.settings.pcTag + '/' + this.campaign.id + ')';
 		const characters = this.dv.pages(query)
 			.where(character =>
@@ -142,11 +186,29 @@ export class TimelineModel extends AbstractModel {
 				)
 			)
 		});
+		*/
+		const characters = RpgData.index.getElements((data: CharacterInterface) =>
+			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
+			data.dob != null
+		);
+		characters.forEach((character: CharacterInterface) => {
+			timeline.elements.push(
+				new TimelineElementResponse(
+					character.dob,
+					(<Date>character.dob).toDateString(),
+					'00:00',
+					'birth',
+					character.synopsis ?? '',
+					character.link,
+				)
+			)
+		});
 	}
 
 	private addDeaths(
 		timeline: TimelineResponseInterface,
 	): void {
+		/*
 		const query = '(#' + RpgFunctions.settings.npcTag + '/' + this.campaign.id + ' or #' + RpgFunctions.settings.pcTag + '/' + this.campaign.id + ')';
 		const characters = this.dv.pages(query)
 			.where(character =>
@@ -173,11 +235,30 @@ export class TimelineModel extends AbstractModel {
 				)
 			)
 		});
+		*/
+
+		const characters = RpgData.index.getElements((data: CharacterInterface) =>
+			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
+			data.death != null
+		);
+		characters.forEach((character: CharacterInterface) => {
+			timeline.elements.push(
+				new TimelineElementResponse(
+					character.death,
+					(<Date>character.death).toDateString(),
+					'00:00',
+					'death',
+					character.synopsis ?? '',
+					character.link,
+				)
+			)
+		});
 	}
 
 	private addSessions(
 		timeline: TimelineResponseInterface,
 	): void {
+		/*
 		const query = '#' + RpgFunctions.settings.sessionTag + '/' + this.campaign.id;
 		const sessions = this.dv.pages(query)
 			.where(session =>
@@ -200,6 +281,24 @@ export class TimelineModel extends AbstractModel {
 					'session',
 					(<SessionDataInterface>sess).synopsis,
 					sess.link,
+				)
+			)
+		});
+		*/
+
+		const sessions = RpgData.index.getElements((data: SessionInterface) =>
+			data.type === DataType.Session &&
+			data.date != null
+		);
+		sessions.forEach((session: SessionInterface) => {
+			timeline.elements.push(
+				new TimelineElementResponse(
+					session.date,
+					(<Date>session.date).toDateString(),
+					'00:00',
+					'session',
+					session.synopsis ?? '',
+					session.link,
 				)
 			)
 		});

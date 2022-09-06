@@ -1,21 +1,17 @@
-import {
-	App,
-	CachedMetadata,
-	Component,
-	MarkdownPostProcessorContext,
-	Plugin,
-	PluginSettingTab,
-	Setting,
-	TFile
-} from 'obsidian';
+import {App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting,} from 'obsidian';
 import {Controller} from "./Controller";
 import {RpgFunctions} from "./RpgFunctions";
 import {FileFactory} from "./factories/FileFactory";
 import {DataType} from "./enums/DataType";
-import {RpgData, RpgDataList} from "./Data";
+import {RpgData} from "./Data";
 
 export default class RpgManager extends Plugin {
 	/*
+	@TODO: Move everything to RpgData
+	@TODO: Image
+	@TODO: Clue Status
+	@TODO: Change the ABT/StoryCircle information and moving them in the codeblock
+	@TODO: Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
 	@TODO: Review Modal windows
 	@TODO: Review Template creation (Adding RpgManager where it belongs)
 	@TODO: complete Note Navigation and Creation for sessions
@@ -39,6 +35,11 @@ export default class RpgManager extends Plugin {
 
 	async onLayoutReady(){
 		RpgData.initialise(this.app);
+		const a = RpgData.index.getElementByObsidianId('Non-Player Characters/Music/Erik Kim.md')
+		if (a !== null) {
+			const B = a.getRelationships(DataType.Character);
+			console.log(B);
+		}
 	}
 
 	async onunload() {

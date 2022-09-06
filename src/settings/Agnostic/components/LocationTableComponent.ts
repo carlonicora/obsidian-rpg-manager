@@ -1,17 +1,16 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
-import {GenericDataListInterface} from "../../../interfaces/data/GenericDataListInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
-import {LocationDataInterface} from "../../../interfaces/data/LocationDataInterface";
+import {LocationInterface, RpgDataInterface} from "../../../Data";
 
 export class LocationTableComponent extends AbstractComponent {
 	generateData(
-		data: GenericDataListInterface,
+		data: RpgDataInterface[],
 		title:string|null,
 	): ResponseElementInterface | null {
-		if (data.elements.length === 0){
+		if (data.length === 0){
 			return null;
 		}
 
@@ -23,7 +22,7 @@ export class LocationTableComponent extends AbstractComponent {
 			ContentFactory.create('Name', ContentType.String),
 			ContentFactory.create('Synopsis', ContentType.String),
 		]);
-		data.elements.forEach((location: LocationDataInterface) => {
+		data.forEach((location: LocationInterface) => {
 			response.addContent([
 				ContentFactory.create(location.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(location.link, ContentType.Link, true),

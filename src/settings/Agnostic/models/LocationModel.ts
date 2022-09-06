@@ -7,18 +7,20 @@ import {DataType} from "../../../enums/DataType";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {LocationDataInterface} from "../../../interfaces/data/LocationDataInterface";
+import {LocationInterface, RpgData} from "../../../Data";
 
 export class LocationModel extends AbstractModel {
+	protected currentElement: LocationInterface;
+
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());
 
-		if ((<LocationDataInterface>this.specificData).address != null && (<LocationDataInterface>this.specificData).address !== '') {
+		if (this.currentElement.address != null && this.currentElement.address !== '') {
 			const status = new ResponseLine();
 			status.content = ContentFactory.create(
-				'## ' + (<LocationDataInterface>this.specificData).address,
+				'## ' + this.currentElement.address,
 				ContentType.Markdown,
 			);
 			response.addElement(status);
@@ -26,9 +28,9 @@ export class LocationModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Character,
 					DataType.Faction,
 				),
@@ -37,9 +39,9 @@ export class LocationModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Event,
 					DataType.Location,
 				),
@@ -48,9 +50,9 @@ export class LocationModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Clue,
 					DataType.Location,
 				),
@@ -59,9 +61,9 @@ export class LocationModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Location,
 				),
 				'Contained locations',
@@ -70,9 +72,9 @@ export class LocationModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.io,
-				this.io.getRelationshipList(
+				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				RpgData.index.getRelationshipList(
+					this.currentElement,
 					DataType.Location,
 					DataType.Location,
 				),
@@ -85,7 +87,6 @@ export class LocationModel extends AbstractModel {
 
 	/*
 	public async render() {
-		this.synopsis(this.dv.current()?.address ? this.dv.current()?.address : null);
 		this.image(450);
 	}
 	 */

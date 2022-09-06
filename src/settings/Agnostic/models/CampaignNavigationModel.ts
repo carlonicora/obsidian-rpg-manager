@@ -15,7 +15,7 @@ export class CampaignNavigationModel extends AbstractModel {
 			ComponentFactory.create(
 				//CampaignSetting[this.campaign.settings] + 'Banner' as SingleComponentKey<any>,
 				CampaignSetting[this.currentElement.settings] + 'Banner' as SingleComponentKey<any>,
-				this.io,
+				//this.io,
 				//this.campaign,
 				this.currentElement
 			)
