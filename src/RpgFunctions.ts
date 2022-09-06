@@ -1,4 +1,4 @@
-import {App, TAbstractFile, TFile} from "obsidian";
+import {App, TAbstractFile, TagCache, TFile} from "obsidian";
 import {Literal} from "obsidian-dataview/lib/data-model/value";
 import {DataType} from "./enums/DataType";
 import {DateTime} from "obsidian-dataview";
@@ -65,6 +65,26 @@ export class RpgFunctions {
 		}
 
 		return response;
+	}
+
+
+	public static getImg(
+		name: string,
+	): string|null {
+		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
+
+		for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
+			const fileName = this.app.vault.config.attachmentFolderPath + '/' + name + '.' + imageExtensions[extensionCount];
+
+			if (this.fileExists(fileName)) {
+				if (this.root == null) {
+					this.initialiseRoots();
+				}
+				return this.root + fileName;
+			}
+		}
+
+		return null;
 	}
 
 	public static getImageLink(page: Record<string, Literal>|undefined){
@@ -142,6 +162,42 @@ export class RpgFunctions {
 		return "<img src=\"" + imageFile + "\" style=\"object-fit: cover;" + dimensions + "\">";
 	}
 
+	public static getDataTypeFromTagCache(
+		tags: TagCache[],
+	): DataType|null {
+		let response: DataType|null = null;
+
+		tags.forEach((tag: TagCache) => {
+			if (tag.tag.startsWith(this.settings.campaignTag)){
+				response = DataType.Campaign;
+			} else if (tag.tag.startsWith(this.settings.adventureTag)){
+				response = DataType.Adventure;
+			} else if (tag.tag.startsWith(this.settings.sessionTag)){
+				response = DataType.Session;
+			} else if (tag.tag.startsWith(this.settings.sceneTag)){
+				response = DataType.Scene;
+			} else if (tag.tag.startsWith(this.settings.npcTag)){
+				response = DataType.NonPlayerCharacter;
+			} else if (tag.tag.startsWith(this.settings.pcTag)){
+				response = DataType.Character;
+			} else if (tag.tag.startsWith(this.settings.clueTag)){
+				response = DataType.Clue;
+			} else if (tag.tag.startsWith(this.settings.locationTag)){
+				response = DataType.Location;
+			} else if (tag.tag.startsWith(this.settings.factionTag)){
+				response = DataType.Faction;
+			} else if (tag.tag.startsWith(this.settings.eventTag)){
+				response = DataType.Event;
+			} else if (tag.tag.startsWith(this.settings.timelineTag)){
+				response = DataType.Timeline;
+			} else if (tag.tag.startsWith(this.settings.noteTag)){
+				response = DataType.Note;
+			}
+		});
+
+		return response;
+	}
+
 	public static getDataType(
 		tags: Array<string>|null,
 	): DataType|null {
@@ -176,6 +232,19 @@ export class RpgFunctions {
 		});
 
 		return response;
+	}
+
+	public static getTagIdFromTagCache(
+		tags: TagCache[],
+		type: DataType,
+	): number {
+		const stringTags: string[] = [];
+
+		tags.forEach((tag: TagCache) => {
+			stringTags.push(tag.tag);
+		});
+
+		return this.getTagId(stringTags, type);
 	}
 
 	public static getTagId(

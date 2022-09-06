@@ -1,6 +1,18 @@
-import {App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting} from 'obsidian';
+import {
+	App,
+	CachedMetadata,
+	Component,
+	MarkdownPostProcessorContext,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	TFile
+} from 'obsidian';
 import {Controller} from "./Controller";
 import {RpgFunctions} from "./RpgFunctions";
+import {FileFactory} from "./factories/FileFactory";
+import {DataType} from "./enums/DataType";
+import {RpgData, RpgDataList} from "./Data";
 
 export default class RpgManager extends Plugin {
 	/*
@@ -16,12 +28,17 @@ export default class RpgManager extends Plugin {
 		await this.loadSettings();
 
 		this.addSettingTab(new RpgManagerSettingTab(this.app, this));
+		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
 
 		RpgFunctions.initialise(this.app, this.settings);
 
 		this.registerEvents();
 		this.registerCodeBlock();
 		this.registerCommands();
+	}
+
+	async onLayoutReady(){
+		RpgData.initialise(this.app);
 	}
 
 	async onunload() {
@@ -79,24 +96,22 @@ export default class RpgManager extends Plugin {
 
 	private registerCommands(
 	): void {
-		/*
 		Object.keys(DataType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 			this.addCommand({
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
 				callback: () => {
-					this.api.fileFactory.initialise(DataType[type as keyof typeof DataType]);
+					FileFactory.initialise(this.app, DataType[type as keyof typeof DataType]);
 				},
 			});
 			this.addCommand({
 				id: "rpg-manager-fill-" + type.toLowerCase(),
 				name: "Fill with " + type,
 				callback: () => {
-					this.api.fileFactory.initialise(DataType[type as keyof typeof DataType], false);
+					FileFactory.initialise(this.app, DataType[type as keyof typeof DataType], false);
 				},
 			});
 		})
-		*/
 	}
 }
 

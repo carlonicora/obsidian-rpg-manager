@@ -1,5 +1,4 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
-import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {BreadcrumbResponseInterface} from "../../../interfaces/response/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 

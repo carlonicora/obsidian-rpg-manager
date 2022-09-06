@@ -1,7 +1,6 @@
 import {
 	App,
 	Component,
-	debounce,
 	MarkdownPostProcessorContext,
 	MarkdownRenderChild,
 	MarkdownView,
@@ -20,6 +19,7 @@ import {ResponseType} from "./enums/ResponseType";
 import {ModelFactory, SingleModelKey} from "./factories/ModelFactory";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {CampaignData} from "./settings/Agnostic/data/CampaignData";
+import {RpgData, RpgDataInterface} from "./Data";
 
 export class Controller extends MarkdownRenderChild {
 	private isActive = false;
@@ -29,6 +29,8 @@ export class Controller extends MarkdownRenderChild {
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
 	private contentEl: HTMLElement;
+
+	private currentElement: RpgDataInterface;
 
 	constructor(
 		protected app: App,
@@ -44,13 +46,16 @@ export class Controller extends MarkdownRenderChild {
 
 	private initialise(
 	): void {
-		const current = this.dv.current();
-		if (current == null){
+		const currentElement = RpgData.index?.getElementByObsidianId(this.sourcePath);
+		//const current = this.dv.current();
+		//if (current == null){
+		if (currentElement == null){
 			this.isActive = false;
 		} else {
 			this.isActive = true;
-			this.current = current;
-			this.loadCampaign();
+			//this.current = current;
+			this.currentElement = currentElement;
+			//this.loadCampaign();
 
 			const sourceLines = this.source.split('\n');
 			let modelName = sourceLines[0].toLowerCase();
@@ -65,9 +70,10 @@ export class Controller extends MarkdownRenderChild {
 			this.model = ModelFactory.create(
 				modelIdentifier,
 				this.app,
-				this.campaign,
-				this.current,
-				this.dv,
+				//this.campaign,
+				//this.current,
+				//this.dv,
+				this.currentElement,
 				this.source,
 				this.sourcePath,
 				this.contentEl,
@@ -81,6 +87,7 @@ export class Controller extends MarkdownRenderChild {
 		this.render();
 	}
 
+	/*
 	private loadCampaign(
 	): void {
 		const campaignId = RpgFunctions.getTagId(this.current.tags, DataType.Campaign);
@@ -94,6 +101,7 @@ export class Controller extends MarkdownRenderChild {
 			campaigns[0],
 		);
 	}
+	*/
 
 	private async render(){
 		const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);

@@ -3,7 +3,6 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ResponseData} from "../../../data/responses/ResponseData";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
-import RpgManager from "../../../main";
 import {RpgFunctions} from "../../../RpgFunctions";
 import {TimelineResponse} from "../../../data/responses/TimelineResponse";
 import {TimelineElementResponse} from "../../../data/responses/TimelineElementResponse";
@@ -118,7 +117,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const query = '(#' + RpgFunctions.settings.npcTag + '/' + this.campaign.id + ' or #' + RpgFunctions.settings.pcTag + '/' + this.campaign.id + ')';
-		let characters = this.dv.pages(query)
+		const characters = this.dv.pages(query)
 			.where(character =>
 				character?.dates?.dob !== undefined &&
 				character?.dates?.dob !== null
@@ -149,7 +148,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const query = '(#' + RpgFunctions.settings.npcTag + '/' + this.campaign.id + ' or #' + RpgFunctions.settings.pcTag + '/' + this.campaign.id + ')';
-		let characters = this.dv.pages(query)
+		const characters = this.dv.pages(query)
 			.where(character =>
 				character?.dates?.death !== undefined &&
 				character?.dates?.death !== null
@@ -161,7 +160,7 @@ export class TimelineModel extends AbstractModel {
 				character,
 				this.campaign,
 			);
-			const deathString = (<CharacterDataInterface>char).dob;
+			const deathString = (<CharacterDataInterface>char).death;
 			const death: string = (deathString == null ? '00:00' : deathString);
 			timeline.elements.push(
 				new TimelineElementResponse(

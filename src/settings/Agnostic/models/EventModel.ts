@@ -8,8 +8,11 @@ import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {EventDataInterface} from "../../../interfaces/data/EventDataInterface";
+import {EventInterface} from "../../../Data";
 
 export class EventModel extends AbstractModel {
+	protected currentElement: EventInterface;
+
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
@@ -26,7 +29,8 @@ export class EventModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getRelationshipList(
 					DataType.Character,

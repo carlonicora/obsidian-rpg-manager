@@ -1,10 +1,10 @@
 import {TemplateInterface} from "../interfaces/data/TemplateInterface";
 
-export abstract class AbstractTemplate  implements TemplateInterface{
+export abstract class AbstractTemplate  implements TemplateInterface {
 	constructor(
 		protected createFrontMatterOnly: boolean,
 		protected name: string,
-		protected campaignId: number,
+		protected campaignId: number|null,
 		protected adventureId: number|null,
 		protected sessionId: number|null,
 		protected sceneId: number|null,

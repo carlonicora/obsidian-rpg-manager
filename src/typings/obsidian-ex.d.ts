@@ -28,6 +28,7 @@ declare module "obsidian" {
 		config: {
 			attachmentFolderPath: string;
 		};
+		fileMap: TFile[]
 	}
 
 	interface App {

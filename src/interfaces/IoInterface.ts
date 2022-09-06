@@ -11,8 +11,13 @@ import {CharacterListInterface} from "./data/CharacterListInterface";
 import {GenericImageDataInterface} from "./data/GenericImageDataInterface";
 import {GenericSynopsisDataInterface} from "./data/GenericSynopsisDataInterface";
 import {GenericDataListInterface} from "./data/GenericDataListInterface";
+import {CampaignDataInterface} from "./data/CampaignDataInterface";
 
 export interface IoInterface {
+	getCampaign(
+		campaignId: number,
+	): CampaignDataInterface|null;
+
 	getAdventureList(
 	): AdventureListInterface;
 

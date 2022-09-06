@@ -1,6 +1,6 @@
-import {AbstractTemplateModal} from "../../../abstracts/AbstractTemplateModal";
+import {AbstractModal} from "../../../abstracts/AbstractModal";
 
-export class SceneModal extends AbstractTemplateModal {
+export class SceneModal extends AbstractModal {
 	protected content(
 		contentEl: HTMLElement,
 	): void {

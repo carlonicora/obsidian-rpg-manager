@@ -1,5 +1,4 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
-import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {TimelineElementResponseInterface} from "../../../interfaces/response/TimelineElementResponseInterface";
 import {TimelineResponseInterface} from "../../../interfaces/response/TimelineResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";

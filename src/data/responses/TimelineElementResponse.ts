@@ -1,4 +1,3 @@
-import {AbstractResponse} from "../../abstracts/AbstractResponse";
 import {TimelineElementResponseInterface} from "../../interfaces/response/TimelineElementResponseInterface";
 import {DateTime} from "obsidian-dataview";
 

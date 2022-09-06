@@ -1,7 +1,7 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
 import {RpgFunctions} from "../../../RpgFunctions";
 
-export class CampaignTemplate extends AbstractTemplate{
+export class CampaignTemplate extends AbstractTemplate {
     protected generateFrontmatterTags(
 	): string {
 		return 'tags: [' + RpgFunctions.settings.campaignTag +'/' + this.campaignId + ']\n';

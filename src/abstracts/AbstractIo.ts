@@ -120,6 +120,22 @@ export abstract class AbstractIo implements IoInterface {
 		return response;
 	}
 
+	public getCampaign(
+		campaignId: number,
+	): CampaignDataInterface|null {
+		let response: CampaignDataInterface|null = null;
+
+		const query = '#' + RpgFunctions.settings.campaignTag + '/' + this.campaign.id;
+
+		const campaigns = this.dv.pages(query);
+
+		if (campaigns != null && campaigns.length === 1){
+			response = campaigns[0];
+		}
+
+		return response;
+	}
+
 	public getAdventureList(
 	): AdventureListInterface
 	{

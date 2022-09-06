@@ -18,6 +18,7 @@ import {SessionModel} from "../settings/Agnostic/models/SessionModel";
 import {SessionNavigationModel} from "../settings/Agnostic/models/SessionNavigationModel";
 import {TimelineModel} from "../settings/Agnostic/models/TimelineModel";
 import {AdventureNavigationModel} from "../settings/Agnostic/models/AdventureNavigationModel";
+import {RpgDataInterface} from "../Data";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
@@ -48,14 +49,16 @@ export class ModelFactory {
 	static create<K extends ModelKeys>(
 		k: SingleModelKey<K>,
 		app: App,
-		campaign: CampaignDataInterface,
-		current: Record<string, any>,
-		dv: DataviewInlineApi,
+		//campaign: CampaignDataInterface,
+		//current: Record<string, any>,
+		//dv: DataviewInlineApi,
+		currentElement: RpgDataInterface,
 		source: string,
 		sourcePath: string,
 		contentEl: HTMLElement,
 		sourceMeta: any,
 	): ModelClassType<K> {
-		return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl, sourceMeta);
+		//return new ModelsMap[k](app, campaign, current, dv, source, sourcePath, contentEl, sourceMeta);
+		return new ModelsMap[k](app, currentElement, source, sourcePath, contentEl, sourceMeta);
 	}
 }

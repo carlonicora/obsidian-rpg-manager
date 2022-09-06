@@ -11,7 +11,8 @@ export class CampaignModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'AdventureTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'AdventureTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'AdventureTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getAdventureList(),
 			)
@@ -19,7 +20,8 @@ export class CampaignModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getSessionList(),
 			)
@@ -27,7 +29,8 @@ export class CampaignModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getCharacterList(),
 			)

@@ -8,8 +8,11 @@ import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
+import {ClueInterface} from "../../../Data";
 
 export class ClueModel extends AbstractModel {
+	protected currentElement: ClueInterface;
+
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
@@ -26,7 +29,8 @@ export class ClueModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getRelationshipList(
 					DataType.Character,
@@ -36,7 +40,8 @@ export class ClueModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getRelationshipList(
 					DataType.Location,
@@ -46,7 +51,8 @@ export class ClueModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				CampaignSetting[this.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
+				//CampaignSetting[this.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
+				CampaignSetting[this.currentElement.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
 				this.io,
 				this.io.getRelationshipList(
 					DataType.Event,

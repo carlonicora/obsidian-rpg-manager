@@ -2,23 +2,13 @@ import {App, CachedMetadata, Modal, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {RpgFunctions} from "../RpgFunctions";
 import {FileFactory} from "../factories/FileFactory";
+import {ModalElementInterface} from "../interfaces/ModalElementInterface";
+import {ModalElement} from "../data/ModalElement";
+import {IoFactory} from "../factories/Iofactory";
+import {DataviewInlineApi} from "obsidian-dataview/lib/api/inline-api";
+import {DataviewApi} from "obsidian-dataview/lib/api/plugin-api";
 
-export interface RpgmElementInterface {
-	type: DataType;
-	id: number;
-	name: string;
-}
-
-export class RpgmElement implements RpgmElementInterface {
-	constructor(
-		public type: DataType,
-		public id: number,
-		public name: string,
-	) {
-	}
-}
-
-export abstract class AbstractTemplateModal extends Modal {
+export abstract class AbstractModal extends Modal {
 	public confirm = false;
 	public button: HTMLButtonElement;
 	public title: HTMLInputElement;
@@ -32,10 +22,10 @@ export abstract class AbstractTemplateModal extends Modal {
 	public session: HTMLSelectElement;
 	public sessionError: HTMLParagraphElement;
 
-	protected campaigns: RpgmElementInterface[];
-	protected adventures: RpgmElementInterface[];
-	protected sessions: RpgmElementInterface[];
-	protected scenes: RpgmElementInterface[];
+	protected campaigns: ModalElementInterface[];
+	protected adventures: ModalElementInterface[];
+	protected sessions: ModalElementInterface[];
+	protected scenes: ModalElementInterface[];
 
 	private newCampaignId = 1;
 	private newAdventureId = 1;
@@ -128,8 +118,8 @@ export abstract class AbstractTemplateModal extends Modal {
 				}
 			}
 
-			const fileFactory = new FileFactory(this.app);
-			fileFactory.create(
+			FileFactory.create(
+				this.app,
 				this.type,
 				this.create,
 				this.createFrontMatterOnly.checked,
@@ -192,7 +182,7 @@ export abstract class AbstractTemplateModal extends Modal {
 						if (campaignId >= this.newCampaignId){
 							this.newCampaignId = campaignId+1;
 						}
-						this.campaigns.push(new RpgmElement(
+						this.campaigns.push(new ModalElement(
 							DataType.Campaign,
 							campaignId,
 							file.basename,
@@ -218,7 +208,16 @@ export abstract class AbstractTemplateModal extends Modal {
 				value: '',
 			}).selected = true;
 		}
-		this.campaigns.forEach((campaign: RpgmElementInterface) => {
+		this.campaign.onchange = (function () {
+			this.campaigns.forEach((campaign: ModalElementInterface) => {
+				if (campaign.id === this.campaign.value) {
+
+				}
+			});
+			console.log('Campaign Selected: ' + this.campaign.value);
+		}).bind(this);
+
+		this.campaigns.forEach((campaign: ModalElementInterface) => {
 			this.campaign.createEl('option', {
 				text: campaign.name,
 				value: campaign.id.toString(),
@@ -266,7 +265,7 @@ export abstract class AbstractTemplateModal extends Modal {
 						if (adventureId >= this.newAdventureId) {
 							this.newAdventureId = adventureId + 1;
 						}
-						this.adventures.push(new RpgmElement(
+						this.adventures.push(new ModalElement(
 							DataType.Adventure,
 							adventureId,
 							file.basename,
@@ -300,7 +299,7 @@ export abstract class AbstractTemplateModal extends Modal {
 	): void {
 		if (this.adventure != null) {
 			this.removeOptions(this.adventure);
-			this.adventures.forEach((adventure: RpgmElementInterface) => {
+			this.adventures.forEach((adventure: ModalElementInterface) => {
 				this.adventure.createEl('option', {
 					text: adventure.name,
 					value: adventure.id.toString(),
@@ -343,7 +342,7 @@ export abstract class AbstractTemplateModal extends Modal {
 						if (sessionId >= this.newSessionId) {
 							this.newSessionId = sessionId + 1;
 						}
-						this.sessions.push(new RpgmElement(
+						this.sessions.push(new ModalElement(
 							DataType.Session,
 							sessionId,
 							file.basename,
@@ -376,7 +375,7 @@ export abstract class AbstractTemplateModal extends Modal {
 	): void {
 		if (this.session != null) {
 			this.removeOptions(this.session);
-			this.sessions.forEach((session: RpgmElementInterface) => {
+			this.sessions.forEach((session: ModalElementInterface) => {
 				this.session.createEl('option', {
 					text: session.name,
 					value: session.id.toString(),
@@ -419,7 +418,7 @@ export abstract class AbstractTemplateModal extends Modal {
 						if (sceneId >= this.newSceneId) {
 							this.newSceneId = sceneId + 1;
 						}
-						this.scenes.push(new RpgmElement(
+						this.scenes.push(new ModalElement(
 							DataType.Scene,
 							sceneId,
 							file.basename,

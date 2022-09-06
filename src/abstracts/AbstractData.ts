@@ -1,5 +1,4 @@
 import {GenericDataInterface} from "../interfaces/data/GenericDataInterface";
-import {DateTime} from "obsidian-dataview";
 
 export abstract class AbstractData implements GenericDataInterface {
 	public link: string;

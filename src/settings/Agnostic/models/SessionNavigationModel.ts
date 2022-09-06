@@ -3,7 +3,6 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ResponseData} from "../../../data/responses/ResponseData";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
-import {ClueDataInterface} from "../../../interfaces/data/ClueDataInterface";
 import {ContentType} from "../../../enums/ContentType";
 import {SessionDataInterface} from "../../../interfaces/data/SessionDataInterface";
 
