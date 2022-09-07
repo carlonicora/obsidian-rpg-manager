@@ -19,7 +19,7 @@ export class Character extends AbstractRpgElementData implements CharacterInterf
 		this.dob = this.initialiseDate(this.frontmatter?.dates?.dob);
 		this.death = this.initialiseDate(this.frontmatter?.dates?.death);
 		this.goals = this.frontmatter?.goals;
-		this.pronoun = this.frontmatter?.pronoun ? PronounFactory.create(this.frontmatter?.pronoun) : null;
+		this.pronoun = this.frontmatter?.pronoun ? this.app.plugins.getPlugin('rpg-manager').factories.pronouns.create(this.frontmatter?.pronoun) : null;
 	}
 
 	public get age(

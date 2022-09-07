@@ -10,6 +10,7 @@ import {FactionModal} from "../settings/Agnostic/modals/FactionModal";
 import {LocationModal} from "../settings/Agnostic/modals/LocationModal";
 import {NonPlayerCharacterModal} from "../settings/Agnostic/modals/NonPlayerCharacterModal";
 import {App} from "obsidian";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
 const ModalsMap = {
 	Campaign: CampaignModal,
@@ -27,14 +28,13 @@ type ModalsMapType = typeof ModalsMap;
 type ModalKeys = keyof ModalsMapType;
 export type SingleModalKey<K> = [K] extends (K extends ModalKeys ? [K] : never) ? K : never;
 
-export class ModalFactory {
-	static open<K extends ModalKeys>(
+export class ModalFactory extends AbstractFactory {
+	public open<K extends ModalKeys>(
 		k: SingleModalKey<K>,
-		app: App,
 		type: DataType,
 		create: boolean,
-		name: string|null,
+		name: string|null=null,
 	): void {
-		new ModalsMap[k](app, type, create, name).open();
+		new ModalsMap[k](this.app, type, create, name).open();
 	}
 }

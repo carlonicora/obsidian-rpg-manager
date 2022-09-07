@@ -2,14 +2,16 @@ import {AbstractResponse} from "../../abstracts/AbstractResponse";
 import {ResponseType} from "../../enums/ResponseType";
 import {TableResponseInterface} from "../../interfaces/response/TableResponseInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
+import {App} from "obsidian";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public headers: Array<ContentInterface>;
 	public content: Array<Array<ContentInterface>>;
 
 	constructor(
+		app: App,
 	) {
-		super();
+		super(app);
 		this.responseType = ResponseType.Table;
 		this.headers = [];
 		this.content = [];

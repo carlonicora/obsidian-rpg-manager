@@ -12,9 +12,8 @@ export class CampaignNavigationModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.settings] + 'Banner' as SingleComponentKey<any>,
-				this.app,
 				this.currentElement
 			)
 		);

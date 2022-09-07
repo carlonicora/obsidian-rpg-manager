@@ -6,4 +6,5 @@ export enum ResponseType {
 	Box,
 	Breadcrumb,
 	Timeline,
+	Image,
 }

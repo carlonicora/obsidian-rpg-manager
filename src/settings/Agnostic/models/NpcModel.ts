@@ -15,17 +15,22 @@ export class NpcModel extends AbstractModel {
 		response.addElement(this.generateBreadcrumb());
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
-				this.app,
 				this.currentElement
 			)
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Image' as SingleComponentKey<any>,
+				this.currentElement,
+			)
+		);
+
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Faction,
@@ -34,9 +39,8 @@ export class NpcModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
@@ -45,9 +49,8 @@ export class NpcModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Event,
@@ -57,9 +60,8 @@ export class NpcModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,
@@ -69,9 +71,8 @@ export class NpcModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
@@ -84,8 +85,6 @@ export class NpcModel extends AbstractModel {
 
 	/*
 	public async render() {
-		this.synopsis();
-		this.image(300,300);
 		this.info();
 	}
 

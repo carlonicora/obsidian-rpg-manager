@@ -15,21 +15,21 @@ export class EventTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 
 		response.addTitle(title ? title : 'Events');
 		response.addHeaders([
-			ContentFactory.create('', ContentType.String, true),
-			ContentFactory.create('Name', ContentType.String),
-			ContentFactory.create('Date', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Name', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Date', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
 		data.forEach((event: EventInterface) => {
 			response.addContent([
-				ContentFactory.create(event.imageSrcElement, ContentType.Image, true),
-				ContentFactory.create(event.link, ContentType.Link, true),
-				ContentFactory.create(event.date?.toDateString(), ContentType.String),
-				ContentFactory.create(event.additionalInformation ?? event.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.imageSrcElement, ContentType.Image, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.link, ContentType.Link, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.date?.toDateString(), ContentType.String),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.additionalInformation ?? event.synopsis, ContentType.Markdown),
 			])
 		});
 

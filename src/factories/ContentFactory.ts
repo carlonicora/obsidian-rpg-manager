@@ -6,9 +6,10 @@ import {NumberContent} from "../data/content/NumberContent";
 import {ObjectContent} from "../data/content/ObjectContent";
 import {MarkdownContent} from "../data/content/MarkdownContent";
 import {ImageContent} from "../data/content/ImageContent";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
-export class ContentFactory {
-	public static create(
+export class ContentFactory extends AbstractFactory {
+	public create(
 		content: any,
 		type: ContentType,
 		isInline = false,

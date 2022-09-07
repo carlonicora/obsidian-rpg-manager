@@ -15,26 +15,26 @@ export class SceneTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 
 		response.addTitle(title ? title : 'Scenes');
 
 		response.addHeaders([
-			ContentFactory.create('#', ContentType.String, true),
-			ContentFactory.create('Scene', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
-			ContentFactory.create('Start', ContentType.String),
-			ContentFactory.create('End', ContentType.String),
-			ContentFactory.create('Duration', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('#', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Scene', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Start', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('End', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Duration', ContentType.String),
 		]);
 		data.forEach((scene: SceneInterface) => {
 			response.addContent([
-				ContentFactory.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
-				ContentFactory.create(scene.link, ContentType.Link),
-				ContentFactory.create(scene.synopsis, ContentType.Markdown),
-				ContentFactory.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.startTime), ContentType.String, true),
-				ContentFactory.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.endTime), ContentType.String, true),
-				ContentFactory.create(scene.duration, ContentType.String, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link, ContentType.Link),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.startTime), ContentType.String, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.endTime), ContentType.String, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.duration, ContentType.String, true),
 			])
 		});
 		return response;

@@ -4,15 +4,17 @@ import {ContentType} from "../../enums/ContentType";
 import {StringResponseInterface} from "../../interfaces/response/StringResponseInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {ContentFactory} from "../../factories/ContentFactory";
+import {App} from "obsidian";
 
 export class ResponseLine extends AbstractResponse implements StringResponseInterface {
 	public content: ContentInterface;
 
 	constructor(
+		app: App,
 	) {
-		super();
+		super(app);
 		this.responseType = ResponseType.String;
-		this.content = ContentFactory.create('', ContentType.String);
+		this.content = this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String);
 	}
 
 	public addContent(

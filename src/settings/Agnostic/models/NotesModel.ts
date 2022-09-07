@@ -7,11 +7,4 @@ export class NotesModel extends AbstractModel {
 		const response = new ResponseData();
 		return response;
 	}
-
-	/*
-	public async render() {
-
-	}
-
-	 */
 }

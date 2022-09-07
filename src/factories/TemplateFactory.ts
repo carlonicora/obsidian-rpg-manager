@@ -9,6 +9,7 @@ import {EventTemplate} from "../settings/Agnostic/templates/EventTemplate";
 import {ClueTemplate} from "../settings/Agnostic/templates/ClueTemplate";
 import {FactionTemplate} from "../settings/Agnostic/templates/FactionTemplate";
 import {App} from "obsidian";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
 const TemplatesMap = {
 	AgnosticCampaign: CampaignTemplate,
@@ -28,10 +29,9 @@ type Tuples<T> = T extends TemplateKeys ? [T, InstanceType<TemplatesMapType[T]>]
 export type SingleTemplateKey<K> = [K] extends (K extends TemplateKeys ? [K] : never) ? K : never;
 type TemplateClassType<A extends TemplateKeys> = Extract<Tuples<TemplateKeys>, [A, any]>[1];
 
-export class TemplateFactory {
-	static create<K extends TemplateKeys>(
+export class TemplateFactory extends AbstractFactory {
+	public create<K extends TemplateKeys>(
 		k: SingleTemplateKey<K>,
-		app: App,
 		createFrontMatterOnly: boolean,
 		name: string,
 		campaignId: number|null,
@@ -39,6 +39,6 @@ export class TemplateFactory {
 		sessionId: number|null,
 		sceneId: number|null,
 	): TemplateClassType<K> {
-		return new TemplatesMap[k](app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+		return new TemplatesMap[k](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
 	}
 }

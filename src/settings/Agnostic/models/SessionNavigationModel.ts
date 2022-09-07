@@ -14,8 +14,8 @@ export class SessionNavigationModel extends AbstractModel {
 
 		response.addElement(this.generateBreadcrumb());
 
-		const status = new ResponseLine();
-		status.content =ContentFactory.create(
+		const status = new ResponseLine(this.app);
+		status.content =this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
 			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
 				? this.currentElement.synopsis
 				: '<span class="rpgm-missing">Synopsis missing</span>'),

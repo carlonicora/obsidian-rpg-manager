@@ -14,19 +14,19 @@ export class FactionTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 
 		response.addTitle(title ? title : 'Factions');
 		response.addHeaders([
-			ContentFactory.create('', ContentType.String, true),
-			ContentFactory.create('Faction', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Faction', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
 		data.forEach((faction: RpgDataInterface) => {
 			response.addContent([
-				ContentFactory.create(faction.imageSrcElement, ContentType.Image, true),
-				ContentFactory.create(faction.link, ContentType.Link, true),
-				ContentFactory.create(faction.additionalInformation ?? faction.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(faction.imageSrcElement, ContentType.Image, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(faction.link, ContentType.Link, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(faction.additionalInformation ?? faction.synopsis, ContentType.Markdown),
 			])
 		});
 

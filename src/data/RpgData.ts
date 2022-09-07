@@ -120,9 +120,8 @@ export class RpgData extends Component {
 					)
 				) {
 					this.data.addElement(
-						DataFactory.create(
+						this.app.plugins.getPlugin('rpg-manager').factories.data.create(
 							CampaignSetting[settings] + DataType[fileType] as SingleDataKey<any>,
-							this.app,
 							fileType,
 							file,
 							metadata

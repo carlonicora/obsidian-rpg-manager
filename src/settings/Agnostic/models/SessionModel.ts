@@ -12,9 +12,8 @@ export class SessionModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'SceneTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getSceneList(
 					this.currentElement.campaign.campaignId,
 					this.currentElement.adventure.adventureId,

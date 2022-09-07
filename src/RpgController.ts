@@ -18,7 +18,7 @@ import {CampaignSetting} from "./enums/CampaignSetting";
 import {RpgElementDataInterface} from "./interfaces/data/RpgElementDataInterface";
 import {RpgOutlineDataInterface} from "./interfaces/data/RpgOutlineDataInterface";
 
-export class Controller extends MarkdownRenderChild {
+export class RpgController extends MarkdownRenderChild {
 	private isActive = false;
 	private current: Record<string, any>;
 	private data: ResponseDataInterface;
@@ -55,9 +55,8 @@ export class Controller extends MarkdownRenderChild {
 
 			const sourceMeta = parseYaml(sourceLines.join('\n'));
 
-			this.model = ModelFactory.create(
+			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
 				CampaignSetting[this.currentElement.campaign.settings] + modelName as SingleModelKey<any>,
-				this.app,
 				this.currentElement,
 				this.source,
 				this.sourcePath,
@@ -87,7 +86,7 @@ export class Controller extends MarkdownRenderChild {
 				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
 					const viewName: SingleViewKey<any> = CampaignSetting[this.currentElement.campaign.settings] + ResponseType[element.responseType];
 
-					const view: ViewInterface = ViewFactory.create(viewName, this.sourcePath);
+					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(viewName, this.sourcePath);
 
 					view.render(this.container, element);
 				});

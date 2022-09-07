@@ -15,20 +15,20 @@ export class LocationTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 
 		response.addTitle(title ? title : 'Locations');
 		response.addHeaders([
-			ContentFactory.create('', ContentType.String, true),
-			ContentFactory.create('Name', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Name', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
 		data.forEach((location: LocationInterface
 		) => {
 			response.addContent([
-				ContentFactory.create(location.imageSrcElement, ContentType.Image, true),
-				ContentFactory.create(location.link, ContentType.Link, true),
-				ContentFactory.create(location.additionalInformation ?? location.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(location.imageSrcElement, ContentType.Image, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(location.link, ContentType.Link, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(location.additionalInformation ?? location.synopsis, ContentType.Markdown),
 			])
 		});
 

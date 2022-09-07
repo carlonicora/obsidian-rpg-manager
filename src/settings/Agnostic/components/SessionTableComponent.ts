@@ -15,22 +15,22 @@ export class SessionTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 		response.addTitle(title ? title : 'Sessions');
 		response.addHeaders([
-			ContentFactory.create('#', ContentType.String, true),
-			ContentFactory.create('Session', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
-			ContentFactory.create('Date', ContentType.String),
-			ContentFactory.create('Play Date', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('#', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Session', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Date', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Play Date', ContentType.String),
 		]);
 		data.forEach((session: SessionInterface) => {
 			response.addContent([
-				ContentFactory.create(session.sessionId, ContentType.Number, true),
-				ContentFactory.create(session.link, ContentType.Link),
-				ContentFactory.create(session.synopsis, ContentType.Markdown),
-				ContentFactory.create(session.date?.toDateString(), ContentType.String, true),
-				ContentFactory.create(session.irl?.toDateString(), ContentType.String, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.sessionId, ContentType.Number, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.link, ContentType.Link),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.date?.toDateString(), ContentType.String, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
 			])
 		});
 		return response;

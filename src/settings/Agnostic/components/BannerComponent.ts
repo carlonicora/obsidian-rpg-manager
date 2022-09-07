@@ -10,7 +10,7 @@ export class BannerComponent extends AbstractComponent{
 		data: RpgDataInterface,
 		title: string | null,
 	): ResponseElementInterface | null {
-		const response = new ResponseBanner();
+		const response = new ResponseBanner(this.app);
 
 		if (data instanceof Campaign) {
 			response.image = data.image;

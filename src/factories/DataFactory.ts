@@ -11,6 +11,7 @@ import {Location} from "../settings/Agnostic/data/Location";
 import {Event} from "../settings/Agnostic/data/Event";
 import {Timeline} from "../settings/Agnostic/data/Timeline";
 import {Note} from "../settings/Agnostic/data/Note";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
 
 const DatasMap = {
@@ -33,14 +34,13 @@ type Tuples<T> = T extends DataKeys ? [T, InstanceType<DatasMapType[T]>] : never
 export type SingleDataKey<K> = [K] extends (K extends DataKeys ? [K] : never) ? K : never;
 type DataClassType<A extends DataKeys> = Extract<Tuples<DataKeys>, [A, any]>[1];
 
-export class DataFactory {
-	static create<K extends DataKeys>(
+export class DataFactory extends AbstractFactory {
+	public create<K extends DataKeys>(
 		k: SingleDataKey<K>,
-		app: App,
 		type: DataType,
 		file: TFile,
 		metadata: CachedMetadata,
 	): DataClassType<K> {
-		return new DatasMap[k](app, type, file, metadata);
+		return new DatasMap[k](this.app, type, file, metadata);
 	}
 }

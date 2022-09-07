@@ -13,9 +13,8 @@ export class SceneModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
@@ -24,9 +23,8 @@ export class SceneModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Faction,
@@ -35,9 +33,8 @@ export class SceneModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,

@@ -1,22 +1,26 @@
 import {App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting,} from 'obsidian';
-import {Controller} from "./Controller";
+import {RpgController} from "./RpgController";
 import {FileFactory} from "./factories/FileFactory";
 import {DataType} from "./enums/DataType";
 import {RpgData} from "./data/RpgData";
-import {RpgFunctions} from "./data/RpgFunctions";
+import {RpgFunctions} from "./RpgFunctions";
+import {RpgFactories} from "./RpgFactories";
+import {SingleModalKey} from "./factories/ModalFactory";
 
 export default class RpgManager extends Plugin {
 	/*
-	@TODO: Clue Status
-	@TODO: Change the ABT/StoryCircle information and moving them in the codeblock
-	@TODO: Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
-	@TODO: Review Modal windows
-	@TODO: Review Template creation (Adding RpgManager where it belongs)
-	@TODO: complete Note Navigation and Creation for sessions
+	@TODO: ***** Character initial part
+	@TODO: **** Sort elements in list
+	@TODO: *** Change the ABT/StoryCircle information and moving them in the codeblock
+	@TODO: *** Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
+	@TODO: ** Review Modal windows
+	@TODO: ** Review Template creation (Adding RpgManager where it belongs)
+	@TODO: * complete Note Navigation and Creation for sessions
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;
 	io: RpgData;
+	factories: RpgFactories;
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
@@ -28,6 +32,7 @@ export default class RpgManager extends Plugin {
 
 		this.io = new RpgData(this.app);
 		this.functions = new RpgFunctions(this.app);
+		this.factories = new RpgFactories(this.app);
 
 		this.registerEvents();
 		this.registerCodeBlock();
@@ -36,7 +41,6 @@ export default class RpgManager extends Plugin {
 
 	async onLayoutReady(){
 		this.io.loadCache();
-		//console.log(RpgData.index);
 	}
 
 	async onunload() {
@@ -57,7 +61,7 @@ export default class RpgManager extends Plugin {
 		sourcePath: string
 	) {
 		component.addChild(
-			new Controller(
+			new RpgController(
 				this.app,
 				el,
 				source,
@@ -96,14 +100,26 @@ export default class RpgManager extends Plugin {
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
 				callback: () => {
-					FileFactory.initialise(this.app, DataType[type as keyof typeof DataType]);
+					let name: string|null = null;
+					const activeFile = app.workspace.getActiveFile();
+					if (activeFile != null) {
+						name = activeFile.basename;
+					}
+					this.app.plugins.getPlugin('rpg-manager').factories.modals.open(
+						type as SingleModalKey<any>, DataType[type as keyof typeof DataType],
+						false,
+						name,
+					);
 				},
 			});
 			this.addCommand({
 				id: "rpg-manager-fill-" + type.toLowerCase(),
 				name: "Fill with " + type,
 				callback: () => {
-					FileFactory.initialise(this.app, DataType[type as keyof typeof DataType], false);
+					this.app.plugins.getPlugin('rpg-manager').factories.modals.open(
+						type as SingleModalKey<any>, DataType[type as keyof typeof DataType],
+						false,
+					);
 				},
 			});
 		})

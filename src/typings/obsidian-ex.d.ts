@@ -1,7 +1,8 @@
 import "obsidian";
-import {RpgManagerSettings} from "../main";
-import {RpgFunctions} from "../data/RpgFunctions";
+import RpgManager, {RpgManagerSettings} from "../main";
+import {RpgFunctions} from "../RpgFunctions";
 import {RpgData} from "../data/RpgData";
+import {RpgFactories} from "../RpgFactories";
 
 declare module "obsidian" {
 	interface MetadataCache {
@@ -22,6 +23,7 @@ declare module "obsidian" {
 				settings: RpgManagerSettings;
 				functions: RpgFunctions;
 				io: RpgData;
+				factories: RpgFactories;
 			};
 			enabledPlugins: Set<string>;
 		};

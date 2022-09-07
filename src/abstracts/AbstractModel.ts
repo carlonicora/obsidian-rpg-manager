@@ -25,7 +25,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 	protected generateBreadcrumb(
 	): BreadcrumbResponseInterface {
-		const response = new ResponseBreadcrumb();
+		const response = new ResponseBreadcrumb(this.app);
 		response.link = this.currentElement.campaign.link;
 		response.title = DataType[DataType.Campaign];
 
@@ -33,8 +33,8 @@ export abstract class AbstractModel implements ModelInterface {
 			response.mainTitle = DataType[this.currentElement.type];
 
 			let sessionBreadcrumb, sceneBreadcrumb: BreadcrumbResponseInterface;
-			const adventureBreadcrumb = new ResponseBreadcrumb();
-			const elementBreadcrumb = new ResponseBreadcrumb();
+			const adventureBreadcrumb = new ResponseBreadcrumb(this.app);
+			const elementBreadcrumb = new ResponseBreadcrumb(this.app);
 			switch (this.dataType) {
 				case DataType.Adventure:
 					adventureBreadcrumb.link = this.currentElement.link.toString();
@@ -46,13 +46,13 @@ export abstract class AbstractModel implements ModelInterface {
 						adventureBreadcrumb.title = DataType[DataType.Adventure];
 						response.nextBreadcrumb = adventureBreadcrumb;
 
-						sessionBreadcrumb = new ResponseBreadcrumb();
+						sessionBreadcrumb = new ResponseBreadcrumb(this.app);
 						sessionBreadcrumb.link = this.currentElement.link;
 						sessionBreadcrumb.title = DataType[DataType.Session];
 						adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
 
-						const previousSessionBreadcrumb = new ResponseBreadcrumb();
-						const nextSessionBreadcrumb = new ResponseBreadcrumb();
+						const previousSessionBreadcrumb = new ResponseBreadcrumb(this.app);
+						const nextSessionBreadcrumb = new ResponseBreadcrumb(this.app);
 
 						if ((<SessionInterface>this.currentElement).previousSession != null) {
 							previousSessionBreadcrumb.link = (<SessionInterface>this.currentElement).previousSession?.link!;
@@ -61,7 +61,7 @@ export abstract class AbstractModel implements ModelInterface {
 							sessionBreadcrumb.nextBreadcrumb = previousSessionBreadcrumb;
 						}
 
-						const sessionNotesBreadcrumb = new ResponseBreadcrumb();
+						const sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
 						sessionNotesBreadcrumb.link = '[[link]]';
 						sessionNotesBreadcrumb.linkText = 'notes';
 						if ((<SessionInterface>this.currentElement).previousSession != null) {
@@ -84,18 +84,18 @@ export abstract class AbstractModel implements ModelInterface {
 						adventureBreadcrumb.title = DataType[DataType.Adventure];
 						response.nextBreadcrumb = adventureBreadcrumb;
 
-							sessionBreadcrumb = new ResponseBreadcrumb();
+							sessionBreadcrumb = new ResponseBreadcrumb(this.app);
 							sessionBreadcrumb.link = (<SceneInterface>this.currentElement).session.link;
 							sessionBreadcrumb.title = DataType[DataType.Session];
 							adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
 
-							sceneBreadcrumb = new ResponseBreadcrumb();
+							sceneBreadcrumb = new ResponseBreadcrumb(this.app);
 							sceneBreadcrumb.link = this.currentElement.link;
 							sceneBreadcrumb.title = DataType[DataType.Scene];
 							sessionBreadcrumb.nextBreadcrumb = sceneBreadcrumb;
 
-							const previousSceneBreadcrumb = new ResponseBreadcrumb();
-							const nextSceneBreadcrumb = new ResponseBreadcrumb();
+							const previousSceneBreadcrumb = new ResponseBreadcrumb(this.app);
+							const nextSceneBreadcrumb = new ResponseBreadcrumb(this.app);
 							if ((<SceneInterface>this.currentElement).previousScene != null) {
 								previousSceneBreadcrumb.link = (<SceneInterface>this.currentElement).previousScene?.link!;
 								previousSceneBreadcrumb.linkText = '<< prev scene';

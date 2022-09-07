@@ -18,8 +18,8 @@ export class FactionModel extends AbstractModel {
 
 		response.addElement(this.generateBreadcrumb());
 
-		const status = new ResponseLine();
-		status.content =ContentFactory.create(
+		const status = new ResponseLine(this.app);
+		status.content = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
 			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
 				? this.currentElement.synopsis
 				: '<span class="rpgm-missing">Synopsis missing</span>'),
@@ -28,9 +28,15 @@ export class FactionModel extends AbstractModel {
 		response.addElement(status);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Image' as SingleComponentKey<any>,
+				this.currentElement,
+			)
+		);
+
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
@@ -40,9 +46,8 @@ export class FactionModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
@@ -52,11 +57,4 @@ export class FactionModel extends AbstractModel {
 
 		return response;
 	}
-
-	/*
-	public async render() {
-		this.synopsis();
-		this.image(200);
-	}
-	*/
 }

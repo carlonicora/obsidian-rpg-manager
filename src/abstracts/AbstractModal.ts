@@ -114,8 +114,7 @@ export abstract class AbstractModal extends Modal {
 				}
 			}
 
-			FileFactory.create(
-				this.app,
+			this.app.plugins.getPlugin('rpg-manager').factories.files.create(
 				this.type,
 				this.create,
 				this.createFrontMatterOnly.checked,

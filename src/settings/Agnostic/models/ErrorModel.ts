@@ -9,8 +9,8 @@ export class ErrorModel extends AbstractModel {
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
 
-		const status = new ResponseLine();
-		status.content =ContentFactory.create('<span class="rpgm-missing">The selected function does not exist in Rpg Manager</span>',
+		const status = new ResponseLine(this.app);
+		status.content =this.app.plugins.getPlugin('rpg-manager').factories.contents.create('<span class="rpgm-missing">The selected function does not exist in Rpg Manager</span>',
 			ContentType.Markdown,
 		);
 		response.addElement(status);

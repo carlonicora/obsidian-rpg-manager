@@ -21,14 +21,14 @@ export class CharacterSynopsisComponent extends AbstractComponent{
 			fullSynopsis += data.link.toString();
 			const pronoun = data.pronoun;
 			if (pronoun != null) {
-				fullSynopsis += PronounFactory.readPronoun(pronoun);
+				fullSynopsis += this.app.plugins.getPlugin('rpg-manager').factories.pronouns.readPronoun(pronoun);
 			}
 			fullSynopsis += (data.isDead) ? ' was ' : ' is ';
 			fullSynopsis += data.synopsis;
 		}
 
-		const response = new ResponseLine();
-		response.content =ContentFactory.create(
+		const response = new ResponseLine(this.app);
+		response.content =this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
 			fullSynopsis,
 			ContentType.Markdown,
 		);

@@ -18,8 +18,8 @@ export class LocationModel extends AbstractModel {
 		response.addElement(this.generateBreadcrumb());
 
 		if (this.currentElement.address != null && this.currentElement.address !== '') {
-			const status = new ResponseLine();
-			status.content = ContentFactory.create(
+			const status = new ResponseLine(this.app);
+			status.content = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
 				'## ' + this.currentElement.address,
 				ContentType.Markdown,
 			);
@@ -27,9 +27,15 @@ export class LocationModel extends AbstractModel {
 		}
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Image' as SingleComponentKey<any>,
+				this.currentElement,
+			)
+		);
+
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
@@ -39,9 +45,8 @@ export class LocationModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Event,
@@ -51,9 +56,8 @@ export class LocationModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,
@@ -63,9 +67,8 @@ export class LocationModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
@@ -75,9 +78,8 @@ export class LocationModel extends AbstractModel {
 		);
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				this.app,
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
@@ -89,10 +91,4 @@ export class LocationModel extends AbstractModel {
 
 		return response;
 	}
-
-	/*
-	public async render() {
-		this.image(450);
-	}
-	 */
 }

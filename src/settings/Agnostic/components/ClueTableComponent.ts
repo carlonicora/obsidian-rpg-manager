@@ -15,21 +15,21 @@ export class ClueTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 
 		response.addTitle(title ? title : 'Clues');
 		response.addHeaders([
-			ContentFactory.create('', ContentType.String, true),
-			ContentFactory.create('Clue', ContentType.String),
-			ContentFactory.create('Found', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Clue', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Found', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
 		data.forEach((clue: ClueInterface) => {
 			response.addContent([
-				ContentFactory.create(clue.imageSrcElement, ContentType.Image, true),
-				ContentFactory.create(clue.link, ContentType.Link, true),
-				ContentFactory.create((clue.isFound ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
-				ContentFactory.create(clue.additionalInformation ?? clue.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(clue.imageSrcElement, ContentType.Image, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(clue.link, ContentType.Link, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create((clue.isFound ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(clue.additionalInformation ?? clue.synopsis, ContentType.Markdown),
 			])
 		});
 

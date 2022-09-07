@@ -21,14 +21,13 @@ export class TimelineModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			ComponentFactory.create(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'Banner' as SingleComponentKey<any>,
-				this.app,
 				this.currentElement,
 			)
 		);
 
-		const timeline = new TimelineResponse();
+		const timeline = new TimelineResponse(this.app);
 
 		if (this.sourceMeta.events === true){
 			this.addEvents(timeline);

@@ -1,7 +1,8 @@
 import {Pronoun} from "../enums/Pronoun";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
-export class PronounFactory {
-	public static create(
+export class PronounFactory extends AbstractFactory {
+	public create(
 		pronoun: string|null,
 	): Pronoun|null {
 
@@ -30,7 +31,7 @@ export class PronounFactory {
 		return response;
 	}
 
-	public static readPronoun(
+	public readPronoun(
 		pronoun: Pronoun
 	): string {
 		switch (pronoun) {

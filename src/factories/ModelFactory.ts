@@ -18,6 +18,7 @@ import {TimelineModel} from "../settings/Agnostic/models/TimelineModel";
 import {AdventureNavigationModel} from "../settings/Agnostic/models/AdventureNavigationModel";
 import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
 import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
@@ -44,16 +45,15 @@ type Tuples<T> = T extends ModelKeys ? [T, InstanceType<ModelsMapType[T]>] : nev
 export type SingleModelKey<K> = [K] extends (K extends ModelKeys ? [K] : never) ? K : never;
 type ModelClassType<A extends ModelKeys> = Extract<Tuples<ModelKeys>, [A, any]>[1];
 
-export class ModelFactory {
-	static create<K extends ModelKeys>(
+export class ModelFactory extends AbstractFactory {
+	public create<K extends ModelKeys>(
 		k: SingleModelKey<K>,
-		app: App,
 		currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
 		source: string,
 		sourcePath: string,
 		contentEl: HTMLElement,
 		sourceMeta: any,
 	): ModelClassType<K> {
-		return new ModelsMap[k](app, currentElement, source, sourcePath, contentEl, sourceMeta);
+		return new ModelsMap[k](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
 	}
 }

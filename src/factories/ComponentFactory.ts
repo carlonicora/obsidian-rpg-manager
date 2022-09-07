@@ -12,6 +12,8 @@ import {BannerComponent} from "../settings/Agnostic/components/BannerComponent";
 import {CharacterSynopsisComponent} from "../settings/Agnostic/components/CharacterSynopsisComponent";
 import {App} from "obsidian";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {ImageComponent} from "../settings/Agnostic/components/ImageComponent";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -24,19 +26,19 @@ const ComponentsMap = {
 	AgnosticSceneTable: SceneTableComponent,
 	AgnosticBanner: BannerComponent,
 	AgnosticCharacterSynopsis: CharacterSynopsisComponent,
+	AgnosticImage: ImageComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;
 export type SingleComponentKey<K> = [K] extends (K extends ComponentKeys ? [K] : never) ? K : never;
 
-export class ComponentFactory {
-	static create<K extends ComponentKeys>(
+export class ComponentFactory extends AbstractFactory {
+	public create<K extends ComponentKeys>(
 		k: SingleComponentKey<K>,
-		app: App,
 		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null = null,
 	): ResponseElementInterface|null {
-		const component: ComponentInterface = new ComponentsMap[k](app);
+		const component: ComponentInterface = new ComponentsMap[k](this.app);
 		return component.generateData(data, title);
 	}
 }

@@ -14,21 +14,21 @@ export class CharacterTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 
 		response.addTitle(title ? title : 'Characters');
 		response.addHeaders([
-			ContentFactory.create('', ContentType.String, true),
-			ContentFactory.create('Character', ContentType.String),
-			ContentFactory.create('Age', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Character', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Age', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
 		data.forEach((character: CharacterInterface) => {
 			response.addContent([
-				ContentFactory.create(character.imageSrcElement, ContentType.Image, true),
-				ContentFactory.create(character.link, ContentType.Link, true),
-				ContentFactory.create(character.age?.toString(), ContentType.String, true),
-				ContentFactory.create(character.additionalInformation ?? character.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.imageSrcElement, ContentType.Image, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.link, ContentType.Link, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.age?.toString(), ContentType.String, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.additionalInformation ?? character.synopsis, ContentType.Markdown),
 			])
 		});
 

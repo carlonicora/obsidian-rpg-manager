@@ -1,5 +1,5 @@
 import {App, TAbstractFile, TFile} from "obsidian";
-import {DataType} from "../enums/DataType";
+import {DataType} from "./enums/DataType";
 
 export class RpgFunctions {
 	private root: string;

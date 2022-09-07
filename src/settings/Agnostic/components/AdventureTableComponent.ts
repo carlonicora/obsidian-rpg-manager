@@ -15,18 +15,18 @@ export class AdventureTableComponent extends AbstractComponent {
 			return null;
 		}
 
-		const response = new ResponseTable();
+		const response = new ResponseTable(this.app);
 		response.addTitle(title ? title : 'Adventures');
 		response.addHeaders([
-			ContentFactory.create('#', ContentType.String, true),
-			ContentFactory.create('Adventure', ContentType.String),
-			ContentFactory.create('Synopsis', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('#', ContentType.String, true),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Adventure', ContentType.String),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
 		data.forEach((adventure: AdventureInterface) => {
 			response.addContent([
-				ContentFactory.create(adventure.adventureId, ContentType.Number, true),
-				ContentFactory.create(adventure.link, ContentType.Link),
-				ContentFactory.create(adventure.synopsis, ContentType.Markdown),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(adventure.adventureId, ContentType.Number, true),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(adventure.link, ContentType.Link),
+				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(adventure.synopsis, ContentType.Markdown),
 			])
 		});
 
