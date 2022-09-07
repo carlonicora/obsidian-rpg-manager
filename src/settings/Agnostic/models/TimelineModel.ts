@@ -63,7 +63,7 @@ export class TimelineModel extends AbstractModel {
 			data.date != null
 		);
 
-		events.forEach((event: EventInterface) => {
+		events.elements.forEach((event: EventInterface) => {
 			if (event.date != null) {
 				timeline.elements.push(
 					new TimelineElementResponse(
@@ -86,7 +86,7 @@ export class TimelineModel extends AbstractModel {
 			data.type === DataType.Clue &&
 			data.isFound === true
 		);
-		clues.forEach((clue: ClueInterface) => {
+		clues.elements.forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
 				timeline.elements.push(
 					new TimelineElementResponse(
@@ -109,7 +109,7 @@ export class TimelineModel extends AbstractModel {
 			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
 			data.dob != null
 		);
-		characters.forEach((character: CharacterInterface) => {
+		characters.elements.forEach((character: CharacterInterface) => {
 			if (character.dob != null) {
 				timeline.elements.push(
 					new TimelineElementResponse(
@@ -132,7 +132,7 @@ export class TimelineModel extends AbstractModel {
 			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
 			data.death != null
 		);
-		characters.forEach((character: CharacterInterface) => {
+		characters.elements.forEach((character: CharacterInterface) => {
 			if (character.death != null) {
 				timeline.elements.push(
 					new TimelineElementResponse(
@@ -155,7 +155,7 @@ export class TimelineModel extends AbstractModel {
 			data.type === DataType.Session &&
 			data.date != null
 		);
-		sessions.forEach((session: SessionInterface) => {
+		sessions.elements.forEach((session: SessionInterface) => {
 			if (session.date != null) {
 				timeline.elements.push(
 					new TimelineElementResponse(

@@ -11,6 +11,7 @@ import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
+import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 
 export class RpgData extends Component {
 	private data: RpgDataList;
@@ -77,7 +78,7 @@ export class RpgData extends Component {
 
 	private fillNeighbours(
 	): void {
-		this.getOutlines().forEach((data: RpgOutlineDataInterface) => {
+		this.getOutlines().elements.forEach((data: RpgOutlineDataInterface) => {
 			data.initialiseNeighbours();
 		});
 	}
@@ -127,50 +128,16 @@ export class RpgData extends Component {
 							metadata
 						)
 					);
-					/*
-					switch (fileType) {
-						case DataType.Campaign:
-							this.data.addElement(new Campaign(DataType.Campaign, file, metadata));
-							break;
-						case DataType.Adventure:
-							this.data.addElement(new Adventure(DataType.Adventure, file, metadata));
-							break;
-						case DataType.Session:
-							this.data.addElement(new Session(DataType.Session, file, metadata));
-							break;
-						case DataType.Scene:
-							this.data.addElement(new Scene(DataType.Scene, file, metadata));
-							break;
-						case DataType.NonPlayerCharacter:
-							this.data.addElement(new Character(DataType.NonPlayerCharacter, file, metadata));
-							break;
-						case DataType.Character:
-							this.data.addElement(new Character(DataType.Character, file, metadata));
-							break;
-						case DataType.Clue:
-							this.data.addElement(new Clue(DataType.Clue, file, metadata));
-							break;
-						case DataType.Event:
-							this.data.addElement(new Event(DataType.Event, file, metadata));
-							break;
-						case DataType.Faction:
-							this.data.addElement(new Faction(DataType.Faction, file, metadata));
-							break;
-						case DataType.Location:
-							this.data.addElement(new Location(DataType.Location, file, metadata));
-							break;
-					}
-					*/
 				}
 			}
 		}
 	}
 
 	public getOutlines(
-	): RpgOutlineDataInterface[] {
+	): RpgDataListInterface {
 		return this.data.where((data: RpgOutlineDataInterface) =>
 			data.isOutline === true
-		) as RpgOutlineDataInterface[];
+		);
 	}
 
 	public getCampaign(
@@ -181,15 +148,15 @@ export class RpgData extends Component {
 			campaign.campaignId === campaignId
 		);
 
-		return campaigns.length === 1 ? (<CampaignInterface>campaigns[0]) : null;
+		return campaigns.elements.length === 1 ? (<CampaignInterface>campaigns.elements[0]) : null;
 	}
 
 	public getCampaigns(
-	): CampaignInterface[] {
+	): RpgDataListInterface {
 		return this.data
 			.where((data: RpgDataInterface) =>
 				data.type === DataType.Campaign
-			) as CampaignInterface[];
+			);
 	}
 
 	public getAdventure(
@@ -201,7 +168,7 @@ export class RpgData extends Component {
 			adventure.campaign.campaignId === campaignId &&
 			adventure.adventureId === adventureId
 		);
-		return adventures.length === 1 ? (<AdventureInterface>adventures[0]) : null;
+		return adventures.elements.length === 1 ? (<AdventureInterface>adventures.elements[0]) : null;
 	}
 
 	public getSession(
@@ -216,7 +183,7 @@ export class RpgData extends Component {
 			session.sessionId === sessionId
 		);
 
-		return sessions.length === 1 ? (<SessionInterface>sessions[0]) : null;
+		return sessions.elements.length === 1 ? (<SessionInterface>sessions.elements[0]) : null;
 	}
 
 	public getScene(
@@ -236,7 +203,7 @@ export class RpgData extends Component {
 			scene.sceneId === sceneId
 		);
 
-		return scenes.length === 1 ? (<SceneInterface>scenes[0]) : null;
+		return scenes.elements.length === 1 ? (<SceneInterface>scenes.elements[0]) : null;
 	}
 
 	public getElementByObsidianId(
@@ -246,7 +213,7 @@ export class RpgData extends Component {
 			data.obsidianId === obsidianId
 		);
 
-		return list.length === 1 ? (<RpgOutlineDataInterface|RpgElementDataInterface>list[0]) : null;
+		return list.elements.length === 1 ? (<RpgOutlineDataInterface|RpgElementDataInterface>list.elements[0]) : null;
 	}
 
 	public getElementByName(
@@ -256,71 +223,75 @@ export class RpgData extends Component {
 			data.name === name
 		);
 
-		return list.length === 1 ? (<RpgOutlineDataInterface|RpgElementDataInterface>list[0]) : null;
+		return list.elements.length === 1 ? (<RpgOutlineDataInterface|RpgElementDataInterface>list.elements[0]) : null;
 	}
 
 	public getElements(
 		predicate: any,
-	): RpgOutlineDataInterface[]|RpgElementDataInterface[] {
-		return this.data.where(predicate) as RpgOutlineDataInterface[]|RpgElementDataInterface[];
+	): RpgDataListInterface {
+		return this.data.where(predicate);
 	}
 
 	public getSessionList(
 		adventureId: number|null = null,
-	): SessionInterface[] {
+	): RpgDataListInterface {
 		return this.data
 			.where((data: SessionInterface) =>
 				data.type === DataType.Session &&
 				(adventureId ? data.adventure.adventureId === adventureId : true)
-			) as SessionInterface[];
+			);
 	}
 
 	public getAdventureList(
 		campaignId: number|null = null,
-	): AdventureInterface[] {
+	): RpgDataListInterface {
 		return this.data
 			.where((data: AdventureInterface) =>
 				data.type === DataType.Adventure &&
 				(campaignId ? data.campaign.campaignId === campaignId : true)
-			) as AdventureInterface[];
+			);
 	}
 
 	public getCharacterList(
-	): CharacterInterface[] {
+	): RpgDataListInterface {
 		return this.data
 			.where((data: CharacterInterface) =>
 				(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter)
-			) as CharacterInterface[];
+			);
 	}
 
 	public getSceneList(
 		campaignId: number,
 		adventureId: number,
 		sessionId: number,
-	): SceneInterface[] {
+	): RpgDataListInterface {
 		return this.data
 			.where((data: SceneInterface) =>
 				data.type === DataType.Scene &&
 				data.campaign.campaignId === campaignId &&
 				data.adventure.adventureId === adventureId &&
 				data.session.sessionId === sessionId
-			) as SceneInterface[];
+			)
+			.sort(function (leftData: SceneInterface, rightData: SceneInterface) {
+				if (leftData.sceneId > rightData.sceneId) { return 1; }
+				if (leftData.sceneId < rightData.sceneId) {return -1; }
+				return 0;
+			});
 	}
 
 	public getType(
 		type: DataType,
-	): RpgOutlineDataInterface[]|RpgElementDataInterface[] {
+	): RpgDataListInterface {
 		return this.data
 			.where((data: RpgDataInterface) =>
 				data.type === type,
-			) as RpgOutlineDataInterface[]|RpgElementDataInterface[];
+			);
 	}
 
 	public getRelationshipList(
 		currentElement: RpgDataInterface,
 		type: DataType,
 		parentType: DataType|null = null,
-		//sorting: ArrayFunc<any, any>|null = null,
 	): RpgOutlineDataInterface[]|RpgElementDataInterface[]
 	{
 		const response: RpgDataInterface[] = [];
@@ -348,9 +319,12 @@ export class RpgData extends Component {
 		}
 
 		this.getElements(comparison)
-			//.sort(
-			//	(sorting !== null ? sorting : defaultSorting)
-			//)
+			.sort(function (leftData: RpgDataInterface, rightData: RpgDataInterface) {
+				if (leftData.name > rightData.name) { return 1; }
+				if (leftData.name < rightData.name) {return -1; }
+				return 0;
+			})
+			.elements
 			.forEach((data: RpgDataInterface) => {
 				data.additionalInformation = parentType === null ?
 					currentElement.frontmatter?.relationships[variablePlural][data.name] :
@@ -381,4 +355,6 @@ export class RpgData extends Component {
 		});
 		return response;
 	}
+
+
 }

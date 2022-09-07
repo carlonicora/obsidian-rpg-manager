@@ -1,14 +1,30 @@
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
+import {TimelineElementResponseInterface} from "../interfaces/response/TimelineElementResponseInterface";
 
 export class RpgDataList implements RpgDataListInterface{
 	public elements: RpgDataInterface[] = [];
 
 	public where(
 		predicate: any,
-	): RpgDataInterface[]|RpgOutlineDataInterface[] {
-		return this.elements.filter(predicate);
+	): RpgDataListInterface {
+		const response = new RpgDataList();
+
+		(this.elements.filter(predicate) || []).forEach((data: RpgDataInterface) => {
+			response.addElement(data);
+		});
+
+		return response;
+	}
+
+
+	public sort(
+		comparatorFunction: any,
+	): RpgDataListInterface {
+		this.elements.sort(comparatorFunction);
+
+		return this;
 	}
 
 	public getElement(

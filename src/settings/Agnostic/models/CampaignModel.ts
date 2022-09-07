@@ -15,21 +15,21 @@ export class CampaignModel extends AbstractModel {
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'AdventureTable' as SingleComponentKey<any>,
-				this.app.plugins.getPlugin('rpg-manager').io.getAdventureList(),
+				this.app.plugins.getPlugin('rpg-manager').io.getAdventureList().elements,
 			)
 		);
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
-				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(),
+				this.app.plugins.getPlugin('rpg-manager').io.getSessionList().elements,
 			)
 		);
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				this.app.plugins.getPlugin('rpg-manager').io.getCharacterList(),
+				this.app.plugins.getPlugin('rpg-manager').io.getCharacterList().elements,
 			)
 		);
 

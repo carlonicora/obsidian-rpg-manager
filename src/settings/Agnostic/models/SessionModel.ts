@@ -18,7 +18,7 @@ export class SessionModel extends AbstractModel {
 					this.currentElement.campaign.campaignId,
 					this.currentElement.adventure.adventureId,
 					this.currentElement.sessionId
-				),
+				).elements,
 			)
 		);
 

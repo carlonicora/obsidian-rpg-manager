@@ -9,7 +9,6 @@ import {SingleModalKey} from "./factories/ModalFactory";
 
 export default class RpgManager extends Plugin {
 	/*
-	@TODO: ***** Sort elements in list
 	@TODO: **** Review Modal windows
 	@TODO: **** Review Template creation (Adding RpgManager where it belongs)
 	@TODO: ** complete Note Navigation and Creation for sessions

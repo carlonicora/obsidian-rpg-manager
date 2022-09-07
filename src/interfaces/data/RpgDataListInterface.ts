@@ -10,4 +10,12 @@ export interface RpgDataListInterface {
 	addElement(
 		element: RpgDataInterface,
 	): void;
+
+	where(
+		predicate: any,
+	): RpgDataListInterface;
+
+	sort(
+		comparatorFunction: any,
+	): RpgDataListInterface;
 }

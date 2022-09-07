@@ -15,7 +15,7 @@ export class AdventureModel extends AbstractModel {
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
-				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.currentElement.adventureId)
+				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.currentElement.adventureId).elements,
 			)
 		);
 
