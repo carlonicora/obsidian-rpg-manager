@@ -1,7 +1,9 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
+import {App} from "obsidian";
 
 export abstract class AbstractTemplate  implements TemplateInterface {
 	constructor(
+		protected app: App,
 		protected createFrontMatterOnly: boolean,
 		protected name: string,
 		protected campaignId: number|null,

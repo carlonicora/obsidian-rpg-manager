@@ -1,7 +1,7 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {AdventureInterface} from "../../../Data";
+import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 
 export class AdventureNavigationModel extends AbstractModel {
 	protected currentElement: AdventureInterface;

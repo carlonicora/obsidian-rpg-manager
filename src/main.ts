@@ -1,13 +1,12 @@
 import {App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting,} from 'obsidian';
 import {Controller} from "./Controller";
-import {RpgFunctions} from "./RpgFunctions";
 import {FileFactory} from "./factories/FileFactory";
 import {DataType} from "./enums/DataType";
-import {RpgData} from "./Data";
+import {RpgData} from "./data/RpgData";
+import {RpgFunctions} from "./data/RpgFunctions";
 
 export default class RpgManager extends Plugin {
 	/*
-	@TODO: Sorting!!!
 	@TODO: Clue Status
 	@TODO: Change the ABT/StoryCircle information and moving them in the codeblock
 	@TODO: Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
@@ -16,6 +15,8 @@ export default class RpgManager extends Plugin {
 	@TODO: complete Note Navigation and Creation for sessions
 	 */
 	settings: RpgManagerSettings;
+	functions: RpgFunctions;
+	io: RpgData;
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
@@ -25,7 +26,8 @@ export default class RpgManager extends Plugin {
 		this.addSettingTab(new RpgManagerSettingTab(this.app, this));
 		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
 
-		RpgFunctions.initialise(this.app, this.settings);
+		this.io = new RpgData(this.app);
+		this.functions = new RpgFunctions(this.app);
 
 		this.registerEvents();
 		this.registerCodeBlock();
@@ -33,7 +35,7 @@ export default class RpgManager extends Plugin {
 	}
 
 	async onLayoutReady(){
-		RpgData.initialise(this.app);
+		this.io.loadCache();
 		//console.log(RpgData.index);
 	}
 

@@ -7,7 +7,7 @@ import {DataType} from "../../../enums/DataType";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {EventInterface, RpgData} from "../../../Data";
+import {EventInterface} from "../../../interfaces/data/EventInterface";
 
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;
@@ -29,7 +29,8 @@ export class EventModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
 				),
@@ -39,7 +40,8 @@ export class EventModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,
 				),
@@ -49,7 +51,8 @@ export class EventModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
 				),

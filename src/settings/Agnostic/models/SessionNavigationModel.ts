@@ -4,7 +4,7 @@ import {ResponseData} from "../../../data/responses/ResponseData";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {SessionInterface} from "../../../Data";
+import {SessionInterface} from "../../../interfaces/data/SessionInterface";
 
 export class SessionNavigationModel extends AbstractModel {
 	protected currentElement: SessionInterface;
@@ -16,9 +16,6 @@ export class SessionNavigationModel extends AbstractModel {
 
 		const status = new ResponseLine();
 		status.content =ContentFactory.create(
-			//((<SessionDataInterface>this.specificData).synopsis != null && (<SessionDataInterface>this.specificData).synopsis !== ''
-				//? (<SessionDataInterface>this.specificData).synopsis
-				//: '<span class="rpgm-missing">Synopsis missing</span>'),
 			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
 				? this.currentElement.synopsis
 				: '<span class="rpgm-missing">Synopsis missing</span>'),

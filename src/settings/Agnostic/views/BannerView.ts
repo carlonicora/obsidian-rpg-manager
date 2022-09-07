@@ -1,6 +1,5 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
 import {BannerResponseInterface} from "../../../interfaces/response/BannerResponseInterface";
-import {RpgFunctions} from "../../../RpgFunctions";
 
 export class BannerView extends AbstractView {
 	public render(

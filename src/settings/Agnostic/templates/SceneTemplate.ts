@@ -1,11 +1,10 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
-import {RpgFunctions} from "../../../RpgFunctions";
 
 export class SceneTemplate extends AbstractTemplate {
 
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + RpgFunctions.settings.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId + '/' + this.sceneId + ']\n';
+		return 'tags: [' + this.app.plugins.getPlugin('rpg-manager').settings.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId + '/' + this.sceneId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(

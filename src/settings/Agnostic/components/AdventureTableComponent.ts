@@ -3,7 +3,8 @@ import {ResponseElementInterface} from "../../../interfaces/response/ResponseEle
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {AdventureInterface, RpgDataInterface} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 
 export class AdventureTableComponent extends AbstractComponent {
 	public generateData(

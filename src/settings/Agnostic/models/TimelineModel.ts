@@ -6,18 +6,16 @@ import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {TimelineResponse} from "../../../data/responses/TimelineResponse";
 import {TimelineElementResponse} from "../../../data/responses/TimelineElementResponse";
 import {TimelineResponseInterface} from "../../../interfaces/response/TimelineResponseInterface";
-import {
-	CharacterInterface,
-	ClueInterface,
-	EventInterface,
-	RpgData,
-	SessionInterface,
-	TimelineInterface
-} from "../../../Data";
 import {DataType} from "../../../enums/DataType";
+import {EventInterface} from "../../../interfaces/data/EventInterface";
+import {ClueInterface} from "../../../interfaces/data/ClueInterface";
+import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
+import {SessionInterface} from "../../../interfaces/data/SessionInterface";
+import {RpgOutlineDataInterface} from "../../../interfaces/data/RpgOutlineDataInterface";
+import {RpgElementDataInterface} from "../../../interfaces/data/RpgElementDataInterface";
 
 export class TimelineModel extends AbstractModel {
-	protected currentElement: TimelineInterface;
+	protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface;
 
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
@@ -25,6 +23,7 @@ export class TimelineModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'Banner' as SingleComponentKey<any>,
+				this.app,
 				this.currentElement,
 			)
 		);
@@ -60,7 +59,7 @@ export class TimelineModel extends AbstractModel {
 	private addEvents(
 		timeline: TimelineResponseInterface,
 	): void {
-		const events = RpgData.index.getElements((data: EventInterface) =>
+		const events = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: EventInterface) =>
 			data.type === DataType.Event &&
 			data.date != null
 		);
@@ -84,7 +83,7 @@ export class TimelineModel extends AbstractModel {
 	private addClues(
 		timeline: TimelineResponseInterface,
 	): void {
-		const clues = RpgData.index.getElements((data: ClueInterface) =>
+		const clues = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: ClueInterface) =>
 			data.type === DataType.Clue &&
 			data.isFound === true
 		);
@@ -107,7 +106,7 @@ export class TimelineModel extends AbstractModel {
 	private addBirths(
 		timeline: TimelineResponseInterface,
 	): void {
-		const characters = RpgData.index.getElements((data: CharacterInterface) =>
+		const characters = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: CharacterInterface) =>
 			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
 			data.dob != null
 		);
@@ -130,7 +129,7 @@ export class TimelineModel extends AbstractModel {
 	private addDeaths(
 		timeline: TimelineResponseInterface,
 	): void {
-		const characters = RpgData.index.getElements((data: CharacterInterface) =>
+		const characters = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: CharacterInterface) =>
 			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
 			data.death != null
 		);
@@ -153,7 +152,7 @@ export class TimelineModel extends AbstractModel {
 	private addSessions(
 		timeline: TimelineResponseInterface,
 	): void {
-		const sessions = RpgData.index.getElements((data: SessionInterface) =>
+		const sessions = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: SessionInterface) =>
 			data.type === DataType.Session &&
 			data.date != null
 		);

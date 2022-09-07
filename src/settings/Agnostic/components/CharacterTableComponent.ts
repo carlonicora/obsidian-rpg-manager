@@ -3,7 +3,7 @@ import {ResponseElementInterface} from "../../../interfaces/response/ResponseEle
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {CharacterInterface} from "../../../Data";
+import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 
 export class CharacterTableComponent extends AbstractComponent {
 	generateData(

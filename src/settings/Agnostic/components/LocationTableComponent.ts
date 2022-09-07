@@ -3,7 +3,8 @@ import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
-import {LocationInterface, RpgDataInterface} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {LocationInterface} from "../../../interfaces/data/LocationInterface";
 
 export class LocationTableComponent extends AbstractComponent {
 	generateData(
@@ -22,7 +23,8 @@ export class LocationTableComponent extends AbstractComponent {
 			ContentFactory.create('Name', ContentType.String),
 			ContentFactory.create('Synopsis', ContentType.String),
 		]);
-		data.forEach((location: LocationInterface) => {
+		data.forEach((location: LocationInterface
+		) => {
 			response.addContent([
 				ContentFactory.create(location.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(location.link, ContentType.Link, true),

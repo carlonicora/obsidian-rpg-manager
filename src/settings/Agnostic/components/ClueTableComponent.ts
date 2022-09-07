@@ -3,7 +3,8 @@ import {ResponseElementInterface} from "../../../interfaces/response/ResponseEle
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {ClueInterface, RpgDataInterface} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {ClueInterface} from "../../../interfaces/data/ClueInterface";
 
 export class ClueTableComponent extends AbstractComponent {
 	generateData(

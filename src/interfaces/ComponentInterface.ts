@@ -1,5 +1,5 @@
 import {ResponseElementInterface} from "./response/ResponseElementInterface";
-import {RpgDataInterface} from "../Data";
+import {RpgDataInterface} from "./data/RpgDataInterface";
 
 export interface ComponentInterface {
 	generateData(

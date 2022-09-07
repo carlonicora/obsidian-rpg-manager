@@ -3,7 +3,7 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {AdventureInterface, RpgData} from "../../../Data";
+import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 
 export class AdventureModel extends AbstractModel {
 	protected currentElement: AdventureInterface;
@@ -15,7 +15,8 @@ export class AdventureModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
-				RpgData.index.getSessionList(this.currentElement.adventureId)
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.currentElement.adventureId)
 			)
 		);
 

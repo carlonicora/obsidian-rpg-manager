@@ -1,6 +1,5 @@
 import {App, CachedMetadata, Modal, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
-import {RpgFunctions} from "../RpgFunctions";
 import {FileFactory} from "../factories/FileFactory";
 import {ModalElementInterface} from "../interfaces/ModalElementInterface";
 import {ModalElement} from "../data/ModalElement";
@@ -174,7 +173,7 @@ export abstract class AbstractModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.campaignTag)) {
+					if (typeof tag === 'string' && tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.campaignTag)) {
 						const campaignId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (campaignId >= this.newCampaignId){
 							this.newCampaignId = campaignId+1;
@@ -257,7 +256,7 @@ export abstract class AbstractModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.adventureTag + '/' + this.campaign.value)) {
+					if (typeof tag === 'string' && tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.adventureTag + '/' + this.campaign.value)) {
 						const adventureId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (adventureId >= this.newAdventureId) {
 							this.newAdventureId = adventureId + 1;
@@ -334,7 +333,7 @@ export abstract class AbstractModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
+					if (typeof tag === 'string' && tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag + '/' + this.campaign.value + '/' + this.adventure.value)) {
 						const sessionId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sessionId >= this.newSessionId) {
 							this.newSessionId = sessionId + 1;
@@ -410,7 +409,7 @@ export abstract class AbstractModal extends Modal {
 				const tags = (typeof metadata.frontmatter.tags === 'string' ? [metadata.frontmatter.tags] : metadata.frontmatter.tags);
 
 				tags.forEach((tag: string|object) => {
-					if (typeof tag === 'string' && tag.startsWith(RpgFunctions.settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
+					if (typeof tag === 'string' && tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sceneTag + '/' + this.campaign.value + '/' + this.adventure.value + '/' + this.session.value)) {
 						const sceneId = +tag.substring(tag.lastIndexOf('/') + 1);
 						if (sceneId >= this.newSceneId) {
 							this.newSceneId = sceneId + 1;

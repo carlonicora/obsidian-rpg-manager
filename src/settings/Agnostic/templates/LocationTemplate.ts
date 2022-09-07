@@ -1,10 +1,9 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
-import {RpgFunctions} from "../../../RpgFunctions";
 
 export class LocationTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + RpgFunctions.settings.locationTag + '/' + this.campaignId + ']\n';
+		return 'tags: [' + this.app.plugins.getPlugin('rpg-manager').settings.locationTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(

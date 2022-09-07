@@ -4,7 +4,7 @@ import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {PronounFactory} from "../../../factories/PronounFactory";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {CharacterInterface} from "../../../Data";
+import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 
 export class CharacterSynopsisComponent extends AbstractComponent{
 	generateData(

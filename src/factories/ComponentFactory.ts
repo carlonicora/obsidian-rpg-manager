@@ -10,7 +10,8 @@ import {FactionTableComponent} from "../settings/Agnostic/components/FactionTabl
 import {SceneTableComponent} from "../settings/Agnostic/components/SceneTableComponent";
 import {BannerComponent} from "../settings/Agnostic/components/BannerComponent";
 import {CharacterSynopsisComponent} from "../settings/Agnostic/components/CharacterSynopsisComponent";
-import {RpgDataInterface} from "../Data";
+import {App} from "obsidian";
+import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -31,10 +32,11 @@ export type SingleComponentKey<K> = [K] extends (K extends ComponentKeys ? [K] :
 export class ComponentFactory {
 	static create<K extends ComponentKeys>(
 		k: SingleComponentKey<K>,
+		app: App,
 		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null = null,
 	): ResponseElementInterface|null {
-		const component: ComponentInterface = new ComponentsMap[k]();
+		const component: ComponentInterface = new ComponentsMap[k](app);
 		return component.generateData(data, title);
 	}
 }

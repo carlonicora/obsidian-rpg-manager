@@ -3,7 +3,8 @@ import {ResponseElementInterface} from "../../../interfaces/response/ResponseEle
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {RpgDataInterface, SessionInterface} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {SessionInterface} from "../../../interfaces/data/SessionInterface";
 
 export class SessionTableComponent extends AbstractComponent {
 	public generateData(

@@ -4,7 +4,7 @@ import {ResponseData} from "../../../data/responses/ResponseData";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
-import {CharacterInterface, RpgData} from "../../../Data";
+import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 
 export class NpcModel extends AbstractModel {
 	protected currentElement: CharacterInterface;
@@ -17,6 +17,7 @@ export class NpcModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
+				this.app,
 				this.currentElement
 			)
 		);
@@ -24,7 +25,8 @@ export class NpcModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Faction,
 				),
@@ -34,7 +36,8 @@ export class NpcModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
 				),
@@ -44,7 +47,8 @@ export class NpcModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Event,
 					DataType.Character,
@@ -55,7 +59,8 @@ export class NpcModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,
 					DataType.Character,
@@ -66,7 +71,8 @@ export class NpcModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
 				),

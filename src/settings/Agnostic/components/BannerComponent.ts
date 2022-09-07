@@ -1,7 +1,9 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseBanner} from "../../../data/responses/ResponseBanner";
-import {Campaign, RpgDataInterface, Timeline} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {Campaign} from "../data/Campaign";
+import {Timeline} from "../data/Timeline";
 
 export class BannerComponent extends AbstractComponent{
 	generateData(

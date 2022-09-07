@@ -3,7 +3,7 @@ import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseData} from "../../../data/responses/ResponseData";
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
-import {CampaignInterface} from "../../../Data";
+import {CampaignInterface} from "../../../interfaces/data/CampaignInterface";
 
 export class CampaignNavigationModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
@@ -13,10 +13,8 @@ export class CampaignNavigationModel extends AbstractModel {
 
 		response.addElement(
 			ComponentFactory.create(
-				//CampaignSetting[this.campaign.settings] + 'Banner' as SingleComponentKey<any>,
 				CampaignSetting[this.currentElement.settings] + 'Banner' as SingleComponentKey<any>,
-				//this.io,
-				//this.campaign,
+				this.app,
 				this.currentElement
 			)
 		);

@@ -1,23 +1,16 @@
-import {App, TAbstractFile, TagCache, TFile} from "obsidian";
-import {DataType} from "./enums/DataType";
-import {RpgManagerSettings} from "./main";
+import {App, TAbstractFile, TFile} from "obsidian";
+import {DataType} from "../enums/DataType";
 
 export class RpgFunctions {
-	private static app: App;
-	public static settings: RpgManagerSettings;
-	private static root: string;
-
-	public static initialise(
-		app: App,
-		settings: RpgManagerSettings,
-	): void {
-		this.app = app;
-		this.settings = settings;
-
+	private root: string;
+	
+	constructor(
+		private app: App,
+	) {
 		this.initialiseRoots();
 	}
 
-	private static initialiseRoots() {
+	private initialiseRoots() {
 		if (this.app.vault.getFiles().length !== 0) {
 			const filePath = this.app.vault.getFiles()[0].path;
 
@@ -54,7 +47,7 @@ export class RpgFunctions {
 		}
 	}
 
-	private static fileExists(path: string): boolean {
+	private fileExists(path: string): boolean {
 		const abstractFile = this.app.vault.getAbstractFileByPath(path);
 		let response = false;
 
@@ -66,7 +59,7 @@ export class RpgFunctions {
 	}
 
 
-	public static getImg(
+	public getImg(
 		name: string,
 	): string|null {
 		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
@@ -85,7 +78,7 @@ export class RpgFunctions {
 		return null;
 	}
 
-	public static getImgElement(
+	public getImgElement(
 		imgSrc: string,
 		width: number|undefined =75,
 		height: number|undefined =75,
@@ -104,35 +97,35 @@ export class RpgFunctions {
 		return response;
 	}
 
-	public static getDataType(
+	public getDataType(
 		tags: Array<string>|null,
 	): DataType|null {
 		let response: DataType|null = null;
 
 		(tags || []).forEach((tag: string) => {
-			if (tag.startsWith(this.settings.campaignTag)){
+			if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.campaignTag)){
 				response = DataType.Campaign;
-			} else if (tag.startsWith(this.settings.adventureTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.adventureTag)){
 				response = DataType.Adventure;
-			} else if (tag.startsWith(this.settings.sessionTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag)){
 				response = DataType.Session;
-			} else if (tag.startsWith(this.settings.sceneTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sceneTag)){
 				response = DataType.Scene;
-			} else if (tag.startsWith(this.settings.npcTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.npcTag)){
 				response = DataType.NonPlayerCharacter;
-			} else if (tag.startsWith(this.settings.pcTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.pcTag)){
 				response = DataType.Character;
-			} else if (tag.startsWith(this.settings.clueTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.clueTag)){
 				response = DataType.Clue;
-			} else if (tag.startsWith(this.settings.locationTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.locationTag)){
 				response = DataType.Location;
-			} else if (tag.startsWith(this.settings.factionTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.factionTag)){
 				response = DataType.Faction;
-			} else if (tag.startsWith(this.settings.eventTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.eventTag)){
 				response = DataType.Event;
-			} else if (tag.startsWith(this.settings.timelineTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.timelineTag)){
 				response = DataType.Timeline;
-			} else if (tag.startsWith(this.settings.noteTag)){
+			} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.noteTag)){
 				response = DataType.Note;
 			}
 		});
@@ -140,7 +133,7 @@ export class RpgFunctions {
 		return response;
 	}
 
-	public static getTagId(
+	public getTagId(
 		tags: Array<string>|null,
 		type: DataType,
 	): number {
@@ -152,14 +145,14 @@ export class RpgFunctions {
 
 		tags.forEach((tag: string) => {
 			if (response === ''){
-				if (tag.startsWith(this.settings.campaignTag)){
+				if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.campaignTag)){
 					if (type === DataType.Campaign){
-						response = tag.substring(this.settings.campaignTag.length + 1);
+						response = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.campaignTag.length + 1);
 					} else {
 						throw new Error();
 					}
-				} else if (tag.startsWith(this.settings.adventureTag)){
-					const parts = tag.substring(this.settings.adventureTag.length + 1).split('/');
+				} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.adventureTag)){
+					const parts = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.adventureTag.length + 1).split('/');
 					if (parts.length === 2){
 						if (type === DataType.Campaign){
 							response = parts[0];
@@ -169,8 +162,8 @@ export class RpgFunctions {
 					} else if (parts.length === 1 && type === DataType.Adventure){
 						response = parts[0];
 					}
-				} else if (tag.startsWith(this.settings.sessionTag)){
-					const parts = tag.substring(this.settings.sessionTag.length + 1).split('/');
+				} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag)){
+					const parts = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag.length + 1).split('/');
 					if (parts.length === 3){
 						if (type === DataType.Campaign){
 							response = parts[0];
@@ -186,8 +179,8 @@ export class RpgFunctions {
 							response = parts[1];
 						}
 					}
-				} else if (tag.startsWith(this.settings.sceneTag)){
-					const parts = tag.substring(this.settings.sceneTag.length + 1).split('/');
+				} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sceneTag)){
+					const parts = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.sceneTag.length + 1).split('/');
 					if (parts.length === 4){
 						if (type === DataType.Campaign){
 							response = parts[0];
@@ -209,20 +202,22 @@ export class RpgFunctions {
 					}
 				} else {
 					let tagLength = 0;
-					if (tag.startsWith(this.settings.npcTag)) {
-						tagLength = this.settings.npcTag.length;
-					} else if (tag.startsWith(this.settings.pcTag)) {
-						tagLength = this.settings.pcTag.length;
-					} else if (tag.startsWith(this.settings.eventTag)) {
-						tagLength = this.settings.eventTag.length;
-					} else if (tag.startsWith(this.settings.factionTag)) {
-						tagLength = this.settings.factionTag.length;
-					} else if (tag.startsWith(this.settings.locationTag)) {
-						tagLength = this.settings.locationTag.length;
-					} else if (tag.startsWith(this.settings.clueTag)) {
-						tagLength = this.settings.clueTag.length;
-					}else if (tag.startsWith(this.settings.timelineTag)) {
-						tagLength = this.settings.timelineTag.length;
+					if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.npcTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.npcTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.pcTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.pcTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.eventTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.eventTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.factionTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.factionTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.locationTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.locationTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.clueTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.clueTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.timelineTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.timelineTag.length;
+					} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.noteTag)) {
+						tagLength = this.app.plugins.getPlugin('rpg-manager').settings.noteTag.length;
 					}
 
 					if (tagLength !== 0 && tag.length > tagLength && type === DataType.Campaign){
@@ -239,7 +234,7 @@ export class RpgFunctions {
 		return +response;
 	}
 
-	public static formatTime(
+	public formatTime(
 		date: Date|null
 	): string {
 		if (date == null) return '';

@@ -3,7 +3,8 @@ import {ResponseElementInterface} from "../../../interfaces/response/ResponseEle
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {EventInterface, RpgDataInterface} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {EventInterface} from "../../../interfaces/data/EventInterface";
 
 export class EventTableComponent extends AbstractComponent {
 	generateData(

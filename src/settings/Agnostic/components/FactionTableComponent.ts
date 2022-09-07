@@ -3,7 +3,7 @@ import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
-import {FactionInterface, RpgDataInterface} from "../../../Data";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
 
 export class FactionTableComponent extends AbstractComponent {
 	generateData(
@@ -22,7 +22,7 @@ export class FactionTableComponent extends AbstractComponent {
 			ContentFactory.create('Faction', ContentType.String),
 			ContentFactory.create('Synopsis', ContentType.String),
 		]);
-		data.forEach((faction: FactionInterface) => {
+		data.forEach((faction: RpgDataInterface) => {
 			response.addContent([
 				ContentFactory.create(faction.imageSrcElement, ContentType.Image, true),
 				ContentFactory.create(faction.link, ContentType.Link, true),

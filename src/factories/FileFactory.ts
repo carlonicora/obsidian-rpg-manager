@@ -3,8 +3,7 @@ import {DataType} from "../enums/DataType";
 import {ModalFactory, SingleModalKey} from "./ModalFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {SingleTemplateKey, TemplateFactory} from "./TemplateFactory";
-import {RpgFunctions} from "../RpgFunctions";
-import {Campaign, CampaignInterface, RpgData} from "../Data";
+import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 
 export class FileFactory {
 	static async initialise(
@@ -36,10 +35,11 @@ export class FileFactory {
 		sessionId: number|null = null,
 		sceneId: number|null = null,
 	): Promise<void> {
-		const settings = this.getSettings(campaignId);
+		const settings = this.getSettings(app, campaignId);
 
 		const template = TemplateFactory.create(
 			CampaignSetting[settings] + DataType[type] as SingleTemplateKey<any>,
+			app,
 			createFrontMatterOnly,
 			name,
 			campaignId,
@@ -72,10 +72,11 @@ export class FileFactory {
 		sessionId: number|null = null,
 		sceneId: number|null = null,
 	): Promise<void> {
-		const settings = this.getSettings(campaignId);
+		const settings = this.getSettings(app, campaignId);
 
 		const template = TemplateFactory.create(
 			CampaignSetting[settings] + DataType[type] as SingleTemplateKey<any>,
+			app,
 			false,
 			name,
 			campaignId,
@@ -91,12 +92,13 @@ export class FileFactory {
 	}
 
 	private static getSettings(
+		app: App,
 		campaignId: number|null,
 	): CampaignSetting {
 		let response: CampaignSetting = CampaignSetting.Agnostic;
 
 		if (campaignId != null){
-			const campaign: CampaignInterface|null = RpgData.index.getCampaign(campaignId);
+			const campaign: CampaignInterface|null = app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
 
 			if (campaign != null){
 				response = campaign.settings;

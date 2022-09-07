@@ -7,7 +7,7 @@ import {DataType} from "../../../enums/DataType";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {LocationInterface, RpgData} from "../../../Data";
+import {LocationInterface} from "../../../interfaces/data/LocationInterface";
 
 export class LocationModel extends AbstractModel {
 	protected currentElement: LocationInterface;
@@ -29,7 +29,8 @@ export class LocationModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
 					DataType.Faction,
@@ -40,7 +41,8 @@ export class LocationModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'EventTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Event,
 					DataType.Location,
@@ -51,7 +53,8 @@ export class LocationModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,
 					DataType.Location,
@@ -62,7 +65,8 @@ export class LocationModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
 				),
@@ -73,7 +77,8 @@ export class LocationModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
 					DataType.Location,

@@ -1,10 +1,9 @@
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
-import {RpgFunctions} from "../../../RpgFunctions";
 
 export class FactionTemplate extends AbstractTemplate {
 	protected generateFrontmatterTags(
 	): string {
-		return 'tags: [' + RpgFunctions.settings.factionTag + '/' + this.campaignId + ']\n';
+		return 'tags: [' + this.app.plugins.getPlugin('rpg-manager').settings.factionTag + '/' + this.campaignId + ']\n';
 	}
 
 	protected generateFrontmatterSynopsis(

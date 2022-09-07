@@ -7,10 +7,11 @@ import {DataType} from "../../../enums/DataType";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
-import {FactionInterface, RpgData} from "../../../Data";
+import {RpgOutlineDataInterface} from "../../../interfaces/data/RpgOutlineDataInterface";
+import {RpgElementDataInterface} from "../../../interfaces/data/RpgElementDataInterface";
 
 export class FactionModel extends AbstractModel {
-	protected currentElement: FactionInterface;
+	protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface;
 
 	generateData(): ResponseDataInterface {
 		const response = new ResponseData();
@@ -29,7 +30,8 @@ export class FactionModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
 					DataType.Faction,
@@ -40,7 +42,8 @@ export class FactionModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'LocationTable' as SingleComponentKey<any>,
-				RpgData.index.getRelationshipList(
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Location,
 				),

@@ -3,7 +3,7 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {CampaignInterface, RpgData} from "../../../Data";
+import {CampaignInterface} from "../../../interfaces/data/CampaignInterface";
 
 export class CampaignModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
@@ -15,22 +15,24 @@ export class CampaignModel extends AbstractModel {
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'AdventureTable' as SingleComponentKey<any>,
-				RpgData.index.getAdventureList(),
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getAdventureList(),
 			)
 		);
 
 		response.addElement(
 			ComponentFactory.create(
-				//CampaignSetting[this.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
 				CampaignSetting[this.currentElement.campaign.settings] + 'SessionTable' as SingleComponentKey<any>,
-				RpgData.index.getSessionList(),
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(),
 			)
 		);
 
 		response.addElement(
 			ComponentFactory.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
-				RpgData.index.getCharacterList(),
+				this.app,
+				this.app.plugins.getPlugin('rpg-manager').io.getCharacterList(),
 			)
 		);
 

@@ -4,7 +4,10 @@ import {App} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {BreadcrumbResponseInterface} from "../interfaces/response/BreadcrumbResponseInterface";
 import {ResponseBreadcrumb} from "../data/responses/ResponseBreadcrumb";
-import {RpgDataInterface, SceneInterface, SessionInterface} from "../Data";
+import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
+import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {SceneInterface} from "../interfaces/data/SceneInterface";
 
 export abstract class AbstractModel implements ModelInterface {
 
@@ -12,7 +15,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 	constructor(
 		protected app: App,
-		protected currentElement: RpgDataInterface,
+		protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
 		protected source: string,
 		protected sourcePath: string,
 		protected contentEl: HTMLElement,
