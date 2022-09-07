@@ -1,0 +1,75 @@
+import {AbstractComponent} from "../../../abstracts/AbstractComponent";
+import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
+import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
+import {ResponseHeader} from "../../../data/responses/ResponseHeader";
+import {ResponseType} from "../../../enums/ResponseType";
+import {ContentType} from "../../../enums/ContentType";
+import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
+import {Character} from "../data/Character";
+import {Clue} from "../data/Clue";
+import {Location} from "../data/Location";
+import {Event} from "../data/Event";
+
+export class HeaderComponent extends AbstractComponent{
+	generateData(
+		data: RpgDataInterface,
+		title: string | null,
+	): ResponseElementInterface | null {
+		const response = new ResponseHeader(this.app);
+
+		response.link = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(data.link, ContentType.Link);
+		response.name = data.name;
+
+		let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
+
+		if (data instanceof Character) {
+			response.age = data.age;
+			response.pronoun = data.pronoun;
+			response.death = data.death;
+			if (data.goals != null && data.goals != '') {
+				response.goals = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(data.goals, ContentType.Markdown);
+			}
+
+			if (data.synopsis != null && data.synopsis !== '') {
+				synopsis = '';
+				synopsis += data.link.toString();
+				const pronoun = data.pronoun;
+				if (pronoun != null) {
+					synopsis += this.app.plugins.getPlugin('rpg-manager').factories.pronouns.readPronoun(pronoun);
+				}
+				synopsis += (data.isDead) ? ' was ' : ' is ';
+				synopsis += data.synopsis;
+			}
+
+			response.synopsis = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(synopsis, ContentType.Markdown);
+		} else {
+			if (data instanceof Clue){
+				const clueFound = data.isFound
+					? 'Clue found on ' + data.found?.toDateString()
+					: '<span class="rpgm-missing">Clue not found yet</span>';
+
+				response.clueFound = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(clueFound, ContentType.Markdown);
+			} else if (data instanceof Location){
+				if (data.address != null && data.address != ''){
+					response.address = data.address;
+				}
+			} else if (data instanceof Event){
+				if (data.date != null) {
+					response.date = data.date;
+				}
+			}
+			if (data.synopsis != null && data.synopsis != ''){
+				synopsis = data.synopsis;
+			}
+			response.synopsis = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(synopsis, ContentType.Markdown);
+		}
+
+		response.imgSrc = data.image;
+		response.imgWidth = 300;
+		response.imgHeight = 300;
+
+
+
+		return response;
+	}
+}

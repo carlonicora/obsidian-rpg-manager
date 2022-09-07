@@ -14,7 +14,7 @@ import {App} from "obsidian";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageComponent} from "../settings/Agnostic/components/ImageComponent";
-import {CharacterRecordSheetComponent} from "../settings/Agnostic/components/CharacterRecordSheetComponent";
+import {HeaderComponent} from "../settings/Agnostic/components/HeaderComponent";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -28,7 +28,7 @@ const ComponentsMap = {
 	AgnosticBanner: BannerComponent,
 	AgnosticCharacterSynopsis: CharacterSynopsisComponent,
 	AgnosticImage: ImageComponent,
-	AgnosticCharacterRecordSheet: CharacterRecordSheetComponent,
+	AgnosticHeader: HeaderComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;

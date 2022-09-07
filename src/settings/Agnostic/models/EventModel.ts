@@ -17,14 +17,12 @@ export class EventModel extends AbstractModel {
 
 		response.addElement(this.generateBreadcrumb());
 
-		const status = new ResponseLine(this.app);
-		status.content =this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
-			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
-				? this.currentElement.synopsis
-				: '<span class="rpgm-missing">Synopsis missing</span>'),
-			ContentType.Markdown,
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Header' as SingleComponentKey<any>,
+				this.currentElement
+			)
 		);
-		response.addElement(status);
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(

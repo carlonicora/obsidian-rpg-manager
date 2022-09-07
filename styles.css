@@ -279,9 +279,8 @@
   width: 100%;
   font-size: 0.9em;
   text-align: center;
-  border-bottom: 1px solid #d9d9d9;
   padding-bottom: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 .rpgm-breadcrumb h2 {
   margin-bottom: 0px;
@@ -319,65 +318,66 @@
   clear: both;
 }
 
-.rpgm-character-record-sheet {
+.rpgm-header-info {
   width: 100%;
   border: 1px solid #eeeeee;
+  margin-bottom: 40px;
 }
-.rpgm-character-record-sheet .title {
+.rpgm-header-info .title {
   width: 100%;
   font-weight: 400;
   font-size: 2em;
   border-bottom: 1px solid #eeeeee;
   text-align: center;
 }
-.rpgm-character-record-sheet .title p {
+.rpgm-header-info .title p {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.rpgm-character-record-sheet .container {
+.rpgm-header-info .container {
   width: 100%;
 }
-.rpgm-character-record-sheet .container .info, .rpgm-character-record-sheet .container .image {
+.rpgm-header-info .container .info, .rpgm-header-info .container .image {
   padding: 10px;
 }
-.rpgm-character-record-sheet .container .info {
+.rpgm-header-info .container .info {
   width: calc(100% - 320px);
   float: left;
 }
-.rpgm-character-record-sheet .container .info .longTitle {
+.rpgm-header-info .container .info .longTitle {
   width: 100%;
   font-variant: small-caps;
   font-size: 0.8em;
   color: #808080;
 }
-.rpgm-character-record-sheet .container .info .longText {
+.rpgm-header-info .container .info .longText {
   width: 100%;
 }
-.rpgm-character-record-sheet .container .info .longText p {
+.rpgm-header-info .container .info .longText p {
   margin-bottom: 0px;
 }
-.rpgm-character-record-sheet .container .info .short .shortTitle {
+.rpgm-header-info .container .info .short .shortTitle {
   width: 100px;
   font-variant: small-caps;
   font-size: 0.8em;
   color: #808080;
   float: left;
 }
-.rpgm-character-record-sheet .container .info .short .shortText {
+.rpgm-header-info .container .info .short .shortText {
   width: calc(100% - 100px);
   float: left;
 }
-.rpgm-character-record-sheet .container .info .short .shortText p {
+.rpgm-header-info .container .info .short .shortText p {
   margin: 0px;
 }
-.rpgm-character-record-sheet .container .info .short .reset {
+.rpgm-header-info .container .info .short .reset {
   clear: both;
 }
-.rpgm-character-record-sheet .container .image {
+.rpgm-header-info .container .image {
   width: 300px;
   float: right;
 }
-.rpgm-character-record-sheet .container .reset {
+.rpgm-header-info .container .reset {
   clear: both;
 }
 

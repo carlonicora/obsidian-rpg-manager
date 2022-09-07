@@ -1,11 +1,11 @@
 import {AbstractResponse} from "../../abstracts/AbstractResponse";
-import {CharacterRecordSheetResponseInterface} from "../../interfaces/response/CharacterRecordSheetResponseInterface";
+import {HeaderResponseInterface} from "../../interfaces/response/HeaderResponseInterface";
 import {Pronoun} from "../../enums/Pronoun";
 import {App} from "obsidian";
 import {ResponseType} from "../../enums/ResponseType";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 
-export class ResponseCharacterRecordSheet extends AbstractResponse implements CharacterRecordSheetResponseInterface {
+export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public link: ContentInterface;
 	public name: string;
 	public imgSrc: string|null;
@@ -16,11 +16,14 @@ export class ResponseCharacterRecordSheet extends AbstractResponse implements Ch
 	public age: number|null;
 	public pronoun: Pronoun|null;
 	public synopsis: ContentInterface;
+	public clueFound: ContentInterface|null;
+	public address: string|null;
+	public date: Date|null;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
-		this.responseType = ResponseType.CharacterRecordSheet;
+		this.responseType = ResponseType.Header;
 	}
 }

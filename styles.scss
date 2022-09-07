@@ -339,9 +339,10 @@ $blue: #2020ff;
 	width: 100%;
 	font-size: 0.9em;
 	text-align: center;
-	border-bottom: 1px solid $light-grey;
+	//border-bottom: 1px solid $light-grey;
 	padding-bottom: 20px;
-	margin-bottom: 40px;
+	//margin-bottom: 40px;
+	margin-bottom: 10px;
 
 	h2 {
 		margin-bottom: 0px;
@@ -389,9 +390,10 @@ $blue: #2020ff;
 	}
 }
 
-.rpgm-character-record-sheet {
+.rpgm-header-info {
 	width: 100%;
 	border: 1px solid $off-white;
+	margin-bottom: 40px;
 
 	.title {
 		width: 100%;

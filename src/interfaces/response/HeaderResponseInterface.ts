@@ -2,7 +2,7 @@ import {ResponseElementInterface} from "./ResponseElementInterface";
 import {Pronoun} from "../../enums/Pronoun";
 import {ContentInterface} from "../ContentInterface";
 
-export interface CharacterRecordSheetResponseInterface extends ResponseElementInterface {
+export interface HeaderResponseInterface extends ResponseElementInterface {
 	link: ContentInterface;
 	name: string;
 	imgSrc: string|null;
@@ -13,4 +13,7 @@ export interface CharacterRecordSheetResponseInterface extends ResponseElementIn
 	age: number|null;
 	pronoun: Pronoun|null;
 	synopsis: ContentInterface;
+	clueFound: ContentInterface|null;
+	address: string|null;
+	date: Date|null;
 }

@@ -17,6 +17,14 @@ export class LocationModel extends AbstractModel {
 
 		response.addElement(this.generateBreadcrumb());
 
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Header' as SingleComponentKey<any>,
+				this.currentElement
+			)
+		);
+
+		/*
 		if (this.currentElement.address != null && this.currentElement.address !== '') {
 			const status = new ResponseLine(this.app);
 			status.content = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
@@ -32,6 +40,7 @@ export class LocationModel extends AbstractModel {
 				this.currentElement,
 			)
 		);
+		*/
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(

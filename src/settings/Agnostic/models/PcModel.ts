@@ -16,15 +16,8 @@ export class PcModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
-				this.currentElement,
-			)
-		);
-
-		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.campaign.settings] + 'Image' as SingleComponentKey<any>,
-				this.currentElement,
+				CampaignSetting[this.currentElement.campaign.settings] + 'Header' as SingleComponentKey<any>,
+				this.currentElement
 			)
 		);
 

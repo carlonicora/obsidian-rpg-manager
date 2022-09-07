@@ -1,21 +1,28 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
-import {CharacterRecordSheetResponseInterface} from "../../../interfaces/response/CharacterRecordSheetResponseInterface";
+import {HeaderResponseInterface} from "../../../interfaces/response/HeaderResponseInterface";
 import {Pronoun} from "../../../enums/Pronoun";
 import {Component, MarkdownRenderer} from "obsidian";
 
-export class CharacterRecordSheetView extends AbstractView {
+export class HeaderView extends AbstractView {
 	render(
 		container: HTMLElement,
-		data: CharacterRecordSheetResponseInterface,
+		data: HeaderResponseInterface,
 	): void {
-		const crs = container.createDiv({cls: 'rpgm-character-record-sheet'});
+		const crs = container.createDiv({cls: 'rpgm-header-info'});
 		const crsTitle = crs.createDiv({cls: 'title'});
 		data.link.fillContent(crsTitle, this.sourcePath);
 
 		const crsContainer = crs.createDiv({cls: 'container'});
 
 		const crsInfo = crsContainer.createDiv({cls: 'info'});
-		crsInfo.createDiv({cls: 'longTitle', text: 'Synopsis:'});
+
+		if (data.clueFound != null) {
+			crsInfo.createDiv({cls: 'longTitle', text: 'Clue:'});
+			const crsClue = crsInfo.createDiv({cls: 'longtext'});
+			data.clueFound.fillContent(crsClue, this.sourcePath);
+		}
+
+		crsInfo.createDiv({cls: 'longTitle', text: 'Synopsis'});
 		const crsSynopsis = crsInfo.createDiv({cls: 'longtext'});
 		data.synopsis.fillContent(crsSynopsis, this.sourcePath);
 
@@ -27,10 +34,12 @@ export class CharacterRecordSheetView extends AbstractView {
 			crsPronoun.createDiv({cls: 'reset'});
 		}
 
-		const crsStatus = crsInfo.createDiv({cls: 'short'});
-		crsStatus.createDiv({cls: 'shortTitle', text: 'Status'});
-		crsStatus.createDiv({cls: 'shortText', text: data.death ? 'Dead' : 'Alive'});
-		crsStatus.createDiv({cls: 'reset'});
+		if (data.age != null || data.death != null) {
+			const crsStatus = crsInfo.createDiv({cls: 'short'});
+			crsStatus.createDiv({cls: 'shortTitle', text: 'Status'});
+			crsStatus.createDiv({cls: 'shortText', text: data.death ? 'Dead' : 'Alive'});
+			crsStatus.createDiv({cls: 'reset'});
+		}
 
 		if (data.death != null){
 			let death = data.death.toDateString();
@@ -45,6 +54,20 @@ export class CharacterRecordSheetView extends AbstractView {
 			const crsAge = crsInfo.createDiv({cls: 'short'});
 			crsAge.createDiv({cls: 'shortTitle', text: 'Age'});
 			crsAge.createDiv({cls: 'shortText', text: data.age.toString()});
+			crsAge.createDiv({cls: 'reset'});
+		}
+
+		if (data.date != null) {
+			const crsDate = crsInfo.createDiv({cls: 'short'});
+			crsDate.createDiv({cls: 'shortTitle', text: 'Date'});
+			crsDate.createDiv({cls: 'shortText', text: data.date.toDateString()});
+			crsDate.createDiv({cls: 'reset'});
+		}
+
+		if (data.address != null) {
+			const crsAge = crsInfo.createDiv({cls: 'short'});
+			crsAge.createDiv({cls: 'shortTitle', text: 'Address'});
+			crsAge.createDiv({cls: 'shortText', text: data.address});
 			crsAge.createDiv({cls: 'reset'});
 		}
 
