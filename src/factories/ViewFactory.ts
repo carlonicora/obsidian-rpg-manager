@@ -6,6 +6,7 @@ import {BreadcrumbView} from "../settings/Agnostic/views/BreadcrumbView";
 import {TimelineView} from "../settings/Agnostic/views/TimelineView";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageView} from "../settings/Agnostic/views/ImageView";
+import {CharacterRecordSheetView} from "../settings/Agnostic/views/CharacterRecordSheetView";
 
 const ViewsMap = {
 	AgnosticString: StringView,
@@ -15,6 +16,7 @@ const ViewsMap = {
 	AgnosticBreadcrumb: BreadcrumbView,
 	AgnosticTimeline: TimelineView,
 	AgnosticImage: ImageView,
+	AgnosticCharacterRecordSheet: CharacterRecordSheetView,
 };
 type ViewsMapType = typeof ViewsMap;
 type ViewKeys = keyof ViewsMapType;

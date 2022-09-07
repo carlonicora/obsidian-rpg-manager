@@ -9,13 +9,12 @@ import {SingleModalKey} from "./factories/ModalFactory";
 
 export default class RpgManager extends Plugin {
 	/*
-	@TODO: ***** Character initial part
-	@TODO: **** Sort elements in list
-	@TODO: *** Change the ABT/StoryCircle information and moving them in the codeblock
-	@TODO: *** Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
-	@TODO: ** Review Modal windows
-	@TODO: ** Review Template creation (Adding RpgManager where it belongs)
-	@TODO: * complete Note Navigation and Creation for sessions
+	@TODO: ***** Sort elements in list
+	@TODO: **** Review Modal windows
+	@TODO: **** Review Template creation (Adding RpgManager where it belongs)
+	@TODO: ** complete Note Navigation and Creation for sessions
+	@TODO: * Change the ABT/StoryCircle information and moving them in the codeblock
+	@TODO: * Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;

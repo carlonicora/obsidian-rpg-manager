@@ -16,6 +16,14 @@ export class NpcModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterRecordSheet' as SingleComponentKey<any>,
+				this.currentElement
+			)
+		);
+
+		/*
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterSynopsis' as SingleComponentKey<any>,
 				this.currentElement
 			)
@@ -27,6 +35,7 @@ export class NpcModel extends AbstractModel {
 				this.currentElement,
 			)
 		);
+		*/
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
@@ -82,26 +91,4 @@ export class NpcModel extends AbstractModel {
 
 		return response;
 	}
-
-	/*
-	public async render() {
-		this.info();
-	}
-
-	async info(){
-		const current = this.dv.current();
-		if (current !== undefined) {
-
-			const data = new CharacterData(
-				this.api,
-				current,
-				this.campaign,
-			)
-
-			const view = ViewFactory.createSingle(ViewType.CharacterInfo, this.dv);
-			view.render(data);
-		}
-	}
-
-	 */
 }

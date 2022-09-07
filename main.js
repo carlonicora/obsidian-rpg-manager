@@ -67,6 +67,7 @@ var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
   ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
   ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
   ResponseType2[ResponseType2["Image"] = 7] = "Image";
+  ResponseType2[ResponseType2["CharacterRecordSheet"] = 8] = "CharacterRecordSheet";
   return ResponseType2;
 })(ResponseType || {});
 
@@ -978,6 +979,45 @@ var ImageComponent = class extends AbstractComponent {
   }
 };
 
+// src/data/responses/ResponseCharacterRecordSheet.ts
+var ResponseCharacterRecordSheet = class extends AbstractResponse {
+  constructor(app2) {
+    super(app2);
+    this.responseType = 8 /* CharacterRecordSheet */;
+  }
+};
+
+// src/settings/Agnostic/components/CharacterRecordSheetComponent.ts
+var CharacterRecordSheetComponent = class extends AbstractComponent {
+  generateData(data, title) {
+    const response = new ResponseCharacterRecordSheet(this.app);
+    response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
+    response.name = data.name;
+    response.age = data.age;
+    response.pronoun = data.pronoun;
+    response.death = data.death;
+    if (data.goals != null && data.goals != "") {
+      response.goals = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.goals, 4 /* Markdown */);
+    }
+    response.imgSrc = data.image;
+    response.imgWidth = 300;
+    response.imgHeight = 300;
+    let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
+    if (data.synopsis != null && data.synopsis !== "") {
+      synopsis = "";
+      synopsis += data.link.toString();
+      const pronoun = data.pronoun;
+      if (pronoun != null) {
+        synopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
+      }
+      synopsis += data.isDead ? " was " : " is ";
+      synopsis += data.synopsis;
+    }
+    response.synopsis = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(synopsis, 4 /* Markdown */);
+    return response;
+  }
+};
+
 // src/factories/ComponentFactory.ts
 var ComponentsMap = {
   AgnosticSessionTable: SessionTableComponent,
@@ -990,7 +1030,8 @@ var ComponentsMap = {
   AgnosticSceneTable: SceneTableComponent,
   AgnosticBanner: BannerComponent,
   AgnosticCharacterSynopsis: CharacterSynopsisComponent,
-  AgnosticImage: ImageComponent
+  AgnosticImage: ImageComponent,
+  AgnosticCharacterRecordSheet: CharacterRecordSheetComponent
 };
 var ComponentFactory = class extends AbstractFactory {
   create(k, data, title = null) {
@@ -1927,8 +1968,7 @@ var NpcModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterSynopsis", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Image", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterRecordSheet", this.currentElement));
     response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
     response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
     response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 4 /* Character */)));
@@ -2144,6 +2184,14 @@ var ModelFactory = class extends AbstractFactory {
     return new ModelsMap[k](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
   }
 };
+
+// src/enums/Pronoun.ts
+var Pronoun = /* @__PURE__ */ ((Pronoun2) => {
+  Pronoun2[Pronoun2["they"] = 0] = "they";
+  Pronoun2[Pronoun2["she"] = 1] = "she";
+  Pronoun2[Pronoun2["he"] = 2] = "he";
+  return Pronoun2;
+})(Pronoun || {});
 
 // src/factories/PronounFactory.ts
 var PronounFactory = class extends AbstractFactory {
@@ -2680,6 +2728,60 @@ var ImageView = class extends AbstractView {
   }
 };
 
+// src/settings/Agnostic/views/CharacterRecordSheetView.ts
+var CharacterRecordSheetView = class extends AbstractView {
+  render(container, data) {
+    const crs = container.createDiv({ cls: "rpgm-character-record-sheet" });
+    const crsTitle = crs.createDiv({ cls: "title" });
+    data.link.fillContent(crsTitle, this.sourcePath);
+    const crsContainer = crs.createDiv({ cls: "container" });
+    const crsInfo = crsContainer.createDiv({ cls: "info" });
+    crsInfo.createDiv({ cls: "longTitle", text: "Synopsis:" });
+    const crsSynopsis = crsInfo.createDiv({ cls: "longtext" });
+    data.synopsis.fillContent(crsSynopsis, this.sourcePath);
+    if (data.pronoun != null) {
+      const crsPronoun = crsInfo.createDiv({ cls: "short" });
+      crsPronoun.createDiv({ cls: "shortTitle", text: "Pronoun" });
+      crsPronoun.createDiv({ cls: "shortText", text: Pronoun[data.pronoun] });
+      crsPronoun.createDiv({ cls: "reset" });
+    }
+    const crsStatus = crsInfo.createDiv({ cls: "short" });
+    crsStatus.createDiv({ cls: "shortTitle", text: "Status" });
+    crsStatus.createDiv({ cls: "shortText", text: data.death ? "Dead" : "Alive" });
+    crsStatus.createDiv({ cls: "reset" });
+    if (data.death != null) {
+      let death = data.death.toDateString();
+      if (data.age != null) {
+        death += " at age " + data.age;
+      }
+      const crsDeath = crsInfo.createDiv({ cls: "short" });
+      crsDeath.createDiv({ cls: "shortTitle", text: "Death" });
+      crsDeath.createDiv({ cls: "shortText", text: death });
+      crsDeath.createDiv({ cls: "reset" });
+    } else if (data.age != null) {
+      const crsAge = crsInfo.createDiv({ cls: "short" });
+      crsAge.createDiv({ cls: "shortTitle", text: "Age" });
+      crsAge.createDiv({ cls: "shortText", text: data.age.toString() });
+      crsAge.createDiv({ cls: "reset" });
+    }
+    if (data.goals != null) {
+      const crsGoals = crsInfo.createDiv({ cls: "short" });
+      crsGoals.createDiv({ cls: "shortTitle", text: "Goals" });
+      const crsGoal = crsGoals.createDiv({ cls: "shortText" });
+      data.goals.fillContent(crsGoal, this.sourcePath);
+      crsGoals.createDiv({ cls: "reset" });
+    }
+    const crsImage = crsContainer.createDiv({ cls: "image" });
+    if (data.imgSrc != null) {
+      const image = new Image(data.imgWidth, data.imgHeight);
+      image.src = data.imgSrc;
+      image.style.objectFit = "cover";
+      crsImage.append(image);
+    }
+    crsContainer.createDiv({ cls: "reset" });
+  }
+};
+
 // src/factories/ViewFactory.ts
 var ViewsMap = {
   AgnosticString: StringView,
@@ -2688,7 +2790,8 @@ var ViewsMap = {
   AgnosticBox: BoxView,
   AgnosticBreadcrumb: BreadcrumbView,
   AgnosticTimeline: TimelineView,
-  AgnosticImage: ImageView
+  AgnosticImage: ImageView,
+  AgnosticCharacterRecordSheet: CharacterRecordSheetView
 };
 var ViewFactory = class extends AbstractFactory {
   create(k, sourcePath) {

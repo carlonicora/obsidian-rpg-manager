@@ -319,4 +319,66 @@
   clear: both;
 }
 
+.rpgm-character-record-sheet {
+  width: 100%;
+  border: 1px solid #eeeeee;
+}
+.rpgm-character-record-sheet .title {
+  width: 100%;
+  font-weight: 400;
+  font-size: 2em;
+  border-bottom: 1px solid #eeeeee;
+  text-align: center;
+}
+.rpgm-character-record-sheet .title p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.rpgm-character-record-sheet .container {
+  width: 100%;
+}
+.rpgm-character-record-sheet .container .info, .rpgm-character-record-sheet .container .image {
+  padding: 10px;
+}
+.rpgm-character-record-sheet .container .info {
+  width: calc(100% - 320px);
+  float: left;
+}
+.rpgm-character-record-sheet .container .info .longTitle {
+  width: 100%;
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: #808080;
+}
+.rpgm-character-record-sheet .container .info .longText {
+  width: 100%;
+}
+.rpgm-character-record-sheet .container .info .longText p {
+  margin-bottom: 0px;
+}
+.rpgm-character-record-sheet .container .info .short .shortTitle {
+  width: 100px;
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: #808080;
+  float: left;
+}
+.rpgm-character-record-sheet .container .info .short .shortText {
+  width: calc(100% - 100px);
+  float: left;
+}
+.rpgm-character-record-sheet .container .info .short .shortText p {
+  margin: 0px;
+}
+.rpgm-character-record-sheet .container .info .short .reset {
+  clear: both;
+}
+.rpgm-character-record-sheet .container .image {
+  width: 300px;
+  float: right;
+}
+.rpgm-character-record-sheet .container .reset {
+  clear: both;
+}
+
 /*# sourceMappingURL=styles.css.map */

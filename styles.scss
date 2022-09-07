@@ -388,3 +388,81 @@ $blue: #2020ff;
 		clear: both;
 	}
 }
+
+.rpgm-character-record-sheet {
+	width: 100%;
+	border: 1px solid $off-white;
+
+	.title {
+		width: 100%;
+		font-weight: 400;
+		font-size: 2em;
+		border-bottom: 1px solid $off-white;
+		text-align: center;
+
+		p {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+	}
+
+	.container {
+		width: 100%;
+
+		.info, .image {
+			padding: 10px;
+		}
+
+		.info {
+			width: calc(100% - 320px);
+			float: left;
+
+			.longTitle {
+				width: 100%;
+				font-variant: small-caps;
+				font-size: 0.8em;
+				color: $dark-grey;
+			}
+
+			.longText {
+				width: 100%;
+
+				p{
+					margin-bottom: 0px;
+				}
+			}
+
+			.short {
+				.shortTitle {
+					width: 100px;
+					font-variant: small-caps;
+					font-size: 0.8em;
+					color: $dark-grey;
+					float:left;
+				}
+
+				.shortText {
+					width: calc(100% - 100px);
+					float:left;
+
+					p {
+						margin: 0px;
+					}
+				}
+
+				.reset {
+					clear: both;
+				}
+			}
+		}
+
+		.image {
+			width: 300px;
+			float: right;
+		}
+
+		.reset {
+			clear: both;
+		}
+	}
+}

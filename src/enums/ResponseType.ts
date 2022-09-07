@@ -7,4 +7,5 @@ export enum ResponseType {
 	Breadcrumb,
 	Timeline,
 	Image,
+	CharacterRecordSheet,
 }
