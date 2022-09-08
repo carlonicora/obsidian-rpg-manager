@@ -10,9 +10,6 @@ import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 
 export abstract class AbstractModel implements ModelInterface {
-
-	protected dataType: DataType;
-
 	constructor(
 		protected app: App,
 		protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
@@ -32,90 +29,101 @@ export abstract class AbstractModel implements ModelInterface {
 		if (this.currentElement.type !== DataType.Campaign){
 			response.mainTitle = DataType[this.currentElement.type];
 
-			let sessionBreadcrumb, sceneBreadcrumb: BreadcrumbResponseInterface;
-			const adventureBreadcrumb = new ResponseBreadcrumb(this.app);
-			const elementBreadcrumb = new ResponseBreadcrumb(this.app);
-			switch (this.dataType) {
+			let nextBreadcrumb,
+				previousBreadcrumb,
+				elementBreadcrumb,
+				adventureBreadcrumb,
+				sessionBreadcrumb,
+				sceneBreadcrumb: BreadcrumbResponseInterface;
+
+			let previousSession, nextSession: SessionInterface|null;
+
+			switch (this.currentElement.type) {
 				case DataType.Adventure:
-					adventureBreadcrumb.link = this.currentElement.link.toString();
-					adventureBreadcrumb.title = DataType[this.currentElement.type];
+					adventureBreadcrumb = new ResponseBreadcrumb(this.app);
+					adventureBreadcrumb.link = this.currentElement.link;
+					adventureBreadcrumb.title = DataType[DataType.Adventure];
 					response.nextBreadcrumb = adventureBreadcrumb;
 					break;
 				case DataType.Session:
-						adventureBreadcrumb.link = (<SessionInterface>this.currentElement).adventure.link;
-						adventureBreadcrumb.title = DataType[DataType.Adventure];
-						response.nextBreadcrumb = adventureBreadcrumb;
+					previousSession = (<SessionInterface>this.currentElement).previousSession;
+					nextSession = (<SessionInterface>this.currentElement).nextSession;
 
-						sessionBreadcrumb = new ResponseBreadcrumb(this.app);
-						sessionBreadcrumb.link = this.currentElement.link;
-						sessionBreadcrumb.title = DataType[DataType.Session];
-						adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
+					adventureBreadcrumb = new ResponseBreadcrumb(this.app);
+					adventureBreadcrumb.link = (<SessionInterface>this.currentElement).adventure.link;
+					adventureBreadcrumb.title = DataType[DataType.Adventure];
+					response.nextBreadcrumb = adventureBreadcrumb;
 
-						const previousSessionBreadcrumb = new ResponseBreadcrumb(this.app);
-						const nextSessionBreadcrumb = new ResponseBreadcrumb(this.app);
+					sessionBreadcrumb = new ResponseBreadcrumb(this.app);
+					sessionBreadcrumb.link = this.currentElement.link;
+					sessionBreadcrumb.title = DataType[DataType.Session];
+					adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
 
-						if ((<SessionInterface>this.currentElement).previousSession != null) {
-							previousSessionBreadcrumb.link = (<SessionInterface>this.currentElement).previousSession?.link!;
-							previousSessionBreadcrumb.linkText = '<< prev session';
-							previousSessionBreadcrumb.isInNewLine = true;
-							sessionBreadcrumb.nextBreadcrumb = previousSessionBreadcrumb;
-						}
+					previousBreadcrumb = new ResponseBreadcrumb(this.app);
+					nextBreadcrumb = new ResponseBreadcrumb(this.app);
 
-						const sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
-						sessionNotesBreadcrumb.link = '[[link]]';
-						sessionNotesBreadcrumb.linkText = 'notes';
-						if ((<SessionInterface>this.currentElement).previousSession != null) {
-							previousSessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
-						} else {
-							sessionNotesBreadcrumb.isInNewLine = true;
-							sessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
-						}
+					if (previousSession != null) {
+						previousBreadcrumb.link = previousSession.link;
+						previousBreadcrumb.linkText = '<< prev session';
+						previousBreadcrumb.isInNewLine = true;
+						sessionBreadcrumb.nextBreadcrumb = previousBreadcrumb;
+					}
 
-						if ((<SessionInterface>this.currentElement).nextSession != null){
-							nextSessionBreadcrumb.link = (<SessionInterface>this.currentElement).nextSession?.link!;
-							nextSessionBreadcrumb.linkText = 'next session >>';
+					const sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
+					sessionNotesBreadcrumb.link = '[[link]]';
+					sessionNotesBreadcrumb.linkText = 'notes';
+					if (previousSession != null) {
+						previousBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+					} else {
+						sessionNotesBreadcrumb.isInNewLine = true;
+						sessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+					}
 
-							sessionNotesBreadcrumb.nextBreadcrumb = nextSessionBreadcrumb;
-						}
-					//}
+					if (nextSession != null){
+						nextBreadcrumb.link = nextSession.link;
+						nextBreadcrumb.linkText = 'next session >>';
+						sessionNotesBreadcrumb.nextBreadcrumb = nextBreadcrumb;
+					}
 					break;
 				case DataType.Scene:
-						adventureBreadcrumb.link = (<SceneInterface>this.currentElement).adventure.link;
-						adventureBreadcrumb.title = DataType[DataType.Adventure];
-						response.nextBreadcrumb = adventureBreadcrumb;
+					adventureBreadcrumb = new ResponseBreadcrumb(this.app);
+					adventureBreadcrumb.link = (<SceneInterface>this.currentElement).adventure.link;
+					adventureBreadcrumb.title = DataType[DataType.Adventure];
+					response.nextBreadcrumb = adventureBreadcrumb;
 
-							sessionBreadcrumb = new ResponseBreadcrumb(this.app);
-							sessionBreadcrumb.link = (<SceneInterface>this.currentElement).session.link;
-							sessionBreadcrumb.title = DataType[DataType.Session];
-							adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
+					sessionBreadcrumb = new ResponseBreadcrumb(this.app);
+					sessionBreadcrumb.link = (<SceneInterface>this.currentElement).session.link;
+					sessionBreadcrumb.title = DataType[DataType.Session];
+					adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
 
-							sceneBreadcrumb = new ResponseBreadcrumb(this.app);
-							sceneBreadcrumb.link = this.currentElement.link;
-							sceneBreadcrumb.title = DataType[DataType.Scene];
-							sessionBreadcrumb.nextBreadcrumb = sceneBreadcrumb;
+					sceneBreadcrumb = new ResponseBreadcrumb(this.app);
+					sceneBreadcrumb.link = this.currentElement.link;
+					sceneBreadcrumb.title = DataType[DataType.Scene];
+					sessionBreadcrumb.nextBreadcrumb = sceneBreadcrumb;
 
-							const previousSceneBreadcrumb = new ResponseBreadcrumb(this.app);
-							const nextSceneBreadcrumb = new ResponseBreadcrumb(this.app);
-							if ((<SceneInterface>this.currentElement).previousScene != null) {
-								previousSceneBreadcrumb.link = (<SceneInterface>this.currentElement).previousScene?.link!;
-								previousSceneBreadcrumb.linkText = '<< prev scene';
-								previousSceneBreadcrumb.isInNewLine = true;
-								sceneBreadcrumb.nextBreadcrumb = previousSceneBreadcrumb;
-							}
+					previousBreadcrumb = new ResponseBreadcrumb(this.app);
+					nextBreadcrumb = new ResponseBreadcrumb(this.app);
+					if ((<SceneInterface>this.currentElement).previousScene != null) {
+						previousBreadcrumb.link = (<SceneInterface>this.currentElement).previousScene?.link!;
+						previousBreadcrumb.linkText = '<< prev scene';
+						previousBreadcrumb.isInNewLine = true;
+						sceneBreadcrumb.nextBreadcrumb = previousBreadcrumb;
+					}
 
-							if ((<SceneInterface>this.currentElement).nextScene != null){
-								nextSceneBreadcrumb.link = (<SceneInterface>this.currentElement).nextScene?.link!;
-								nextSceneBreadcrumb.linkText = 'next scene >>';
+					if ((<SceneInterface>this.currentElement).nextScene != null){
+						nextBreadcrumb.link = (<SceneInterface>this.currentElement).nextScene?.link!;
+						nextBreadcrumb.linkText = 'next scene >>';
 
-								if ((<SceneInterface>this.currentElement).previousScene != null) {
-									previousSceneBreadcrumb.nextBreadcrumb = nextSceneBreadcrumb;
-								} else {
-									nextSceneBreadcrumb.isInNewLine = true;
-									sceneBreadcrumb.nextBreadcrumb = nextSceneBreadcrumb;
-								}
-							}
+						if ((<SceneInterface>this.currentElement).previousScene != null) {
+							previousBreadcrumb.nextBreadcrumb = nextBreadcrumb;
+						} else {
+							nextBreadcrumb.isInNewLine = true;
+							sceneBreadcrumb.nextBreadcrumb = nextBreadcrumb;
+						}
+					}
 					break;
 				default:
+					elementBreadcrumb = new ResponseBreadcrumb(this.app);
 					elementBreadcrumb.link = this.currentElement.link;
 					elementBreadcrumb.title = DataType[this.currentElement.type];
 					response.nextBreadcrumb = elementBreadcrumb;

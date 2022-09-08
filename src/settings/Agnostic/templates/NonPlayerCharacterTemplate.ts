@@ -35,10 +35,14 @@ export class NonPlayerCharacterTemplate extends AbstractTemplate {
 			' death: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('npc');
+	}
+
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('npc');
-		response += this.getNotes();
+		let response = this.getNotes();
 		response += this.getStory();
 
 		return response;

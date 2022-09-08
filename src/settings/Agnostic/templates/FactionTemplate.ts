@@ -16,10 +16,14 @@ export class FactionTemplate extends AbstractTemplate {
 		return ' locations: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('faction');
+	}
+
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('faction');
-		response += this.getAdditionalInformation();
+		let response = this.getAdditionalInformation();
 
 		return response;
 	}

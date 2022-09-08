@@ -231,6 +231,29 @@ $blue: #2020ff;
 		font-size: 1.5em;
 	}
 
+	.group {
+
+	}
+
+	.title {
+		writing-mode: vertical-rl;
+		transform: rotate(180deg);
+		white-space: nowrap;
+		display: inline-block;
+		overflow: visible;
+		margin: 10px;
+		float:left;
+		border-left: solid 1px #eeeeee;
+	}
+
+	.container {
+		float: left;
+	}
+
+	.clear {
+		clear: both;
+	}
+
 	input[type=text], input[type=text]:focus {
 		border: none;
 		border-bottom: solid 1px #eeeeee;

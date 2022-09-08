@@ -19,6 +19,7 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 	public clueFound: ContentInterface|null;
 	public address: string|null;
 	public date: Date|null;
+	public synopsisTitle: string|null;
 
 	constructor(
 		app: App,

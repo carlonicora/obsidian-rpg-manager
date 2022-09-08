@@ -1,12 +1,9 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
-import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
+import {SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {ResponseLine} from "../../../data/responses/ResponseLine";
-import {ContentFactory} from "../../../factories/ContentFactory";
-import {ContentType} from "../../../enums/ContentType";
 import {ClueInterface} from "../../../interfaces/data/ClueInterface";
 
 export class ClueModel extends AbstractModel {

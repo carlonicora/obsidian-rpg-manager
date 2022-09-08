@@ -16,10 +16,14 @@ export class LocationTemplate extends AbstractTemplate {
 		return 'address: ""\n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('location');
+	}
+
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('location');
-		response += this.getAdditionalInformation();
+		let response = this.getAdditionalInformation();
 
 		return response;
 	}

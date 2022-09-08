@@ -13,8 +13,8 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 
 	public adventure: AdventureInterface;
 	public session: SessionInterface;
-	public previousScene: SceneInterface|null;
-	public nextScene: SceneInterface|null;
+	public previousScene: SceneInterface|null=null;
+	public nextScene: SceneInterface|null=null;
 
 	public reload(
 		file: TFile,

@@ -30,13 +30,20 @@ export class SceneTemplate extends AbstractTemplate {
 			' end: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('sceneNavigation');
+	}
+
+	protected generateLastCodeBlock(): string {
+		return this.getRpgManagerCodeblock('scene');
+	}
+
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('sceneNavigation');
-		response += this.getHeader('Trigger');
+		let response = this.getHeader('Trigger');
 		response += '\n\n';
 		response += this.getNotes();
-		response += this.getRpgManagerCodeblock('scene');
 
 		return response;
 	}

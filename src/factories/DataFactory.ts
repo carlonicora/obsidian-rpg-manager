@@ -1,4 +1,4 @@
-import {App, CachedMetadata, TFile} from "obsidian";
+import {CachedMetadata, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {Campaign} from "../settings/Agnostic/data/Campaign";
 import {Adventure} from "../settings/Agnostic/data/Adventure";
@@ -27,6 +27,32 @@ const DatasMap = {
 	AgnosticEvent: Event,
 	AgnosticTimeline: Timeline,
 	AgnosticNote: Note,
+	
+	RawCampaign: Campaign,
+	RawAdventure: Adventure,
+	RawSession: Session,
+	RawScene: Scene,
+	RawCharacter: Character,
+	RawNonPlayerCharacter: Character,
+	RawFaction: Faction,
+	RawClue: Clue,
+	RawLocation: Location,
+	RawEvent: Event,
+	RawTimeline: Timeline,
+	RawNote: Note,
+
+	VampireCampaign: Campaign,
+	VampireAdventure: Adventure,
+	VampireSession: Session,
+	VampireScene: Scene,
+	VampireCharacter: Character,
+	VampireNonPlayerCharacter: Character,
+	VampireFaction: Faction,
+	VampireClue: Clue,
+	VampireLocation: Location,
+	VampireEvent: Event,
+	VampireTimeline: Timeline,
+	VampireNote: Note,
 };
 type DatasMapType = typeof DatasMap;
 type DataKeys = keyof DatasMapType;

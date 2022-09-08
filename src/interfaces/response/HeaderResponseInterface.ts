@@ -16,4 +16,5 @@ export interface HeaderResponseInterface extends ResponseElementInterface {
 	clueFound: ContentInterface|null;
 	address: string|null;
 	date: Date|null;
+	synopsisTitle: string|null;
 }

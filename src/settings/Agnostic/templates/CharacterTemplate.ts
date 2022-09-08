@@ -14,6 +14,10 @@ export class CharacterTemplate extends AbstractTemplate {
 			' locations: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('pc');
+	}
 
 	protected generateFrontmatterDates(
 	): string|null {
@@ -28,8 +32,7 @@ export class CharacterTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('pc');
-		response += this.getPlayerCharacterDetails();
+		let response = this.getPlayerCharacterDetails();
 
 		return response;
 	}

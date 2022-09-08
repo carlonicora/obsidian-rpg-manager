@@ -1,14 +1,45 @@
-import {AbstractModal} from "../../../abstracts/AbstractModal";
+import {AbstractModalComponent} from "../../../abstracts/AbstractModalComponent";
+import {App} from "obsidian";
+import {ModalInterface} from "../../../interfaces/ModalInterface";
+import {SceneInterface} from "../../../interfaces/data/SceneInterface";
 
-export class SceneModal extends AbstractModal {
-	protected content(
+export class SceneModal extends AbstractModalComponent {
+	private scenes: SceneInterface[];
+
+	constructor(
+		app: App,
+		modal: ModalInterface,
+	) {
+		super(app, modal);
+
+		if (this.modal.adventureId != null && this.modal.sessionId != null) {
+			this.scenes = this.app.plugins.getPlugin('rpg-manager').io.getSceneList(this.modal.campaignId, this.modal.adventureId, this.modal.sessionId).elements as SceneInterface[];
+		} else {
+			this.scenes = [];
+		}
+	}
+
+	public async addElement(
 		contentEl: HTMLElement,
-	): void {
-		this.campaignBlock(contentEl);
-		this.initialiseAdventures();
-		this.adventureBlock(contentEl);
-		this.initialiseSessions();
-		this.sessionBlock(contentEl);
-		this.initialiseScenes();
+	): Promise<void> {
+		const sceneEl = contentEl.createDiv({cls: 'sceneContainer'});
+
+		this.modal.sceneId = 1;
+		this.scenes.forEach((data: SceneInterface) => {
+			if (data.sceneId >= (this.modal.sceneId ?? 0)) this.modal.sceneId = (data.sceneId + 1);
+		});
+
+		this.modal.saver = this;
+		this.modal.enableButton();
+	}
+
+	public async loadChild(
+		containerEl: HTMLElement,
+	): Promise<void> {
+	}
+
+	public validate(
+	): boolean {
+		return true;
 	}
 }

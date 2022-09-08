@@ -11,12 +11,20 @@ export class AdventureTemplate extends AbstractTemplate {
 		return 'synopsis: ""\n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('adventureNavigation');
+	}
+
+	protected generateLastCodeBlock(): string {
+		return this.getRpgManagerCodeblock('adventure');
+	}
+
 	protected generateTemplate(
 	): string {
 		let response = this.getHeader('Plot');
 		response += this.getAbtPlot();
 		response += this.getNotes();
-		response += this.getRpgManagerCodeblock('adventure');
 
 		return response;
 	}

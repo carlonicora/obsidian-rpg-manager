@@ -8,7 +8,6 @@ import {LocationTemplate} from "../settings/Agnostic/templates/LocationTemplate"
 import {EventTemplate} from "../settings/Agnostic/templates/EventTemplate";
 import {ClueTemplate} from "../settings/Agnostic/templates/ClueTemplate";
 import {FactionTemplate} from "../settings/Agnostic/templates/FactionTemplate";
-import {App} from "obsidian";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 
 const TemplatesMap = {
@@ -22,6 +21,28 @@ const TemplatesMap = {
 	AgnosticEvent: EventTemplate,
 	AgnosticClue: ClueTemplate,
 	AgnosticFaction: FactionTemplate,
+
+	RawCampaign: CampaignTemplate,
+	RawAdventure: AdventureTemplate,
+	RawSession: SessionTemplate,
+	RawScene: SceneTemplate,
+	RawCharacter: CharacterTemplate,
+	RawNonPlayerCharacter: NonPlayerCharacterTemplate,
+	RawLocation: LocationTemplate,
+	RawEvent: EventTemplate,
+	RawClue: ClueTemplate,
+	RawFaction: FactionTemplate,
+
+	VampireCampaign: CampaignTemplate,
+	VampireAdventure: AdventureTemplate,
+	VampireSession: SessionTemplate,
+	VampireScene: SceneTemplate,
+	VampireCharacter: CharacterTemplate,
+	VampireNonPlayerCharacter: NonPlayerCharacterTemplate,
+	VampireLocation: LocationTemplate,
+	VampireEvent: EventTemplate,
+	VampireClue: ClueTemplate,
+	VampireFaction: FactionTemplate,
 };
 type TemplatesMapType = typeof TemplatesMap;
 type TemplateKeys = keyof TemplatesMapType;

@@ -1,18 +1,16 @@
 import {App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting,} from 'obsidian';
 import {RpgController} from "./RpgController";
-import {FileFactory} from "./factories/FileFactory";
 import {DataType} from "./enums/DataType";
 import {RpgData} from "./data/RpgData";
 import {RpgFunctions} from "./RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
-import {SingleModalKey} from "./factories/ModalFactory";
+import {RpgModal} from "./RpgModal";
 
 export default class RpgManager extends Plugin {
 	/*
-	@TODO: **** Review Modal windows
-	@TODO: **** Review Template creation (Adding RpgManager where it belongs)
-	@TODO: ** complete Note Navigation and Creation for sessions
-	@TODO: * Change the ABT/StoryCircle information and moving them in the codeblock
+	@TODO: ***** add additional information to modal windows and to template
+	@TODO: *** complete Note Navigation and Creation for sessions
+	@TODO: ** Change the ABT/StoryCircle information and moving them in the codeblock
 	@TODO: * Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
 	 */
 	settings: RpgManagerSettings;
@@ -98,26 +96,27 @@ export default class RpgManager extends Plugin {
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
 				callback: () => {
-					let name: string|null = null;
-					const activeFile = app.workspace.getActiveFile();
-					if (activeFile != null) {
-						name = activeFile.basename;
-					}
-					this.app.plugins.getPlugin('rpg-manager').factories.modals.open(
-						type as SingleModalKey<any>, DataType[type as keyof typeof DataType],
-						false,
-						name,
-					);
+					new RpgModal(
+						this.app,
+						DataType[type as keyof typeof DataType],
+					).open();
 				},
 			});
 			this.addCommand({
 				id: "rpg-manager-fill-" + type.toLowerCase(),
 				name: "Fill with " + type,
 				callback: () => {
-					this.app.plugins.getPlugin('rpg-manager').factories.modals.open(
-						type as SingleModalKey<any>, DataType[type as keyof typeof DataType],
+					let name: string|null = null;
+					const activeFile = app.workspace.getActiveFile();
+					if (activeFile != null) {
+						name = activeFile.basename;
+					}
+					new RpgModal(
+						this.app,
+						DataType[type as keyof typeof DataType],
 						false,
-					);
+						name,
+					).open();
 				},
 			});
 		})

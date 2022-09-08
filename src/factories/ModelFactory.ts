@@ -1,4 +1,3 @@
-import {App} from "obsidian";
 import {AdventureModel} from "../settings/Agnostic/models/AdventureModel";
 import {CampaignModel} from "../settings/Agnostic/models/CampaignModel";
 import {CampaignNavigationModel} from "../settings/Agnostic/models/CampaignNavigationModel";
@@ -38,6 +37,42 @@ const ModelsMap = {
 	AgnosticSession: SessionModel,
 	AgnosticSessionNavigation: SessionNavigationModel,
 	AgnosticTimeline: TimelineModel,
+
+	RawAdventure: AdventureModel,
+	RawAdventureNavigation: AdventureNavigationModel,
+	RawCampaign: CampaignModel,
+	RawCampaignNavigation: CampaignNavigationModel,
+	RawClue: ClueModel,
+	RawError: ErrorModel,
+	RawEvent: EventModel,
+	RawFaction: FactionModel,
+	RawLocation: LocationModel,
+	RawNotes: NotesModel,
+	RawNpc: NpcModel,
+	RawPc: PcModel,
+	RawScene: SceneModel,
+	RawSceneNavigation: SceneNavigationModel,
+	RawSession: SessionModel,
+	RawSessionNavigation: SessionNavigationModel,
+	RawTimeline: TimelineModel,
+
+	VampireAdventure: AdventureModel,
+	VampireAdventureNavigation: AdventureNavigationModel,
+	VampireCampaign: CampaignModel,
+	VampireCampaignNavigation: CampaignNavigationModel,
+	VampireClue: ClueModel,
+	VampireError: ErrorModel,
+	VampireEvent: EventModel,
+	VampireFaction: FactionModel,
+	VampireLocation: LocationModel,
+	VampireNotes: NotesModel,
+	VampireNpc: NpcModel,
+	VampirePc: PcModel,
+	VampireScene: SceneModel,
+	VampireSceneNavigation: SceneNavigationModel,
+	VampireSession: SessionModel,
+	VampireSessionNavigation: SessionNavigationModel,
+	VampireTimeline: TimelineModel,
 };
 type ModelsMapType = typeof ModelsMap;
 type ModelKeys = keyof ModelsMapType;

@@ -11,6 +11,7 @@ export interface RpgDataListInterface {
 		element: RpgDataInterface,
 	): void;
 
+
 	where(
 		predicate: any,
 	): RpgDataListInterface;

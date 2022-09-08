@@ -1,6 +1,4 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
-import {TableResponseInterface} from "../../../interfaces/response/TableResponseInterface";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {ImageResponseInterface} from "../../../interfaces/response/ImageResponseInterface";
 
 export class ImageView extends AbstractView {

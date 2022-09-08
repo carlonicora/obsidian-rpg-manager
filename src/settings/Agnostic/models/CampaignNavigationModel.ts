@@ -1,7 +1,7 @@
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {ComponentFactory, SingleComponentKey} from "../../../factories/ComponentFactory";
+import {SingleComponentKey} from "../../../factories/ComponentFactory";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {CampaignInterface} from "../../../interfaces/data/CampaignInterface";
 

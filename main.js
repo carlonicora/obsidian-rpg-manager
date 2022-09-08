@@ -79,6 +79,106 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
   return CampaignSetting2;
 })(CampaignSetting || {});
 
+// src/enums/DataType.ts
+var DataType = /* @__PURE__ */ ((DataType2) => {
+  DataType2[DataType2["Campaign"] = 0] = "Campaign";
+  DataType2[DataType2["Adventure"] = 1] = "Adventure";
+  DataType2[DataType2["Session"] = 2] = "Session";
+  DataType2[DataType2["Scene"] = 3] = "Scene";
+  DataType2[DataType2["Character"] = 4] = "Character";
+  DataType2[DataType2["NonPlayerCharacter"] = 5] = "NonPlayerCharacter";
+  DataType2[DataType2["Location"] = 6] = "Location";
+  DataType2[DataType2["Event"] = 7] = "Event";
+  DataType2[DataType2["Clue"] = 8] = "Clue";
+  DataType2[DataType2["Faction"] = 9] = "Faction";
+  DataType2[DataType2["Note"] = 10] = "Note";
+  DataType2[DataType2["Timeline"] = 11] = "Timeline";
+  return DataType2;
+})(DataType || {});
+
+// src/abstracts/AbstractRpgData.ts
+var AbstractRpgData = class {
+  constructor(app2, type, file, metadata) {
+    this.app = app2;
+    this.type = type;
+    this.synopsis = null;
+    this.additionalInformation = null;
+    this.image = null;
+    this.reload(file, metadata);
+  }
+  reload(file, metadata) {
+    var _a, _b, _c;
+    this.obsidianId = file.path;
+    this.link = "[[" + file.basename + "]]";
+    this.name = file.basename;
+    this.path = file.path;
+    this.links = [];
+    (metadata.links || []).forEach((link) => {
+      this.links.push(link.link);
+    });
+    this.frontmatter = metadata.frontmatter;
+    this.completed = ((_a = metadata.frontmatter) == null ? void 0 : _a.completed) ? (_b = metadata.frontmatter) == null ? void 0 : _b.completed : true;
+    this.synopsis = (_c = metadata.frontmatter) == null ? void 0 : _c.synopsis;
+    this.image = this.app.plugins.getPlugin("rpg-manager").functions.getImg(this.name);
+  }
+  get imageSrcElement() {
+    if (this.image == null)
+      return null;
+    return this.app.plugins.getPlugin("rpg-manager").functions.getImgElement(this.image);
+  }
+  getRelationships(type) {
+    var _a;
+    const response = [];
+    const relationships = (_a = this.frontmatter) == null ? void 0 : _a.relationships[DataType[type].toLowerCase() + "s"];
+    if (relationships != null) {
+      Object.entries(relationships).forEach(([key, value], index) => {
+        const data = this.app.plugins.getPlugin("rpg-manager").io.getElementByName(key);
+        if (data != null) {
+          data.additionalInformation = value;
+          response.push(data);
+        }
+      });
+    }
+    return response;
+  }
+  initialiseDate(date) {
+    return date ? new Date(date) : null;
+  }
+};
+
+// src/abstracts/AbstractRpgGenericData.ts
+var AbstractRpgGenericData = class extends AbstractRpgData {
+  reload(file, metadata) {
+    var _a;
+    super.reload(file, metadata);
+    if (this.type !== 0 /* Campaign */)
+      this.campaign = this.app.plugins.getPlugin("rpg-manager").io.getCampaign(this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, 0 /* Campaign */));
+  }
+};
+
+// src/abstracts/AbstractRpgOutlineData.ts
+var AbstractRpgOutlineData = class extends AbstractRpgGenericData {
+  constructor() {
+    super(...arguments);
+    this.isOutline = true;
+  }
+};
+
+// src/settings/Agnostic/data/Campaign.ts
+var Campaign = class extends AbstractRpgOutlineData {
+  reload(file, metadata) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    super.reload(file, metadata);
+    if ((_a = this.frontmatter) == null ? void 0 : _a.tags)
+      this.campaignId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, this.type);
+    if ((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current)
+      this.currentDate = new Date((_f = (_e = this.frontmatter) == null ? void 0 : _e.dates) == null ? void 0 : _f.current);
+    this.settings = ((_g = this.frontmatter) == null ? void 0 : _g.settings) ? CampaignSetting[(_h = this.frontmatter) == null ? void 0 : _h.settings] : 0 /* Agnostic */;
+  }
+  initialiseNeighbours() {
+  }
+};
+
 // src/RpgController.ts
 var RpgController = class extends import_obsidian.MarkdownRenderChild {
   constructor(app2, container, source, component, sourcePath) {
@@ -103,10 +203,17 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
       modelName = modelName.replace("navigation", "Navigation");
       sourceLines.shift();
       const sourceMeta = (0, import_obsidian.parseYaml)(sourceLines.join("\n"));
-      this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(CampaignSetting[this.currentElement.campaign.settings] + modelName, this.currentElement, this.source, this.sourcePath, this.contentEl, sourceMeta);
+      let campaignSettings;
+      if (this.currentElement instanceof Campaign) {
+        campaignSettings = CampaignSetting[this.currentElement.settings];
+      } else {
+        campaignSettings = CampaignSetting[this.currentElement.campaign.settings];
+      }
+      this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(campaignSettings + modelName, this.currentElement, this.source, this.sourcePath, this.contentEl, sourceMeta);
     }
   }
   onload() {
+    this.render = (0, import_obsidian.debounce)(this.render, 100, true);
     this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
     this.render();
   }
@@ -117,11 +224,15 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
         this.contentEl = activeLeaf.contentEl;
         this.initialise();
         if (this.isActive) {
-          this.render = (0, import_obsidian.debounce)(this.render, 1e3, true);
           this.container.empty();
+          let campaignSettings;
+          if (this.currentElement instanceof Campaign) {
+            campaignSettings = CampaignSetting[this.currentElement.settings];
+          } else {
+            campaignSettings = CampaignSetting[this.currentElement.campaign.settings];
+          }
           this.model.generateData().elements.forEach((element) => {
-            const viewName = CampaignSetting[this.currentElement.campaign.settings] + ResponseType[element.responseType];
-            const view = this.app.plugins.getPlugin("rpg-manager").factories.views.create(viewName, this.sourcePath);
+            const view = this.app.plugins.getPlugin("rpg-manager").factories.views.create(campaignSettings + ResponseType[element.responseType], this.sourcePath);
             view.render(this.container, element);
           });
         }
@@ -129,23 +240,6 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
     });
   }
 };
-
-// src/enums/DataType.ts
-var DataType = /* @__PURE__ */ ((DataType2) => {
-  DataType2[DataType2["Campaign"] = 0] = "Campaign";
-  DataType2[DataType2["Adventure"] = 1] = "Adventure";
-  DataType2[DataType2["Session"] = 2] = "Session";
-  DataType2[DataType2["Scene"] = 3] = "Scene";
-  DataType2[DataType2["Character"] = 4] = "Character";
-  DataType2[DataType2["NonPlayerCharacter"] = 5] = "NonPlayerCharacter";
-  DataType2[DataType2["Location"] = 6] = "Location";
-  DataType2[DataType2["Event"] = 7] = "Event";
-  DataType2[DataType2["Clue"] = 8] = "Clue";
-  DataType2[DataType2["Faction"] = 9] = "Faction";
-  DataType2[DataType2["Note"] = 10] = "Note";
-  DataType2[DataType2["Timeline"] = 11] = "Timeline";
-  return DataType2;
-})(DataType || {});
 
 // src/data/RpgData.ts
 var import_obsidian2 = require("obsidian");
@@ -259,7 +353,10 @@ var RpgData = class extends import_obsidian2.Component {
           }
         }
         if (!restrictType || (restrictedToType !== null && restrictedToType === fileType || restrictedToType === null && (fileType !== 0 /* Campaign */ && fileType !== 1 /* Adventure */ && fileType !== 2 /* Session */ && fileType !== 3 /* Scene */))) {
-          this.data.addElement(this.app.plugins.getPlugin("rpg-manager").factories.data.create(CampaignSetting[settings] + DataType[fileType], fileType, file, metadata));
+          const element = this.app.plugins.getPlugin("rpg-manager").factories.data.create(CampaignSetting[settings] + DataType[fileType], fileType, file, metadata);
+          if (element instanceof AbstractRpgOutlineData)
+            element.initialiseNeighbours();
+          this.data.addElement(element);
         }
       }
     }
@@ -283,7 +380,7 @@ var RpgData = class extends import_obsidian2.Component {
     return sessions.elements.length === 1 ? sessions.elements[0] : null;
   }
   getScene(campaignId, adventureId, sessionId, sceneId) {
-    const scenes = this.data.where((scene) => scene.type === 2 /* Session */ && scene.campaign != null && scene.campaign.campaignId === campaignId && scene.adventure != null && scene.adventure.adventureId === adventureId && scene.session != null && scene.session.sessionId === sessionId && scene.sceneId === sceneId);
+    const scenes = this.data.where((scene) => scene.type === 3 /* Scene */ && scene.campaign != null && scene.campaign.campaignId === campaignId && scene.adventure != null && scene.adventure.adventureId === adventureId && scene.session != null && scene.session.sessionId === sessionId && scene.sceneId === sceneId);
     return scenes.elements.length === 1 ? scenes.elements[0] : null;
   }
   getElementByObsidianId(obsidianId) {
@@ -297,14 +394,14 @@ var RpgData = class extends import_obsidian2.Component {
   getElements(predicate) {
     return this.data.where(predicate);
   }
-  getSessionList(adventureId = null) {
-    return this.data.where((data) => data.type === 2 /* Session */ && (adventureId ? data.adventure.adventureId === adventureId : true));
+  getSessionList(campaignId = null, adventureId = null) {
+    return this.data.where((data) => data.type === 2 /* Session */ && (adventureId ? data.adventure.adventureId === adventureId : true) && (campaignId ? data.campaign.campaignId === campaignId : true));
   }
   getAdventureList(campaignId = null) {
     return this.data.where((data) => data.type === 1 /* Adventure */ && (campaignId ? data.campaign.campaignId === campaignId : true));
   }
-  getCharacterList() {
-    return this.data.where((data) => data.type === 4 /* Character */ || data.type === 5 /* NonPlayerCharacter */);
+  getCharacterList(campaignId = null) {
+    return this.data.where((data) => (data.type === 4 /* Character */ || data.type === 5 /* NonPlayerCharacter */) && (campaignId ? data.campaign.campaignId === campaignId : true));
   }
   getSceneList(campaignId, adventureId, sessionId) {
     return this.data.where((data) => data.type === 3 /* Scene */ && data.campaign.campaignId === campaignId && data.adventure.adventureId === adventureId && data.session.sessionId === sessionId).sort(function(leftData, rightData) {
@@ -828,89 +925,6 @@ var ResponseBanner = class extends AbstractResponse {
   }
 };
 
-// src/abstracts/AbstractRpgData.ts
-var AbstractRpgData = class {
-  constructor(app2, type, file, metadata) {
-    this.app = app2;
-    this.type = type;
-    this.synopsis = null;
-    this.additionalInformation = null;
-    this.image = null;
-    this.reload(file, metadata);
-  }
-  reload(file, metadata) {
-    var _a, _b, _c;
-    this.obsidianId = file.path;
-    this.link = "[[" + file.basename + "]]";
-    this.name = file.basename;
-    this.path = file.path;
-    this.links = [];
-    (metadata.links || []).forEach((link) => {
-      this.links.push(link.link);
-    });
-    this.frontmatter = metadata.frontmatter;
-    this.completed = ((_a = metadata.frontmatter) == null ? void 0 : _a.completed) ? (_b = metadata.frontmatter) == null ? void 0 : _b.completed : true;
-    this.synopsis = (_c = metadata.frontmatter) == null ? void 0 : _c.synopsis;
-    this.image = this.app.plugins.getPlugin("rpg-manager").functions.getImg(this.name);
-  }
-  get imageSrcElement() {
-    if (this.image == null)
-      return null;
-    return this.app.plugins.getPlugin("rpg-manager").functions.getImgElement(this.image);
-  }
-  getRelationships(type) {
-    var _a;
-    const response = [];
-    const relationships = (_a = this.frontmatter) == null ? void 0 : _a.relationships[DataType[type].toLowerCase() + "s"];
-    if (relationships != null) {
-      Object.entries(relationships).forEach(([key, value], index) => {
-        const data = this.app.plugins.getPlugin("rpg-manager").io.getElementByName(key);
-        if (data != null) {
-          data.additionalInformation = value;
-          response.push(data);
-        }
-      });
-    }
-    return response;
-  }
-  initialiseDate(date) {
-    return date ? new Date(date) : null;
-  }
-};
-
-// src/abstracts/AbstractRpgGenericData.ts
-var AbstractRpgGenericData = class extends AbstractRpgData {
-  reload(file, metadata) {
-    var _a;
-    super.reload(file, metadata);
-    if (this.type !== 0 /* Campaign */)
-      this.campaign = this.app.plugins.getPlugin("rpg-manager").io.getCampaign(this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, 0 /* Campaign */));
-  }
-};
-
-// src/abstracts/AbstractRpgOutlineData.ts
-var AbstractRpgOutlineData = class extends AbstractRpgGenericData {
-  constructor() {
-    super(...arguments);
-    this.isOutline = true;
-  }
-};
-
-// src/settings/Agnostic/data/Campaign.ts
-var Campaign = class extends AbstractRpgOutlineData {
-  reload(file, metadata) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    super.reload(file, metadata);
-    if ((_a = this.frontmatter) == null ? void 0 : _a.tags)
-      this.campaignId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, this.type);
-    if ((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current)
-      this.currentDate = new Date((_f = (_e = this.frontmatter) == null ? void 0 : _e.dates) == null ? void 0 : _f.current);
-    this.settings = ((_g = this.frontmatter) == null ? void 0 : _g.settings) ? CampaignSetting[(_h = this.frontmatter) == null ? void 0 : _h.settings] : 0 /* Agnostic */;
-  }
-  initialiseNeighbours() {
-  }
-};
-
 // src/abstracts/AbstractRpgElementData.ts
 var AbstractRpgElementData = class extends AbstractRpgGenericData {
   constructor() {
@@ -1066,6 +1080,41 @@ var Event = class extends AbstractRpgElementData {
   }
 };
 
+// src/settings/Agnostic/data/Scene.ts
+var Scene = class extends AbstractRpgOutlineData {
+  constructor() {
+    super(...arguments);
+    this.previousScene = null;
+    this.nextScene = null;
+  }
+  reload(file, metadata) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    super.reload(file, metadata);
+    this.sceneId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, this.type);
+    this.adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
+    this.session = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_c = this.frontmatter) == null ? void 0 : _c.tags, 2 /* Session */));
+    this.startTime = this.initialiseDate((_e = (_d = this.frontmatter) == null ? void 0 : _d.time) == null ? void 0 : _e.start);
+    this.endTime = this.initialiseDate((_g = (_f = this.frontmatter) == null ? void 0 : _f.time) == null ? void 0 : _g.end);
+    this.action = (_h = this.frontmatter) == null ? void 0 : _h.action;
+  }
+  initialiseNeighbours() {
+    if (this.campaign != null && this.adventure != null && this.session != null) {
+      this.previousScene = this.app.plugins.getPlugin("rpg-manager").io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
+      this.nextScene = this.app.plugins.getPlugin("rpg-manager").io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
+    }
+  }
+  get duration() {
+    let response = "";
+    if (this.startTime && this.endTime) {
+      const duration = this.endTime.getTime() - this.startTime.getTime();
+      const hours = Math.floor(duration / (1e3 * 60 * 60));
+      const minutes = Math.floor(duration / (1e3 * 60)) % 60;
+      response = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
+    }
+    return response;
+  }
+};
+
 // src/settings/Agnostic/components/HeaderComponent.ts
 var HeaderComponent = class extends AbstractComponent {
   generateData(data, title) {
@@ -1104,6 +1153,8 @@ var HeaderComponent = class extends AbstractComponent {
         if (data.date != null) {
           response.date = data.date;
         }
+      } else if (data instanceof Scene) {
+        response.synopsisTitle = "Scene Goal";
       }
       if (data.synopsis != null && data.synopsis != "") {
         synopsis = data.synopsis;
@@ -1130,7 +1181,31 @@ var ComponentsMap = {
   AgnosticBanner: BannerComponent,
   AgnosticCharacterSynopsis: CharacterSynopsisComponent,
   AgnosticImage: ImageComponent,
-  AgnosticHeader: HeaderComponent
+  AgnosticHeader: HeaderComponent,
+  RawSessionTable: SessionTableComponent,
+  RawAdventureTable: AdventureTableComponent,
+  RawCharacterTable: CharacterTableComponent,
+  RawLocationTable: LocationTableComponent,
+  RawEventTable: EventTableComponent,
+  RawClueTable: ClueTableComponent,
+  RawFactionTable: FactionTableComponent,
+  RawSceneTable: SceneTableComponent,
+  RawBanner: BannerComponent,
+  RawCharacterSynopsis: CharacterSynopsisComponent,
+  RawImage: ImageComponent,
+  RawHeader: HeaderComponent,
+  VampireSessionTable: SessionTableComponent,
+  VampireAdventureTable: AdventureTableComponent,
+  VampireCharacterTable: CharacterTableComponent,
+  VampireLocationTable: LocationTableComponent,
+  VampireEventTable: EventTableComponent,
+  VampireClueTable: ClueTableComponent,
+  VampireFactionTable: FactionTableComponent,
+  VampireSceneTable: SceneTableComponent,
+  VampireBanner: BannerComponent,
+  VampireCharacterSynopsis: CharacterSynopsisComponent,
+  VampireImage: ImageComponent,
+  VampireHeader: HeaderComponent
 };
 var ComponentFactory = class extends AbstractFactory {
   create(k, data, title = null) {
@@ -1255,6 +1330,11 @@ var Adventure = class extends AbstractRpgOutlineData {
 
 // src/settings/Agnostic/data/Session.ts
 var Session = class extends AbstractRpgOutlineData {
+  constructor() {
+    super(...arguments);
+    this.previousSession = null;
+    this.nextSession = null;
+  }
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f;
     super.reload(file, metadata);
@@ -1268,36 +1348,6 @@ var Session = class extends AbstractRpgOutlineData {
       this.previousSession = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, null, this.sessionId - 1);
       this.nextSession = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, null, this.sessionId + 1);
     }
-  }
-};
-
-// src/settings/Agnostic/data/Scene.ts
-var Scene = class extends AbstractRpgOutlineData {
-  reload(file, metadata) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    super.reload(file, metadata);
-    this.sceneId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, this.type);
-    this.adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
-    this.session = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_c = this.frontmatter) == null ? void 0 : _c.tags, 2 /* Session */));
-    this.startTime = this.initialiseDate((_e = (_d = this.frontmatter) == null ? void 0 : _d.time) == null ? void 0 : _e.start);
-    this.endTime = this.initialiseDate((_g = (_f = this.frontmatter) == null ? void 0 : _f.time) == null ? void 0 : _g.end);
-    this.action = (_h = this.frontmatter) == null ? void 0 : _h.action;
-  }
-  initialiseNeighbours() {
-    if (this.campaign != null && this.adventure != null && this.session != null) {
-      this.previousScene = this.app.plugins.getPlugin("rpg-manager").io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
-      this.nextScene = this.app.plugins.getPlugin("rpg-manager").io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
-    }
-  }
-  get duration() {
-    let response = "";
-    if (this.startTime && this.endTime) {
-      const duration = this.endTime.getTime() - this.startTime.getTime();
-      const hours = Math.floor(duration / (1e3 * 60 * 60));
-      const minutes = Math.floor(duration / (1e3 * 60)) % 60;
-      response = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
-    }
-    return response;
   }
 };
 
@@ -1322,7 +1372,31 @@ var DatasMap = {
   AgnosticLocation: Location,
   AgnosticEvent: Event,
   AgnosticTimeline: Timeline,
-  AgnosticNote: Note
+  AgnosticNote: Note,
+  RawCampaign: Campaign,
+  RawAdventure: Adventure,
+  RawSession: Session,
+  RawScene: Scene,
+  RawCharacter: Character,
+  RawNonPlayerCharacter: Character,
+  RawFaction: Faction,
+  RawClue: Clue,
+  RawLocation: Location,
+  RawEvent: Event,
+  RawTimeline: Timeline,
+  RawNote: Note,
+  VampireCampaign: Campaign,
+  VampireAdventure: Adventure,
+  VampireSession: Session,
+  VampireScene: Scene,
+  VampireCharacter: Character,
+  VampireNonPlayerCharacter: Character,
+  VampireFaction: Faction,
+  VampireClue: Clue,
+  VampireLocation: Location,
+  VampireEvent: Event,
+  VampireTimeline: Timeline,
+  VampireNote: Note
 };
 var DataFactory = class extends AbstractFactory {
   create(k, type, file, metadata) {
@@ -1340,9 +1414,8 @@ var ErrorFactory = class extends AbstractFactory {
 // src/factories/FileFactory.ts
 var import_obsidian7 = require("obsidian");
 var FileFactory = class extends AbstractFactory {
-  create(type, create, createFrontMatterOnly, name, campaignId = null, adventureId = null, sessionId = null, sceneId = null) {
+  create(settings, type, create, createFrontMatterOnly, name, campaignId = null, adventureId = null, sessionId = null, sceneId = null) {
     return __async(this, null, function* () {
-      const settings = this.getSettings(campaignId);
       const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(CampaignSetting[settings] + DataType[type], createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
       if (create) {
@@ -1358,13 +1431,13 @@ var FileFactory = class extends AbstractFactory {
       }
     });
   }
-  silentCreate(app2, type, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
+  silentCreate(type, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
     return __async(this, null, function* () {
       const settings = this.getSettings(campaignId);
       const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(CampaignSetting[settings] + DataType[type], false, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
-      const newFile = yield app2.vault.create(name + ".md", data);
-      const leaf = app2.workspace.getLeaf(true);
+      const newFile = yield app.vault.create(name + ".md", data);
+      const leaf = app.workspace.getLeaf(true);
       yield leaf.openFile(newFile);
     });
   }
@@ -1380,390 +1453,454 @@ var FileFactory = class extends AbstractFactory {
   }
 };
 
-// src/abstracts/AbstractModal.ts
-var import_obsidian8 = require("obsidian");
-
-// src/data/ModalElement.ts
-var ModalElement = class {
-  constructor(type, id, name) {
-    this.type = type;
-    this.id = id;
-    this.name = name;
-  }
-};
-
-// src/abstracts/AbstractModal.ts
-var AbstractModal = class extends import_obsidian8.Modal {
-  constructor(app2, type, create, name) {
-    super(app2);
+// src/abstracts/AbstractModalComponent.ts
+var AbstractModalComponent = class {
+  constructor(app2, modal) {
     this.app = app2;
-    this.type = type;
-    this.create = create;
-    this.name = name;
-    this.confirm = false;
-    this.newCampaignId = 1;
-    this.newAdventureId = 1;
-    this.newSessionId = 1;
-    this.newSceneId = 1;
-    this.confirm = false;
+    this.modal = modal;
   }
-  onOpen() {
-    super.onOpen();
-    const { contentEl } = this;
-    contentEl.addClass("rpgm-modal");
-    this.initialiseCampaigns();
-    if (this.campaigns.length < 1 && this.type !== 0 /* Campaign */) {
-      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Main campaign missing" });
-      contentEl.createSpan({ cls: "", text: "This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a " + DataType[this.type] + ", please initialise your first campaign." });
-    } else {
-      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
-      contentEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
-      this.title = contentEl.createEl("input", { type: "text" });
-      if (this.name !== null) {
-        this.title.value = this.name;
-      }
-      this.titleError = contentEl.createEl("p", { cls: "error" });
-      this.content(contentEl);
-      const cfmo = contentEl.createDiv({ cls: "createFrontMatterOnly" });
-      this.createFrontMatterOnly = cfmo.createEl("input", { type: "checkbox" });
-      this.createFrontMatterOnly.id = "createFrontMatterOnly";
-      const labelFrontMatterOnly = cfmo.createEl("label", { text: "Create Frontmatter only" });
-      labelFrontMatterOnly.htmlFor = "createFrontMatterOnly";
-      this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
-      this.button.addEventListener("click", (e) => {
-        this.confirmed = true;
-        this.save();
-      });
-    }
-  }
-  save() {
-    let validation = this.titleValidation();
-    if (this.type !== 0 /* Campaign */) {
-      validation = validation && this.campaignValidation();
-      if (this.type === 2 /* Session */ || this.type === 3 /* Scene */) {
-        if (this.type === 3 /* Scene */) {
-        }
-      }
-    }
-    if (validation) {
-      let campaignId = this.newCampaignId;
-      let adventureId = this.newAdventureId;
-      let sessionId = this.newSessionId;
-      const sceneId = this.newSceneId;
-      if (this.type !== 0 /* Campaign */) {
-        campaignId = +this.campaign.value;
-      }
-      if (this.type === 2 /* Session */ || this.type === 3 /* Scene */) {
-        adventureId = +this.adventure.value;
-        if (this.type === 3 /* Scene */) {
-          sessionId = +this.session.value;
-        }
-      }
-      this.app.plugins.getPlugin("rpg-manager").factories.files.create(this.type, this.create, this.createFrontMatterOnly.checked, this.title.value, campaignId, adventureId, sessionId, sceneId);
-      this.close();
-    }
-  }
-  onClose() {
-    const { contentEl } = this;
-    contentEl.empty();
-  }
-  removeOptions(select) {
-    const L = select.options.length - 1;
-    for (let i = L; i >= 0; i--) {
-      select.remove(i);
-    }
-  }
-  titleValidation() {
-    let response = true;
-    this.titleError.style.display = "none";
-    if (this.title.value === "") {
-      this.titleError.style.display = "block";
-      this.titleError.textContent = "You must add a title for your " + DataType[this.type];
-      response = false;
-    }
-    return response;
-  }
-  initialiseCampaigns() {
-    this.campaigns = [];
-    this.app.vault.getFiles().forEach((file) => {
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
-        tags.forEach((tag) => {
-          if (typeof tag === "string" && tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.campaignTag)) {
-            const campaignId = +tag.substring(tag.lastIndexOf("/") + 1);
-            if (campaignId >= this.newCampaignId) {
-              this.newCampaignId = campaignId + 1;
-            }
-            this.campaigns.push(new ModalElement(0 /* Campaign */, campaignId, file.basename));
-          }
-        });
-      }
+  save(settings, type, create, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
+    return __async(this, null, function* () {
+      this.app.plugins.getPlugin("rpg-manager").factories.files.create(settings, type, create, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
     });
-    this.campaigns.sort((n1, n2) => {
-      return n1.id - n2.id;
-    });
-  }
-  campaignBlock(contentEl) {
-    contentEl.createEl("p", { text: "Campaign" });
-    this.campaign = contentEl.createEl("select");
-    if (this.campaigns.length > 1) {
-      this.campaign.createEl("option", {
-        text: "",
-        value: ""
-      }).selected = true;
-    }
-    this.campaign.onchange = function() {
-      this.campaigns.forEach((campaign) => {
-        if (campaign.id === this.campaign.value) {
-        }
-      });
-      console.log("Campaign Selected: " + this.campaign.value);
-    }.bind(this);
-    this.campaigns.forEach((campaign) => {
-      this.campaign.createEl("option", {
-        text: campaign.name,
-        value: campaign.id.toString()
-      }).selected = true;
-    });
-    this.campaign.addEventListener("change", (e) => {
-      this.initialiseAdventures();
-    });
-    this.campaignError = contentEl.createEl("p", { cls: "error" });
-  }
-  campaignValidation() {
-    let response = true;
-    this.campaignError.style.display = "none";
-    if (this.campaign.value === "") {
-      this.campaignError.style.display = "block";
-      this.campaignError.textContent = "You must select a valid campaign for your " + DataType[this.type];
-      response = false;
-    }
-    return response;
-  }
-  initialiseAdventures() {
-    this.newAdventureId = 1;
-    this.adventures = [];
-    this.app.vault.getFiles().forEach((file) => {
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
-        tags.forEach((tag) => {
-          if (typeof tag === "string" && tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.adventureTag + "/" + this.campaign.value)) {
-            const adventureId = +tag.substring(tag.lastIndexOf("/") + 1);
-            if (adventureId >= this.newAdventureId) {
-              this.newAdventureId = adventureId + 1;
-            }
-            this.adventures.push(new ModalElement(1 /* Adventure */, adventureId, file.basename));
-          }
-        });
-      }
-    });
-    this.adventures.sort((n1, n2) => {
-      return n1.id - n2.id;
-    });
-  }
-  adventureBlock(contentEl) {
-    contentEl.createEl("p", { text: "Adventure" });
-    this.adventure = contentEl.createEl("select");
-    this.refreshAdventureBlock();
-    this.adventure.addEventListener("change", (e) => {
-      this.initialiseSessions();
-      this.refreshSessionBlock();
-    });
-    this.adventureError = contentEl.createEl("p", { cls: "error" });
-  }
-  refreshAdventureBlock() {
-    if (this.adventure != null) {
-      this.removeOptions(this.adventure);
-      this.adventures.forEach((adventure) => {
-        this.adventure.createEl("option", {
-          text: adventure.name,
-          value: adventure.id.toString()
-        }).selected = true;
-      });
-    }
-  }
-  adventureValidation() {
-    let response = true;
-    this.adventureError.style.display = "none";
-    if (this.adventure.value === "") {
-      this.adventureError.style.display = "block";
-      this.adventureError.textContent = "You must select a valid adventure for your " + DataType[this.type];
-      response = false;
-    }
-    return response;
-  }
-  initialiseSessions() {
-    this.newSessionId = 1;
-    this.sessions = [];
-    this.app.vault.getFiles().forEach((file) => {
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
-        tags.forEach((tag) => {
-          if (typeof tag === "string" && tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag + "/" + this.campaign.value + "/" + this.adventure.value)) {
-            const sessionId = +tag.substring(tag.lastIndexOf("/") + 1);
-            if (sessionId >= this.newSessionId) {
-              this.newSessionId = sessionId + 1;
-            }
-            this.sessions.push(new ModalElement(2 /* Session */, sessionId, file.basename));
-          }
-        });
-      }
-    });
-    this.sessions.sort((n1, n2) => {
-      return n1.id - n2.id;
-    });
-  }
-  sessionBlock(contentEl) {
-    contentEl.createEl("p", { text: "Session" });
-    this.session = contentEl.createEl("select");
-    this.refreshSessionBlock();
-    this.session.addEventListener("change", (e) => {
-      this.initialiseScenes();
-    });
-    this.sessionError = contentEl.createEl("p", { cls: "error" });
-  }
-  refreshSessionBlock() {
-    if (this.session != null) {
-      this.removeOptions(this.session);
-      this.sessions.forEach((session) => {
-        this.session.createEl("option", {
-          text: session.name,
-          value: session.id.toString()
-        }).selected = true;
-      });
-    }
-  }
-  sessionValidation() {
-    let response = true;
-    this.sessionError.style.display = "none";
-    if (this.session.value === "") {
-      this.sessionError.style.display = "block";
-      this.sessionError.textContent = "You must select a valid session for your " + DataType[this.type];
-      response = false;
-    }
-    return response;
-  }
-  initialiseScenes() {
-    this.newSceneId = 1;
-    this.scenes = [];
-    this.app.vault.getFiles().forEach((file) => {
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata !== null && metadata.frontmatter != null && metadata.frontmatter.tags != null && metadata.frontmatter.tags.length > 0) {
-        const tags = typeof metadata.frontmatter.tags === "string" ? [metadata.frontmatter.tags] : metadata.frontmatter.tags;
-        tags.forEach((tag) => {
-          if (typeof tag === "string" && tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.sceneTag + "/" + this.campaign.value + "/" + this.adventure.value + "/" + this.session.value)) {
-            const sceneId = +tag.substring(tag.lastIndexOf("/") + 1);
-            if (sceneId >= this.newSceneId) {
-              this.newSceneId = sceneId + 1;
-            }
-            this.scenes.push(new ModalElement(3 /* Scene */, sceneId, file.basename));
-          }
-        });
-      }
-    });
-    this.scenes.sort((n1, n2) => {
-      return n1.id - n2.id;
-    });
-  }
-};
-
-// src/settings/Agnostic/modals/AdventureModal.ts
-var AdventureModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-    this.initialiseAdventures();
   }
 };
 
 // src/settings/Agnostic/modals/CampaignModal.ts
-var CampaignModal = class extends AbstractModal {
-  content(contentEl) {
+var CampaignModal = class extends AbstractModalComponent {
+  constructor(app2, modal) {
+    super(app2, modal);
+    this.campaigns = this.app.plugins.getPlugin("rpg-manager").io.getCampaigns().elements;
+  }
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const campaignEl = contentEl.createDiv({ cls: "campaignContainer" });
+      if (this.modal.type === 0 /* Campaign */) {
+        this.addNewCampaignElements(campaignEl);
+      } else {
+        if (this.campaigns.length === 0) {
+          const mainContent = this.modal.getContentEl();
+          mainContent.empty();
+          mainContent.createEl("h2", { cls: "rpgm-modal-title", text: "Main campaign missing" });
+          mainContent.createSpan({ cls: "", text: "This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a " + DataType[this.modal.type] + ", please initialise your first campaign." });
+        } else {
+          this.childEl = contentEl.createDiv({ cls: "child" });
+          this.childEl.id = "CampaignChild";
+          this.selectCampaignElements(campaignEl);
+        }
+      }
+      if (this.modal.type === 0 /* Campaign */) {
+        this.modal.saver = this;
+      }
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+      if (this.modal.type !== 1 /* Adventure */ && this.modal.type !== 2 /* Session */ && this.modal.type !== 3 /* Scene */) {
+        this.modal.elementModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[this.modal.type], this.modal.type, this.modal);
+        this.modal.elementModal.addElement(containerEl);
+      } else {
+        this.modal.adventureModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[1 /* Adventure */], this.modal.type, this.modal);
+        this.modal.adventureModal.addElement(containerEl);
+      }
+    });
+  }
+  validate() {
+    return true;
+  }
+  addNewCampaignElements(containerEl) {
+    this.modal.campaignId = 1;
+    this.campaigns.forEach((data) => {
+      if (data.campaignId >= this.modal.campaignId)
+        this.modal.campaignId = data.campaignId + 1;
+    });
+    containerEl.createEl("p", { text: "Select Campaign Settings" });
+    this.campaignSettingsEl = containerEl.createEl("select");
+    Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting) => {
+      const campaignSettingOption = this.campaignSettingsEl.createEl("option", {
+        text: setting,
+        value: setting
+      });
+      if (setting === 0 /* Agnostic */.toString()) {
+        campaignSettingOption.selected = true;
+      }
+    });
+    this.selectSetting();
+    this.campaignSettingsEl.addEventListener("change", (e) => {
+      this.selectSetting();
+    });
+  }
+  selectCampaignElements(containerEl) {
+    const groupElement = containerEl.createDiv({ cls: "group" });
+    groupElement.createDiv({ cls: "title", text: "Campaign" });
+    const selectionContainerEl = groupElement.createDiv({ cls: "container" });
+    groupElement.createDiv({ cls: "clear" });
+    this.campaignEl = selectionContainerEl.createEl("select");
+    if (this.campaigns.length > 1) {
+      this.campaignEl.createEl("option", {
+        text: "",
+        value: ""
+      }).selected = true;
+    }
+    this.campaigns.forEach((campaign) => {
+      const campaignOptionEl = this.campaignEl.createEl("option", {
+        text: campaign.name,
+        value: campaign.campaignId.toString()
+      });
+      if (this.campaigns.length === 1) {
+        campaignOptionEl.selected = true;
+        this.selectCampaign();
+      }
+    });
+    this.campaignEl.addEventListener("change", (e) => {
+      this.selectCampaign();
+    });
+    this.campaignErrorEl = containerEl.createEl("p", { cls: "error" });
+  }
+  selectSetting() {
+    this.modal.settings = CampaignSetting[this.campaignSettingsEl.value];
+  }
+  selectCampaign() {
+    this.modal.campaignId = +this.campaignEl.value;
+    this.childEl.empty();
+    this.loadChild(this.childEl);
   }
 };
 
-// src/settings/Agnostic/modals/SceneModal.ts
-var SceneModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-    this.initialiseAdventures();
-    this.adventureBlock(contentEl);
-    this.initialiseSessions();
-    this.sessionBlock(contentEl);
-    this.initialiseScenes();
+// src/settings/Agnostic/modals/AdventureModal.ts
+var AdventureModal = class extends AbstractModalComponent {
+  constructor(app2, modal) {
+    super(app2, modal);
+    this.adventures = this.app.plugins.getPlugin("rpg-manager").io.getAdventureList(this.modal.campaignId).elements;
+  }
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const adventureEl = contentEl.createDiv({ cls: "adventureContainer" });
+      if (this.modal.type === 1 /* Adventure */) {
+        this.addNewAdventureElements(adventureEl);
+      } else {
+        if (this.adventures.length === 0) {
+          const mainContent = this.modal.getContentEl();
+          mainContent.empty();
+          mainContent.createEl("h2", { cls: "rpgm-modal-title", text: "Adventures missing" });
+          mainContent.createSpan({ cls: "", text: "This Obsidian Vault does not contain a Rpg Manager Adventure for the selected campaign. Before creating a " + DataType[this.modal.type] + ", please initialise your first adventure for the campaign." });
+        } else {
+          this.childEl = contentEl.createDiv({ cls: "child" });
+          this.childEl.id = "AdventureChild";
+          this.selectAdventureElements(adventureEl);
+        }
+      }
+      if (this.modal.type === 1 /* Adventure */) {
+        this.modal.saver = this;
+        this.modal.enableButton();
+      }
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+      this.modal.sessionModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[2 /* Session */], this.modal.type, this.modal);
+      this.modal.sessionModal.addElement(containerEl);
+    });
+  }
+  validate() {
+    return true;
+  }
+  addNewAdventureElements(containerEl) {
+    this.modal.adventureId = 1;
+    this.adventures.forEach((data) => {
+      var _a;
+      if (data.adventureId >= ((_a = this.modal.adventureId) != null ? _a : 0))
+        this.modal.adventureId = data.adventureId + 1;
+    });
+  }
+  selectAdventureElements(containerEl) {
+    containerEl.createDiv({ cls: "title", text: "Adventure" });
+    const selectionContainerEl = containerEl.createDiv({ cls: "container" });
+    containerEl.createDiv({ cls: "clear" });
+    this.adventureEl = selectionContainerEl.createEl("select");
+    if (this.adventures.length > 1) {
+      this.adventureEl.createEl("option", {
+        text: "",
+        value: ""
+      }).selected = true;
+    }
+    this.adventures.forEach((adventure) => {
+      const adventureOptionEl = this.adventureEl.createEl("option", {
+        text: adventure.name,
+        value: adventure.adventureId.toString()
+      });
+      if (this.adventures.length === 1) {
+        adventureOptionEl.selected = true;
+        this.selectAdventure();
+      }
+    });
+    this.adventureEl.addEventListener("change", (e) => {
+      this.selectAdventure();
+    });
+    this.adventureErrorEl = containerEl.createEl("p", { cls: "error" });
+  }
+  selectAdventure() {
+    this.modal.adventureId = +this.adventureEl.value;
+    this.childEl.empty();
+    this.loadChild(this.childEl);
   }
 };
 
 // src/settings/Agnostic/modals/SessionModal.ts
-var SessionModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
-    this.initialiseAdventures();
-    this.adventureBlock(contentEl);
-    this.initialiseSessions();
+var SessionModal = class extends AbstractModalComponent {
+  constructor(app2, modal) {
+    super(app2, modal);
+    this.sessions = this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.modal.campaignId, this.modal.adventureId).elements;
+  }
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const sessionEl = contentEl.createDiv({ cls: "sessionContainer" });
+      if (this.modal.type === 2 /* Session */) {
+        this.addNewSessionElements(sessionEl);
+      } else {
+        if (this.sessions.length === 0) {
+          const mainContent = this.modal.getContentEl();
+          mainContent.empty();
+          mainContent.createEl("h2", { cls: "rpgm-modal-title", text: "Sessions missing" });
+          mainContent.createSpan({ cls: "", text: "This Obsidian Vault does not contain a Rpg Manager Session for the selected adventure. Before creating a " + DataType[this.modal.type] + ", please initialise your first session for the adventure." });
+        } else {
+          this.childEl = contentEl.createDiv({ cls: "child" });
+          this.childEl.id = "SessionChild";
+          this.selectSessionElements(sessionEl);
+        }
+      }
+      if (this.modal.type === 2 /* Session */) {
+        this.modal.saver = this;
+        this.modal.enableButton();
+      }
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+      this.modal.sceneModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[3 /* Scene */], this.modal.type, this.modal);
+      this.modal.sceneModal.addElement(containerEl);
+    });
+  }
+  validate() {
+    return true;
+  }
+  addNewSessionElements(containerEl) {
+    this.modal.sessionId = 1;
+    this.sessions.forEach((data) => {
+      var _a;
+      if (data.sessionId >= ((_a = this.modal.sessionId) != null ? _a : 0))
+        this.modal.sessionId = data.sessionId + 1;
+    });
+  }
+  selectSessionElements(containerEl) {
+    containerEl.createDiv({ cls: "title", text: "Session" });
+    const selectionContainerEl = containerEl.createDiv({ cls: "container" });
+    containerEl.createDiv({ cls: "clear" });
+    this.sessionEl = selectionContainerEl.createEl("select");
+    if (this.sessions.length > 1) {
+      this.sessionEl.createEl("option", {
+        text: "",
+        value: ""
+      }).selected = true;
+    }
+    this.sessions.forEach((session) => {
+      const sessionOptionEl = this.sessionEl.createEl("option", {
+        text: session.name,
+        value: session.sessionId.toString()
+      });
+      if (this.sessions.length === 1) {
+        sessionOptionEl.selected = true;
+        this.selectSession();
+      }
+    });
+    this.sessionEl.addEventListener("change", (e) => {
+      this.selectSession();
+    });
+    this.sessionErrorEl = containerEl.createEl("p", { cls: "error" });
+  }
+  selectSession() {
+    this.modal.sessionId = +this.sessionEl.value;
+    this.childEl.empty();
+    this.loadChild(this.childEl);
+  }
+};
+
+// src/settings/Agnostic/modals/SceneModal.ts
+var SceneModal = class extends AbstractModalComponent {
+  constructor(app2, modal) {
+    super(app2, modal);
+    if (this.modal.adventureId != null && this.modal.sessionId != null) {
+      this.scenes = this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.modal.campaignId, this.modal.adventureId, this.modal.sessionId).elements;
+    } else {
+      this.scenes = [];
+    }
+  }
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const sceneEl = contentEl.createDiv({ cls: "sceneContainer" });
+      this.modal.sceneId = 1;
+      this.scenes.forEach((data) => {
+        var _a;
+        if (data.sceneId >= ((_a = this.modal.sceneId) != null ? _a : 0))
+          this.modal.sceneId = data.sceneId + 1;
+      });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/settings/Agnostic/modals/CharacterModal.ts
-var CharacterModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
+var CharacterModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const characterEl = contentEl.createDiv({ cls: "characterContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/settings/Agnostic/modals/ClueModal.ts
-var ClueModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
+var ClueModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const clueEl = contentEl.createDiv({ cls: "clueContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/settings/Agnostic/modals/EventModal.ts
-var EventModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
+var EventModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const eventEl = contentEl.createDiv({ cls: "eventContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/settings/Agnostic/modals/FactionModal.ts
-var FactionModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
+var FactionModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const locationEl = contentEl.createDiv({ cls: "locationContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/settings/Agnostic/modals/LocationModal.ts
-var LocationModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
+var LocationModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const locationEl = contentEl.createDiv({ cls: "locationContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/settings/Agnostic/modals/NonPlayerCharacterModal.ts
-var NonPlayerCharacterModal = class extends AbstractModal {
-  content(contentEl) {
-    this.campaignBlock(contentEl);
+var NonPlayerCharacterModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      const characterEl = contentEl.createDiv({ cls: "characterContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
   }
 };
 
 // src/factories/ModalFactory.ts
 var ModalsMap = {
-  Campaign: CampaignModal,
-  Adventure: AdventureModal,
-  Session: SessionModal,
-  Scene: SceneModal,
-  Character: CharacterModal,
-  Clue: ClueModal,
-  Event: EventModal,
-  Faction: FactionModal,
-  Location: LocationModal,
-  NonPlayerCharacter: NonPlayerCharacterModal
+  AgnosticCampaign: CampaignModal,
+  AgnosticAdventure: AdventureModal,
+  AgnosticSession: SessionModal,
+  AgnosticScene: SceneModal,
+  AgnosticCharacter: CharacterModal,
+  AgnosticClue: ClueModal,
+  AgnosticEvent: EventModal,
+  AgnosticFaction: FactionModal,
+  AgnosticLocation: LocationModal,
+  AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
+  RawCampaign: CampaignModal,
+  RawAdventure: AdventureModal,
+  RawSession: SessionModal,
+  RawScene: SceneModal,
+  RawCharacter: CharacterModal,
+  RawClue: ClueModal,
+  RawEvent: EventModal,
+  RawFaction: FactionModal,
+  RawLocation: LocationModal,
+  RawNonPlayerCharacter: NonPlayerCharacterModal,
+  VampireCampaign: CampaignModal,
+  VampireAdventure: AdventureModal,
+  VampireSession: SessionModal,
+  VampireScene: SceneModal,
+  VampireCharacter: CharacterModal,
+  VampireClue: ClueModal,
+  VampireEvent: EventModal,
+  VampireFaction: FactionModal,
+  VampireLocation: LocationModal,
+  VampireNonPlayerCharacter: NonPlayerCharacterModal
 };
 var ModalFactory = class extends AbstractFactory {
-  open(k, type, create, name = null) {
-    new ModalsMap[k](this.app, type, create, name).open();
+  create(k, type, modal) {
+    return new ModalsMap[k](this.app, modal);
   }
 };
 
@@ -1789,22 +1926,25 @@ var AbstractModel = class {
     this.sourceMeta = sourceMeta;
   }
   generateBreadcrumb() {
-    var _a, _b, _c, _d;
+    var _a, _b;
     const response = new ResponseBreadcrumb(this.app);
     response.link = this.currentElement.campaign.link;
     response.title = DataType[0 /* Campaign */];
     if (this.currentElement.type !== 0 /* Campaign */) {
       response.mainTitle = DataType[this.currentElement.type];
-      let sessionBreadcrumb, sceneBreadcrumb;
-      const adventureBreadcrumb = new ResponseBreadcrumb(this.app);
-      const elementBreadcrumb = new ResponseBreadcrumb(this.app);
-      switch (this.dataType) {
+      let nextBreadcrumb, previousBreadcrumb, elementBreadcrumb, adventureBreadcrumb, sessionBreadcrumb, sceneBreadcrumb;
+      let previousSession, nextSession;
+      switch (this.currentElement.type) {
         case 1 /* Adventure */:
-          adventureBreadcrumb.link = this.currentElement.link.toString();
-          adventureBreadcrumb.title = DataType[this.currentElement.type];
+          adventureBreadcrumb = new ResponseBreadcrumb(this.app);
+          adventureBreadcrumb.link = this.currentElement.link;
+          adventureBreadcrumb.title = DataType[1 /* Adventure */];
           response.nextBreadcrumb = adventureBreadcrumb;
           break;
         case 2 /* Session */:
+          previousSession = this.currentElement.previousSession;
+          nextSession = this.currentElement.nextSession;
+          adventureBreadcrumb = new ResponseBreadcrumb(this.app);
           adventureBreadcrumb.link = this.currentElement.adventure.link;
           adventureBreadcrumb.title = DataType[1 /* Adventure */];
           response.nextBreadcrumb = adventureBreadcrumb;
@@ -1812,30 +1952,31 @@ var AbstractModel = class {
           sessionBreadcrumb.link = this.currentElement.link;
           sessionBreadcrumb.title = DataType[2 /* Session */];
           adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
-          const previousSessionBreadcrumb = new ResponseBreadcrumb(this.app);
-          const nextSessionBreadcrumb = new ResponseBreadcrumb(this.app);
-          if (this.currentElement.previousSession != null) {
-            previousSessionBreadcrumb.link = (_a = this.currentElement.previousSession) == null ? void 0 : _a.link;
-            previousSessionBreadcrumb.linkText = "<< prev session";
-            previousSessionBreadcrumb.isInNewLine = true;
-            sessionBreadcrumb.nextBreadcrumb = previousSessionBreadcrumb;
+          previousBreadcrumb = new ResponseBreadcrumb(this.app);
+          nextBreadcrumb = new ResponseBreadcrumb(this.app);
+          if (previousSession != null) {
+            previousBreadcrumb.link = previousSession.link;
+            previousBreadcrumb.linkText = "<< prev session";
+            previousBreadcrumb.isInNewLine = true;
+            sessionBreadcrumb.nextBreadcrumb = previousBreadcrumb;
           }
           const sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
           sessionNotesBreadcrumb.link = "[[link]]";
           sessionNotesBreadcrumb.linkText = "notes";
-          if (this.currentElement.previousSession != null) {
-            previousSessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+          if (previousSession != null) {
+            previousBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
           } else {
             sessionNotesBreadcrumb.isInNewLine = true;
             sessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
           }
-          if (this.currentElement.nextSession != null) {
-            nextSessionBreadcrumb.link = (_b = this.currentElement.nextSession) == null ? void 0 : _b.link;
-            nextSessionBreadcrumb.linkText = "next session >>";
-            sessionNotesBreadcrumb.nextBreadcrumb = nextSessionBreadcrumb;
+          if (nextSession != null) {
+            nextBreadcrumb.link = nextSession.link;
+            nextBreadcrumb.linkText = "next session >>";
+            sessionNotesBreadcrumb.nextBreadcrumb = nextBreadcrumb;
           }
           break;
         case 3 /* Scene */:
+          adventureBreadcrumb = new ResponseBreadcrumb(this.app);
           adventureBreadcrumb.link = this.currentElement.adventure.link;
           adventureBreadcrumb.title = DataType[1 /* Adventure */];
           response.nextBreadcrumb = adventureBreadcrumb;
@@ -1847,26 +1988,27 @@ var AbstractModel = class {
           sceneBreadcrumb.link = this.currentElement.link;
           sceneBreadcrumb.title = DataType[3 /* Scene */];
           sessionBreadcrumb.nextBreadcrumb = sceneBreadcrumb;
-          const previousSceneBreadcrumb = new ResponseBreadcrumb(this.app);
-          const nextSceneBreadcrumb = new ResponseBreadcrumb(this.app);
+          previousBreadcrumb = new ResponseBreadcrumb(this.app);
+          nextBreadcrumb = new ResponseBreadcrumb(this.app);
           if (this.currentElement.previousScene != null) {
-            previousSceneBreadcrumb.link = (_c = this.currentElement.previousScene) == null ? void 0 : _c.link;
-            previousSceneBreadcrumb.linkText = "<< prev scene";
-            previousSceneBreadcrumb.isInNewLine = true;
-            sceneBreadcrumb.nextBreadcrumb = previousSceneBreadcrumb;
+            previousBreadcrumb.link = (_a = this.currentElement.previousScene) == null ? void 0 : _a.link;
+            previousBreadcrumb.linkText = "<< prev scene";
+            previousBreadcrumb.isInNewLine = true;
+            sceneBreadcrumb.nextBreadcrumb = previousBreadcrumb;
           }
           if (this.currentElement.nextScene != null) {
-            nextSceneBreadcrumb.link = (_d = this.currentElement.nextScene) == null ? void 0 : _d.link;
-            nextSceneBreadcrumb.linkText = "next scene >>";
+            nextBreadcrumb.link = (_b = this.currentElement.nextScene) == null ? void 0 : _b.link;
+            nextBreadcrumb.linkText = "next scene >>";
             if (this.currentElement.previousScene != null) {
-              previousSceneBreadcrumb.nextBreadcrumb = nextSceneBreadcrumb;
+              previousBreadcrumb.nextBreadcrumb = nextBreadcrumb;
             } else {
-              nextSceneBreadcrumb.isInNewLine = true;
-              sceneBreadcrumb.nextBreadcrumb = nextSceneBreadcrumb;
+              nextBreadcrumb.isInNewLine = true;
+              sceneBreadcrumb.nextBreadcrumb = nextBreadcrumb;
             }
           }
           break;
         default:
+          elementBreadcrumb = new ResponseBreadcrumb(this.app);
           elementBreadcrumb.link = this.currentElement.link;
           elementBreadcrumb.title = DataType[this.currentElement.type];
           response.nextBreadcrumb = elementBreadcrumb;
@@ -1893,7 +2035,13 @@ var ResponseData = class {
 var AdventureModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.adventureId).elements));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
+      if (leftData.sessionId > rightData.sessionId)
+        return -1;
+      if (leftData.sessionId < rightData.sessionId)
+        return 1;
+      return 0;
+    }).elements));
     return response;
   }
 };
@@ -1902,9 +2050,27 @@ var AdventureModel = class extends AbstractModel {
 var CampaignModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "AdventureTable", this.app.plugins.getPlugin("rpg-manager").io.getAdventureList().elements));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList().elements));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getCharacterList().elements));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "AdventureTable", this.app.plugins.getPlugin("rpg-manager").io.getAdventureList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+      if (leftData.adventureId > rightData.adventureId)
+        return -1;
+      if (leftData.adventureId < rightData.adventureId)
+        return 1;
+      return 0;
+    }).elements));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+      if (leftData.sessionId > rightData.sessionId)
+        return -1;
+      if (leftData.sessionId < rightData.sessionId)
+        return 1;
+      return 0;
+    }).elements));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getCharacterList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+      if (leftData.name > rightData.name)
+        return 1;
+      if (leftData.name < rightData.name)
+        return -1;
+      return 0;
+    }).elements));
     return response;
   }
 };
@@ -2043,6 +2209,7 @@ var SceneNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
     const goalElement = new ResponseBox(this.app);
     goalElement.content = this.currentElement.synopsis;
     goalElement.title = "Scene Goal";
@@ -2071,9 +2238,7 @@ var SessionNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    const status = new ResponseLine(this.app);
-    status.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.currentElement.synopsis != null && this.currentElement.synopsis !== "" ? this.currentElement.synopsis : '<span class="rpgm-missing">Synopsis missing</span>', 4 /* Markdown */);
-    response.addElement(status);
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
     return response;
   }
 };
@@ -2181,6 +2346,7 @@ var AdventureNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
     return response;
   }
 };
@@ -2203,7 +2369,41 @@ var ModelsMap = {
   AgnosticSceneNavigation: SceneNavigationModel,
   AgnosticSession: SessionModel,
   AgnosticSessionNavigation: SessionNavigationModel,
-  AgnosticTimeline: TimelineModel
+  AgnosticTimeline: TimelineModel,
+  RawAdventure: AdventureModel,
+  RawAdventureNavigation: AdventureNavigationModel,
+  RawCampaign: CampaignModel,
+  RawCampaignNavigation: CampaignNavigationModel,
+  RawClue: ClueModel,
+  RawError: ErrorModel,
+  RawEvent: EventModel,
+  RawFaction: FactionModel,
+  RawLocation: LocationModel,
+  RawNotes: NotesModel,
+  RawNpc: NpcModel,
+  RawPc: PcModel,
+  RawScene: SceneModel,
+  RawSceneNavigation: SceneNavigationModel,
+  RawSession: SessionModel,
+  RawSessionNavigation: SessionNavigationModel,
+  RawTimeline: TimelineModel,
+  VampireAdventure: AdventureModel,
+  VampireAdventureNavigation: AdventureNavigationModel,
+  VampireCampaign: CampaignModel,
+  VampireCampaignNavigation: CampaignNavigationModel,
+  VampireClue: ClueModel,
+  VampireError: ErrorModel,
+  VampireEvent: EventModel,
+  VampireFaction: FactionModel,
+  VampireLocation: LocationModel,
+  VampireNotes: NotesModel,
+  VampireNpc: NpcModel,
+  VampirePc: PcModel,
+  VampireScene: SceneModel,
+  VampireSceneNavigation: SceneNavigationModel,
+  VampireSession: SessionModel,
+  VampireSessionNavigation: SessionNavigationModel,
+  VampireTimeline: TimelineModel
 };
 var ModelFactory = class extends AbstractFactory {
   create(k, currentElement, source, sourcePath, contentEl, sourceMeta) {
@@ -2273,9 +2473,11 @@ var AbstractTemplate = class {
   generateData() {
     let response = "";
     response += this.generateFrontmatter();
+    response += this.generateInitialCodeBlock();
     if (this.createFrontMatterOnly !== true) {
       response += this.generateTemplate();
     }
+    response += this.generateLastCodeBlock();
     return response;
   }
   generateFrontmatter() {
@@ -2301,6 +2503,12 @@ var AbstractTemplate = class {
     response += "completed: false\n";
     response += "---\n";
     return response;
+  }
+  generateInitialCodeBlock() {
+    return "";
+  }
+  generateLastCodeBlock() {
+    return "";
   }
   generateFrontmatterRelationships() {
     return null;
@@ -2354,14 +2562,21 @@ var CampaignTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
     return "tags: [" + this.app.plugins.getPlugin("rpg-manager").settings.campaignTag + "/" + this.campaignId + "]\n";
   }
+  generateFrontmatterAdditionalInformation() {
+    return "settings: Agnostic\n";
+  }
   generateFrontmatterDates() {
     return " current: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("campaignNavigation");
+  }
+  generateLastCodeBlock() {
+    return this.getRpgManagerCodeblock("campaign");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("campaignNavigation");
-    response += this.getHeader("Plot");
+    let response = this.getHeader("Plot");
     response += this.getAbtPlot();
-    response += this.getRpgManagerCodeblock("campaign");
     return response;
   }
 };
@@ -2374,11 +2589,16 @@ var AdventureTemplate = class extends AbstractTemplate {
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("adventureNavigation");
+  }
+  generateLastCodeBlock() {
+    return this.getRpgManagerCodeblock("adventure");
+  }
   generateTemplate() {
     let response = this.getHeader("Plot");
     response += this.getAbtPlot();
     response += this.getNotes();
-    response += this.getRpgManagerCodeblock("adventure");
     return response;
   }
 };
@@ -2394,16 +2614,20 @@ var SessionTemplate = class extends AbstractTemplate {
   generateFrontmatterDates() {
     return " session: \n irl: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("sessionNavigation");
+  }
+  generateLastCodeBlock() {
+    return this.getRpgManagerCodeblock("session");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("sessionNavigation");
-    response += this.getHeader("Introduction");
+    let response = this.getHeader("Introduction");
     response += "\n";
     response += this.getHeader("Plot");
     response += this.getHeader("ABT Plot", 3);
     response += this.getAbtPlot();
     response += this.getHeader("Story Circle Plot", 3);
     response += this.getStoryCirclePlot();
-    response += this.getRpgManagerCodeblock("session");
     return response;
   }
 };
@@ -2425,12 +2649,16 @@ var SceneTemplate = class extends AbstractTemplate {
   generateFrontmatterTimes() {
     return " start: \n end: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("sceneNavigation");
+  }
+  generateLastCodeBlock() {
+    return this.getRpgManagerCodeblock("scene");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("sceneNavigation");
-    response += this.getHeader("Trigger");
+    let response = this.getHeader("Trigger");
     response += "\n\n";
     response += this.getNotes();
-    response += this.getRpgManagerCodeblock("scene");
     return response;
   }
 };
@@ -2443,6 +2671,9 @@ var CharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterRelationships() {
     return " characters: \n factions: \n locations: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("pc");
+  }
   generateFrontmatterDates() {
     return " dob: \n death: \n";
   }
@@ -2450,8 +2681,7 @@ var CharacterTemplate = class extends AbstractTemplate {
     return "pronoun: #t/s/h\n";
   }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("pc");
-    response += this.getPlayerCharacterDetails();
+    let response = this.getPlayerCharacterDetails();
     return response;
   }
 };
@@ -2476,9 +2706,11 @@ var NonPlayerCharacterTemplate = class extends AbstractTemplate {
   generateFrontmatterDates() {
     return " dob: \n death: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("npc");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("npc");
-    response += this.getNotes();
+    let response = this.getNotes();
     response += this.getStory();
     return response;
   }
@@ -2495,9 +2727,11 @@ var LocationTemplate = class extends AbstractTemplate {
   generateFrontmatterAdditionalInformation() {
     return 'address: ""\n';
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("location");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("location");
-    response += this.getAdditionalInformation();
+    let response = this.getAdditionalInformation();
     return response;
   }
   generateFrontmatterRelationships() {
@@ -2516,12 +2750,14 @@ var EventTemplate = class extends AbstractTemplate {
   generateFrontmatterRelationships() {
     return " characters: \n clues: \n locations: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("event");
+  }
   generateFrontmatterDates() {
     return " event: \n";
   }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("event");
-    response += this.getAdditionalInformation();
+    let response = this.getAdditionalInformation();
     return response;
   }
 };
@@ -2540,9 +2776,11 @@ var ClueTemplate = class extends AbstractTemplate {
   generateFrontmatterDates() {
     return " found: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("clue");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("clue");
-    response += this.getAdditionalInformation();
+    let response = this.getAdditionalInformation();
     return response;
   }
 };
@@ -2558,9 +2796,11 @@ var FactionTemplate = class extends AbstractTemplate {
   generateFrontmatterRelationships() {
     return " locations: \n";
   }
+  generateInitialCodeBlock() {
+    return this.getRpgManagerCodeblock("faction");
+  }
   generateTemplate() {
-    let response = this.getRpgManagerCodeblock("faction");
-    response += this.getAdditionalInformation();
+    let response = this.getAdditionalInformation();
     return response;
   }
 };
@@ -2576,7 +2816,27 @@ var TemplatesMap = {
   AgnosticLocation: LocationTemplate,
   AgnosticEvent: EventTemplate,
   AgnosticClue: ClueTemplate,
-  AgnosticFaction: FactionTemplate
+  AgnosticFaction: FactionTemplate,
+  RawCampaign: CampaignTemplate,
+  RawAdventure: AdventureTemplate,
+  RawSession: SessionTemplate,
+  RawScene: SceneTemplate,
+  RawCharacter: CharacterTemplate,
+  RawNonPlayerCharacter: NonPlayerCharacterTemplate,
+  RawLocation: LocationTemplate,
+  RawEvent: EventTemplate,
+  RawClue: ClueTemplate,
+  RawFaction: FactionTemplate,
+  VampireCampaign: CampaignTemplate,
+  VampireAdventure: AdventureTemplate,
+  VampireSession: SessionTemplate,
+  VampireScene: SceneTemplate,
+  VampireCharacter: CharacterTemplate,
+  VampireNonPlayerCharacter: NonPlayerCharacterTemplate,
+  VampireLocation: LocationTemplate,
+  VampireEvent: EventTemplate,
+  VampireClue: ClueTemplate,
+  VampireFaction: FactionTemplate
 };
 var TemplateFactory = class extends AbstractFactory {
   create(k, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
@@ -2647,7 +2907,7 @@ var BannerView = class extends AbstractView {
 };
 
 // src/settings/Agnostic/views/BoxView.ts
-var import_obsidian9 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 var BoxView = class extends AbstractView {
   render(container, data) {
     const boxDiv = container.createDiv();
@@ -2656,12 +2916,12 @@ var BoxView = class extends AbstractView {
     const boxTitle = boxDiv.createDiv();
     boxTitle.addClass("title");
     boxTitle.innerText = data.title;
-    import_obsidian9.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
+    import_obsidian8.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
   }
 };
 
 // src/settings/Agnostic/views/BreadcrumbView.ts
-var import_obsidian10 = require("obsidian");
+var import_obsidian9 = require("obsidian");
 var BreadcrumbView = class extends AbstractView {
   render(container, data) {
     const breadcrumbContainer = container.createDiv({ cls: "rpgm-breadcrumb" });
@@ -2687,7 +2947,7 @@ var BreadcrumbView = class extends AbstractView {
         link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
       }
     }
-    import_obsidian10.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
+    import_obsidian9.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
     if (data.nextBreadcrumb != null) {
       if (data.nextBreadcrumb.isInNewLine === false) {
         const separator = lineToUse.createDiv({ cls: "separator" });
@@ -2703,7 +2963,7 @@ var BreadcrumbView = class extends AbstractView {
 };
 
 // src/settings/Agnostic/views/TimelineView.ts
-var import_obsidian11 = require("obsidian");
+var import_obsidian10 = require("obsidian");
 var TimelineView = class extends AbstractView {
   render(container, data) {
     const timeline = container.createDiv({ cls: "rpgm-timeline" });
@@ -2735,8 +2995,8 @@ var TimelineView = class extends AbstractView {
       const details = li.createDiv({ cls: "event-details" });
       const fileLink = details.createEl("h3");
       const synopsis = details.createSpan();
-      import_obsidian11.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
-      import_obsidian11.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
+      import_obsidian10.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
+      import_obsidian10.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
     });
   }
 };
@@ -2757,6 +3017,7 @@ var ImageView = class extends AbstractView {
 // src/settings/Agnostic/views/HeaderView.ts
 var HeaderView = class extends AbstractView {
   render(container, data) {
+    var _a;
     const crs = container.createDiv({ cls: "rpgm-header-info" });
     const crsTitle = crs.createDiv({ cls: "title" });
     data.link.fillContent(crsTitle, this.sourcePath);
@@ -2767,7 +3028,7 @@ var HeaderView = class extends AbstractView {
       const crsClue = crsInfo.createDiv({ cls: "longtext" });
       data.clueFound.fillContent(crsClue, this.sourcePath);
     }
-    crsInfo.createDiv({ cls: "longTitle", text: "Synopsis" });
+    crsInfo.createDiv({ cls: "longTitle", text: (_a = data.synopsisTitle) != null ? _a : "Synopsis" });
     const crsSynopsis = crsInfo.createDiv({ cls: "longtext" });
     data.synopsis.fillContent(crsSynopsis, this.sourcePath);
     if (data.pronoun != null) {
@@ -2836,7 +3097,23 @@ var ViewsMap = {
   AgnosticBreadcrumb: BreadcrumbView,
   AgnosticTimeline: TimelineView,
   AgnosticImage: ImageView,
-  AgnosticHeader: HeaderView
+  AgnosticHeader: HeaderView,
+  RawString: StringView,
+  RawTable: TableView,
+  RawBanner: BannerView,
+  RawBox: BoxView,
+  RawBreadcrumb: BreadcrumbView,
+  RawTimeline: TimelineView,
+  RawImage: ImageView,
+  RawHeader: HeaderView,
+  VampireString: StringView,
+  VampireTable: TableView,
+  VampireBanner: BannerView,
+  VampireBox: BoxView,
+  VampireBreadcrumb: BreadcrumbView,
+  VampireTimeline: TimelineView,
+  VampireImage: ImageView,
+  VampireHeader: HeaderView
 };
 var ViewFactory = class extends AbstractFactory {
   create(k, sourcePath) {
@@ -2858,6 +3135,85 @@ var RpgFactories = class {
     this.pronouns = new PronounFactory(this.app);
     this.templates = new TemplateFactory(this.app);
     this.views = new ViewFactory(this.app);
+  }
+};
+
+// src/RpgModal.ts
+var import_obsidian11 = require("obsidian");
+var RpgModal = class extends import_obsidian11.Modal {
+  constructor(app2, type, create = true, name = null, campaignId = null, adventureId = null, sessionId = null) {
+    super(app2);
+    this.app = app2;
+    this.type = type;
+    this.create = create;
+    this.name = name;
+    this.settings = 0 /* Agnostic */;
+    if (campaignId != null)
+      this.campaignId = campaignId;
+    if (adventureId != null)
+      this.adventureId = adventureId;
+    if (sessionId != null)
+      this.sessionId = sessionId;
+  }
+  onOpen() {
+    super.onOpen();
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("rpgm-modal");
+    contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
+    contentEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
+    this.title = contentEl.createEl("input", { type: "text" });
+    if (this.name !== null) {
+      this.title.value = this.name;
+    }
+    this.titleError = contentEl.createEl("p", { cls: "error" });
+    this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.settings] + DataType[0 /* Campaign */], this.type, this);
+    const childElement = contentEl.createDiv();
+    const cfmo = contentEl.createDiv({ cls: "createFrontMatterOnly" });
+    this.createFrontMatterOnly = cfmo.createEl("input", { type: "checkbox" });
+    this.createFrontMatterOnly.id = "createFrontMatterOnly";
+    const labelFrontMatterOnly = contentEl.createEl("label", { text: "Create Frontmatter only" });
+    labelFrontMatterOnly.htmlFor = "createFrontMatterOnly";
+    this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
+    if (this.type !== 0 /* Campaign */) {
+      this.button.disabled = true;
+    }
+    this.button.addEventListener("click", (e) => {
+      this.save();
+    });
+    this.campaignModal.addElement(childElement);
+  }
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
+    super.onClose();
+  }
+  save() {
+    return __async(this, null, function* () {
+      if (this.title.value === "") {
+        this.titleError.style.display = "block";
+        return;
+      }
+      if (!this.campaignModal.validate())
+        return;
+      if (this.adventureModal != null && !this.adventureModal.validate())
+        return;
+      if (this.sessionModal != null && !this.sessionModal.validate())
+        return;
+      if (this.sceneModal != null && !this.sceneModal.validate())
+        return;
+      if (this.elementModal != null && !this.elementModal.validate())
+        return;
+      this.saver.save(this.settings, this.type, this.create, this.createFrontMatterOnly.checked, this.title.value, this.campaignId, this.adventureId, this.sessionId, this.sceneId);
+      this.close();
+    });
+  }
+  enableButton() {
+    this.button.disabled = false;
+  }
+  getContentEl() {
+    const { contentEl } = this;
+    return contentEl;
   }
 };
 
@@ -2922,19 +3278,19 @@ var RpgManager = class extends import_obsidian12.Plugin {
         id: "rpg-manager-create-" + type.toLowerCase(),
         name: "Create a new " + type,
         callback: () => {
-          let name = null;
-          const activeFile = app.workspace.getActiveFile();
-          if (activeFile != null) {
-            name = activeFile.basename;
-          }
-          this.app.plugins.getPlugin("rpg-manager").factories.modals.open(type, DataType[type], false, name);
+          new RpgModal(this.app, DataType[type]).open();
         }
       });
       this.addCommand({
         id: "rpg-manager-fill-" + type.toLowerCase(),
         name: "Fill with " + type,
         callback: () => {
-          this.app.plugins.getPlugin("rpg-manager").factories.modals.open(type, DataType[type], false);
+          let name = null;
+          const activeFile = app.workspace.getActiveFile();
+          if (activeFile != null) {
+            name = activeFile.basename;
+          }
+          new RpgModal(this.app, DataType[type], false, name).open();
         }
       });
     });

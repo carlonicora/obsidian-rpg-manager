@@ -1,8 +1,6 @@
 import {AbstractResponse} from "../../abstracts/AbstractResponse";
-import {ContentInterface} from "../../interfaces/ContentInterface";
 import {App} from "obsidian";
 import {ResponseType} from "../../enums/ResponseType";
-import {ContentType} from "../../enums/ContentType";
 import {ImageResponseInterface} from "../../interfaces/response/ImageResponseInterface";
 
 export class ResponseImage extends AbstractResponse implements ImageResponseInterface {

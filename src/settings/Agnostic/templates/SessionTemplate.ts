@@ -17,17 +17,24 @@ export class SessionTemplate extends AbstractTemplate {
 			' irl: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('sessionNavigation');
+	}
+
+	protected generateLastCodeBlock(): string {
+		return this.getRpgManagerCodeblock('session');
+	}
+
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('sessionNavigation');
-		response += this.getHeader('Introduction');
+		let response = this.getHeader('Introduction');
 		response += '\n';
 		response += this.getHeader('Plot');
 		response += this.getHeader('ABT Plot', 3);
 		response += this.getAbtPlot();
 		response += this.getHeader('Story Circle Plot', 3);
 		response += this.getStoryCirclePlot();
-		response += this.getRpgManagerCodeblock('session');
 
 		return response;
 	}

@@ -1,14 +1,13 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
-import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 import {ResponseHeader} from "../../../data/responses/ResponseHeader";
-import {ResponseType} from "../../../enums/ResponseType";
 import {ContentType} from "../../../enums/ContentType";
 import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
 import {Character} from "../data/Character";
 import {Clue} from "../data/Clue";
 import {Location} from "../data/Location";
 import {Event} from "../data/Event";
+import {Scene} from "../data/Scene";
 
 export class HeaderComponent extends AbstractComponent{
 	generateData(
@@ -57,6 +56,8 @@ export class HeaderComponent extends AbstractComponent{
 				if (data.date != null) {
 					response.date = data.date;
 				}
+			} else if (data instanceof Scene){
+				response.synopsisTitle = 'Scene Goal';
 			}
 			if (data.synopsis != null && data.synopsis != ''){
 				synopsis = data.synopsis;

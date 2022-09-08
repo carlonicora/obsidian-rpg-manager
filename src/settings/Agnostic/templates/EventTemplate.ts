@@ -18,6 +18,11 @@ export class EventTemplate extends AbstractTemplate {
 			' locations: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('event');
+	}
+
 	protected generateFrontmatterDates(
 	): string|null {
 		return ' event: \n';
@@ -25,8 +30,7 @@ export class EventTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('event');
-		response += this.getAdditionalInformation();
+		let response = this.getAdditionalInformation();
 
 		return response;
 	}

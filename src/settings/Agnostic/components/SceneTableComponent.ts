@@ -1,7 +1,6 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
-import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
 import {SceneInterface} from "../../../interfaces/data/SceneInterface";

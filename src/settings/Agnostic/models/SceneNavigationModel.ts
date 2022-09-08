@@ -3,6 +3,8 @@ import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataIn
 import {ResponseData} from "../../../data/responses/ResponseData";
 import {ResponseBox} from "../../../data/responses/ResponseBox";
 import {SceneInterface} from "../../../interfaces/data/SceneInterface";
+import {CampaignSetting} from "../../../enums/CampaignSetting";
+import {SingleComponentKey} from "../../../factories/ComponentFactory";
 
 export class SceneNavigationModel extends AbstractModel {
 	protected currentElement: SceneInterface;
@@ -11,6 +13,13 @@ export class SceneNavigationModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());
+
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Header' as SingleComponentKey<any>,
+				this.currentElement
+			)
+		);
 
 		const goalElement = new ResponseBox(this.app);
 		goalElement.content = this.currentElement.synopsis;

@@ -1,13 +1,13 @@
-import {App, MarkdownView} from "obsidian";
+import {MarkdownView} from "obsidian";
 import {DataType} from "../enums/DataType";
-import {ModalFactory, SingleModalKey} from "./ModalFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {SingleTemplateKey, TemplateFactory} from "./TemplateFactory";
+import {SingleTemplateKey} from "./TemplateFactory";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 
 export class FileFactory extends AbstractFactory {
 	public async create(
+		settings: CampaignSetting,
 		type: DataType,
 		create: boolean,
 		createFrontMatterOnly: boolean,
@@ -17,8 +17,6 @@ export class FileFactory extends AbstractFactory {
 		sessionId: number|null = null,
 		sceneId: number|null = null,
 	): Promise<void> {
-		const settings = this.getSettings(campaignId);
-
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			CampaignSetting[settings] + DataType[type] as SingleTemplateKey<any>,
 			createFrontMatterOnly,
@@ -45,7 +43,6 @@ export class FileFactory extends AbstractFactory {
 	}
 
 	public async silentCreate(
-		app: App,
 		type: DataType,
 		name: string,
 		campaignId: number,

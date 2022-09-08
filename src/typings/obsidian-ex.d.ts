@@ -1,5 +1,5 @@
 import "obsidian";
-import RpgManager, {RpgManagerSettings} from "../main";
+import {RpgManagerSettings} from "../main";
 import {RpgFunctions} from "../RpgFunctions";
 import {RpgData} from "../data/RpgData";
 import {RpgFactories} from "../RpgFactories";

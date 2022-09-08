@@ -3,7 +3,6 @@ import {ResponseType} from "../../enums/ResponseType";
 import {ContentType} from "../../enums/ContentType";
 import {StringResponseInterface} from "../../interfaces/response/StringResponseInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
-import {ContentFactory} from "../../factories/ContentFactory";
 import {App} from "obsidian";
 
 export class ResponseLine extends AbstractResponse implements StringResponseInterface {

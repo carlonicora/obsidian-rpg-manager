@@ -2,7 +2,6 @@ import {AbstractRpgElementData} from "../../../abstracts/AbstractRpgElementData"
 import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 import {Pronoun} from "../../../enums/Pronoun";
 import {CachedMetadata, TFile} from "obsidian";
-import {PronounFactory} from "../../../factories/PronounFactory";
 
 export class Character extends AbstractRpgElementData implements CharacterInterface {
 	public dob: Date|null;

@@ -1,7 +1,6 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
 import {HeaderResponseInterface} from "../../../interfaces/response/HeaderResponseInterface";
 import {Pronoun} from "../../../enums/Pronoun";
-import {Component, MarkdownRenderer} from "obsidian";
 
 export class HeaderView extends AbstractView {
 	render(
@@ -22,7 +21,7 @@ export class HeaderView extends AbstractView {
 			data.clueFound.fillContent(crsClue, this.sourcePath);
 		}
 
-		crsInfo.createDiv({cls: 'longTitle', text: 'Synopsis'});
+		crsInfo.createDiv({cls: 'longTitle', text: data.synopsisTitle ?? 'Synopsis'});
 		const crsSynopsis = crsInfo.createDiv({cls: 'longtext'});
 		data.synopsis.fillContent(crsSynopsis, this.sourcePath);
 

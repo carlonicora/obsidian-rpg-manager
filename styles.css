@@ -185,6 +185,22 @@
 .rpgm-modal h2.rpgm-modal-title {
   font-size: 1.5em;
 }
+.rpgm-modal .title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  display: inline-block;
+  overflow: visible;
+  margin: 10px;
+  float: left;
+  border-left: solid 1px #eeeeee;
+}
+.rpgm-modal .container {
+  float: left;
+}
+.rpgm-modal .clear {
+  clear: both;
+}
 .rpgm-modal input[type=text], .rpgm-modal input[type=text]:focus {
   border: none;
   border-bottom: solid 1px #eeeeee;

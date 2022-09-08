@@ -1,7 +1,7 @@
 import {App, CachedMetadata, Component, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {DataFactory, SingleDataKey} from "../factories/DataFactory";
+import {SingleDataKey} from "../factories/DataFactory";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {RpgDataList} from "./RpgDataList";
 import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
@@ -12,6 +12,7 @@ import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
+import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
 
 export class RpgData extends Component {
 	private data: RpgDataList;
@@ -120,14 +121,16 @@ export class RpgData extends Component {
 						(restrictedToType === null && (fileType !== DataType.Campaign && fileType !== DataType.Adventure && fileType !== DataType.Session && fileType !== DataType.Scene))
 					)
 				) {
-					this.data.addElement(
-						this.app.plugins.getPlugin('rpg-manager').factories.data.create(
-							CampaignSetting[settings] + DataType[fileType] as SingleDataKey<any>,
-							fileType,
-							file,
-							metadata
-						)
+					const element: RpgOutlineDataInterface|RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
+						CampaignSetting[settings] + DataType[fileType] as SingleDataKey<any>,
+						fileType,
+						file,
+						metadata
 					);
+
+					if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
+
+					this.data.addElement(element);
 				}
 			}
 		}
@@ -193,7 +196,7 @@ export class RpgData extends Component {
 		sceneId: number,
 	): SceneInterface|null {
 		const scenes = this.data.where((scene: SceneInterface) =>
-			scene.type === DataType.Session &&
+			scene.type === DataType.Scene &&
 			scene.campaign != null &&
 			scene.campaign.campaignId === campaignId &&
 			scene.adventure != null &&
@@ -208,7 +211,7 @@ export class RpgData extends Component {
 
 	public getElementByObsidianId(
 		obsidianId: string,
-	): RpgOutlineDataInterface|RpgElementDataInterface|null {
+	): any {
 		const list = this.data.where((data: RpgDataInterface) =>
 			data.obsidianId === obsidianId
 		);
@@ -233,12 +236,14 @@ export class RpgData extends Component {
 	}
 
 	public getSessionList(
+		campaignId: number|null = null,
 		adventureId: number|null = null,
 	): RpgDataListInterface {
 		return this.data
 			.where((data: SessionInterface) =>
 				data.type === DataType.Session &&
-				(adventureId ? data.adventure.adventureId === adventureId : true)
+				(adventureId ? data.adventure.adventureId === adventureId : true) &&
+				(campaignId ? data.campaign.campaignId === campaignId : true)
 			);
 	}
 
@@ -253,10 +258,12 @@ export class RpgData extends Component {
 	}
 
 	public getCharacterList(
+		campaignId: number|null = null,
 	): RpgDataListInterface {
 		return this.data
 			.where((data: CharacterInterface) =>
-				(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter)
+				(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
+				(campaignId ? data.campaign.campaignId === campaignId : true)
 			);
 	}
 
@@ -355,6 +362,4 @@ export class RpgData extends Component {
 		});
 		return response;
 	}
-
-
 }

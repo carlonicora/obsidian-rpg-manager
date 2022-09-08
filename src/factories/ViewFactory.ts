@@ -17,6 +17,24 @@ const ViewsMap = {
 	AgnosticTimeline: TimelineView,
 	AgnosticImage: ImageView,
 	AgnosticHeader: HeaderView,
+
+	RawString: StringView,
+	RawTable: TableView,
+	RawBanner: BannerView,
+	RawBox: BoxView,
+	RawBreadcrumb: BreadcrumbView,
+	RawTimeline: TimelineView,
+	RawImage: ImageView,
+	RawHeader: HeaderView,
+
+	VampireString: StringView,
+	VampireTable: TableView,
+	VampireBanner: BannerView,
+	VampireBox: BoxView,
+	VampireBreadcrumb: BreadcrumbView,
+	VampireTimeline: TimelineView,
+	VampireImage: ImageView,
+	VampireHeader: HeaderView,
 };
 type ViewsMapType = typeof ViewsMap;
 type ViewKeys = keyof ViewsMapType;

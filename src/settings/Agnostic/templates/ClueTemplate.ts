@@ -22,10 +22,14 @@ export class ClueTemplate extends AbstractTemplate {
 		return ' found: \n';
 	}
 
+	protected generateInitialCodeBlock(
+	): string {
+		return this.getRpgManagerCodeblock('clue');
+	}
+
 	protected generateTemplate(
 	): string {
-		let response = this.getRpgManagerCodeblock('clue');
-		response += this.getAdditionalInformation();
+		let response = this.getAdditionalInformation();
 
 		return response;
 	}

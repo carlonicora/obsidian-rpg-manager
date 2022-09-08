@@ -1,8 +1,6 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseLine} from "../../../data/responses/ResponseLine";
-import {PronounFactory} from "../../../factories/PronounFactory";
-import {ContentFactory} from "../../../factories/ContentFactory";
 import {ContentType} from "../../../enums/ContentType";
 import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 

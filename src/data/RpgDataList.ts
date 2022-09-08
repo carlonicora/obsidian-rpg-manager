@@ -1,7 +1,5 @@
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {TimelineElementResponseInterface} from "../interfaces/response/TimelineElementResponseInterface";
 
 export class RpgDataList implements RpgDataListInterface{
 	public elements: RpgDataInterface[] = [];
@@ -17,7 +15,6 @@ export class RpgDataList implements RpgDataListInterface{
 
 		return response;
 	}
-
 
 	public sort(
 		comparatorFunction: any,

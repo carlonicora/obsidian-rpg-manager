@@ -10,8 +10,8 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 	public irl: Date|null;
 
 	public adventure: AdventureInterface;
-	public previousSession: SessionInterface|null;
-	public nextSession: SessionInterface|null;
+	public previousSession: SessionInterface|null=null;
+	public nextSession: SessionInterface|null=null;
 
 	public reload(
 		file: TFile,

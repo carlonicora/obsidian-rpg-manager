@@ -1,4 +1,3 @@
 import {RpgGenericDataInterface} from "./RpgGenericDataInterface";
 
-export interface RpgElementDataInterface extends RpgGenericDataInterface {
-}
+export type RpgElementDataInterface = RpgGenericDataInterface

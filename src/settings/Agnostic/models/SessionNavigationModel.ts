@@ -1,10 +1,9 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {ResponseLine} from "../../../data/responses/ResponseLine";
-import {ContentFactory} from "../../../factories/ContentFactory";
-import {ContentType} from "../../../enums/ContentType";
 import {SessionInterface} from "../../../interfaces/data/SessionInterface";
+import {CampaignSetting} from "../../../enums/CampaignSetting";
+import {SingleComponentKey} from "../../../factories/ComponentFactory";
 
 export class SessionNavigationModel extends AbstractModel {
 	protected currentElement: SessionInterface;
@@ -14,14 +13,12 @@ export class SessionNavigationModel extends AbstractModel {
 
 		response.addElement(this.generateBreadcrumb());
 
-		const status = new ResponseLine(this.app);
-		status.content =this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
-			(this.currentElement.synopsis != null && this.currentElement.synopsis !== ''
-				? this.currentElement.synopsis
-				: '<span class="rpgm-missing">Synopsis missing</span>'),
-			ContentType.Markdown,
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting[this.currentElement.campaign.settings] + 'Header' as SingleComponentKey<any>,
+				this.currentElement
+			)
 		);
-		response.addElement(status);
 
 		return response;
 	}

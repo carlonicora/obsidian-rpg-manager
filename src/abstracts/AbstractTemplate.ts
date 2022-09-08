@@ -21,9 +21,13 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 
 		response += this.generateFrontmatter();
 
+		response += this.generateInitialCodeBlock();
+
 		if (this.createFrontMatterOnly !== true) {
 			response += this.generateTemplate();
 		}
+
+		response += this.generateLastCodeBlock();
 
 		return response;
 	}
@@ -58,6 +62,16 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		response += '---\n';
 
 		return response;
+	}
+
+	protected generateInitialCodeBlock(
+	): string {
+		return '';
+	}
+
+	protected generateLastCodeBlock(
+	): string {
+		return '';
 	}
 
 	protected generateFrontmatterRelationships(

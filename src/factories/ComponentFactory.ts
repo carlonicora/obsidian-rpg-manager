@@ -10,7 +10,6 @@ import {FactionTableComponent} from "../settings/Agnostic/components/FactionTabl
 import {SceneTableComponent} from "../settings/Agnostic/components/SceneTableComponent";
 import {BannerComponent} from "../settings/Agnostic/components/BannerComponent";
 import {CharacterSynopsisComponent} from "../settings/Agnostic/components/CharacterSynopsisComponent";
-import {App} from "obsidian";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageComponent} from "../settings/Agnostic/components/ImageComponent";
@@ -29,6 +28,32 @@ const ComponentsMap = {
 	AgnosticCharacterSynopsis: CharacterSynopsisComponent,
 	AgnosticImage: ImageComponent,
 	AgnosticHeader: HeaderComponent,
+
+	RawSessionTable: SessionTableComponent,
+	RawAdventureTable: AdventureTableComponent,
+	RawCharacterTable: CharacterTableComponent,
+	RawLocationTable: LocationTableComponent,
+	RawEventTable: EventTableComponent,
+	RawClueTable: ClueTableComponent,
+	RawFactionTable: FactionTableComponent,
+	RawSceneTable: SceneTableComponent,
+	RawBanner: BannerComponent,
+	RawCharacterSynopsis: CharacterSynopsisComponent,
+	RawImage: ImageComponent,
+	RawHeader: HeaderComponent,
+
+	VampireSessionTable: SessionTableComponent,
+	VampireAdventureTable: AdventureTableComponent,
+	VampireCharacterTable: CharacterTableComponent,
+	VampireLocationTable: LocationTableComponent,
+	VampireEventTable: EventTableComponent,
+	VampireClueTable: ClueTableComponent,
+	VampireFactionTable: FactionTableComponent,
+	VampireSceneTable: SceneTableComponent,
+	VampireBanner: BannerComponent,
+	VampireCharacterSynopsis: CharacterSynopsisComponent,
+	VampireImage: ImageComponent,
+	VampireHeader: HeaderComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;
