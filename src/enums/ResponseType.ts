@@ -8,4 +8,6 @@ export enum ResponseType {
 	Timeline,
 	Image,
 	Header,
+	AbtPlot,
+	StoryCirclePlot,
 }

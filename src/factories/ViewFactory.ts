@@ -7,6 +7,8 @@ import {TimelineView} from "../settings/Agnostic/views/TimelineView";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageView} from "../settings/Agnostic/views/ImageView";
 import {HeaderView} from "../settings/Agnostic/views/HeaderView";
+import {AbtPlotView} from "../settings/Agnostic/views/AbtPlotView";
+import {StoryCirclePlotView} from "../settings/Agnostic/views/StoryCirclePlotView";
 
 const ViewsMap = {
 	AgnosticString: StringView,
@@ -17,6 +19,8 @@ const ViewsMap = {
 	AgnosticTimeline: TimelineView,
 	AgnosticImage: ImageView,
 	AgnosticHeader: HeaderView,
+	AgnosticAbtPlot: AbtPlotView,
+	AgnosticStoryCirclePlot: StoryCirclePlotView,
 
 	RawString: StringView,
 	RawTable: TableView,
@@ -26,6 +30,8 @@ const ViewsMap = {
 	RawTimeline: TimelineView,
 	RawImage: ImageView,
 	RawHeader: HeaderView,
+	RawAbtPlot: AbtPlotView,
+	RawStoryCirclePlot: StoryCirclePlotView,
 
 	VampireString: StringView,
 	VampireTable: TableView,
@@ -35,6 +41,8 @@ const ViewsMap = {
 	VampireTimeline: TimelineView,
 	VampireImage: ImageView,
 	VampireHeader: HeaderView,
+	VampireAbtPlot: AbtPlotView,
+	VampireStoryCirclePlot: StoryCirclePlotView,
 };
 type ViewsMapType = typeof ViewsMap;
 type ViewKeys = keyof ViewsMapType;

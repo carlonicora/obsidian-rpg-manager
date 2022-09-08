@@ -14,6 +14,23 @@
   color: #fff;
   position: relative;
   min-height: 350px;
+  height: 350px;
+}
+
+.rpgm-plot-container {
+  width: 100%;
+  border-left: solid 1px #eeeeee;
+  padding: 30px;
+  margin-bottom: 20px;
+  color: #808080;
+}
+
+.rpgm-plot {
+  margin: 30px;
+  color: #808080;
+}
+.rpgm-plot p {
+  margin: 0px;
 }
 
 .rpgm-header-overlay {

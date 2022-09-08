@@ -2,6 +2,7 @@ import {ResponseElementInterface} from "./ResponseElementInterface";
 import {ContentInterface} from "../ContentInterface";
 
 export interface TableResponseInterface extends ResponseElementInterface {
+	class: string|null;
 	headers: Array<ContentInterface>;
 	content: Array<Array<ContentInterface>>;
 

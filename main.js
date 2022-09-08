@@ -68,6 +68,8 @@ var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
   ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
   ResponseType2[ResponseType2["Image"] = 7] = "Image";
   ResponseType2[ResponseType2["Header"] = 8] = "Header";
+  ResponseType2[ResponseType2["AbtPlot"] = 9] = "AbtPlot";
+  ResponseType2[ResponseType2["StoryCirclePlot"] = 10] = "StoryCirclePlot";
   return ResponseType2;
 })(ResponseType || {});
 
@@ -689,6 +691,7 @@ var ResponseTable = class extends AbstractResponse {
   constructor(app2) {
     super(app2);
     this.responseType = 0 /* Table */;
+    this.class = null;
     this.headers = [];
     this.content = [];
   }
@@ -1168,6 +1171,78 @@ var HeaderComponent = class extends AbstractComponent {
   }
 };
 
+// src/settings/Agnostic/components/AbtPlotComponent.ts
+var AbtPlotComponent = class extends AbstractComponent {
+  generateData(data, title, additionalInformation) {
+    if (additionalInformation == null)
+      return null;
+    const response = new ResponseTable(this.app);
+    response.title = "ABT Plot";
+    response.class = "rpgm-plot";
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.and ? additionalInformation.and : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.but ? additionalInformation.but : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.therefore ? additionalInformation.therefore : "", 4 /* Markdown */)
+    ]);
+    return response;
+  }
+};
+
+// src/settings/Agnostic/components/StoryCirclePlotComponent.ts
+var StoryCirclePlotComponent = class extends AbstractComponent {
+  generateData(data, title, additionalInformation) {
+    if (additionalInformation == null)
+      return null;
+    const response = new ResponseTable(this.app);
+    response.title = "Story Circle Plot";
+    response.class = "rpgm-plot";
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.you ? additionalInformation.you : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.go ? additionalInformation.go : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.search ? additionalInformation.search : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.find ? additionalInformation.find : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.take ? additionalInformation.take : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.return ? additionalInformation.return : "", 4 /* Markdown */)
+    ]);
+    response.addContent([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.change ? additionalInformation.change : "", 4 /* Markdown */)
+    ]);
+    return response;
+  }
+};
+
 // src/factories/ComponentFactory.ts
 var ComponentsMap = {
   AgnosticSessionTable: SessionTableComponent,
@@ -1182,6 +1257,8 @@ var ComponentsMap = {
   AgnosticCharacterSynopsis: CharacterSynopsisComponent,
   AgnosticImage: ImageComponent,
   AgnosticHeader: HeaderComponent,
+  AgnosticAbtPlot: AbtPlotComponent,
+  AgnosticStoryCirclePlot: StoryCirclePlotComponent,
   RawSessionTable: SessionTableComponent,
   RawAdventureTable: AdventureTableComponent,
   RawCharacterTable: CharacterTableComponent,
@@ -1194,6 +1271,8 @@ var ComponentsMap = {
   RawCharacterSynopsis: CharacterSynopsisComponent,
   RawImage: ImageComponent,
   RawHeader: HeaderComponent,
+  RawAbtPlot: AbtPlotComponent,
+  RawStoryCirclePlot: StoryCirclePlotComponent,
   VampireSessionTable: SessionTableComponent,
   VampireAdventureTable: AdventureTableComponent,
   VampireCharacterTable: CharacterTableComponent,
@@ -1205,12 +1284,14 @@ var ComponentsMap = {
   VampireBanner: BannerComponent,
   VampireCharacterSynopsis: CharacterSynopsisComponent,
   VampireImage: ImageComponent,
-  VampireHeader: HeaderComponent
+  VampireHeader: HeaderComponent,
+  VampireAbtPlot: AbtPlotComponent,
+  VampireStoryCirclePlot: StoryCirclePlotComponent
 };
 var ComponentFactory = class extends AbstractFactory {
-  create(k, data, title = null) {
+  create(k, data, title = null, additionalInformation = null) {
     const component = new ComponentsMap[k](this.app);
-    return component.generateData(data, title);
+    return component.generateData(data, title, additionalInformation);
   }
 };
 
@@ -2078,8 +2159,12 @@ var CampaignModel = class extends AbstractModel {
 // src/settings/Agnostic/models/CampaignNavigationModel.ts
 var CampaignNavigationModel = class extends AbstractModel {
   generateData() {
+    var _a;
     const response = new ResponseData();
     response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "Banner", this.currentElement));
+    if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+    }
     return response;
   }
 };
@@ -2236,9 +2321,16 @@ var SessionModel = class extends AbstractModel {
 // src/settings/Agnostic/models/SessionNavigationModel.ts
 var SessionNavigationModel = class extends AbstractModel {
   generateData() {
+    var _a, _b;
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
     response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
+    if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+    }
+    if (((_b = this.sourceMeta) == null ? void 0 : _b.storycircle) != null) {
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "StoryCirclePlot", this.currentElement, null, this.sourceMeta.storycircle));
+    }
     return response;
   }
 };
@@ -2344,9 +2436,13 @@ var TimelineModel = class extends AbstractModel {
 // src/settings/Agnostic/models/AdventureNavigationModel.ts
 var AdventureNavigationModel = class extends AbstractModel {
   generateData() {
+    var _a;
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
     response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
+    if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+    }
     return response;
   }
 };
@@ -2868,14 +2964,19 @@ var TableView = class extends AbstractView {
     }
     const table = divContainer.createEl("table");
     table.addClass("rpgm-table");
-    const header = table.createEl("tr");
-    data.headers.forEach((content) => {
-      const cell = header.createEl("th");
-      content.fillContent(cell, this.sourcePath);
-      if (content.isInLine) {
-        cell.addClass("inline");
-      }
-    });
+    if (data.class != null) {
+      table.addClass(data.class);
+    }
+    if (data.headers != null && data.headers.length > 0) {
+      const header = table.createEl("tr");
+      data.headers.forEach((content) => {
+        const cell = header.createEl("th");
+        content.fillContent(cell, this.sourcePath);
+        if (content.isInLine) {
+          cell.addClass("inline");
+        }
+      });
+    }
     data.content.forEach((element) => {
       const row = table.createEl("tr");
       element.forEach((content) => {
@@ -3088,6 +3189,48 @@ var HeaderView = class extends AbstractView {
   }
 };
 
+// src/settings/Agnostic/views/AbtPlotView.ts
+var AbtPlotView = class extends AbstractView {
+  render(container, data) {
+    const titleEl = container.createEl("h2");
+    titleEl.textContent = "ABT Plot";
+    const plotEl = container.createDiv({ cls: "rpgm-plot-container" });
+    const needEl = plotEl.createEl("p");
+    data.need.fillContent(needEl, this.sourcePath);
+    const andEl = plotEl.createEl("p");
+    data.and.fillContent(andEl, this.sourcePath);
+    const butEl = plotEl.createEl("p");
+    data.but.fillContent(butEl, this.sourcePath);
+    const thereforeEl = plotEl.createEl("p");
+    data.therefore.fillContent(thereforeEl, this.sourcePath);
+  }
+};
+
+// src/settings/Agnostic/views/StoryCirclePlotView.ts
+var StoryCirclePlotView = class extends AbstractView {
+  render(container, data) {
+    const titleEl = container.createEl("h2");
+    titleEl.textContent = "Story Circle Plot";
+    const plotEl = container.createDiv({ cls: "rpgm-plot-container" });
+    const youEl = plotEl.createEl("p");
+    data.you.fillContent(youEl, this.sourcePath);
+    const needEl = plotEl.createEl("p");
+    data.need.fillContent(needEl, this.sourcePath);
+    const goEl = plotEl.createEl("p");
+    data.go.fillContent(goEl, this.sourcePath);
+    const searchEl = plotEl.createEl("p");
+    data.search.fillContent(searchEl, this.sourcePath);
+    const findEl = plotEl.createEl("p");
+    data.find.fillContent(findEl, this.sourcePath);
+    const takeEl = plotEl.createEl("p");
+    data.take.fillContent(takeEl, this.sourcePath);
+    const returnEl = plotEl.createEl("p");
+    data.return.fillContent(returnEl, this.sourcePath);
+    const changeEl = plotEl.createEl("p");
+    data.change.fillContent(changeEl, this.sourcePath);
+  }
+};
+
 // src/factories/ViewFactory.ts
 var ViewsMap = {
   AgnosticString: StringView,
@@ -3098,6 +3241,8 @@ var ViewsMap = {
   AgnosticTimeline: TimelineView,
   AgnosticImage: ImageView,
   AgnosticHeader: HeaderView,
+  AgnosticAbtPlot: AbtPlotView,
+  AgnosticStoryCirclePlot: StoryCirclePlotView,
   RawString: StringView,
   RawTable: TableView,
   RawBanner: BannerView,
@@ -3106,6 +3251,8 @@ var ViewsMap = {
   RawTimeline: TimelineView,
   RawImage: ImageView,
   RawHeader: HeaderView,
+  RawAbtPlot: AbtPlotView,
+  RawStoryCirclePlot: StoryCirclePlotView,
   VampireString: StringView,
   VampireTable: TableView,
   VampireBanner: BannerView,
@@ -3113,7 +3260,9 @@ var ViewsMap = {
   VampireBreadcrumb: BreadcrumbView,
   VampireTimeline: TimelineView,
   VampireImage: ImageView,
-  VampireHeader: HeaderView
+  VampireHeader: HeaderView,
+  VampireAbtPlot: AbtPlotView,
+  VampireStoryCirclePlot: StoryCirclePlotView
 };
 var ViewFactory = class extends AbstractFactory {
   create(k, sourcePath) {

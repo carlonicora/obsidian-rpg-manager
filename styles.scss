@@ -19,12 +19,7 @@ $blue: #2020ff;
 }
 
 .rpgm-container {
-	//max-width: 350px;
-	//max-height: 630px;
 	overflow: hidden;
-	//margin: 30px auto 0;
-	//box-shadow: 0 0 40px lighten($black, 50);
-	//font-family: 'Open Sans', sans-serif;
 }
 
 .rpgm-header {
@@ -32,6 +27,26 @@ $blue: #2020ff;
 	color: $white;
 	position: relative;
 	min-height: 350px;
+	height: 350px;
+}
+
+.rpgm-plot-container {
+	width: 100%;
+	border-left: solid 1px $off-white;
+	padding: 30px;
+	margin-bottom: 20px;
+	color: $dark-grey;
+
+
+}
+
+.rpgm-plot {
+	margin: 30px;
+	color: $dark-grey;
+
+	p {
+		margin: 0px;
+	}
 }
 
 .rpgm-header-overlay {
@@ -491,3 +506,4 @@ $blue: #2020ff;
 		}
 	}
 }
+

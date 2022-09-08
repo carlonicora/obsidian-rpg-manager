@@ -20,6 +20,28 @@ export class SessionNavigationModel extends AbstractModel {
 			)
 		);
 
+		if (this.sourceMeta?.abt != null){
+			response.addElement(
+				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+					CampaignSetting[this.currentElement.campaign.settings] + 'AbtPlot' as SingleComponentKey<any>,
+					this.currentElement,
+					null,
+					this.sourceMeta.abt,
+				)
+			);
+		}
+
+		if (this.sourceMeta?.storycircle != null){
+			response.addElement(
+				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+					CampaignSetting[this.currentElement.campaign.settings] + 'StoryCirclePlot' as SingleComponentKey<any>,
+					this.currentElement,
+					null,
+					this.sourceMeta.storycircle,
+				)
+			);
+		}
+
 		return response;
 	}
 }

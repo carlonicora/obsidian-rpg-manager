@@ -5,6 +5,7 @@ import {ContentInterface} from "../../interfaces/ContentInterface";
 import {App} from "obsidian";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
+	public class: string|null;
 	public headers: Array<ContentInterface>;
 	public content: Array<Array<ContentInterface>>;
 
@@ -13,6 +14,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 	) {
 		super(app);
 		this.responseType = ResponseType.Table;
+		this.class = null;
 		this.headers = [];
 		this.content = [];
 	}

@@ -14,6 +14,8 @@ import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageComponent} from "../settings/Agnostic/components/ImageComponent";
 import {HeaderComponent} from "../settings/Agnostic/components/HeaderComponent";
+import {AbtPlotComponent} from "../settings/Agnostic/components/AbtPlotComponent";
+import {StoryCirclePlotComponent} from "../settings/Agnostic/components/StoryCirclePlotComponent";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -28,6 +30,8 @@ const ComponentsMap = {
 	AgnosticCharacterSynopsis: CharacterSynopsisComponent,
 	AgnosticImage: ImageComponent,
 	AgnosticHeader: HeaderComponent,
+	AgnosticAbtPlot: AbtPlotComponent,
+	AgnosticStoryCirclePlot: StoryCirclePlotComponent,
 
 	RawSessionTable: SessionTableComponent,
 	RawAdventureTable: AdventureTableComponent,
@@ -41,6 +45,8 @@ const ComponentsMap = {
 	RawCharacterSynopsis: CharacterSynopsisComponent,
 	RawImage: ImageComponent,
 	RawHeader: HeaderComponent,
+	RawAbtPlot: AbtPlotComponent,
+	RawStoryCirclePlot: StoryCirclePlotComponent,
 
 	VampireSessionTable: SessionTableComponent,
 	VampireAdventureTable: AdventureTableComponent,
@@ -54,6 +60,8 @@ const ComponentsMap = {
 	VampireCharacterSynopsis: CharacterSynopsisComponent,
 	VampireImage: ImageComponent,
 	VampireHeader: HeaderComponent,
+	VampireAbtPlot: AbtPlotComponent,
+	VampireStoryCirclePlot: StoryCirclePlotComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;
@@ -64,8 +72,9 @@ export class ComponentFactory extends AbstractFactory {
 		k: SingleComponentKey<K>,
 		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null = null,
+		additionalInformation: any|null = null,
 	): ResponseElementInterface|null {
 		const component: ComponentInterface = new ComponentsMap[k](this.app);
-		return component.generateData(data, title);
+		return component.generateData(data, title, additionalInformation);
 	}
 }
