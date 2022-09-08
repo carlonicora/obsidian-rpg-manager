@@ -18,7 +18,13 @@ export class CampaignTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		return this.getRpgManagerCodeblock('campaignNavigation');
+		let additionalInformation = ' abt: \n' +
+			'  need: \n' +
+			'  and: \n' +
+			'  but: \n' +
+			'  therefore: \n';
+
+		return this.getRpgManagerCodeblock('campaignNavigation', additionalInformation);
 	}
 
 	protected generateLastCodeBlock(): string {

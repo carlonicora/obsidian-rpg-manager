@@ -17,4 +17,6 @@ export interface HeaderResponseInterface extends ResponseElementInterface {
 	address: string|null;
 	date: Date|null;
 	synopsisTitle: string|null;
+	action: ContentInterface|null;
+	trigger: ContentInterface|null;
 }

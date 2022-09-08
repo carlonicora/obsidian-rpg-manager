@@ -1108,7 +1108,7 @@ var Scene = class extends AbstractRpgOutlineData {
 
 // src/settings/Agnostic/components/HeaderComponent.ts
 var HeaderComponent = class extends AbstractComponent {
-  generateData(data, title) {
+  generateData(data, title, additionalInformation = null) {
     var _a;
     const response = new ResponseHeader(this.app);
     response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
@@ -1146,6 +1146,14 @@ var HeaderComponent = class extends AbstractComponent {
         }
       } else if (data instanceof Scene) {
         response.synopsisTitle = "Scene Goal";
+        if (data.action != null && data.action != "") {
+          response.action = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.action, 4 /* Markdown */);
+        } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
+          response.action = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.action, 4 /* Markdown */);
+        }
+        if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
+          response.trigger = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.trigger, 4 /* Markdown */);
+        }
       }
       if (data.synopsis != null && data.synopsis != "") {
         synopsis = data.synopsis;
@@ -2208,31 +2216,12 @@ var SceneModel = class extends AbstractModel {
   }
 };
 
-// src/data/responses/ResponseBox.ts
-var ResponseBox = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.colour = "white";
-    this.responseType = 4 /* Box */;
-  }
-};
-
 // src/settings/Agnostic/models/SceneNavigationModel.ts
 var SceneNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-    const goalElement = new ResponseBox(this.app);
-    goalElement.content = this.currentElement.synopsis;
-    goalElement.title = "Scene Goal";
-    goalElement.colour = "white";
-    response.addElement(goalElement);
-    const actionsElement = new ResponseBox(this.app);
-    actionsElement.content = this.currentElement.action;
-    actionsElement.title = "Player Character's Action";
-    actionsElement.colour = "off-white";
-    response.addElement(actionsElement);
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement, null, this.sourceMeta));
     return response;
   }
 };
@@ -2528,8 +2517,13 @@ var AbstractTemplate = class {
   getHeader(title, level = 2) {
     return "#".repeat(level) + " " + title + "\n";
   }
-  getRpgManagerCodeblock(funct) {
-    return "```RpgManager\n" + funct + "\n```\n";
+  getRpgManagerCodeblock(funct, additionalInformation = null) {
+    let response = "```RpgManager\n" + funct + "\n";
+    if (additionalInformation != null) {
+      response += additionalInformation;
+    }
+    response += "```\n";
+    return response;
   }
   getAbtPlot() {
     return ">\n>\n>\n>**AND** \n>\n>**BUT** \n>\n>**THEREFORE** \n>\n\n";
@@ -2563,7 +2557,8 @@ var CampaignTemplate = class extends AbstractTemplate {
     return " current: \n";
   }
   generateInitialCodeBlock() {
-    return this.getRpgManagerCodeblock("campaignNavigation");
+    let additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
+    return this.getRpgManagerCodeblock("campaignNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
     return this.getRpgManagerCodeblock("campaign");
@@ -2587,13 +2582,11 @@ var AdventureTemplate = class extends AbstractTemplate {
     return this.getRpgManagerCodeblock("adventureNavigation");
   }
   generateLastCodeBlock() {
-    return this.getRpgManagerCodeblock("adventure");
+    let additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
+    return this.getRpgManagerCodeblock("adventure", additionalInformation);
   }
   generateTemplate() {
-    let response = this.getHeader("Plot");
-    response += this.getAbtPlot();
-    response += this.getNotes();
-    return response;
+    return this.getNotes();
   }
 };
 
@@ -2609,7 +2602,8 @@ var SessionTemplate = class extends AbstractTemplate {
     return " session: \n irl: \n";
   }
   generateInitialCodeBlock() {
-    return this.getRpgManagerCodeblock("sessionNavigation");
+    let additionalInformation = ' abt: \n  need: \n  and: \n  but: \n  therefore: \n storycircle: \n  you: ""\n  need: ""\n  go: ""\n  search: ""\n  find: ""\n  take: ""\n  return: ""\n  change: ""\n';
+    return this.getRpgManagerCodeblock("sessionNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
     return this.getRpgManagerCodeblock("session");
@@ -2644,7 +2638,8 @@ var SceneTemplate = class extends AbstractTemplate {
     return " start: \n end: \n";
   }
   generateInitialCodeBlock() {
-    return this.getRpgManagerCodeblock("sceneNavigation");
+    let additionalInformation = " trigger: \n action: \n";
+    return this.getRpgManagerCodeblock("sceneNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
     return this.getRpgManagerCodeblock("scene");
@@ -3059,6 +3054,20 @@ var HeaderView = class extends AbstractView {
       const crsGoal = crsGoals.createDiv({ cls: "shortText" });
       data.goals.fillContent(crsGoal, this.sourcePath);
       crsGoals.createDiv({ cls: "reset" });
+    }
+    if (data.action != null) {
+      const crsActions = crsInfo.createDiv({ cls: "short" });
+      crsActions.createDiv({ cls: "shortTitle", text: "Action" });
+      const crsAction = crsActions.createDiv({ cls: "shortText" });
+      data.action.fillContent(crsAction, this.sourcePath);
+      crsActions.createDiv({ cls: "reset" });
+    }
+    if (data.trigger != null) {
+      const crsTrigger = crsInfo.createDiv({ cls: "short" });
+      crsTrigger.createDiv({ cls: "shortTitle", text: "Trigger" });
+      const crsTriggerText = crsTrigger.createDiv({ cls: "shortText" });
+      data.trigger.fillContent(crsTriggerText, this.sourcePath);
+      crsTrigger.createDiv({ cls: "reset" });
     }
     const crsImage = crsContainer.createDiv({ cls: "image" });
     if (data.imgSrc != null) {

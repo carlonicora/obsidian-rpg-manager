@@ -13,6 +13,7 @@ export class HeaderComponent extends AbstractComponent{
 	generateData(
 		data: RpgDataInterface,
 		title: string | null,
+		additionalInformation: any|null = null,
 	): ResponseElementInterface | null {
 		const response = new ResponseHeader(this.app);
 
@@ -58,7 +59,18 @@ export class HeaderComponent extends AbstractComponent{
 				}
 			} else if (data instanceof Scene){
 				response.synopsisTitle = 'Scene Goal';
+
+				if (data.action != null && data.action != ''){
+					response.action = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(data.action, ContentType.Markdown);
+				} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
+					response.action = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(additionalInformation.action, ContentType.Markdown);
+				}
+
+				if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != ''){
+					response.trigger = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(additionalInformation.trigger, ContentType.Markdown);
+				}
 			}
+
 			if (data.synopsis != null && data.synopsis != ''){
 				synopsis = data.synopsis;
 			}

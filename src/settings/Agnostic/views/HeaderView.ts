@@ -78,6 +78,22 @@ export class HeaderView extends AbstractView {
 			crsGoals.createDiv({cls: 'reset'});
 		}
 
+		if (data.action != null){
+			const crsActions = crsInfo.createDiv({cls: 'short'});
+			crsActions.createDiv({cls: 'shortTitle', text: 'Action'});
+			const crsAction = crsActions.createDiv({cls: 'shortText'});
+			data.action.fillContent(crsAction, this.sourcePath);
+			crsActions.createDiv({cls: 'reset'});
+		}
+
+		if (data.trigger != null){
+			const crsTrigger = crsInfo.createDiv({cls: 'short'});
+			crsTrigger.createDiv({cls: 'shortTitle', text: 'Trigger'});
+			const crsTriggerText = crsTrigger.createDiv({cls: 'shortText'});
+			data.trigger.fillContent(crsTriggerText, this.sourcePath);
+			crsTrigger.createDiv({cls: 'reset'});
+		}
+
 		const crsImage = crsContainer.createDiv({cls: 'image'});
 		if (data.imgSrc != null) {
 			const image = new Image(data.imgWidth, data.imgHeight);

@@ -121,10 +121,18 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 
 	protected getRpgManagerCodeblock(
 		funct: string,
+		additionalInformation: string|null = null,
 	): string {
-		return '```RpgManager\n' +
-			funct + '\n' +
-			'```\n';
+		let response = '```RpgManager\n' +
+			funct + '\n';
+
+		if (additionalInformation != null){
+			response += additionalInformation;
+		}
+
+		response += '```\n';
+
+		return response;
 	}
 
 	protected getAbtPlot(

@@ -19,7 +19,21 @@ export class SessionTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		return this.getRpgManagerCodeblock('sessionNavigation');
+		let additionalInformation = ' abt: \n' +
+			'  need: \n' +
+			'  and: \n' +
+			'  but: \n' +
+			'  therefore: \n' +
+			' storycircle: \n' +
+			'  you: ""\n' +
+			'  need: ""\n' +
+			'  go: ""\n' +
+			'  search: ""\n' +
+			'  find: ""\n' +
+			'  take: ""\n' +
+			'  return: ""\n' +
+			'  change: ""\n';
+		return this.getRpgManagerCodeblock('sessionNavigation', additionalInformation);
 	}
 
 	protected generateLastCodeBlock(): string {

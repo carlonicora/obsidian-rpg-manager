@@ -20,6 +20,8 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 	public address: string|null;
 	public date: Date|null;
 	public synopsisTitle: string|null;
+	public action: ContentInterface|null;
+	public trigger: ContentInterface|null;
 
 	constructor(
 		app: App,

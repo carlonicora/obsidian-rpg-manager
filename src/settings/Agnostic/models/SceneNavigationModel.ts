@@ -16,21 +16,11 @@ export class SceneNavigationModel extends AbstractModel {
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'Header',
-				this.currentElement
+				this.currentElement,
+				null,
+				this.sourceMeta,
 			)
 		);
-
-		const goalElement = new ResponseBox(this.app);
-		goalElement.content = this.currentElement.synopsis;
-		goalElement.title = 'Scene Goal';
-		goalElement.colour = 'white';
-		response.addElement(goalElement);
-
-		const actionsElement = new ResponseBox(this.app);
-		actionsElement.content = this.currentElement.action;
-		actionsElement.title = 'Player Character\'s Action';
-		actionsElement.colour = 'off-white';
-		response.addElement(actionsElement);
 
 		return response;
 	}
