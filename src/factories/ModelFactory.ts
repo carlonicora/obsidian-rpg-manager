@@ -18,6 +18,7 @@ import {AdventureNavigationModel} from "../settings/Agnostic/models/AdventureNav
 import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
 import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
@@ -37,58 +38,27 @@ const ModelsMap = {
 	AgnosticSession: SessionModel,
 	AgnosticSessionNavigation: SessionNavigationModel,
 	AgnosticTimeline: TimelineModel,
-
-	RawAdventure: AdventureModel,
-	RawAdventureNavigation: AdventureNavigationModel,
-	RawCampaign: CampaignModel,
-	RawCampaignNavigation: CampaignNavigationModel,
-	RawClue: ClueModel,
-	RawError: ErrorModel,
-	RawEvent: EventModel,
-	RawFaction: FactionModel,
-	RawLocation: LocationModel,
-	RawNotes: NotesModel,
-	RawNpc: NpcModel,
-	RawPc: PcModel,
-	RawScene: SceneModel,
-	RawSceneNavigation: SceneNavigationModel,
-	RawSession: SessionModel,
-	RawSessionNavigation: SessionNavigationModel,
-	RawTimeline: TimelineModel,
-
-	VampireAdventure: AdventureModel,
-	VampireAdventureNavigation: AdventureNavigationModel,
-	VampireCampaign: CampaignModel,
-	VampireCampaignNavigation: CampaignNavigationModel,
-	VampireClue: ClueModel,
-	VampireError: ErrorModel,
-	VampireEvent: EventModel,
-	VampireFaction: FactionModel,
-	VampireLocation: LocationModel,
-	VampireNotes: NotesModel,
-	VampireNpc: NpcModel,
-	VampirePc: PcModel,
-	VampireScene: SceneModel,
-	VampireSceneNavigation: SceneNavigationModel,
-	VampireSession: SessionModel,
-	VampireSessionNavigation: SessionNavigationModel,
-	VampireTimeline: TimelineModel,
 };
 type ModelsMapType = typeof ModelsMap;
 type ModelKeys = keyof ModelsMapType;
 type Tuples<T> = T extends ModelKeys ? [T, InstanceType<ModelsMapType[T]>] : never;
-export type SingleModelKey<K> = [K] extends (K extends ModelKeys ? [K] : never) ? K : never;
+type SingleModelKey<K> = [K] extends (K extends ModelKeys ? [K] : never) ? K : never;
 type ModelClassType<A extends ModelKeys> = Extract<Tuples<ModelKeys>, [A, any]>[1];
 
 export class ModelFactory extends AbstractFactory {
 	public create<K extends ModelKeys>(
-		k: SingleModelKey<K>,
+		settings: CampaignSetting,
+		modelName: string,
 		currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
 		source: string,
 		sourcePath: string,
 		contentEl: HTMLElement,
 		sourceMeta: any,
 	): ModelClassType<K> {
-		return new ModelsMap[k](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
+		let modelKey: SingleModelKey<K> = CampaignSetting[settings] + modelName as SingleModelKey<K>;
+		if (ModelsMap[modelKey] == null && settings !== CampaignSetting.Agnostic){
+			modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName as SingleModelKey<K>;
+		}
+		return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
 	}
 }

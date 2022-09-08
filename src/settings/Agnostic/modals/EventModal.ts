@@ -4,7 +4,7 @@ export class EventModal extends AbstractModalComponent {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
-		const eventEl = contentEl.createDiv({cls: 'eventContainer'});
+		contentEl.createDiv({cls: 'eventContainer'});
 
 		this.modal.saver = this;
 		this.modal.enableButton();

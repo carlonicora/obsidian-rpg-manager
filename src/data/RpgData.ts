@@ -1,7 +1,6 @@
 import {App, CachedMetadata, Component, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {SingleDataKey} from "../factories/DataFactory";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {RpgDataList} from "./RpgDataList";
 import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
@@ -122,7 +121,7 @@ export class RpgData extends Component {
 					)
 				) {
 					const element: RpgOutlineDataInterface|RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
-						CampaignSetting[settings] + DataType[fileType] as SingleDataKey<any>,
+						settings,
 						fileType,
 						file,
 						metadata

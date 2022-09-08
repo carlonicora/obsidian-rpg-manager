@@ -1,7 +1,6 @@
 import {MarkdownView} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {SingleTemplateKey} from "./TemplateFactory";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 
@@ -18,7 +17,8 @@ export class FileFactory extends AbstractFactory {
 		sceneId: number|null = null,
 	): Promise<void> {
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
-			CampaignSetting[settings] + DataType[type] as SingleTemplateKey<any>,
+			settings,
+			type,
 			createFrontMatterOnly,
 			name,
 			campaignId,
@@ -53,7 +53,8 @@ export class FileFactory extends AbstractFactory {
 		const settings = this.getSettings(campaignId);
 
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
-			CampaignSetting[settings] + DataType[type] as SingleTemplateKey<any>,
+			settings,
+			type,
 			false,
 			name,
 			campaignId,

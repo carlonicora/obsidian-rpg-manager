@@ -23,7 +23,7 @@ export class LocationTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		let response = this.getAdditionalInformation();
+		const response = this.getAdditionalInformation();
 
 		return response;
 	}

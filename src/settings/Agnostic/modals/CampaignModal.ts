@@ -4,7 +4,6 @@ import {DataType} from "../../../enums/DataType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../../interfaces/ModalInterface";
 import {CampaignInterface} from "../../../interfaces/data/CampaignInterface";
-import {SingleModalKey} from "../../../factories/ModalFactory";
 
 export class CampaignModal extends AbstractModalComponent {
 	private campaigns: CampaignInterface[];
@@ -55,7 +54,7 @@ export class CampaignModal extends AbstractModalComponent {
 	): Promise<void> {
 		if (this.modal.type !== DataType.Adventure && this.modal.type !== DataType.Session && this.modal.type !== DataType.Scene) {
 			this.modal.elementModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-				CampaignSetting[this.modal.settings] + DataType[this.modal.type] as SingleModalKey<any>,
+				this.modal.settings,
 				this.modal.type,
 				this.modal,
 			);
@@ -64,8 +63,8 @@ export class CampaignModal extends AbstractModalComponent {
 			)
 		} else {
 			this.modal.adventureModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-				CampaignSetting[this.modal.settings] + DataType[DataType.Adventure] as SingleModalKey<any>,
-				this.modal.type,
+				this.modal.settings,
+				DataType.Adventure,
 				this.modal,
 			);
 

@@ -1,8 +1,6 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {SingleComponentKey} from "../../../factories/ComponentFactory";
-import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {TimelineResponse} from "../../../data/responses/TimelineResponse";
 import {TimelineElementResponse} from "../../../data/responses/TimelineElementResponse";
 import {TimelineResponseInterface} from "../../../interfaces/response/TimelineResponseInterface";
@@ -22,7 +20,8 @@ export class TimelineModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.campaign.settings] + 'Banner' as SingleComponentKey<any>,
+				this.currentElement.campaign.settings,
+				'Banner',
 				this.currentElement,
 			)
 		);

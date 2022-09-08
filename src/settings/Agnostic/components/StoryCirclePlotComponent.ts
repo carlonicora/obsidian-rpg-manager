@@ -2,7 +2,6 @@ import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ContentType} from "../../../enums/ContentType";
-import {ResponseStoryCirclePlot} from "../../../data/responses/ResponseStoryCirclePlot";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 
 export class StoryCirclePlotComponent extends AbstractComponent {
@@ -19,35 +18,35 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 		response.class = 'rpgm-plot';
 
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**YOU** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**YOU** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.you ? additionalInformation.you : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**NEED** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**NEED** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.need ? additionalInformation.need : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**GO** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**GO** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.go ? additionalInformation.go : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**SEARCH** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**SEARCH** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.search ? additionalInformation.search : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**FIND** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**FIND** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.find ? additionalInformation.find : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**TAKE** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**TAKE** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.take ? additionalInformation.take : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**RETURN** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**RETURN** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.return ? additionalInformation.return : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**CHANGE** ', ContentType.Markdown),
+			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**CHANGE** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.change ? additionalInformation.change : ''), ContentType.Markdown),
 		]);
 

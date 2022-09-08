@@ -1,8 +1,6 @@
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {SingleComponentKey} from "../../../factories/ComponentFactory";
-import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {CampaignInterface} from "../../../interfaces/data/CampaignInterface";
 
 export class CampaignNavigationModel extends AbstractModel {
@@ -13,7 +11,8 @@ export class CampaignNavigationModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.settings] + 'Banner' as SingleComponentKey<any>,
+				this.currentElement.settings,
+				'Banner',
 				this.currentElement
 			)
 		);
@@ -21,7 +20,8 @@ export class CampaignNavigationModel extends AbstractModel {
 		if (this.sourceMeta?.abt != null){
 			response.addElement(
 				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-					CampaignSetting[this.currentElement.settings] + 'AbtPlot' as SingleComponentKey<any>,
+					this.currentElement.settings,
+					'AbtPlot',
 					this.currentElement,
 					null,
 					this.sourceMeta.abt,

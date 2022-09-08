@@ -8,11 +8,12 @@ import {RpgModal} from "./RpgModal";
 
 export default class RpgManager extends Plugin {
 	/*
+	BLOCKING
 	@TODO: ***** Change the way Factories get their information (no Single Key, but CampaignSettings and DataType or String
+	@TODO: **** Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
 	@TODO: *** complete Note Navigation and Creation for sessions
-	@TODO: NOT-BLOCKING add additional information to modal windows and to template
-	@TODO: ** Change the ABT/StoryCircle information and moving them in the codeblock
-	@TODO: * Change the scene information, moving them in the codeblock (Exclugin the Synopsis)
+	NON BLOCKING
+	@TODO: ** add additional information to modal windows and to template
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;

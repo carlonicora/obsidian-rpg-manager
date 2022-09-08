@@ -4,7 +4,7 @@ export class NonPlayerCharacterModal extends AbstractModalComponent {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
-		const characterEl = contentEl.createDiv({cls: 'characterContainer'});
+		contentEl.createDiv({cls: 'characterContainer'});
 
 		this.modal.saver = this;
 		this.modal.enableButton();

@@ -4,7 +4,7 @@ export class LocationModal extends AbstractModalComponent {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
-		const locationEl = contentEl.createDiv({cls: 'locationContainer'});
+		contentEl.createDiv({cls: 'locationContainer'});
 
 		this.modal.saver = this;
 		this.modal.enableButton();

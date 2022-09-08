@@ -22,7 +22,7 @@ export class SceneModal extends AbstractModalComponent {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
-		const sceneEl = contentEl.createDiv({cls: 'sceneContainer'});
+		contentEl.createDiv({cls: 'sceneContainer'});
 
 		this.modal.sceneId = 1;
 		this.scenes.forEach((data: SceneInterface) => {

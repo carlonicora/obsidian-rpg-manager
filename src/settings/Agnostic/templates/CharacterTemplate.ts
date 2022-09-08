@@ -32,7 +32,7 @@ export class CharacterTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		let response = this.getPlayerCharacterDetails();
+		const response = this.getPlayerCharacterDetails();
 
 		return response;
 	}

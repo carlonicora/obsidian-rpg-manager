@@ -16,6 +16,7 @@ import {ImageComponent} from "../settings/Agnostic/components/ImageComponent";
 import {HeaderComponent} from "../settings/Agnostic/components/HeaderComponent";
 import {AbtPlotComponent} from "../settings/Agnostic/components/AbtPlotComponent";
 import {StoryCirclePlotComponent} from "../settings/Agnostic/components/StoryCirclePlotComponent";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -32,49 +33,24 @@ const ComponentsMap = {
 	AgnosticHeader: HeaderComponent,
 	AgnosticAbtPlot: AbtPlotComponent,
 	AgnosticStoryCirclePlot: StoryCirclePlotComponent,
-
-	RawSessionTable: SessionTableComponent,
-	RawAdventureTable: AdventureTableComponent,
-	RawCharacterTable: CharacterTableComponent,
-	RawLocationTable: LocationTableComponent,
-	RawEventTable: EventTableComponent,
-	RawClueTable: ClueTableComponent,
-	RawFactionTable: FactionTableComponent,
-	RawSceneTable: SceneTableComponent,
-	RawBanner: BannerComponent,
-	RawCharacterSynopsis: CharacterSynopsisComponent,
-	RawImage: ImageComponent,
-	RawHeader: HeaderComponent,
-	RawAbtPlot: AbtPlotComponent,
-	RawStoryCirclePlot: StoryCirclePlotComponent,
-
-	VampireSessionTable: SessionTableComponent,
-	VampireAdventureTable: AdventureTableComponent,
-	VampireCharacterTable: CharacterTableComponent,
-	VampireLocationTable: LocationTableComponent,
-	VampireEventTable: EventTableComponent,
-	VampireClueTable: ClueTableComponent,
-	VampireFactionTable: FactionTableComponent,
-	VampireSceneTable: SceneTableComponent,
-	VampireBanner: BannerComponent,
-	VampireCharacterSynopsis: CharacterSynopsisComponent,
-	VampireImage: ImageComponent,
-	VampireHeader: HeaderComponent,
-	VampireAbtPlot: AbtPlotComponent,
-	VampireStoryCirclePlot: StoryCirclePlotComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;
-export type SingleComponentKey<K> = [K] extends (K extends ComponentKeys ? [K] : never) ? K : never;
+type SingleComponentKey<K> = [K] extends (K extends ComponentKeys ? [K] : never) ? K : never;
 
 export class ComponentFactory extends AbstractFactory {
 	public create<K extends ComponentKeys>(
-		k: SingleComponentKey<K>,
+		settings: CampaignSetting,
+		type: string,
 		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null = null,
 		additionalInformation: any|null = null,
 	): ResponseElementInterface|null {
-		const component: ComponentInterface = new ComponentsMap[k](this.app);
+		let componentKey: SingleComponentKey<K> = CampaignSetting[settings] + type as SingleComponentKey<K>;
+		if (ComponentsMap[componentKey] == null && settings !== CampaignSetting.Agnostic){
+			componentKey = CampaignSetting[CampaignSetting.Agnostic] + type as SingleComponentKey<K>;
+		}
+		const component: ComponentInterface = new ComponentsMap[componentKey](this.app);
 		return component.generateData(data, title, additionalInformation);
 	}
 }

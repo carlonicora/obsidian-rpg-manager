@@ -11,10 +11,6 @@ import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {SingleViewKey} from "./factories/ViewFactory";
-import {ResponseType} from "./enums/ResponseType";
-import {SingleModelKey} from "./factories/ModelFactory";
-import {CampaignSetting} from "./enums/CampaignSetting";
 import {RpgElementDataInterface} from "./interfaces/data/RpgElementDataInterface";
 import {RpgOutlineDataInterface} from "./interfaces/data/RpgOutlineDataInterface";
 import {Campaign} from "./settings/Agnostic/data/Campaign";
@@ -55,15 +51,9 @@ export class RpgController extends MarkdownRenderChild {
 
 			const sourceMeta = parseYaml(sourceLines.join('\n'));
 
-			let campaignSettings: string;
-			if (this.currentElement instanceof Campaign){
-				campaignSettings = CampaignSetting[this.currentElement.settings]
-			} else {
-				campaignSettings = CampaignSetting[this.currentElement.campaign.settings]
-			}
-
 			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
-				campaignSettings + modelName as SingleModelKey<any>,
+				((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
+				modelName,
 				this.currentElement,
 				this.source,
 				this.sourcePath,
@@ -89,16 +79,10 @@ export class RpgController extends MarkdownRenderChild {
 			if (this.isActive) {
 				this.container.empty();
 
-				let campaignSettings: string;
-				if (this.currentElement instanceof Campaign){
-					campaignSettings = CampaignSetting[this.currentElement.settings]
-				} else {
-					campaignSettings = CampaignSetting[this.currentElement.campaign.settings]
-				}
-
 				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
 					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
-						campaignSettings + ResponseType[element.responseType] as SingleViewKey<any>,
+						((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
+						element.responseType,
 						this.sourcePath,
 					);
 

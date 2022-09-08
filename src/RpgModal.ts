@@ -2,7 +2,6 @@ import {App, Modal} from "obsidian";
 import {DataType} from "./enums/DataType";
 import {ModalComponentInterface} from "./interfaces/ModalComponentInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
-import {SingleModalKey} from "./factories/ModalFactory";
 import {ModalInterface} from "./interfaces/ModalInterface";
 
 export class RpgModal extends Modal implements ModalInterface {
@@ -57,8 +56,8 @@ export class RpgModal extends Modal implements ModalInterface {
 		this.titleError = contentEl.createEl('p', {cls: 'error'});
 
 		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-			CampaignSetting[this.settings] + DataType[DataType.Campaign] as SingleModalKey<any>,
-			this.type,
+			this.settings,
+			DataType.Campaign,
 			this,
 		)
 
@@ -127,75 +126,4 @@ export class RpgModal extends Modal implements ModalInterface {
 		const {contentEl} = this;
 		return contentEl;
 	}
-
-	/*
-	protected async addModalComponent(
-		contentEl: HTMLElement,
-		type: DataType,
-	): Promise<void> {
-		const modalComponent: ModalComponentInterface = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-			CampaignSetting[this.settings] + DataType[type] as SingleModalKey<any>,
-			type,
-			this,
-		)
-
-		let autoloadType: DataType|null = null;
-		let selectedId: number|null = null;
-
-		switch (type){
-			case DataType.Campaign:
-				this.campaignModal = modalComponent;
-				if (this.campaignId != null) {
-					if (this.type === DataType.Adventure || this.type === DataType.Session || this.type === DataType.Scene){
-						autoloadType = DataType.Adventure;
-						selectedId = this.adventureId;
-					} else {
-						autoloadType = this.type;
-					}
-				}
-				const campaign = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(this.campaignId);
-				if (campaign != null){
-					this.settings = campaign.settings;
-				}
-				break;
-			case DataType.Adventure:
-				this.adventureModal = modalComponent;
-				if (this.adventureId != null) {
-					autoloadType = DataType.Session;
-					selectedId = this.sessionId;
-				}
-				break;
-			case DataType.Session:
-				this.sessionModal = modalComponent;
-				if (this.sessionModal != null) {
-					autoloadType = DataType.Scene;
-					selectedId = this.sceneId;
-				}
-				break;
-			case DataType.Scene:
-				this.sceneModal = modalComponent;
-				break;
-			default:
-				this.elementModal = modalComponent;
-				break;
-		}
-
-		if (this.type === type){
-			this.saver = modalComponent;
-			this.button.style.disabled
-		}
-
-		modalComponent.addElement(
-			contentEl,
-			selectedId,
-		)
-
-		if (autoloadType != null){
-			this.addModalComponent(
-				contentEl,
-				autoloadType,
-			)
-		}
-	}
-	*/
 }

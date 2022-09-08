@@ -12,6 +12,7 @@ import {EventModal} from "../settings/Agnostic/modals/EventModal";
 import {FactionModal} from "../settings/Agnostic/modals/FactionModal";
 import {LocationModal} from "../settings/Agnostic/modals/LocationModal";
 import {NonPlayerCharacterModal} from "../settings/Agnostic/modals/NonPlayerCharacterModal";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 const ModalsMap = {
 	AgnosticCampaign: CampaignModal,
@@ -24,39 +25,21 @@ const ModalsMap = {
 	AgnosticFaction: FactionModal,
 	AgnosticLocation: LocationModal,
 	AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
-
-	RawCampaign: CampaignModal,
-	RawAdventure: AdventureModal,
-	RawSession: SessionModal,
-	RawScene: SceneModal,
-	RawCharacter: CharacterModal,
-	RawClue: ClueModal,
-	RawEvent: EventModal,
-	RawFaction: FactionModal,
-	RawLocation: LocationModal,
-	RawNonPlayerCharacter: NonPlayerCharacterModal,
-
-	VampireCampaign: CampaignModal,
-	VampireAdventure: AdventureModal,
-	VampireSession: SessionModal,
-	VampireScene: SceneModal,
-	VampireCharacter: CharacterModal,
-	VampireClue: ClueModal,
-	VampireEvent: EventModal,
-	VampireFaction: FactionModal,
-	VampireLocation: LocationModal,
-	VampireNonPlayerCharacter: NonPlayerCharacterModal,
 };
 type ModalsMapType = typeof ModalsMap;
 type ModalKeys = keyof ModalsMapType;
-export type SingleModalKey<K> = [K] extends (K extends ModalKeys ? [K] : never) ? K : never;
+type SingleModalKey<K> = [K] extends (K extends ModalKeys ? [K] : never) ? K : never;
 
 export class ModalFactory extends AbstractFactory {
 	public create<K extends ModalKeys>(
-		k: SingleModalKey<K>,
+		settings: CampaignSetting,
 		type: DataType,
 		modal: ModalInterface,
 	): ModalComponentInterface {
-		return new ModalsMap[k](this.app, modal);
+		let modalKey: SingleModalKey<K> = CampaignSetting[settings] + DataType[type] as SingleModalKey<K>;
+		if (ModalsMap[modalKey] == null && settings !== CampaignSetting.Agnostic){
+			modalKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleModalKey<K>;
+		}
+		return new ModalsMap[modalKey](this.app, modal);
 	}
 }

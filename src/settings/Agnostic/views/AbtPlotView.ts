@@ -1,5 +1,4 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
-import {BannerResponseInterface} from "../../../interfaces/response/BannerResponseInterface";
 import {AbtPlotResponseInterface} from "../../../interfaces/response/AbtPlotResponseInterface";
 
 export class AbtPlotView extends AbstractView {

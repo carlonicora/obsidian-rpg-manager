@@ -1,6 +1,4 @@
 import {AbstractView} from "../../../abstracts/AbstractView";
-import {BannerResponseInterface} from "../../../interfaces/response/BannerResponseInterface";
-import {AbtPlotResponseInterface} from "../../../interfaces/response/AbtPlotResponseInterface";
 import {StoryCirclePlotResponseInterface} from "../../../interfaces/response/StoryCirclePlotResponseInterface";
 
 export class StoryCirclePlotView extends AbstractView {

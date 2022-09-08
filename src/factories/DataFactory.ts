@@ -12,6 +12,7 @@ import {Event} from "../settings/Agnostic/data/Event";
 import {Timeline} from "../settings/Agnostic/data/Timeline";
 import {Note} from "../settings/Agnostic/data/Note";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 
 const DatasMap = {
@@ -27,46 +28,25 @@ const DatasMap = {
 	AgnosticEvent: Event,
 	AgnosticTimeline: Timeline,
 	AgnosticNote: Note,
-	
-	RawCampaign: Campaign,
-	RawAdventure: Adventure,
-	RawSession: Session,
-	RawScene: Scene,
-	RawCharacter: Character,
-	RawNonPlayerCharacter: Character,
-	RawFaction: Faction,
-	RawClue: Clue,
-	RawLocation: Location,
-	RawEvent: Event,
-	RawTimeline: Timeline,
-	RawNote: Note,
-
-	VampireCampaign: Campaign,
-	VampireAdventure: Adventure,
-	VampireSession: Session,
-	VampireScene: Scene,
-	VampireCharacter: Character,
-	VampireNonPlayerCharacter: Character,
-	VampireFaction: Faction,
-	VampireClue: Clue,
-	VampireLocation: Location,
-	VampireEvent: Event,
-	VampireTimeline: Timeline,
-	VampireNote: Note,
 };
 type DatasMapType = typeof DatasMap;
 type DataKeys = keyof DatasMapType;
 type Tuples<T> = T extends DataKeys ? [T, InstanceType<DatasMapType[T]>] : never;
-export type SingleDataKey<K> = [K] extends (K extends DataKeys ? [K] : never) ? K : never;
+type SingleDataKey<K> = [K] extends (K extends DataKeys ? [K] : never) ? K : never;
 type DataClassType<A extends DataKeys> = Extract<Tuples<DataKeys>, [A, any]>[1];
 
 export class DataFactory extends AbstractFactory {
 	public create<K extends DataKeys>(
-		k: SingleDataKey<K>,
+		settings: CampaignSetting,
 		type: DataType,
 		file: TFile,
 		metadata: CachedMetadata,
 	): DataClassType<K> {
-		return new DatasMap[k](this.app, type, file, metadata);
+		let dataKey: SingleDataKey<K> = CampaignSetting[settings] + DataType[type] as SingleDataKey<K>;
+		if (DatasMap[dataKey] == null && settings !== CampaignSetting.Agnostic){
+			dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleDataKey<K>;
+		}
+
+		return new DatasMap[dataKey](this.app, type, file, metadata);
 	}
 }

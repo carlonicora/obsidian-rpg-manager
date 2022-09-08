@@ -1,8 +1,6 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {SingleComponentKey} from "../../../factories/ComponentFactory";
-import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
 import {SceneInterface} from "../../../interfaces/data/SceneInterface";
 
@@ -14,7 +12,8 @@ export class SceneModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.campaign.settings] + 'CharacterTable' as SingleComponentKey<any>,
+				this.currentElement.campaign.settings,
+				'CharacterTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Character,
@@ -24,7 +23,8 @@ export class SceneModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.campaign.settings] + 'FactionTable' as SingleComponentKey<any>,
+				this.currentElement.campaign.settings,
+				'FactionTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Faction,
@@ -34,7 +34,8 @@ export class SceneModel extends AbstractModel {
 
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting[this.currentElement.campaign.settings] + 'ClueTable' as SingleComponentKey<any>,
+				this.currentElement.campaign.settings,
+				'ClueTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
 					DataType.Clue,

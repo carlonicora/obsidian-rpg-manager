@@ -1,5 +1,4 @@
 import {AbstractResponse} from "../../abstracts/AbstractResponse";
-import {AbtPlotResponseInterface} from "../../interfaces/response/AbtPlotResponseInterface";
 import {App} from "obsidian";
 import {ResponseType} from "../../enums/ResponseType";
 import {ContentInterface} from "../../interfaces/ContentInterface";

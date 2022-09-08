@@ -4,7 +4,7 @@ export class FactionModal extends AbstractModalComponent {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
-		const locationEl = contentEl.createDiv({cls: 'locationContainer'});
+		contentEl.createDiv({cls: 'factionContainer'});
 
 		this.modal.saver = this;
 		this.modal.enableButton();

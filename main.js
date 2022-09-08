@@ -57,30 +57,6 @@ var import_obsidian12 = require("obsidian");
 // src/RpgController.ts
 var import_obsidian = require("obsidian");
 
-// src/enums/ResponseType.ts
-var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
-  ResponseType2[ResponseType2["Table"] = 0] = "Table";
-  ResponseType2[ResponseType2["String"] = 1] = "String";
-  ResponseType2[ResponseType2["Banner"] = 2] = "Banner";
-  ResponseType2[ResponseType2["Scene"] = 3] = "Scene";
-  ResponseType2[ResponseType2["Box"] = 4] = "Box";
-  ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
-  ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
-  ResponseType2[ResponseType2["Image"] = 7] = "Image";
-  ResponseType2[ResponseType2["Header"] = 8] = "Header";
-  ResponseType2[ResponseType2["AbtPlot"] = 9] = "AbtPlot";
-  ResponseType2[ResponseType2["StoryCirclePlot"] = 10] = "StoryCirclePlot";
-  return ResponseType2;
-})(ResponseType || {});
-
-// src/enums/CampaignSetting.ts
-var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
-  CampaignSetting2[CampaignSetting2["Agnostic"] = 0] = "Agnostic";
-  CampaignSetting2[CampaignSetting2["Raw"] = 1] = "Raw";
-  CampaignSetting2[CampaignSetting2["Vampire"] = 2] = "Vampire";
-  return CampaignSetting2;
-})(CampaignSetting || {});
-
 // src/enums/DataType.ts
 var DataType = /* @__PURE__ */ ((DataType2) => {
   DataType2[DataType2["Campaign"] = 0] = "Campaign";
@@ -166,6 +142,14 @@ var AbstractRpgOutlineData = class extends AbstractRpgGenericData {
   }
 };
 
+// src/enums/CampaignSetting.ts
+var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
+  CampaignSetting2[CampaignSetting2["Agnostic"] = 0] = "Agnostic";
+  CampaignSetting2[CampaignSetting2["Raw"] = 1] = "Raw";
+  CampaignSetting2[CampaignSetting2["Vampire"] = 2] = "Vampire";
+  return CampaignSetting2;
+})(CampaignSetting || {});
+
 // src/settings/Agnostic/data/Campaign.ts
 var Campaign = class extends AbstractRpgOutlineData {
   reload(file, metadata) {
@@ -205,13 +189,7 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
       modelName = modelName.replace("navigation", "Navigation");
       sourceLines.shift();
       const sourceMeta = (0, import_obsidian.parseYaml)(sourceLines.join("\n"));
-      let campaignSettings;
-      if (this.currentElement instanceof Campaign) {
-        campaignSettings = CampaignSetting[this.currentElement.settings];
-      } else {
-        campaignSettings = CampaignSetting[this.currentElement.campaign.settings];
-      }
-      this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(campaignSettings + modelName, this.currentElement, this.source, this.sourcePath, this.contentEl, sourceMeta);
+      this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, modelName, this.currentElement, this.source, this.sourcePath, this.contentEl, sourceMeta);
     }
   }
   onload() {
@@ -227,14 +205,8 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
         this.initialise();
         if (this.isActive) {
           this.container.empty();
-          let campaignSettings;
-          if (this.currentElement instanceof Campaign) {
-            campaignSettings = CampaignSetting[this.currentElement.settings];
-          } else {
-            campaignSettings = CampaignSetting[this.currentElement.campaign.settings];
-          }
           this.model.generateData().elements.forEach((element) => {
-            const view = this.app.plugins.getPlugin("rpg-manager").factories.views.create(campaignSettings + ResponseType[element.responseType], this.sourcePath);
+            const view = this.app.plugins.getPlugin("rpg-manager").factories.views.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, element.responseType, this.sourcePath);
             view.render(this.container, element);
           });
         }
@@ -355,7 +327,7 @@ var RpgData = class extends import_obsidian2.Component {
           }
         }
         if (!restrictType || (restrictedToType !== null && restrictedToType === fileType || restrictedToType === null && (fileType !== 0 /* Campaign */ && fileType !== 1 /* Adventure */ && fileType !== 2 /* Session */ && fileType !== 3 /* Scene */))) {
-          const element = this.app.plugins.getPlugin("rpg-manager").factories.data.create(CampaignSetting[settings] + DataType[fileType], fileType, file, metadata);
+          const element = this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, fileType, file, metadata);
           if (element instanceof AbstractRpgOutlineData)
             element.initialiseNeighbours();
           this.data.addElement(element);
@@ -685,6 +657,22 @@ var AbstractResponse = class {
     this.title = title;
   }
 };
+
+// src/enums/ResponseType.ts
+var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
+  ResponseType2[ResponseType2["Table"] = 0] = "Table";
+  ResponseType2[ResponseType2["String"] = 1] = "String";
+  ResponseType2[ResponseType2["Banner"] = 2] = "Banner";
+  ResponseType2[ResponseType2["Scene"] = 3] = "Scene";
+  ResponseType2[ResponseType2["Box"] = 4] = "Box";
+  ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
+  ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
+  ResponseType2[ResponseType2["Image"] = 7] = "Image";
+  ResponseType2[ResponseType2["Header"] = 8] = "Header";
+  ResponseType2[ResponseType2["AbtPlot"] = 9] = "AbtPlot";
+  ResponseType2[ResponseType2["StoryCirclePlot"] = 10] = "StoryCirclePlot";
+  return ResponseType2;
+})(ResponseType || {});
 
 // src/data/responses/ResponseTable.ts
 var ResponseTable = class extends AbstractResponse {
@@ -1180,19 +1168,19 @@ var AbtPlotComponent = class extends AbstractComponent {
     response.title = "ABT Plot";
     response.class = "rpgm-plot";
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.and ? additionalInformation.and : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.but ? additionalInformation.but : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.therefore ? additionalInformation.therefore : "", 4 /* Markdown */)
     ]);
     return response;
@@ -1208,35 +1196,35 @@ var StoryCirclePlotComponent = class extends AbstractComponent {
     response.title = "Story Circle Plot";
     response.class = "rpgm-plot";
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.you ? additionalInformation.you : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.go ? additionalInformation.go : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.search ? additionalInformation.search : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.find ? additionalInformation.find : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.take ? additionalInformation.take : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.return ? additionalInformation.return : "", 4 /* Markdown */)
     ]);
     response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */, true),
       this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.change ? additionalInformation.change : "", 4 /* Markdown */)
     ]);
     return response;
@@ -1258,39 +1246,15 @@ var ComponentsMap = {
   AgnosticImage: ImageComponent,
   AgnosticHeader: HeaderComponent,
   AgnosticAbtPlot: AbtPlotComponent,
-  AgnosticStoryCirclePlot: StoryCirclePlotComponent,
-  RawSessionTable: SessionTableComponent,
-  RawAdventureTable: AdventureTableComponent,
-  RawCharacterTable: CharacterTableComponent,
-  RawLocationTable: LocationTableComponent,
-  RawEventTable: EventTableComponent,
-  RawClueTable: ClueTableComponent,
-  RawFactionTable: FactionTableComponent,
-  RawSceneTable: SceneTableComponent,
-  RawBanner: BannerComponent,
-  RawCharacterSynopsis: CharacterSynopsisComponent,
-  RawImage: ImageComponent,
-  RawHeader: HeaderComponent,
-  RawAbtPlot: AbtPlotComponent,
-  RawStoryCirclePlot: StoryCirclePlotComponent,
-  VampireSessionTable: SessionTableComponent,
-  VampireAdventureTable: AdventureTableComponent,
-  VampireCharacterTable: CharacterTableComponent,
-  VampireLocationTable: LocationTableComponent,
-  VampireEventTable: EventTableComponent,
-  VampireClueTable: ClueTableComponent,
-  VampireFactionTable: FactionTableComponent,
-  VampireSceneTable: SceneTableComponent,
-  VampireBanner: BannerComponent,
-  VampireCharacterSynopsis: CharacterSynopsisComponent,
-  VampireImage: ImageComponent,
-  VampireHeader: HeaderComponent,
-  VampireAbtPlot: AbtPlotComponent,
-  VampireStoryCirclePlot: StoryCirclePlotComponent
+  AgnosticStoryCirclePlot: StoryCirclePlotComponent
 };
 var ComponentFactory = class extends AbstractFactory {
-  create(k, data, title = null, additionalInformation = null) {
-    const component = new ComponentsMap[k](this.app);
+  create(settings, type, data, title = null, additionalInformation = null) {
+    let componentKey = CampaignSetting[settings] + type;
+    if (ComponentsMap[componentKey] == null && settings !== 0 /* Agnostic */) {
+      componentKey = CampaignSetting[0 /* Agnostic */] + type;
+    }
+    const component = new ComponentsMap[componentKey](this.app);
     return component.generateData(data, title, additionalInformation);
   }
 };
@@ -1453,35 +1417,15 @@ var DatasMap = {
   AgnosticLocation: Location,
   AgnosticEvent: Event,
   AgnosticTimeline: Timeline,
-  AgnosticNote: Note,
-  RawCampaign: Campaign,
-  RawAdventure: Adventure,
-  RawSession: Session,
-  RawScene: Scene,
-  RawCharacter: Character,
-  RawNonPlayerCharacter: Character,
-  RawFaction: Faction,
-  RawClue: Clue,
-  RawLocation: Location,
-  RawEvent: Event,
-  RawTimeline: Timeline,
-  RawNote: Note,
-  VampireCampaign: Campaign,
-  VampireAdventure: Adventure,
-  VampireSession: Session,
-  VampireScene: Scene,
-  VampireCharacter: Character,
-  VampireNonPlayerCharacter: Character,
-  VampireFaction: Faction,
-  VampireClue: Clue,
-  VampireLocation: Location,
-  VampireEvent: Event,
-  VampireTimeline: Timeline,
-  VampireNote: Note
+  AgnosticNote: Note
 };
 var DataFactory = class extends AbstractFactory {
-  create(k, type, file, metadata) {
-    return new DatasMap[k](this.app, type, file, metadata);
+  create(settings, type, file, metadata) {
+    let dataKey = CampaignSetting[settings] + DataType[type];
+    if (DatasMap[dataKey] == null && settings !== 0 /* Agnostic */) {
+      dataKey = CampaignSetting[0 /* Agnostic */] + DataType[type];
+    }
+    return new DatasMap[dataKey](this.app, type, file, metadata);
   }
 };
 
@@ -1497,7 +1441,7 @@ var import_obsidian7 = require("obsidian");
 var FileFactory = class extends AbstractFactory {
   create(settings, type, create, createFrontMatterOnly, name, campaignId = null, adventureId = null, sessionId = null, sceneId = null) {
     return __async(this, null, function* () {
-      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(CampaignSetting[settings] + DataType[type], createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
       if (create) {
         const newFile = yield app.vault.create(name + ".md", data);
@@ -1515,7 +1459,7 @@ var FileFactory = class extends AbstractFactory {
   silentCreate(type, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
     return __async(this, null, function* () {
       const settings = this.getSettings(campaignId);
-      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(CampaignSetting[settings] + DataType[type], false, name, campaignId, adventureId, sessionId, sceneId);
+      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, false, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
       const newFile = yield app.vault.create(name + ".md", data);
       const leaf = app.workspace.getLeaf(true);
@@ -1578,10 +1522,10 @@ var CampaignModal = class extends AbstractModalComponent {
   loadChild(containerEl) {
     return __async(this, null, function* () {
       if (this.modal.type !== 1 /* Adventure */ && this.modal.type !== 2 /* Session */ && this.modal.type !== 3 /* Scene */) {
-        this.modal.elementModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[this.modal.type], this.modal.type, this.modal);
+        this.modal.elementModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.modal.settings, this.modal.type, this.modal);
         this.modal.elementModal.addElement(containerEl);
       } else {
-        this.modal.adventureModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[1 /* Adventure */], this.modal.type, this.modal);
+        this.modal.adventureModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.modal.settings, 1 /* Adventure */, this.modal);
         this.modal.adventureModal.addElement(containerEl);
       }
     });
@@ -1679,7 +1623,7 @@ var AdventureModal = class extends AbstractModalComponent {
   }
   loadChild(containerEl) {
     return __async(this, null, function* () {
-      this.modal.sessionModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[2 /* Session */], this.modal.type, this.modal);
+      this.modal.sessionModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.modal.settings, 2 /* Session */, this.modal);
       this.modal.sessionModal.addElement(containerEl);
     });
   }
@@ -1758,7 +1702,7 @@ var SessionModal = class extends AbstractModalComponent {
   }
   loadChild(containerEl) {
     return __async(this, null, function* () {
-      this.modal.sceneModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.modal.settings] + DataType[3 /* Scene */], this.modal.type, this.modal);
+      this.modal.sceneModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.modal.settings, 3 /* Scene */, this.modal);
       this.modal.sceneModal.addElement(containerEl);
     });
   }
@@ -1818,7 +1762,7 @@ var SceneModal = class extends AbstractModalComponent {
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const sceneEl = contentEl.createDiv({ cls: "sceneContainer" });
+      contentEl.createDiv({ cls: "sceneContainer" });
       this.modal.sceneId = 1;
       this.scenes.forEach((data) => {
         var _a;
@@ -1842,7 +1786,7 @@ var SceneModal = class extends AbstractModalComponent {
 var CharacterModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const characterEl = contentEl.createDiv({ cls: "characterContainer" });
+      contentEl.createDiv({ cls: "characterContainer" });
       this.modal.saver = this;
       this.modal.enableButton();
     });
@@ -1860,7 +1804,7 @@ var CharacterModal = class extends AbstractModalComponent {
 var ClueModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const clueEl = contentEl.createDiv({ cls: "clueContainer" });
+      contentEl.createDiv({ cls: "clueContainer" });
       this.modal.saver = this;
       this.modal.enableButton();
     });
@@ -1878,7 +1822,7 @@ var ClueModal = class extends AbstractModalComponent {
 var EventModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const eventEl = contentEl.createDiv({ cls: "eventContainer" });
+      contentEl.createDiv({ cls: "eventContainer" });
       this.modal.saver = this;
       this.modal.enableButton();
     });
@@ -1896,7 +1840,7 @@ var EventModal = class extends AbstractModalComponent {
 var FactionModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const locationEl = contentEl.createDiv({ cls: "locationContainer" });
+      contentEl.createDiv({ cls: "factionContainer" });
       this.modal.saver = this;
       this.modal.enableButton();
     });
@@ -1914,7 +1858,7 @@ var FactionModal = class extends AbstractModalComponent {
 var LocationModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const locationEl = contentEl.createDiv({ cls: "locationContainer" });
+      contentEl.createDiv({ cls: "locationContainer" });
       this.modal.saver = this;
       this.modal.enableButton();
     });
@@ -1932,7 +1876,7 @@ var LocationModal = class extends AbstractModalComponent {
 var NonPlayerCharacterModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
-      const characterEl = contentEl.createDiv({ cls: "characterContainer" });
+      contentEl.createDiv({ cls: "characterContainer" });
       this.modal.saver = this;
       this.modal.enableButton();
     });
@@ -1957,31 +1901,15 @@ var ModalsMap = {
   AgnosticEvent: EventModal,
   AgnosticFaction: FactionModal,
   AgnosticLocation: LocationModal,
-  AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
-  RawCampaign: CampaignModal,
-  RawAdventure: AdventureModal,
-  RawSession: SessionModal,
-  RawScene: SceneModal,
-  RawCharacter: CharacterModal,
-  RawClue: ClueModal,
-  RawEvent: EventModal,
-  RawFaction: FactionModal,
-  RawLocation: LocationModal,
-  RawNonPlayerCharacter: NonPlayerCharacterModal,
-  VampireCampaign: CampaignModal,
-  VampireAdventure: AdventureModal,
-  VampireSession: SessionModal,
-  VampireScene: SceneModal,
-  VampireCharacter: CharacterModal,
-  VampireClue: ClueModal,
-  VampireEvent: EventModal,
-  VampireFaction: FactionModal,
-  VampireLocation: LocationModal,
-  VampireNonPlayerCharacter: NonPlayerCharacterModal
+  AgnosticNonPlayerCharacter: NonPlayerCharacterModal
 };
 var ModalFactory = class extends AbstractFactory {
-  create(k, type, modal) {
-    return new ModalsMap[k](this.app, modal);
+  create(settings, type, modal) {
+    let modalKey = CampaignSetting[settings] + DataType[type];
+    if (ModalsMap[modalKey] == null && settings !== 0 /* Agnostic */) {
+      modalKey = CampaignSetting[0 /* Agnostic */] + DataType[type];
+    }
+    return new ModalsMap[modalKey](this.app, modal);
   }
 };
 
@@ -2116,7 +2044,7 @@ var ResponseData = class {
 var AdventureModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
       if (leftData.sessionId > rightData.sessionId)
         return -1;
       if (leftData.sessionId < rightData.sessionId)
@@ -2131,21 +2059,21 @@ var AdventureModel = class extends AbstractModel {
 var CampaignModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "AdventureTable", this.app.plugins.getPlugin("rpg-manager").io.getAdventureList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AdventureTable", this.app.plugins.getPlugin("rpg-manager").io.getAdventureList(this.currentElement.campaignId).sort(function(leftData, rightData) {
       if (leftData.adventureId > rightData.adventureId)
         return -1;
       if (leftData.adventureId < rightData.adventureId)
         return 1;
       return 0;
     }).elements));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaignId).sort(function(leftData, rightData) {
       if (leftData.sessionId > rightData.sessionId)
         return -1;
       if (leftData.sessionId < rightData.sessionId)
         return 1;
       return 0;
     }).elements));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getCharacterList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getCharacterList(this.currentElement.campaignId).sort(function(leftData, rightData) {
       if (leftData.name > rightData.name)
         return 1;
       if (leftData.name < rightData.name)
@@ -2161,9 +2089,9 @@ var CampaignNavigationModel = class extends AbstractModel {
   generateData() {
     var _a;
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "Banner", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "Banner", this.currentElement));
     if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.settings] + "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
     }
     return response;
   }
@@ -2174,10 +2102,10 @@ var ClueModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 8 /* Clue */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 8 /* Clue */)));
     return response;
   }
 };
@@ -2198,10 +2126,10 @@ var EventModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
     return response;
   }
 };
@@ -2211,9 +2139,9 @@ var FactionModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
     return response;
   }
 };
@@ -2223,12 +2151,12 @@ var LocationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 6 /* Location */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 6 /* Location */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */), "Contained locations"));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */, 6 /* Location */), "Part of locations"));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */), "Contained locations"));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */, 6 /* Location */), "Part of locations"));
     return response;
   }
 };
@@ -2246,12 +2174,12 @@ var NpcModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
     return response;
   }
 };
@@ -2261,10 +2189,10 @@ var PcModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
     return response;
   }
 };
@@ -2273,9 +2201,9 @@ var PcModel = class extends AbstractModel {
 var SceneModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
     return response;
   }
 };
@@ -2294,7 +2222,7 @@ var SceneNavigationModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
     const goalElement = new ResponseBox(this.app);
     goalElement.content = this.currentElement.synopsis;
     goalElement.title = "Scene Goal";
@@ -2313,7 +2241,7 @@ var SceneNavigationModel = class extends AbstractModel {
 var SessionModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
     return response;
   }
 };
@@ -2324,12 +2252,12 @@ var SessionNavigationModel = class extends AbstractModel {
     var _a, _b;
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
     if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
     }
     if (((_b = this.sourceMeta) == null ? void 0 : _b.storycircle) != null) {
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "StoryCirclePlot", this.currentElement, null, this.sourceMeta.storycircle));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "StoryCirclePlot", this.currentElement, null, this.sourceMeta.storycircle));
     }
     return response;
   }
@@ -2365,7 +2293,7 @@ var TimelineElementResponse = class {
 var TimelineModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Banner", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Banner", this.currentElement));
     const timeline = new TimelineResponse(this.app);
     if (this.sourceMeta.events === true) {
       this.addEvents(timeline);
@@ -2439,9 +2367,9 @@ var AdventureNavigationModel = class extends AbstractModel {
     var _a;
     const response = new ResponseData();
     response.addElement(this.generateBreadcrumb());
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "Header", this.currentElement));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
     if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(CampaignSetting[this.currentElement.campaign.settings] + "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
     }
     return response;
   }
@@ -2465,45 +2393,15 @@ var ModelsMap = {
   AgnosticSceneNavigation: SceneNavigationModel,
   AgnosticSession: SessionModel,
   AgnosticSessionNavigation: SessionNavigationModel,
-  AgnosticTimeline: TimelineModel,
-  RawAdventure: AdventureModel,
-  RawAdventureNavigation: AdventureNavigationModel,
-  RawCampaign: CampaignModel,
-  RawCampaignNavigation: CampaignNavigationModel,
-  RawClue: ClueModel,
-  RawError: ErrorModel,
-  RawEvent: EventModel,
-  RawFaction: FactionModel,
-  RawLocation: LocationModel,
-  RawNotes: NotesModel,
-  RawNpc: NpcModel,
-  RawPc: PcModel,
-  RawScene: SceneModel,
-  RawSceneNavigation: SceneNavigationModel,
-  RawSession: SessionModel,
-  RawSessionNavigation: SessionNavigationModel,
-  RawTimeline: TimelineModel,
-  VampireAdventure: AdventureModel,
-  VampireAdventureNavigation: AdventureNavigationModel,
-  VampireCampaign: CampaignModel,
-  VampireCampaignNavigation: CampaignNavigationModel,
-  VampireClue: ClueModel,
-  VampireError: ErrorModel,
-  VampireEvent: EventModel,
-  VampireFaction: FactionModel,
-  VampireLocation: LocationModel,
-  VampireNotes: NotesModel,
-  VampireNpc: NpcModel,
-  VampirePc: PcModel,
-  VampireScene: SceneModel,
-  VampireSceneNavigation: SceneNavigationModel,
-  VampireSession: SessionModel,
-  VampireSessionNavigation: SessionNavigationModel,
-  VampireTimeline: TimelineModel
+  AgnosticTimeline: TimelineModel
 };
 var ModelFactory = class extends AbstractFactory {
-  create(k, currentElement, source, sourcePath, contentEl, sourceMeta) {
-    return new ModelsMap[k](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
+  create(settings, modelName, currentElement, source, sourcePath, contentEl, sourceMeta) {
+    let modelKey = CampaignSetting[settings] + modelName;
+    if (ModelsMap[modelKey] == null && settings !== 0 /* Agnostic */) {
+      modelKey = CampaignSetting[0 /* Agnostic */] + modelName;
+    }
+    return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
   }
 };
 
@@ -2777,7 +2675,7 @@ var CharacterTemplate = class extends AbstractTemplate {
     return "pronoun: #t/s/h\n";
   }
   generateTemplate() {
-    let response = this.getPlayerCharacterDetails();
+    const response = this.getPlayerCharacterDetails();
     return response;
   }
 };
@@ -2827,7 +2725,7 @@ var LocationTemplate = class extends AbstractTemplate {
     return this.getRpgManagerCodeblock("location");
   }
   generateTemplate() {
-    let response = this.getAdditionalInformation();
+    const response = this.getAdditionalInformation();
     return response;
   }
   generateFrontmatterRelationships() {
@@ -2853,7 +2751,7 @@ var EventTemplate = class extends AbstractTemplate {
     return " event: \n";
   }
   generateTemplate() {
-    let response = this.getAdditionalInformation();
+    const response = this.getAdditionalInformation();
     return response;
   }
 };
@@ -2876,7 +2774,7 @@ var ClueTemplate = class extends AbstractTemplate {
     return this.getRpgManagerCodeblock("clue");
   }
   generateTemplate() {
-    let response = this.getAdditionalInformation();
+    const response = this.getAdditionalInformation();
     return response;
   }
 };
@@ -2896,7 +2794,7 @@ var FactionTemplate = class extends AbstractTemplate {
     return this.getRpgManagerCodeblock("faction");
   }
   generateTemplate() {
-    let response = this.getAdditionalInformation();
+    const response = this.getAdditionalInformation();
     return response;
   }
 };
@@ -2912,31 +2810,15 @@ var TemplatesMap = {
   AgnosticLocation: LocationTemplate,
   AgnosticEvent: EventTemplate,
   AgnosticClue: ClueTemplate,
-  AgnosticFaction: FactionTemplate,
-  RawCampaign: CampaignTemplate,
-  RawAdventure: AdventureTemplate,
-  RawSession: SessionTemplate,
-  RawScene: SceneTemplate,
-  RawCharacter: CharacterTemplate,
-  RawNonPlayerCharacter: NonPlayerCharacterTemplate,
-  RawLocation: LocationTemplate,
-  RawEvent: EventTemplate,
-  RawClue: ClueTemplate,
-  RawFaction: FactionTemplate,
-  VampireCampaign: CampaignTemplate,
-  VampireAdventure: AdventureTemplate,
-  VampireSession: SessionTemplate,
-  VampireScene: SceneTemplate,
-  VampireCharacter: CharacterTemplate,
-  VampireNonPlayerCharacter: NonPlayerCharacterTemplate,
-  VampireLocation: LocationTemplate,
-  VampireEvent: EventTemplate,
-  VampireClue: ClueTemplate,
-  VampireFaction: FactionTemplate
+  AgnosticFaction: FactionTemplate
 };
 var TemplateFactory = class extends AbstractFactory {
-  create(k, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
-    return new TemplatesMap[k](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+  create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
+    let templateKey = CampaignSetting[settings] + DataType[type];
+    if (TemplatesMap[templateKey] == null && settings !== 0 /* Agnostic */) {
+      templateKey = CampaignSetting[0 /* Agnostic */] + DataType[type];
+    }
+    return new TemplatesMap[templateKey](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
   }
 };
 
@@ -3242,31 +3124,15 @@ var ViewsMap = {
   AgnosticImage: ImageView,
   AgnosticHeader: HeaderView,
   AgnosticAbtPlot: AbtPlotView,
-  AgnosticStoryCirclePlot: StoryCirclePlotView,
-  RawString: StringView,
-  RawTable: TableView,
-  RawBanner: BannerView,
-  RawBox: BoxView,
-  RawBreadcrumb: BreadcrumbView,
-  RawTimeline: TimelineView,
-  RawImage: ImageView,
-  RawHeader: HeaderView,
-  RawAbtPlot: AbtPlotView,
-  RawStoryCirclePlot: StoryCirclePlotView,
-  VampireString: StringView,
-  VampireTable: TableView,
-  VampireBanner: BannerView,
-  VampireBox: BoxView,
-  VampireBreadcrumb: BreadcrumbView,
-  VampireTimeline: TimelineView,
-  VampireImage: ImageView,
-  VampireHeader: HeaderView,
-  VampireAbtPlot: AbtPlotView,
-  VampireStoryCirclePlot: StoryCirclePlotView
+  AgnosticStoryCirclePlot: StoryCirclePlotView
 };
 var ViewFactory = class extends AbstractFactory {
-  create(k, sourcePath) {
-    return new ViewsMap[k](sourcePath);
+  create(settings, type, sourcePath) {
+    let viewKey = CampaignSetting[settings] + ResponseType[type];
+    if (ViewsMap[viewKey] == null && settings !== 0 /* Agnostic */) {
+      viewKey = CampaignSetting[0 /* Agnostic */] + ResponseType[type];
+    }
+    return new ViewsMap[viewKey](sourcePath);
   }
 };
 
@@ -3316,7 +3182,7 @@ var RpgModal = class extends import_obsidian11.Modal {
       this.title.value = this.name;
     }
     this.titleError = contentEl.createEl("p", { cls: "error" });
-    this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(CampaignSetting[this.settings] + DataType[0 /* Campaign */], this.type, this);
+    this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.settings, 0 /* Campaign */, this);
     const childElement = contentEl.createDiv();
     const cfmo = contentEl.createDiv({ cls: "createFrontMatterOnly" });
     this.createFrontMatterOnly = cfmo.createEl("input", { type: "checkbox" });

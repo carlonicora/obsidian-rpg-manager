@@ -1,9 +1,7 @@
 import {AbstractModalComponent} from "../../../abstracts/AbstractModalComponent";
-import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {DataType} from "../../../enums/DataType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../../interfaces/ModalInterface";
-import {SingleModalKey} from "../../../factories/ModalFactory";
 import {SessionInterface} from "../../../interfaces/data/SessionInterface";
 
 export class SessionModal extends AbstractModalComponent {
@@ -54,8 +52,8 @@ export class SessionModal extends AbstractModalComponent {
 		containerEl: HTMLElement,
 	): Promise<void> {
 		this.modal.sceneModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-			CampaignSetting[this.modal.settings] + DataType[DataType.Scene] as SingleModalKey<any>,
-			this.modal.type,
+			this.modal.settings,
+			DataType.Scene,
 			this.modal,
 		);
 
