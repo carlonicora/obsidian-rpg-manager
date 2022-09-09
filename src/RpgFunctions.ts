@@ -162,8 +162,13 @@ export class RpgFunctions {
 					} else if (parts.length === 1 && type === DataType.Adventure){
 						response = parts[0];
 					}
-				} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag)){
-					const parts = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag.length + 1).split('/');
+				} else if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag) || tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.noteTag)){
+					let parts: Array<string>;
+					if (tag.startsWith(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag)) {
+						parts = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag.length + 1).split('/');
+					} else {
+						parts = tag.substring(this.app.plugins.getPlugin('rpg-manager').settings.noteTag.length + 1).split('/');
+					}
 					if (parts.length === 3){
 						if (type === DataType.Campaign){
 							response = parts[0];

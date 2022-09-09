@@ -8,8 +8,6 @@ import {RpgModal} from "./RpgModal";
 
 export default class RpgManager extends Plugin {
 	/*
-	BLOCKING
-	@TODO: *** complete Note Navigation and Creation for sessions
 	NON BLOCKING
 	@TODO: ** add additional information to modal windows and to template
 	 */
@@ -150,7 +148,7 @@ export const DEFAULT_SETTINGS: RpgManagerSettings = {
 	eventTag: 'rpgm/element/event',
 	clueTag: 'rpgm/element/clue',
 	timelineTag: 'rpgm/element/timeline',
-	noteTag: 'rpgm/element/note',
+	noteTag: 'rpgm/outline/note',
 }
 
 export class RpgManagerSettingTab extends PluginSettingTab {

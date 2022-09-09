@@ -129,8 +129,11 @@ var AbstractRpgGenericData = class extends AbstractRpgData {
   reload(file, metadata) {
     var _a;
     super.reload(file, metadata);
-    if (this.type !== 0 /* Campaign */)
-      this.campaign = this.app.plugins.getPlugin("rpg-manager").io.getCampaign(this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, 0 /* Campaign */));
+    if (this.type !== 0 /* Campaign */) {
+      const campaign = this.app.plugins.getPlugin("rpg-manager").io.getCampaign(this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, 0 /* Campaign */));
+      if (campaign != null)
+        this.campaign = campaign;
+    }
   }
 };
 
@@ -220,11 +223,12 @@ var import_obsidian2 = require("obsidian");
 
 // src/data/RpgDataList.ts
 var RpgDataList = class {
-  constructor() {
+  constructor(app2) {
+    this.app = app2;
     this.elements = [];
   }
   where(predicate) {
-    const response = new RpgDataList();
+    const response = new RpgDataList(this.app);
     (this.elements.filter(predicate) || []).forEach((data) => {
       response.addElement(data);
     });
@@ -247,6 +251,9 @@ var RpgDataList = class {
     let isNew = true;
     for (let elementCount = 0; elementCount < this.elements.length; elementCount++) {
       if (this.elements[elementCount].obsidianId === element.obsidianId) {
+        if (element instanceof AbstractRpgOutlineData) {
+          element.initialiseNeighbours();
+        }
         this.elements[elementCount] = element;
         isNew = false;
       }
@@ -262,13 +269,14 @@ var RpgData = class extends import_obsidian2.Component {
   constructor(app2) {
     super();
     this.app = app2;
-    this.data = new RpgDataList();
+    this.data = new RpgDataList(this.app);
   }
   loadCache() {
     this.loadElements(0 /* Campaign */);
     this.loadElements(1 /* Adventure */);
     this.loadElements(2 /* Session */);
     this.loadElements(3 /* Scene */);
+    this.loadElements(10 /* Note */);
     this.loadElements();
     this.fillNeighbours();
     this.registerEvent(this.app.metadataCache.on("resolve", (file) => this.refreshDataCache(file)));
@@ -352,6 +360,10 @@ var RpgData = class extends import_obsidian2.Component {
   getSession(campaignId, adventureId, sessionId) {
     const sessions = this.data.where((session) => session.type === 2 /* Session */ && session.campaign.campaignId === campaignId && (adventureId ? session.adventure.adventureId === adventureId : true) && session.sessionId === sessionId);
     return sessions.elements.length === 1 ? sessions.elements[0] : null;
+  }
+  getNote(campaignId, adventureId, sessionId) {
+    const notes = this.data.where((note) => note.type === 10 /* Note */ && note.campaign.campaignId === campaignId && note.adventure.adventureId === adventureId && note.session.sessionId === sessionId);
+    return notes.elements.length === 1 ? notes.elements[0] : null;
   }
   getScene(campaignId, adventureId, sessionId, sceneId) {
     const scenes = this.data.where((scene) => scene.type === 3 /* Scene */ && scene.campaign != null && scene.campaign.campaignId === campaignId && scene.adventure != null && scene.adventure.adventureId === adventureId && scene.session != null && scene.session.sessionId === sessionId && scene.sceneId === sceneId);
@@ -564,8 +576,13 @@ var RpgFunctions = class {
           } else if (parts.length === 1 && type === 1 /* Adventure */) {
             response = parts[0];
           }
-        } else if (tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag)) {
-          const parts = tag.substring(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag.length + 1).split("/");
+        } else if (tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag) || tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.noteTag)) {
+          let parts;
+          if (tag.startsWith(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag)) {
+            parts = tag.substring(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag.length + 1).split("/");
+          } else {
+            parts = tag.substring(this.app.plugins.getPlugin("rpg-manager").settings.noteTag.length + 1).split("/");
+          }
           if (parts.length === 3) {
             if (type === 0 /* Campaign */) {
               response = parts[0];
@@ -1082,8 +1099,12 @@ var Scene = class extends AbstractRpgOutlineData {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     super.reload(file, metadata);
     this.sceneId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, this.type);
-    this.adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
-    this.session = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_c = this.frontmatter) == null ? void 0 : _c.tags, 2 /* Session */));
+    const adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
+    if (adventure != null)
+      this.adventure = adventure;
+    const session = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_c = this.frontmatter) == null ? void 0 : _c.tags, 2 /* Session */));
+    if (session != null)
+      this.session = session;
     this.startTime = this.initialiseDate((_e = (_d = this.frontmatter) == null ? void 0 : _d.time) == null ? void 0 : _e.start);
     this.endTime = this.initialiseDate((_g = (_f = this.frontmatter) == null ? void 0 : _f.time) == null ? void 0 : _g.end);
     this.action = (_h = this.frontmatter) == null ? void 0 : _h.action;
@@ -1092,6 +1113,10 @@ var Scene = class extends AbstractRpgOutlineData {
     if (this.campaign != null && this.adventure != null && this.session != null) {
       this.previousScene = this.app.plugins.getPlugin("rpg-manager").io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
       this.nextScene = this.app.plugins.getPlugin("rpg-manager").io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
+      if (this.nextScene != null)
+        this.nextScene.previousScene = this;
+      if (this.previousScene != null)
+        this.previousScene.nextScene = this;
     }
   }
   get duration() {
@@ -1387,12 +1412,15 @@ var Session = class extends AbstractRpgOutlineData {
     super(...arguments);
     this.previousSession = null;
     this.nextSession = null;
+    this.notes = null;
   }
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f;
     super.reload(file, metadata);
     this.sessionId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = metadata.frontmatter) == null ? void 0 : _a.tags, this.type);
-    this.adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
+    const adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 1 /* Adventure */));
+    if (adventure != null)
+      this.adventure = adventure;
     this.date = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.session);
     this.irl = this.initialiseDate((_f = (_e = this.frontmatter) == null ? void 0 : _e.dates) == null ? void 0 : _f.irl);
   }
@@ -1400,6 +1428,11 @@ var Session = class extends AbstractRpgOutlineData {
     if (this.campaign != null && this.adventure != null) {
       this.previousSession = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, null, this.sessionId - 1);
       this.nextSession = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, null, this.sessionId + 1);
+      this.notes = this.app.plugins.getPlugin("rpg-manager").io.getNote(this.campaign.campaignId, this.adventure.adventureId, this.sessionId);
+      if (this.nextSession != null)
+        this.nextSession.previousSession = this;
+      if (this.nextSession != null)
+        this.nextSession.previousSession = this;
     }
   }
 };
@@ -1409,7 +1442,21 @@ var Faction = class extends AbstractRpgElementData {
 };
 
 // src/settings/Agnostic/data/Note.ts
-var Note = class extends AbstractRpgElementData {
+var Note = class extends AbstractRpgOutlineData {
+  reload(file, metadata) {
+    var _a, _b;
+    super.reload(file, metadata);
+    const adventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_a = this.frontmatter) == null ? void 0 : _a.tags, 1 /* Adventure */));
+    if (adventure != null) {
+      this.adventure = adventure;
+      const session = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 2 /* Session */));
+      if (session != null)
+        this.session = session;
+    }
+  }
+  initialiseNeighbours() {
+    this.session.notes = this;
+  }
 };
 
 // src/factories/DataFactory.ts
@@ -1928,6 +1975,7 @@ var ResponseBreadcrumb = class extends AbstractResponse {
     this.title = null;
     this.isInNewLine = false;
     this.mainTitle = null;
+    this.function = null;
     this.responseType = 5 /* Breadcrumb */;
   }
 };
@@ -1941,98 +1989,81 @@ var AbstractModel = class {
     this.sourcePath = sourcePath;
     this.contentEl = contentEl;
     this.sourceMeta = sourceMeta;
+    this.noteCreator = function(session, fileFactory) {
+      fileFactory.silentCreate(10 /* Note */, "notes - " + session.name, session.campaign.campaignId, session.adventure.adventureId, session.sessionId);
+    };
   }
   generateBreadcrumb() {
-    var _a, _b;
-    const response = new ResponseBreadcrumb(this.app);
-    response.link = this.currentElement.campaign.link;
-    response.title = DataType[0 /* Campaign */];
+    const response = this.generateElementBreadcrumb(null, 0 /* Campaign */, this.currentElement.campaign);
     if (this.currentElement.type !== 0 /* Campaign */) {
       response.mainTitle = DataType[this.currentElement.type];
-      let nextBreadcrumb, previousBreadcrumb, elementBreadcrumb, adventureBreadcrumb, sessionBreadcrumb, sceneBreadcrumb;
-      let previousSession, nextSession;
       switch (this.currentElement.type) {
         case 1 /* Adventure */:
-          adventureBreadcrumb = new ResponseBreadcrumb(this.app);
-          adventureBreadcrumb.link = this.currentElement.link;
-          adventureBreadcrumb.title = DataType[1 /* Adventure */];
-          response.nextBreadcrumb = adventureBreadcrumb;
+          this.generateElementBreadcrumb(response, 1 /* Adventure */, this.currentElement);
           break;
         case 2 /* Session */:
-          previousSession = this.currentElement.previousSession;
-          nextSession = this.currentElement.nextSession;
-          adventureBreadcrumb = new ResponseBreadcrumb(this.app);
-          adventureBreadcrumb.link = this.currentElement.adventure.link;
-          adventureBreadcrumb.title = DataType[1 /* Adventure */];
-          response.nextBreadcrumb = adventureBreadcrumb;
-          sessionBreadcrumb = new ResponseBreadcrumb(this.app);
-          sessionBreadcrumb.link = this.currentElement.link;
-          sessionBreadcrumb.title = DataType[2 /* Session */];
-          adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
-          previousBreadcrumb = new ResponseBreadcrumb(this.app);
-          nextBreadcrumb = new ResponseBreadcrumb(this.app);
-          if (previousSession != null) {
-            previousBreadcrumb.link = previousSession.link;
-            previousBreadcrumb.linkText = "<< prev session";
-            previousBreadcrumb.isInNewLine = true;
-            sessionBreadcrumb.nextBreadcrumb = previousBreadcrumb;
-          }
-          const sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
-          sessionNotesBreadcrumb.link = "[[link]]";
-          sessionNotesBreadcrumb.linkText = "notes";
-          if (previousSession != null) {
-            previousBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
-          } else {
-            sessionNotesBreadcrumb.isInNewLine = true;
-            sessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
-          }
-          if (nextSession != null) {
-            nextBreadcrumb.link = nextSession.link;
-            nextBreadcrumb.linkText = "next session >>";
-            sessionNotesBreadcrumb.nextBreadcrumb = nextBreadcrumb;
-          }
+          this.generateSessionBreadcrumb(response, this.currentElement);
           break;
         case 3 /* Scene */:
-          adventureBreadcrumb = new ResponseBreadcrumb(this.app);
-          adventureBreadcrumb.link = this.currentElement.adventure.link;
-          adventureBreadcrumb.title = DataType[1 /* Adventure */];
-          response.nextBreadcrumb = adventureBreadcrumb;
-          sessionBreadcrumb = new ResponseBreadcrumb(this.app);
-          sessionBreadcrumb.link = this.currentElement.session.link;
-          sessionBreadcrumb.title = DataType[2 /* Session */];
-          adventureBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
-          sceneBreadcrumb = new ResponseBreadcrumb(this.app);
-          sceneBreadcrumb.link = this.currentElement.link;
-          sceneBreadcrumb.title = DataType[3 /* Scene */];
-          sessionBreadcrumb.nextBreadcrumb = sceneBreadcrumb;
-          previousBreadcrumb = new ResponseBreadcrumb(this.app);
-          nextBreadcrumb = new ResponseBreadcrumb(this.app);
-          if (this.currentElement.previousScene != null) {
-            previousBreadcrumb.link = (_a = this.currentElement.previousScene) == null ? void 0 : _a.link;
-            previousBreadcrumb.linkText = "<< prev scene";
-            previousBreadcrumb.isInNewLine = true;
-            sceneBreadcrumb.nextBreadcrumb = previousBreadcrumb;
-          }
-          if (this.currentElement.nextScene != null) {
-            nextBreadcrumb.link = (_b = this.currentElement.nextScene) == null ? void 0 : _b.link;
-            nextBreadcrumb.linkText = "next scene >>";
-            if (this.currentElement.previousScene != null) {
-              previousBreadcrumb.nextBreadcrumb = nextBreadcrumb;
-            } else {
-              nextBreadcrumb.isInNewLine = true;
-              sceneBreadcrumb.nextBreadcrumb = nextBreadcrumb;
-            }
-          }
+          this.generateSceneBreadcrumb(response, this.currentElement);
           break;
         default:
-          elementBreadcrumb = new ResponseBreadcrumb(this.app);
-          elementBreadcrumb.link = this.currentElement.link;
-          elementBreadcrumb.title = DataType[this.currentElement.type];
-          response.nextBreadcrumb = elementBreadcrumb;
+          this.generateElementBreadcrumb(response, this.currentElement.type, this.currentElement);
           break;
       }
     }
     return response;
+  }
+  generateElementBreadcrumb(parent, type, data, linkText = null, isNewLine = false) {
+    const response = new ResponseBreadcrumb(this.app);
+    response.link = data.link;
+    response.title = DataType[type];
+    if (linkText != null)
+      response.linkText = linkText;
+    if (isNewLine)
+      response.isInNewLine = isNewLine;
+    if (parent != null)
+      parent.nextBreadcrumb = response;
+    return response;
+  }
+  generateSessionBreadcrumb(parent, session) {
+    const adventureBreadcrumb = this.generateElementBreadcrumb(parent, 1 /* Adventure */, session.adventure);
+    const sessionBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, 2 /* Session */, session);
+    let previousBreadcrumb = null;
+    if (session.previousSession != null)
+      previousBreadcrumb = this.generateElementBreadcrumb(sessionBreadcrumb, 2 /* Session */, session.previousSession, "<< prev session", true);
+    let sessionNotesBreadcrumb;
+    if (session.notes != null) {
+      sessionNotesBreadcrumb = this.generateElementBreadcrumb(previousBreadcrumb != null ? previousBreadcrumb : sessionBreadcrumb, 10 /* Note */, session.notes, "notes");
+    } else {
+      sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
+      sessionNotesBreadcrumb.link = "";
+      sessionNotesBreadcrumb.linkText = "create session notes";
+      sessionNotesBreadcrumb.functionParameters = [this.currentElement, this.app.plugins.getPlugin("rpg-manager").factories.files];
+      sessionNotesBreadcrumb.function = this.noteCreator;
+      if (previousBreadcrumb != null) {
+        previousBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+      } else {
+        sessionNotesBreadcrumb.isInNewLine = true;
+        sessionBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
+      }
+    }
+    let nextBreadcrumb = null;
+    if (session.nextSession != null)
+      nextBreadcrumb = this.generateElementBreadcrumb(sessionNotesBreadcrumb, 2 /* Session */, session.nextSession, "next session >>");
+    return nextBreadcrumb != null ? nextBreadcrumb : sessionNotesBreadcrumb;
+  }
+  generateSceneBreadcrumb(parent, scene) {
+    const adventureBreadcrumb = this.generateElementBreadcrumb(parent, 1 /* Adventure */, scene.adventure);
+    const sessionBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, 2 /* Session */, scene.session);
+    const sceneBreadcrumb = this.generateElementBreadcrumb(sessionBreadcrumb, 3 /* Scene */, scene);
+    let previousBreadcrumb = null;
+    if (scene.previousScene != null)
+      previousBreadcrumb = this.generateElementBreadcrumb(sceneBreadcrumb, 3 /* Scene */, scene.previousScene, "<< prev scene", true);
+    let nextBreadcrumb = null;
+    if (scene.nextScene != null)
+      nextBreadcrumb = this.generateElementBreadcrumb(previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb, 3 /* Scene */, scene.nextScene, "next scene >>", previousBreadcrumb != null ? false : true);
+    return nextBreadcrumb != null ? nextBreadcrumb : previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb;
   }
 };
 
@@ -2557,7 +2588,7 @@ var CampaignTemplate = class extends AbstractTemplate {
     return " current: \n";
   }
   generateInitialCodeBlock() {
-    let additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
+    const additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
     return this.getRpgManagerCodeblock("campaignNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
@@ -2582,7 +2613,7 @@ var AdventureTemplate = class extends AbstractTemplate {
     return this.getRpgManagerCodeblock("adventureNavigation");
   }
   generateLastCodeBlock() {
-    let additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
+    const additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
     return this.getRpgManagerCodeblock("adventure", additionalInformation);
   }
   generateTemplate() {
@@ -2602,7 +2633,7 @@ var SessionTemplate = class extends AbstractTemplate {
     return " session: \n irl: \n";
   }
   generateInitialCodeBlock() {
-    let additionalInformation = ' abt: \n  need: \n  and: \n  but: \n  therefore: \n storycircle: \n  you: ""\n  need: ""\n  go: ""\n  search: ""\n  find: ""\n  take: ""\n  return: ""\n  change: ""\n';
+    const additionalInformation = ' abt: \n  need: \n  and: \n  but: \n  therefore: \n storycircle: \n  you: ""\n  need: ""\n  go: ""\n  search: ""\n  find: ""\n  take: ""\n  return: ""\n  change: ""\n';
     return this.getRpgManagerCodeblock("sessionNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
@@ -2638,7 +2669,7 @@ var SceneTemplate = class extends AbstractTemplate {
     return " start: \n end: \n";
   }
   generateInitialCodeBlock() {
-    let additionalInformation = " trigger: \n action: \n";
+    const additionalInformation = " trigger: \n action: \n";
     return this.getRpgManagerCodeblock("sceneNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
@@ -2794,6 +2825,16 @@ var FactionTemplate = class extends AbstractTemplate {
   }
 };
 
+// src/settings/Agnostic/templates/NoteTemplate.ts
+var NoteTemplate = class extends AbstractTemplate {
+  generateFrontmatterTags() {
+    return "tags: [" + this.app.plugins.getPlugin("rpg-manager").settings.noteTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId + "]\n";
+  }
+  generateTemplate() {
+    return "";
+  }
+};
+
 // src/factories/TemplateFactory.ts
 var TemplatesMap = {
   AgnosticCampaign: CampaignTemplate,
@@ -2805,7 +2846,8 @@ var TemplatesMap = {
   AgnosticLocation: LocationTemplate,
   AgnosticEvent: EventTemplate,
   AgnosticClue: ClueTemplate,
-  AgnosticFaction: FactionTemplate
+  AgnosticFaction: FactionTemplate,
+  AgnosticNote: NoteTemplate
 };
 var TemplateFactory = class extends AbstractFactory {
   create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
@@ -2917,15 +2959,27 @@ var BreadcrumbView = class extends AbstractView {
     const crumb = lineToUse.createDiv({ cls: "crumb" });
     crumb.createDiv({ cls: "title", text: data.title ? data.title : " " });
     const value = crumb.createDiv({ cls: "value" });
-    let link = data.link;
-    if (data.linkText != null) {
-      if (link.indexOf("|") !== -1) {
-        link = link.substring(0, link.indexOf("|") + 1) + data.linkText + "]]";
-      } else {
-        link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
+    if (data.function != null) {
+      const functionLink = value.createEl("a");
+      functionLink.textContent = data.linkText;
+      functionLink.addEventListener("click", () => {
+        if (data.functionParameters != null) {
+          data.function(...data.functionParameters);
+        } else {
+          data.function();
+        }
+      });
+    } else {
+      let link = data.link;
+      if (data.linkText != null) {
+        if (link.indexOf("|") !== -1) {
+          link = link.substring(0, link.indexOf("|") + 1) + data.linkText + "]]";
+        } else {
+          link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
+        }
       }
+      import_obsidian9.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
     }
-    import_obsidian9.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
     if (data.nextBreadcrumb != null) {
       if (data.nextBreadcrumb.isInNewLine === false) {
         const separator = lineToUse.createDiv({ cls: "separator" });
@@ -3332,7 +3386,7 @@ var DEFAULT_SETTINGS = {
   eventTag: "rpgm/element/event",
   clueTag: "rpgm/element/clue",
   timelineTag: "rpgm/element/timeline",
-  noteTag: "rpgm/element/note"
+  noteTag: "rpgm/outline/note"
 };
 var RpgManagerSettingTab = class extends import_obsidian12.PluginSettingTab {
   constructor(app2, plugin) {

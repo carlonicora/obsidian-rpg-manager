@@ -10,6 +10,8 @@ export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbRe
 	public title: string|null = null;
 	public isInNewLine = false;
 	public mainTitle: string|null = null;
+	public function: any|null = null;
+	public functionParameters: Array<any>|null;
 
 	constructor(
 		app: App,

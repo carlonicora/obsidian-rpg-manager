@@ -18,7 +18,7 @@ export class CampaignTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		let additionalInformation = ' abt: \n' +
+		const additionalInformation = ' abt: \n' +
 			'  need: \n' +
 			'  and: \n' +
 			'  but: \n' +

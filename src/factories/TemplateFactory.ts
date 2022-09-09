@@ -11,6 +11,7 @@ import {FactionTemplate} from "../settings/Agnostic/templates/FactionTemplate";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
+import {NoteTemplate} from "../settings/Agnostic/templates/NoteTemplate";
 
 const TemplatesMap = {
 	AgnosticCampaign: CampaignTemplate,
@@ -23,6 +24,7 @@ const TemplatesMap = {
 	AgnosticEvent: EventTemplate,
 	AgnosticClue: ClueTemplate,
 	AgnosticFaction: FactionTemplate,
+	AgnosticNote: NoteTemplate,
 };
 type TemplatesMapType = typeof TemplatesMap;
 type TemplateKeys = keyof TemplatesMapType;

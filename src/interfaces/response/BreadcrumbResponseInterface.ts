@@ -7,4 +7,6 @@ export interface BreadcrumbResponseInterface extends ResponseElementInterface {
 	title: string|null;
 	isInNewLine: boolean;
 	mainTitle: string|null;
+	function: any|null;
+	functionParameters: Array<any>|null;
 }

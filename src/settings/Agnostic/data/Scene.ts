@@ -23,8 +23,10 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 		super.reload(file, metadata);
 
 		this.sceneId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter?.tags, this.type);
-		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure))!;
-		this.session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Session))!;
+		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure));
+		if (adventure != null) this.adventure = adventure;
+		const session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Session));
+		if (session != null) this.session = session;
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
 		this.action = this.frontmatter?.action;
@@ -35,6 +37,9 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 		if (this.campaign != null && this.adventure != null && this.session != null) {
 			this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
 			this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
+
+			if (this.nextScene != null) this.nextScene.previousScene = this;
+			if (this.previousScene != null) this.previousScene.nextScene = this;
 		}
 	}
 

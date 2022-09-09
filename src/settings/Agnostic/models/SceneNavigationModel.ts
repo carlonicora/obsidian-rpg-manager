@@ -1,7 +1,6 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {ResponseBox} from "../../../data/responses/ResponseBox";
 import {SceneInterface} from "../../../interfaces/data/SceneInterface";
 
 export class SceneNavigationModel extends AbstractModel {

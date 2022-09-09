@@ -3,6 +3,7 @@ import {SessionInterface} from "../../../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 import {CachedMetadata, TFile} from "obsidian";
 import {DataType} from "../../../enums/DataType";
+import {NoteInterface} from "../../../interfaces/data/NoteInterface";
 
 export class Session extends AbstractRpgOutlineData implements SessionInterface {
 	public sessionId: number;
@@ -12,6 +13,7 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 	public adventure: AdventureInterface;
 	public previousSession: SessionInterface|null=null;
 	public nextSession: SessionInterface|null=null;
+	public notes: NoteInterface|null=null;
 
 	public reload(
 		file: TFile,
@@ -20,7 +22,8 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 		super.reload(file, metadata);
 
 		this.sessionId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter?.tags, this.type);
-		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure))!;
+		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure));
+		if (adventure != null) this.adventure = adventure;
 		this.date = this.initialiseDate(this.frontmatter?.dates?.session);
 		this.irl = this.initialiseDate(this.frontmatter?.dates?.irl);
 	}
@@ -30,6 +33,10 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 		if (this.campaign != null && this.adventure != null) {
 			this.previousSession = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, null, this.sessionId - 1);
 			this.nextSession = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, null, this.sessionId + 1);
+			this.notes = this.app.plugins.getPlugin('rpg-manager').io.getNote(this.campaign.campaignId, this.adventure.adventureId, this.sessionId);
+
+			if (this.nextSession != null) this.nextSession.previousSession = this;
+			if (this.nextSession != null) this.nextSession.previousSession = this;
 		}
 	}
 }

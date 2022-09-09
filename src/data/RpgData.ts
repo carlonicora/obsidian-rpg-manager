@@ -12,6 +12,7 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
+import {NoteInterface} from "../interfaces/data/NoteInterface";
 
 export class RpgData extends Component {
 	private data: RpgDataList;
@@ -21,7 +22,7 @@ export class RpgData extends Component {
 	) {
 		super();
 
-		this.data = new RpgDataList();
+		this.data = new RpgDataList(this.app);
 	}
 
 	public loadCache(
@@ -30,6 +31,7 @@ export class RpgData extends Component {
 		this.loadElements(DataType.Adventure);
 		this.loadElements(DataType.Session);
 		this.loadElements(DataType.Scene);
+		this.loadElements(DataType.Note);
 		this.loadElements();
 		this.fillNeighbours();
 
@@ -186,6 +188,22 @@ export class RpgData extends Component {
 		);
 
 		return sessions.elements.length === 1 ? (<SessionInterface>sessions.elements[0]) : null;
+	}
+
+	public getNote(
+		campaignId: number,
+		adventureId: number,
+		sessionId: number,
+	): NoteInterface|null {
+		const notes = this.data.where((note: NoteInterface) =>
+			note.type === DataType.Note &&
+			note.campaign.campaignId === campaignId &&
+			note.adventure.adventureId === adventureId &&
+			note.session.sessionId === sessionId
+		);
+
+		return notes.elements.length === 1 ? (<NoteInterface>notes.elements[0]) : null;
+
 	}
 
 	public getScene(

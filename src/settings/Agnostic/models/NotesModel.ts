@@ -1,7 +1,6 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {LocationInterface} from "../../../interfaces/data/LocationInterface";
 import {NoteInterface} from "../../../interfaces/data/NoteInterface";
 
 export class NotesModel extends AbstractModel {

@@ -19,7 +19,7 @@ export class SessionTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		let additionalInformation = ' abt: \n' +
+		const additionalInformation = ' abt: \n' +
 			'  need: \n' +
 			'  and: \n' +
 			'  but: \n' +

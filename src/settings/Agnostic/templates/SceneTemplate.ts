@@ -32,7 +32,7 @@ export class SceneTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		let additionalInformation = ' trigger: \n' +
+		const additionalInformation = ' trigger: \n' +
 			' action: \n';
 		return this.getRpgManagerCodeblock('sceneNavigation', additionalInformation);
 	}

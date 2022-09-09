@@ -32,21 +32,35 @@ export class BreadcrumbView extends AbstractView {
 		crumb.createDiv({cls: 'title', text: data.title ? data.title : ' '});
 		const value = crumb.createDiv({cls: 'value'});
 
-		let link: string = data.link;
-		if (data.linkText != null){
-			if (link.indexOf('|') !== -1){
-				link = link.substring(0, link.indexOf('|') + 1) + data.linkText + ']]';
-			} else {
-				link = link.substring(0, link.indexOf(']]')) + '|' + data.linkText + ']]';
+		if (data.function != null){
+			const functionLink: HTMLAnchorElement = value.createEl('a');
+			functionLink.textContent = data.linkText;
+			functionLink.addEventListener("click", () => {
+				if (data.functionParameters != null){
+					data.function(...data.functionParameters);
+				} else {
+					data.function();
+				}
+			});
+		} else {
+			let link: string = data.link;
+			if (data.linkText != null){
+				if (link.indexOf('|') !== -1){
+					link = link.substring(0, link.indexOf('|') + 1) + data.linkText + ']]';
+				} else {
+					link = link.substring(0, link.indexOf(']]')) + '|' + data.linkText + ']]';
+				}
 			}
+
+			MarkdownRenderer.renderMarkdown(
+				link,
+				value,
+				this.sourcePath,
+				null as unknown as Component,
+			)
 		}
 
-		MarkdownRenderer.renderMarkdown(
-			link,
-			value,
-			this.sourcePath,
-			null as unknown as Component,
-		)
+
 
 		if (data.nextBreadcrumb != null){
 			if (data.nextBreadcrumb.isInNewLine === false) {
