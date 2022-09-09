@@ -1,4 +1,4 @@
-import {App, Modal} from "obsidian";
+import {App, MarkdownView, Modal} from "obsidian";
 import {DataType} from "./enums/DataType";
 import {ModalComponentInterface} from "./interfaces/ModalComponentInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
@@ -46,6 +46,12 @@ export class RpgModal extends Modal implements ModalInterface {
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.addClass('rpgm-modal');
+
+		if (!this.create && this.app.workspace.getActiveViewOfType(MarkdownView) == null){
+			contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Error'});
+			contentEl.createSpan({cls: '', text: 'To fill a note with a RPG Manager element you must have a valid file opened.'});
+			return;
+		}
 
 		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + DataType[this.type]});
 		contentEl.createEl('p', {text: 'Title of your new ' + DataType[this.type]});
