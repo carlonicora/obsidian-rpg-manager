@@ -17,7 +17,7 @@ export class NoteModel extends AbstractModel {
 				this.app.plugins.getPlugin('rpg-manager').io.getSceneList(
 					this.currentElement.campaign.campaignId,
 					this.currentElement.adventure.adventureId,
-					this.currentElement.session.sessionId
+					this.currentElement.sessionId
 				).elements,
 			)
 		);

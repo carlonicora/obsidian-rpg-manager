@@ -202,7 +202,7 @@ export class RpgData extends Component {
 			note.type === DataType.Note &&
 			note.campaign.campaignId === campaignId &&
 			note.adventure.adventureId === adventureId &&
-			note.session.sessionId === sessionId
+			note.sessionId === sessionId
 		);
 
 		return notes.elements.length === 1 ? (<NoteInterface>notes.elements[0]) : null;
