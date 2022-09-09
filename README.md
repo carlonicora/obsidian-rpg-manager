@@ -1,8 +1,9 @@
 # Role Playing Game Manager Obsidian Plugin 
 
 Obsidian Role Playing Game Manager is an Obsidian plugin that helps you plot and manage your tabletop role playing game 
-campaigns. It uses [Obsidian Dataview](https://github.com/blacksmithgu/obsidian-dataview) to reference information 
-from different notes inside your vault to simplify the creation and run of complex campaigns.
+campaigns.
+
+**From this version, RPG Manager does not require the Dataview plugin any longer**
 
 The plugin works well in conjunction with a 
 [structured plotting style](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
@@ -87,23 +88,25 @@ session
 RpgManager supports the creation of different views. These views are associated to the page element, and they feed from 
 the Frontmatter metadata in the page. The available functions are:
 
-| Function            | Description                                                                                                                                    |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `campaign`          | Lists the adventures, sessions and characters for the campaign                                                                                 |
-| `adventure`         | Lists the adventure sessions                                                                                                                   |
-| `sessionNavigation` | Displays the session navigator                                                                                                                 |
-| `session`           | Lists the session scenes                                                                                                                       |
-| `sessionNavigation` | Displays the session navigator                                                                                                                 |
-| `scene`             | Displays the scene navigator and lists the characters, locations and clues for the scene                                                       |
-| `sceneNavigation`   | Displays the scene navigator and lists the scene goal and player characters expected action                                                    |
-| `npc`               | Displays the non player character information and lists the list of factions, characters, events, clues and locations related to the character |
-| `pc`                | Displays the player character information and lists the list of factions, characters and locations related to the character                    |
-| `clue`              | Displays the clue information and lists the characters, locations and events related to the clue                                               |
-| `event`             | Displays the event information and lists the characters, clues and locations related to the event                                              |
-| `location`          | Displays the location information and lists the characters, clues and events related to the location                                           |
-| `faction`           | Displays the faction information and lists the characters and locations related to the faction                                                 |
-| `timeline`          | Displays a timeline of every event, session and character date in the campaign                                                                 |
-| `notes`             | Currently does not display any specific type of information (_under development_)                                                              |
+| Function              | Description                                                                                                                                    |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `campaignNavigation`  | Displays the banner of the campaign                                                                                                            |
+| `campaign`            | Lists the adventures, sessions and characters for the campaign                                                                                 |
+| `adventureNavigation` | Displays the breadcrumb and the header                                                                                                         |
+| `adventure`           | Lists the adventure sessions                                                                                                                   |
+| `sessionNavigation`   | Displays the session navigator                                                                                                                 |
+| `session`             | Lists the session scenes                                                                                                                       |
+| `sessionNavigation`   | Displays the breadcrumb and the header                                                                                                         |
+| `sceneNavigation`     | Displays the breadcrumb and the header                                                                                                         |
+| `scene`               | Displays the scene navigator and lists the characters, locations and clues for the scene                                                       |
+| `npc`                 | Displays the non player character information and lists the list of factions, characters, events, clues and locations related to the character |
+| `pc`                  | Displays the player character information and lists the list of factions, characters and locations related to the character                    |
+| `clue`                | Displays the clue information and lists the characters, locations and events related to the clue                                               |
+| `event`               | Displays the event information and lists the characters, clues and locations related to the event                                              |
+| `location`            | Displays the location information and lists the characters, clues and events related to the location                                           |
+| `faction`             | Displays the faction information and lists the characters and locations related to the faction                                                 |
+| `timeline`            | Displays a timeline of every event, session and character date in the campaign                                                                 |
+| `notes`               | Currently does not display any specific type of information (_under development_)                                                              |
 
 example
 ```
@@ -118,15 +121,11 @@ have the same name of the note. Supported files extensions are `.jpg`, `.jpeg`, 
 
 ### Templates
 
-Using Rpg Manager Commands (`Create a new...`) you have access to pre-designed templates which contains the correct 
-frontmatter and codeblocks for each `outline` and `element`.
+Using Rpg Manager Create Commands (`Create a new...`) you have access to pre-designed templates which contains the correct 
+frontmatter and codeblocks for each `outline` and `element`. You can also fill an existing note using Rpg Manager 
+Fill Commands (`Fill ...`)
 
 ## Installation
-
-### Requirements
-
-This plugin makes use of [Obsidian Dataview](https://github.com/blacksmithgu/obsidian-dataview) to organise the 
-information. Please make sure you have the dataview community plugin installed.
 
 ### Manually installing the plugin
 
