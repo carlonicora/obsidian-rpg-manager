@@ -117,4 +117,9 @@ export class SessionModal extends AbstractModalComponent {
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}
+
+	protected async addAdditionalElements(
+	): Promise<void> {
+		//this.modal.additionalInformationEl
+	}
 }

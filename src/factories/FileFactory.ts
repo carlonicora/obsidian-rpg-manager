@@ -15,6 +15,7 @@ export class FileFactory extends AbstractFactory {
 		adventureId: number|null = null,
 		sessionId: number|null = null,
 		sceneId: number|null = null,
+		additionalInformation: any|null = null,
 	): Promise<void> {
 		let folder = '/';
 
@@ -35,6 +36,7 @@ export class FileFactory extends AbstractFactory {
 			adventureId,
 			sessionId,
 			sceneId,
+			additionalInformation,
 		);
 
 		const data: string = template.generateData();
@@ -63,6 +65,9 @@ export class FileFactory extends AbstractFactory {
 
 				const file = activeView.file;
 				this.app.fileManager.renameFile(file, fullPath + '/' + name + '.md');
+
+				activeView.leaf.detach();
+				app.workspace.getLeaf(true).openFile(file);
 			}
 		}
 	}

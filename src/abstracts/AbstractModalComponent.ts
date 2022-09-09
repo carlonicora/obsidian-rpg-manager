@@ -15,6 +15,14 @@ export abstract class AbstractModalComponent implements ModalComponentInterface 
 		contentEl: HTMLElement,
 	): Promise<void>;
 
+	protected abstract addAdditionalElements(
+	): Promise<void>;
+
+	public prepareAdditionalInformation(
+	): any|null {
+		return null;
+	}
+
 	abstract loadChild(
 		containerEl: HTMLElement
 	): Promise<void>;
@@ -31,7 +39,8 @@ export abstract class AbstractModalComponent implements ModalComponentInterface 
 		campaignId: number,
 		adventureId: number | null,
 		sessionId: number | null,
-		sceneId: number | null
+		sceneId: number | null,
+		additionalInformation: any|null,
 	): Promise<void> {
 		this.app.plugins.getPlugin('rpg-manager').factories.files.create(
 			settings,
@@ -43,6 +52,7 @@ export abstract class AbstractModalComponent implements ModalComponentInterface 
 			adventureId,
 			sessionId,
 			sceneId,
+			additionalInformation,
 		);
 	}
 }

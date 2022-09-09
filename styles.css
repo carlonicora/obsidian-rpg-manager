@@ -203,6 +203,16 @@
 .rpgm-modal h2.rpgm-modal-title {
   font-size: 1.5em;
 }
+.rpgm-modal .additionalElements, .rpgm-modal .navigation {
+  float: left;
+}
+.rpgm-modal .additionalElements {
+  border: solid 1px #eeeeee;
+  display: none;
+  margin-top: 80px;
+  margin-left: 50px;
+  padding: 25px;
+}
 .rpgm-modal .title {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -228,10 +238,10 @@
   margin-bottom: 10px;
   box-shadow: 0 0 0 0 transparent;
 }
-.rpgm-modal .createFrontMatterOnly {
+.rpgm-modal .navigation > .createFrontMatterOnly {
   margin-top: 10px;
 }
-.rpgm-modal .createFrontMatterOnly input[type=checkbox], .rpgm-modal .createFrontMatterOnly label {
+.rpgm-modal .navigation > .createFrontMatterOnly input[type=checkbox], .rpgm-modal .navigation > .createFrontMatterOnly label {
   float: left;
   margin-top: 10px;
   margin-top: 10px;

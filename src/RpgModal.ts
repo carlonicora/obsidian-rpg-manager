@@ -11,6 +11,7 @@ export class RpgModal extends Modal implements ModalInterface {
 	public title: HTMLInputElement;
 	public titleError: HTMLParagraphElement;
 	public createFrontMatterOnly: HTMLInputElement;
+	public additionalInformationEl: HTMLDivElement;
 
 	public campaignId: number;
 	public adventureId: number|null;
@@ -53,13 +54,17 @@ export class RpgModal extends Modal implements ModalInterface {
 			return;
 		}
 
-		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + DataType[this.type]});
-		contentEl.createEl('p', {text: 'Title of your new ' + DataType[this.type]});
-		this.title = contentEl.createEl('input', {type: 'text'});
+		const navigationEl = contentEl.createDiv({cls: 'navigation'});
+		this.additionalInformationEl = contentEl.createDiv({cls: 'additionalElements'});
+		contentEl.createDiv({cls: 'clear'});
+
+		navigationEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + DataType[this.type]});
+		navigationEl.createEl('p', {text: 'Title of your new ' + DataType[this.type]});
+		this.title = navigationEl.createEl('input', {type: 'text'});
 		if (this.name !== null) {
 			this.title.value = this.name;
 		}
-		this.titleError = contentEl.createEl('p', {cls: 'error'});
+		this.titleError = navigationEl.createEl('p', {cls: 'error'});
 
 		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
 			this.settings,
@@ -67,16 +72,16 @@ export class RpgModal extends Modal implements ModalInterface {
 			this,
 		)
 
-		const childElement = contentEl.createDiv();
+		const childElement = navigationEl.createDiv();
 
-		const cfmo = contentEl.createDiv({cls: 'createFrontMatterOnly'});
+		const cfmo = navigationEl.createDiv({cls: 'createFrontMatterOnly'});
 		this.createFrontMatterOnly = cfmo.createEl('input', {type: 'checkbox'});
 		this.createFrontMatterOnly.id = 'createFrontMatterOnly';
 
-		const labelFrontMatterOnly = contentEl.createEl('label', {text: 'Create Frontmatter only'});
+		const labelFrontMatterOnly = navigationEl.createEl('label', {text: 'Create Frontmatter only'});
 		labelFrontMatterOnly.htmlFor = 'createFrontMatterOnly';
 
-		this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
+		this.button = navigationEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
 
 		if (this.type !== DataType.Campaign){
 			this.button.disabled = true;
@@ -119,6 +124,7 @@ export class RpgModal extends Modal implements ModalInterface {
 			this.adventureId,
 			this.sessionId,
 			this.sceneId,
+			this.saver.prepareAdditionalInformation(),
 		)
 		this.close();
 	}

@@ -247,6 +247,18 @@ $blue: #2020ff;
 		font-size: 1.5em;
 	}
 
+	.additionalElements, .navigation {
+		float: left;
+	}
+
+	.additionalElements {
+		border: solid 1px $off-white;
+		display: none;
+		margin-top: 80px;
+		margin-left: 50px;
+		padding: 25px;
+	}
+
 	.group {
 
 	}
@@ -280,7 +292,7 @@ $blue: #2020ff;
 		box-shadow: 0 0 0 0 transparent;
 	}
 
-	.createFrontMatterOnly {
+	.navigation > .createFrontMatterOnly {
 		margin-top: 10px;
 
 		input[type=checkbox], label {

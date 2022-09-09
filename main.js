@@ -1578,7 +1578,7 @@ var ErrorFactory = class extends AbstractFactory {
 // src/factories/FileFactory.ts
 var import_obsidian7 = require("obsidian");
 var FileFactory = class extends AbstractFactory {
-  create(settings, type, create, createFrontMatterOnly, name, campaignId = null, adventureId = null, sessionId = null, sceneId = null) {
+  create(settings, type, create, createFrontMatterOnly, name, campaignId = null, adventureId = null, sessionId = null, sceneId = null, additionalInformation = null) {
     return __async(this, null, function* () {
       let folder = "/";
       if (campaignId != null) {
@@ -1588,7 +1588,7 @@ var FileFactory = class extends AbstractFactory {
           folder = campaign.folder;
         }
       }
-      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
       const data = template.generateData();
       let fullPath;
       if (type !== 0 /* Campaign */) {
@@ -1611,6 +1611,8 @@ var FileFactory = class extends AbstractFactory {
           editor.setValue(data + "\n" + editor.getValue());
           const file = activeView.file;
           this.app.fileManager.renameFile(file, fullPath + "/" + name + ".md");
+          activeView.leaf.detach();
+          app.workspace.getLeaf(true).openFile(file);
         }
       }
     });
@@ -1643,9 +1645,12 @@ var AbstractModalComponent = class {
     this.app = app2;
     this.modal = modal;
   }
-  save(settings, type, create, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
+  prepareAdditionalInformation() {
+    return null;
+  }
+  save(settings, type, create, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation) {
     return __async(this, null, function* () {
-      this.app.plugins.getPlugin("rpg-manager").factories.files.create(settings, type, create, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+      this.app.plugins.getPlugin("rpg-manager").factories.files.create(settings, type, create, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
     });
   }
 };
@@ -1660,6 +1665,7 @@ var CampaignModal = class extends AbstractModalComponent {
     return __async(this, null, function* () {
       const campaignEl = contentEl.createDiv({ cls: "campaignContainer" });
       if (this.modal.type === 0 /* Campaign */) {
+        this.addAdditionalElements();
         this.addNewCampaignElements(campaignEl);
       } else {
         if (this.campaigns.length === 0) {
@@ -1749,6 +1755,24 @@ var CampaignModal = class extends AbstractModalComponent {
     this.childEl.empty();
     this.loadChild(this.childEl);
   }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+      if (this.modal.additionalInformationEl.style.display !== "block") {
+        this.modal.additionalInformationEl.style.display = "block";
+        this.modal.additionalInformationEl.createEl("h2", {
+          cls: "rpgm-modal-title",
+          text: "Additional Information for the " + DataType[this.modal.type]
+        });
+        this.modal.additionalInformationEl.createEl("p", { text: "Current Date" });
+        this.currentDateEl = this.modal.additionalInformationEl.createEl("input", { type: "text" });
+      }
+    });
+  }
+  prepareAdditionalInformation() {
+    return {
+      current: this.currentDateEl.value
+    };
+  }
 };
 
 // src/settings/Agnostic/modals/AdventureModal.ts
@@ -1761,6 +1785,7 @@ var AdventureModal = class extends AbstractModalComponent {
     return __async(this, null, function* () {
       const adventureEl = contentEl.createDiv({ cls: "adventureContainer" });
       if (this.modal.type === 1 /* Adventure */) {
+        this.addAdditionalElements();
         this.addNewAdventureElements(adventureEl);
       } else {
         if (this.adventures.length === 0) {
@@ -1827,6 +1852,10 @@ var AdventureModal = class extends AbstractModalComponent {
     this.modal.adventureId = +this.adventureEl.value;
     this.childEl.empty();
     this.loadChild(this.childEl);
+  }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
   }
 };
 
@@ -1907,6 +1936,10 @@ var SessionModal = class extends AbstractModalComponent {
     this.childEl.empty();
     this.loadChild(this.childEl);
   }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
+  }
 };
 
 // src/settings/Agnostic/modals/SceneModal.ts
@@ -1939,6 +1972,10 @@ var SceneModal = class extends AbstractModalComponent {
   validate() {
     return true;
   }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
+  }
 };
 
 // src/settings/Agnostic/modals/CharacterModal.ts
@@ -1956,6 +1993,10 @@ var CharacterModal = class extends AbstractModalComponent {
   }
   validate() {
     return true;
+  }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
   }
 };
 
@@ -1975,6 +2016,10 @@ var ClueModal = class extends AbstractModalComponent {
   validate() {
     return true;
   }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
+  }
 };
 
 // src/settings/Agnostic/modals/EventModal.ts
@@ -1992,6 +2037,10 @@ var EventModal = class extends AbstractModalComponent {
   }
   validate() {
     return true;
+  }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
   }
 };
 
@@ -2011,6 +2060,10 @@ var FactionModal = class extends AbstractModalComponent {
   validate() {
     return true;
   }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
+  }
 };
 
 // src/settings/Agnostic/modals/LocationModal.ts
@@ -2028,6 +2081,10 @@ var LocationModal = class extends AbstractModalComponent {
   }
   validate() {
     return true;
+  }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
   }
 };
 
@@ -2047,6 +2104,10 @@ var NonPlayerCharacterModal = class extends AbstractModalComponent {
   validate() {
     return true;
   }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
+  }
 };
 
 // src/settings/Agnostic/modals/NoteModal.ts
@@ -2064,6 +2125,10 @@ var NoteModal = class extends AbstractModalComponent {
   }
   validate() {
     return true;
+  }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
   }
 };
 
@@ -2590,7 +2655,7 @@ var PronounFactory = class extends AbstractFactory {
 
 // src/abstracts/AbstractTemplate.ts
 var AbstractTemplate = class {
-  constructor(app2, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
+  constructor(app2, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation) {
     this.app = app2;
     this.createFrontMatterOnly = createFrontMatterOnly;
     this.name = name;
@@ -2598,6 +2663,7 @@ var AbstractTemplate = class {
     this.adventureId = adventureId;
     this.sessionId = sessionId;
     this.sceneId = sceneId;
+    this.additionalInformation = additionalInformation;
   }
   generateData() {
     let response = "";
@@ -2696,11 +2762,18 @@ var CampaignTemplate = class extends AbstractTemplate {
   generateFrontmatterTags() {
     return "tags: [" + this.app.plugins.getPlugin("rpg-manager").settings.campaignTag + "/" + this.campaignId + "]\n";
   }
+  generateFrontmatterSynopsis() {
+    return 'synopsis: ""\n';
+  }
   generateFrontmatterAdditionalInformation() {
     return "settings: Agnostic\n";
   }
   generateFrontmatterDates() {
-    return " current: \n";
+    let current = "";
+    if (this.additionalInformation != null && this.additionalInformation.current != null) {
+      current = this.additionalInformation.current;
+    }
+    return " current: " + current + "\n";
   }
   generateInitialCodeBlock() {
     const additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
@@ -3002,12 +3075,12 @@ var TemplatesMap = {
   VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate
 };
 var TemplateFactory = class extends AbstractFactory {
-  create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
+  create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation = null) {
     let templateKey = CampaignSetting[settings] + DataType[type];
     if (TemplatesMap[templateKey] == null && settings !== 0 /* Agnostic */) {
       templateKey = CampaignSetting[0 /* Agnostic */] + DataType[type];
     }
-    return new TemplatesMap[templateKey](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+    return new TemplatesMap[templateKey](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
   }
 };
 
@@ -3342,21 +3415,24 @@ var RpgModal = class extends import_obsidian11.Modal {
       contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
       return;
     }
-    contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
-    contentEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
-    this.title = contentEl.createEl("input", { type: "text" });
+    const navigationEl = contentEl.createDiv({ cls: "navigation" });
+    this.additionalInformationEl = contentEl.createDiv({ cls: "additionalElements" });
+    contentEl.createDiv({ cls: "clear" });
+    navigationEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
+    navigationEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
+    this.title = navigationEl.createEl("input", { type: "text" });
     if (this.name !== null) {
       this.title.value = this.name;
     }
-    this.titleError = contentEl.createEl("p", { cls: "error" });
+    this.titleError = navigationEl.createEl("p", { cls: "error" });
     this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.settings, 0 /* Campaign */, this);
-    const childElement = contentEl.createDiv();
-    const cfmo = contentEl.createDiv({ cls: "createFrontMatterOnly" });
+    const childElement = navigationEl.createDiv();
+    const cfmo = navigationEl.createDiv({ cls: "createFrontMatterOnly" });
     this.createFrontMatterOnly = cfmo.createEl("input", { type: "checkbox" });
     this.createFrontMatterOnly.id = "createFrontMatterOnly";
-    const labelFrontMatterOnly = contentEl.createEl("label", { text: "Create Frontmatter only" });
+    const labelFrontMatterOnly = navigationEl.createEl("label", { text: "Create Frontmatter only" });
     labelFrontMatterOnly.htmlFor = "createFrontMatterOnly";
-    this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
+    this.button = navigationEl.createEl("button", { cls: "mod-cta", text: "Create" });
     if (this.type !== 0 /* Campaign */) {
       this.button.disabled = true;
     }
@@ -3386,7 +3462,7 @@ var RpgModal = class extends import_obsidian11.Modal {
         return;
       if (this.elementModal != null && !this.elementModal.validate())
         return;
-      this.saver.save(this.settings, this.type, this.create, this.createFrontMatterOnly.checked, this.title.value, this.campaignId, this.adventureId, this.sessionId, this.sceneId);
+      this.saver.save(this.settings, this.type, this.create, this.createFrontMatterOnly.checked, this.title.value, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.saver.prepareAdditionalInformation());
       this.close();
     });
   }

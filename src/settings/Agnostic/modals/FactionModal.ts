@@ -20,4 +20,9 @@ export class FactionModal extends AbstractModalComponent {
 	): boolean {
 		return true;
 	}
+
+	protected async addAdditionalElements(
+	): Promise<void> {
+		//this.modal.additionalInformationEl
+	}
 }

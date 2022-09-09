@@ -10,6 +10,7 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		protected adventureId: number|null,
 		protected sessionId: number|null,
 		protected sceneId: number|null,
+		protected additionalInformation: any|null,
 	) {
 	}
 

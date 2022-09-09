@@ -3,6 +3,7 @@ import {DataType} from "../../../enums/DataType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../../interfaces/ModalInterface";
 import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
+import {EditorView} from "@codemirror/view";
 
 export class AdventureModal extends AbstractModalComponent {
 	private adventures: AdventureInterface[];
@@ -10,6 +11,7 @@ export class AdventureModal extends AbstractModalComponent {
 	private adventureEl: HTMLSelectElement;
 	private adventureErrorEl: HTMLParagraphElement;
 	private childEl: HTMLDivElement;
+	private synopsisEl: HTMLTextAreaElement;
 
 	constructor(
 		app: App,
@@ -26,6 +28,7 @@ export class AdventureModal extends AbstractModalComponent {
 		const adventureEl = contentEl.createDiv({cls: 'adventureContainer'});
 
 		if (this.modal.type === DataType.Adventure){
+			this.addAdditionalElements();
 			this.addNewAdventureElements(adventureEl);
 		} else {
 			if (this.adventures.length === 0){
@@ -116,5 +119,26 @@ export class AdventureModal extends AbstractModalComponent {
 		this.modal.adventureId = +this.adventureEl.value;
 		this.childEl.empty();
 		this.loadChild(this.childEl);
+	}
+
+	protected async addAdditionalElements(
+	): Promise<void> {
+		/*
+		if (this.modal.additionalInformationEl.style.display !== 'block') {
+			this.modal.additionalInformationEl.style.display = 'block';
+			this.modal.additionalInformationEl.createEl('h2', {
+				cls: 'rpgm-modal-title',
+				text: 'Additional Information for the ' + DataType[this.modal.type]
+			});
+			this.modal.additionalInformationEl.createEl('p', {text: 'Synopsis'});
+
+			this.app.workspace.
+			const editorEl = this.modal.additionalInformationEl.createDiv('editor');
+			let editor = new EditorView({
+				parent: editorEl,
+			})
+			//this.synopsisEl = this.modal.additionalInformationEl.createEl('textarea');
+		}
+		*/
 	}
 }

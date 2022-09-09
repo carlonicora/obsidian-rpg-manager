@@ -13,6 +13,8 @@ export class CampaignModal extends AbstractModalComponent {
 	private campaignErrorEl: HTMLParagraphElement;
 	private childEl: HTMLDivElement;
 
+	private currentDateEl: HTMLInputElement;
+
 	constructor(
 		app: App,
 		modal: ModalInterface,
@@ -28,6 +30,7 @@ export class CampaignModal extends AbstractModalComponent {
 		const campaignEl = contentEl.createDiv({cls: 'campaignContainer'});
 
 		if (this.modal.type === DataType.Campaign){
+			this.addAdditionalElements();
 			this.addNewCampaignElements(campaignEl);
 		} else {
 			if (this.campaigns.length === 0){
@@ -153,5 +156,24 @@ export class CampaignModal extends AbstractModalComponent {
 		this.modal.campaignId = +this.campaignEl.value;
 		this.childEl.empty();
 		this.loadChild(this.childEl);
+	}
+
+	protected async addAdditionalElements(
+	): Promise<void> {
+		if (this.modal.additionalInformationEl.style.display !== 'block') {
+			this.modal.additionalInformationEl.style.display = 'block';
+			this.modal.additionalInformationEl.createEl('h2', {
+				cls: 'rpgm-modal-title',
+				text: 'Additional Information for the ' + DataType[this.modal.type]
+			});
+			this.modal.additionalInformationEl.createEl('p', {text: 'Current Date'});
+			this.currentDateEl = this.modal.additionalInformationEl.createEl('input', {type: 'text'});
+		}
+	}
+
+	public prepareAdditionalInformation(): any {
+		return {
+			current: this.currentDateEl.value,
+		};
 	}
 }

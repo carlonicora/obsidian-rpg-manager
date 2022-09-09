@@ -13,6 +13,8 @@ export interface ModalInterface {
 	sceneId: number|null;
 	settings: CampaignSetting;
 
+	additionalInformationEl: HTMLDivElement;
+
 	campaignModal: ModalComponentInterface;
 	adventureModal: ModalComponentInterface;
 	sessionModal: ModalComponentInterface;

@@ -16,7 +16,11 @@ export interface ModalComponentInterface {
 		adventureId: number|null,
 		sessionId: number|null,
 		sceneId: number|null,
+		additionalInformation: any|null,
 	): void;
+
+	prepareAdditionalInformation(
+	): any|null;
 
 	validate(
 	): boolean;

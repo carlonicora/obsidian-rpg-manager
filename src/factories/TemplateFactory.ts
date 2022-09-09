@@ -46,11 +46,12 @@ export class TemplateFactory extends AbstractFactory {
 		adventureId: number|null,
 		sessionId: number|null,
 		sceneId: number|null,
+		additionalInformation: any|null = null,
 	): TemplateClassType<K> {
 		let templateKey: SingleTemplateKey<K> = CampaignSetting[settings] + DataType[type] as SingleTemplateKey<K>;
 		if (TemplatesMap[templateKey] == null && settings !== CampaignSetting.Agnostic){
 			templateKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleTemplateKey<K>;
 		}
-		return new TemplatesMap[templateKey](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
+		return new TemplatesMap[templateKey](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
 	}
 }

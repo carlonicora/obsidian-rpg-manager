@@ -6,6 +6,11 @@ export class CampaignTemplate extends AbstractTemplate {
 		return 'tags: [' + this.app.plugins.getPlugin('rpg-manager').settings.campaignTag +'/' + this.campaignId + ']\n';
 	}
 
+	protected generateFrontmatterSynopsis(
+	): string {
+		return 'synopsis: ""\n';
+	}
+
 	protected generateFrontmatterAdditionalInformation(
 	): string {
 		return 'settings: Agnostic\n';
@@ -13,7 +18,11 @@ export class CampaignTemplate extends AbstractTemplate {
 
 	protected generateFrontmatterDates(
 	): string|null {
-		return ' current: \n';
+		let current = '';
+		if (this.additionalInformation != null && this.additionalInformation.current != null){
+			current = this.additionalInformation.current;
+		}
+		return ' current: ' + current + '\n';
 	}
 
 	protected generateInitialCodeBlock(
