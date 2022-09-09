@@ -9,6 +9,7 @@ import {RpgModal} from "./RpgModal";
 export default class RpgManager extends Plugin {
 	/*
 	@TODO: Add additional information to modal windows and to template
+	@TODO: Raw: connect with api.raw.carlonicora.com to fetch the character data
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;

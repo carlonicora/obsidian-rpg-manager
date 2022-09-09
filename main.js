@@ -364,7 +364,7 @@ var RpgData = class extends import_obsidian2.Component {
     return sessions.elements.length === 1 ? sessions.elements[0] : null;
   }
   getNote(campaignId, adventureId, sessionId) {
-    const notes = this.data.where((note) => note.type === 10 /* Note */ && note.campaign.campaignId === campaignId && note.adventure.adventureId === adventureId && note.session.sessionId === sessionId);
+    const notes = this.data.where((note) => note.type === 10 /* Note */ && note.campaign.campaignId === campaignId && note.adventure.adventureId === adventureId && note.sessionId === sessionId);
     return notes.elements.length === 1 ? notes.elements[0] : null;
   }
   getScene(campaignId, adventureId, sessionId, sceneId) {
@@ -1456,11 +1456,10 @@ var Note = class extends AbstractRpgOutlineData {
       this.adventure = adventure;
       const session = this.app.plugins.getPlugin("rpg-manager").io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin("rpg-manager").functions.getTagId((_b = this.frontmatter) == null ? void 0 : _b.tags, 2 /* Session */));
       if (session != null)
-        this.session = session;
+        this.sessionId = session.sessionId;
     }
   }
   initialiseNeighbours() {
-    this.session.note = this;
   }
 };
 
@@ -1511,19 +1510,27 @@ var FileFactory = class extends AbstractFactory {
       }
       const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId);
       const data = template.generateData();
-      const fullPath = folder.substring(1) + DataType[type] + "s";
-      if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
-        yield app.vault.createFolder(fullPath);
+      let fullPath;
+      if (type !== 0 /* Campaign */) {
+        fullPath = folder.substring(1) + DataType[type] + "s";
+        if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
+          yield app.vault.createFolder(fullPath);
+        }
+      } else {
+        fullPath = folder.substring(1);
       }
       if (create) {
         const newFile = yield app.vault.create(fullPath + "/" + name + ".md", data);
-        const leaf = app.workspace.getLeaf(true);
+        const currentLeaf = app.workspace.getActiveViewOfType(import_obsidian7.MarkdownView);
+        const leaf = app.workspace.getLeaf(currentLeaf != null);
         yield leaf.openFile(newFile);
       } else {
         const activeView = app.workspace.getActiveViewOfType(import_obsidian7.MarkdownView);
         if (activeView != null) {
           const editor = activeView.editor;
           editor.setValue(data + "\n" + editor.getValue());
+          const file = activeView.file;
+          this.app.fileManager.renameFile(file, fullPath + "/" + name + ".md");
         }
       }
     });
@@ -2239,7 +2246,7 @@ var LocationModel = class extends AbstractModel {
 var NoteModel = class extends AbstractModel {
   generateData() {
     const response = new ResponseData();
-    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.session.sessionId).elements));
+    response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
     return response;
   }
 };
@@ -3291,6 +3298,11 @@ var RpgModal = class extends import_obsidian11.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("rpgm-modal");
+    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian11.MarkdownView) == null) {
+      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Error" });
+      contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
+      return;
+    }
     contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
     contentEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
     this.title = contentEl.createEl("input", { type: "text" });
