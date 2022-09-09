@@ -6,7 +6,7 @@ import {ErrorModel} from "../settings/Agnostic/models/ErrorModel";
 import {EventModel} from "../settings/Agnostic/models/EventModel";
 import {FactionModel} from "../settings/Agnostic/models/FactionModel";
 import {LocationModel} from "../settings/Agnostic/models/LocationModel";
-import {NotesModel} from "../settings/Agnostic/models/NotesModel";
+import {NoteModel} from "../settings/Agnostic/models/NoteModel";
 import {NpcModel} from "../settings/Agnostic/models/NpcModel";
 import {PcModel} from "../settings/Agnostic/models/PcModel";
 import {SceneModel} from "../settings/Agnostic/models/SceneModel";
@@ -30,7 +30,7 @@ const ModelsMap = {
 	AgnosticEvent: EventModel,
 	AgnosticFaction: FactionModel,
 	AgnosticLocation: LocationModel,
-	AgnosticNotes: NotesModel,
+	AgnosticNote: NoteModel,
 	AgnosticNpc: NpcModel,
 	AgnosticPc: PcModel,
 	AgnosticScene: SceneModel,
@@ -52,13 +52,12 @@ export class ModelFactory extends AbstractFactory {
 		currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
 		source: string,
 		sourcePath: string,
-		contentEl: HTMLElement,
 		sourceMeta: any,
 	): ModelClassType<K> {
 		let modelKey: SingleModelKey<K> = CampaignSetting[settings] + modelName as SingleModelKey<K>;
 		if (ModelsMap[modelKey] == null && settings !== CampaignSetting.Agnostic){
 			modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName as SingleModelKey<K>;
 		}
-		return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, contentEl, sourceMeta);
+		return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
 	}
 }

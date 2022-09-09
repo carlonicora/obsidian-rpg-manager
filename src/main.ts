@@ -8,8 +8,7 @@ import {RpgModal} from "./RpgModal";
 
 export default class RpgManager extends Plugin {
 	/*
-	NON BLOCKING
-	@TODO: ** add additional information to modal windows and to template
+	@TODO: Add additional information to modal windows and to template
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;

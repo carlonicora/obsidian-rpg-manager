@@ -3,8 +3,6 @@ import {
 	Component,
 	MarkdownPostProcessorContext,
 	MarkdownRenderChild,
-	MarkdownView,
-	debounce,
 	parseYaml
 } from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
@@ -19,7 +17,6 @@ export class RpgController extends MarkdownRenderChild {
 	private isActive = false;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
-	private contentEl: HTMLElement;
 
 	private currentElement: RpgElementDataInterface|RpgOutlineDataInterface;
 
@@ -57,23 +54,20 @@ export class RpgController extends MarkdownRenderChild {
 				this.currentElement,
 				this.source,
 				this.sourcePath,
-				this.contentEl,
 				sourceMeta,
 			);
 		}
 	}
 
 	onload() {
-		this.render = debounce(this.render, 100, true) as unknown as () => Promise<void>;
+		//this.render = debounce(this.render, 100, true) as unknown as () => Promise<void>;
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
 		this.render();
 	}
 
 	private async render(){
-		const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
-
-		if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
-			this.contentEl = activeLeaf.contentEl;
+		//const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
+		//if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
 			this.initialise();
 
 			if (this.isActive) {
@@ -89,6 +83,6 @@ export class RpgController extends MarkdownRenderChild {
 					view.render(this.container, element);
 				});
 			}
-		}
+		//}
 	}
 }

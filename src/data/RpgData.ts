@@ -53,6 +53,7 @@ export class RpgData extends Component {
 
 		if (index != null){
 			this.data.elements.splice(index, 1);
+			this.fillNeighbours();
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
@@ -67,6 +68,7 @@ export class RpgData extends Component {
 
 		if (data != null && metadata != null) {
 			data.reload(file, metadata);
+			this.fillNeighbours();
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
@@ -75,6 +77,7 @@ export class RpgData extends Component {
 		file: TFile,
 	): void {
 		this.loadElement(file);
+		this.fillNeighbours();
 		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
@@ -280,6 +283,16 @@ export class RpgData extends Component {
 		return this.data
 			.where((data: CharacterInterface) =>
 				(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
+				(campaignId ? data.campaign.campaignId === campaignId : true)
+			);
+	}
+
+	public getPlayerCharacterList(
+		campaignId: number|null = null,
+	): RpgDataListInterface {
+		return this.data
+			.where((data: CharacterInterface) =>
+				data.type === DataType.Character &&
 				(campaignId ? data.campaign.campaignId === campaignId : true)
 			);
 	}

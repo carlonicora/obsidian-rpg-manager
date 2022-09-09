@@ -8,7 +8,7 @@ export interface SessionInterface extends RpgDataInterface,RpgOutlineDataInterfa
 	adventure: AdventureInterface;
 	previousSession: SessionInterface|null;
 	nextSession: SessionInterface|null;
-	notes: NoteInterface|null;
+	note: NoteInterface|null;
 	date: Date|null;
 	irl: Date|null;
 }

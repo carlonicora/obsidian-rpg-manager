@@ -18,7 +18,6 @@ export abstract class AbstractModel implements ModelInterface {
 		protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
 		protected source: string,
 		protected sourcePath: string,
-		protected contentEl: HTMLElement,
 		protected sourceMeta: any,
 	) {
 	}
@@ -77,7 +76,7 @@ export abstract class AbstractModel implements ModelInterface {
 		){
 		fileFactory.silentCreate(
 			DataType.Note,
-			'notes - ' + session.name,
+			'Note - ' + session.name,
 			session.campaign.campaignId,
 			session.adventure.adventureId,
 			session.sessionId
@@ -95,8 +94,8 @@ export abstract class AbstractModel implements ModelInterface {
 		if (session.previousSession != null) previousBreadcrumb = this.generateElementBreadcrumb(sessionBreadcrumb, DataType.Session, session.previousSession, '<< prev session', true);
 
 		let sessionNotesBreadcrumb: ResponseBreadcrumb;
-		if (session.notes != null) {
-			sessionNotesBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sessionBreadcrumb), DataType.Note, session.notes, 'notes');
+		if (session.note != null) {
+			sessionNotesBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sessionBreadcrumb), DataType.Note, session.note, 'notes');
 		} else {
 			sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
 			sessionNotesBreadcrumb.link = '';

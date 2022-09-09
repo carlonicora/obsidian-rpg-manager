@@ -57,6 +57,12 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		return this.app.plugins.getPlugin('rpg-manager').functions.getImgElement(this.image);
 	}
 
+	public get folder(
+	): string {
+		const lastSlashPosition = this.path.lastIndexOf('/');
+		return (lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : '/');
+	}
+
 
 	public getRelationships(
 		type: DataType

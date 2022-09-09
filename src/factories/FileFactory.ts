@@ -16,6 +16,16 @@ export class FileFactory extends AbstractFactory {
 		sessionId: number|null = null,
 		sceneId: number|null = null,
 	): Promise<void> {
+		let folder = '/';
+
+		if (campaignId != null) {
+			const campaign: CampaignInterface | null = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
+			if (campaign != null) {
+				settings = campaign.settings;
+				folder = campaign.folder;
+			}
+		}
+
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
@@ -29,8 +39,13 @@ export class FileFactory extends AbstractFactory {
 
 		const data: string = template.generateData();
 
+		const fullPath = folder.substring(1) + DataType[type] + 's';
+		if (this.app.vault.getAbstractFileByPath(fullPath) == null){
+			await app.vault.createFolder(fullPath);
+		}
+
 		if (create) {
-			const newFile = await app.vault.create(name + '.md', data);
+			const newFile = await app.vault.create(fullPath + '/' + name + '.md', data);
 			const leaf = app.workspace.getLeaf(true);
 			await leaf.openFile(newFile);
 		} else {
@@ -50,7 +65,14 @@ export class FileFactory extends AbstractFactory {
 		sessionId: number|null = null,
 		sceneId: number|null = null,
 	): Promise<void> {
-		const settings = this.getSettings(campaignId);
+		let folder = '/';
+		let settings = CampaignSetting.Agnostic;
+
+		const campaign: CampaignInterface | null = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
+		if (campaign != null) {
+			settings = campaign.settings;
+			folder = campaign.folder;
+		}
 
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
@@ -63,25 +85,14 @@ export class FileFactory extends AbstractFactory {
 			sceneId,
 		);
 
-		const data: string = template.generateData();
-		const newFile = await app.vault.create(name + '.md', data);
-		const leaf = app.workspace.getLeaf(true);
-		await leaf.openFile(newFile);
-	}
-
-	private getSettings(
-		campaignId: number|null,
-	): CampaignSetting {
-		let response: CampaignSetting = CampaignSetting.Agnostic;
-
-		if (campaignId != null){
-			const campaign: CampaignInterface|null = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
-
-			if (campaign != null){
-				response = campaign.settings;
-			}
+		const fullPath = folder.substring(1) + DataType[type] + 's';
+		if (this.app.vault.getAbstractFileByPath(fullPath) == null){
+			await app.vault.createFolder(fullPath);
 		}
 
-		return response;
+		const data: string = template.generateData();
+		const newFile = await app.vault.create(fullPath + '/' + name + '.md', data);
+		const leaf = app.workspace.getLeaf(true);
+		await leaf.openFile(newFile);
 	}
 }

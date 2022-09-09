@@ -13,6 +13,7 @@ import {FactionModal} from "../settings/Agnostic/modals/FactionModal";
 import {LocationModal} from "../settings/Agnostic/modals/LocationModal";
 import {NonPlayerCharacterModal} from "../settings/Agnostic/modals/NonPlayerCharacterModal";
 import {CampaignSetting} from "../enums/CampaignSetting";
+import {NoteModal} from "../settings/Agnostic/modals/NoteModal";
 
 const ModalsMap = {
 	AgnosticCampaign: CampaignModal,
@@ -25,6 +26,7 @@ const ModalsMap = {
 	AgnosticFaction: FactionModal,
 	AgnosticLocation: LocationModal,
 	AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
+	AgnosticNote: NoteModal,
 };
 type ModalsMapType = typeof ModalsMap;
 type ModalKeys = keyof ModalsMapType;

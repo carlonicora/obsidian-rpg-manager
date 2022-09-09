@@ -25,6 +25,6 @@ export class Note extends AbstractRpgOutlineData implements NoteInterface {
 
 	public initialiseNeighbours(
 	): void {
-		this.session.notes = this;
+		this.session.note = this;
 	}
 }

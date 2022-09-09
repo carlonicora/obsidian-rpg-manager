@@ -28,4 +28,5 @@ export interface RpgDataInterface {
 	): RpgDataInterface[];
 
 	get imageSrcElement(): HTMLElement|null;
+	get folder(): string;
 }
