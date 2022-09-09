@@ -2799,11 +2799,11 @@ var AdventureTemplate = class extends AbstractTemplate {
     return 'synopsis: ""\n';
   }
   generateInitialCodeBlock() {
-    return this.getRpgManagerCodeblock("adventureNavigation");
+    const additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
+    return this.getRpgManagerCodeblock("adventureNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
-    const additionalInformation = " abt: \n  need: \n  and: \n  but: \n  therefore: \n";
-    return this.getRpgManagerCodeblock("adventure", additionalInformation);
+    return this.getRpgManagerCodeblock("adventure");
   }
   generateTemplate() {
     return this.getNotes();
