@@ -39,20 +39,30 @@ export class FileFactory extends AbstractFactory {
 
 		const data: string = template.generateData();
 
-		const fullPath = folder.substring(1) + DataType[type] + 's';
-		if (this.app.vault.getAbstractFileByPath(fullPath) == null){
-			await app.vault.createFolder(fullPath);
+
+		let fullPath: string;
+		if (type !== DataType.Campaign) {
+			fullPath = folder.substring(1) + DataType[type] + 's';
+			if (this.app.vault.getAbstractFileByPath(fullPath) == null){
+				await app.vault.createFolder(fullPath);
+			}
+		} else {
+			fullPath = folder.substring(1);
 		}
 
 		if (create) {
 			const newFile = await app.vault.create(fullPath + '/' + name + '.md', data);
-			const leaf = app.workspace.getLeaf(true);
+			const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
+			const leaf = app.workspace.getLeaf((currentLeaf != null));
 			await leaf.openFile(newFile);
 		} else {
 			const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 			if (activeView != null) {
 				const editor = activeView.editor;
 				editor.setValue(data + '\n' + editor.getValue());
+
+				const file = activeView.file;
+				this.app.fileManager.renameFile(file, fullPath + '/' + name + '.md');
 			}
 		}
 	}
