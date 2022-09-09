@@ -650,6 +650,7 @@ var RpgFunctions = class {
       }
     });
     if (response === "") {
+      console.log(tags);
       throw new Error();
     }
     return +response;
@@ -1035,6 +1036,10 @@ var ResponseHeader = class extends AbstractResponse {
   constructor(app2) {
     super(app2);
     this.responseType = 8 /* Header */;
+    this.elements = [];
+  }
+  addElement(element) {
+    this.elements.push(element);
   }
 };
 
@@ -1136,6 +1141,17 @@ var Scene = class extends AbstractRpgOutlineData {
   }
 };
 
+// src/data/responses/HeaderResponseElement.ts
+var HeaderResponseElement = class extends AbstractResponse {
+  constructor(app2, title, content, type) {
+    super(app2);
+    this.app = app2;
+    this.title = title;
+    this.type = type;
+    this.value = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(content, 4 /* Markdown */);
+  }
+};
+
 // src/settings/Agnostic/components/HeaderComponent.ts
 var HeaderComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation = null) {
@@ -1144,13 +1160,8 @@ var HeaderComponent = class extends AbstractComponent {
     response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
     response.name = data.name;
     let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
+    let synopsisTitle = "Synopsis";
     if (data instanceof Character) {
-      response.age = data.age;
-      response.pronoun = data.pronoun;
-      response.death = data.death;
-      if (data.goals != null && data.goals != "") {
-        response.goals = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.goals, 4 /* Markdown */);
-      }
       if (data.synopsis != null && data.synopsis !== "") {
         synopsis = "";
         synopsis += data.link.toString();
@@ -1161,34 +1172,52 @@ var HeaderComponent = class extends AbstractComponent {
         synopsis += data.isDead ? " was " : " is ";
         synopsis += data.synopsis;
       }
-      response.synopsis = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(synopsis, 4 /* Markdown */);
+      response.addElement(new HeaderResponseElement(this.app, "Synopsis", synopsis, 1 /* Long */));
+      if (data.goals != null)
+        response.addElement(new HeaderResponseElement(this.app, "Goals", data.goals.toString(), 1 /* Long */));
+      if (data.pronoun != null)
+        response.addElement(new HeaderResponseElement(this.app, "Pronoun", this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(data.pronoun), 0 /* Short */));
+      if (data.age != null || data.death != null) {
+        response.addElement(new HeaderResponseElement(this.app, "Status", data.death ? "Dead" : "Alive", 0 /* Short */));
+      }
+      if (data.death != null) {
+        let death = data.death.toDateString();
+        if (data.age != null) {
+          death += " at age " + data.age;
+        }
+        response.addElement(new HeaderResponseElement(this.app, "Death", death, 0 /* Short */));
+      } else if (data.age != null) {
+        response.addElement(new HeaderResponseElement(this.app, "Age", data.age.toString(), 0 /* Short */));
+      }
     } else {
+      if (data instanceof Scene) {
+        synopsisTitle = "Scene Goal";
+      }
       if (data instanceof Clue) {
         const clueFound = data.isFound ? "Clue found on " + ((_a = data.found) == null ? void 0 : _a.toDateString()) : '<span class="rpgm-missing">Clue not found yet</span>';
-        response.clueFound = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clueFound, 4 /* Markdown */);
+        response.addElement(new HeaderResponseElement(this.app, "Found", clueFound, 0 /* Short */));
       } else if (data instanceof Location) {
         if (data.address != null && data.address != "") {
-          response.address = data.address;
+          response.addElement(new HeaderResponseElement(this.app, "Address", data.address, 0 /* Short */));
         }
       } else if (data instanceof Event) {
         if (data.date != null) {
-          response.date = data.date;
+          response.addElement(new HeaderResponseElement(this.app, "Date", data.date.toDateString(), 0 /* Short */));
         }
       } else if (data instanceof Scene) {
-        response.synopsisTitle = "Scene Goal";
         if (data.action != null && data.action != "") {
-          response.action = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.action, 4 /* Markdown */);
+          response.addElement(new HeaderResponseElement(this.app, "Action", data.action, 1 /* Long */));
         } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
-          response.action = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.action, 4 /* Markdown */);
+          response.addElement(new HeaderResponseElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
         }
         if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
-          response.trigger = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.trigger, 4 /* Markdown */);
+          response.addElement(new HeaderResponseElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
         }
       }
       if (data.synopsis != null && data.synopsis != "") {
         synopsis = data.synopsis;
       }
-      response.synopsis = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(synopsis, 4 /* Markdown */);
+      response.addElement(new HeaderResponseElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
     }
     response.imgSrc = data.image;
     response.imgWidth = 300;
@@ -1269,6 +1298,44 @@ var StoryCirclePlotComponent = class extends AbstractComponent {
   }
 };
 
+// src/settings/Vampire/components/VampireCharacterTableComponent.ts
+var VampireCharacterTableComponent = class extends AbstractComponent {
+  generateData(data, title) {
+    if (data.length === 0) {
+      return null;
+    }
+    const response = new ResponseTable(this.app);
+    response.addTitle(title ? title : "Characters");
+    response.addHeaders([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Generation", 0 /* String */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+    ]);
+    data.forEach((character) => {
+      var _a, _b;
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.generation) == null ? void 0 : _a.toString(), 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
+      ]);
+    });
+    return response;
+  }
+};
+
+// src/settings/Vampire/components/VampireHeaderComponent.ts
+var VampireHeaderComponent = class extends HeaderComponent {
+  generateData(data, title, additionalInformation = null) {
+    const response = super.generateData(data, title, additionalInformation);
+    if (data.generation != null) {
+      response.addElement(new HeaderResponseElement(this.app, "Generation", data.generation.toString(), 0 /* Short */));
+    }
+    return response;
+  }
+};
+
 // src/factories/ComponentFactory.ts
 var ComponentsMap = {
   AgnosticSessionTable: SessionTableComponent,
@@ -1284,7 +1351,9 @@ var ComponentsMap = {
   AgnosticImage: ImageComponent,
   AgnosticHeader: HeaderComponent,
   AgnosticAbtPlot: AbtPlotComponent,
-  AgnosticStoryCirclePlot: StoryCirclePlotComponent
+  AgnosticStoryCirclePlot: StoryCirclePlotComponent,
+  VampireCharacterTable: VampireCharacterTableComponent,
+  VampireHeader: VampireHeaderComponent
 };
 var ComponentFactory = class extends AbstractFactory {
   create(settings, type, data, title = null, additionalInformation = null) {
@@ -1463,6 +1532,15 @@ var Note = class extends AbstractRpgOutlineData {
   }
 };
 
+// src/settings/Vampire/data/VampireCharacter.ts
+var VampireCharacter = class extends Character {
+  reload(file, metadata) {
+    var _a;
+    super.reload(file, metadata);
+    this.generation = (_a = this.frontmatter) == null ? void 0 : _a.generation;
+  }
+};
+
 // src/factories/DataFactory.ts
 var DatasMap = {
   AgnosticCampaign: Campaign,
@@ -1476,7 +1554,9 @@ var DatasMap = {
   AgnosticLocation: Location,
   AgnosticEvent: Event,
   AgnosticTimeline: Timeline,
-  AgnosticNote: Note
+  AgnosticNote: Note,
+  VampireCharacter,
+  VampireNonPlayerCharacter: VampireCharacter
 };
 var DataFactory = class extends AbstractFactory {
   create(settings, type, file, metadata) {
@@ -2468,14 +2548,6 @@ var ModelFactory = class extends AbstractFactory {
   }
 };
 
-// src/enums/Pronoun.ts
-var Pronoun = /* @__PURE__ */ ((Pronoun2) => {
-  Pronoun2[Pronoun2["they"] = 0] = "they";
-  Pronoun2[Pronoun2["she"] = 1] = "she";
-  Pronoun2[Pronoun2["he"] = 2] = "he";
-  return Pronoun2;
-})(Pronoun || {});
-
 // src/factories/PronounFactory.ts
 var PronounFactory = class extends AbstractFactory {
   create(pronoun) {
@@ -2895,6 +2967,24 @@ var NoteTemplate = class extends AbstractTemplate {
   }
 };
 
+// src/settings/Vampire/templates/VampireNonPlayerCharacterTemplate.ts
+var VampireNonPlayerCharacterTemplate = class extends NonPlayerCharacterTemplate {
+  generateFrontmatterAdditionalInformation() {
+    let response = super.generateFrontmatterAdditionalInformation();
+    response += "generation: \n";
+    return response;
+  }
+};
+
+// src/settings/Vampire/templates/VampireCharacterTemplate.ts
+var VampireCharacterTemplate = class extends CharacterTemplate {
+  generateFrontmatterAdditionalInformation() {
+    let response = super.generateFrontmatterAdditionalInformation();
+    response += "generation: \n";
+    return response;
+  }
+};
+
 // src/factories/TemplateFactory.ts
 var TemplatesMap = {
   AgnosticCampaign: CampaignTemplate,
@@ -2907,7 +2997,9 @@ var TemplatesMap = {
   AgnosticEvent: EventTemplate,
   AgnosticClue: ClueTemplate,
   AgnosticFaction: FactionTemplate,
-  AgnosticNote: NoteTemplate
+  AgnosticNote: NoteTemplate,
+  VampireCharacter: VampireCharacterTemplate,
+  VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate
 };
 var TemplateFactory = class extends AbstractFactory {
   create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId) {
@@ -3109,80 +3201,27 @@ var ImageView = class extends AbstractView {
 // src/settings/Agnostic/views/HeaderView.ts
 var HeaderView = class extends AbstractView {
   render(container, data) {
-    var _a;
     const crs = container.createDiv({ cls: "rpgm-header-info" });
     const crsTitle = crs.createDiv({ cls: "title" });
     data.link.fillContent(crsTitle, this.sourcePath);
     const crsContainer = crs.createDiv({ cls: "container" });
     const crsInfo = crsContainer.createDiv({ cls: "info" });
-    if (data.clueFound != null) {
-      crsInfo.createDiv({ cls: "longTitle", text: "Clue:" });
-      const crsClue = crsInfo.createDiv({ cls: "longtext" });
-      data.clueFound.fillContent(crsClue, this.sourcePath);
-    }
-    crsInfo.createDiv({ cls: "longTitle", text: (_a = data.synopsisTitle) != null ? _a : "Synopsis" });
-    const crsSynopsis = crsInfo.createDiv({ cls: "longtext" });
-    data.synopsis.fillContent(crsSynopsis, this.sourcePath);
-    if (data.pronoun != null) {
-      const crsPronoun = crsInfo.createDiv({ cls: "short" });
-      crsPronoun.createDiv({ cls: "shortTitle", text: "Pronoun" });
-      crsPronoun.createDiv({ cls: "shortText", text: Pronoun[data.pronoun] });
-      crsPronoun.createDiv({ cls: "reset" });
-    }
-    if (data.age != null || data.death != null) {
-      const crsStatus = crsInfo.createDiv({ cls: "short" });
-      crsStatus.createDiv({ cls: "shortTitle", text: "Status" });
-      crsStatus.createDiv({ cls: "shortText", text: data.death ? "Dead" : "Alive" });
-      crsStatus.createDiv({ cls: "reset" });
-    }
-    if (data.death != null) {
-      let death = data.death.toDateString();
-      if (data.age != null) {
-        death += " at age " + data.age;
+    data.elements.forEach((element) => {
+      let prefix = "short";
+      let crsContainer2;
+      if (element.type === 1 /* Long */) {
+        prefix = "long";
+        crsContainer2 = crsInfo;
+      } else {
+        crsContainer2 = crsInfo.createDiv({ cls: "short" });
       }
-      const crsDeath = crsInfo.createDiv({ cls: "short" });
-      crsDeath.createDiv({ cls: "shortTitle", text: "Death" });
-      crsDeath.createDiv({ cls: "shortText", text: death });
-      crsDeath.createDiv({ cls: "reset" });
-    } else if (data.age != null) {
-      const crsAge = crsInfo.createDiv({ cls: "short" });
-      crsAge.createDiv({ cls: "shortTitle", text: "Age" });
-      crsAge.createDiv({ cls: "shortText", text: data.age.toString() });
-      crsAge.createDiv({ cls: "reset" });
-    }
-    if (data.date != null) {
-      const crsDate = crsInfo.createDiv({ cls: "short" });
-      crsDate.createDiv({ cls: "shortTitle", text: "Date" });
-      crsDate.createDiv({ cls: "shortText", text: data.date.toDateString() });
-      crsDate.createDiv({ cls: "reset" });
-    }
-    if (data.address != null) {
-      const crsAge = crsInfo.createDiv({ cls: "short" });
-      crsAge.createDiv({ cls: "shortTitle", text: "Address" });
-      crsAge.createDiv({ cls: "shortText", text: data.address });
-      crsAge.createDiv({ cls: "reset" });
-    }
-    if (data.goals != null) {
-      const crsGoals = crsInfo.createDiv({ cls: "short" });
-      crsGoals.createDiv({ cls: "shortTitle", text: "Goals" });
-      const crsGoal = crsGoals.createDiv({ cls: "shortText" });
-      data.goals.fillContent(crsGoal, this.sourcePath);
-      crsGoals.createDiv({ cls: "reset" });
-    }
-    if (data.action != null) {
-      const crsActions = crsInfo.createDiv({ cls: "short" });
-      crsActions.createDiv({ cls: "shortTitle", text: "Action" });
-      const crsAction = crsActions.createDiv({ cls: "shortText" });
-      data.action.fillContent(crsAction, this.sourcePath);
-      crsActions.createDiv({ cls: "reset" });
-    }
-    if (data.trigger != null) {
-      const crsTrigger = crsInfo.createDiv({ cls: "short" });
-      crsTrigger.createDiv({ cls: "shortTitle", text: "Trigger" });
-      const crsTriggerText = crsTrigger.createDiv({ cls: "shortText" });
-      data.trigger.fillContent(crsTriggerText, this.sourcePath);
-      crsTrigger.createDiv({ cls: "reset" });
-    }
+      crsContainer2.createDiv({ cls: prefix + "Title", text: element.title });
+      const contentEl = crsContainer2.createDiv({ cls: prefix + "Text" });
+      element.value.fillContent(contentEl, this.sourcePath);
+      if (element.type === 0 /* Short */) {
+        crsContainer2.createDiv({ cls: "reset" });
+      }
+    });
     const crsImage = crsContainer.createDiv({ cls: "image" });
     if (data.imgSrc != null) {
       const image = new Image(data.imgWidth, data.imgHeight);

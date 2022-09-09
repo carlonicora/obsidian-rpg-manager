@@ -387,9 +387,6 @@
 .rpgm-header-info .container .info .longText {
   width: 100%;
 }
-.rpgm-header-info .container .info .longText p {
-  margin-bottom: 0px;
-}
 .rpgm-header-info .container .info .short .shortTitle {
   width: 100px;
   font-variant: small-caps;

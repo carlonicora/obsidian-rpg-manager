@@ -13,6 +13,7 @@ import {Timeline} from "../settings/Agnostic/data/Timeline";
 import {Note} from "../settings/Agnostic/data/Note";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
+import {VampireCharacter} from "../settings/Vampire/data/VampireCharacter";
 
 
 const DatasMap = {
@@ -28,6 +29,8 @@ const DatasMap = {
 	AgnosticEvent: Event,
 	AgnosticTimeline: Timeline,
 	AgnosticNote: Note,
+	VampireCharacter: VampireCharacter,
+	VampireNonPlayerCharacter: VampireCharacter,
 };
 type DatasMapType = typeof DatasMap;
 type DataKeys = keyof DatasMapType;

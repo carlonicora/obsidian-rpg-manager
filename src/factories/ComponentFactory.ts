@@ -17,6 +17,8 @@ import {HeaderComponent} from "../settings/Agnostic/components/HeaderComponent";
 import {AbtPlotComponent} from "../settings/Agnostic/components/AbtPlotComponent";
 import {StoryCirclePlotComponent} from "../settings/Agnostic/components/StoryCirclePlotComponent";
 import {CampaignSetting} from "../enums/CampaignSetting";
+import {VampireCharacterTableComponent} from "../settings/Vampire/components/VampireCharacterTableComponent";
+import {VampireHeaderComponent} from "../settings/Vampire/components/VampireHeaderComponent";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -33,6 +35,8 @@ const ComponentsMap = {
 	AgnosticHeader: HeaderComponent,
 	AgnosticAbtPlot: AbtPlotComponent,
 	AgnosticStoryCirclePlot: StoryCirclePlotComponent,
+	VampireCharacterTable: VampireCharacterTableComponent,
+	VampireHeader: VampireHeaderComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;

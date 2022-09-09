@@ -233,6 +233,7 @@ export class RpgFunctions {
 		});
 
 		if (response === ''){
+			console.log(tags);
 			throw new Error();
 		}
 
