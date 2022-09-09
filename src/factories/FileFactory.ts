@@ -63,8 +63,9 @@ export class FileFactory extends AbstractFactory {
 				const editor = activeView.editor;
 				editor.setValue(data + '\n' + editor.getValue());
 
-				const file = activeView.file;
-				this.app.fileManager.renameFile(file, fullPath + '/' + name + '.md');
+				let file = activeView.file;
+				await this.app.fileManager.renameFile(file, fullPath + '/' + name + '.md');
+				file = activeView.file;
 
 				activeView.leaf.detach();
 				app.workspace.getLeaf(true).openFile(file);

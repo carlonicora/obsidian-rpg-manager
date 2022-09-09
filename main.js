@@ -1609,8 +1609,9 @@ var FileFactory = class extends AbstractFactory {
         if (activeView != null) {
           const editor = activeView.editor;
           editor.setValue(data + "\n" + editor.getValue());
-          const file = activeView.file;
-          this.app.fileManager.renameFile(file, fullPath + "/" + name + ".md");
+          let file = activeView.file;
+          yield this.app.fileManager.renameFile(file, fullPath + "/" + name + ".md");
+          file = activeView.file;
           activeView.leaf.detach();
           app.workspace.getLeaf(true).openFile(file);
         }
