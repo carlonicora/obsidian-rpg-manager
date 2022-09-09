@@ -13,16 +13,17 @@ export class AdventureTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		return this.getRpgManagerCodeblock('adventureNavigation');
-	}
-
-	protected generateLastCodeBlock(): string {
 		const additionalInformation = ' abt: \n' +
 			'  need: \n' +
 			'  and: \n' +
 			'  but: \n' +
 			'  therefore: \n';
-		return this.getRpgManagerCodeblock('adventure', additionalInformation);
+		return this.getRpgManagerCodeblock('adventureNavigation', additionalInformation);
+	}
+
+	protected generateLastCodeBlock(): string {
+
+		return this.getRpgManagerCodeblock('adventure');
 	}
 
 	protected generateTemplate(
