@@ -53,14 +53,18 @@ export class RpgModal extends Modal implements ModalInterface {
 			contentEl.createSpan({cls: '', text: 'To fill a note with a RPG Manager element you must have a valid file opened.'});
 			return;
 		}
+		//Modal Title
+		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + DataType[this.type]});
 
-		const navigationEl = contentEl.createDiv({cls: 'navigation'});
-		this.additionalInformationEl = contentEl.createDiv({cls: 'additionalElements'});
-		contentEl.createDiv({cls: 'clear'});
+		//Navigation & Additional Info
+		const gridEl = contentEl.createDiv({cls: 'rpgm-grid'})
+		const navigationEl = gridEl.createDiv({cls: 'navigation'});
+		this.additionalInformationEl = gridEl.createDiv({cls: 'additionalElements'});
 
-		navigationEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + DataType[this.type]});
-		navigationEl.createEl('p', {text: 'Title of your new ' + DataType[this.type]});
-		this.title = navigationEl.createEl('input', {type: 'text'});
+		//Title Input
+		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
+		titleEl.createEl('label', {text: 'Title of your new ' + DataType[this.type]});
+		this.title = titleEl.createEl('input', {type: 'text'});
 		if (this.name !== null) {
 			this.title.value = this.name;
 		}
@@ -74,14 +78,16 @@ export class RpgModal extends Modal implements ModalInterface {
 
 		const childElement = navigationEl.createDiv();
 
+		//Checkbox
 		const cfmo = navigationEl.createDiv({cls: 'createFrontMatterOnly'});
 		this.createFrontMatterOnly = cfmo.createEl('input', {type: 'checkbox'});
 		this.createFrontMatterOnly.id = 'createFrontMatterOnly';
 
-		const labelFrontMatterOnly = navigationEl.createEl('label', {text: 'Create Frontmatter only'});
+		const labelFrontMatterOnly = cfmo.createEl('label', {text: 'Create Frontmatter only'});
 		labelFrontMatterOnly.htmlFor = 'createFrontMatterOnly';
 
-		this.button = navigationEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
+		//Create Button
+		this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
 
 		if (this.type !== DataType.Campaign){
 			this.button.disabled = true;

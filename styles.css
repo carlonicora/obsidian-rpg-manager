@@ -1,7 +1,7 @@
 .rpgm-missing {
   font-weight: 100;
   font-style: italic;
-  color: #808080;
+  color: var(--text-faint);
   font-size: 0.9em;
 }
 
@@ -19,15 +19,15 @@
 
 .rpgm-plot-container {
   width: 100%;
-  border-left: solid 1px #eeeeee;
+  border-left: solid 1px var(--background-modifier-border);
   padding: 30px;
   margin-bottom: 20px;
-  color: #808080;
+  color: var(--text-muted);
 }
 
 .rpgm-plot {
   margin: 30px;
-  color: #808080;
+  color: var(--text-muted);
   margin-bottom: 60px;
 }
 .rpgm-plot p {
@@ -200,18 +200,35 @@
   background-color: #f9f9f9;
 }
 
-.rpgm-modal h2.rpgm-modal-title {
-  font-size: 1.5em;
+.rpgm-modal {
+  display: block;
+  padding: 20px;
 }
-.rpgm-modal .additionalElements, .rpgm-modal .navigation {
-  float: left;
+.rpgm-modal h2.rpgm-modal-title {
+  text-align: center;
+}
+.rpgm-modal .rpgm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 1fr);
+  gap: 20px;
+}
+.rpgm-modal .navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 .rpgm-modal .additionalElements {
-  border: solid 1px #eeeeee;
+  border: solid 1px var(--background-modifier-border);
   display: none;
-  margin-top: 80px;
-  margin-left: 50px;
   padding: 25px;
+  padding-top: 0;
+  width: 100%;
+}
+.rpgm-modal .group {
+  display: flex;
+}
+.rpgm-modal .container {
+  width: 100%;
 }
 .rpgm-modal .title {
   writing-mode: vertical-rl;
@@ -219,43 +236,33 @@
   white-space: nowrap;
   display: inline-block;
   overflow: visible;
-  margin: 10px;
-  float: left;
-  border-left: solid 1px #eeeeee;
+  margin-right: 10px;
+  padding: 10px;
+  padding-right: 0;
+  border-left: solid 1px var(--background-modifier-border);
 }
-.rpgm-modal .container {
-  float: left;
+.rpgm-modal label {
+  color: var(--text-muted);
 }
-.rpgm-modal .clear {
-  clear: both;
-}
-.rpgm-modal input[type=text], .rpgm-modal input[type=text]:focus {
+.rpgm-modal input[type=text],
+.rpgm-modal input[type=text]:focus {
   border: none;
-  border-bottom: solid 1px #eeeeee;
+  border-bottom: solid 1px var(--text-normal);
   border-radius: 0px;
   width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 2px;
   box-shadow: 0 0 0 0 transparent;
 }
 .rpgm-modal .navigation > .createFrontMatterOnly {
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.rpgm-modal .navigation > .createFrontMatterOnly input[type=checkbox], .rpgm-modal .navigation > .createFrontMatterOnly label {
-  float: left;
-  margin-top: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.rpgm-modal p {
-  font-weight: 500;
-  color: #808080;
-  padding-top: 25px;
-  margin-bottom: 0px;
-  font-size: 1.2em;
+.rpgm-modal .navigation > .createFrontMatterOnly input[type=checkbox] {
+  margin: 0;
 }
 .rpgm-modal p.error {
-  color: #ff2020;
+  color: var(--text-error);
   display: none;
   font-size: 0.9em;
   font-weight: 200;
@@ -263,21 +270,18 @@
   padding: 0px;
   margin-top: -10px;
 }
-.rpgm-modal select, .rpgm-modal select:focus {
+.rpgm-modal select,
+.rpgm-modal select:focus {
   border: none;
-  border-bottom: solid 1px #eeeeee;
+  border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0px;
   width: 100%;
   margin-top: 10px;
-  margin-bottom: 10px;
   box-shadow: 0 0 0 0 transparent;
 }
 .rpgm-modal button {
-  right: 0px;
-  float: right;
-  background-color: #808080;
-  color: #fff;
-  margin-top: 50px;
+  display: block;
+  margin-top: 10px;
 }
 
 .rpgm-button {

@@ -89,7 +89,7 @@ export class CampaignModal extends AbstractModalComponent {
 		this.campaigns.forEach((data: CampaignInterface) => {
 			if (data.campaignId >= this.modal.campaignId) this.modal.campaignId = (data.campaignId + 1);
 		});
-		containerEl.createEl('p', {text: 'Select Campaign Settings'});
+		containerEl.createEl('label', {text: 'Select Campaign Settings'});
 		this.campaignSettingsEl = containerEl.createEl('select');
 
 		Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting: string) => {
@@ -166,7 +166,7 @@ export class CampaignModal extends AbstractModalComponent {
 				cls: 'rpgm-modal-title',
 				text: 'Additional Information for the ' + DataType[this.modal.type]
 			});
-			this.modal.additionalInformationEl.createEl('p', {text: 'Current Date'});
+			this.modal.additionalInformationEl.createEl('label', {text: 'Current Date'});
 			this.currentDateEl = this.modal.additionalInformationEl.createEl('input', {type: 'text'});
 		}
 	}

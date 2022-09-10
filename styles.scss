@@ -14,7 +14,7 @@ $blue: #2020ff;
 .rpgm-missing {
 	font-weight: 100;
 	font-style: italic;
-	color: $dark-grey;
+	color: var(--text-faint);
 	font-size: 0.9em;
 }
 
@@ -32,17 +32,17 @@ $blue: #2020ff;
 
 .rpgm-plot-container {
 	width: 100%;
-	border-left: solid 1px $off-white;
+	border-left: solid 1px var(--background-modifier-border);
 	padding: 30px;
 	margin-bottom: 20px;
-	color: $dark-grey;
+	color: var(--text-muted);
 
 
 }
 
 .rpgm-plot {
 	margin: 30px;
-	color: $dark-grey;
+	color: var(--text-muted);
 	margin-bottom: 60px;
 
 	p {
@@ -243,25 +243,41 @@ $blue: #2020ff;
 }
 
 .rpgm-modal {
+	display: block;
+	// justify-content: center;
+	// flex-direction: column;
+	// flex: unset;
+	padding: 20px;
+
 	h2.rpgm-modal-title {
-		font-size: 1.5em;
+		// font-size: 1.5em;
+		text-align: center;
 	}
 
-	.additionalElements, .navigation {
-		float: left;
+	.rpgm-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, 1fr);
+		gap: 20px;
 	}
 
+	.navigation {
+		display: flex;
+		flex-direction: column;
+		gap: 25px;
+	}
 	.additionalElements {
-		border: solid 1px $off-white;
+		border: solid 1px var(--background-modifier-border);
 		display: none;
-		margin-top: 80px;
-		margin-left: 50px;
+		// margin-left: 50px;
 		padding: 25px;
+		padding-top: 0;
+		width: 100%;
 	}
 
-	.group {
+	//Campaign
+	.group { display: flex;	}
+	.container { width: 100%; }
 
-	}
 
 	.title {
 		writing-mode: vertical-rl;
@@ -269,50 +285,45 @@ $blue: #2020ff;
 		white-space: nowrap;
 		display: inline-block;
 		overflow: visible;
-		margin: 10px;
-		float:left;
-		border-left: solid 1px #eeeeee;
+		
+		margin-right: 10px;
+		padding: 10px;
+		padding-right: 0;
+
+		// float:left;
+		border-left: solid 1px var(--background-modifier-border);
 	}
 
-	.container {
-		float: left;
-	}
+	// .clear { clear: both; }
 
-	.clear {
-		clear: both;
-	}
 
-	input[type=text], input[type=text]:focus {
+	label {
+		// font-weight: 500;
+		color: var(--text-muted);
+		// padding-top: 25px;
+		// font-size: 1.2em;
+	}
+	input[type=text], 
+	input[type=text]:focus {
 		border: none;
-		border-bottom: solid 1px #eeeeee;
+		border-bottom: solid 1px var(--text-normal);
 		border-radius: 0px;
 		width: 100%;
-		margin-top: 10px;
-		margin-bottom: 10px;
+		margin-top: 2px;
 		box-shadow: 0 0 0 0 transparent;
 	}
 
 	.navigation > .createFrontMatterOnly {
-		margin-top: 10px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
 
-		input[type=checkbox], label {
-			float:left;
-			margin-top: 10px;
-			margin-top: 10px;
-			margin-bottom: 10px;
-		}
+		input[type=checkbox] { margin: 0; }
 	}
-
-	p {
-		font-weight: 500;
-		color: $dark-grey;
-		padding-top: 25px;
-		margin-bottom: 0px;
-		font-size: 1.2em;
-	}
-
+	// ?
 	p.error {
-		color: $red;
+		color: var(--text-error);
+
 		display: none;
 		font-size: 0.9em;
 		font-weight: 200;
@@ -321,22 +332,25 @@ $blue: #2020ff;
 		margin-top: -10px;
 	}
 
-	select, select:focus {
+	select, 
+	select:focus {
 		border: none;
-		border-bottom: solid 1px #eeeeee;
+		border-bottom: solid 1px var(--background-modifier-border);
 		border-radius: 0px;
 		width: 100%;
 		margin-top: 10px;
-		margin-bottom: 10px;
+		// margin-bottom: 10px;
 		box-shadow: 0 0 0 0 transparent;
 	}
 
 	button {
-		right: 0px;
-		float: right;
-		background-color: $dark-grey;
-		color: $white;
-		margin-top: 50px;
+		// right: 0px;
+		// float: right;
+		// background-color: $dark-grey;
+		// color: $white;
+		display: block;
+		// margin: auto;
+		margin-top: 10px;
 	}
 }
 
