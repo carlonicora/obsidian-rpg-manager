@@ -1766,17 +1766,9 @@ var FileFactory = class extends AbstractFactory {
       }
       const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
       const data = template.generateData();
-      let fullPath;
-      if (type !== 0 /* Campaign */) {
-        fullPath = folder.substring(1) + DataType[type] + "s";
-        if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
-          yield app.vault.createFolder(fullPath);
-        }
-      } else {
-        fullPath = folder.substring(1);
-      }
+      const fileName = yield this.generateFilePath(type, folder, name);
       if (create) {
-        const newFile = yield app.vault.create(fullPath + "/" + name + ".md", data);
+        const newFile = yield app.vault.create(fileName, data);
         const currentLeaf = app.workspace.getActiveViewOfType(import_obsidian7.MarkdownView);
         const leaf = app.workspace.getLeaf(currentLeaf != null);
         yield leaf.openFile(newFile);
@@ -1786,7 +1778,7 @@ var FileFactory = class extends AbstractFactory {
           const editor = activeView.editor;
           editor.setValue(data + "\n" + editor.getValue());
           let file = activeView.file;
-          yield this.app.fileManager.renameFile(file, fullPath + "/" + name + ".md");
+          yield this.app.fileManager.renameFile(file, fileName);
           file = activeView.file;
           activeView.leaf.detach();
           app.workspace.getLeaf(true).openFile(file);
@@ -1804,14 +1796,29 @@ var FileFactory = class extends AbstractFactory {
         folder = campaign.folder;
       }
       const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, false, name, campaignId, adventureId, sessionId, sceneId);
-      const fullPath = folder.substring(1) + DataType[type] + "s";
-      if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
-        yield app.vault.createFolder(fullPath);
-      }
+      const fileName = yield this.generateFilePath(type, folder, name);
       const data = template.generateData();
-      const newFile = yield app.vault.create(fullPath + "/" + name + ".md", data);
+      const newFile = yield app.vault.create(fileName, data);
       const leaf = app.workspace.getLeaf(true);
       yield leaf.openFile(newFile);
+    });
+  }
+  generateFilePath(type, folder, name) {
+    return __async(this, null, function* () {
+      let response = name + ".md";
+      if (this.app.plugins.getPlugin("rpg-manager").settings.automaticMove) {
+        let fullPath;
+        if (type !== 0 /* Campaign */) {
+          fullPath = folder.substring(1) + DataType[type] + "s";
+          if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
+            yield app.vault.createFolder(fullPath);
+          }
+        } else {
+          fullPath = folder.substring(1);
+        }
+        response = fullPath + "/" + response;
+      }
+      return response;
     });
   }
 };
@@ -3829,7 +3836,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
               const abilityToBeat = ability.value + ability.traitValue;
               let difference;
               let update;
-              let initialAbilityValue = ability.value;
+              const initialAbilityValue = ability.value;
               if (upgradeRoll.result > abilityToBeat) {
                 difference = upgradeRoll.result - abilityToBeat;
                 update = Math.floor(difference / 25) + 1;
@@ -3849,7 +3856,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
                 const yaml = (_a2 = (0, import_obsidian13.parseYaml)(range)) != null ? _a2 : {};
                 if (((_c = (_b = yaml == null ? void 0 : yaml.raw) == null ? void 0 : _b.character) == null ? void 0 : _c.id) != null) {
                 } else {
-                  if (yaml === {} || (yaml == null ? void 0 : yaml.raw) == null) {
+                  if (yaml.length === 0 || (yaml == null ? void 0 : yaml.raw) == null) {
                     this.addRawMetadata(yaml);
                   } else {
                     if (((_d = yaml.raw) == null ? void 0 : _d.character) == null) {
@@ -4131,7 +4138,8 @@ var DEFAULT_SETTINGS = {
   eventTag: "rpgm/element/event",
   clueTag: "rpgm/element/clue",
   timelineTag: "rpgm/element/timeline",
-  noteTag: "rpgm/outline/note"
+  noteTag: "rpgm/outline/note",
+  automaticMove: true
 };
 var RpgManagerSettingTab = class extends import_obsidian15.PluginSettingTab {
   constructor(app2, plugin) {
@@ -4142,6 +4150,22 @@ var RpgManagerSettingTab = class extends import_obsidian15.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("h2", { text: "CampaignSetting for Role Playing Game Manager" });
+    containerEl.createEl("h3", { text: "Automations" });
+    containerEl.createEl("span", { text: createFragment((frag) => {
+      frag.appendText("Set your preferences for the automations RPG Manager offers.");
+      frag.createEl("br");
+      frag.appendText(" ");
+    }) });
+    new import_obsidian15.Setting(this.containerEl).setName("Auto Organisation of Notes").setDesc(createFragment((frag) => {
+      frag.createEl("br");
+      frag.appendText("RPG Manager automatically organise created or filled outlines and elements in separate folders.");
+      frag.createEl("br");
+      frag.appendText("You can avoid the automatical move of your notes by disabling this setting.");
+      frag.createEl("br");
+      frag.appendText(" ");
+    })).addToggle((toggle) => toggle.setValue(this.plugin.settings.automaticMove).onChange((value) => __async(this, null, function* () {
+      return yield this.plugin.updateSettings({ automaticMove: value });
+    })));
     containerEl.createEl("h3", { text: "Outlines" });
     containerEl.createEl("span", { text: createFragment((frag) => {
       frag.appendText("Outlines are the plot part of the campaign.");

@@ -139,6 +139,7 @@ export interface RpgManagerSettings {
 	clueTag: string;
 	timelineTag: string;
 	noteTag: string;
+	automaticMove: boolean;
 }
 
 export const DEFAULT_SETTINGS: RpgManagerSettings = {
@@ -154,6 +155,7 @@ export const DEFAULT_SETTINGS: RpgManagerSettings = {
 	clueTag: 'rpgm/element/clue',
 	timelineTag: 'rpgm/element/timeline',
 	noteTag: 'rpgm/outline/note',
+	automaticMove: true,
 }
 
 export class RpgManagerSettingTab extends PluginSettingTab {
@@ -169,6 +171,29 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 		containerEl.createEl('h2', {text: 'CampaignSetting for Role Playing Game Manager'});
+
+		containerEl.createEl('h3', {text: 'Automations'});
+		containerEl.createEl('span', {text: createFragment(frag => {
+				frag.appendText('Set your preferences for the automations RPG Manager offers.');
+				frag.createEl('br');
+				frag.appendText(' ');
+			})});
+
+		new Setting(this.containerEl)
+			.setName("Auto Organisation of Notes")
+			.setDesc(createFragment(frag => {
+				frag.createEl('br');
+				frag.appendText('RPG Manager automatically organise created or filled outlines and elements in separate folders.');
+				frag.createEl('br');
+				frag.appendText('You can avoid the automatical move of your notes by disabling this setting.');
+				frag.createEl('br');
+				frag.appendText(' ');
+			}))
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.automaticMove)
+					.onChange(async value => await this.plugin.updateSettings({ automaticMove: value }))
+			);
 
 		containerEl.createEl('h3', {text: 'Outlines'});
 		containerEl.createEl('span', {text: createFragment(frag => {

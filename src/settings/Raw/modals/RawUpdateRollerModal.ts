@@ -6,7 +6,6 @@ import {RawRollResult} from "../enums/RawRollResult";
 import {RawAbility} from "../enums/RawAbility";
 import {RawTrait} from "../enums/RawTrait";
 import {DiceResult} from "../../../helpers/DiceResult";
-import {match} from "assert";
 
 export class RawUpdateRollerModal extends Modal {
 	constructor(

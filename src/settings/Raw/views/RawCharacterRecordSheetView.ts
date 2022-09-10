@@ -105,7 +105,7 @@ export class RawCharacterRecordSheetView extends AbstractView {
 						const abilityToBeat = ability.value + ability.traitValue;
 						let difference: number;
 						let update: number;
-						let initialAbilityValue = ability.value;
+						const initialAbilityValue = ability.value;
 
 						if (upgradeRoll.result > abilityToBeat){
 							difference = upgradeRoll.result - abilityToBeat;
@@ -131,7 +131,7 @@ export class RawCharacterRecordSheetView extends AbstractView {
 							if (yaml?.raw?.character?.id != null) {
 								//Save everything online!
 							} else {
-								if (yaml === {} || yaml?.raw == null) {
+								if (yaml.length === 0 || yaml?.raw == null) {
 									this.addRawMetadata(yaml);
 								} else {
 									if (yaml.raw?.character == null) {
