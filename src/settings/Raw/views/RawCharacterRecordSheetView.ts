@@ -11,6 +11,7 @@ import {DiceRollerHelper} from "../../../helpers/DiceRollerHelper";
 import {DiceType} from "../../../enums/DiceType";
 import {DiceResult} from "../../../helpers/DiceResult";
 import {RawRollResult} from "../enums/RawRollResult";
+import {RawUpdateRollerModal} from "../modals/RawUpdateRollerModal";
 
 export class RawCharacterRecordSheetView extends AbstractView {
 	private characterRecordSheetContainerEl: HTMLDivElement;
@@ -102,10 +103,13 @@ export class RawCharacterRecordSheetView extends AbstractView {
 					){
 						const upgradeRoll:DiceResult = DiceRollerHelper.rollSingleDice(DiceType.d100);
 						const abilityToBeat = ability.value + ability.traitValue;
+						let difference: number;
+						let update: number;
+						let initialAbilityValue = ability.value;
 
 						if (upgradeRoll.result > abilityToBeat){
-							const difference = upgradeRoll.result - abilityToBeat;
-							let update = Math.floor(difference/25) + 1;
+							difference = upgradeRoll.result - abilityToBeat;
+							update = Math.floor(difference/25) + 1;
 
 							if (upgradeRoll.rollResult === RawRollResult.CriticalSuccess){
 								update *= 2;
@@ -122,12 +126,12 @@ export class RawCharacterRecordSheetView extends AbstractView {
 								ch: 0,
 							}
 							const range = editor.getRange(start, end);
-							const yaml = parseYaml(range);
+							const yaml = parseYaml(range) ?? {};
 
 							if (yaml?.raw?.character?.id != null) {
 								//Save everything online!
 							} else {
-								if (yaml?.raw == null) {
+								if (yaml === {} || yaml?.raw == null) {
 									this.addRawMetadata(yaml);
 								} else {
 									if (yaml.raw?.character == null) {
@@ -156,6 +160,13 @@ export class RawCharacterRecordSheetView extends AbstractView {
 								editor.replaceRange(stringifyYaml(yaml), start, end);
 							}
 						}
+
+						new RawUpdateRollerModal(
+							this.app,
+							ability,
+							initialAbilityValue,
+							upgradeRoll,
+						).open();
 					}
 				}
 			});
@@ -166,6 +177,7 @@ export class RawCharacterRecordSheetView extends AbstractView {
 		yaml: any,
 	): void {
 		yaml.raw = {};
+		this.addCharacterMetadata(yaml);
 	}
 
 	private addCharacterMetadata(
@@ -185,7 +197,7 @@ export class RawCharacterRecordSheetView extends AbstractView {
 		yaml: any,
 	): void {
 		yaml.raw.character[(<string>RawTrait[trait]).toLowerCase()] = {
-			value: {},
+			value: 0,
 			abilities: {}
 		}
 	}

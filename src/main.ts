@@ -10,7 +10,7 @@ export default class RpgManager extends Plugin {
 	/*
 	@TODO: Add additional information to modal windows and to template
 	@TODO: RAW
-		- Update RAW Ability stat
+		- Update RAW Ability stats remotely
 		- POST /Characters
 		- PATCH /Characters
 		- Generate Character
