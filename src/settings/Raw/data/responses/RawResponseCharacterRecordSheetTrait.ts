@@ -6,9 +6,9 @@ import {
 	RawCharacterRecordSheetAbilityResponseInterface
 } from "../../interfaces/responses/RawCharacterRecordSheetAbilityResponseInterface";
 import {App} from "obsidian";
-import {RawTrait} from "../../evals/RawTrait";
+import {RawTrait} from "../../enums/RawTrait";
 import {RawResponseCharacterRecordSheetAbility} from "./RawResponseCharacterRecordSheetAbility";
-import {RawAbility, RawAbilityTrait} from "../../evals/RawAbility";
+import {RawAbility, RawAbilityTrait} from "../../enums/RawAbility";
 
 export class RawResponseCharacterRecordSheetTrait extends AbstractResponse implements RawCharacterRecordSheetTraitResponseInterface {
 	public abilities: RawCharacterRecordSheetAbilityResponseInterface[];
@@ -26,23 +26,20 @@ export class RawResponseCharacterRecordSheetTrait extends AbstractResponse imple
 		if (metadata != null) {
 			this.value = (metadata.value != null ? metadata.value : 0);
 			if (metadata.abilities != null) {
-				Object.entries(metadata.abilities).forEach(([key, value]: [string, any]) => {
-					let name: string = key;
-					let specialisation: string | null = null;
-					const separatorPosition = key.lastIndexOf('/');
-					if (separatorPosition !== -1) {
-						name = key.substring(0, separatorPosition);
-						specialisation = key.substring(separatorPosition + 1).toLowerCase();
-					}
+				Object.entries(metadata.abilities).forEach(([abilityName, value]: [string, any]) => {
 
-					name = name.toLowerCase();
-					const abilityDetails = {
-						name: name,
-						value: -10,
-						specialisation: specialisation,
-					}
 
-					this.abilities.push(new RawResponseCharacterRecordSheetAbility(app, RawAbility[name as keyof typeof RawAbility], abilityDetails, this.trait, this.traitValue));
+					this.abilities.push(
+						new RawResponseCharacterRecordSheetAbility(
+							app,
+							null,
+							RawAbility[abilityName.toLowerCase() as keyof typeof RawAbility],
+							value?.value ?? -10,
+							value?.specialisation ?? null,
+							this.trait,
+							this.traitValue
+						)
+					);
 				});
 			}
 		}
@@ -50,11 +47,17 @@ export class RawResponseCharacterRecordSheetTrait extends AbstractResponse imple
 		Object.keys(RawAbilityTrait).filter((abilityKey) => isNaN(Number(abilityKey))).forEach((abilityKey: string) => {
 			const ability: RawAbility = RawAbility[abilityKey as keyof typeof RawAbility];
 			if (this.trait === RawAbilityTrait[RawAbility[ability] as keyof typeof RawAbility] && this.getAbility(ability) == null) {
-				const abilityDetails = {
-					name: ability,
-					value: -10,
-				}
-				this.abilities.push(new RawResponseCharacterRecordSheetAbility(app, ability, abilityDetails, this.trait, this.traitValue));
+				this.abilities.push(
+					new RawResponseCharacterRecordSheetAbility(
+						app,
+						null,
+						ability,
+						-10,
+						null,
+						this.trait,
+						this.traitValue
+					)
+				);
 			}
 		});
 	}

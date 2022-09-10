@@ -52,7 +52,7 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian13 = require("obsidian");
+var import_obsidian14 = require("obsidian");
 
 // src/RpgController.ts
 var import_obsidian = require("obsidian");
@@ -1347,7 +1347,7 @@ var VampireHeaderComponent = class extends HeaderComponent {
   }
 };
 
-// src/settings/Raw/evals/RawTrait.ts
+// src/settings/Raw/enums/RawTrait.ts
 var RawTrait = /* @__PURE__ */ ((RawTrait2) => {
   RawTrait2[RawTrait2["Body"] = 0] = "Body";
   RawTrait2[RawTrait2["Mind"] = 1] = "Mind";
@@ -1357,18 +1357,18 @@ var RawTrait = /* @__PURE__ */ ((RawTrait2) => {
 
 // src/settings/Raw/data/responses/RawResponseCharacterRecordSheetAbility.ts
 var RawResponseCharacterRecordSheetAbility = class extends AbstractResponse {
-  constructor(app2, name, abilityDetails, trait, traitValue) {
+  constructor(app2, id, name, value, specialisation, trait, traitValue) {
     super(app2);
+    this.id = id;
     this.name = name;
+    this.value = value;
+    this.specialisation = specialisation;
     this.trait = trait;
     this.traitValue = traitValue;
-    this.id = abilityDetails == null ? void 0 : abilityDetails.id;
-    this.value = abilityDetails.value;
-    this.specialisation = abilityDetails == null ? void 0 : abilityDetails.specialisation;
   }
 };
 
-// src/settings/Raw/evals/RawAbility.ts
+// src/settings/Raw/enums/RawAbility.ts
 var RawAbility = /* @__PURE__ */ ((RawAbility2) => {
   RawAbility2[RawAbility2["athletics"] = 0] = "athletics";
   RawAbility2[RawAbility2["drive"] = 1] = "drive";
@@ -1433,32 +1433,16 @@ var RawResponseCharacterRecordSheetTrait = class extends AbstractResponse {
     if (metadata != null) {
       this.value = metadata.value != null ? metadata.value : 0;
       if (metadata.abilities != null) {
-        Object.entries(metadata.abilities).forEach(([key, value]) => {
-          let name = key;
-          let specialisation = null;
-          const separatorPosition = key.lastIndexOf("/");
-          if (separatorPosition !== -1) {
-            name = key.substring(0, separatorPosition);
-            specialisation = key.substring(separatorPosition + 1).toLowerCase();
-          }
-          name = name.toLowerCase();
-          const abilityDetails = {
-            name,
-            value: -10,
-            specialisation
-          };
-          this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, RawAbility[name], abilityDetails, this.trait, this.traitValue));
+        Object.entries(metadata.abilities).forEach(([abilityName, value]) => {
+          var _a, _b;
+          this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, null, RawAbility[abilityName.toLowerCase()], (_a = value == null ? void 0 : value.value) != null ? _a : -10, (_b = value == null ? void 0 : value.specialisation) != null ? _b : null, this.trait, this.traitValue));
         });
       }
     }
     Object.keys(RawAbilityTrait).filter((abilityKey) => isNaN(Number(abilityKey))).forEach((abilityKey) => {
       const ability = RawAbility[abilityKey];
       if (this.trait === RawAbilityTrait[RawAbility[ability]] && this.getAbility(ability) == null) {
-        const abilityDetails = {
-          name: ability,
-          value: -10
-        };
-        this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, ability, abilityDetails, this.trait, this.traitValue));
+        this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, null, ability, -10, null, this.trait, this.traitValue));
       }
     });
   }
@@ -2814,6 +2798,38 @@ var AdventureNavigationModel = class extends AbstractModel {
   }
 };
 
+// src/settings/Raw/enums/RawEndpoint.ts
+var RawEndpoint = /* @__PURE__ */ ((RawEndpoint2) => {
+  RawEndpoint2[RawEndpoint2["Characters"] = 0] = "Characters";
+  return RawEndpoint2;
+})(RawEndpoint || {});
+
+// src/settings/Raw/helpers/RawApi.ts
+var RawApi = class {
+  static get(apiCampaignKey, parentEndpoint, parentId = null, childEndpoint = null, childId = null) {
+    return __async(this, null, function* () {
+      const server = "https://api.raw.dev.carlonicora.com/v1.0";
+      let endpoint = "/" + RawEndpoint[parentEndpoint];
+      if (parentId != null) {
+        endpoint += "/" + parentId;
+        if (childEndpoint != null) {
+          endpoint += "/" + RawEndpoint[childEndpoint];
+          if (childId != null)
+            endpoint += "/" + childId;
+        }
+      }
+      const data = yield fetch(server + endpoint, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + (apiCampaignKey != null ? apiCampaignKey : "")
+        }
+      });
+      const response = yield data.json();
+      return response;
+    });
+  }
+};
+
 // src/settings/Raw/models/RawNpcModel.ts
 var RawNpcModel = class extends NpcModel {
   generateData() {
@@ -2823,23 +2839,11 @@ var RawNpcModel = class extends NpcModel {
       if (((_c = (_b = (_a = this.sourceMeta) == null ? void 0 : _a.raw) == null ? void 0 : _b.character) == null ? void 0 : _c.id) != null) {
         const id = (_f = (_e = (_d = this.sourceMeta) == null ? void 0 : _d.raw) == null ? void 0 : _e.character) == null ? void 0 : _f.id;
         const apiCampaignKey = this.currentElement.campaign.apiCampaignKey;
-        const character = yield this.callApi(id, apiCampaignKey);
+        const character = yield RawApi.get(apiCampaignKey, 0 /* Characters */, id);
         this.sourceMeta.raw.character = character;
         this.sourceMeta.raw.character.id = id;
       }
       this.addCharacterRecordSheet(response);
-      return response;
-    });
-  }
-  callApi(id, apiCampaignKey) {
-    return __async(this, null, function* () {
-      const data = yield fetch("https://api.raw.dev.carlonicora.com/v1.0/characters/" + id, {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + (apiCampaignKey != null ? apiCampaignKey : "")
-        }
-      });
-      const response = yield data.json();
       return response;
     });
   }
@@ -3638,13 +3642,33 @@ var StoryCirclePlotView = class extends AbstractView {
 // src/settings/Raw/modals/RawDiceRollerModal.ts
 var import_obsidian11 = require("obsidian");
 
+// src/settings/Raw/enums/RawRollResult.ts
+var RawRollResult = /* @__PURE__ */ ((RawRollResult2) => {
+  RawRollResult2[RawRollResult2["Standard"] = 0] = "Standard";
+  RawRollResult2[RawRollResult2["CriticalSuccess"] = 1] = "CriticalSuccess";
+  RawRollResult2[RawRollResult2["CriticalFailure"] = 2] = "CriticalFailure";
+  return RawRollResult2;
+})(RawRollResult || {});
+
 // src/helpers/DiceResult.ts
 var DiceResult = class {
-  constructor(type = null, result = null) {
+  constructor(type, result) {
     if (type != null)
       this.type = type;
-    if (result != null)
+    if (result != null) {
       this.result = result;
+      switch (this.result) {
+        case 1:
+          this.rollResult = 2 /* CriticalFailure */;
+          break;
+        case this.type:
+          this.rollResult = 1 /* CriticalSuccess */;
+          break;
+        default:
+          this.rollResult = 0 /* Standard */;
+          break;
+      }
+    }
   }
 };
 
@@ -3678,20 +3702,11 @@ var RawDiceRollerModal = class extends import_obsidian11.Modal {
     const { contentEl } = this;
     contentEl.empty();
     const diceRoll = DiceRollerHelper.rollSingleDice(20 /* d20 */);
-    let diceResult;
-    let diceResultLabel = "";
-    switch (diceRoll.result) {
-      case 1:
-        diceResultLabel = "FUMBLE!";
-        diceResult = -20;
-        break;
-      case 20:
-        diceResultLabel = "CRITICAL SUCCESS!";
-        diceResult = 40;
-        break;
-      default:
-        diceResult = diceRoll.result;
-        break;
+    let diceResult = diceRoll.result;
+    if (diceRoll.rollResult === 1 /* CriticalSuccess */) {
+      diceResult = 40;
+    } else if (diceRoll.rollResult === 2 /* CriticalFailure */) {
+      diceResult = -20;
     }
     const result = diceResult + this.ability.value + this.ability.traitValue;
     const successes = Math.floor(result / 25);
@@ -3699,7 +3714,7 @@ var RawDiceRollerModal = class extends import_obsidian11.Modal {
     contentEl.createDiv({ text: "Ability Value: " + this.ability.value.toString() });
     contentEl.createDiv({ text: "Trait: " + RawTrait[this.ability.trait] });
     contentEl.createDiv({ text: "Trait Value: " + this.ability.traitValue.toString() });
-    contentEl.createDiv({ text: "Dice Roll: " + diceRoll.result.toString() + (diceResultLabel != "" ? " " + diceResultLabel + " (real roll result: " + diceResult + ")" : "") });
+    contentEl.createDiv({ text: "Dice Roll: " + diceRoll.result.toString() + (diceRoll.rollResult !== 0 /* Standard */ ? " " + RawRollResult[diceRoll.rollResult] + " (real roll result: " + diceResult + ")" : "") });
     contentEl.createDiv({ text: "Result: " + result.toString() });
     contentEl.createDiv({ text: "Successes: " + successes.toString() });
     contentEl.createEl("h2", { text: result.toString() });
@@ -3711,7 +3726,8 @@ var RawDiceRollerModal = class extends import_obsidian11.Modal {
   }
 };
 
-// src/settings/Raw/RawCharacterRecordSheetView.ts
+// src/settings/Raw/views/RawCharacterRecordSheetView.ts
+var import_obsidian12 = require("obsidian");
 var RawCharacterRecordSheetView = class extends AbstractView {
   render(container, data) {
     let maxAbilities = data.body.abilities.length;
@@ -3743,10 +3759,13 @@ var RawCharacterRecordSheetView = class extends AbstractView {
   }
   addTraitCells(row, ability) {
     if (ability != null) {
-      row.createEl("td", { cls: ability.value == -10 ? "untrained" : "", text: RawAbility[ability.name] + (ability.specialisation ? "/" + ability.specialisation : "") });
+      const abilityEl = row.createEl("td", { cls: ability.value === -10 ? "untrained" : "", text: RawAbility[ability.name] + (ability.specialisation ? "/" + ability.specialisation : "") });
       const abilityValueEl = row.createEl("td", {
-        cls: ability.value == -10 ? "untrained" : "",
+        cls: ability.value === -10 ? "untrained" : "",
         text: ability.value.toString()
+      });
+      abilityEl.addEventListener("click", () => {
+        this.upgradeStats(ability, abilityValueEl);
       });
       abilityValueEl.addEventListener("click", () => {
         new RawDiceRollerModal(this.app, ability).open();
@@ -3755,6 +3774,97 @@ var RawCharacterRecordSheetView = class extends AbstractView {
       row.createEl("td", { text: "" });
       row.createEl("td", { text: "" });
     }
+  }
+  upgradeStats(ability, valueEl) {
+    return __async(this, null, function* () {
+      var _a;
+      const activeView = app.workspace.getActiveViewOfType(import_obsidian12.MarkdownView);
+      if (activeView != null) {
+        const editor = activeView.editor;
+        const file = activeView.file;
+        const cache = this.app.metadataCache.getFileCache(file);
+        (_a = cache == null ? void 0 : cache.sections) == null ? void 0 : _a.forEach((value) => {
+          var _a2, _b, _c, _d, _e, _f;
+          if (value.type === "code") {
+            if (editor.getLine(value.position.start.line) === "```RpgManager" && editor.getLine(value.position.start.line + 1).lastIndexOf("pc") !== -1) {
+              const upgradeRoll = DiceRollerHelper.rollSingleDice(100 /* d100 */);
+              const abilityToBeat = ability.value + ability.traitValue;
+              if (upgradeRoll.result > abilityToBeat) {
+                const difference = upgradeRoll.result - abilityToBeat;
+                let update = Math.floor(difference / 25) + 1;
+                if (upgradeRoll.rollResult === 1 /* CriticalSuccess */) {
+                  update *= 2;
+                }
+                ability.value = ability.value === -10 ? update : ability.value + update;
+                const start = {
+                  line: value.position.start.line + 2,
+                  ch: 0
+                };
+                const end = {
+                  line: value.position.end.line,
+                  ch: 0
+                };
+                const range = editor.getRange(start, end);
+                const yaml = (0, import_obsidian12.parseYaml)(range);
+                if (((_b = (_a2 = yaml == null ? void 0 : yaml.raw) == null ? void 0 : _a2.character) == null ? void 0 : _b.id) != null) {
+                } else {
+                  if ((yaml == null ? void 0 : yaml.raw) == null) {
+                    this.addRawMetadata(yaml);
+                  } else {
+                    if (((_c = yaml.raw) == null ? void 0 : _c.character) == null) {
+                      this.addCharacterMetadata(yaml);
+                    } else {
+                      if (((_d = yaml.raw.character) == null ? void 0 : _d.body) == null)
+                        this.addTraitMetadata(0 /* Body */, yaml);
+                      if (((_e = yaml.raw.character) == null ? void 0 : _e.mind) == null)
+                        this.addTraitMetadata(1 /* Mind */, yaml);
+                      if (((_f = yaml.raw.character) == null ? void 0 : _f.spirit) == null)
+                        this.addTraitMetadata(2 /* Spirit */, yaml);
+                    }
+                  }
+                  const traitName = RawTrait[ability.trait].toLowerCase();
+                  const abilityName = RawAbility[ability.name].toLowerCase();
+                  if (yaml.raw.character[traitName].abilities[abilityName] == null) {
+                    this.addAbilityMetadata(ability, yaml);
+                  } else {
+                    this.updateAbilityValue(ability, yaml);
+                  }
+                  editor.replaceRange((0, import_obsidian12.stringifyYaml)(yaml), start, end);
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  }
+  addRawMetadata(yaml) {
+    yaml.raw = {};
+  }
+  addCharacterMetadata(yaml) {
+    yaml.raw.character = {
+      damages: 0
+    };
+    this.addTraitMetadata(0 /* Body */, yaml);
+    this.addTraitMetadata(1 /* Mind */, yaml);
+    this.addTraitMetadata(2 /* Spirit */, yaml);
+  }
+  addTraitMetadata(trait, yaml) {
+    yaml.raw.character[RawTrait[trait].toLowerCase()] = {
+      value: {},
+      abilities: {}
+    };
+  }
+  addAbilityMetadata(ability, yaml) {
+    yaml.raw.character[RawTrait[ability.trait].toLowerCase()].abilities[RawAbility[ability.name].toLowerCase()] = {
+      value: ability.value
+    };
+    if (ability.specialisation != null) {
+      yaml.raw.character[RawTrait[ability.trait].toLowerCase()].abilities[RawAbility[ability.name].toLowerCase()].specialisation = ability.specialisation;
+    }
+  }
+  updateAbilityValue(ability, yaml) {
+    yaml.raw.character[RawTrait[ability.trait].toLowerCase()].abilities[RawAbility[ability.name].toLowerCase()].value = ability.value;
   }
 };
 
@@ -3800,8 +3910,8 @@ var RpgFactories = class {
 };
 
 // src/RpgModal.ts
-var import_obsidian12 = require("obsidian");
-var RpgModal = class extends import_obsidian12.Modal {
+var import_obsidian13 = require("obsidian");
+var RpgModal = class extends import_obsidian13.Modal {
   constructor(app2, type, create = true, name = null, campaignId = null, adventureId = null, sessionId = null) {
     super(app2);
     this.app = app2;
@@ -3821,7 +3931,7 @@ var RpgModal = class extends import_obsidian12.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("rpgm-modal");
-    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian12.MarkdownView) == null) {
+    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian13.MarkdownView) == null) {
       contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Error" });
       contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
       return;
@@ -3887,7 +3997,7 @@ var RpgModal = class extends import_obsidian12.Modal {
 };
 
 // src/main.ts
-var RpgManager = class extends import_obsidian13.Plugin {
+var RpgManager = class extends import_obsidian14.Plugin {
   onload() {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
@@ -3927,8 +4037,9 @@ var RpgManager = class extends import_obsidian13.Plugin {
       this.settings = Object.assign({}, DEFAULT_SETTINGS, yield this.loadData());
     });
   }
-  saveSettings() {
+  updateSettings(settings) {
     return __async(this, null, function* () {
+      Object.assign(this.settings, settings);
       yield this.saveData(this.settings);
     });
   }
@@ -3979,7 +4090,7 @@ var DEFAULT_SETTINGS = {
   timelineTag: "rpgm/element/timeline",
   noteTag: "rpgm/outline/note"
 };
-var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
+var RpgManagerSettingTab = class extends import_obsidian14.PluginSettingTab {
   constructor(app2, plugin) {
     super(app2, plugin);
     this.plugin = plugin;
@@ -3999,7 +4110,7 @@ var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
       frag.createEl("span");
       frag.appendText(" ");
     }) });
-    new import_obsidian13.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian14.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying the campaign");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -4008,9 +4119,9 @@ var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
     })).addText((text) => text.setPlaceholder("rpgm/outline/campaign").setValue(this.plugin.settings.campaignTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ campaignTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian14.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying an Adventure");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -4019,9 +4130,9 @@ var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
     })).addText((text) => text.setPlaceholder("rpgm/outline/adventure").setValue(this.plugin.settings.adventureTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ adventureTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian14.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Session");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -4030,9 +4141,9 @@ var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
     })).addText((text) => text.setPlaceholder("rpgm/outline/session").setValue(this.plugin.settings.sessionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ sessionTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian14.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Scene");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -4041,7 +4152,7 @@ var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
     })).addText((text) => text.setPlaceholder("rpgm/outline/scene").setValue(this.plugin.settings.sceneTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ sceneTag: value });
     })));
     containerEl.createEl("h3", { text: "Elements" });
     containerEl.createEl("span", { text: createFragment((frag) => {
@@ -4053,45 +4164,45 @@ var RpgManagerSettingTab = class extends import_obsidian13.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian13.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ pcTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ npcTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ locationTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ factionTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ eventTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ clueTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ timelineTag: value });
     })));
-    new import_obsidian13.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian14.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
-      yield this.plugin.saveSettings();
+      yield this.plugin.updateSettings({ noteTag: value });
     })));
   }
 };

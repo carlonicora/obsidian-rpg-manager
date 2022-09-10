@@ -1,5 +1,5 @@
-import {RawTrait} from "../../evals/RawTrait";
-import {RawAbility} from "../../evals/RawAbility";
+import {RawTrait} from "../../enums/RawTrait";
+import {RawAbility} from "../../enums/RawAbility";
 import {RawCharacterRecordSheetAbilityResponseInterface} from "./RawCharacterRecordSheetAbilityResponseInterface";
 
 export interface RawCharacterRecordSheetTraitResponseInterface {

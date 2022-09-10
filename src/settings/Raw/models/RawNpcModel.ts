@@ -2,6 +2,8 @@ import {NpcModel} from "../../Agnostic/models/NpcModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {RawCampaignInterface} from "../interfaces/RawCampaignInterface";
+import {RawEndpoint} from "../enums/RawEndpoint";
+import {RawApi} from "../helpers/RawApi";
 
 export class RawNpcModel extends NpcModel {
 	public async generateData(
@@ -11,7 +13,7 @@ export class RawNpcModel extends NpcModel {
 		if (this.sourceMeta?.raw?.character?.id != null) {
 			const id: string = this.sourceMeta?.raw?.character?.id;
 			const apiCampaignKey = (<RawCampaignInterface>this.currentElement.campaign).apiCampaignKey;
-			const character = await this.callApi(id, apiCampaignKey);
+			const character = await RawApi.get(apiCampaignKey, RawEndpoint.Characters, id);
 			this.sourceMeta.raw.character = character;
 			this.sourceMeta.raw.character.id = id;
 		}
@@ -19,20 +21,6 @@ export class RawNpcModel extends NpcModel {
 		this.addCharacterRecordSheet(response);
 
 		return response;
-	}
-
-	private async callApi(
-		id: string,
-		apiCampaignKey: string|null,
-	): Promise<any> {
-			const data = await fetch('https://api.raw.dev.carlonicora.com/v1.0/characters/' + id, {
-				method: 'GET',
-				headers: {
-					Authorization: 'Bearer ' + (apiCampaignKey ?? ''),
-				},
-			});
-			const response = await data.json();
-			return response;
 	}
 
 	private async addCharacterRecordSheet(

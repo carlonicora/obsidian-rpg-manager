@@ -11,7 +11,7 @@ import {AbtPlotView} from "../settings/Agnostic/views/AbtPlotView";
 import {StoryCirclePlotView} from "../settings/Agnostic/views/StoryCirclePlotView";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
-import {RawCharacterRecordSheetView} from "../settings/Raw/RawCharacterRecordSheetView";
+import {RawCharacterRecordSheetView} from "../settings/Raw/views/RawCharacterRecordSheetView";
 
 const ViewsMap = {
 	AgnosticString: StringView,
