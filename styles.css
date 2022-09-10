@@ -208,21 +208,21 @@
   text-align: center;
 }
 .rpgm-modal .rpgm-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 1fr);
+  display: flex;
   gap: 20px;
 }
 .rpgm-modal .navigation {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  flex: 1 1 auto;
 }
 .rpgm-modal .additionalElements {
   border: solid 1px var(--background-modifier-border);
   display: none;
   padding: 25px;
   padding-top: 0;
-  width: 100%;
+  min-width: 250px;
 }
 .rpgm-modal .group {
   display: flex;

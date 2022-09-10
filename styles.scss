@@ -241,9 +241,8 @@
 		text-align: center;
 	}
 
-	.rpgm-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, 1fr);
+	.rpgm-grid {		
+		display: flex;
 		gap: 20px;
 	}
 
@@ -251,14 +250,18 @@
 		display: flex;
 		flex-direction: column;
 		gap: 25px;
+		flex: 1 1 auto;
 	}
 	.additionalElements {
 		border: solid 1px var(--background-modifier-border);
 		display: none;
-		// margin-left: 50px;
 		padding: 25px;
 		padding-top: 0;
-		width: 100%;
+		min-width: 250px;
+
+		// width: 100%;
+		// margin-left: 50px;
+		// float: right;
 	}
 
 	//Campaign
