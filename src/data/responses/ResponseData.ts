@@ -10,9 +10,14 @@ export class ResponseData implements ResponseDataInterface {
 
 	public addElement(
 		element: ResponseElementInterface|null,
+		position: number|null = null,
 	): void {
 		if (element != null) {
-			this.elements.push(element);
+			if (position == null) {
+				this.elements.push(element);
+			} else {
+				this.elements.splice(position, 0, element);
+			}
 		}
 	}
 }

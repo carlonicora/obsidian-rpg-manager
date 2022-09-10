@@ -6,8 +6,8 @@ import {NoteInterface} from "../../../interfaces/data/NoteInterface";
 export class NoteModel extends AbstractModel {
 	protected currentElement: NoteInterface;
 
-	generateData(
-	): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(

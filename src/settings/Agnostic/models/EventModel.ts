@@ -7,7 +7,8 @@ import {EventInterface} from "../../../interfaces/data/EventInterface";
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());

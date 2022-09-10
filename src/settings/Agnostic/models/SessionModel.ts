@@ -6,7 +6,8 @@ import {SessionInterface} from "../../../interfaces/data/SessionInterface";
 export class SessionModel extends AbstractModel {
 	protected currentElement: SessionInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(

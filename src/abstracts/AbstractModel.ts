@@ -49,7 +49,7 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	abstract generateData(
-	): ResponseDataInterface;
+	): Promise<ResponseDataInterface>;
 
 	private generateElementBreadcrumb(
 		parent: ResponseBreadcrumb|null,

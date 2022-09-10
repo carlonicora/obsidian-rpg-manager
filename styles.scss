@@ -519,3 +519,26 @@ $blue: #2020ff;
 		}
 	}
 }
+
+.markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {
+	font-weight: 700;
+	color: $black;
+}
+
+.rpgm-raw-character-record-shet-container {
+	border: solid 1px $off-white;
+	padding: 20px;
+
+	table {
+		font-size: 0.8em;
+
+		tr > th {
+			font-weight: 700;
+			color: $black;
+		}
+
+		tr > td.untrained {
+			color: $light-grey;
+		}
+	}
+}

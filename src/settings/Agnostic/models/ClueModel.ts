@@ -7,7 +7,8 @@ import {ClueInterface} from "../../../interfaces/data/ClueInterface";
 export class ClueModel extends AbstractModel {
 	protected currentElement: ClueInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());

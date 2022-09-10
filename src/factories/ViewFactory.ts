@@ -11,6 +11,7 @@ import {AbtPlotView} from "../settings/Agnostic/views/AbtPlotView";
 import {StoryCirclePlotView} from "../settings/Agnostic/views/StoryCirclePlotView";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
+import {RawCharacterRecordSheetView} from "../settings/Raw/RawCharacterRecordSheetView";
 
 const ViewsMap = {
 	AgnosticString: StringView,
@@ -23,6 +24,7 @@ const ViewsMap = {
 	AgnosticHeader: HeaderView,
 	AgnosticAbtPlot: AbtPlotView,
 	AgnosticStoryCirclePlot: StoryCirclePlotView,
+	RawRawCharacterRecordSheet: RawCharacterRecordSheetView,
 };
 type ViewsMapType = typeof ViewsMap;
 type ViewKeys = keyof ViewsMapType;
@@ -36,10 +38,11 @@ export class ViewFactory extends AbstractFactory {
 		type: ResponseType,
 		sourcePath: string,
 	): ViewClassType<K> {
+
 		let viewKey: SingleViewKey<K> = CampaignSetting[settings] + ResponseType[type] as SingleViewKey<K>;
 		if (ViewsMap[viewKey] == null && settings !== CampaignSetting.Agnostic){
 			viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type] as SingleViewKey<K>;
 		}
-		return new ViewsMap[viewKey](sourcePath);
+		return new ViewsMap[viewKey](this.app, sourcePath);
 	}
 }

@@ -9,8 +9,8 @@ import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 export class CampaignModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
 
-	public generateData(
-	): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(

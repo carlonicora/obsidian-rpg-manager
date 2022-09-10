@@ -7,7 +7,8 @@ import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 export class PcModel extends AbstractModel {
 	protected currentElement: CharacterInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());

@@ -7,7 +7,8 @@ import {LocationInterface} from "../../../interfaces/data/LocationInterface";
 export class LocationModel extends AbstractModel {
 	protected currentElement: LocationInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());

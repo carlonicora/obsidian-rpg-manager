@@ -3,7 +3,6 @@ import {DataType} from "../../../enums/DataType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../../interfaces/ModalInterface";
 import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
-import {EditorView} from "@codemirror/view";
 
 export class AdventureModal extends AbstractModalComponent {
 	private adventures: AdventureInterface[];

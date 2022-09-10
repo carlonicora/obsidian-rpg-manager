@@ -5,7 +5,7 @@ import {App} from "obsidian";
 import {ContentType} from "../../enums/ContentType";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 
-export class HeaderResponseElement extends AbstractResponse implements HeaderResponseElementInterface {
+export class ResponseHeaderElement extends AbstractResponse implements HeaderResponseElementInterface {
 	public value: ContentInterface;
 
 	constructor(

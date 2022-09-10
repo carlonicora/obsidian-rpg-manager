@@ -19,6 +19,7 @@ import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterfac
 import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
+import {RawNpcModel} from "../settings/Raw/models/RawNpcModel";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
@@ -38,6 +39,7 @@ const ModelsMap = {
 	AgnosticSession: SessionModel,
 	AgnosticSessionNavigation: SessionNavigationModel,
 	AgnosticTimeline: TimelineModel,
+	RawNpc: RawNpcModel,
 };
 type ModelsMapType = typeof ModelsMap;
 type ModelKeys = keyof ModelsMapType;

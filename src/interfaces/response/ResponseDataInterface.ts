@@ -4,6 +4,7 @@ export interface ResponseDataInterface {
 	elements: ResponseElementInterface[];
 
 	addElement(
-		element: ResponseElementInterface|null
+		element: ResponseElementInterface|null,
+		position: number|null,
 	): void;
 }

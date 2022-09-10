@@ -18,6 +18,8 @@ export class RpgController extends MarkdownRenderChild {
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
 
+	private rendering = false;
+
 	private currentElement: RpgElementDataInterface|RpgOutlineDataInterface;
 
 	constructor(
@@ -66,23 +68,29 @@ export class RpgController extends MarkdownRenderChild {
 	}
 
 	private async render(){
-		//const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
-		//if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
+		if (!this.rendering) {
+			//const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
+			//if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
 			this.initialise();
 
 			if (this.isActive) {
+				this.rendering = true;
 				this.container.empty();
 
-				this.model.generateData().elements.forEach((element: ResponseElementInterface) => {
-					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
-						((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
-						element.responseType,
-						this.sourcePath,
-					);
-
-					view.render(this.container, element);
-				});
+				this.model.generateData()
+					.then((data: ResponseDataInterface) => {
+						data.elements.forEach((element: ResponseElementInterface) => {
+							const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
+								((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
+								element.responseType,
+								this.sourcePath,
+							);
+							view.render(this.container, element);
+						});
+						this.rendering = false;
+					});
 			}
+		}
 		//}
 	}
 }

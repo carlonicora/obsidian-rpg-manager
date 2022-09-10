@@ -5,7 +5,8 @@ import {ResponseLine} from "../../../data/responses/ResponseLine";
 import {ContentType} from "../../../enums/ContentType";
 
 export class ErrorModel extends AbstractModel {
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		const status = new ResponseLine(this.app);

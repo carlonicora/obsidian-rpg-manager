@@ -10,4 +10,5 @@ export enum ResponseType {
 	Header,
 	AbtPlot,
 	StoryCirclePlot,
+	RawCharacterRecordSheet,
 }

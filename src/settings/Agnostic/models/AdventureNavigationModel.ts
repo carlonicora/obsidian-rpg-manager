@@ -6,8 +6,8 @@ import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 export class AdventureNavigationModel extends AbstractModel {
 	protected currentElement: AdventureInterface;
 
-	generateData(
-	): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());

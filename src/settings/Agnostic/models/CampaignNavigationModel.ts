@@ -6,7 +6,8 @@ import {CampaignInterface} from "../../../interfaces/data/CampaignInterface";
 export class CampaignNavigationModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(

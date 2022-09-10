@@ -8,7 +8,7 @@ import {Clue} from "../data/Clue";
 import {Location} from "../data/Location";
 import {Event} from "../data/Event";
 import {Scene} from "../data/Scene";
-import {HeaderResponseElement} from "../../../data/responses/HeaderResponseElement";
+import {ResponseHeaderElement} from "../../../data/responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 
 export class HeaderComponent extends AbstractComponent{
@@ -36,22 +36,22 @@ export class HeaderComponent extends AbstractComponent{
 				synopsis += (data.isDead) ? ' was ' : ' is ';
 				synopsis += data.synopsis;
 			}
-			response.addElement(new HeaderResponseElement(this.app, 'Synopsis', synopsis, HeaderResponseType.Long));
+			response.addElement(new ResponseHeaderElement(this.app, 'Synopsis', synopsis, HeaderResponseType.Long));
 
-			if (data.goals != null) response.addElement(new HeaderResponseElement(this.app, 'Goals', data.goals.toString(), HeaderResponseType.Long));
+			if (data.goals != null) response.addElement(new ResponseHeaderElement(this.app, 'Goals', data.goals.toString(), HeaderResponseType.Long));
 
-			if (data.pronoun != null) response.addElement(new HeaderResponseElement(this.app, 'Pronoun', this.app.plugins.getPlugin('rpg-manager').factories.pronouns.readPronoun(data.pronoun), HeaderResponseType.Short));
+			if (data.pronoun != null) response.addElement(new ResponseHeaderElement(this.app, 'Pronoun', this.app.plugins.getPlugin('rpg-manager').factories.pronouns.readPronoun(data.pronoun), HeaderResponseType.Short));
 			if (data.age != null || data.death != null) {
-				response.addElement(new HeaderResponseElement(this.app, 'Status', data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
+				response.addElement(new ResponseHeaderElement(this.app, 'Status', data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
 			}
 			if (data.death != null){
 				let death = data.death.toDateString();
 				if (data.age != null){
 					death += ' at age ' + data.age;
 				}
-				response.addElement(new HeaderResponseElement(this.app, 'Death', death, HeaderResponseType.Short));
+				response.addElement(new ResponseHeaderElement(this.app, 'Death', death, HeaderResponseType.Short));
 			} else if (data.age != null) {
-				response.addElement(new HeaderResponseElement(this.app, 'Age', data.age.toString(), HeaderResponseType.Short));			}
+				response.addElement(new ResponseHeaderElement(this.app, 'Age', data.age.toString(), HeaderResponseType.Short));			}
 
 		} else {
 			if (data instanceof Scene) {
@@ -63,31 +63,31 @@ export class HeaderComponent extends AbstractComponent{
 					? 'Clue found on ' + data.found?.toDateString()
 					: '<span class="rpgm-missing">Clue not found yet</span>';
 
-				response.addElement(new HeaderResponseElement(this.app, 'Found', clueFound, HeaderResponseType.Short));
+				response.addElement(new ResponseHeaderElement(this.app, 'Found', clueFound, HeaderResponseType.Short));
 			} else if (data instanceof Location){
 				if (data.address != null && data.address != ''){
-					response.addElement(new HeaderResponseElement(this.app, 'Address', data.address, HeaderResponseType.Short));
+					response.addElement(new ResponseHeaderElement(this.app, 'Address', data.address, HeaderResponseType.Short));
 				}
 			} else if (data instanceof Event){
 				if (data.date != null) {
-					response.addElement(new HeaderResponseElement(this.app, 'Date', data.date.toDateString(), HeaderResponseType.Short));
+					response.addElement(new ResponseHeaderElement(this.app, 'Date', data.date.toDateString(), HeaderResponseType.Short));
 				}
 			} else if (data instanceof Scene){
 				if (data.action != null && data.action != ''){
-					response.addElement(new HeaderResponseElement(this.app, 'Action', data.action, HeaderResponseType.Long));
+					response.addElement(new ResponseHeaderElement(this.app, 'Action', data.action, HeaderResponseType.Long));
 				} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
-					response.addElement(new HeaderResponseElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
+					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
 
 				if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != ''){
-					response.addElement(new HeaderResponseElement(this.app, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
+					response.addElement(new ResponseHeaderElement(this.app, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
 				}
 			}
 
 			if (data.synopsis != null && data.synopsis != '') {
 				synopsis = data.synopsis;
 			}
-			response.addElement(new HeaderResponseElement(this.app, synopsisTitle, synopsis, HeaderResponseType.Long));
+			response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, HeaderResponseType.Long));
 		}
 
 		response.imgSrc = data.image;

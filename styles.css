@@ -421,3 +421,23 @@
 .rpgm-header-info .container .reset {
   clear: both;
 }
+
+.markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {
+  font-weight: 700;
+  color: #202020;
+}
+
+.rpgm-raw-character-record-shet-container {
+  border: solid 1px #eeeeee;
+  padding: 20px;
+}
+.rpgm-raw-character-record-shet-container table {
+  font-size: 0.8em;
+}
+.rpgm-raw-character-record-shet-container table tr > th {
+  font-weight: 700;
+  color: #202020;
+}
+.rpgm-raw-character-record-shet-container table tr > td.untrained {
+  color: #d9d9d9;
+}

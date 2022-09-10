@@ -6,7 +6,8 @@ import {SceneInterface} from "../../../interfaces/data/SceneInterface";
 export class SceneNavigationModel extends AbstractModel {
 	protected currentElement: SceneInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(this.generateBreadcrumb());

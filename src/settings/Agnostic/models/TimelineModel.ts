@@ -15,7 +15,8 @@ import {RpgElementDataInterface} from "../../../interfaces/data/RpgElementDataIn
 export class TimelineModel extends AbstractModel {
 	protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface;
 
-	generateData(): ResponseDataInterface {
+	public async generateData(
+	): Promise<ResponseDataInterface> {
 		const response = new ResponseData();
 
 		response.addElement(
