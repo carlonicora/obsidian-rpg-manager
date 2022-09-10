@@ -1,4 +1,4 @@
-import {RawAbility} from "../../evals/RawAbility";
+import {RawAbility} from "../../enums/RawAbility";
 import {RawCharacterRecordSheetTraitResponseInterface} from "./RawCharacterRecordSheetTraitResponseInterface";
 import {RawCharacterRecordSheetAbilityResponseInterface} from "./RawCharacterRecordSheetAbilityResponseInterface";
 

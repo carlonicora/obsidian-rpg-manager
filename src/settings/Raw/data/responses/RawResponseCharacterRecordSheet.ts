@@ -1,7 +1,7 @@
 import {AbstractResponse} from "../../../../abstracts/AbstractResponse";
 import {App} from "obsidian";
-import {RawAbility} from "../../evals/RawAbility";
-import {RawTrait} from "../../evals/RawTrait";
+import {RawAbility} from "../../enums/RawAbility";
+import {RawTrait} from "../../enums/RawTrait";
 import {ResponseType} from "../../../../enums/ResponseType";
 import {
 	RawCharacterRecordSheetTraitResponseInterface

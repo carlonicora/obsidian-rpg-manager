@@ -42,18 +42,10 @@ export class FileFactory extends AbstractFactory {
 		const data: string = template.generateData();
 
 
-		let fullPath: string;
-		if (type !== DataType.Campaign) {
-			fullPath = folder.substring(1) + DataType[type] + 's';
-			if (this.app.vault.getAbstractFileByPath(fullPath) == null){
-				await app.vault.createFolder(fullPath);
-			}
-		} else {
-			fullPath = folder.substring(1);
-		}
+		const fileName = await this.generateFilePath(type, folder, name);
 
 		if (create) {
-			const newFile = await app.vault.create(fullPath + '/' + name + '.md', data);
+			const newFile = await app.vault.create(fileName, data);
 			const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
 			const leaf = app.workspace.getLeaf((currentLeaf != null));
 			await leaf.openFile(newFile);
@@ -64,7 +56,7 @@ export class FileFactory extends AbstractFactory {
 				editor.setValue(data + '\n' + editor.getValue());
 
 				let file = activeView.file;
-				await this.app.fileManager.renameFile(file, fullPath + '/' + name + '.md');
+				await this.app.fileManager.renameFile(file, fileName);
 				file = activeView.file;
 
 				activeView.leaf.detach();
@@ -101,14 +93,35 @@ export class FileFactory extends AbstractFactory {
 			sceneId,
 		);
 
-		const fullPath = folder.substring(1) + DataType[type] + 's';
-		if (this.app.vault.getAbstractFileByPath(fullPath) == null){
-			await app.vault.createFolder(fullPath);
-		}
+		const fileName = await this.generateFilePath(type, folder, name);
 
 		const data: string = template.generateData();
-		const newFile = await app.vault.create(fullPath + '/' + name + '.md', data);
+		const newFile = await app.vault.create(fileName, data);
 		const leaf = app.workspace.getLeaf(true);
 		await leaf.openFile(newFile);
+	}
+
+	private async generateFilePath(
+		type: DataType,
+		folder: string,
+		name: string,
+	): Promise<string> {
+		let response = name + '.md';
+
+		if (this.app.plugins.getPlugin('rpg-manager').settings.automaticMove){
+			let fullPath: string;
+			if (type !== DataType.Campaign) {
+				fullPath = folder.substring(1) + DataType[type] + 's';
+				if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
+					await app.vault.createFolder(fullPath);
+				}
+			} else {
+				fullPath = folder.substring(1);
+			}
+
+			response = fullPath + '/' + response;
+		}
+
+		return response;
 	}
 }

@@ -9,7 +9,11 @@ import {RpgModal} from "./RpgModal";
 export default class RpgManager extends Plugin {
 	/*
 	@TODO: Add additional information to modal windows and to template
-	@TODO: Raw: connect with api.raw.carlonicora.com to fetch the character data
+	@TODO: RAW
+		- Update RAW Ability stats remotely
+		- POST /Characters
+		- PATCH /Characters
+		- Generate Character
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;
@@ -69,7 +73,8 @@ export default class RpgManager extends Plugin {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
-	async saveSettings() {
+	async updateSettings(settings: Partial<RpgManagerSettings>) {
+		Object.assign(this.settings, settings);
 		await this.saveData(this.settings);
 	}
 
@@ -134,6 +139,7 @@ export interface RpgManagerSettings {
 	clueTag: string;
 	timelineTag: string;
 	noteTag: string;
+	automaticMove: boolean;
 }
 
 export const DEFAULT_SETTINGS: RpgManagerSettings = {
@@ -149,6 +155,7 @@ export const DEFAULT_SETTINGS: RpgManagerSettings = {
 	clueTag: 'rpgm/element/clue',
 	timelineTag: 'rpgm/element/timeline',
 	noteTag: 'rpgm/outline/note',
+	automaticMove: true,
 }
 
 export class RpgManagerSettingTab extends PluginSettingTab {
@@ -164,6 +171,29 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 		containerEl.createEl('h2', {text: 'CampaignSetting for Role Playing Game Manager'});
+
+		containerEl.createEl('h3', {text: 'Automations'});
+		containerEl.createEl('span', {text: createFragment(frag => {
+				frag.appendText('Set your preferences for the automations RPG Manager offers.');
+				frag.createEl('br');
+				frag.appendText(' ');
+			})});
+
+		new Setting(this.containerEl)
+			.setName("Auto Organisation of Notes")
+			.setDesc(createFragment(frag => {
+				frag.createEl('br');
+				frag.appendText('RPG Manager automatically organise created or filled outlines and elements in separate folders.');
+				frag.createEl('br');
+				frag.appendText('You can avoid the automatical move of your notes by disabling this setting.');
+				frag.createEl('br');
+				frag.appendText(' ');
+			}))
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.automaticMove)
+					.onChange(async value => await this.plugin.updateSettings({ automaticMove: value }))
+			);
 
 		containerEl.createEl('h3', {text: 'Outlines'});
 		containerEl.createEl('span', {text: createFragment(frag => {
@@ -192,8 +222,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.campaignTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ campaignTag: value });
 					})
 			);
 
@@ -212,8 +241,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.adventureTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ adventureTag: value });
 					})
 			);
 
@@ -232,8 +260,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.sessionTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ sessionTag: value });
 					})
 			);
 
@@ -252,8 +279,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.sceneTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ sceneTag: value });
 					})
 			);
 
@@ -276,8 +302,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.pcTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ pcTag: value });
 					})
 			);
 
@@ -289,8 +314,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.npcTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ npcTag: value });
 					})
 			);
 
@@ -302,8 +326,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.locationTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ locationTag: value });
 					})
 			);
 
@@ -315,8 +338,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.factionTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ factionTag: value });
 					})
 			);
 
@@ -328,8 +350,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.eventTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ eventTag: value });
 					})
 			);
 
@@ -341,8 +362,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.clueTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ clueTag: value });
 					})
 			);
 
@@ -354,8 +374,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.timelineTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ timelineTag: value });
 					})
 			);
 
@@ -367,8 +386,7 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.noteTag)
 					.onChange(async value => {
 						if (value.length == 0) return;
-
-						await this.plugin.saveSettings();
+						await this.plugin.updateSettings({ noteTag: value });
 					})
 			);
 	}
