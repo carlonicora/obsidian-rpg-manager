@@ -14,6 +14,8 @@ import {DataType} from "../enums/DataType";
 import {NoteTemplate} from "../settings/Agnostic/templates/NoteTemplate";
 import {VampireNonPlayerCharacterTemplate} from "../settings/Vampire/templates/VampireNonPlayerCharacterTemplate";
 import {VampireCharacterTemplate} from "../settings/Vampire/templates/VampireCharacterTemplate";
+import {RawCampaignTemplate} from "../settings/Raw/templates/RawCampaignTemplate";
+import {VampireCampaignTemplate} from "../settings/Vampire/templates/VampireCampaignTemplate";
 
 const TemplatesMap = {
 	AgnosticCampaign: CampaignTemplate,
@@ -29,6 +31,8 @@ const TemplatesMap = {
 	AgnosticNote: NoteTemplate,
 	VampireCharacter: VampireCharacterTemplate,
 	VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate,
+	RawCampaign: RawCampaignTemplate,
+	VampireCampaign: VampireCampaignTemplate,
 };
 type TemplatesMapType = typeof TemplatesMap;
 type TemplateKeys = keyof TemplatesMapType;

@@ -18,9 +18,11 @@ export class RawCharacterRecordSheetView extends AbstractView {
 		if (data.mind.abilities.length > maxAbilities) maxAbilities = data.mind.abilities.length;
 		if (data.spirit.abilities.length > maxAbilities) maxAbilities = data.spirit.abilities.length;
 
-		const characterRecordSheetHeaderEl = container.createEl('h2', {text: 'RAW Character Record Sheet'});
+		container.createEl('h2', {text: 'RAW Character Record Sheet'});
 		this.characterRecordSheetContainerEl = container.createDiv({cls: 'rpgm-raw-character-record-shet-container'});
 		/*
+		const characterRecordSheetHeaderEl = container.createEl('h2', {text: 'RAW Character Record Sheet'});
+		this.characterRecordSheetContainerEl = container.createDiv({cls: 'rpgm-raw-character-record-shet-container'});
 		characterRecordSheetHeaderEl.addEventListener("click", () => {
 			if (this.characterRecordSheetContainerEl.style.display === 'block'){
 				this.characterRecordSheetContainerEl.style.display = 'none';

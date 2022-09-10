@@ -108,7 +108,12 @@ export class RpgData extends Component {
 
 			if (fileType !== null) {
 				let settings = CampaignSetting.Agnostic;
-				if (fileType !== DataType.Campaign) {
+
+				if (fileType === DataType.Campaign) {
+					if (metadata?.frontmatter?.settings != null) {
+						settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
+					}
+				} else {
 					const campaignId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter.tags, DataType.Campaign);
 
 					if (campaignId != null){
@@ -118,6 +123,7 @@ export class RpgData extends Component {
 						}
 					}
 				}
+
 				if (
 					!restrictType ||
 					(

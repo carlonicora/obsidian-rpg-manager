@@ -328,13 +328,17 @@ var RpgData = class extends import_obsidian2.Component {
     });
   }
   loadElement(file, restrictType = false, restrictedToType = null) {
-    var _a;
+    var _a, _b;
     const metadata = this.app.metadataCache.getFileCache(file);
     if ((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags) {
       const fileType = this.app.plugins.getPlugin("rpg-manager").functions.getDataType(metadata.frontmatter.tags);
       if (fileType !== null) {
         let settings = 0 /* Agnostic */;
-        if (fileType !== 0 /* Campaign */) {
+        if (fileType === 0 /* Campaign */) {
+          if (((_b = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _b.settings) != null) {
+            settings = CampaignSetting[metadata.frontmatter.settings];
+          }
+        } else {
           const campaignId = this.app.plugins.getPlugin("rpg-manager").functions.getTagId(metadata.frontmatter.tags, 0 /* Campaign */);
           if (campaignId != null) {
             const campaign = this.getCampaign(campaignId);
@@ -1719,6 +1723,15 @@ var VampireCharacter = class extends Character {
   }
 };
 
+// src/settings/Raw/data/RawCampaign.ts
+var RawCampaign = class extends Campaign {
+  reload(file, metadata) {
+    var _a, _b;
+    super.reload(file, metadata);
+    this.apiCampaignKey = (_b = (_a = this.frontmatter) == null ? void 0 : _a.apiCampaignKey) != null ? _b : null;
+  }
+};
+
 // src/factories/DataFactory.ts
 var DatasMap = {
   AgnosticCampaign: Campaign,
@@ -1734,7 +1747,8 @@ var DatasMap = {
   AgnosticTimeline: Timeline,
   AgnosticNote: Note,
   VampireCharacter,
-  VampireNonPlayerCharacter: VampireCharacter
+  VampireNonPlayerCharacter: VampireCharacter,
+  RawCampaign
 };
 var DataFactory = class extends AbstractFactory {
   create(settings, type, file, metadata) {
@@ -2808,7 +2822,8 @@ var RawNpcModel = class extends NpcModel {
       const response = __superGet(RawNpcModel.prototype, this, "generateData").call(this);
       if (((_c = (_b = (_a = this.sourceMeta) == null ? void 0 : _a.raw) == null ? void 0 : _b.character) == null ? void 0 : _c.id) != null) {
         const id = (_f = (_e = (_d = this.sourceMeta) == null ? void 0 : _d.raw) == null ? void 0 : _e.character) == null ? void 0 : _f.id;
-        const character = yield this.callApi(id);
+        const apiCampaignKey = this.currentElement.campaign.apiCampaignKey;
+        const character = yield this.callApi(id, apiCampaignKey);
         this.sourceMeta.raw.character = character;
         this.sourceMeta.raw.character.id = id;
       }
@@ -2816,11 +2831,13 @@ var RawNpcModel = class extends NpcModel {
       return response;
     });
   }
-  callApi(id) {
+  callApi(id, apiCampaignKey) {
     return __async(this, null, function* () {
       const data = yield fetch("https://api.raw.dev.carlonicora.com/v1.0/characters/" + id, {
         method: "GET",
-        headers: {}
+        headers: {
+          Authorization: "Bearer " + (apiCampaignKey != null ? apiCampaignKey : "")
+        }
       });
       const response = yield data.json();
       return response;
@@ -3311,6 +3328,20 @@ var VampireCharacterTemplate = class extends CharacterTemplate {
   }
 };
 
+// src/settings/Raw/templates/RawCampaignTemplate.ts
+var RawCampaignTemplate = class extends CampaignTemplate {
+  generateFrontmatterAdditionalInformation() {
+    return "settings: Raw\napiCampaignKey: \n";
+  }
+};
+
+// src/settings/Vampire/templates/VampireCampaignTemplate.ts
+var VampireCampaignTemplate = class extends CampaignTemplate {
+  generateFrontmatterAdditionalInformation() {
+    return "settings: Vampire\n";
+  }
+};
+
 // src/factories/TemplateFactory.ts
 var TemplatesMap = {
   AgnosticCampaign: CampaignTemplate,
@@ -3325,7 +3356,9 @@ var TemplatesMap = {
   AgnosticFaction: FactionTemplate,
   AgnosticNote: NoteTemplate,
   VampireCharacter: VampireCharacterTemplate,
-  VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate
+  VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate,
+  RawCampaign: RawCampaignTemplate,
+  VampireCampaign: VampireCampaignTemplate
 };
 var TemplateFactory = class extends AbstractFactory {
   create(settings, type, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation = null) {
@@ -3686,16 +3719,8 @@ var RawCharacterRecordSheetView = class extends AbstractView {
       maxAbilities = data.mind.abilities.length;
     if (data.spirit.abilities.length > maxAbilities)
       maxAbilities = data.spirit.abilities.length;
-    const characterRecordSheetHeaderEl = container.createEl("h3", { text: "RAW Character Record Sheet" });
-    characterRecordSheetHeaderEl.addEventListener("click", () => {
-      if (this.characterRecordSheetContainerEl.style.display === "block") {
-        this.characterRecordSheetContainerEl.style.display = "none";
-      } else {
-        this.characterRecordSheetContainerEl.style.display = "block";
-      }
-    });
+    container.createEl("h2", { text: "RAW Character Record Sheet" });
     this.characterRecordSheetContainerEl = container.createDiv({ cls: "rpgm-raw-character-record-shet-container" });
-    this.characterRecordSheetContainerEl.style.display = "none";
     const lifePointsEl = this.characterRecordSheetContainerEl.createEl("p");
     lifePointsEl.textContent = "Life Points: " + data.lifePoints.toString();
     const damagesEl = this.characterRecordSheetContainerEl.createEl("p");
