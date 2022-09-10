@@ -68,7 +68,7 @@ export class RpgModal extends Modal implements ModalInterface {
 		if (this.name !== null) {
 			this.title.value = this.name;
 		}
-		this.titleError = navigationEl.createEl('p', {cls: 'error'});
+		this.titleError = navigationEl.createEl('p', {cls: 'error', text: 'Please specify a valid title'});
 
 		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
 			this.settings,

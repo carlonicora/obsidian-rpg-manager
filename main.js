@@ -1888,7 +1888,7 @@ var CampaignModal = class extends AbstractModalComponent {
       if (data.campaignId >= this.modal.campaignId)
         this.modal.campaignId = data.campaignId + 1;
     });
-    containerEl.createEl("p", { text: "Select Campaign Settings" });
+    containerEl.createEl("label", { text: "Select Campaign Settings" });
     this.campaignSettingsEl = containerEl.createEl("select");
     Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting) => {
       const campaignSettingOption = this.campaignSettingsEl.createEl("option", {
@@ -1947,7 +1947,7 @@ var CampaignModal = class extends AbstractModalComponent {
           cls: "rpgm-modal-title",
           text: "Additional Information for the " + DataType[this.modal.type]
         });
-        this.modal.additionalInformationEl.createEl("p", { text: "Current Date" });
+        this.modal.additionalInformationEl.createEl("label", { text: "Current Date" });
         this.currentDateEl = this.modal.additionalInformationEl.createEl("input", { type: "text" });
       }
     });
@@ -3986,24 +3986,25 @@ var RpgModal = class extends import_obsidian14.Modal {
       contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
       return;
     }
-    const navigationEl = contentEl.createDiv({ cls: "navigation" });
-    this.additionalInformationEl = contentEl.createDiv({ cls: "additionalElements" });
-    contentEl.createDiv({ cls: "clear" });
-    navigationEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
-    navigationEl.createEl("p", { text: "Title of your new " + DataType[this.type] });
-    this.title = navigationEl.createEl("input", { type: "text" });
+    contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
+    const gridEl = contentEl.createDiv({ cls: "rpgm-grid" });
+    const navigationEl = gridEl.createDiv({ cls: "navigation" });
+    this.additionalInformationEl = gridEl.createDiv({ cls: "additionalElements" });
+    const titleEl = navigationEl.createDiv({ cls: "rpgm-input-title" });
+    titleEl.createEl("label", { text: "Title of your new " + DataType[this.type] });
+    this.title = titleEl.createEl("input", { type: "text" });
     if (this.name !== null) {
       this.title.value = this.name;
     }
-    this.titleError = navigationEl.createEl("p", { cls: "error" });
+    this.titleError = navigationEl.createEl("p", { cls: "error", text: "Please specify a valid title" });
     this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.settings, 0 /* Campaign */, this);
     const childElement = navigationEl.createDiv();
     const cfmo = navigationEl.createDiv({ cls: "createFrontMatterOnly" });
     this.createFrontMatterOnly = cfmo.createEl("input", { type: "checkbox" });
     this.createFrontMatterOnly.id = "createFrontMatterOnly";
-    const labelFrontMatterOnly = navigationEl.createEl("label", { text: "Create Frontmatter only" });
+    const labelFrontMatterOnly = cfmo.createEl("label", { text: "Create Frontmatter only" });
     labelFrontMatterOnly.htmlFor = "createFrontMatterOnly";
-    this.button = navigationEl.createEl("button", { cls: "mod-cta", text: "Create" });
+    this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
     if (this.type !== 0 /* Campaign */) {
       this.button.disabled = true;
     }

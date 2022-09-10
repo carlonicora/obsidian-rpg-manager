@@ -3,17 +3,38 @@
 Obsidian Role Playing Game Manager is an Obsidian plugin that helps you plot and manage your tabletop role playing game 
 campaigns.
 
-**From this version, RPG Manager does not require the Dataview plugin any longer**
-
-The plugin works well in conjunction with a 
+The plugin works well in conjunction with a
 [structured plotting style](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
 
-The plugin collects data and Frontmatter metadata from the notes and organise them into easy-to access references in 
+The plugin collects data and Frontmatter metadata from the notes and organise them into easy-to access references in
 form of tables and links.
+
+### Update notes
+
+From version `1.0` RPG Manager does not require the Dataview plugin any longer
+
+## Data Structure
+
+The plugin organises the notes in `Outlines` and `Elements`. Each of them has a structure that helps writing and keeping
+track of a campaign. The structure is as follow:
+
+- Campaign (_Outline_)
+  - Adventures (_Outline_)
+    - Sessions (_Outline_)
+      - Scenes (_Outline_)
+  - Player Characters (_Element_)
+  - Non Player Characters (_Element_)
+  - Events (_Element_)
+  - Clues (_Element_)
+  - Factions (_Element_)
+  - Locations (_Element_)
+  - Timelines (_Element_)
+  - Notes (_Element_)
 
 ## TL;DR
 
-1. Use the `Rpg Manager` commands to create a new outline or element
+1. Use the `Rpg Manager` **commands** to create a new outline or element or to fill an existing note with the correct 
+frontmatter and codeblocks.
 2. Add the information in the Frontmatter metadata 
 3. See everything linking together 
 4. Navigate your campaign easily
@@ -37,35 +58,34 @@ which means that it does not (yet) extend into stats or dice rolling. It is a to
 Outlines are the plots of a Campaign, Adventure, Session or Scene. You can read more 
 [here](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
 
-| Element                  | Codeblocks                     | Description                                                                                                                                                                                                           |
-|--------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Campaign**             | `campaign`                     | The overarching story plot for a series of `Adventures`                                                                                                                                                               |
-| **Adventure**            | `adventure`                    | A single, self contain storyarc divided in `Sessions`                                                                                                                                                                 |
-| **Session**              | `session` + `sessionNavigator` | A single session of a role playing game containing a series of `Scenes`                                                                                                                                               |
-| **Scene**                | `scene` + `sceneNavigator`     | A part of a `Session` in which the player characters are expected to do something                                                                                                                                     |
+| Element                  | Codeblocks                          | Description                                                                       |
+|--------------------------|-------------------------------------|-----------------------------------------------------------------------------------|
+| **Campaign**             | `campaign` + `campaignNavigation`   | The overarching story plot for a series of `Adventures`                           |
+| **Adventure**            | `adventure` + `adventureNavigation` | A single, self contain storyarc divided in `Sessions`                             |
+| **Session**              | `session` + `sessionNavigation`     | A single session of a role playing game containing a series of `Scenes`           |
+| **Scene**                | `scene` + `sceneNavigation`         | A part of a `Session` in which the player characters are expected to do something |
 
 ### Elements
 
 Elements are other information related to the campaign, which are not in a plot (Player Characters, Non Player 
 Characters, Factions, Locations, Events, Clues)
 
-| Element                  | Codeblock                      | Description                                                                                                                                                                                                           |
-|--------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Player Character**     | `pc`                           | The record sheet of a player character                                                                                                                                                                                |
-| **Non Player Character** | `npc`                          | The record sheet of a non-playing character                                                                                                                                                                           |
-| **Faction**              | `faction`                      | A group of player and non-player characters                                                                                                                                                                           |
-| **Location**             | `location`                     | A physical location in the game                                                                                                                                                                                       |
-| **Event**                | `event`                        | Something that happened in the game. This is something that happened **without the player characters** and it is used to give more details to the storyteller and to simplify the creation of investigative campaigns |
-| **Clue**                 | `clue`                         | An object or a detail the player character can encounter in the game that will help them understand something and advance the game                                                                                    |
-| **Note**                 | `note`                         | A note, usually associated to a `Session`, that helps the storyteller to keep track of the player characters' decisions                                                                                               |
+| Element                  | Codeblock  | Description                                                                                                                                                                                                           |
+|--------------------------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Player Character**     | `pc`       | The record sheet of a player character                                                                                                                                                                                |
+| **Non Player Character** | `npc`      | The record sheet of a non-playing character                                                                                                                                                                           |
+| **Faction**              | `faction`  | A group of player and non-player characters                                                                                                                                                                           |
+| **Location**             | `location` | A physical location in the game                                                                                                                                                                                       |
+| **Event**                | `event`    | Something that happened in the game. This is something that happened **without the player characters** and it is used to give more details to the storyteller and to simplify the creation of investigative campaigns |
+| **Clue**                 | `clue`     | An object or a detail the player character can encounter in the game that will help them understand something and advance the game                                                                                    |
+| **Note**                 | `note`     | A note, usually associated to a `Session`, that helps the storyteller to keep track of the player characters' decisions                                                                                               |
+| **Timeline**             | `timeline` | A list of elements organised by dates (_if you use dates in your campaign_)                                                                                                                                           |
 
 ## Usage
 
 ### Frontmatter Metadata
 
-A complete readme on the required structure of the Frontmatter metadata is available [here](frontmatter.md). As 
-Frontmatter metadata can be quite temperamental if you you write them incorrectly. Please make sure to familiarise 
-yourself on how to correctly write them and check their validity using the Reading View in Obsidian.
+A complete readme on the required structure of the Frontmatter metadata is available [here](frontmatter.md).
 
 ### Frontmatter Examples
 
@@ -74,8 +94,8 @@ For more examples of the Frontmatter metadata to be used in each [element](#elem
 
 ### RpgManager Codeblock
 
-To start using RpgManager, please [install and activate it](#installation) in your Obsidian vault and then use a 
-`RpgManager` codeblock with the name of the type of [element](#elements) you want to use.
+RpgManager uses codeblocks to parse information. You can add one or more codeblocks in a page to display the relevant 
+information.
 
 Example of a session codeblock
 ```
@@ -125,19 +145,8 @@ Using Rpg Manager Create Commands (`Create a new...`) you have access to pre-des
 frontmatter and codeblocks for each `outline` and `element`. You can also fill an existing note using Rpg Manager 
 Fill Commands (`Fill ...`)
 
-## Installation
+## Contributing
 
-### Manually installing the plugin
-
-Go to the [releases]() and download the latest `main.js`, `manifest.json` and `styles.css` files. Create a folder 
-called `obsidian-rpg-manager` inside .obsidian/plugins and place both files in it.
-
-### Compatibility
-
-This plugin has been tested on both MacOS and iOS. The relationships and the images are correctly loaded. If you find 
-any issue on other platforms, please get in touch.
-
-### Contributing
 Contributions via bug reports, bug fixes, documentation, and general improvements are always welcome. For more major 
 feature work, make an issue about the feature idea / reach out to me so we can judge feasibility and how best to 
 implement it.

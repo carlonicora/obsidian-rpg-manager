@@ -1,16 +1,3 @@
-$black: #202020;
-$white: #fff;
-$off-white: #eeeeee;
-$super-off-white: #f9f9f9;
-$dark-grey: #808080;
-$light-grey: #d9d9d9;
-$purple: #B97CFC;
-$pink: #F93B69;
-$green: #B0E8E2;
-$orange: #EB8B6E;
-$red: #ff2020;
-$blue: #2020ff;
-
 .rpgm-missing {
 	font-weight: 100;
 	font-style: italic;
@@ -24,7 +11,7 @@ $blue: #2020ff;
 
 .rpgm-header {
 	background-size: cover;
-	color: $white;
+	color: var(--background-primary);
 	position: relative;
 	min-height: 350px;
 	height: 350px;
@@ -98,7 +85,7 @@ $blue: #2020ff;
 			content: ' ';
 			height: 100%;
 			width: 1px;
-			background-color: $light-grey;
+			background-color: var(--background-modifier-border);
 			position: absolute;
 			top: 0;
 			left: 133px;
@@ -117,30 +104,30 @@ $blue: #2020ff;
 		height: 1em;
 		box-sizing: border-box;
 		border-radius: 50%;
-		background: $dark-grey;
+		background: var(--text-muted);
 		z-index: 1;
 		margin-right: 10px;
-		border: 1px solid $dark-grey;
+		border: 1px solid var(--text-muted);
 		margin-top: 20px;
 
 		&.red {
-			border: 1px solid $red;
-			background: $red;
+			border: 1px solid var(--text-error);
+			background: var(--text-error);
 		}
 
 		&.green {
-			border: 1px solid $green;
-			background: $green;
+			border: 1px solid var(--interactive-success);
+			background: var(--interactive-success);
 		}
 
 		&.blue {
-			border: 1px solid $blue;
-			background: $blue;
+			border: 1px solid var(--background-modifier-success);
+			background: var(--background-modifier-success);
 		}
 
 		&.purple {
-			border: 1px solid $blue;
-			background: $purple;
+			border: 1px solid var(--interactive-accent);
+			background: var(--interactive-accent);
 		}
 	}
 
@@ -164,19 +151,19 @@ $blue: #2020ff;
 			margin-top: 0px;
 
 			&.red {
-				color: $red;
+				color: var(--text-error);
 			}
 
 			&.green {
-				color: $green;
+				color: var(--interactive-success);
 			}
 
 			&.blue {
-				color: $blue;
+				color: var(--background-modifier-success);
 			}
 
 			&.purple {
-				color: $purple;
+				color: var(--interactive-accent);
 			}
 		}
 	}
@@ -195,25 +182,25 @@ $blue: #2020ff;
 			margin: 0;
 			font-size: 0.9em;
 			font-weight: 400;
-			color: $dark-grey;
+			color: var(--text-muted);
 		}
 	}
 }
 
 .rpg-error {
-	border: solid 1px $orange;
-	background-color: $off-white;
+	border: solid 1px var(--text-error);
+	background-color: var(--background-secondary);
 	padding: 10px 25px;
 
 	h3 {
-		color: $orange;
+		color: var(--text-error);
 		font-size: 1.1em;
 		font-weight: 400;
 	}
 }
 
 .rpgm-box {
-	border: solid 1px $light-grey;
+	border: solid 1px var(--background-modifier-border);
 	padding: 10px 25px;
 	font-size: 1.0em;
 	margin-top: 20px;
@@ -231,14 +218,14 @@ $blue: #2020ff;
 		margin-top: -10px;
 		text-align: right;
 		margin-right: -20px;
-		color: $dark-grey;
+		color: var(--text-muted);
 	}
 
 	&.white{
-		background-color: $white;
+		background-color: var(--background-primary);
 	}
 	&.off-white{
-		background-color: $super-off-white;
+		background-color: var(--background-primary-alt);
 	}
 }
 
@@ -323,7 +310,7 @@ $blue: #2020ff;
 
 		input[type=checkbox] { margin: 0; }
 	}
-	// ?
+
 	p.error {
 		color: var(--text-error);
 
@@ -349,24 +336,11 @@ $blue: #2020ff;
 	button {
 		// right: 0px;
 		// float: right;
-		// background-color: $dark-grey;
-		// color: $white;
+		// background-color: var(--text-muted);
+		// color: var(--background-primary);
 		display: block;
 		// margin: auto;
 		margin-top: 10px;
-	}
-}
-
-.rpgm-button {
-	text-decoration: none;
-	border: solid 0.5px $dark-grey;
-	font-size: 0.9em;
-	padding: 7px 20px;
-	border-radius: 5px;
-	color: $light-grey;
-
-	:hover {
-		color: $blue;
 	}
 }
 
@@ -407,9 +381,7 @@ $blue: #2020ff;
 	width: 100%;
 	font-size: 0.9em;
 	text-align: center;
-	//border-bottom: 1px solid $light-grey;
 	padding-bottom: 20px;
-	//margin-bottom: 40px;
 	margin-bottom: 10px;
 
 	h2 {
@@ -437,7 +409,7 @@ $blue: #2020ff;
 				font-weight: 100;
 				font-size: 0.7em;
 				font-variant-caps: small-caps;
-				color: $dark-grey;
+				color: var(--text-muted);
 			}
 
 			.value {
@@ -460,14 +432,14 @@ $blue: #2020ff;
 
 .rpgm-header-info {
 	width: 100%;
-	border: 1px solid $off-white;
+	border: 1px solid var(--background-modifier-border);
 	margin-bottom: 40px;
 
 	.title {
 		width: 100%;
 		font-weight: 400;
 		font-size: 2em;
-		border-bottom: 1px solid $off-white;
+		border-bottom: 1px solid var(--background-modifier-border);
 		text-align: center;
 
 		p {
@@ -491,7 +463,7 @@ $blue: #2020ff;
 				width: 100%;
 				font-variant: small-caps;
 				font-size: 0.8em;
-				color: $dark-grey;
+				color: var(--text-muted);
 			}
 
 			.longText {
@@ -507,7 +479,7 @@ $blue: #2020ff;
 					width: 100px;
 					font-variant: small-caps;
 					font-size: 0.8em;
-					color: $dark-grey;
+					color: var(--text-muted);
 					float:left;
 				}
 
@@ -539,11 +511,11 @@ $blue: #2020ff;
 
 .markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {
 	font-weight: 700;
-	color: $black;
+	color: var(--text-normal);
 }
 
 .rpgm-raw-character-record-shet-container {
-	border: solid 1px $off-white;
+	border: solid 1px var(--background-modifier-border);
 	padding: 20px;
 
 	table {
@@ -551,11 +523,11 @@ $blue: #2020ff;
 
 		tr > th {
 			font-weight: 700;
-			color: $black;
+			color: var(--text-normal);
 		}
 
 		tr > td.untrained {
-			color: $light-grey;
+			color: var(--text-muted);
 		}
 	}
 }

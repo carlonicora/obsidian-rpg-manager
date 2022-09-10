@@ -11,7 +11,7 @@
 
 .rpgm-header {
   background-size: cover;
-  color: #fff;
+  color: var(--background-primary);
   position: relative;
   min-height: 350px;
   height: 350px;
@@ -78,7 +78,7 @@
   content: " ";
   height: 100%;
   width: 1px;
-  background-color: #d9d9d9;
+  background-color: var(--background-modifier-border);
   position: absolute;
   top: 0;
   left: 133px;
@@ -94,27 +94,27 @@
   height: 1em;
   box-sizing: border-box;
   border-radius: 50%;
-  background: #808080;
+  background: var(--text-muted);
   z-index: 1;
   margin-right: 10px;
-  border: 1px solid #808080;
+  border: 1px solid var(--text-muted);
   margin-top: 20px;
 }
 .rpgm-timeline .bullet.red {
-  border: 1px solid #ff2020;
-  background: #ff2020;
+  border: 1px solid var(--text-error);
+  background: var(--text-error);
 }
 .rpgm-timeline .bullet.green {
-  border: 1px solid #B0E8E2;
-  background: #B0E8E2;
+  border: 1px solid var(--interactive-success);
+  background: var(--interactive-success);
 }
 .rpgm-timeline .bullet.blue {
-  border: 1px solid #2020ff;
-  background: #2020ff;
+  border: 1px solid var(--background-modifier-success);
+  background: var(--background-modifier-success);
 }
 .rpgm-timeline .bullet.purple {
-  border: 1px solid #2020ff;
-  background: #B97CFC;
+  border: 1px solid var(--interactive-accent);
+  background: var(--interactive-accent);
 }
 .rpgm-timeline .event-time-container {
   width: 115px;
@@ -135,16 +135,16 @@
   margin-top: 0px;
 }
 .rpgm-timeline .event-time-container .event-type.red {
-  color: #ff2020;
+  color: var(--text-error);
 }
 .rpgm-timeline .event-time-container .event-type.green {
-  color: #B0E8E2;
+  color: var(--interactive-success);
 }
 .rpgm-timeline .event-time-container .event-type.blue {
-  color: #2020ff;
+  color: var(--background-modifier-success);
 }
 .rpgm-timeline .event-time-container .event-type.purple {
-  color: #B97CFC;
+  color: var(--interactive-accent);
 }
 .rpgm-timeline .event-details {
   margin-top: 0px;
@@ -159,22 +159,22 @@
   margin: 0;
   font-size: 0.9em;
   font-weight: 400;
-  color: #808080;
+  color: var(--text-muted);
 }
 
 .rpg-error {
-  border: solid 1px #EB8B6E;
-  background-color: #eeeeee;
+  border: solid 1px var(--text-error);
+  background-color: var(--background-secondary);
   padding: 10px 25px;
 }
 .rpg-error h3 {
-  color: #EB8B6E;
+  color: var(--text-error);
   font-size: 1.1em;
   font-weight: 400;
 }
 
 .rpgm-box {
-  border: solid 1px #d9d9d9;
+  border: solid 1px var(--background-modifier-border);
   padding: 10px 25px;
   font-size: 1em;
   margin-top: 20px;
@@ -191,13 +191,13 @@
   margin-top: -10px;
   text-align: right;
   margin-right: -20px;
-  color: #808080;
+  color: var(--text-muted);
 }
 .rpgm-box.white {
-  background-color: #fff;
+  background-color: var(--background-primary);
 }
 .rpgm-box.off-white {
-  background-color: #f9f9f9;
+  background-color: var(--background-primary-alt);
 }
 
 .rpgm-modal {
@@ -284,18 +284,6 @@
   margin-top: 10px;
 }
 
-.rpgm-button {
-  text-decoration: none;
-  border: solid 0.5px #808080;
-  font-size: 0.9em;
-  padding: 7px 20px;
-  border-radius: 5px;
-  color: #d9d9d9;
-}
-.rpgm-button :hover {
-  color: #2020ff;
-}
-
 .markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block > div .rpgm-table {
   margin-left: 0px !important;
   margin-right: 0px;
@@ -351,7 +339,7 @@
   font-weight: 100;
   font-size: 0.7em;
   font-variant-caps: small-caps;
-  color: #808080;
+  color: var(--text-muted);
 }
 .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value {
   font-weight: 300;
@@ -368,14 +356,14 @@
 
 .rpgm-header-info {
   width: 100%;
-  border: 1px solid #eeeeee;
+  border: 1px solid var(--background-modifier-border);
   margin-bottom: 40px;
 }
 .rpgm-header-info .title {
   width: 100%;
   font-weight: 400;
   font-size: 2em;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid var(--background-modifier-border);
   text-align: center;
 }
 .rpgm-header-info .title p {
@@ -396,7 +384,7 @@
   width: 100%;
   font-variant: small-caps;
   font-size: 0.8em;
-  color: #808080;
+  color: var(--text-muted);
 }
 .rpgm-header-info .container .info .longText {
   width: 100%;
@@ -405,7 +393,7 @@
   width: 100px;
   font-variant: small-caps;
   font-size: 0.8em;
-  color: #808080;
+  color: var(--text-muted);
   float: left;
 }
 .rpgm-header-info .container .info .short .shortText {
@@ -428,11 +416,11 @@
 
 .markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {
   font-weight: 700;
-  color: #202020;
+  color: var(--text-normal);
 }
 
 .rpgm-raw-character-record-shet-container {
-  border: solid 1px #eeeeee;
+  border: solid 1px var(--background-modifier-border);
   padding: 20px;
 }
 .rpgm-raw-character-record-shet-container table {
@@ -440,8 +428,8 @@
 }
 .rpgm-raw-character-record-shet-container table tr > th {
   font-weight: 700;
-  color: #202020;
+  color: var(--text-normal);
 }
 .rpgm-raw-character-record-shet-container table tr > td.untrained {
-  color: #d9d9d9;
+  color: var(--text-muted);
 }
