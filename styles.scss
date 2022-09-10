@@ -263,7 +263,7 @@ $blue: #2020ff;
 		display: flex;
 		flex-direction: column;
 		gap: 25px;
-		flex: 1 1 auto;
+		flex: 1 .5 auto;
 	}
 	.additionalElements {
 		border: solid 1px var(--background-modifier-border);
