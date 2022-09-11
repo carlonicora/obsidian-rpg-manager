@@ -15,6 +15,11 @@ export class HeaderView extends AbstractView {
 		const crsContainer = crs.createDiv({cls: 'container'});
 
 		const crsInfo = crsContainer.createDiv({cls: 'info'});
+		const crsImage = crsContainer.createDiv({cls: 'image'});
+		if (data.imgSrc == null) {
+			crsImage.addClass('invisible');
+			crsInfo.addClass('info-large');
+		}
 
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
 			let prefix = 'short';
@@ -36,7 +41,7 @@ export class HeaderView extends AbstractView {
 			}
 		});
 
-		const crsImage = crsContainer.createDiv({cls: 'image'});
+
 		if (data.imgSrc != null) {
 			const image = new Image(data.imgWidth, data.imgHeight);
 			image.src = data.imgSrc;

@@ -79,9 +79,11 @@ export class SessionModal extends AbstractModalComponent {
 	private selectSessionElements(
 		containerEl: HTMLElement
 	): void {
-		containerEl.createDiv({cls: 'title', text: 'Session'});
-		const selectionContainerEl = containerEl.createDiv({cls: 'container'});
-		containerEl.createDiv({cls: 'clear'});
+		const groupElement = containerEl.createDiv({cls: 'group'});
+
+		groupElement.createDiv({cls: 'title', text: 'Session'});
+		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
+		groupElement.createDiv({cls: 'clear'});
 
 		this.sessionEl = selectionContainerEl.createEl('select');
 

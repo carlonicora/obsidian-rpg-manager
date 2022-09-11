@@ -498,13 +498,42 @@
 			}
 		}
 
+		.info-large {
+			width: 100%;
+		}
+
 		.image {
 			width: 300px;
 			float: right;
 		}
 
+		.invisible {
+			width: 0px;
+		}
+
 		.reset {
 			clear: both;
+		}
+	}
+}
+
+.markdown-embed {
+	.rpgm-breadcrumb {
+		display: none;
+	}
+
+	.rpgm-header-info {
+		.container {
+			.info {
+				width: calc(100% - 120px);
+			}
+			.image {
+				width: 120px;
+				img {
+					width: 100px;
+					height: 100px
+				}
+			}
 		}
 	}
 }

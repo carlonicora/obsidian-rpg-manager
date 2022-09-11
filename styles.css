@@ -406,12 +406,32 @@
 .rpgm-header-info .container .info .short .reset {
   clear: both;
 }
+.rpgm-header-info .container .info-large {
+  width: 100%;
+}
 .rpgm-header-info .container .image {
   width: 300px;
   float: right;
 }
+.rpgm-header-info .container .invisible {
+  width: 0px;
+}
 .rpgm-header-info .container .reset {
   clear: both;
+}
+
+.markdown-embed .rpgm-breadcrumb {
+  display: none;
+}
+.markdown-embed .rpgm-header-info .container .info {
+  width: calc(100% - 120px);
+}
+.markdown-embed .rpgm-header-info .container .image {
+  width: 120px;
+}
+.markdown-embed .rpgm-header-info .container .image img {
+  width: 100px;
+  height: 100px;
 }
 
 .markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {

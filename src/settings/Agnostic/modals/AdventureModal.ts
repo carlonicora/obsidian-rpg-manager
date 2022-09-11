@@ -81,12 +81,13 @@ export class AdventureModal extends AbstractModalComponent {
 	private selectAdventureElements(
 		containerEl: HTMLElement
 	): void {
-		containerEl.createDiv({cls: 'title', text: 'Adventure'});
-		const selectionContainerEl = containerEl.createDiv({cls: 'container'});
-		containerEl.createDiv({cls: 'clear'});
+		const groupElement = containerEl.createDiv({cls: 'group'});
+
+		groupElement.createDiv({cls: 'title', text: 'Adventure'});
+		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
+		groupElement.createDiv({cls: 'clear'});
 
 		this.adventureEl = selectionContainerEl.createEl('select');
-
 		if (this.adventures.length > 1) {
 			this.adventureEl.createEl('option', {
 				text: '',
