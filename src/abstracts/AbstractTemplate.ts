@@ -222,6 +222,7 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		'>\n' +
 		'\n' +
 		'Do you have any enemy or person you don\'t go on well with?\n' +
+			'>\n' +
 		'\n' +
 		'What do you want to do when you "grow up"?\n' +
 		'>\n' +
@@ -230,7 +231,6 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		' 1. \n' +
 		' 2. \n' +
 		' 3. \n' +
-		' 4. \n' +
-		'>';
+		' 4. \n';
 	}
 }

@@ -2958,7 +2958,76 @@ var AbstractTemplate = class {
     return this.getHeader("Story") + "\n\n";
   }
   getPlayerCharacterDetails() {
-    return '## Backstory\n\n## Questionnaire\nWhere and when were you born?\n>\n\nWho are/were your parents?\n>1.  \n>2.  \n\nDo you have any siblings?\n>\n\nWrite a full physical description of yourself.\n>\n\nTo which social class do you belong?\n>\n\nDo you have any allergies, diseases or other physical or mental weaknesses?\n>\n\nAre you right-handed or left-handed?\n>\n\nWhat do you have in your pockets?\n> 1. \n> 2. \n> 3. \n> 4.\n\nDo you have any quirks, strange mannerism, annoying habits, or other defining characteristics?\n>\n\nWhat are you afraid of?\n>\n\nWhat defining moments have you experienced?\n>\n\nWhat things matter to you?\n>\n\nWhat do you believe in?\n>\n\nWhat is your idol?\n>\n\nWhat is your desire?\n>\n\nWhat is your "normal"?\n>\n\nWhat is your "secret"?\n>\n\nWhat do you want to do when you "grow up"?\n>\n\nWrite and answer 5 questions about your character.\n 1. \n 2. \n 3. \n 4. \n\nDo you have any allergy?\n>';
+    return `## Backstory
+
+## Questionnaire
+Where and when were you born?
+>
+
+Who are/were your parents?
+>1.  
+>2.  
+
+Do you have any siblings?
+>
+
+Write a full physical description of yourself.
+>
+
+To which social class do you belong?
+>
+
+Do you have any allergies, diseases or other physical or mental weaknesses?
+>
+
+Are you right-handed or left-handed?
+>
+
+What do you have in your pockets?
+> 1. 
+> 2. 
+> 3. 
+> 4.
+
+Do you have any quirks, strange mannerism, annoying habits, or other defining characteristics?
+>
+
+What are you afraid of?
+>
+
+What defining moments have you experienced?
+>
+
+What things matter to you?
+>
+
+What do you believe in?
+>
+
+What is your idol?
+>
+
+What is your desire?
+>
+
+What is your "normal"?
+>
+
+What is your "secret"?
+>
+
+Do you have any enemy or person you don't go on well with?
+>
+
+What do you want to do when you "grow up"?
+>
+
+Write and answer 5 questions about your character.
+ 1. 
+ 2. 
+ 3. 
+ 4. 
+`;
   }
 };
 
