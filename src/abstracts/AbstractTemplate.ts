@@ -40,7 +40,6 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		response += 'alias: []\n';
 		response += this.generateFrontmatterTags();
 		response += this.generateFrontmatterSynopsis();
-		response += this.generateFrontmatterAction();
 		response += this.generateFrontmatterGoals();
 		response += this.generateFrontmatterAdditionalInformation();
 
@@ -96,11 +95,6 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 	}
 
 	protected generateFrontmatterAdditionalInformation(
-	): string {
-		return '';
-	}
-
-	protected generateFrontmatterAction(
 	): string {
 		return '';
 	}

@@ -78,14 +78,14 @@ export class HeaderComponent extends AbstractComponent{
 					response.addElement(new ResponseHeaderElement(this.app, 'Date', data.date.toDateString(), HeaderResponseType.Short));
 				}
 			} else if (data instanceof Scene){
+				if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != ''){
+					response.addElement(new ResponseHeaderElement(this.app, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
+				}
+
 				if (data.action != null && data.action != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', data.action, HeaderResponseType.Long));
 				} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
-				}
-
-				if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != ''){
-					response.addElement(new ResponseHeaderElement(this.app, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
 				}
 			}
 		}

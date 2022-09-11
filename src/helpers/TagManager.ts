@@ -44,21 +44,23 @@ export class TagManager {
 		if (tags == null) return undefined;
 
 		let response: string|undefined;
-		
-		tags.forEach((tag: string) => {
-			if (tag.startsWith(this.dataSettings.get(DataType.Campaign) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Adventure) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Session) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Scene) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.NonPlayerCharacter) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Character) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Clue) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Location) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Faction) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Event) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Timeline) ?? '?')) response = tag;
-			if (tag.startsWith(this.dataSettings.get(DataType.Note) ?? '?')) response = tag;
-		});
+
+		if (typeof tags === 'object') {
+			tags.forEach((tag: string) => {
+				if (tag.startsWith(this.dataSettings.get(DataType.Campaign) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Adventure) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Session) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Scene) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.NonPlayerCharacter) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Character) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Clue) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Location) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Faction) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Event) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Timeline) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Note) ?? '?')) response = tag;
+			});
+		}
 
 		return response;
 	}

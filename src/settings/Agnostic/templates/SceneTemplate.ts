@@ -12,11 +12,6 @@ export class SceneTemplate extends AbstractTemplate {
 		return 'synopsis: ""\n';
 	}
 
-	protected generateFrontmatterAction(
-	): string {
-		return 'action: ""\n';
-	}
-
 	protected generateFrontmatterRelationships(
 	): string|null {
 		return ' clues: \n' +
@@ -32,8 +27,8 @@ export class SceneTemplate extends AbstractTemplate {
 
 	protected generateInitialCodeBlock(
 	): string {
-		const additionalInformation = ' trigger: \n' +
-			' action: \n';
+		const additionalInformation = ' trigger: ""\n' +
+			' action: ""\n';
 		return this.getRpgManagerCodeblock('sceneNavigation', additionalInformation);
 	}
 
@@ -43,11 +38,7 @@ export class SceneTemplate extends AbstractTemplate {
 
 	protected generateTemplate(
 	): string {
-		let response = this.getHeader('Trigger');
-		response += '\n\n';
-		response += this.getNotes();
-
-		return response;
+		return this.getNotes();
 	}
 }
 

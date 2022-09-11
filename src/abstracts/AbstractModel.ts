@@ -71,15 +71,34 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	noteCreator = function(
-			session: SessionInterface,
-			fileFactory: FileFactory,
-		){
+		session: SessionInterface,
+		fileFactory: FileFactory,
+	){
 		fileFactory.silentCreate(
 			DataType.Note,
 			'Note - ' + session.name,
 			session.campaign.campaignId,
 			session.adventure.adventureId,
 			session.sessionId
+		);
+	}
+
+	sceneCreator = function(
+		scene: SceneInterface,
+		fileFactory: FileFactory,
+	){
+		const newSceneId = scene.sceneId + 1;
+		fileFactory.silentCreate(
+			DataType.Scene,
+			's' +
+				(scene.session.sessionId < 10 ? '0' + scene.session.sessionId.toString(): scene.session.sessionId.toString()) +
+				'e' +
+				(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()) +
+				' - ',
+			scene.campaign.campaignId,
+			scene.adventure.adventureId,
+			scene.session.sessionId,
+			newSceneId,
 		);
 	}
 
@@ -128,7 +147,21 @@ export abstract class AbstractModel implements ModelInterface {
 		if (scene.previousScene != null) previousBreadcrumb = this.generateElementBreadcrumb(sceneBreadcrumb, DataType.Scene, scene.previousScene, '<< prev scene', true);
 
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
-		if (scene.nextScene != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), DataType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb != null ? false : true));
+		if (scene.nextScene != null) {
+			nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), DataType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb != null ? false : true));
+		} else {
+			const newSceneBreadcrumb = new ResponseBreadcrumb(this.app);
+			newSceneBreadcrumb.link = '';
+			newSceneBreadcrumb.linkText = '+ add scene >>';
+			newSceneBreadcrumb.functionParameters = [this.currentElement as SceneInterface, this.app.plugins.getPlugin('rpg-manager').factories.files];
+			newSceneBreadcrumb.function = this.sceneCreator;
+			if (previousBreadcrumb == null){
+				newSceneBreadcrumb.isInNewLine = true;
+				sceneBreadcrumb.nextBreadcrumb = newSceneBreadcrumb;
+			} else {
+				previousBreadcrumb.nextBreadcrumb = newSceneBreadcrumb;
+			}
+		}
 
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb));
 	}

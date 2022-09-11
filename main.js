@@ -1144,13 +1144,13 @@ var HeaderComponent = class extends AbstractComponent {
           response.addElement(new ResponseHeaderElement(this.app, "Date", data.date.toDateString(), 0 /* Short */));
         }
       } else if (data instanceof Scene) {
+        if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
+          response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
+        }
         if (data.action != null && data.action != "") {
           response.addElement(new ResponseHeaderElement(this.app, "Action", data.action, 1 /* Long */));
         } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
           response.addElement(new ResponseHeaderElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
-        }
-        if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
-          response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
         }
       }
     }
@@ -2289,6 +2289,10 @@ var AbstractModel = class {
     this.noteCreator = function(session, fileFactory) {
       fileFactory.silentCreate(10 /* Note */, "Note - " + session.name, session.campaign.campaignId, session.adventure.adventureId, session.sessionId);
     };
+    this.sceneCreator = function(scene, fileFactory) {
+      const newSceneId = scene.sceneId + 1;
+      fileFactory.silentCreate(3 /* Scene */, "s" + (scene.session.sessionId < 10 ? "0" + scene.session.sessionId.toString() : scene.session.sessionId.toString()) + "e" + (newSceneId < 10 ? "0" + newSceneId.toString() : newSceneId.toString()) + " - ", scene.campaign.campaignId, scene.adventure.adventureId, scene.session.sessionId, newSceneId);
+    };
   }
   generateBreadcrumb() {
     const response = this.generateElementBreadcrumb(null, 0 /* Campaign */, this.currentElement.campaign);
@@ -2358,8 +2362,21 @@ var AbstractModel = class {
     if (scene.previousScene != null)
       previousBreadcrumb = this.generateElementBreadcrumb(sceneBreadcrumb, 3 /* Scene */, scene.previousScene, "<< prev scene", true);
     let nextBreadcrumb = null;
-    if (scene.nextScene != null)
+    if (scene.nextScene != null) {
       nextBreadcrumb = this.generateElementBreadcrumb(previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb, 3 /* Scene */, scene.nextScene, "next scene >>", previousBreadcrumb != null ? false : true);
+    } else {
+      const newSceneBreadcrumb = new ResponseBreadcrumb(this.app);
+      newSceneBreadcrumb.link = "";
+      newSceneBreadcrumb.linkText = "+ add scene >>";
+      newSceneBreadcrumb.functionParameters = [this.currentElement, this.app.plugins.getPlugin("rpg-manager").factories.files];
+      newSceneBreadcrumb.function = this.sceneCreator;
+      if (previousBreadcrumb == null) {
+        newSceneBreadcrumb.isInNewLine = true;
+        sceneBreadcrumb.nextBreadcrumb = newSceneBreadcrumb;
+      } else {
+        previousBreadcrumb.nextBreadcrumb = newSceneBreadcrumb;
+      }
+    }
     return nextBreadcrumb != null ? nextBreadcrumb : previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb;
   }
 };
@@ -2888,7 +2905,6 @@ var AbstractTemplate = class {
     response += "alias: []\n";
     response += this.generateFrontmatterTags();
     response += this.generateFrontmatterSynopsis();
-    response += this.generateFrontmatterAction();
     response += this.generateFrontmatterGoals();
     response += this.generateFrontmatterAdditionalInformation();
     const dates = this.generateFrontmatterDates();
@@ -2926,9 +2942,6 @@ var AbstractTemplate = class {
     return "";
   }
   generateFrontmatterAdditionalInformation() {
-    return "";
-  }
-  generateFrontmatterAction() {
     return "";
   }
   generateFrontmatterGoals() {
@@ -3124,9 +3137,6 @@ var SceneTemplate = class extends AbstractTemplate {
   generateFrontmatterSynopsis() {
     return 'synopsis: ""\n';
   }
-  generateFrontmatterAction() {
-    return 'action: ""\n';
-  }
   generateFrontmatterRelationships() {
     return " clues: \n characters: \n locations: \n";
   }
@@ -3134,17 +3144,14 @@ var SceneTemplate = class extends AbstractTemplate {
     return " start: \n end: \n";
   }
   generateInitialCodeBlock() {
-    const additionalInformation = " trigger: \n action: \n";
+    const additionalInformation = ' trigger: ""\n action: ""\n';
     return this.getRpgManagerCodeblock("sceneNavigation", additionalInformation);
   }
   generateLastCodeBlock() {
     return this.getRpgManagerCodeblock("scene");
   }
   generateTemplate() {
-    let response = this.getHeader("Trigger");
-    response += "\n\n";
-    response += this.getNotes();
-    return response;
+    return this.getNotes();
   }
 };
 
@@ -4083,33 +4090,35 @@ var TagManager = class {
     if (tags == null)
       return void 0;
     let response;
-    tags.forEach((tag) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-      if (tag.startsWith((_a = this.dataSettings.get(0 /* Campaign */)) != null ? _a : "?"))
-        response = tag;
-      if (tag.startsWith((_b = this.dataSettings.get(1 /* Adventure */)) != null ? _b : "?"))
-        response = tag;
-      if (tag.startsWith((_c = this.dataSettings.get(2 /* Session */)) != null ? _c : "?"))
-        response = tag;
-      if (tag.startsWith((_d = this.dataSettings.get(3 /* Scene */)) != null ? _d : "?"))
-        response = tag;
-      if (tag.startsWith((_e = this.dataSettings.get(5 /* NonPlayerCharacter */)) != null ? _e : "?"))
-        response = tag;
-      if (tag.startsWith((_f = this.dataSettings.get(4 /* Character */)) != null ? _f : "?"))
-        response = tag;
-      if (tag.startsWith((_g = this.dataSettings.get(8 /* Clue */)) != null ? _g : "?"))
-        response = tag;
-      if (tag.startsWith((_h = this.dataSettings.get(6 /* Location */)) != null ? _h : "?"))
-        response = tag;
-      if (tag.startsWith((_i = this.dataSettings.get(9 /* Faction */)) != null ? _i : "?"))
-        response = tag;
-      if (tag.startsWith((_j = this.dataSettings.get(7 /* Event */)) != null ? _j : "?"))
-        response = tag;
-      if (tag.startsWith((_k = this.dataSettings.get(11 /* Timeline */)) != null ? _k : "?"))
-        response = tag;
-      if (tag.startsWith((_l = this.dataSettings.get(10 /* Note */)) != null ? _l : "?"))
-        response = tag;
-    });
+    if (typeof tags === "object") {
+      tags.forEach((tag) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+        if (tag.startsWith((_a = this.dataSettings.get(0 /* Campaign */)) != null ? _a : "?"))
+          response = tag;
+        if (tag.startsWith((_b = this.dataSettings.get(1 /* Adventure */)) != null ? _b : "?"))
+          response = tag;
+        if (tag.startsWith((_c = this.dataSettings.get(2 /* Session */)) != null ? _c : "?"))
+          response = tag;
+        if (tag.startsWith((_d = this.dataSettings.get(3 /* Scene */)) != null ? _d : "?"))
+          response = tag;
+        if (tag.startsWith((_e = this.dataSettings.get(5 /* NonPlayerCharacter */)) != null ? _e : "?"))
+          response = tag;
+        if (tag.startsWith((_f = this.dataSettings.get(4 /* Character */)) != null ? _f : "?"))
+          response = tag;
+        if (tag.startsWith((_g = this.dataSettings.get(8 /* Clue */)) != null ? _g : "?"))
+          response = tag;
+        if (tag.startsWith((_h = this.dataSettings.get(6 /* Location */)) != null ? _h : "?"))
+          response = tag;
+        if (tag.startsWith((_i = this.dataSettings.get(9 /* Faction */)) != null ? _i : "?"))
+          response = tag;
+        if (tag.startsWith((_j = this.dataSettings.get(7 /* Event */)) != null ? _j : "?"))
+          response = tag;
+        if (tag.startsWith((_k = this.dataSettings.get(11 /* Timeline */)) != null ? _k : "?"))
+          response = tag;
+        if (tag.startsWith((_l = this.dataSettings.get(10 /* Note */)) != null ? _l : "?"))
+          response = tag;
+      });
+    }
     return response;
   }
   getDataType(tags = void 0, tag = void 0) {
