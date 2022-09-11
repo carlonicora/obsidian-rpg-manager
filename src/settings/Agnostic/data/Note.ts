@@ -14,10 +14,10 @@ export class Note extends AbstractRpgOutlineData implements NoteInterface {
 	) {
 		super.reload(file, metadata);
 
-		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure));
+		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Adventure, this.tag));
 		if (adventure != null) {
 			this.adventure = adventure;
-			const session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Session));
+			const session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Session, this.tag));
 			if (session != null) this.sessionId = session.sessionId;
 		}
 	}

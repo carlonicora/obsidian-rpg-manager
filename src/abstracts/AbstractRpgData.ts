@@ -9,6 +9,8 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	public name: string;
 	public path: string;
 
+	public tag: string|undefined;
+
 	public links: Array<string>;
 
 	public completed: boolean;
@@ -36,6 +38,8 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		this.link = '[[' + file.basename + ']]';
 		this.name = file.basename;
 		this.path = file.path;
+
+		this.tag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(metadata.frontmatter?.tags)
 
 		this.links = [];
 

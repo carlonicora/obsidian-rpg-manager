@@ -22,10 +22,10 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 	) {
 		super.reload(file, metadata);
 
-		this.sceneId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter?.tags, this.type);
-		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure));
+		this.sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
+		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Adventure, this.tag));
 		if (adventure != null) this.adventure = adventure;
-		const session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Session));
+		const session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Session, this.tag));
 		if (session != null) this.session = session;
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);

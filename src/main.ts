@@ -4,7 +4,8 @@ import {DataType} from "./enums/DataType";
 import {RpgData} from "./data/RpgData";
 import {RpgFunctions} from "./RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
-import {RpgModal} from "./RpgModal";
+import {CreationModal} from "./modals/CreationModal";
+import {TagManager} from "./helpers/TagManager";
 
 export default class RpgManager extends Plugin {
 	/*
@@ -19,6 +20,7 @@ export default class RpgManager extends Plugin {
 	functions: RpgFunctions;
 	io: RpgData;
 	factories: RpgFactories;
+	tagManager: TagManager;
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
@@ -31,6 +33,7 @@ export default class RpgManager extends Plugin {
 		this.io = new RpgData(this.app);
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
+		this.tagManager = new TagManager(this.app);
 
 		this.registerEvents();
 		this.registerCodeBlock();
@@ -99,7 +102,7 @@ export default class RpgManager extends Plugin {
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
 				callback: () => {
-					new RpgModal(
+					new CreationModal(
 						this.app,
 						DataType[type as keyof typeof DataType],
 					).open();
@@ -114,7 +117,7 @@ export default class RpgManager extends Plugin {
 					if (activeFile != null) {
 						name = activeFile.basename;
 					}
-					new RpgModal(
+					new CreationModal(
 						this.app,
 						DataType[type as keyof typeof DataType],
 						false,

@@ -11,7 +11,7 @@ export class Adventure extends AbstractRpgOutlineData implements AdventureInterf
 	) {
 		super.reload(file, metadata);
 
-		if (metadata.frontmatter?.tags != null) this.adventureId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter?.tags, this.type);
+		if (metadata.frontmatter?.tags != null) this.adventureId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
 	}
 
 	public initialiseNeighbours(

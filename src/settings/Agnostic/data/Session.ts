@@ -21,8 +21,9 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 	) {
 		super.reload(file, metadata);
 
-		this.sessionId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter?.tags, this.type);
-		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').functions.getTagId(this.frontmatter?.tags, DataType.Adventure));
+		const tag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(metadata.frontmatter?.tags);
+		this.sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, tag);
+		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Adventure, tag));
 		if (adventure != null) this.adventure = adventure;
 		this.date = this.initialiseDate(this.frontmatter?.dates?.session);
 		this.irl = this.initialiseDate(this.frontmatter?.dates?.irl);

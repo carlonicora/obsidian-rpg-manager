@@ -11,6 +11,7 @@ export interface RpgDataInterface {
 	path: string;
 	completed: boolean;
 	links: Array<string>;
+	tag: string|undefined;
 
 	synopsis: string|null;
 	additionalInformation: string|null;

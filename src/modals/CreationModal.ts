@@ -1,10 +1,10 @@
 import {App, MarkdownView, Modal} from "obsidian";
-import {DataType} from "./enums/DataType";
-import {ModalComponentInterface} from "./interfaces/ModalComponentInterface";
-import {CampaignSetting} from "./enums/CampaignSetting";
-import {ModalInterface} from "./interfaces/ModalInterface";
+import {DataType} from "../enums/DataType";
+import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
+import {CampaignSetting} from "../enums/CampaignSetting";
+import {ModalInterface} from "../interfaces/ModalInterface";
 
-export class RpgModal extends Modal implements ModalInterface {
+export class CreationModal extends Modal implements ModalInterface {
 	public saver: ModalComponentInterface;
 
 	public button: HTMLButtonElement;

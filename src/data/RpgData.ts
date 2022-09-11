@@ -13,9 +13,11 @@ import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
+import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
 
 export class RpgData extends Component {
 	private data: RpgDataList;
+	private misconfiguredTags: Map<TFile, string> = new Map();
 
 	constructor(
 		private app: App,
@@ -34,6 +36,10 @@ export class RpgData extends Component {
 		this.loadElements(DataType.Note);
 		this.loadElements();
 		this.fillNeighbours();
+
+		if (this.misconfiguredTags.size > 0){
+			new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
+		}
 
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.refreshDataCache(file)));
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.renameDataCache(file, oldPath)));
@@ -104,43 +110,57 @@ export class RpgData extends Component {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 
 		if (metadata?.frontmatter?.tags){
-			const fileType = this.app.plugins.getPlugin('rpg-manager').functions.getDataType(metadata.frontmatter.tags);
+			const fileDataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(metadata.frontmatter?.tags);
 
-			if (fileType !== null) {
-				let settings = CampaignSetting.Agnostic;
+			if (fileDataTag !== undefined) {
+				const fileType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, fileDataTag);
 
-				if (fileType === DataType.Campaign) {
-					if (metadata?.frontmatter?.settings != null) {
-						settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
-					}
-				} else {
-					const campaignId = this.app.plugins.getPlugin('rpg-manager').functions.getTagId(metadata.frontmatter.tags, DataType.Campaign);
+				if (fileType !== undefined) {
+					let settings = CampaignSetting.Agnostic;
 
-					if (campaignId != null){
-						const campaign = this.getCampaign(campaignId);
-						if (campaign != null){
-							settings = campaign.settings;
+					if (fileType === DataType.Campaign) {
+						if (metadata?.frontmatter?.settings != null) {
+							settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
+						}
+					} else {
+						try {
+							const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, fileDataTag);
+
+							if (campaignId != null) {
+								const campaign = this.getCampaign(campaignId);
+								if (campaign != null) {
+									settings = campaign.settings;
+								}
+							}
+						} catch (e) {
+							this.misconfiguredTags.set(file, e);
+							return;
 						}
 					}
-				}
 
-				if (
-					!restrictType ||
-					(
-						(restrictedToType !== null && restrictedToType === fileType) ||
-						(restrictedToType === null && (fileType !== DataType.Campaign && fileType !== DataType.Adventure && fileType !== DataType.Session && fileType !== DataType.Scene))
-					)
-				) {
-					const element: RpgOutlineDataInterface|RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
-						settings,
-						fileType,
-						file,
-						metadata
-					);
+					if (
+						!restrictType ||
+						(
+							(restrictedToType !== null && restrictedToType === fileType) ||
+							(restrictedToType === null && (fileType !== DataType.Campaign && fileType !== DataType.Adventure && fileType !== DataType.Session && fileType !== DataType.Scene))
+						)
+					) {
+						try {
+							const element: RpgOutlineDataInterface | RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
+								settings,
+								fileType,
+								file,
+								metadata
+							);
 
-					if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
+							if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
 
-					this.data.addElement(element);
+							this.data.addElement(element);
+						} catch (e) {
+							this.misconfiguredTags.set(file, e);
+							return;
+						}
+					}
 				}
 			}
 		}

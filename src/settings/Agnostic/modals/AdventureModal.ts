@@ -130,13 +130,6 @@ export class AdventureModal extends AbstractModalComponent {
 				text: 'Additional Information for the ' + DataType[this.modal.type]
 			});
 			this.modal.additionalInformationEl.createEl('p', {text: 'Synopsis'});
-
-			this.app.workspace.
-			const editorEl = this.modal.additionalInformationEl.createDiv('editor');
-			let editor = new EditorView({
-				parent: editorEl,
-			})
-			//this.synopsisEl = this.modal.additionalInformationEl.createEl('textarea');
 		}
 		*/
 	}
