@@ -221,6 +221,8 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		'What is your "secret"?\n' +
 		'>\n' +
 		'\n' +
+		'Do you have any enemy or person you don\'t go on well with?\n' +
+		'\n' +
 		'What do you want to do when you "grow up"?\n' +
 		'>\n' +
 		'\n' +
@@ -229,8 +231,6 @@ export abstract class AbstractTemplate  implements TemplateInterface {
 		' 2. \n' +
 		' 3. \n' +
 		' 4. \n' +
-		'\n' +
-		'Do you have any allergy?\n' +
 		'>';
 	}
 }
