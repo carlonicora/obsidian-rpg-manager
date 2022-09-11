@@ -58,6 +58,11 @@ export class HeaderComponent extends AbstractComponent{
 				synopsisTitle = 'Scene Goal';
 			}
 
+			if (data.synopsis != null && data.synopsis != '') {
+				synopsis = data.synopsis;
+			}
+			response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, HeaderResponseType.Long));
+
 			if (data instanceof Clue){
 				const clueFound = data.isFound
 					? 'Clue found on ' + data.found?.toDateString()
@@ -83,11 +88,6 @@ export class HeaderComponent extends AbstractComponent{
 					response.addElement(new ResponseHeaderElement(this.app, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
 				}
 			}
-
-			if (data.synopsis != null && data.synopsis != '') {
-				synopsis = data.synopsis;
-			}
-			response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, HeaderResponseType.Long));
 		}
 
 		response.imgSrc = data.image;

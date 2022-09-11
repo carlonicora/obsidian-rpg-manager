@@ -426,12 +426,18 @@
 .markdown-embed .rpgm-header-info .container .info {
   width: calc(100% - 120px);
 }
+.markdown-embed .rpgm-header-info .container .info-large {
+  width: 100%;
+}
 .markdown-embed .rpgm-header-info .container .image {
   width: 120px;
 }
 .markdown-embed .rpgm-header-info .container .image img {
   width: 100px;
   height: 100px;
+}
+.markdown-embed .rpgm-header-info .container .invisible {
+  width: 0px;
 }
 
 .markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {

@@ -527,12 +527,22 @@
 			.info {
 				width: calc(100% - 120px);
 			}
+
+			.info-large {
+				width: 100%;
+			}
+
 			.image {
 				width: 120px;
+
 				img {
 					width: 100px;
 					height: 100px
 				}
+			}
+
+			.invisible {
+				width: 0px;
 			}
 		}
 	}

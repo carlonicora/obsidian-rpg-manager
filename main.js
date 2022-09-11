@@ -1128,6 +1128,10 @@ var HeaderComponent = class extends AbstractComponent {
       if (data instanceof Scene) {
         synopsisTitle = "Scene Goal";
       }
+      if (data.synopsis != null && data.synopsis != "") {
+        synopsis = data.synopsis;
+      }
+      response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
       if (data instanceof Clue) {
         const clueFound = data.isFound ? "Clue found on " + ((_a = data.found) == null ? void 0 : _a.toDateString()) : '<span class="rpgm-missing">Clue not found yet</span>';
         response.addElement(new ResponseHeaderElement(this.app, "Found", clueFound, 0 /* Short */));
@@ -1149,10 +1153,6 @@ var HeaderComponent = class extends AbstractComponent {
           response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
         }
       }
-      if (data.synopsis != null && data.synopsis != "") {
-        synopsis = data.synopsis;
-      }
-      response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
     }
     response.imgSrc = data.image;
     response.imgWidth = 300;
@@ -2568,6 +2568,7 @@ var SceneModel = class extends AbstractModel {
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
       return response;
     });
   }

@@ -44,6 +44,17 @@ export class SceneModel extends AbstractModel {
 			)
 		);
 
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				this.currentElement.campaign.settings,
+				'LocationTable',
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
+					this.currentElement,
+					DataType.Location,
+				),
+			)
+		);
+
 		return response;
 	}
 }
