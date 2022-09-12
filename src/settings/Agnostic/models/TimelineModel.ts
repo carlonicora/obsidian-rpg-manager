@@ -59,17 +59,21 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const events = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: EventInterface) =>
+			data.campaign != null &&
+			data.campaign.campaignId === this.currentElement.campaign.campaignId &&
 			data.type === DataType.Event &&
 			data.date != null
 		);
 
 		events.elements.forEach((event: EventInterface) => {
 			if (event.date != null) {
+				let time = (<Date>event.date).toLocaleTimeString();
+				time = time.substring(0, time.length-3);
 				timeline.elements.push(
 					new TimelineElementResponse(
 						event.date,
 						(<Date>event.date).toDateString(),
-						(<Date>event.date).toTimeString(),
+						time,
 						'event',
 						event.synopsis ?? '',
 						event.link,
@@ -83,6 +87,8 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const clues = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: ClueInterface) =>
+			data.campaign != null &&
+			data.campaign.campaignId === this.currentElement.campaign.campaignId &&
 			data.type === DataType.Clue &&
 			data.isFound === true
 		);
@@ -106,6 +112,8 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const characters = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: CharacterInterface) =>
+			data.campaign != null &&
+			data.campaign.campaignId === this.currentElement.campaign.campaignId &&
 			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
 			data.dob != null
 		);
@@ -129,6 +137,8 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const characters = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: CharacterInterface) =>
+			data.campaign != null &&
+			data.campaign.campaignId === this.currentElement.campaign.campaignId &&
 			(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
 			data.death != null
 		);
@@ -152,6 +162,8 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const sessions = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: SessionInterface) =>
+			data.campaign != null &&
+			data.campaign.campaignId === this.currentElement.campaign.campaignId &&
 			data.type === DataType.Session &&
 			data.date != null
 		);

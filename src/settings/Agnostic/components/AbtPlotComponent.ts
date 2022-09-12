@@ -11,7 +11,18 @@ export class AbtPlotComponent extends AbstractComponent {
 		title:string|null,
 		additionalInformation: any|null,
 	): ResponseElementInterface|null {
-		if (additionalInformation == null) return null;
+		if (additionalInformation == null ||
+			additionalInformation.need != null ||
+			additionalInformation.and != null ||
+			additionalInformation.but != null ||
+			additionalInformation.therefore != null ||
+			(
+				additionalInformation.need === '' &&
+				additionalInformation.and === '' &&
+				additionalInformation.but === '' &&
+				additionalInformation.therefore === ''
+			)
+		) return null;
 
 		const response = new ResponseTable(this.app);
 
@@ -34,25 +45,6 @@ export class AbtPlotComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**THEREFORE** ', ContentType.Markdown, true),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.therefore ? additionalInformation.therefore : ''), ContentType.Markdown),
 		]);
-
-		/*
-		const response = new ResponseAbtPlot(this.app);
-		response.need = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
-			'**NEED** ' + additionalInformation.need,
-			ContentType.Markdown,
-		);
-		response.and = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
-			'**AND** ' + additionalInformation.and,
-			ContentType.Markdown
-		);
-		response.but = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
-			'**BUT** ' + additionalInformation.but,
-			ContentType.Markdown
-		);
-		response.therefore = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(
-			'**THEREFORE** ' + additionalInformation.therefore, ContentType.Markdown
-		);
-		*/
 
 		return response;
 	}

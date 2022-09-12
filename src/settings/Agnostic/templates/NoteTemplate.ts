@@ -1,25 +1,23 @@
+import {TemplateInterface} from "../../../interfaces/TemplateInterface";
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
 import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 
-export class NoteTemplate extends AbstractTemplate {
-	protected generateFrontmatterTags(): string {
-		return 'tags: [' + this.app.plugins.getPlugin('rpg-manager').settings.noteTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId +']\n';
-	}
-
-	protected generateInitialCodeBlock(
-	): string {
-		return this.getRpgManagerCodeblock('note');
-	}
-
-	protected generateTemplate(): string {
+export class NoteTemplate extends AbstractTemplate implements TemplateInterface {
+	public getContent(): string {
 		const characters = this.app.plugins.getPlugin('rpg-manager').io.getPlayerCharacterList(this.campaignId);
 
+		let possibleRecappers = '';
+		(characters.elements || []).forEach((character: CharacterInterface) => {
+			possibleRecappers += character.link + '/';
+		});
+		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
+
 		let response = '---\n';
-		response += this.getHeader('GM Notes');
-		response += '- \n\n';
+		response += 'Recap: ' + possibleRecappers + '\n\n';
 		response += '---\n';
-		response += this.getHeader('Feedback');
-		response += '\n';
+		response += '## GM Notes\n- \n\n';
+		response += '---\n';
+		response += '## Feedback \n';
 		response += this.generateFeedback('GM');
 		(characters.elements || []).forEach((character: CharacterInterface) => {
 			response += this.generateFeedback(character.link);

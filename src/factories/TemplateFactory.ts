@@ -1,34 +1,36 @@
-import {CampaignTemplate} from "../settings/Agnostic/templates/CampaignTemplate";
-import {AdventureTemplate} from "../settings/Agnostic/templates/AdventureTemplate";
-import {SessionTemplate} from "../settings/Agnostic/templates/SessionTemplate";
-import {SceneTemplate} from "../settings/Agnostic/templates/SceneTemplate";
-import {CharacterTemplate} from "../settings/Agnostic/templates/CharacterTemplate";
-import {NonPlayerCharacterTemplate} from "../settings/Agnostic/templates/NonPlayerCharacterTemplate";
-import {LocationTemplate} from "../settings/Agnostic/templates/LocationTemplate";
-import {EventTemplate} from "../settings/Agnostic/templates/EventTemplate";
-import {ClueTemplate} from "../settings/Agnostic/templates/ClueTemplate";
-import {FactionTemplate} from "../settings/Agnostic/templates/FactionTemplate";
+import {CampaignTemplateFactory} from "../settings/Agnostic/factories/CampaignTemplateFactory";
+import {AdventureTemplateFactory} from "../settings/Agnostic/factories/AdventureTemplateFactory";
+import {SessionTemplateFactory} from "../settings/Agnostic/factories/SessionTemplateFactory";
+import {SceneTemplateFactory} from "../settings/Agnostic/factories/SceneTemplateFactory";
+import {CharacterTemplateFactory} from "../settings/Agnostic/factories/CharacterTemplateFactory";
+import {NonPlayerCharacterTemplateFactory} from "../settings/Agnostic/factories/NonPlayerCharacterTemplateFactory";
+import {LocationTemplateFactory} from "../settings/Agnostic/factories/LocationTemplateFactory";
+import {EventTemplateFactory} from "../settings/Agnostic/factories/EventTemplateFactory";
+import {ClueTemplateFactory} from "../settings/Agnostic/factories/ClueTemplateFactory";
+import {FactionTemplateFactory} from "../settings/Agnostic/factories/FactionTemplateFactory";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
-import {NoteTemplate} from "../settings/Agnostic/templates/NoteTemplate";
+import {NoteTemplateFactory} from "../settings/Agnostic/factories/NoteTemplateFactory";
 import {VampireNonPlayerCharacterTemplate} from "../settings/Vampire/templates/VampireNonPlayerCharacterTemplate";
 import {VampireCharacterTemplate} from "../settings/Vampire/templates/VampireCharacterTemplate";
 import {RawCampaignTemplate} from "../settings/Raw/templates/RawCampaignTemplate";
 import {VampireCampaignTemplate} from "../settings/Vampire/templates/VampireCampaignTemplate";
+import {TimelineTemplateFactory} from "../settings/Agnostic/factories/TimelineTemplateFactory";
 
 const TemplatesMap = {
-	AgnosticCampaign: CampaignTemplate,
-	AgnosticAdventure: AdventureTemplate,
-	AgnosticSession: SessionTemplate,
-	AgnosticScene: SceneTemplate,
-	AgnosticCharacter: CharacterTemplate,
-	AgnosticNonPlayerCharacter: NonPlayerCharacterTemplate,
-	AgnosticLocation: LocationTemplate,
-	AgnosticEvent: EventTemplate,
-	AgnosticClue: ClueTemplate,
-	AgnosticFaction: FactionTemplate,
-	AgnosticNote: NoteTemplate,
+	AgnosticCampaign: CampaignTemplateFactory,
+	AgnosticAdventure: AdventureTemplateFactory,
+	AgnosticSession: SessionTemplateFactory,
+	AgnosticScene: SceneTemplateFactory,
+	AgnosticCharacter: CharacterTemplateFactory,
+	AgnosticNonPlayerCharacter: NonPlayerCharacterTemplateFactory,
+	AgnosticLocation: LocationTemplateFactory,
+	AgnosticEvent: EventTemplateFactory,
+	AgnosticClue: ClueTemplateFactory,
+	AgnosticFaction: FactionTemplateFactory,
+	AgnosticNote: NoteTemplateFactory,
+	AgnosticTimeline: TimelineTemplateFactory,
 	VampireCharacter: VampireCharacterTemplate,
 	VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate,
 	RawCampaign: RawCampaignTemplate,
@@ -44,7 +46,7 @@ export class TemplateFactory extends AbstractFactory {
 	public create<K extends TemplateKeys>(
 		settings: CampaignSetting,
 		type: DataType,
-		createFrontMatterOnly: boolean,
+		templateName: string,
 		name: string,
 		campaignId: number|null,
 		adventureId: number|null,
@@ -56,6 +58,6 @@ export class TemplateFactory extends AbstractFactory {
 		if (TemplatesMap[templateKey] == null && settings !== CampaignSetting.Agnostic){
 			templateKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleTemplateKey<K>;
 		}
-		return new TemplatesMap[templateKey](this.app, createFrontMatterOnly, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
+		return new TemplatesMap[templateKey](this.app, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
 	}
 }

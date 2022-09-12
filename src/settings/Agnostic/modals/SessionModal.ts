@@ -59,7 +59,7 @@ export class SessionModal extends AbstractModalComponent {
 
 		this.modal.sceneModal.addElement(
 			containerEl,
-		)
+		);
 	}
 
 	public validate(

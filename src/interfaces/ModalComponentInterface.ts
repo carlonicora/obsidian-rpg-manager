@@ -10,7 +10,7 @@ export interface ModalComponentInterface {
 		settings: CampaignSetting,
 		type: DataType,
 		create: boolean,
-		createFrontMatterOnly: boolean,
+		templateName: string,
 		name: string,
 		campaignId: number,
 		adventureId: number|null,

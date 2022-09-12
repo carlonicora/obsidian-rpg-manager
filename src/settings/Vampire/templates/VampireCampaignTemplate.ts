@@ -1,8 +1,27 @@
-import {CampaignTemplate} from "../../Agnostic/templates/CampaignTemplate";
+import {CampaignTemplateFactory} from "../../Agnostic/factories/CampaignTemplateFactory";
+import {RpgCodeBlockInterface} from "../../../interfaces/RpgCodeBlockInterface";
 
-export class VampireCampaignTemplate extends CampaignTemplate {
-	protected generateFrontmatterAdditionalInformation(
-	): string {
-		return 'settings: Vampire\n';
+export class VampireCampaignTemplate extends CampaignTemplateFactory {
+	public addFrontmatterData(
+		frontmatter: any,
+	): void {
 	}
+
+	public generateInitialCodeBlock(
+	): RpgCodeBlockInterface|undefined {
+		return undefined;
+	}
+
+	public generateLastCodeBlock(
+	): RpgCodeBlockInterface|undefined {
+		return undefined;
+	}
+
+/*
+protected generateFrontmatterAdditionalInformation(
+): string {
+	return 'settings: Vampire\n';
+}
+
+ */
 }

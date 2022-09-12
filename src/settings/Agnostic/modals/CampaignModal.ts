@@ -55,7 +55,7 @@ export class CampaignModal extends AbstractModalComponent {
 	public async loadChild(
 		containerEl: HTMLElement
 	): Promise<void> {
-		if (this.modal.type !== DataType.Adventure && this.modal.type !== DataType.Session && this.modal.type !== DataType.Scene) {
+		if (this.modal.type !== DataType.Adventure && this.modal.type !== DataType.Session && this.modal.type !== DataType.Scene && this.modal.type !== DataType.Note) {
 			this.modal.elementModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
 				this.modal.settings,
 				this.modal.type,

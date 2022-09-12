@@ -1,9 +1,28 @@
-import {CampaignTemplate} from "../../Agnostic/templates/CampaignTemplate";
+import {CampaignTemplateFactory} from "../../Agnostic/factories/CampaignTemplateFactory";
+import {RpgCodeBlockInterface} from "../../../interfaces/RpgCodeBlockInterface";
 
-export class RawCampaignTemplate extends CampaignTemplate {
-	protected generateFrontmatterAdditionalInformation(
-	): string {
-		return 'settings: Raw\n' +
-			'apiCampaignKey: \n';
+export class RawCampaignTemplate extends CampaignTemplateFactory {
+	public addFrontmatterData(
+		frontmatter: any,
+	): void {
 	}
+
+	public generateInitialCodeBlock(
+	): RpgCodeBlockInterface|undefined {
+		return undefined;
+	}
+
+	public generateLastCodeBlock(
+	): RpgCodeBlockInterface|undefined {
+		return undefined;
+	}
+
+/*
+protected generateFrontmatterAdditionalInformation(
+): string {
+	return 'settings: Raw\n' +
+		'apiCampaignKey: \n';
+}
+
+ */
 }

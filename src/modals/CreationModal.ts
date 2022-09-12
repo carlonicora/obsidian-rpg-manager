@@ -1,8 +1,9 @@
-import {App, MarkdownView, Modal} from "obsidian";
+import {App, CachedMetadata, MarkdownView, Modal, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalInterface} from "../interfaces/ModalInterface";
+import {TemplateInterface} from "../interfaces/TemplateInterface";
 
 export class CreationModal extends Modal implements ModalInterface {
 	public saver: ModalComponentInterface;
@@ -12,6 +13,7 @@ export class CreationModal extends Modal implements ModalInterface {
 	public titleError: HTMLParagraphElement;
 	public createFrontMatterOnly: HTMLInputElement;
 	public additionalInformationEl: HTMLDivElement;
+	public templateEl: HTMLSelectElement;
 
 	public campaignId: number;
 	public adventureId: number|null;
@@ -24,6 +26,11 @@ export class CreationModal extends Modal implements ModalInterface {
 	public sessionModal: ModalComponentInterface;
 	public sceneModal: ModalComponentInterface;
 	public elementModal: ModalComponentInterface;
+
+	public availableSpecificTemplates: Array<TFile> = [];
+	public availableGenericTemplates: Array<TFile> = [];
+
+	private internalTemplates: Map<DataType, TemplateInterface>;
 
 	constructor(
 		public app: App,
@@ -39,6 +46,24 @@ export class CreationModal extends Modal implements ModalInterface {
 		if (campaignId != null) this.campaignId = campaignId;
 		if (adventureId != null) this.adventureId = adventureId;
 		if (sessionId != null) this.sessionId = sessionId;
+
+		this.app.vault.getFiles()
+			.filter((file: TFile) =>
+				file.parent.path === this.app.plugins.getPlugin('rpg-manager').settings.templateFolder
+			)
+			.forEach((file: TFile) => {
+				const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+				if (metadata != null) {
+					if (metadata.frontmatter != null && metadata.frontmatter?.tags != null) {
+						const templateType = this.app.plugins.getPlugin('rpg-manager').tagManager.getTemplateDataType(metadata.frontmatter?.tags);
+						if (templateType == undefined) this.availableGenericTemplates.push(file);
+						if (templateType === this.type) this.availableSpecificTemplates.push(file);
+					} else {
+						this.availableGenericTemplates.push(file);
+					}
+				}
+			});
+
 	}
 
 	onOpen() {
@@ -70,6 +95,55 @@ export class CreationModal extends Modal implements ModalInterface {
 		}
 		this.titleError = navigationEl.createEl('p', {cls: 'error', text: 'Please specify a valid title'});
 
+		//Template Selection
+		const selectionTitleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
+		selectionTitleEl.createEl('label', {text: 'Template to use'});
+		this.templateEl = selectionTitleEl.createEl('select');
+		this.templateEl.createEl('option', {
+			text: '',
+			value: '',
+		}).selected = true;
+
+
+		this.templateEl.createEl('option', {
+			text: 'RpgManager default ' + DataType[this.type] + ' template',
+			value: 'internal' + DataType[this.type],
+		})
+		this.templateEl.createEl('option', {
+			text: '',
+			value: '',
+		})
+
+		if (this.availableSpecificTemplates.length > 0) {
+			const templateOptionEl = this.templateEl.createEl('option', {
+				text: DataType[this.type] + '-specific templates',
+			});
+			templateOptionEl.disabled = true;
+			this.availableSpecificTemplates.forEach((file: TFile) => {
+				this.templateEl.createEl('option', {
+					text: file.basename,
+					value: file.path,
+				});
+			});
+			this.templateEl.createEl('option', {
+				text: '',
+				value: '',
+			});
+		}
+		if (this.availableGenericTemplates.length > 0){
+
+			const templateOptionEl = this.templateEl.createEl('option', {
+				text: 'Generic templates',
+			});
+			templateOptionEl.disabled = true;
+			this.availableGenericTemplates.forEach((file: TFile) => {
+				this.templateEl.createEl('option', {
+					text: file.basename,
+					value: file.path,
+				});
+			});
+		}
+
 		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
 			this.settings,
 			DataType.Campaign,
@@ -78,13 +152,6 @@ export class CreationModal extends Modal implements ModalInterface {
 
 		const childElement = navigationEl.createDiv();
 
-		//Checkbox
-		const cfmo = navigationEl.createDiv({cls: 'createFrontMatterOnly'});
-		this.createFrontMatterOnly = cfmo.createEl('input', {type: 'checkbox'});
-		this.createFrontMatterOnly.id = 'createFrontMatterOnly';
-
-		const labelFrontMatterOnly = cfmo.createEl('label', {text: 'Create Frontmatter only'});
-		labelFrontMatterOnly.htmlFor = 'createFrontMatterOnly';
 
 		//Create Button
 		this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
@@ -124,7 +191,7 @@ export class CreationModal extends Modal implements ModalInterface {
 			this.settings,
 			this.type,
 			this.create,
-			this.createFrontMatterOnly.checked,
+			this.templateEl.value,
 			this.title.value,
 			this.campaignId,
 			this.adventureId,

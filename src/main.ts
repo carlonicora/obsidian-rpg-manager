@@ -1,4 +1,13 @@
-import {addIcon, App, Component, MarkdownPostProcessorContext, Plugin, PluginSettingTab, Setting,} from 'obsidian';
+import {
+	addIcon,
+	App,
+	Component, DropdownComponent,
+	MarkdownPostProcessorContext,
+	Plugin,
+	PluginSettingTab,
+	Setting, TAbstractFile,
+	TFolder,
+} from 'obsidian';
 import {RpgController} from "./RpgController";
 import {DataType} from "./enums/DataType";
 import {RpgData} from "./data/RpgData";
@@ -40,6 +49,26 @@ export default class RpgManager extends Plugin {
 		this.registerEvents();
 		this.registerCodeBlock();
 		this.registerCommands();
+	}
+
+	private padTo2Digits(num: number) {
+		return num.toString().padStart(2, '0');
+	}
+
+	private formatDate(date: Date) {
+		return (
+			[
+				date.getFullYear(),
+				this.padTo2Digits(date.getMonth() + 1),
+				this.padTo2Digits(date.getDate()),
+			].join('-') +
+			' ' +
+			[
+				this.padTo2Digits(date.getHours()),
+				this.padTo2Digits(date.getMinutes()),
+				this.padTo2Digits(date.getSeconds()),
+			].join(':')
+		);
 	}
 
 	async onLayoutReady(){
@@ -145,6 +174,7 @@ export interface RpgManagerSettings {
 	timelineTag: string;
 	noteTag: string;
 	automaticMove: boolean;
+	templateFolder: string;
 }
 
 export const DEFAULT_SETTINGS: RpgManagerSettings = {
@@ -161,6 +191,7 @@ export const DEFAULT_SETTINGS: RpgManagerSettings = {
 	timelineTag: 'rpgm/element/timeline',
 	noteTag: 'rpgm/outline/note',
 	automaticMove: true,
+	templateFolder: '',
 }
 
 export class RpgManagerSettingTab extends PluginSettingTab {
@@ -171,11 +202,53 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
+	private fillOptionsWithFolders(
+		dropdown: DropdownComponent,
+		parent: TFolder|undefined = undefined,
+	): void {
+		let folderList: TAbstractFile[] = [];
+		if (parent != undefined) {
+			folderList = parent.children.filter((file: TAbstractFile) => file instanceof TFolder);
+		} else {
+			folderList = this.app.vault.getRoot().children.filter((file: TAbstractFile) => file instanceof TFolder);
+		}
+
+		folderList.forEach((folder: TFolder) => {
+			dropdown.addOption(folder.path, folder.path);
+			this.fillOptionsWithFolders(dropdown, folder);
+		});
+	}
+
 	display(): void {
 		const {containerEl} = this;
 
 		containerEl.empty();
 		containerEl.createEl('h2', {text: 'CampaignSetting for Role Playing Game Manager'});
+
+		containerEl.createEl('h3', {text: 'Templates'});
+		containerEl.createEl('span', {text: createFragment(frag => {
+				frag.appendText('Manage the folder RPG Manager can read the templates from');
+				frag.createEl('br');
+				frag.appendText(' ');
+			})});
+
+		new Setting(this.containerEl)
+			.setName("Templates folder")
+			.setDesc(createFragment(frag => {
+				frag.appendText('Select the folder in which you keep the templates for RPG Manager.');
+				frag.createEl('br');
+				frag.appendText('If you leave this value empty, the creation of outlines and elements won\'t have any additional information apart from the frontmatter and the codeblocks');
+				frag.createEl('br');
+				frag.appendText(' ');
+			}))
+			.addDropdown(dropdown => {
+				dropdown.addOption('', '');
+				this.fillOptionsWithFolders(dropdown);
+
+				dropdown.setValue(this.plugin.settings.templateFolder);
+
+				dropdown.onChange(async value => await this.plugin.updateSettings({templateFolder: value}));
+			});
 
 		containerEl.createEl('h3', {text: 'Automations'});
 		containerEl.createEl('span', {text: createFragment(frag => {

@@ -1,3 +1,3 @@
 export interface TemplateInterface {
-	generateData(): string;
+	getContent(): string;
 }

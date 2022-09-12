@@ -37,6 +37,32 @@ export class TagManager {
 		this.requiredIds.set(DataType.Note, [DataType.Campaign, DataType.Adventure, DataType.Session]);
 		this.requiredIds.set(DataType.Timeline, [DataType.Campaign]);
 	}
+
+	public getTemplateDataType(
+		tags: Array<string>|null,
+	): DataType|undefined {
+		if (tags == null) return undefined;
+
+		let response: DataType|undefined;
+		tags.forEach((tag: string) => {
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Campaign].toLowerCase())) response = DataType.Campaign;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Adventure].toLowerCase())) response = DataType.Adventure;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Session].toLowerCase())) response = DataType.Session;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Scene].toLowerCase())) response = DataType.Scene;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.NonPlayerCharacter].toLowerCase())) response = DataType.NonPlayerCharacter;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Character].toLowerCase())) response = DataType.Character;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Clue].toLowerCase())) response = DataType.Clue;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Location].toLowerCase())) response = DataType.Location;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Faction].toLowerCase())) response = DataType.Faction;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Event].toLowerCase())) response = DataType.Event;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Timeline].toLowerCase())) response = DataType.Timeline;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Note].toLowerCase())) response = DataType.Note;
+		});
+
+		return response;
+	}
+
+
 	
 	public getDataTag(
 		tags: Array<string>|null,

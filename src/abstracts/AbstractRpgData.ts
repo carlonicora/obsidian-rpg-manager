@@ -90,6 +90,10 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	protected initialiseDate(
 		date: string|null,
 	): Date|null {
-		return date ? new Date(date) : null;
+		if (date == null) return null;
+
+		const response = new Date(date);
+		response.setTime(response.getTime() + response.getTimezoneOffset() * 60 * 1000);
+		return response;
 	}
 }

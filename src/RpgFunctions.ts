@@ -10,40 +10,10 @@ export class RpgFunctions {
 	}
 
 	private initialiseRoots() {
-		if (this.app.vault.getFiles().length !== 0) {
-			const filePath = this.app.vault.getFiles()[0].path;
-
-			let slashCount = 0;
-			let p = filePath.indexOf('/');
-			while (p !== -1) {
-				slashCount++;
-				p = filePath.indexOf('/', p + 1);
-			}
-
-			slashCount++;
-			const file = this.app.vault.getAbstractFileByPath(filePath);
-
-			if (file instanceof TFile) {
-				this.root = this.app.vault.getResourcePath(file);
-			}
-
-			if (this.root === null) {
-				console.log('Rpg Manager failed to find the root folder!');
-				return;
-			}
-
-			if (this.root.includes("?")) {
-				this.root = this.root.substring(0, this.root.lastIndexOf("?"));
-			}
-
-			for (let removedSlash = slashCount; removedSlash > 0; removedSlash--) {
-				this.root = this.root.slice(0, this.root.lastIndexOf('/'));
-			}
-
-			if (!this.root.endsWith("/")) {
-				this.root += "/";
-			}
-		}
+		const file = this.app.vault.getAbstractFileByPath('/');
+		this.root = this.app.vault.getResourcePath(file as TFile);
+		if (this.root.includes("?")) this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+		if (!this.root.endsWith("/")) this.root += "/";
 	}
 
 	private fileExists(path: string): boolean {

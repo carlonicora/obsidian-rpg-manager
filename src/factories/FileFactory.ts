@@ -9,7 +9,7 @@ export class FileFactory extends AbstractFactory {
 		settings: CampaignSetting,
 		type: DataType,
 		create: boolean,
-		createFrontMatterOnly: boolean,
+		templateName: string,
 		name: string,
 		campaignId: number|null=null,
 		adventureId: number|null = null,
@@ -30,7 +30,7 @@ export class FileFactory extends AbstractFactory {
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
-			createFrontMatterOnly,
+			templateName,
 			name,
 			campaignId,
 			adventureId,
@@ -39,29 +39,42 @@ export class FileFactory extends AbstractFactory {
 			additionalInformation,
 		);
 
-		const data: string = template.generateData();
-
-
 		const fileName = await this.generateFilePath(type, folder, name);
 
-		if (create) {
-			const newFile = await app.vault.create(fileName, data);
-			const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
-			const leaf = app.workspace.getLeaf((currentLeaf != null));
-			await leaf.openFile(newFile);
-		} else {
-			const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-			if (activeView != null) {
-				const editor = activeView.editor;
-				editor.setValue(data + '\n' + editor.getValue());
+		template.generateData()
+			.then((data: string) => {
+				if (create) {
+					this.createNewFile(data, fileName);
+				} else {
+					this.editExistingFile(data, fileName);
+				}
+			});
+	}
 
-				let file = activeView.file;
-				await this.app.fileManager.renameFile(file, fileName);
-				file = activeView.file;
+	private async createNewFile(
+		data: string,
+		fileName: string,
+	): Promise<void> {
+		const newFile = await app.vault.create(fileName, data);
+		const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
+		const leaf = app.workspace.getLeaf((currentLeaf != null));
+		await leaf.openFile(newFile);
+	}
 
-				activeView.leaf.detach();
-				app.workspace.getLeaf(true).openFile(file);
-			}
+	private async editExistingFile(
+		data: string,
+		fileName: string,
+	): Promise<void> {
+		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+		if (activeView != null) {
+			const editor = activeView.editor;
+			editor.setValue(data + '\n' + editor.getValue());
+
+			let file = activeView.file;
+			await this.app.fileManager.renameFile(file, fileName);
+			file = activeView.file;
+
+			app.workspace.getLeaf().openFile(file);
 		}
 	}
 
@@ -85,7 +98,7 @@ export class FileFactory extends AbstractFactory {
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
-			false,
+			'',
 			name,
 			campaignId,
 			adventureId,
@@ -95,7 +108,7 @@ export class FileFactory extends AbstractFactory {
 
 		const fileName = await this.generateFilePath(type, folder, name);
 
-		const data: string = template.generateData();
+		const data: string = await template.generateData();
 		const newFile = await app.vault.create(fileName, data);
 		const leaf = app.workspace.getLeaf(true);
 		await leaf.openFile(newFile);
@@ -111,7 +124,7 @@ export class FileFactory extends AbstractFactory {
 		if (this.app.plugins.getPlugin('rpg-manager').settings.automaticMove){
 			let fullPath: string;
 			if (type !== DataType.Campaign) {
-				fullPath = folder.substring(1) + DataType[type] + 's';
+				fullPath = folder + DataType[type] + 's';
 				if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
 					await app.vault.createFolder(fullPath);
 				}
