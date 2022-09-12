@@ -159,6 +159,7 @@ export interface RpgManagerSettings {
 	noteTag: string;
 	automaticMove: boolean;
 	templateFolder: string;
+	musicTag: string;
 }
 
 export const DEFAULT_SETTINGS: RpgManagerSettings = {
@@ -176,6 +177,7 @@ export const DEFAULT_SETTINGS: RpgManagerSettings = {
 	noteTag: 'rpgm/outline/note',
 	automaticMove: true,
 	templateFolder: '',
+	musicTag: 'rpgm/element/music',
 }
 
 export class RpgManagerSettingTab extends PluginSettingTab {
@@ -449,6 +451,18 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 					.onChange(async value => {
 						if (value.length == 0) return;
 						await this.plugin.updateSettings({ noteTag: value });
+					})
+			);
+
+		new Setting(this.containerEl)
+			.setName("Music Tag")
+			.addText(text =>
+				text
+					.setPlaceholder('rpgm/element/music')
+					.setValue(this.plugin.settings.musicTag)
+					.onChange(async value => {
+						if (value.length == 0) return;
+						await this.plugin.updateSettings({ musicTag: value });
 					})
 			);
 	}

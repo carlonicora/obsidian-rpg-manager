@@ -16,6 +16,9 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 			session: {},
 			irl: {},
 		}
+		frontmatter.relationships = {
+			music: {},
+		};
 	}
 
 	public generateInitialCodeBlock(

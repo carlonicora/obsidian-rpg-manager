@@ -71,6 +71,7 @@ var DataType = /* @__PURE__ */ ((DataType2) => {
   DataType2[DataType2["Faction"] = 9] = "Faction";
   DataType2[DataType2["Note"] = 10] = "Note";
   DataType2[DataType2["Timeline"] = 11] = "Timeline";
+  DataType2[DataType2["Music"] = 12] = "Music";
   return DataType2;
 })(DataType || {});
 
@@ -1563,6 +1564,31 @@ var RawCharacterRecordSheetComponent = class extends AbstractComponent {
   }
 };
 
+// src/settings/Agnostic/components/MusicTableComponent.ts
+var MusicTableComponent = class extends AbstractComponent {
+  generateData(data, title) {
+    if (data.length === 0) {
+      return null;
+    }
+    const response = new ResponseTable(this.app);
+    response.addTitle(title ? title : "Music");
+    response.addHeaders([
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Music", 0 /* String */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("url", 0 /* String */),
+      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+    ]);
+    data.forEach((music) => {
+      var _a, _b;
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(music.link, 2 /* Link */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = music.url) != null ? _a : '<span class="rpgm-missing">No URL provided</span>', 4 /* Markdown */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = music.additionalInformation) != null ? _b : music.synopsis, 4 /* Markdown */)
+      ]);
+    });
+    return response;
+  }
+};
+
 // src/factories/ComponentFactory.ts
 var ComponentsMap = {
   AgnosticSessionTable: SessionTableComponent,
@@ -1581,7 +1607,8 @@ var ComponentsMap = {
   AgnosticStoryCirclePlot: StoryCirclePlotComponent,
   VampireCharacterTable: VampireCharacterTableComponent,
   VampireHeader: VampireHeaderComponent,
-  RawCharacterRecordSheet: RawCharacterRecordSheetComponent
+  RawCharacterRecordSheet: RawCharacterRecordSheetComponent,
+  AgnosticMusicTable: MusicTableComponent
 };
 var ComponentFactory = class extends AbstractFactory {
   create(settings, type, data, title = null, additionalInformation = null) {
@@ -1761,6 +1788,15 @@ var RawCampaign = class extends Campaign {
   }
 };
 
+// src/settings/Agnostic/data/Music.ts
+var Music = class extends AbstractRpgElementData {
+  reload(file, metadata) {
+    var _a;
+    super.reload(file, metadata);
+    this.url = (_a = this.frontmatter) == null ? void 0 : _a.url;
+  }
+};
+
 // src/factories/DataFactory.ts
 var DatasMap = {
   AgnosticCampaign: Campaign,
@@ -1777,7 +1813,8 @@ var DatasMap = {
   AgnosticNote: Note,
   VampireCharacter,
   VampireNonPlayerCharacter: VampireCharacter,
-  RawCampaign
+  RawCampaign,
+  AgnosticMusic: Music
 };
 var DataFactory = class extends AbstractFactory {
   create(settings, type, file, metadata) {
@@ -1865,7 +1902,7 @@ var FileFactory = class extends AbstractFactory {
         let fullPath;
         if (type !== 0 /* Campaign */) {
           fullPath = folder + DataType[type] + "s";
-          if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
+          if (this.app.vault.getAbstractFileByPath(fullPath.substring(1)) == null) {
             yield app.vault.createFolder(fullPath);
           }
         } else {
@@ -2395,6 +2432,28 @@ var TimelineModal = class extends AbstractModalComponent {
   }
 };
 
+// src/settings/Agnostic/modals/MusicModal.ts
+var MusicModal = class extends AbstractModalComponent {
+  addElement(contentEl) {
+    return __async(this, null, function* () {
+      contentEl.createDiv({ cls: "musicContainer" });
+      this.modal.saver = this;
+      this.modal.enableButton();
+    });
+  }
+  loadChild(containerEl) {
+    return __async(this, null, function* () {
+    });
+  }
+  validate() {
+    return true;
+  }
+  addAdditionalElements() {
+    return __async(this, null, function* () {
+    });
+  }
+};
+
 // src/factories/ModalFactory.ts
 var ModalsMap = {
   AgnosticCampaign: CampaignModal,
@@ -2408,7 +2467,8 @@ var ModalsMap = {
   AgnosticLocation: LocationModal,
   AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
   AgnosticNote: NoteModal,
-  AgnosticTimeline: TimelineModal
+  AgnosticTimeline: TimelineModal,
+  AgnosticMusic: MusicModal
 };
 var ModalFactory = class extends AbstractFactory {
   create(settings, type, modal) {
@@ -2736,6 +2796,7 @@ var SceneModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
@@ -2762,6 +2823,7 @@ var SessionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
       response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
       return response;
     });
@@ -2963,6 +3025,21 @@ var RawNpcModel = class extends NpcModel {
   }
 };
 
+// src/settings/Agnostic/models/MusicModel.ts
+var MusicModel = class extends AbstractModel {
+  generateData() {
+    return __async(this, null, function* () {
+      const response = new ResponseData();
+      response.addElement(this.generateBreadcrumb());
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 2 /* Session */, 12 /* Music */)));
+      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 2 /* Session */, 12 /* Music */)));
+      return response;
+    });
+  }
+};
+
 // src/factories/ModelFactory.ts
 var ModelsMap = {
   AgnosticAdventure: AdventureModel,
@@ -2982,7 +3059,8 @@ var ModelsMap = {
   AgnosticSession: SessionModel,
   AgnosticSessionNavigation: SessionNavigationModel,
   AgnosticTimeline: TimelineModel,
-  RawNpc: RawNpcModel
+  RawNpc: RawNpcModel,
+  AgnosticMusic: MusicModel
 };
 var ModelFactory = class extends AbstractFactory {
   create(settings, modelName, currentElement, source, sourcePath, sourceMeta) {
@@ -3482,6 +3560,9 @@ var SessionTemplateFactory = class extends AbstractTemplateFactory {
       session: {},
       irl: {}
     };
+    frontmatter.relationships = {
+      music: {}
+    };
   }
   generateInitialCodeBlock() {
     return new RpgCodeBlock("sessionNavigation", {
@@ -3516,7 +3597,8 @@ var SceneTemplateFactory = class extends AbstractTemplateFactory {
     frontmatter.relationships = {
       clues: {},
       characters: {},
-      locations: {}
+      locations: {},
+      music: {}
     };
     frontmatter.times = {
       start: {},
@@ -3719,6 +3801,22 @@ var TimelineTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
+// src/settings/Agnostic/factories/MusicTemplateFactory.ts
+var MusicTemplateFactory = class extends AbstractTemplateFactory {
+  addFrontmatterData(frontmatter) {
+    var _a, _b;
+    frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.musicTag + "/" + this.campaignId);
+    frontmatter.url = (_b = (_a = this == null ? void 0 : this.additionalInformation) == null ? void 0 : _a.url) != null ? _b : "";
+    frontmatter.synopsis = "";
+    frontmatter.relationships = {
+      music: {}
+    };
+  }
+  generateInitialCodeBlock() {
+    return new RpgCodeBlock("music");
+  }
+};
+
 // src/factories/TemplateFactory.ts
 var TemplatesMap = {
   AgnosticCampaign: CampaignTemplateFactory,
@@ -3736,7 +3834,8 @@ var TemplatesMap = {
   VampireCharacter: VampireCharacterTemplate,
   VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate,
   RawCampaign: RawCampaignTemplate,
-  VampireCampaign: VampireCampaignTemplate
+  VampireCampaign: VampireCampaignTemplate,
+  AgnosticMusic: MusicTemplateFactory
 };
 var TemplateFactory = class extends AbstractFactory {
   create(settings, type, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation = null) {
@@ -4796,7 +4895,8 @@ var DEFAULT_SETTINGS = {
   timelineTag: "rpgm/element/timeline",
   noteTag: "rpgm/outline/note",
   automaticMove: true,
-  templateFolder: ""
+  templateFolder: "",
+  musicTag: "rpgm/element/music"
 };
 var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
   constructor(app2, plugin) {
@@ -4959,6 +5059,11 @@ var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ noteTag: value });
+    })));
+    new import_obsidian19.Setting(this.containerEl).setName("Music Tag").addText((text) => text.setPlaceholder("rpgm/element/music").setValue(this.plugin.settings.musicTag).onChange((value) => __async(this, null, function* () {
+      if (value.length == 0)
+        return;
+      yield this.plugin.updateSettings({ musicTag: value });
     })));
   }
 };

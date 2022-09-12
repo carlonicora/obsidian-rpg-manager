@@ -15,6 +15,7 @@ import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {VampireCharacter} from "../settings/Vampire/data/VampireCharacter";
 import {RawCampaign} from "../settings/Raw/data/RawCampaign";
+import {Music} from "../settings/Agnostic/data/Music";
 
 
 const DatasMap = {
@@ -33,6 +34,7 @@ const DatasMap = {
 	VampireCharacter: VampireCharacter,
 	VampireNonPlayerCharacter: VampireCharacter,
 	RawCampaign: RawCampaign,
+	AgnosticMusic: Music,
 };
 type DatasMapType = typeof DatasMap;
 type DataKeys = keyof DatasMapType;

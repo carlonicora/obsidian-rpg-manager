@@ -14,6 +14,17 @@ export class SceneModel extends AbstractModel {
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
+				'MusicTable',
+				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
+					this.currentElement,
+					DataType.Music,
+				),
+			)
+		);
+
+		response.addElement(
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				this.currentElement.campaign.settings,
 				'CharacterTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,

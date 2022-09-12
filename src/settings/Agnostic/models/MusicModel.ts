@@ -1,11 +1,11 @@
 import {AbstractModel} from "../../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
-import {DataType} from "../../../enums/DataType";
 import {ResponseData} from "../../../data/responses/ResponseData";
-import {ClueInterface} from "../../../interfaces/data/ClueInterface";
+import {DataType} from "../../../enums/DataType";
+import {MusicInterface} from "../../../interfaces/data/MusicInterface";
 
-export class ClueModel extends AbstractModel {
-	protected currentElement: ClueInterface;
+export class MusicModel extends AbstractModel {
+	protected currentElement: MusicInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
@@ -24,10 +24,10 @@ export class ClueModel extends AbstractModel {
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
-				'CharacterTable',
+				'MusicTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
-					DataType.Character,
+					DataType.Music,
 				),
 			)
 		);
@@ -35,10 +35,11 @@ export class ClueModel extends AbstractModel {
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
-				'LocationTable',
+				'SceneTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
-					DataType.Location,
+					DataType.Session,
+					DataType.Music,
 				),
 			)
 		);
@@ -46,11 +47,11 @@ export class ClueModel extends AbstractModel {
 		response.addElement(
 			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
-				'EventTable',
+				'SessionTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
 					this.currentElement,
-					DataType.Event,
-					DataType.Clue,
+					DataType.Session,
+					DataType.Music,
 				),
 			)
 		);

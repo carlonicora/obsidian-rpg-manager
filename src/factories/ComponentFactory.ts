@@ -20,6 +20,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {VampireCharacterTableComponent} from "../settings/Vampire/components/VampireCharacterTableComponent";
 import {VampireHeaderComponent} from "../settings/Vampire/components/VampireHeaderComponent";
 import {RawCharacterRecordSheetComponent} from "../settings/Raw/components/RawCharacterRecordSheetComponent";
+import {MusicTableComponent} from "../settings/Agnostic/components/MusicTableComponent";
 
 const ComponentsMap = {
 	AgnosticSessionTable: SessionTableComponent,
@@ -39,6 +40,7 @@ const ComponentsMap = {
 	VampireCharacterTable: VampireCharacterTableComponent,
 	VampireHeader: VampireHeaderComponent,
 	RawCharacterRecordSheet: RawCharacterRecordSheetComponent,
+	AgnosticMusicTable: MusicTableComponent,
 };
 type ComponentsMapType = typeof ComponentsMap;
 type ComponentKeys = keyof ComponentsMapType;

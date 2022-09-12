@@ -17,6 +17,7 @@ import {VampireCharacterTemplate} from "../settings/Vampire/templates/VampireCha
 import {RawCampaignTemplate} from "../settings/Raw/templates/RawCampaignTemplate";
 import {VampireCampaignTemplate} from "../settings/Vampire/templates/VampireCampaignTemplate";
 import {TimelineTemplateFactory} from "../settings/Agnostic/factories/TimelineTemplateFactory";
+import {MusicTemplateFactory} from "../settings/Agnostic/factories/MusicTemplateFactory";
 
 const TemplatesMap = {
 	AgnosticCampaign: CampaignTemplateFactory,
@@ -35,6 +36,7 @@ const TemplatesMap = {
 	VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate,
 	RawCampaign: RawCampaignTemplate,
 	VampireCampaign: VampireCampaignTemplate,
+	AgnosticMusic: MusicTemplateFactory,
 };
 type TemplatesMapType = typeof TemplatesMap;
 type TemplateKeys = keyof TemplatesMapType;

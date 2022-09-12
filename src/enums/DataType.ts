@@ -11,4 +11,5 @@ export enum DataType {
 	Faction,
 	Note,
 	Timeline,
+	Music,
 }

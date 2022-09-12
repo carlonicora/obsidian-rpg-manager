@@ -15,6 +15,7 @@ import {NonPlayerCharacterModal} from "../settings/Agnostic/modals/NonPlayerChar
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {NoteModal} from "../settings/Agnostic/modals/NoteModal";
 import {TimelineModal} from "../settings/Agnostic/modals/TimelineModal";
+import {MusicModal} from "../settings/Agnostic/modals/MusicModal";
 
 const ModalsMap = {
 	AgnosticCampaign: CampaignModal,
@@ -29,6 +30,7 @@ const ModalsMap = {
 	AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
 	AgnosticNote: NoteModal,
 	AgnosticTimeline: TimelineModal,
+	AgnosticMusic: MusicModal,
 };
 type ModalsMapType = typeof ModalsMap;
 type ModalKeys = keyof ModalsMapType;
