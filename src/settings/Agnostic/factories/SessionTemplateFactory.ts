@@ -8,7 +8,10 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 	): void {
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
 
-		const synopsis = this.additionalInformation.synopsis ?? '';
+		let synopsis: string = this.additionalInformation.synopsis ?? '';
+		synopsis = synopsis.replaceAll('"', '\"');
+
+
 		frontmatter.synopsis = synopsis;
 		frontmatter.dates = {
 			session: "",
