@@ -11,8 +11,7 @@ export abstract class AbstractRpgGenericData extends AbstractRpgData implements 
 	reload(file: TFile, metadata: CachedMetadata) {
 		super.reload(file, metadata);
 		if (this.type !== DataType.Campaign) {
-			const campaign = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, this.tag));
-			if (campaign != null) this.campaign = campaign;
+			this.campaign = this.loadCampaign();
 		}
 	}
 }

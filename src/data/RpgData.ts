@@ -14,10 +14,14 @@ import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
+import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
+import {RpgError} from "../errors/RpgError";
+import {HiddenError} from "../errors/HiddenError";
+import {ElementDuplicated} from "../errors/ElementDuplicated";
 
 export class RpgData extends Component {
 	private data: RpgDataList;
-	private misconfiguredTags: Map<TFile, string> = new Map();
+	private misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
 
 	constructor(
 		private app: App,
@@ -29,12 +33,12 @@ export class RpgData extends Component {
 
 	public loadCache(
 	): void {
-		this.loadElements(DataType.Campaign);
-		this.loadElements(DataType.Adventure);
-		this.loadElements(DataType.Session);
-		this.loadElements(DataType.Scene);
-		this.loadElements(DataType.Note);
-		this.loadElements();
+		this.loadElements(true, DataType.Campaign);
+		this.loadElements(true, DataType.Adventure);
+		this.loadElements(true, DataType.Session);
+		this.loadElements(true, DataType.Scene);
+		this.loadElements(true, DataType.Note);
+		this.loadElements(true);
 		this.fillNeighbours();
 
 		if (this.misconfiguredTags.size > 0){
@@ -82,31 +86,29 @@ export class RpgData extends Component {
 	public refreshDataCache(
 		file: TFile,
 	): void {
-		this.loadElement(file);
+		this.loadElement(false, file);
 		this.fillNeighbours();
 		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
 	private fillNeighbours(
 	): void {
-		try {
-			this.getOutlines().elements.forEach((data: RpgOutlineDataInterface) => {
-				data.initialiseNeighbours();
-			});
-		} catch (e) {
-			console.log(e);
-		}
+		this.getOutlines().elements.forEach((data: RpgOutlineDataInterface) => {
+			data.initialiseNeighbours();
+		});
 	}
 
 	private loadElements(
+		isBootstrap: boolean,
 		type: DataType|null = null,
 	): void {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
-			this.loadElement(file, true, type);
+			this.loadElement(isBootstrap, file, true, type);
 		});
 	}
 
 	private loadElement(
+		isBootstrap: boolean,
 		file: TFile,
 		restrictType = false,
 		restrictedToType: DataType|null = null,
@@ -121,23 +123,25 @@ export class RpgData extends Component {
 
 				if (fileType !== undefined) {
 					let settings = CampaignSetting.Agnostic;
+					const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, fileDataTag);
 
 					if (fileType === DataType.Campaign) {
+						if (this.elementCount(DataType.Campaign, campaignId) > 1){
+							this.misconfiguredTags.set(file, new ElementDuplicated(this.app, DataType.Campaign, fileDataTag, campaignId));
+							return;
+						}
 						if (metadata?.frontmatter?.settings != null) {
 							settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
 						}
 					} else {
 						try {
-							const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, fileDataTag);
-
 							if (campaignId != null) {
 								const campaign = this.getCampaign(campaignId);
 								if (campaign != null) {
 									settings = campaign.settings;
 								}
 							}
-						} catch (e) {
-							this.misconfiguredTags.set(file, e);
+						} catch (e: any) {
 							return;
 						}
 					}
@@ -160,14 +164,68 @@ export class RpgData extends Component {
 							if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
 
 							this.data.addElement(element);
-						} catch (e) {
-							this.misconfiguredTags.set(file, e);
-							return;
+						} catch (e: any) {
+							if (e instanceof RpgError) {
+								const isHidden: boolean = e instanceof HiddenError;
+								if (!isHidden) {
+									if (isBootstrap) {
+										this.misconfiguredTags.set(file, e as RpgErrorInterface);
+									} else {
+										//throw e;
+										new MisconfiguredDataModal(this.app, undefined, e).open();
+									}
+								}
+								return;
+							} else {
+								throw e;
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	public elementCount(
+		type: DataType,
+		campaignId: number,
+		adventureId: number|null = null,
+		sessionId: number|null = null,
+		sceneId: number|null = null,
+	): number {
+		let predicate: any;
+
+		switch (type){
+			case DataType.Campaign:
+				predicate = (campaign: CampaignInterface) =>
+					campaign.type === DataType.Campaign &&
+					campaign.campaignId === campaignId;
+				break;
+			case DataType.Adventure:
+				predicate = (adventure: AdventureInterface) =>
+					adventure.type === DataType.Adventure &&
+					adventure.campaign.campaignId === campaignId &&
+					adventure.adventureId === adventureId;
+				break;
+			case DataType.Session:
+			case DataType.Note:
+				predicate = (session: SessionInterface|NoteInterface) =>
+					session.type === DataType.Adventure &&
+					session.campaign.campaignId === campaignId &&
+					session.adventure.adventureId === adventureId &&
+					session.sessionId === sessionId;
+				break;
+			case DataType.Scene:
+				predicate = (scene: SceneInterface) =>
+					scene.type === DataType.Adventure &&
+					scene.campaign.campaignId === campaignId &&
+					scene.adventure.adventureId === adventureId &&
+					scene.session.sessionId === sessionId &&
+					scene.sceneId === sceneId;
+				break;
+		}
+
+		return this.data.where(predicate).elements.length;
 	}
 
 	public getOutlines(
@@ -205,6 +263,7 @@ export class RpgData extends Component {
 			adventure.campaign.campaignId === campaignId &&
 			adventure.adventureId === adventureId
 		);
+
 		return adventures.elements.length === 1 ? (<AdventureInterface>adventures.elements[0]) : null;
 	}
 

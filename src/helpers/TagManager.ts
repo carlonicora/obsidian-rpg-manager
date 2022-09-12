@@ -1,8 +1,9 @@
 import {App} from "obsidian";
 import {DataType} from "../enums/DataType";
+import {TagMisconfigured} from "../errors/TagMisconfigured";
 
 export class TagManager {
-	private dataSettings: Map<DataType, string>;
+	public dataSettings: Map<DataType, string>;
 	private requiredIds: Map<DataType, Array<DataType>>;
 
 	constructor(
@@ -153,22 +154,7 @@ export class TagManager {
 		const response = variables.get(type);
 
 		if (response == null){
-			let requiredIds = '';
-			switch (dataType) {
-				case DataType.Scene:
-					requiredIds = '/{sceneId}' + requiredIds;
-				case DataType.Session:
-				case DataType.Note:
-					requiredIds = '/{sessionId}' + requiredIds;
-				case DataType.Adventure:
-					requiredIds = '/{adventureId}' + requiredIds;
-			}
-			requiredIds = '/{campaignId}' + requiredIds;
-
-			const error = 'The tag **' + tag + '** is misconfigured. \n' +
-				'The correct format should be: `' + dataSettingsTag + requiredIds + '` (_with all the ids being numbers_)';
-
-			throw new Error(error);
+			throw new TagMisconfigured(this.app, dataType, tag);
 		}
 
 		return response;

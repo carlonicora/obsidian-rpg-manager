@@ -1,7 +1,6 @@
 import {NoteInterface} from "../../../interfaces/data/NoteInterface";
 import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 import {CachedMetadata, TFile} from "obsidian";
-import {DataType} from "../../../enums/DataType";
 import {AbstractRpgOutlineData} from "../../../abstracts/AbstractRpgOutlineData";
 
 export class Note extends AbstractRpgOutlineData implements NoteInterface {
@@ -14,12 +13,11 @@ export class Note extends AbstractRpgOutlineData implements NoteInterface {
 	) {
 		super.reload(file, metadata);
 
-		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Adventure, this.tag));
-		if (adventure != null) {
-			this.adventure = adventure;
-			const session = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, this.adventure.adventureId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Session, this.tag));
-			if (session != null) this.sessionId = session.sessionId;
-		}
+		this.adventure = this.loadAdventure(this.campaign.campaignId);
+		const session = this.loadSession(this.campaign.campaignId, this.adventure.adventureId);
+		this.checkElementDuplication();
+
+		this.sessionId = session.sessionId;
 	}
 
 	public initialiseNeighbours(

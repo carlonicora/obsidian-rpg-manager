@@ -344,6 +344,10 @@
 	}
 }
 
+.modal-content h1.error {
+	color: var(--text-error);
+}
+
 .markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block>div .rpgm-table {
 	margin-left: 0px !important;
 	margin-right: 0px;

@@ -2,7 +2,6 @@ import {AbstractRpgOutlineData} from "../../../abstracts/AbstractRpgOutlineData"
 import {SessionInterface} from "../../../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../../../interfaces/data/AdventureInterface";
 import {CachedMetadata, TFile} from "obsidian";
-import {DataType} from "../../../enums/DataType";
 import {NoteInterface} from "../../../interfaces/data/NoteInterface";
 
 export class Session extends AbstractRpgOutlineData implements SessionInterface {
@@ -21,10 +20,11 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 	) {
 		super.reload(file, metadata);
 
-		const tag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(metadata.frontmatter?.tags);
-		this.sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, tag);
-		const adventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(this.campaign.campaignId, this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Adventure, tag));
-		if (adventure != null) this.adventure = adventure;
+		this.sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
+
+		this.adventure = this.loadAdventure(this.campaign.campaignId);
+		this.checkElementDuplication();
+
 		this.date = this.initialiseDate(this.frontmatter?.dates?.session);
 		this.irl = this.initialiseDate(this.frontmatter?.dates?.irl);
 	}

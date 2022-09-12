@@ -15,6 +15,8 @@ export class Campaign extends AbstractRpgOutlineData implements CampaignInterfac
 		super.reload(file, metadata);
 
 		if (this.frontmatter?.tags) this.campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
+		this.checkElementDuplication();
+
 		if (this.frontmatter?.dates?.current) this.currentDate = new Date(this.frontmatter?.dates?.current);
 		this.settings = this.frontmatter?.settings ? CampaignSetting[this.frontmatter?.settings as keyof typeof CampaignSetting] : CampaignSetting.Agnostic;
 	}

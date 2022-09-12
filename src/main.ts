@@ -45,10 +45,6 @@ export default class RpgManager extends Plugin {
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
 		this.tagManager = new TagManager(this.app);
-
-		this.registerEvents();
-		this.registerCodeBlock();
-		this.registerCommands();
 	}
 
 	private padTo2Digits(num: number) {
@@ -56,8 +52,11 @@ export default class RpgManager extends Plugin {
 	}
 
 	async onLayoutReady(){
-		this.io.loadCache();
+		await this.io.loadCache();
 
+		this.registerEvents();
+		this.registerCodeBlock();
+		this.registerCommands();
 	}
 
 	async onunload() {
