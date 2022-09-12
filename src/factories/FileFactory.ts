@@ -127,11 +127,13 @@ export class FileFactory extends AbstractFactory {
 			let fullPath: string;
 			if (type !== DataType.Campaign) {
 				fullPath = folder + DataType[type] + 's';
+				if (fullPath.startsWith('/')) fullPath = fullPath.substring(1);
 				if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
 					await app.vault.createFolder(fullPath);
 				}
 			} else {
-				fullPath = folder.substring(1);
+				fullPath = folder;
+				if (fullPath.startsWith('/')) fullPath = fullPath.substring(1);
 			}
 
 			response = fullPath + '/' + response;

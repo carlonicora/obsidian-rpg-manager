@@ -1865,11 +1865,15 @@ var FileFactory = class extends AbstractFactory {
         let fullPath;
         if (type !== 0 /* Campaign */) {
           fullPath = folder + DataType[type] + "s";
+          if (fullPath.startsWith("/"))
+            fullPath = fullPath.substring(1);
           if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
             yield app.vault.createFolder(fullPath);
           }
         } else {
-          fullPath = folder.substring(1);
+          fullPath = folder;
+          if (fullPath.startsWith("/"))
+            fullPath = fullPath.substring(1);
         }
         response = fullPath + "/" + response;
       }
