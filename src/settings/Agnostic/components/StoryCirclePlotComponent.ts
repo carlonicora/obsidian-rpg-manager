@@ -10,15 +10,18 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 		title:string|null,
 		additionalInformation: any|null,
 	): ResponseElementInterface|null {
-		if (additionalInformation == null ||
-			additionalInformation.you != null ||
-			additionalInformation.need != null ||
-			additionalInformation.go != null ||
-			additionalInformation.search != null ||
-			additionalInformation.find != null ||
-			additionalInformation.take != null ||
-			additionalInformation.return != null ||
-			additionalInformation.change != null ||
+		if (
+			additionalInformation == null ||
+			(
+			additionalInformation.you == null ||
+			additionalInformation.need == null ||
+			additionalInformation.go == null ||
+			additionalInformation.search == null ||
+			additionalInformation.find == null ||
+			additionalInformation.take == null ||
+			additionalInformation.return == null ||
+			additionalInformation.change == null
+			) ||
 			(
 				additionalInformation.you === '' &&
 				additionalInformation.need === '' &&
@@ -26,7 +29,7 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 				additionalInformation.search === '' &&
 				additionalInformation.find === '' &&
 				additionalInformation.take === '' &&
-				additionalInformation.return() === '' &&
+				additionalInformation.return === '' &&
 				additionalInformation.change === ''
 			)
 		) return null;

@@ -1,7 +1,7 @@
 import {ContentInterface} from "../interfaces/ContentInterface";
 
 export abstract class AbstractContent implements ContentInterface {
-	protected content: any|null;
+	public content: any|null;
 	public isInLine = false;
 
 	constructor(

@@ -85,6 +85,7 @@ export class FileFactory extends AbstractFactory {
 		adventureId: number|null = null,
 		sessionId: number|null = null,
 		sceneId: number|null = null,
+		additionalInformation: any|null = null,
 	): Promise<void> {
 		let folder = '/';
 		let settings = CampaignSetting.Agnostic;
@@ -104,6 +105,7 @@ export class FileFactory extends AbstractFactory {
 			adventureId,
 			sessionId,
 			sceneId,
+			additionalInformation,
 		);
 
 		const fileName = await this.generateFilePath(type, folder, name);

@@ -3,6 +3,8 @@ import {RpgDataInterface} from "../../../interfaces/data/RpgDataInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../../../data/responses/ResponseTable";
 import {ContentType} from "../../../enums/ContentType";
+import {Adventure} from "../data/Adventure";
+import {DataType} from "../../../enums/DataType";
 
 export class AbtPlotComponent extends AbstractComponent {
 
@@ -11,11 +13,14 @@ export class AbtPlotComponent extends AbstractComponent {
 		title:string|null,
 		additionalInformation: any|null,
 	): ResponseElementInterface|null {
-		if (additionalInformation == null ||
-			additionalInformation.need != null ||
-			additionalInformation.and != null ||
-			additionalInformation.but != null ||
-			additionalInformation.therefore != null ||
+		if (
+			additionalInformation == null ||
+			(
+				additionalInformation.need == null ||
+				additionalInformation.and == null ||
+				additionalInformation.but == null ||
+				additionalInformation.therefore == null
+			) ||
 			(
 				additionalInformation.need === '' &&
 				additionalInformation.and === '' &&
@@ -25,6 +30,19 @@ export class AbtPlotComponent extends AbstractComponent {
 		) return null;
 
 		const response = new ResponseTable(this.app);
+
+		if (
+			data instanceof Adventure &&
+			this.app.plugins.getPlugin('rpg-manager').io.getSessionList(data.campaign.campaignId, data.adventureId).elements.length === 0 &&
+			additionalInformation.need !== '' &&
+			additionalInformation.and !== '' &&
+			additionalInformation.but !== '' &&
+			additionalInformation.therefore !== ''
+		) {
+			response.create = DataType.Adventure;
+			response.campaignId = data.campaign.campaignId;
+			response.adventureId = data.adventureId;
+		}
 
 		response.title = 'ABT Plot';
 		response.class = 'rpgm-plot';

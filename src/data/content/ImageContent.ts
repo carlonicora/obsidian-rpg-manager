@@ -1,7 +1,7 @@
 import {AbstractContent} from "../../abstracts/AbstractContent";
 
 export class ImageContent extends AbstractContent {
-	protected content: HTMLElement;
+	public content: HTMLElement;
 
 	public fillContent(
 		container: HTMLElement,

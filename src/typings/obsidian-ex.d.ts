@@ -1,6 +1,6 @@
 import "obsidian";
 import {RpgManagerSettings} from "../main";
-import {RpgFunctions} from "../RpgFunctions";
+import {RpgFunctions} from "../helpers/RpgFunctions";
 import {RpgData} from "../data/RpgData";
 import {RpgFactories} from "../RpgFactories";
 import {TagManager} from "../helpers/TagManager";

@@ -525,7 +525,7 @@ var RpgData = class extends import_obsidian3.Component {
   }
 };
 
-// src/RpgFunctions.ts
+// src/helpers/RpgFunctions.ts
 var import_obsidian4 = require("obsidian");
 var RpgFunctions = class {
   constructor(app2) {
@@ -1144,12 +1144,29 @@ var HeaderComponent = class extends AbstractComponent {
   }
 };
 
+// src/settings/Agnostic/data/Adventure.ts
+var Adventure = class extends AbstractRpgOutlineData {
+  reload(file, metadata) {
+    var _a;
+    super.reload(file, metadata);
+    if (((_a = metadata.frontmatter) == null ? void 0 : _a.tags) != null)
+      this.adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+  }
+  initialiseNeighbours() {
+  }
+};
+
 // src/settings/Agnostic/components/AbtPlotComponent.ts
 var AbtPlotComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
-    if (additionalInformation == null || additionalInformation.need != null || additionalInformation.and != null || additionalInformation.but != null || additionalInformation.therefore != null || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
+    if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
       return null;
     const response = new ResponseTable(this.app);
+    if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").io.getSessionList(data.campaign.campaignId, data.adventureId).elements.length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
+      response.create = 1 /* Adventure */;
+      response.campaignId = data.campaign.campaignId;
+      response.adventureId = data.adventureId;
+    }
     response.title = "ABT Plot";
     response.class = "rpgm-plot";
     response.addContent([
@@ -1175,7 +1192,7 @@ var AbtPlotComponent = class extends AbstractComponent {
 // src/settings/Agnostic/components/StoryCirclePlotComponent.ts
 var StoryCirclePlotComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
-    if (additionalInformation == null || additionalInformation.you != null || additionalInformation.need != null || additionalInformation.go != null || additionalInformation.search != null || additionalInformation.find != null || additionalInformation.take != null || additionalInformation.return != null || additionalInformation.change != null || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return() === "" && additionalInformation.change === "")
+    if (additionalInformation == null || (additionalInformation.you == null || additionalInformation.need == null || additionalInformation.go == null || additionalInformation.search == null || additionalInformation.find == null || additionalInformation.take == null || additionalInformation.return == null || additionalInformation.change == null) || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return === "" && additionalInformation.change === "")
       return null;
     const response = new ResponseTable(this.app);
     response.title = "Story Circle Plot";
@@ -1541,18 +1558,6 @@ var ContentFactory = class extends AbstractFactory {
   }
 };
 
-// src/settings/Agnostic/data/Adventure.ts
-var Adventure = class extends AbstractRpgOutlineData {
-  reload(file, metadata) {
-    var _a;
-    super.reload(file, metadata);
-    if (((_a = metadata.frontmatter) == null ? void 0 : _a.tags) != null)
-      this.adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
-  }
-  initialiseNeighbours() {
-  }
-};
-
 // src/settings/Agnostic/data/Session.ts
 var Session = class extends AbstractRpgOutlineData {
   constructor() {
@@ -1703,7 +1708,7 @@ var FileFactory = class extends AbstractFactory {
       }
     });
   }
-  silentCreate(type, name, campaignId, adventureId = null, sessionId = null, sceneId = null) {
+  silentCreate(type, name, campaignId, adventureId = null, sessionId = null, sceneId = null, additionalInformation = null) {
     return __async(this, null, function* () {
       let folder = "/";
       let settings = 0 /* Agnostic */;
@@ -1712,7 +1717,7 @@ var FileFactory = class extends AbstractFactory {
         settings = campaign.settings;
         folder = campaign.folder;
       }
-      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, "", name, campaignId, adventureId, sessionId, sceneId);
+      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, "", name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
       const fileName = yield this.generateFilePath(type, folder, name);
       const data = yield template.generateData();
       const newFile = yield app.vault.create(fileName, data);
@@ -3336,8 +3341,10 @@ var AdventureTemplateFactory = class extends AbstractTemplateFactory {
 // src/settings/Agnostic/factories/SessionTemplateFactory.ts
 var SessionTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
+    var _a;
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId);
-    frontmatter.synopsis = "";
+    const synopsis = (_a = this.additionalInformation.synopsis) != null ? _a : "";
+    frontmatter.synopsis = synopsis;
     frontmatter.dates = {
       session: "",
       irl: ""
@@ -3630,6 +3637,37 @@ var TableView = class extends AbstractView {
     const divContainer = container.createDiv();
     if (data.title != null) {
       divContainer.createEl("h2", { text: data.title });
+    }
+    if (data.create !== void 0) {
+      const createButtonEl = divContainer.createEl("button", { cls: "create-button" });
+      switch (data.create) {
+        case 1 /* Adventure */:
+          createButtonEl.textContent = "Create session from Adventure Plot";
+          createButtonEl.addEventListener("click", () => {
+            if (data.campaignId !== void 0 && data.adventureId !== void 0) {
+              const previousAdventure = this.app.plugins.getPlugin("rpg-manager").io.getAdventure(data.campaignId, data.adventureId - 1);
+              let nextSessionId = 1;
+              if (previousAdventure != null) {
+                const previousAdventureSessions = this.app.plugins.getPlugin("rpg-manager").io.getSessionList(data.campaignId, previousAdventure.adventureId);
+                previousAdventureSessions.elements.forEach((session) => {
+                  if (nextSessionId <= session.sessionId)
+                    nextSessionId = session.sessionId + 1;
+                });
+              }
+              data.content.forEach((element) => {
+                const content = element[1];
+                if (data.campaignId != null) {
+                  this.app.plugins.getPlugin("rpg-manager").factories.files.silentCreate(2 /* Session */, "Session " + nextSessionId, data.campaignId, data.adventureId, nextSessionId, null, {
+                    synopsis: content.content
+                  });
+                }
+                nextSessionId++;
+              });
+              createButtonEl.style.display = "none";
+            }
+          });
+          break;
+      }
     }
     const table = divContainer.createEl("table");
     table.addClass("rpgm-table");

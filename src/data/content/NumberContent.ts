@@ -1,7 +1,7 @@
 import {AbstractContent} from "../../abstracts/AbstractContent";
 
 export class NumberContent extends AbstractContent {
-	protected content: number;
+	public content: number;
 
 	public fillContent(
 		container: HTMLElement,

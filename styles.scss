@@ -349,8 +349,21 @@
 	margin-right: 0px;
 	width: 100%;
 	max-width: 100%;
+}
 
-
+.create-button {
+	font-size: var(--font-settings-small);
+	display: block;
+	margin-top: 10px;
+	background-color: var(--interactive-normal);
+	color: var(--text-normal);
+	border: 1px solid var(--background-modifier-border);
+	box-shadow: 0 1px 1px 0 var(--btn-shadow-color);
+	cursor: var(--cursor);
+	height: var(--input-height);
+	line-height: 0;
+	white-space: nowrap;
+	transition: background-color .2s ease-out,border-color .2s ease-out;
 }
 
 .rpgm-table {

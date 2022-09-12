@@ -2,7 +2,7 @@ import {Component, MarkdownRenderer} from "obsidian";
 import {AbstractContent} from "../../abstracts/AbstractContent";
 
 export class MarkdownContent extends AbstractContent {
-	protected content: string;
+	public content: string;
 
 	public fillContent(
 		container: HTMLElement,

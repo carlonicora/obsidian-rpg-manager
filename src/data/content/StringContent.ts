@@ -1,7 +1,7 @@
 import {AbstractContent} from "../../abstracts/AbstractContent";
 
 export class StringContent extends AbstractContent {
-	protected content: string;
+	public content: string;
 
 	public fillContent(
 		container: HTMLElement,

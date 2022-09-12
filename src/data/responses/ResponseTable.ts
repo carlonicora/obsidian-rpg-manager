@@ -3,11 +3,16 @@ import {ResponseType} from "../../enums/ResponseType";
 import {TableResponseInterface} from "../../interfaces/response/TableResponseInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {App} from "obsidian";
+import {DataType} from "../../enums/DataType";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public class: string|null;
 	public headers: Array<ContentInterface>;
 	public content: Array<Array<ContentInterface>>;
+	public create: DataType|undefined;
+	public campaignId: number|undefined;
+	public adventureId: number|undefined;
+	public sessionId: number|undefined;
 
 	constructor(
 		app: App,

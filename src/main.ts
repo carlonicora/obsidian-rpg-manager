@@ -11,7 +11,7 @@ import {
 import {RpgController} from "./RpgController";
 import {DataType} from "./enums/DataType";
 import {RpgData} from "./data/RpgData";
-import {RpgFunctions} from "./RpgFunctions";
+import {RpgFunctions} from "./helpers/RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
