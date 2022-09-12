@@ -13,7 +13,7 @@ export class ClueTemplateFactory extends AbstractTemplateFactory {
 			locations: {},
 		};
 		frontmatter.dates = {
-			found: "",
+			found: {},
 		};
 	}
 

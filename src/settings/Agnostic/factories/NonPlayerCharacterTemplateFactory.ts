@@ -16,8 +16,8 @@ export class NonPlayerCharacterTemplateFactory extends AbstractTemplateFactory {
 		};
 		frontmatter.pronoun = "";
 		frontmatter.dates = {
-			dob: "",
-			death: "",
+			dob: {},
+			death: {},
 		}
 	}
 

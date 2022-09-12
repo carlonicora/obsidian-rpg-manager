@@ -361,9 +361,13 @@ var RpgData = class extends import_obsidian3.Component {
     this.app.workspace.trigger("rpgmanager:refresh-views");
   }
   fillNeighbours() {
-    this.getOutlines().elements.forEach((data) => {
-      data.initialiseNeighbours();
-    });
+    try {
+      this.getOutlines().elements.forEach((data) => {
+        data.initialiseNeighbours();
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
   loadElements(type = null) {
     this.app.vault.getMarkdownFiles().forEach((file) => {
@@ -3296,7 +3300,7 @@ var CampaignTemplateFactory = class extends AbstractTemplateFactory {
     frontmatter.synopsis = "";
     frontmatter.settings = "Agnostic";
     frontmatter.dates = {
-      current: ""
+      current: {}
     };
     if (this.additionalInformation != null && this.additionalInformation.current != null) {
       frontmatter.dates.current = this.additionalInformation.current;
@@ -3341,14 +3345,13 @@ var AdventureTemplateFactory = class extends AbstractTemplateFactory {
 // src/settings/Agnostic/factories/SessionTemplateFactory.ts
 var SessionTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
-    var _a;
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId);
-    let synopsis = (_a = this.additionalInformation.synopsis) != null ? _a : "";
-    synopsis = synopsis.replaceAll('"', '"');
+    let synopsis = this.additionalInformation.synopsis;
+    synopsis = synopsis.replaceAll('"', '\\"');
     frontmatter.synopsis = synopsis;
     frontmatter.dates = {
-      session: "",
-      irl: ""
+      session: {},
+      irl: {}
     };
   }
   generateInitialCodeBlock() {
@@ -3387,8 +3390,8 @@ var SceneTemplateFactory = class extends AbstractTemplateFactory {
       locations: {}
     };
     frontmatter.times = {
-      start: "",
-      end: ""
+      start: {},
+      end: {}
     };
   }
   generateInitialCodeBlock() {
@@ -3414,8 +3417,8 @@ var CharacterTemplateFactory = class extends AbstractTemplateFactory {
     };
     frontmatter.pronoun = "";
     frontmatter.dates = {
-      dob: "",
-      death: ""
+      dob: {},
+      death: {}
     };
   }
   generateInitialCodeBlock() {
@@ -3435,8 +3438,8 @@ var NonPlayerCharacterTemplateFactory = class extends AbstractTemplateFactory {
     };
     frontmatter.pronoun = "";
     frontmatter.dates = {
-      dob: "",
-      death: ""
+      dob: {},
+      death: {}
     };
   }
   generateInitialCodeBlock() {
@@ -3473,7 +3476,7 @@ var EventTemplateFactory = class extends AbstractTemplateFactory {
       locations: {}
     };
     frontmatter.dates = {
-      event: ""
+      event: {}
     };
   }
   generateInitialCodeBlock() {
@@ -3491,7 +3494,7 @@ var ClueTemplateFactory = class extends AbstractTemplateFactory {
       locations: {}
     };
     frontmatter.dates = {
-      found: ""
+      found: {}
     };
   }
   generateInitialCodeBlock() {
@@ -4576,17 +4579,6 @@ var RpgManager = class extends import_obsidian19.Plugin {
   }
   padTo2Digits(num) {
     return num.toString().padStart(2, "0");
-  }
-  formatDate(date) {
-    return [
-      date.getFullYear(),
-      this.padTo2Digits(date.getMonth() + 1),
-      this.padTo2Digits(date.getDate())
-    ].join("-") + " " + [
-      this.padTo2Digits(date.getHours()),
-      this.padTo2Digits(date.getMinutes()),
-      this.padTo2Digits(date.getSeconds())
-    ].join(":");
   }
   onLayoutReady() {
     return __async(this, null, function* () {

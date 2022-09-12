@@ -14,7 +14,7 @@ export class EventTemplateFactory extends AbstractTemplateFactory {
 			locations: {},
 		};
 		frontmatter.dates = {
-			event: "",
+			event: {},
 		};
 	}
 

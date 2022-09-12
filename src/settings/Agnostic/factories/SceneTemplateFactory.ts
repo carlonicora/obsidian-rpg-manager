@@ -14,8 +14,8 @@ export class SceneTemplateFactory extends AbstractTemplateFactory {
 			locations: {},
 		};
 		frontmatter.times = {
-			start: "",
-			end: "",
+			start: {},
+			end: {},
 		}
 	}
 

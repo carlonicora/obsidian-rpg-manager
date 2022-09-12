@@ -89,9 +89,13 @@ export class RpgData extends Component {
 
 	private fillNeighbours(
 	): void {
-		this.getOutlines().elements.forEach((data: RpgOutlineDataInterface) => {
-			data.initialiseNeighbours();
-		});
+		try {
+			this.getOutlines().elements.forEach((data: RpgOutlineDataInterface) => {
+				data.initialiseNeighbours();
+			});
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	private loadElements(
