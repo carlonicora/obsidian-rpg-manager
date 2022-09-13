@@ -4986,6 +4986,7 @@ var RpgManager = class extends import_obsidian19.Plugin {
       this.functions = new RpgFunctions(this.app);
       this.factories = new RpgFactories(this.app);
       this.tagManager = new TagManager(this.app);
+      yield this.io.loadCache();
     });
   }
   padTo2Digits(num) {
@@ -4993,7 +4994,6 @@ var RpgManager = class extends import_obsidian19.Plugin {
   }
   onLayoutReady() {
     return __async(this, null, function* () {
-      yield this.io.loadCache();
       this.registerEvents();
       this.registerCodeBlock();
       this.registerCommands();
