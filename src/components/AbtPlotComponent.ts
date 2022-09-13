@@ -8,11 +8,11 @@ import {DataType} from "../enums/DataType";
 
 export class AbtPlotComponent extends AbstractComponent {
 
-	public generateData(
+	public async generateData(
 		data: RpgDataInterface[],
 		title:string|null,
 		additionalInformation: any|null,
-	): ResponseElementInterface|null {
+	): Promise<ResponseElementInterface|null> {
 		if (
 			additionalInformation == null ||
 			(

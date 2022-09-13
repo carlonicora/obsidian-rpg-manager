@@ -10,13 +10,14 @@ import {Event} from "../data/Event";
 import {Scene} from "../data/Scene";
 import {ResponseHeaderElement} from "../data/responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
+import {Music} from "../data/Music";
 
 export class HeaderComponent extends AbstractComponent{
-	generateData(
+	public async generateData(
 		data: RpgDataInterface,
 		title: string | null,
 		additionalInformation: any|null = null,
-	): ResponseElementInterface | null {
+	): Promise<ResponseElementInterface|null> {
 		const response = new ResponseHeader(this.app);
 
 		response.link = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(data.link, ContentType.Link);
@@ -87,6 +88,14 @@ export class HeaderComponent extends AbstractComponent{
 				} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
+			} else if (data instanceof Music){
+				if (data.image != null) {
+					response.imgSrc = data.image;
+				} else {
+					response.imgSrc = await data.getThumbnail();
+				}
+
+				if (data.url !== undefined) response.addElement(new ResponseHeaderElement(this.app, 'link', data.url, HeaderResponseType.Long));
 			}
 		}
 

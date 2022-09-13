@@ -14,7 +14,7 @@ export class CampaignModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'AdventureTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getAdventureList(this.currentElement.campaignId)
@@ -27,7 +27,7 @@ export class CampaignModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'SessionTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.currentElement.campaignId)
@@ -40,7 +40,7 @@ export class CampaignModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'CharacterTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getCharacterList(this.currentElement.campaignId)

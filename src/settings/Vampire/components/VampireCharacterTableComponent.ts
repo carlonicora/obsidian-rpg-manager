@@ -5,10 +5,10 @@ import {ContentType} from "../../../enums/ContentType";
 import {VampireCharacterInterface} from "../interfaces/VampireCharacterInterface";
 
 export class VampireCharacterTableComponent extends AbstractComponent {
-	generateData(
+	public async generateData(
 		data: VampireCharacterInterface[],
 		title:string|null,
-	): ResponseElementInterface|null {
+	): Promise<ResponseElementInterface|null> {
 		if (data.length === 0){
 			return null;
 		}

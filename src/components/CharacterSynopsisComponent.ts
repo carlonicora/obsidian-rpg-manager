@@ -5,10 +5,10 @@ import {ContentType} from "../enums/ContentType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 
 export class CharacterSynopsisComponent extends AbstractComponent{
-	generateData(
+	public async generateData(
 		data: CharacterInterface,
 		title: string | null,
-	): ResponseElementInterface | null {
+	): Promise<ResponseElementInterface|null> {
 		let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';
 
 		if (data.synopsis != null && data.synopsis !== '') {

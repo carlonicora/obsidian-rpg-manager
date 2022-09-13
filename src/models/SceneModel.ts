@@ -12,7 +12,7 @@ export class SceneModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'MusicTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
@@ -23,7 +23,7 @@ export class SceneModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
@@ -34,7 +34,7 @@ export class SceneModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'FactionTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
@@ -45,7 +45,7 @@ export class SceneModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'ClueTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
@@ -56,7 +56,7 @@ export class SceneModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(

@@ -6,7 +6,7 @@ export class ImageView extends AbstractView {
 		container: HTMLElement,
 		data: ImageResponseInterface,
 	): void {
-		if (data.imgSrc !== null){
+		if (data.imgSrc != null){
 			const divContainer = container.createDiv();
 
 			const image = new Image(data.width, data.height);

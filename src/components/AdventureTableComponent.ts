@@ -6,10 +6,10 @@ import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
 export class AdventureTableComponent extends AbstractComponent {
-	public generateData(
+	public async generateData(
 		data: RpgDataInterface[],
 		title:string|null,
-	): ResponseElementInterface|null {
+	): Promise<ResponseElementInterface|null> {
 		if (data.length === 0){
 			return null;
 		}

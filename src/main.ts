@@ -160,6 +160,7 @@ export interface RpgManagerSettings {
 	automaticMove: boolean;
 	templateFolder: string;
 	musicTag: string;
+	YouTubeKey: string;
 }
 
 export const DEFAULT_SETTINGS: RpgManagerSettings = {
@@ -178,6 +179,7 @@ export const DEFAULT_SETTINGS: RpgManagerSettings = {
 	automaticMove: true,
 	templateFolder: '',
 	musicTag: 'rpgm/element/music',
+	YouTubeKey: '',
 }
 
 export class RpgManagerSettingTab extends PluginSettingTab {
@@ -257,6 +259,35 @@ export class RpgManagerSettingTab extends PluginSettingTab {
 				toggle
 					.setValue(this.plugin.settings.automaticMove)
 					.onChange(async value => await this.plugin.updateSettings({ automaticMove: value }))
+			);
+
+		containerEl.createEl('h2', {text: 'External Services'});
+		containerEl.createEl('span', {text: createFragment(frag => {
+				frag.appendText('Use this area to setup the information relative to third party services');
+				frag.createEl('br');
+				frag.createEl('p', {text: 'ATTENTION: the configurations are saved in a file in your vault. If you share your vault, any secret key might be shared!'}).style.color = 'var(--text-error)';
+				frag.createEl('br');
+				frag.appendText(' ');
+			})});
+
+		new Setting(this.containerEl)
+			.setName("YouTube API Key")
+			.setDesc(createFragment(frag => {
+				frag.appendText('If you want to use the automation included in the `Music` element through YouTube, please generate a YouTube Api Key and add it here');
+				frag.createEl('br');
+				frag.appendText('To generate your YouTube Api key you can follow the instructions in ');
+				frag.createEl('a', {text: 'this link', href: 'https://rapidapi.com/blog/how-to-get-youtube-api-key/'});
+				frag.createEl('br');
+				frag.appendText('/{campaignId}');
+			}))
+			.addText(text =>
+				text
+					.setPlaceholder('Your YouTube API Key')
+					.setValue(this.plugin.settings.YouTubeKey)
+					.onChange(async value => {
+						if (value.length == 0) return;
+						await this.plugin.updateSettings({ YouTubeKey: value });
+					})
 			);
 
 		containerEl.createEl('h3', {text: 'Outlines'});

@@ -23,7 +23,8 @@ export class TagManager {
 		this.dataSettings.set(DataType.NonPlayerCharacter, settings.npcTag);
 		this.dataSettings.set(DataType.Note, settings.noteTag);
 		this.dataSettings.set(DataType.Timeline, settings.timelineTag);
-		
+		this.dataSettings.set(DataType.Music, settings.musicTag);
+
 		this.requiredIds = new Map();
 		this.requiredIds.set(DataType.Campaign, [DataType.Campaign]);
 		this.requiredIds.set(DataType.Adventure, [DataType.Campaign]);
@@ -37,6 +38,7 @@ export class TagManager {
 		this.requiredIds.set(DataType.NonPlayerCharacter, [DataType.Campaign]);
 		this.requiredIds.set(DataType.Note, [DataType.Campaign, DataType.Adventure, DataType.Session]);
 		this.requiredIds.set(DataType.Timeline, [DataType.Campaign]);
+		this.requiredIds.set(DataType.Music, [DataType.Music]);
 	}
 
 	public getTemplateDataType(
@@ -58,12 +60,11 @@ export class TagManager {
 			if (tag.startsWith('rpgm/template/' + DataType[DataType.Event].toLowerCase())) response = DataType.Event;
 			if (tag.startsWith('rpgm/template/' + DataType[DataType.Timeline].toLowerCase())) response = DataType.Timeline;
 			if (tag.startsWith('rpgm/template/' + DataType[DataType.Note].toLowerCase())) response = DataType.Note;
+			if (tag.startsWith('rpgm/template/' + DataType[DataType.Music].toLowerCase())) response = DataType.Music;
 		});
 
 		return response;
 	}
-
-
 	
 	public getDataTag(
 		tags: Array<string>|null,
@@ -86,6 +87,7 @@ export class TagManager {
 				if (tag.startsWith(this.dataSettings.get(DataType.Event) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(DataType.Timeline) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(DataType.Note) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(DataType.Music) ?? '?')) response = tag;
 			});
 		}
 
@@ -116,6 +118,7 @@ export class TagManager {
 		if (tag.startsWith(this.dataSettings.get(DataType.Event) ?? '?')) response = DataType.Event;
 		if (tag.startsWith(this.dataSettings.get(DataType.Timeline) ?? '?')) response = DataType.Timeline;
 		if (tag.startsWith(this.dataSettings.get(DataType.Note) ?? '?')) response = DataType.Note;
+		if (tag.startsWith(this.dataSettings.get(DataType.Music) ?? '?')) response = DataType.Music;
 
 		return response;
 	}

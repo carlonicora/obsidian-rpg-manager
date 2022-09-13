@@ -5,10 +5,10 @@ import {ContentType} from "../enums/ContentType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 
 export class CharacterTableComponent extends AbstractComponent {
-	generateData(
+	public async generateData(
 		data: CharacterInterface[],
 		title:string|null,
-	): ResponseElementInterface|null {
+	): Promise<ResponseElementInterface|null> {
 		if (data.length === 0){
 			return null;
 		}

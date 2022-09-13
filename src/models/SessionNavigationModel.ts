@@ -13,7 +13,7 @@ export class SessionNavigationModel extends AbstractModel {
 		response.addElement(this.generateBreadcrumb());
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'Header',
 				this.currentElement
@@ -22,7 +22,7 @@ export class SessionNavigationModel extends AbstractModel {
 
 		if (this.sourceMeta?.abt != null){
 			response.addElement(
-				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 					this.currentElement.campaign.settings,
 					'AbtPlot',
 					this.currentElement,
@@ -34,7 +34,7 @@ export class SessionNavigationModel extends AbstractModel {
 
 		if (this.sourceMeta?.storycircle != null){
 			response.addElement(
-				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 					this.currentElement.campaign.settings,
 					'StoryCirclePlot',
 					this.currentElement,

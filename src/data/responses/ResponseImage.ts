@@ -4,7 +4,7 @@ import {ResponseType} from "../../enums/ResponseType";
 import {ImageResponseInterface} from "../../interfaces/response/ImageResponseInterface";
 
 export class ResponseImage extends AbstractResponse implements ImageResponseInterface {
-	public imgSrc: string|null;
+	public imgSrc: string|null|undefined;
 	public width: number;
 	public height: number;
 

@@ -10,8 +10,8 @@ export abstract class AbstractComponent implements ComponentInterface {
 	}
 
 	abstract generateData(
-		data: RpgDataInterface[]|RpgDataInterface,
-		title: string|null,
-		additionalInformation: any|null,
-	): ResponseElementInterface|null;
+		data: RpgDataInterface[] | RpgDataInterface,
+		title: string | null,
+		additionalInformation: any | null,
+	): Promise<ResponseElementInterface | null>;
 }

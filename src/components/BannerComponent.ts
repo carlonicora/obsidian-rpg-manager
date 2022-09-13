@@ -6,10 +6,10 @@ import {Campaign} from "../data/Campaign";
 import {Timeline} from "../data/Timeline";
 
 export class BannerComponent extends AbstractComponent{
-	generateData(
+	public async generateData(
 		data: RpgDataInterface,
 		title: string | null,
-	): ResponseElementInterface | null {
+	): Promise<ResponseElementInterface|null> {
 		const response = new ResponseBanner(this.app);
 
 		if (data instanceof Campaign) {

@@ -5,10 +5,10 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 
 export class FactionTableComponent extends AbstractComponent {
-	generateData(
+	public async generateData(
 		data: RpgDataInterface[],
 		title:string|null,
-	): ResponseElementInterface | null {
+	): Promise<ResponseElementInterface|null> {
 		if (data.length === 0){
 			return null;
 		}

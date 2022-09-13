@@ -24,7 +24,7 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	public completed: boolean;
 	public synopsis: string|null = null;
 	public additionalInformation: string|null = null;
-	public image: string|null = null;
+	public image: string|null|undefined = null;
 
 	public frontmatter: FrontMatterCache|undefined;
 

@@ -4,7 +4,7 @@ import {ResponseType} from "../../enums/ResponseType";
 import {App} from "obsidian";
 
 export class ResponseBanner extends AbstractResponse implements BannerResponseInterface {
-	public image: string|null;
+	public image: string|null|undefined;
 	public title: string;
 	public subtitle: string|null;
 	public date: string|null;

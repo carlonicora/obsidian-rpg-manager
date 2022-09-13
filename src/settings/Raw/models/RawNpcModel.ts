@@ -27,6 +27,23 @@ export class RawNpcModel extends NpcModel {
 		response: Promise<ResponseDataInterface>,
 	): Promise<void> {
 		response.then((response: ResponseDataInterface) => {
+			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				CampaignSetting.Raw,
+				'CharacterRecordSheet',
+				this.currentElement,
+				null,
+				this.sourceMeta
+			).then(component => {
+				response.addElement(
+					component,
+					2,
+				);
+			})
+
+		});
+
+		/*
+		response.then((response: ResponseDataInterface) => {
 			response.addElement(
 				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 					CampaignSetting.Raw,
@@ -38,5 +55,7 @@ export class RawNpcModel extends NpcModel {
 				2,
 			);
 		});
+
+		 */
 	}
 }

@@ -8,7 +8,7 @@ import {HeaderResponseElementInterface} from "../../interfaces/response/HeaderRe
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public link: ContentInterface;
 	public name: string;
-	public imgSrc: string|null;
+	public imgSrc: string|null|undefined;
 	public imgWidth: number;
 	public imgHeight: number;
 	public elements: Array<HeaderResponseElementInterface>;

@@ -18,6 +18,7 @@ import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {RpgError} from "../errors/RpgError";
 import {HiddenError} from "../errors/HiddenError";
 import {ElementDuplicated} from "../errors/ElementDuplicated";
+import {MusicInterface} from "../interfaces/data/MusicInterface";
 
 export class RpgData extends Component {
 	private data: RpgDataList;
@@ -372,6 +373,16 @@ export class RpgData extends Component {
 		return this.data
 			.where((data: CharacterInterface) =>
 				(data.type === DataType.Character || data.type === DataType.NonPlayerCharacter) &&
+				(campaignId ? data.campaign.campaignId === campaignId : true)
+			);
+	}
+
+	public getMusicList(
+		campaignId: number|null = null,
+	): RpgDataListInterface {
+		return this.data
+			.where((data: MusicInterface) =>
+				data.type === DataType.Music &&
 				(campaignId ? data.campaign.campaignId === campaignId : true)
 			);
 	}

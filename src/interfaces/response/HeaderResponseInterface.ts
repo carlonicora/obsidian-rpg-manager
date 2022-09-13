@@ -5,7 +5,7 @@ import {HeaderResponseElementInterface} from "./HeaderResponseElementInterface";
 export interface HeaderResponseInterface extends ResponseElementInterface {
 	link: ContentInterface;
 	name: string;
-	imgSrc: string|null;
+	imgSrc: string|null|undefined;
 	imgWidth: number;
 	imgHeight: number;
 

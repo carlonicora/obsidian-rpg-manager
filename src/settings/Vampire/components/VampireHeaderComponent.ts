@@ -6,12 +6,12 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {VampireCharacterInterface} from "../interfaces/VampireCharacterInterface";
 
 export class VampireHeaderComponent extends HeaderComponent {
-	generateData(
+	public async generateData(
 		data: VampireCharacterInterface,
 		title: string | null,
 		additionalInformation: any|null = null,
-	): ResponseElementInterface | null {
-		const response = super.generateData(data, title, additionalInformation) as HeaderResponseInterface;
+	): Promise<ResponseElementInterface|null> {
+		const response = await super.generateData(data, title, additionalInformation) as HeaderResponseInterface;
 
 		if (data.generation != null) {
 			response.addElement(new ResponseHeaderElement(this.app, 'Generation', data.generation.toString(), HeaderResponseType.Short));

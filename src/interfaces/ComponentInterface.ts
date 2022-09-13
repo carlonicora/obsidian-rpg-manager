@@ -6,5 +6,5 @@ export interface ComponentInterface {
 		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null,
 		additionalInformation: any|null,
-	): ResponseElementInterface|null;
+	): Promise<ResponseElementInterface|null>;
 }

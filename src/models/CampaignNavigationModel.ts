@@ -11,7 +11,7 @@ export class CampaignNavigationModel extends AbstractModel {
 		const response = new ResponseData();
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'Banner',
 				this.currentElement
@@ -20,7 +20,7 @@ export class CampaignNavigationModel extends AbstractModel {
 
 		if (this.sourceMeta?.abt != null){
 			response.addElement(
-				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+				await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 					this.currentElement.settings,
 					'AbtPlot',
 					this.currentElement,

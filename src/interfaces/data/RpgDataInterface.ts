@@ -15,7 +15,7 @@ export interface RpgDataInterface {
 
 	synopsis: string|null;
 	additionalInformation: string|null;
-	image: string|null;
+	image: string|null|undefined;
 
 	frontmatter: FrontMatterCache|undefined;
 

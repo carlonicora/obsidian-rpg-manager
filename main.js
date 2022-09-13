@@ -601,6 +601,9 @@ var RpgData = class extends import_obsidian3.Component {
   getCharacterList(campaignId = null) {
     return this.data.where((data) => (data.type === 4 /* Character */ || data.type === 5 /* NonPlayerCharacter */) && (campaignId ? data.campaign.campaignId === campaignId : true));
   }
+  getMusicList(campaignId = null) {
+    return this.data.where((data) => data.type === 12 /* Music */ && (campaignId ? data.campaign.campaignId === campaignId : true));
+  }
   getPlayerCharacterList(campaignId = null) {
     return this.data.where((data) => data.type === 4 /* Character */ && (campaignId ? data.campaign.campaignId === campaignId : true));
   }
@@ -781,214 +784,230 @@ var ResponseTable = class extends AbstractResponse {
 // src/components/SessionTableComponent.ts
 var SessionTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Sessions");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Session", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Play Date", 0 /* String */)
-    ]);
-    data.forEach((session) => {
-      var _a, _b;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.sessionId, 1 /* Number */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.link, 2 /* Link */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.synopsis, 4 /* Markdown */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = session.date) == null ? void 0 : _a.toDateString(), 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = session.irl) == null ? void 0 : _b.toDateString(), 0 /* String */, true)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Sessions");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Session", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Play Date", 0 /* String */)
       ]);
+      data.forEach((session) => {
+        var _a, _b;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.sessionId, 1 /* Number */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.link, 2 /* Link */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.synopsis, 4 /* Markdown */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = session.date) == null ? void 0 : _a.toDateString(), 0 /* String */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = session.irl) == null ? void 0 : _b.toDateString(), 0 /* String */, true)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/AdventureTableComponent.ts
 var AdventureTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Adventures");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Adventure", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((adventure) => {
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.adventureId, 1 /* Number */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.link, 2 /* Link */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Adventures");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Adventure", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((adventure) => {
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.adventureId, 1 /* Number */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.link, 2 /* Link */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/CharacterTableComponent.ts
 var CharacterTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Characters");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Age", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((character) => {
-      var _a, _b;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.age) == null ? void 0 : _a.toString(), 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Characters");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Age", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((character) => {
+        var _a, _b;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.age) == null ? void 0 : _a.toString(), 0 /* String */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/LocationTableComponent.ts
 var LocationTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Locations");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((location) => {
-      var _a;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(location.imageSrcElement, 5 /* Image */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(location.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = location.additionalInformation) != null ? _a : location.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Locations");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((location) => {
+        var _a;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(location.imageSrcElement, 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(location.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = location.additionalInformation) != null ? _a : location.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/EventTableComponent.ts
 var EventTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Events");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((event) => {
-      var _a, _b;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(event.imageSrcElement, 5 /* Image */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(event.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = event.date) == null ? void 0 : _a.toDateString(), 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = event.additionalInformation) != null ? _b : event.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Events");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((event) => {
+        var _a, _b;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(event.imageSrcElement, 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(event.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = event.date) == null ? void 0 : _a.toDateString(), 0 /* String */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = event.additionalInformation) != null ? _b : event.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/ClueTableComponent.ts
 var ClueTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Clues");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Clue", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Found", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((clue) => {
-      var _a, _b;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.imageSrcElement, 5 /* Image */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.isFound ? (_a = clue.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = clue.additionalInformation) != null ? _b : clue.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Clues");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Clue", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Found", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((clue) => {
+        var _a, _b;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.imageSrcElement, 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.isFound ? (_a = clue.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = clue.additionalInformation) != null ? _b : clue.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/FactionTableComponent.ts
 var FactionTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Factions");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Faction", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((faction) => {
-      var _a;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(faction.imageSrcElement, 5 /* Image */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(faction.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = faction.additionalInformation) != null ? _a : faction.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Factions");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Faction", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((faction) => {
+        var _a;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(faction.imageSrcElement, 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(faction.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = faction.additionalInformation) != null ? _a : faction.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/components/SceneTableComponent.ts
 var SceneTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Scenes");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Scene", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Start", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("End", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Duration", 0 /* String */)
-    ]);
-    data.forEach((scene) => {
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link, 2 /* Link */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.synopsis, 4 /* Markdown */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.startTime), 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.endTime), 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.duration, 0 /* String */, true)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Scenes");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Scene", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Start", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("End", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Duration", 0 /* String */)
       ]);
+      data.forEach((scene) => {
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link, 2 /* Link */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.synopsis, 4 /* Markdown */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.startTime), 0 /* String */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.endTime), 0 /* String */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.duration, 0 /* String */, true)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
@@ -1015,18 +1034,20 @@ var Timeline = class extends AbstractRpgElementData {
 // src/components/BannerComponent.ts
 var BannerComponent = class extends AbstractComponent {
   generateData(data, title) {
-    const response = new ResponseBanner(this.app);
-    if (data instanceof Campaign) {
-      response.image = data.image;
-      response.title = data.name;
-      response.date = data.currentDate ? data.currentDate.toDateString() : "";
-    } else if (data instanceof Timeline) {
-      response.image = data.campaign.image;
-      response.title = "Timeline";
-      response.date = data.campaign.currentDate ? data.campaign.currentDate.toDateString() : "";
-      response.subtitle = data.campaign.name;
-    }
-    return response;
+    return __async(this, null, function* () {
+      const response = new ResponseBanner(this.app);
+      if (data instanceof Campaign) {
+        response.image = data.image;
+        response.title = data.name;
+        response.date = data.currentDate ? data.currentDate.toDateString() : "";
+      } else if (data instanceof Timeline) {
+        response.image = data.campaign.image;
+        response.title = "Timeline";
+        response.date = data.campaign.currentDate ? data.campaign.currentDate.toDateString() : "";
+        response.subtitle = data.campaign.name;
+      }
+      return response;
+    });
   }
 };
 
@@ -1045,24 +1066,26 @@ var ResponseLine = class extends AbstractResponse {
 // src/components/CharacterSynopsisComponent.ts
 var CharacterSynopsisComponent = class extends AbstractComponent {
   generateData(data, title) {
-    var _a;
-    let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';
-    if (data.synopsis != null && data.synopsis !== "") {
-      fullSynopsis = "";
-      if (data.isDead) {
-        fullSynopsis = "_Deceased " + ((_a = data.death) == null ? void 0 : _a.toDateString()) + "_\n";
+    return __async(this, null, function* () {
+      var _a;
+      let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';
+      if (data.synopsis != null && data.synopsis !== "") {
+        fullSynopsis = "";
+        if (data.isDead) {
+          fullSynopsis = "_Deceased " + ((_a = data.death) == null ? void 0 : _a.toDateString()) + "_\n";
+        }
+        fullSynopsis += data.link.toString();
+        const pronoun = data.pronoun;
+        if (pronoun != null) {
+          fullSynopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
+        }
+        fullSynopsis += data.isDead ? " was " : " is ";
+        fullSynopsis += data.synopsis;
       }
-      fullSynopsis += data.link.toString();
-      const pronoun = data.pronoun;
-      if (pronoun != null) {
-        fullSynopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
-      }
-      fullSynopsis += data.isDead ? " was " : " is ";
-      fullSynopsis += data.synopsis;
-    }
-    const response = new ResponseLine(this.app);
-    response.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(fullSynopsis, 4 /* Markdown */);
-    return response;
+      const response = new ResponseLine(this.app);
+      response.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(fullSynopsis, 4 /* Markdown */);
+      return response;
+    });
   }
 };
 
@@ -1084,11 +1107,13 @@ var ResponseImage = class extends AbstractResponse {
 // src/components/ImageComponent.ts
 var ImageComponent = class extends AbstractComponent {
   generateData(data, title) {
-    const response = new ResponseImage(this.app);
-    response.imgSrc = data.image;
-    response.height = 300;
-    response.width = 300;
-    return response;
+    return __async(this, null, function* () {
+      const response = new ResponseImage(this.app);
+      response.imgSrc = data.image;
+      response.height = 300;
+      response.width = 300;
+      return response;
+    });
   }
 };
 
@@ -1210,77 +1235,127 @@ var ResponseHeaderElement = class extends AbstractResponse {
   }
 };
 
+// src/enums/FetcherType.ts
+var FetcherType = /* @__PURE__ */ ((FetcherType2) => {
+  FetcherType2[FetcherType2["YouTubeImage"] = 0] = "YouTubeImage";
+  return FetcherType2;
+})(FetcherType || {});
+
+// src/data/Music.ts
+var Music = class extends AbstractRpgElementData {
+  reload(file, metadata) {
+    var _a;
+    super.reload(file, metadata);
+    this.url = (_a = this.frontmatter) == null ? void 0 : _a.url;
+  }
+  getThumbnail() {
+    const imageUrl = this.fetchImage();
+    imageUrl.then((imageUrl2) => {
+      this.image = imageUrl2;
+    });
+    return imageUrl;
+  }
+  getDynamicImageSrcElement() {
+    return __async(this, null, function* () {
+      if (this.image == null) {
+        this.image = yield this.fetchImage();
+      }
+      return this.imageSrcElement;
+    });
+  }
+  fetchImage() {
+    return __async(this, null, function* () {
+      if (this.url == void 0)
+        return void 0;
+      if (this.url.indexOf("youtube.com") !== -1) {
+        const fetcher = this.app.plugins.getPlugin("rpg-manager").factories.fetchers.create(0 /* YouTubeImage */);
+        return fetcher.fetchImage(this.url);
+      }
+    });
+  }
+};
+
 // src/components/HeaderComponent.ts
 var HeaderComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation = null) {
-    var _a;
-    const response = new ResponseHeader(this.app);
-    response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
-    response.name = data.name;
-    let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
-    let synopsisTitle = "Synopsis";
-    if (data instanceof Character) {
-      if (data.synopsis != null && data.synopsis !== "") {
-        synopsis = "";
-        synopsis += data.link.toString();
-        const pronoun = data.pronoun;
-        if (pronoun != null) {
-          synopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
+    return __async(this, null, function* () {
+      var _a;
+      const response = new ResponseHeader(this.app);
+      response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
+      response.name = data.name;
+      let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
+      let synopsisTitle = "Synopsis";
+      if (data instanceof Character) {
+        if (data.synopsis != null && data.synopsis !== "") {
+          synopsis = "";
+          synopsis += data.link.toString();
+          const pronoun = data.pronoun;
+          if (pronoun != null) {
+            synopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
+          }
+          synopsis += data.isDead ? " was " : " is ";
+          synopsis += data.synopsis;
         }
-        synopsis += data.isDead ? " was " : " is ";
-        synopsis += data.synopsis;
-      }
-      response.addElement(new ResponseHeaderElement(this.app, "Synopsis", synopsis, 1 /* Long */));
-      if (data.goals != null)
-        response.addElement(new ResponseHeaderElement(this.app, "Goals", data.goals.toString(), 1 /* Long */));
-      if (data.pronoun != null)
-        response.addElement(new ResponseHeaderElement(this.app, "Pronoun", this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(data.pronoun), 0 /* Short */));
-      if (data.age != null || data.death != null) {
-        response.addElement(new ResponseHeaderElement(this.app, "Status", data.death ? "Dead" : "Alive", 0 /* Short */));
-      }
-      if (data.death != null) {
-        let death = data.death.toDateString();
-        if (data.age != null) {
-          death += " at age " + data.age;
+        response.addElement(new ResponseHeaderElement(this.app, "Synopsis", synopsis, 1 /* Long */));
+        if (data.goals != null)
+          response.addElement(new ResponseHeaderElement(this.app, "Goals", data.goals.toString(), 1 /* Long */));
+        if (data.pronoun != null)
+          response.addElement(new ResponseHeaderElement(this.app, "Pronoun", this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(data.pronoun), 0 /* Short */));
+        if (data.age != null || data.death != null) {
+          response.addElement(new ResponseHeaderElement(this.app, "Status", data.death ? "Dead" : "Alive", 0 /* Short */));
         }
-        response.addElement(new ResponseHeaderElement(this.app, "Death", death, 0 /* Short */));
-      } else if (data.age != null) {
-        response.addElement(new ResponseHeaderElement(this.app, "Age", data.age.toString(), 0 /* Short */));
-      }
-    } else {
-      if (data instanceof Scene) {
-        synopsisTitle = "Scene Goal";
-      }
-      if (data.synopsis != null && data.synopsis != "") {
-        synopsis = data.synopsis;
-      }
-      response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
-      if (data instanceof Clue) {
-        const clueFound = data.isFound ? "Clue found on " + ((_a = data.found) == null ? void 0 : _a.toDateString()) : '<span class="rpgm-missing">Clue not found yet</span>';
-        response.addElement(new ResponseHeaderElement(this.app, "Found", clueFound, 0 /* Short */));
-      } else if (data instanceof Location) {
-        if (data.address != null && data.address != "") {
-          response.addElement(new ResponseHeaderElement(this.app, "Address", data.address, 0 /* Short */));
+        if (data.death != null) {
+          let death = data.death.toDateString();
+          if (data.age != null) {
+            death += " at age " + data.age;
+          }
+          response.addElement(new ResponseHeaderElement(this.app, "Death", death, 0 /* Short */));
+        } else if (data.age != null) {
+          response.addElement(new ResponseHeaderElement(this.app, "Age", data.age.toString(), 0 /* Short */));
         }
-      } else if (data instanceof Event) {
-        if (data.date != null) {
-          response.addElement(new ResponseHeaderElement(this.app, "Date", data.date.toDateString(), 0 /* Short */));
+      } else {
+        if (data instanceof Scene) {
+          synopsisTitle = "Scene Goal";
         }
-      } else if (data instanceof Scene) {
-        if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
-          response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
+        if (data.synopsis != null && data.synopsis != "") {
+          synopsis = data.synopsis;
         }
-        if (data.action != null && data.action != "") {
-          response.addElement(new ResponseHeaderElement(this.app, "Action", data.action, 1 /* Long */));
-        } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
-          response.addElement(new ResponseHeaderElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
+        response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
+        if (data instanceof Clue) {
+          const clueFound = data.isFound ? "Clue found on " + ((_a = data.found) == null ? void 0 : _a.toDateString()) : '<span class="rpgm-missing">Clue not found yet</span>';
+          response.addElement(new ResponseHeaderElement(this.app, "Found", clueFound, 0 /* Short */));
+        } else if (data instanceof Location) {
+          if (data.address != null && data.address != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Address", data.address, 0 /* Short */));
+          }
+        } else if (data instanceof Event) {
+          if (data.date != null) {
+            response.addElement(new ResponseHeaderElement(this.app, "Date", data.date.toDateString(), 0 /* Short */));
+          }
+        } else if (data instanceof Scene) {
+          if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
+          }
+          if (data.action != null && data.action != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Action", data.action, 1 /* Long */));
+          } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
+          }
+        } else if (data instanceof Music) {
+          if (data.image != null) {
+            response.imgSrc = data.image;
+          } else {
+            response.imgSrc = yield data.getThumbnail();
+          }
+          if (data.url !== void 0)
+            response.addElement(new ResponseHeaderElement(this.app, "link", data.url, 1 /* Long */));
         }
       }
-    }
-    response.imgSrc = data.image;
-    response.imgWidth = 300;
-    response.imgHeight = 300;
-    return response;
+      response.imgSrc = data.image;
+      response.imgWidth = 300;
+      response.imgHeight = 300;
+      return response;
+    });
   }
 };
 
@@ -1298,115 +1373,123 @@ var Adventure = class extends AbstractRpgOutlineData {
 // src/components/AbtPlotComponent.ts
 var AbtPlotComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
-    if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
-      return null;
-    const response = new ResponseTable(this.app);
-    if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").io.getSessionList(data.campaign.campaignId, data.adventureId).elements.length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
-      response.create = 1 /* Adventure */;
-      response.campaignId = data.campaign.campaignId;
-      response.adventureId = data.adventureId;
-    }
-    response.title = "ABT Plot";
-    response.class = "rpgm-plot";
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.and ? additionalInformation.and : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.but ? additionalInformation.but : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.therefore ? additionalInformation.therefore : "", 4 /* Markdown */)
-    ]);
-    return response;
+    return __async(this, null, function* () {
+      if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
+        return null;
+      const response = new ResponseTable(this.app);
+      if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").io.getSessionList(data.campaign.campaignId, data.adventureId).elements.length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
+        response.create = 1 /* Adventure */;
+        response.campaignId = data.campaign.campaignId;
+        response.adventureId = data.adventureId;
+      }
+      response.title = "ABT Plot";
+      response.class = "rpgm-plot";
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.and ? additionalInformation.and : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.but ? additionalInformation.but : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.therefore ? additionalInformation.therefore : "", 4 /* Markdown */)
+      ]);
+      return response;
+    });
   }
 };
 
 // src/components/StoryCirclePlotComponent.ts
 var StoryCirclePlotComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
-    if (additionalInformation == null || (additionalInformation.you == null || additionalInformation.need == null || additionalInformation.go == null || additionalInformation.search == null || additionalInformation.find == null || additionalInformation.take == null || additionalInformation.return == null || additionalInformation.change == null) || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return === "" && additionalInformation.change === "")
-      return null;
-    const response = new ResponseTable(this.app);
-    response.title = "Story Circle Plot";
-    response.class = "rpgm-plot";
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.you ? additionalInformation.you : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.go ? additionalInformation.go : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.search ? additionalInformation.search : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.find ? additionalInformation.find : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.take ? additionalInformation.take : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.return ? additionalInformation.return : "", 4 /* Markdown */)
-    ]);
-    response.addContent([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.change ? additionalInformation.change : "", 4 /* Markdown */)
-    ]);
-    return response;
+    return __async(this, null, function* () {
+      if (additionalInformation == null || (additionalInformation.you == null || additionalInformation.need == null || additionalInformation.go == null || additionalInformation.search == null || additionalInformation.find == null || additionalInformation.take == null || additionalInformation.return == null || additionalInformation.change == null) || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return === "" && additionalInformation.change === "")
+        return null;
+      const response = new ResponseTable(this.app);
+      response.title = "Story Circle Plot";
+      response.class = "rpgm-plot";
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.you ? additionalInformation.you : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.go ? additionalInformation.go : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.search ? additionalInformation.search : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.find ? additionalInformation.find : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.take ? additionalInformation.take : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.return ? additionalInformation.return : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.change ? additionalInformation.change : "", 4 /* Markdown */)
+      ]);
+      return response;
+    });
   }
 };
 
 // src/settings/Vampire/components/VampireCharacterTableComponent.ts
 var VampireCharacterTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Characters");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Generation", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((character) => {
-      var _a, _b;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.generation) == null ? void 0 : _a.toString(), 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
+    return __async(this, null, function* () {
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Characters");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Generation", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      data.forEach((character) => {
+        var _a, _b;
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.generation) == null ? void 0 : _a.toString(), 0 /* String */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
+        ]);
+      });
+      return response;
     });
-    return response;
   }
 };
 
 // src/settings/Vampire/components/VampireHeaderComponent.ts
 var VampireHeaderComponent = class extends HeaderComponent {
   generateData(data, title, additionalInformation = null) {
-    const response = super.generateData(data, title, additionalInformation);
-    if (data.generation != null) {
-      response.addElement(new ResponseHeaderElement(this.app, "Generation", data.generation.toString(), 0 /* Short */));
-    }
-    return response;
+    return __async(this, null, function* () {
+      const response = yield __superGet(VampireHeaderComponent.prototype, this, "generateData").call(this, data, title, additionalInformation);
+      if (data.generation != null) {
+        response.addElement(new ResponseHeaderElement(this.app, "Generation", data.generation.toString(), 0 /* Short */));
+      }
+      return response;
+    });
   }
 };
 
@@ -1559,33 +1642,40 @@ var RawResponseCharacterRecordSheet = class extends AbstractResponse {
 // src/settings/Raw/components/RawCharacterRecordSheetComponent.ts
 var RawCharacterRecordSheetComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
-    const response = new RawResponseCharacterRecordSheet(this.app, additionalInformation);
-    return response;
+    return __async(this, null, function* () {
+      const response = new RawResponseCharacterRecordSheet(this.app, additionalInformation);
+      return response;
+    });
   }
 };
 
 // src/components/MusicTableComponent.ts
 var MusicTableComponent = class extends AbstractComponent {
   generateData(data, title) {
-    if (data.length === 0) {
-      return null;
-    }
-    const response = new ResponseTable(this.app);
-    response.addTitle(title ? title : "Music");
-    response.addHeaders([
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Music", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("url", 0 /* String */),
-      this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-    ]);
-    data.forEach((music) => {
+    return __async(this, null, function* () {
       var _a, _b;
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(music.link, 2 /* Link */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = music.url) != null ? _a : '<span class="rpgm-missing">No URL provided</span>', 4 /* Markdown */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = music.additionalInformation) != null ? _b : music.synopsis, 4 /* Markdown */)
+      if (data.length === 0) {
+        return null;
+      }
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Music");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Music", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("url", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
       ]);
+      for (let musicCounter = 0; musicCounter < data.length; musicCounter++) {
+        const music = data[musicCounter];
+        response.addContent([
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(yield music.getDynamicImageSrcElement(), 5 /* Image */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(music.link, 2 /* Link */, true),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = music.url) != null ? _a : '<span class="rpgm-missing">No URL provided</span>', 4 /* Markdown */),
+          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = music.additionalInformation) != null ? _b : music.synopsis, 4 /* Markdown */)
+        ]);
+      }
+      return response;
     });
-    return response;
   }
 };
 
@@ -1612,12 +1702,14 @@ var ComponentsMap = {
 };
 var ComponentFactory = class extends AbstractFactory {
   create(settings, type, data, title = null, additionalInformation = null) {
-    let componentKey = CampaignSetting[settings] + type;
-    if (ComponentsMap[componentKey] == null && settings !== 0 /* Agnostic */) {
-      componentKey = CampaignSetting[0 /* Agnostic */] + type;
-    }
-    const component = new ComponentsMap[componentKey](this.app);
-    return component.generateData(data, title, additionalInformation);
+    return __async(this, null, function* () {
+      let componentKey = CampaignSetting[settings] + type;
+      if (ComponentsMap[componentKey] == null && settings !== 0 /* Agnostic */) {
+        componentKey = CampaignSetting[0 /* Agnostic */] + type;
+      }
+      const component = new ComponentsMap[componentKey](this.app);
+      return component.generateData(data, title, additionalInformation);
+    });
   }
 };
 
@@ -1785,15 +1877,6 @@ var RawCampaign = class extends Campaign {
     var _a, _b;
     super.reload(file, metadata);
     this.apiCampaignKey = (_b = (_a = this.frontmatter) == null ? void 0 : _a.apiCampaignKey) != null ? _b : null;
-  }
-};
-
-// src/data/Music.ts
-var Music = class extends AbstractRpgElementData {
-  reload(file, metadata) {
-    var _a;
-    super.reload(file, metadata);
-    this.url = (_a = this.frontmatter) == null ? void 0 : _a.url;
   }
 };
 
@@ -2620,7 +2703,7 @@ var AdventureModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
         if (leftData.sessionId > rightData.sessionId)
           return -1;
         if (leftData.sessionId < rightData.sessionId)
@@ -2637,21 +2720,21 @@ var CampaignModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AdventureTable", this.app.plugins.getPlugin("rpg-manager").io.getAdventureList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AdventureTable", this.app.plugins.getPlugin("rpg-manager").io.getAdventureList(this.currentElement.campaignId).sort(function(leftData, rightData) {
         if (leftData.adventureId > rightData.adventureId)
           return -1;
         if (leftData.adventureId < rightData.adventureId)
           return 1;
         return 0;
       }).elements));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getSessionList(this.currentElement.campaignId).sort(function(leftData, rightData) {
         if (leftData.sessionId > rightData.sessionId)
           return -1;
         if (leftData.sessionId < rightData.sessionId)
           return 1;
         return 0;
       }).elements));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getCharacterList(this.currentElement.campaignId).sort(function(leftData, rightData) {
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getCharacterList(this.currentElement.campaignId).sort(function(leftData, rightData) {
         if (leftData.name > rightData.name)
           return 1;
         if (leftData.name < rightData.name)
@@ -2669,9 +2752,9 @@ var CampaignNavigationModel = class extends AbstractModel {
     return __async(this, null, function* () {
       var _a;
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "Banner", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "Banner", this.currentElement));
       if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-        response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
       }
       return response;
     });
@@ -2684,10 +2767,10 @@ var ClueModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 8 /* Clue */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 8 /* Clue */)));
       return response;
     });
   }
@@ -2712,10 +2795,10 @@ var EventModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
       return response;
     });
   }
@@ -2727,9 +2810,9 @@ var FactionModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
       return response;
     });
   }
@@ -2741,12 +2824,12 @@ var LocationModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 6 /* Location */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 6 /* Location */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */), "Contained locations"));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */, 6 /* Location */), "Part of locations"));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */, 9 /* Faction */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */), "Contained locations"));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */, 6 /* Location */), "Part of locations"));
       return response;
     });
   }
@@ -2757,7 +2840,7 @@ var NoteModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
       return response;
     });
   }
@@ -2769,12 +2852,12 @@ var NpcModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 7 /* Event */, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
       return response;
     });
   }
@@ -2786,10 +2869,10 @@ var PcModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
       return response;
     });
   }
@@ -2800,11 +2883,11 @@ var SceneModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 4 /* Character */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 9 /* Faction */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 8 /* Clue */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 6 /* Location */)));
       return response;
     });
   }
@@ -2816,7 +2899,7 @@ var SceneNavigationModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement, null, this.sourceMeta));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement, null, this.sourceMeta));
       return response;
     });
   }
@@ -2827,8 +2910,8 @@ var SessionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getSceneList(this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).elements));
       return response;
     });
   }
@@ -2841,12 +2924,12 @@ var SessionNavigationModel = class extends AbstractModel {
       var _a, _b;
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
       if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-        response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
       }
       if (((_b = this.sourceMeta) == null ? void 0 : _b.storycircle) != null) {
-        response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "StoryCirclePlot", this.currentElement, null, this.sourceMeta.storycircle));
+        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "StoryCirclePlot", this.currentElement, null, this.sourceMeta.storycircle));
       }
       return response;
     });
@@ -2884,7 +2967,7 @@ var TimelineModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Banner", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Banner", this.currentElement));
       const timeline = new TimelineResponse(this.app);
       if (this.sourceMeta.events === true) {
         this.addEvents(timeline);
@@ -2962,9 +3045,9 @@ var AdventureNavigationModel = class extends AbstractModel {
       var _a;
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
       if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-        response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
       }
       return response;
     });
@@ -3023,7 +3106,9 @@ var RawNpcModel = class extends NpcModel {
   addCharacterRecordSheet(response) {
     return __async(this, null, function* () {
       response.then((response2) => {
-        response2.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(1 /* Raw */, "CharacterRecordSheet", this.currentElement, null, this.sourceMeta), 2);
+        this.app.plugins.getPlugin("rpg-manager").factories.components.create(1 /* Raw */, "CharacterRecordSheet", this.currentElement, null, this.sourceMeta).then((component) => {
+          response2.addElement(component, 2);
+        });
       });
     });
   }
@@ -3035,10 +3120,10 @@ var MusicModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 2 /* Session */, 12 /* Music */)));
-      response.addElement(this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 2 /* Session */, 12 /* Music */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 12 /* Music */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 2 /* Session */, 12 /* Music */)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.app.plugins.getPlugin("rpg-manager").io.getRelationshipList(this.currentElement, 2 /* Session */, 12 /* Music */)));
       return response;
     });
   }
@@ -4060,7 +4145,7 @@ var TimelineView = class extends AbstractView {
 // src/views/ImageView.ts
 var ImageView = class extends AbstractView {
   render(container, data) {
-    if (data.imgSrc !== null) {
+    if (data.imgSrc != null) {
       const divContainer = container.createDiv();
       const image = new Image(data.width, data.height);
       image.src = data.imgSrc;
@@ -4447,6 +4532,55 @@ var ViewFactory = class extends AbstractFactory {
   }
 };
 
+// src/abstracts/AbstractFetcher.ts
+var AbstractFetcher = class {
+  constructor(app2) {
+    this.app = app2;
+  }
+};
+
+// src/fetchers/YouTubeImageFetcher.ts
+var YouTubeImageFetcher = class extends AbstractFetcher {
+  fetchImage(url) {
+    return __async(this, null, function* () {
+      var _a, _b, _c, _d;
+      const youTubeApiKey = this.app.plugins.getPlugin("rpg-manager").settings.YouTubeKey;
+      if (youTubeApiKey === "" || youTubeApiKey == null)
+        return void 0;
+      let apiResponse;
+      const playlistIdentifier = "playlist?list=";
+      const songIdentifier = "watch?v=";
+      console.log("url", url);
+      if (url.indexOf(playlistIdentifier) !== -1) {
+        const playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
+        apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/playlistItems?key=" + youTubeApiKey + "&part=snippet&playlistId=" + playlistId);
+      } else if (url.indexOf(songIdentifier) !== -1) {
+        const songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
+        apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/videos?key=" + youTubeApiKey + "&part=snippet&id=" + songId);
+      }
+      const jsonData = yield apiResponse.json();
+      if (jsonData === void 0)
+        return void 0;
+      return (_d = (_c = (_b = (_a = jsonData.items[0]) == null ? void 0 : _a.snippet) == null ? void 0 : _b.thumbnails) == null ? void 0 : _c.high) == null ? void 0 : _d.url;
+    });
+  }
+};
+
+// src/factories/FetcherFactory.ts
+var FetcherFactory = class extends AbstractFactory {
+  constructor(app2) {
+    super(app2);
+    this.fetchers = /* @__PURE__ */ new Map();
+    this.fetchers.set(0 /* YouTubeImage */, YouTubeImageFetcher);
+  }
+  create(type) {
+    const fetcher = this.fetchers.get(type);
+    if (fetcher === void 0)
+      throw new Error("Fetcher " + FetcherType[type] + "not configured");
+    return new fetcher(this.app);
+  }
+};
+
 // src/RpgFactories.ts
 var RpgFactories = class {
   constructor(app2) {
@@ -4461,6 +4595,7 @@ var RpgFactories = class {
     this.pronouns = new PronounFactory(this.app);
     this.templates = new TemplateFactory(this.app);
     this.views = new ViewFactory(this.app);
+    this.fetchers = new FetcherFactory(this.app);
   }
 };
 
@@ -4646,6 +4781,7 @@ var TagManager = class {
     this.dataSettings.set(5 /* NonPlayerCharacter */, settings.npcTag);
     this.dataSettings.set(10 /* Note */, settings.noteTag);
     this.dataSettings.set(11 /* Timeline */, settings.timelineTag);
+    this.dataSettings.set(12 /* Music */, settings.musicTag);
     this.requiredIds = /* @__PURE__ */ new Map();
     this.requiredIds.set(0 /* Campaign */, [0 /* Campaign */]);
     this.requiredIds.set(1 /* Adventure */, [0 /* Campaign */]);
@@ -4659,6 +4795,7 @@ var TagManager = class {
     this.requiredIds.set(5 /* NonPlayerCharacter */, [0 /* Campaign */]);
     this.requiredIds.set(10 /* Note */, [0 /* Campaign */, 1 /* Adventure */, 2 /* Session */]);
     this.requiredIds.set(11 /* Timeline */, [0 /* Campaign */]);
+    this.requiredIds.set(12 /* Music */, [12 /* Music */]);
   }
   getTemplateDataType(tags) {
     if (tags == null)
@@ -4689,6 +4826,8 @@ var TagManager = class {
         response = 11 /* Timeline */;
       if (tag.startsWith("rpgm/template/" + DataType[10 /* Note */].toLowerCase()))
         response = 10 /* Note */;
+      if (tag.startsWith("rpgm/template/" + DataType[12 /* Music */].toLowerCase()))
+        response = 12 /* Music */;
     });
     return response;
   }
@@ -4698,7 +4837,7 @@ var TagManager = class {
     let response;
     if (typeof tags === "object") {
       tags.forEach((tag) => {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
         if (tag.startsWith((_a = this.dataSettings.get(0 /* Campaign */)) != null ? _a : "?"))
           response = tag;
         if (tag.startsWith((_b = this.dataSettings.get(1 /* Adventure */)) != null ? _b : "?"))
@@ -4723,12 +4862,14 @@ var TagManager = class {
           response = tag;
         if (tag.startsWith((_l = this.dataSettings.get(10 /* Note */)) != null ? _l : "?"))
           response = tag;
+        if (tag.startsWith((_m = this.dataSettings.get(12 /* Music */)) != null ? _m : "?"))
+          response = tag;
       });
     }
     return response;
   }
   getDataType(tags = void 0, tag = void 0) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
     if (tag === void 0 && tags === void 0)
       return void 0;
     if (tags !== void 0)
@@ -4760,6 +4901,8 @@ var TagManager = class {
       response = 11 /* Timeline */;
     if (tag.startsWith((_l = this.dataSettings.get(10 /* Note */)) != null ? _l : "?"))
       response = 10 /* Note */;
+    if (tag.startsWith((_m = this.dataSettings.get(12 /* Music */)) != null ? _m : "?"))
+      response = 12 /* Music */;
     return response;
   }
   getId(type, tag = void 0, tags = void 0) {
@@ -4900,7 +5043,8 @@ var DEFAULT_SETTINGS = {
   noteTag: "rpgm/outline/note",
   automaticMove: true,
   templateFolder: "",
-  musicTag: "rpgm/element/music"
+  musicTag: "rpgm/element/music",
+  YouTubeKey: ""
 };
 var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
   constructor(app2, plugin) {
@@ -4958,6 +5102,26 @@ var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
       frag.appendText(" ");
     })).addToggle((toggle) => toggle.setValue(this.plugin.settings.automaticMove).onChange((value) => __async(this, null, function* () {
       return yield this.plugin.updateSettings({ automaticMove: value });
+    })));
+    containerEl.createEl("h2", { text: "External Services" });
+    containerEl.createEl("span", { text: createFragment((frag) => {
+      frag.appendText("Use this area to setup the information relative to third party services");
+      frag.createEl("br");
+      frag.createEl("p", { text: "ATTENTION: the configurations are saved in a file in your vault. If you share your vault, any secret key might be shared!" }).style.color = "var(--text-error)";
+      frag.createEl("br");
+      frag.appendText(" ");
+    }) });
+    new import_obsidian19.Setting(this.containerEl).setName("YouTube API Key").setDesc(createFragment((frag) => {
+      frag.appendText("If you want to use the automation included in the `Music` element through YouTube, please generate a YouTube Api Key and add it here");
+      frag.createEl("br");
+      frag.appendText("To generate your YouTube Api key you can follow the instructions in ");
+      frag.createEl("a", { text: "this link", href: "https://rapidapi.com/blog/how-to-get-youtube-api-key/" });
+      frag.createEl("br");
+      frag.appendText("/{campaignId}");
+    })).addText((text) => text.setPlaceholder("Your YouTube API Key").setValue(this.plugin.settings.YouTubeKey).onChange((value) => __async(this, null, function* () {
+      if (value.length == 0)
+        return;
+      yield this.plugin.updateSettings({ YouTubeKey: value });
     })));
     containerEl.createEl("h3", { text: "Outlines" });
     containerEl.createEl("span", { text: createFragment((frag) => {

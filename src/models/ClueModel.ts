@@ -14,7 +14,7 @@ export class ClueModel extends AbstractModel {
 		response.addElement(this.generateBreadcrumb());
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'Header',
 				this.currentElement
@@ -22,7 +22,7 @@ export class ClueModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
@@ -33,7 +33,7 @@ export class ClueModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
@@ -44,7 +44,7 @@ export class ClueModel extends AbstractModel {
 		);
 
 		response.addElement(
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'EventTable',
 				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(

@@ -4,10 +4,10 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {ResponseImage} from "../data/responses/ResponseImage";
 
 export class ImageComponent extends AbstractComponent{
-	generateData(
+	public async generateData(
 		data: RpgDataInterface,
 		title: string | null,
-	): ResponseElementInterface | null {
+	): Promise<ResponseElementInterface|null> {
 		const response = new ResponseImage(this.app);
 
 		response.imgSrc = data.image;

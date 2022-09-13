@@ -47,13 +47,13 @@ type ComponentKeys = keyof ComponentsMapType;
 type SingleComponentKey<K> = [K] extends (K extends ComponentKeys ? [K] : never) ? K : never;
 
 export class ComponentFactory extends AbstractFactory {
-	public create<K extends ComponentKeys>(
+	public async create<K extends ComponentKeys>(
 		settings: CampaignSetting,
 		type: string,
 		data: RpgDataInterface[]|RpgDataInterface,
 		title: string|null = null,
 		additionalInformation: any|null = null,
-	): ResponseElementInterface|null {
+	): Promise<ResponseElementInterface|null> {
 		let componentKey: SingleComponentKey<K> = CampaignSetting[settings] + type as SingleComponentKey<K>;
 		if (ComponentsMap[componentKey] == null && settings !== CampaignSetting.Agnostic){
 			componentKey = CampaignSetting[CampaignSetting.Agnostic] + type as SingleComponentKey<K>;

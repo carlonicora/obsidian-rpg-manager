@@ -5,11 +5,11 @@ import {ContentType} from "../enums/ContentType";
 import {ResponseTable} from "../data/responses/ResponseTable";
 
 export class StoryCirclePlotComponent extends AbstractComponent {
-	public generateData(
+	public async generateData(
 		data: RpgDataInterface[],
 		title:string|null,
 		additionalInformation: any|null,
-	): ResponseElementInterface|null {
+	): Promise<ResponseElementInterface|null> {
 		if (
 			additionalInformation == null ||
 			(
