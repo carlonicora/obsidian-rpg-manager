@@ -11,7 +11,7 @@ import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
 import {RpgElementDataInterface} from "./interfaces/data/RpgElementDataInterface";
 import {RpgOutlineDataInterface} from "./interfaces/data/RpgOutlineDataInterface";
-import {Campaign} from "./settings/Agnostic/data/Campaign";
+import {Campaign} from "./data/Campaign";
 
 export class RpgController extends MarkdownRenderChild {
 	private isActive = false;

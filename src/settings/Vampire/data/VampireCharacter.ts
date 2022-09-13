@@ -1,4 +1,4 @@
-import {Character} from "../../Agnostic/data/Character";
+import {Character} from "../../../data/Character";
 import {CachedMetadata, TFile} from "obsidian";
 
 export class VampireCharacter extends Character {

@@ -1,4 +1,4 @@
-import {HeaderComponent} from "../../Agnostic/components/HeaderComponent";
+import {HeaderComponent} from "../../../components/HeaderComponent";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {HeaderResponseInterface} from "../../../interfaces/response/HeaderResponseInterface";
 import {ResponseHeaderElement} from "../../../data/responses/ResponseHeaderElement";

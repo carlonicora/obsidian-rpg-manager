@@ -4,16 +4,16 @@ import {FileContentManager} from "../helpers/FileContentManager";
 import {RpgCodeBlockInterface} from "../interfaces/RpgCodeBlockInterface";
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {DataType} from "../enums/DataType";
-import {CampaignTemplate} from "../settings/Agnostic/templates/CampaignTemplate";
-import {AdventureTemplate} from "../settings/Agnostic/templates/AdventureTemplate";
-import {CharacterTemplate} from "../settings/Agnostic/templates/CharacterTemplate";
-import {NonPlayerCharacterTemplate} from "../settings/Agnostic/templates/NonPlayerCharacterTemplate";
-import {ClueTemplate} from "../settings/Agnostic/templates/ClueTemplate";
-import {LocationTemplate} from "../settings/Agnostic/templates/LocationTemplate";
-import {FactionTemplate} from "../settings/Agnostic/templates/FactionTemplate";
-import {EventTemplate} from "../settings/Agnostic/templates/EventTemplate";
-import {NoteTemplate} from "../settings/Agnostic/templates/NoteTemplate";
-import {TimelineTemplate} from "../settings/Agnostic/templates/TimelineTemplate";
+import {CampaignTemplate} from "../templates/CampaignTemplate";
+import {AdventureTemplate} from "../templates/AdventureTemplate";
+import {CharacterTemplate} from "../templates/CharacterTemplate";
+import {NonPlayerCharacterTemplate} from "../templates/NonPlayerCharacterTemplate";
+import {ClueTemplate} from "../templates/ClueTemplate";
+import {LocationTemplate} from "../templates/LocationTemplate";
+import {FactionTemplate} from "../templates/FactionTemplate";
+import {EventTemplate} from "../templates/EventTemplate";
+import {NoteTemplate} from "../templates/NoteTemplate";
+import {TimelineTemplate} from "../templates/TimelineTemplate";
 
 export abstract class AbstractTemplateFactory implements TemplateFactoryInterface {
 	protected internalTemplate: TemplateInterface|undefined;

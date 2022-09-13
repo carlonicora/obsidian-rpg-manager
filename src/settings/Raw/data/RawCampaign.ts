@@ -1,4 +1,4 @@
-import {Campaign} from "../../Agnostic/data/Campaign";
+import {Campaign} from "../../../data/Campaign";
 import {RawCampaignInterface} from "../interfaces/RawCampaignInterface";
 import {CachedMetadata, TFile} from "obsidian";
 
