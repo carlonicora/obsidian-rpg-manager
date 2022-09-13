@@ -41,6 +41,24 @@ export class TagManager {
 		this.requiredIds.set(DataType.Music, [DataType.Music]);
 	}
 
+	public sanitiseTags(
+		tags: string|Array<string>|undefined,
+	): Array<string> {
+		if (tags === undefined) return [];
+
+		let response: Array<string>;
+		if (typeof tags === 'string'){
+			response = tags.split(',');
+			response.forEach((tag: string) => {
+				tag = tag.replaceAll(' ', '').replaceAll('#', '');
+			});
+		} else {
+			response = tags;
+		}
+
+		return response;
+	}
+
 	public getTemplateDataType(
 		tags: Array<string>|null,
 	): DataType|undefined {

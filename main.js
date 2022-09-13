@@ -149,7 +149,8 @@ var AbstractRpgData = class {
     this.link = "[[" + file.basename + "]]";
     this.name = file.basename;
     this.path = file.path;
-    this.tag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
+    this.tags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
+    this.tag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(this.tags);
     this.links = [];
     (metadata.links || []).forEach((link) => {
       this.links.push(link.link);
@@ -266,14 +267,13 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
 // src/data/Campaign.ts
 var Campaign = class extends AbstractRpgOutlineData {
   reload(file, metadata) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f;
     super.reload(file, metadata);
-    if ((_a = this.frontmatter) == null ? void 0 : _a.tags)
-      this.campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    this.campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
     this.checkElementDuplication();
-    if ((_c = (_b = this.frontmatter) == null ? void 0 : _b.dates) == null ? void 0 : _c.current)
-      this.currentDate = new Date((_e = (_d = this.frontmatter) == null ? void 0 : _d.dates) == null ? void 0 : _e.current);
-    this.settings = ((_f = this.frontmatter) == null ? void 0 : _f.settings) ? CampaignSetting[(_g = this.frontmatter) == null ? void 0 : _g.settings] : 0 /* Agnostic */;
+    if ((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.current)
+      this.currentDate = new Date((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current);
+    this.settings = ((_e = this.frontmatter) == null ? void 0 : _e.settings) ? CampaignSetting[(_f = this.frontmatter) == null ? void 0 : _f.settings] : 0 /* Agnostic */;
   }
   initialiseNeighbours() {
   }
@@ -481,57 +481,58 @@ var RpgData = class extends import_obsidian3.Component {
     });
   }
   loadElement(isBootstrap, file, restrictType = false, restrictedToType = null) {
-    var _a, _b, _c;
+    var _a, _b;
     const metadata = this.app.metadataCache.getFileCache(file);
-    if ((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags) {
-      const fileDataTag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag((_b = metadata.frontmatter) == null ? void 0 : _b.tags);
-      if (fileDataTag !== void 0) {
-        const fileType = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(void 0, fileDataTag);
-        if (fileType !== void 0) {
-          let settings = 0 /* Agnostic */;
-          const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(0 /* Campaign */, fileDataTag);
-          if (fileType === 0 /* Campaign */) {
-            if (this.elementCount(0 /* Campaign */, campaignId) > 1) {
-              this.misconfiguredTags.set(file, new ElementDuplicated(this.app, 0 /* Campaign */, fileDataTag, campaignId));
-              return;
-            }
-            if (((_c = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _c.settings) != null) {
-              settings = CampaignSetting[metadata.frontmatter.settings];
-            }
-          } else {
-            try {
-              if (campaignId != null) {
-                const campaign = this.getCampaign(campaignId);
-                if (campaign != null) {
-                  settings = campaign.settings;
-                }
-              }
-            } catch (e) {
-              return;
+    if (metadata == null)
+      return;
+    const tags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
+    const fileDataTag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(tags);
+    if (fileDataTag == void 0)
+      return;
+    const fileType = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(void 0, fileDataTag);
+    if (fileType === void 0)
+      return;
+    let settings = 0 /* Agnostic */;
+    const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(0 /* Campaign */, fileDataTag);
+    if (fileType === 0 /* Campaign */) {
+      if (this.elementCount(0 /* Campaign */, campaignId) > 1) {
+        this.misconfiguredTags.set(file, new ElementDuplicated(this.app, 0 /* Campaign */, fileDataTag, campaignId));
+        return;
+      }
+      if (((_b = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _b.settings) != null) {
+        settings = CampaignSetting[metadata.frontmatter.settings];
+      }
+    } else {
+      try {
+        if (campaignId != null) {
+          const campaign = this.getCampaign(campaignId);
+          if (campaign != null) {
+            settings = campaign.settings;
+          }
+        }
+      } catch (e) {
+        return;
+      }
+    }
+    if (!restrictType || (restrictedToType !== null && restrictedToType === fileType || restrictedToType === null && (fileType !== 0 /* Campaign */ && fileType !== 1 /* Adventure */ && fileType !== 2 /* Session */ && fileType !== 3 /* Scene */))) {
+      try {
+        const element = this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, fileType, file, metadata);
+        if (element instanceof AbstractRpgOutlineData)
+          element.initialiseNeighbours();
+        this.data.addElement(element);
+      } catch (e) {
+        if (e instanceof RpgError) {
+          const isHidden = e instanceof HiddenError;
+          if (!isHidden) {
+            if (isBootstrap) {
+              this.misconfiguredTags.set(file, e);
+            } else {
+              new MisconfiguredDataModal(this.app, void 0, e).open();
             }
           }
-          if (!restrictType || (restrictedToType !== null && restrictedToType === fileType || restrictedToType === null && (fileType !== 0 /* Campaign */ && fileType !== 1 /* Adventure */ && fileType !== 2 /* Session */ && fileType !== 3 /* Scene */))) {
-            try {
-              const element = this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, fileType, file, metadata);
-              if (element instanceof AbstractRpgOutlineData)
-                element.initialiseNeighbours();
-              this.data.addElement(element);
-            } catch (e) {
-              if (e instanceof RpgError) {
-                const isHidden = e instanceof HiddenError;
-                if (!isHidden) {
-                  if (isBootstrap) {
-                    this.misconfiguredTags.set(file, e);
-                  } else {
-                    new MisconfiguredDataModal(this.app, void 0, e).open();
-                  }
-                }
-                return;
-              } else {
-                throw e;
-              }
-            }
-          }
+          return;
+        } else {
+          throw e;
         }
       }
     }
@@ -1267,7 +1268,7 @@ var Music = class extends AbstractRpgElementData {
     return __async(this, null, function* () {
       if (this.url == void 0)
         return void 0;
-      if (this.url.indexOf("youtube.com") !== -1) {
+      if (this.url.indexOf("youtube.com") !== -1 || this.url.indexOf("youtu.be") !== -1) {
         const fetcher = this.app.plugins.getPlugin("rpg-manager").factories.fetchers.create(0 /* YouTubeImage */);
         return fetcher.fetchImage(this.url);
       }
@@ -4550,18 +4551,31 @@ var YouTubeImageFetcher = class extends AbstractFetcher {
       let apiResponse;
       const playlistIdentifier = "playlist?list=";
       const songIdentifier = "watch?v=";
-      console.log("url", url);
-      if (url.indexOf(playlistIdentifier) !== -1) {
-        const playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
-        apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/playlistItems?key=" + youTubeApiKey + "&part=snippet&playlistId=" + playlistId);
-      } else if (url.indexOf(songIdentifier) !== -1) {
-        const songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
-        apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/videos?key=" + youTubeApiKey + "&part=snippet&id=" + songId);
-      }
-      const jsonData = yield apiResponse.json();
-      if (jsonData === void 0)
+      const alternativeSongIdentifier = "youtu.be/";
+      let playlistId;
+      let songId;
+      try {
+        if (url.indexOf(playlistIdentifier) !== -1) {
+          playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
+        } else if (url.indexOf(songIdentifier) !== -1) {
+          songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
+        } else if (url.indexOf(alternativeSongIdentifier) !== -1) {
+          songId = url.substring(url.indexOf(alternativeSongIdentifier) + alternativeSongIdentifier.length);
+        }
+        if (playlistId !== void 0) {
+          apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/playlistItems?key=" + youTubeApiKey + "&part=snippet&playlistId=" + playlistId);
+        } else if (songId !== void 0) {
+          apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/videos?key=" + youTubeApiKey + "&part=snippet&id=" + songId);
+        }
+        if (apiResponse === void 0)
+          return void 0;
+        const jsonData = yield apiResponse.json();
+        if (jsonData === void 0)
+          return void 0;
+        return (_d = (_c = (_b = (_a = jsonData.items[0]) == null ? void 0 : _a.snippet) == null ? void 0 : _b.thumbnails) == null ? void 0 : _c.high) == null ? void 0 : _d.url;
+      } catch (e) {
         return void 0;
-      return (_d = (_c = (_b = (_a = jsonData.items[0]) == null ? void 0 : _a.snippet) == null ? void 0 : _b.thumbnails) == null ? void 0 : _c.high) == null ? void 0 : _d.url;
+      }
     });
   }
 };
@@ -4621,8 +4635,10 @@ var CreationModal = class extends import_obsidian18.Modal {
       var _a, _b;
       const metadata = this.app.metadataCache.getFileCache(file);
       if (metadata != null) {
-        if (metadata.frontmatter != null && ((_a = metadata.frontmatter) == null ? void 0 : _a.tags) != null) {
-          const templateType = this.app.plugins.getPlugin("rpg-manager").tagManager.getTemplateDataType((_b = metadata.frontmatter) == null ? void 0 : _b.tags);
+        const tags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
+        if (tags.length > 0) {
+          const tags2 = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_b = metadata.frontmatter) == null ? void 0 : _b.tags);
+          const templateType = this.app.plugins.getPlugin("rpg-manager").tagManager.getTemplateDataType(tags2);
           if (templateType == void 0)
             this.availableGenericTemplates.push(file);
           if (templateType === this.type)
@@ -4796,6 +4812,20 @@ var TagManager = class {
     this.requiredIds.set(10 /* Note */, [0 /* Campaign */, 1 /* Adventure */, 2 /* Session */]);
     this.requiredIds.set(11 /* Timeline */, [0 /* Campaign */]);
     this.requiredIds.set(12 /* Music */, [12 /* Music */]);
+  }
+  sanitiseTags(tags) {
+    if (tags === void 0)
+      return [];
+    let response;
+    if (typeof tags === "string") {
+      response = tags.split(",");
+      response.forEach((tag) => {
+        tag = tag.replaceAll(" ", "").replaceAll("#", "");
+      });
+    } else {
+      response = tags;
+    }
+    return response;
   }
   getTemplateDataType(tags) {
     if (tags == null)

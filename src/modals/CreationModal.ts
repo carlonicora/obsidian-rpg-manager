@@ -54,8 +54,10 @@ export class CreationModal extends Modal implements ModalInterface {
 			.forEach((file: TFile) => {
 				const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 				if (metadata != null) {
-					if (metadata.frontmatter != null && metadata.frontmatter?.tags != null) {
-						const templateType = this.app.plugins.getPlugin('rpg-manager').tagManager.getTemplateDataType(metadata.frontmatter?.tags);
+					const tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata.frontmatter?.tags);
+					if (tags.length > 0) {
+						const tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata.frontmatter?.tags);
+						const templateType = this.app.plugins.getPlugin('rpg-manager').tagManager.getTemplateDataType(tags);
 						if (templateType == undefined) this.availableGenericTemplates.push(file);
 						if (templateType === this.type) this.availableSpecificTemplates.push(file);
 					} else {

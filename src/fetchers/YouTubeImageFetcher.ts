@@ -12,21 +12,35 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
 
 		const playlistIdentifier = 'playlist?list=';
 		const songIdentifier = 'watch?v='
+		const alternativeSongIdentifier = 'youtu.be/';
 
-		console.log('url', url);
-		if (url.indexOf(playlistIdentifier) !== -1){
-			const playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
+		let playlistId: string|undefined;
+		let songId: string|undefined;
 
-			apiResponse = await fetch('https://www.googleapis.com/youtube/v3/playlistItems?key=' + youTubeApiKey + '&part=snippet&playlistId=' + playlistId);
-		} else if (url.indexOf(songIdentifier) !== -1) {
-			const songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
+		try {
+			if (url.indexOf(playlistIdentifier) !== -1) {
+				playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
+			} else if (url.indexOf(songIdentifier) !== -1) {
+				songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
+			} else if (url.indexOf(alternativeSongIdentifier) !== -1) {
+				songId = url.substring(url.indexOf(alternativeSongIdentifier) + alternativeSongIdentifier.length);
+			}
 
-			apiResponse = await fetch('https://www.googleapis.com/youtube/v3/videos?key=' + youTubeApiKey + '&part=snippet&id=' + songId);
+			if (playlistId !== undefined){
+				apiResponse = await fetch('https://www.googleapis.com/youtube/v3/playlistItems?key=' + youTubeApiKey + '&part=snippet&playlistId=' + playlistId);
+			} else if (songId !== undefined){
+				apiResponse = await fetch('https://www.googleapis.com/youtube/v3/videos?key=' + youTubeApiKey + '&part=snippet&id=' + songId);
+			}
+
+			if (apiResponse === undefined) return undefined;
+
+			const jsonData = await apiResponse.json();
+			if (jsonData === undefined) return undefined;
+
+			return jsonData.items[0]?.snippet?.thumbnails?.high?.url;
+
+		} catch (e) {
+			return undefined;
 		}
-
-		const jsonData = await apiResponse.json();
-		if (jsonData === undefined) return undefined;
-
-		return jsonData.items[0]?.snippet?.thumbnails?.high?.url;
 	}
 }

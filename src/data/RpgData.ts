@@ -115,73 +115,71 @@ export class RpgData extends Component {
 		restrictedToType: DataType|null = null,
 	): void {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+		if (metadata == null) return;
 
-		if (metadata?.frontmatter?.tags){
-			const fileDataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(metadata.frontmatter?.tags);
+		const tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
+		const fileDataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(tags);
+		if (fileDataTag == undefined) return;
 
-			if (fileDataTag !== undefined) {
-				const fileType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, fileDataTag);
+		const fileType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, fileDataTag);
+		if (fileType === undefined) return;
 
-				if (fileType !== undefined) {
-					let settings = CampaignSetting.Agnostic;
-					const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, fileDataTag);
+		let settings = CampaignSetting.Agnostic;
+		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, fileDataTag);
 
-					if (fileType === DataType.Campaign) {
-						if (this.elementCount(DataType.Campaign, campaignId) > 1){
-							this.misconfiguredTags.set(file, new ElementDuplicated(this.app, DataType.Campaign, fileDataTag, campaignId));
-							return;
-						}
-						if (metadata?.frontmatter?.settings != null) {
-							settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
-						}
-					} else {
-						try {
-							if (campaignId != null) {
-								const campaign = this.getCampaign(campaignId);
-								if (campaign != null) {
-									settings = campaign.settings;
-								}
-							}
-						} catch (e: any) {
-							return;
+		if (fileType === DataType.Campaign) {
+			if (this.elementCount(DataType.Campaign, campaignId) > 1) {
+				this.misconfiguredTags.set(file, new ElementDuplicated(this.app, DataType.Campaign, fileDataTag, campaignId));
+				return;
+			}
+			if (metadata?.frontmatter?.settings != null) {
+				settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
+			}
+		} else {
+			try {
+				if (campaignId != null) {
+					const campaign = this.getCampaign(campaignId);
+					if (campaign != null) {
+						settings = campaign.settings;
+					}
+				}
+			} catch (e: any) {
+				return;
+			}
+		}
+
+		if (
+			!restrictType ||
+			(
+				(restrictedToType !== null && restrictedToType === fileType) ||
+				(restrictedToType === null && (fileType !== DataType.Campaign && fileType !== DataType.Adventure && fileType !== DataType.Session && fileType !== DataType.Scene))
+			)
+		) {
+			try {
+				const element: RpgOutlineDataInterface | RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
+					settings,
+					fileType,
+					file,
+					metadata
+				);
+
+				if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
+
+				this.data.addElement(element);
+			} catch (e: any) {
+				if (e instanceof RpgError) {
+					const isHidden: boolean = e instanceof HiddenError;
+					if (!isHidden) {
+						if (isBootstrap) {
+							this.misconfiguredTags.set(file, e as RpgErrorInterface);
+						} else {
+							//throw e;
+							new MisconfiguredDataModal(this.app, undefined, e).open();
 						}
 					}
-
-					if (
-						!restrictType ||
-						(
-							(restrictedToType !== null && restrictedToType === fileType) ||
-							(restrictedToType === null && (fileType !== DataType.Campaign && fileType !== DataType.Adventure && fileType !== DataType.Session && fileType !== DataType.Scene))
-						)
-					) {
-						try {
-							const element: RpgOutlineDataInterface | RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
-								settings,
-								fileType,
-								file,
-								metadata
-							);
-
-							if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
-
-							this.data.addElement(element);
-						} catch (e: any) {
-							if (e instanceof RpgError) {
-								const isHidden: boolean = e instanceof HiddenError;
-								if (!isHidden) {
-									if (isBootstrap) {
-										this.misconfiguredTags.set(file, e as RpgErrorInterface);
-									} else {
-										//throw e;
-										new MisconfiguredDataModal(this.app, undefined, e).open();
-									}
-								}
-								return;
-							} else {
-								throw e;
-							}
-						}
-					}
+					return;
+				} else {
+					throw e;
 				}
 			}
 		}
