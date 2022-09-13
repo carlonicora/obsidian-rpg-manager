@@ -40,13 +40,6 @@ export default class RpgManager extends Plugin {
 
 		this.addSettingTab(new RpgManagerSettingTab(this.app, this));
 		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
-
-		this.io = new RpgData(this.app);
-		this.functions = new RpgFunctions(this.app);
-		this.factories = new RpgFactories(this.app);
-		this.tagManager = new TagManager(this.app);
-
-		await this.io.loadCache();
 	}
 
 	private padTo2Digits(num: number) {
@@ -54,6 +47,21 @@ export default class RpgManager extends Plugin {
 	}
 
 	async onLayoutReady(){
+		let reloadStart = Date.now();
+		this.io = new RpgData(this.app);
+		this.functions = new RpgFunctions(this.app);
+		this.factories = new RpgFactories(this.app);
+		this.tagManager = new TagManager(this.app);
+
+
+		await this.io.loadCache();
+
+		console.log(
+			`RPG Manager: all outlines and elements have been indexed in ${
+				(Date.now() - reloadStart) / 1000.0
+			}s.`
+		);
+
 		this.registerEvents();
 		this.registerCodeBlock();
 		this.registerCommands();
