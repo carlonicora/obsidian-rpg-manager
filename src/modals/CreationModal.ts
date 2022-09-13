@@ -104,13 +104,14 @@ export class CreationModal extends Modal implements ModalInterface {
 		this.templateEl.createEl('option', {
 			text: '',
 			value: '',
-		}).selected = true;
+		});
 
 
 		this.templateEl.createEl('option', {
 			text: 'RpgManager default ' + DataType[this.type] + ' template',
 			value: 'internal' + DataType[this.type],
-		})
+		}).selected = true;
+
 		this.templateEl.createEl('option', {
 			text: '',
 			value: '',

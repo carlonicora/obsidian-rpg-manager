@@ -25,7 +25,7 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	public completed: boolean;
 	public synopsis: string|null = null;
 	public additionalInformation: string|null = null;
-	public image: string|null|undefined = null;
+	public imageSrc: string|null|undefined = undefined;
 
 	public frontmatter: FrontMatterCache|undefined;
 
@@ -63,12 +63,12 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 
 		this.completed = metadata.frontmatter?.completed ? metadata.frontmatter?.completed : true;
 		this.synopsis = metadata.frontmatter?.synopsis;
-		this.image = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
+		//this.imageSrc = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
 	}
 
 	public get imageSrcElement(
 	): HTMLElement|null {
-		if (this.image == null) return null;
+		if (this.imageSrc === null) return null;
 
 		return this.app.plugins.getPlugin('rpg-manager').functions.getImgElement(this.image);
 	}
@@ -77,6 +77,11 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	): string {
 		const lastSlashPosition = this.path.lastIndexOf('/');
 		return (lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : '/');
+	}
+
+	public get image(
+	): string|null {
+		return this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
 	}
 
 

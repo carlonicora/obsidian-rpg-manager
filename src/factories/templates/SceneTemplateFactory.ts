@@ -12,7 +12,7 @@ export class SceneTemplateFactory extends AbstractTemplateFactory {
 			clues: {},
 			characters: {},
 			locations: {},
-			music: {},
+			musics: {},
 		};
 		frontmatter.times = {
 			start: {},

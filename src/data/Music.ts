@@ -20,7 +20,11 @@ export class Music extends AbstractRpgElementData implements MusicInterface {
 		const imageUrl = this.fetchImage();
 		imageUrl
 			.then((imageUrl: string|null|undefined) => {
-				this.image = imageUrl;
+				if (imageUrl == null) {
+					this.imageSrc = undefined;
+				} else {
+					this.imageSrc = imageUrl;
+				}
 			});
 
 		return imageUrl;
@@ -28,8 +32,8 @@ export class Music extends AbstractRpgElementData implements MusicInterface {
 
 	public async getDynamicImageSrcElement(
 	): Promise<HTMLElement|null> {
-		if (this.image == null) {
-			this.image = await this.fetchImage();
+		if (this.imageSrc === null) {
+			this.imageSrc = await this.fetchImage();
 		}
 
 		return this.imageSrcElement;

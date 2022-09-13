@@ -89,21 +89,21 @@ export class HeaderComponent extends AbstractComponent{
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
 			} else if (data instanceof Music){
-				if (data.image != null) {
-					response.imgSrc = data.image;
-				} else {
+				if (data.image === undefined) {
 					response.imgSrc = await data.getThumbnail();
+				} else if (data.image !== null) {
+					response.imgSrc = data.image;
 				}
 
 				if (data.url !== undefined) response.addElement(new ResponseHeaderElement(this.app, 'link', data.url, HeaderResponseType.Long));
 			}
 		}
 
-		response.imgSrc = data.image;
-		response.imgWidth = 300;
-		response.imgHeight = 300;
-
-
+		if (data.image !== null) {
+			response.imgSrc = data.image;
+			response.imgWidth = 300;
+			response.imgHeight = 300;
+		}
 
 		return response;
 	}

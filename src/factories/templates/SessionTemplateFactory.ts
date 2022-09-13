@@ -8,8 +8,13 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 	): void {
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
 
-		let synopsis: string = this.additionalInformation.synopsis;
-		synopsis = synopsis.replaceAll('"', '\\"');
+		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
+
+		if (synopsis === undefined) {
+			synopsis = '';
+		} else {
+			synopsis = synopsis.replaceAll('"', '\\"');
+		}
 
 		frontmatter.synopsis = synopsis;
 		frontmatter.dates = {
@@ -17,7 +22,7 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 			irl: {},
 		}
 		frontmatter.relationships = {
-			music: {},
+			musics: {},
 		};
 	}
 

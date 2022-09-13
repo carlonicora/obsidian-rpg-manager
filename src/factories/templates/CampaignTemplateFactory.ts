@@ -10,10 +10,10 @@ export class CampaignTemplateFactory extends AbstractTemplateFactory {
 		frontmatter.synopsis = "";
 		frontmatter.settings = "Agnostic";
 		frontmatter.dates = {
-			current: {}
+			current: {},
 		};
-		if (this.additionalInformation != null && this.additionalInformation.current != null){
-			frontmatter.dates.current = this.additionalInformation.current;
+		if (this.additionalInformation != null && this.additionalInformation.current != null && this.additionalInformation.current != ''){
+			frontmatter.dates.current = this?.additionalInformation?.current;
 		}
 	}
 

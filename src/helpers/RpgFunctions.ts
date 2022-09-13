@@ -48,11 +48,13 @@ export class RpgFunctions {
 	}
 
 	public getImgElement(
-		imgSrc: string,
+		imgSrc: string|null,
 		width: number|undefined =75,
 		height: number|undefined =75,
 	): HTMLImageElement|null
 	{
+		if (imgSrc === null) return null;
+		
 		if (width !== 75 && height === 75){
 			height = undefined;
 		} else if (width === 75 && height !== 75){

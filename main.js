@@ -140,7 +140,7 @@ var AbstractRpgData = class {
     this.type = type;
     this.synopsis = null;
     this.additionalInformation = null;
-    this.image = null;
+    this.imageSrc = void 0;
     this.reload(file, metadata);
   }
   reload(file, metadata) {
@@ -158,16 +158,18 @@ var AbstractRpgData = class {
     this.frontmatter = metadata.frontmatter;
     this.completed = ((_b = metadata.frontmatter) == null ? void 0 : _b.completed) ? (_c = metadata.frontmatter) == null ? void 0 : _c.completed : true;
     this.synopsis = (_d = metadata.frontmatter) == null ? void 0 : _d.synopsis;
-    this.image = this.app.plugins.getPlugin("rpg-manager").functions.getImg(this.name);
   }
   get imageSrcElement() {
-    if (this.image == null)
+    if (this.imageSrc === null)
       return null;
     return this.app.plugins.getPlugin("rpg-manager").functions.getImgElement(this.image);
   }
   get folder() {
     const lastSlashPosition = this.path.lastIndexOf("/");
     return lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : "/";
+  }
+  get image() {
+    return this.app.plugins.getPlugin("rpg-manager").functions.getImg(this.name);
   }
   getRelationships(type) {
     var _a;
@@ -709,6 +711,8 @@ var RpgFunctions = class {
     return null;
   }
   getImgElement(imgSrc, width = 75, height = 75) {
+    if (imgSrc === null)
+      return null;
     if (width !== 75 && height === 75) {
       height = void 0;
     } else if (width === 75 && height !== 75) {
@@ -1252,14 +1256,18 @@ var Music = class extends AbstractRpgElementData {
   getThumbnail() {
     const imageUrl = this.fetchImage();
     imageUrl.then((imageUrl2) => {
-      this.image = imageUrl2;
+      if (imageUrl2 == null) {
+        this.imageSrc = void 0;
+      } else {
+        this.imageSrc = imageUrl2;
+      }
     });
     return imageUrl;
   }
   getDynamicImageSrcElement() {
     return __async(this, null, function* () {
-      if (this.image == null) {
-        this.image = yield this.fetchImage();
+      if (this.imageSrc === null) {
+        this.imageSrc = yield this.fetchImage();
       }
       return this.imageSrcElement;
     });
@@ -1343,18 +1351,20 @@ var HeaderComponent = class extends AbstractComponent {
             response.addElement(new ResponseHeaderElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
           }
         } else if (data instanceof Music) {
-          if (data.image != null) {
-            response.imgSrc = data.image;
-          } else {
+          if (data.image === void 0) {
             response.imgSrc = yield data.getThumbnail();
+          } else if (data.image !== null) {
+            response.imgSrc = data.image;
           }
           if (data.url !== void 0)
             response.addElement(new ResponseHeaderElement(this.app, "link", data.url, 1 /* Long */));
         }
       }
-      response.imgSrc = data.image;
-      response.imgWidth = 300;
-      response.imgHeight = 300;
+      if (data.image !== null) {
+        response.imgSrc = data.image;
+        response.imgWidth = 300;
+        response.imgHeight = 300;
+      }
       return response;
     });
   }
@@ -3593,14 +3603,15 @@ var RpgCodeBlock = class {
 // src/factories/templates/CampaignTemplateFactory.ts
 var CampaignTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
+    var _a;
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.campaignTag + "/" + this.campaignId);
     frontmatter.synopsis = "";
     frontmatter.settings = "Agnostic";
     frontmatter.dates = {
       current: {}
     };
-    if (this.additionalInformation != null && this.additionalInformation.current != null) {
-      frontmatter.dates.current = this.additionalInformation.current;
+    if (this.additionalInformation != null && this.additionalInformation.current != null && this.additionalInformation.current != "") {
+      frontmatter.dates.current = (_a = this == null ? void 0 : this.additionalInformation) == null ? void 0 : _a.current;
     }
   }
   generateInitialCodeBlock() {
@@ -3642,16 +3653,21 @@ var AdventureTemplateFactory = class extends AbstractTemplateFactory {
 // src/factories/templates/SessionTemplateFactory.ts
 var SessionTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
+    var _a;
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId);
-    let synopsis = this.additionalInformation.synopsis;
-    synopsis = synopsis.replaceAll('"', '\\"');
+    let synopsis = (_a = this == null ? void 0 : this.additionalInformation) == null ? void 0 : _a.synopsis;
+    if (synopsis === void 0) {
+      synopsis = "";
+    } else {
+      synopsis = synopsis.replaceAll('"', '\\"');
+    }
     frontmatter.synopsis = synopsis;
     frontmatter.dates = {
       session: {},
       irl: {}
     };
     frontmatter.relationships = {
-      music: {}
+      musics: {}
     };
   }
   generateInitialCodeBlock() {
@@ -3688,7 +3704,7 @@ var SceneTemplateFactory = class extends AbstractTemplateFactory {
       clues: {},
       characters: {},
       locations: {},
-      music: {}
+      musics: {}
     };
     frontmatter.times = {
       start: {},
@@ -4676,11 +4692,11 @@ var CreationModal = class extends import_obsidian18.Modal {
     this.templateEl.createEl("option", {
       text: "",
       value: ""
-    }).selected = true;
+    });
     this.templateEl.createEl("option", {
       text: "RpgManager default " + DataType[this.type] + " template",
       value: "internal" + DataType[this.type]
-    });
+    }).selected = true;
     this.templateEl.createEl("option", {
       text: "",
       value: ""
@@ -4986,7 +5002,7 @@ var RpgManager = class extends import_obsidian19.Plugin {
   }
   onLayoutReady() {
     return __async(this, null, function* () {
-      let reloadStart = Date.now();
+      const reloadStart = Date.now();
       this.io = new RpgData(this.app);
       this.functions = new RpgFunctions(this.app);
       this.factories = new RpgFactories(this.app);

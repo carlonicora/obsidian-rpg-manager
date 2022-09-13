@@ -15,7 +15,7 @@ export interface RpgDataInterface {
 
 	synopsis: string|null;
 	additionalInformation: string|null;
-	image: string|null|undefined;
+	imageSrc: string|null|undefined;
 
 	frontmatter: FrontMatterCache|undefined;
 
@@ -28,6 +28,7 @@ export interface RpgDataInterface {
 		type: DataType
 	): RpgDataInterface[];
 
+	get image(): string|null;
 	get imageSrcElement(): HTMLElement|null;
 	get folder(): string;
 }

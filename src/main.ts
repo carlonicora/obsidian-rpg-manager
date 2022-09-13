@@ -43,7 +43,7 @@ export default class RpgManager extends Plugin {
 	}
 
 	async onLayoutReady(){
-		let reloadStart = Date.now();
+		const reloadStart = Date.now();
 		this.io = new RpgData(this.app);
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
