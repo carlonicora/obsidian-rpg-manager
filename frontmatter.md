@@ -180,14 +180,15 @@ completed: false
 
 ### Sessions
 
-| Key           | Type                | Required/Optional                                           | Description                                                        |
-|---------------|---------------------|-------------------------------------------------------------|--------------------------------------------------------------------|
-| alias         | [array](#array)     | **Required**                                                | The aliases of the current session                                 |
-| tags          | [array](#array)     | **Required**                                                | The tags associated to the session. The tag `session` is required. |
-| synopsis      | [text](#text)       | **Required**                                                | The short description of the session                               |
-| dates.session | [date](#date)       | _Optional_                                                  | The **in-game** date when the event of the session happen          |
-| dates.irl     | [date](#date)       | _Optional_                                                  | The **in-real-life** date in which the session is scheduled        |
-| completed     | [boolean](#boolean) | _Optional_                                                  | Identifies if the session is fully written                         |
+| Key                   | Type                           | Required/Optional  | Description                                                        |
+|-----------------------|--------------------------------|--------------------|--------------------------------------------------------------------|
+| alias                 | [array](#array)                | **Required**       | The aliases of the current session                                 |
+| tags                  | [array](#array)                | **Required**       | The tags associated to the session. The tag `session` is required. |
+| synopsis              | [text](#text)                  | **Required**       | The short description of the session                               |
+| relationships.musics  | [relationship](#relationship)  | _Optional_         | The songs of playlist to be played during the session              |
+| dates.session         | [date](#date)                  | _Optional_         | The **in-game** date when the event of the session happen          |
+| dates.irl             | [date](#date)                  | _Optional_         | The **in-real-life** date in which the session is scheduled        |
+| completed             | [boolean](#boolean)            | _Optional_         | Identifies if the session is fully written                         |
 
 full example
 ```yaml
@@ -213,6 +214,7 @@ completed: true
 | relationships.clues      | [relationship](#relationship) | _Optional_        | The clues that can be found in the scene                              |
 | relationships.characters | [relationship](#relationship) | _Optional_        | The characters that can be found in the scene                         |
 | relationships.locations  | [relationship](#relationship) | _Optional_        | The locations the scene happens in or is related to                   |
+| relationships.musics     | [relationship](#relationship) | _Optional_        | The songs of playlist to be played during the scene                   |
 | time.start               | [date](#date)                 | _Optional_        | The **in-real-life** time the scene starts                            |
 | time.end                 | [date](#date)                 | _Optional_        | The **in-real-life** time the scene ends                              |
 | completed                | [boolean](#boolean)           | _Optional_        | Identifies if the scene is fully written                              |
@@ -319,7 +321,7 @@ full example
 ```yaml
 ---
 alias: ["Dungeons & Dragons"]
-tags: [faction]
+tags: [rpgm/element/faction/1]
 synopsis: "The party is a group of four people who are tasked with finding [[Will Byers]]"
 relationships:
   locations:
@@ -343,7 +345,7 @@ full example
 ```yaml
 ---
 alias: ["Will's House", "The Scary House"]
-tags: [location, geolocation/usa/indiana/hawkins/byers-house]
+tags: [rpgm/element/location/1]
 synopsis: "The house of [[Will Byers]] and the place from where he disappeared"
 address: "573 Hawkins High, Hawkins, IN"
 relationships:
@@ -370,7 +372,7 @@ full example
 ```yaml
 ---
 alias: ["Will's Disappearance"]
-tags: [event]
+tags: [rpgm/element/event/1]
 synopsis: "The disappearance of [[Will Byers]] and its fall in the [[Upside Down]]"
 dates:
   event: 1983-11-06
@@ -402,7 +404,7 @@ full example
 ```yaml
 ---
 alias: ["Christmas Lights", "Fairy Lights"]
-tags: [clue]
+tags: [rpgm/element/clue/1]
 synopsis: "The fairy lights bought by [[Joyce Byers]] to communicate with [[Will Byers]]"
 dates:
   found: 1983-11-05
@@ -412,5 +414,28 @@ relationships:
     Jonathan Byers: "Knows his [[Joyce Byers|mother]] has the lights"
   locations:
     Byers House: "[[Joyce Byers]] keeps the [[Christmas Lights]] in [[Byers House|her house]]"
+---
+```
+
+### Music
+
+| Key                     | Type                           | Required/Optional | Description                                          |
+|-------------------------|--------------------------------|-------------------|------------------------------------------------------|
+| alias                   | [array](#array)                | **Required**      | The aliases of the current song or playlist          |
+| tags                    | [array](#array)                | **Required**      | The tags associated to the music.                    |
+| synopsis                | [text](#text)                  | **Required**      | The short description of the song or playlist        |
+| relationships.musics    | [relationship](#relationship)  | _Optional_        | The child songs of playlist of a specific playlist   |
+| completed               | [boolean](#boolean)            | _Optional_        | Identifies if the clue is fully written              |
+
+
+full example
+```yaml
+---
+alias: [unease]
+tags: [rpgm/element/music/1]
+synopsis: "The music to play during moments in which the player character should start feeling something is coming up"
+url: "https://www.youtube.com/watch?v=NLvzfOWI4aE"
+relationships:
+  musics:
 ---
 ```

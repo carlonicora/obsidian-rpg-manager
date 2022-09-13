@@ -4884,32 +4884,34 @@ var TagManager = class {
     if (typeof tags === "object") {
       tags.forEach((tag) => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
-        if (tag.startsWith((_a = this.dataSettings.get(0 /* Campaign */)) != null ? _a : "?"))
-          response = tag;
-        if (tag.startsWith((_b = this.dataSettings.get(1 /* Adventure */)) != null ? _b : "?"))
-          response = tag;
-        if (tag.startsWith((_c = this.dataSettings.get(2 /* Session */)) != null ? _c : "?"))
-          response = tag;
-        if (tag.startsWith((_d = this.dataSettings.get(3 /* Scene */)) != null ? _d : "?"))
-          response = tag;
-        if (tag.startsWith((_e = this.dataSettings.get(5 /* NonPlayerCharacter */)) != null ? _e : "?"))
-          response = tag;
-        if (tag.startsWith((_f = this.dataSettings.get(4 /* Character */)) != null ? _f : "?"))
-          response = tag;
-        if (tag.startsWith((_g = this.dataSettings.get(8 /* Clue */)) != null ? _g : "?"))
-          response = tag;
-        if (tag.startsWith((_h = this.dataSettings.get(6 /* Location */)) != null ? _h : "?"))
-          response = tag;
-        if (tag.startsWith((_i = this.dataSettings.get(9 /* Faction */)) != null ? _i : "?"))
-          response = tag;
-        if (tag.startsWith((_j = this.dataSettings.get(7 /* Event */)) != null ? _j : "?"))
-          response = tag;
-        if (tag.startsWith((_k = this.dataSettings.get(11 /* Timeline */)) != null ? _k : "?"))
-          response = tag;
-        if (tag.startsWith((_l = this.dataSettings.get(10 /* Note */)) != null ? _l : "?"))
-          response = tag;
-        if (tag.startsWith((_m = this.dataSettings.get(12 /* Music */)) != null ? _m : "?"))
-          response = tag;
+        if (tag != null) {
+          if (tag.startsWith((_a = this.dataSettings.get(0 /* Campaign */)) != null ? _a : "?"))
+            response = tag;
+          if (tag.startsWith((_b = this.dataSettings.get(1 /* Adventure */)) != null ? _b : "?"))
+            response = tag;
+          if (tag.startsWith((_c = this.dataSettings.get(2 /* Session */)) != null ? _c : "?"))
+            response = tag;
+          if (tag.startsWith((_d = this.dataSettings.get(3 /* Scene */)) != null ? _d : "?"))
+            response = tag;
+          if (tag.startsWith((_e = this.dataSettings.get(5 /* NonPlayerCharacter */)) != null ? _e : "?"))
+            response = tag;
+          if (tag.startsWith((_f = this.dataSettings.get(4 /* Character */)) != null ? _f : "?"))
+            response = tag;
+          if (tag.startsWith((_g = this.dataSettings.get(8 /* Clue */)) != null ? _g : "?"))
+            response = tag;
+          if (tag.startsWith((_h = this.dataSettings.get(6 /* Location */)) != null ? _h : "?"))
+            response = tag;
+          if (tag.startsWith((_i = this.dataSettings.get(9 /* Faction */)) != null ? _i : "?"))
+            response = tag;
+          if (tag.startsWith((_j = this.dataSettings.get(7 /* Event */)) != null ? _j : "?"))
+            response = tag;
+          if (tag.startsWith((_k = this.dataSettings.get(11 /* Timeline */)) != null ? _k : "?"))
+            response = tag;
+          if (tag.startsWith((_l = this.dataSettings.get(10 /* Note */)) != null ? _l : "?"))
+            response = tag;
+          if (tag.startsWith((_m = this.dataSettings.get(12 /* Music */)) != null ? _m : "?"))
+            response = tag;
+        }
       });
     }
     return response;

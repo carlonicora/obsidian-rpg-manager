@@ -11,6 +11,10 @@ form of tables and links.
 
 ### Update notes
 
+#### version 1.2 (2022-09-12)
+
+`Music` element added.
+
 #### version 1.1 (2022-09-12)
 
 Templating added. Please refer to the [templating](#templates) section in this document.
@@ -36,6 +40,7 @@ track of a campaign. The structure is as follow:
   - Locations (_Element_)
   - Timelines (_Element_)
   - Notes (_Element_)
+  - Music (_Element_)
 
 ## TL;DR
 
@@ -46,7 +51,11 @@ frontmatter and codeblocks.
 4. Navigate your campaign easily
 5. **Send feedback**
 
-[Watch a tutorial on how to use RPG Manager](https://youtu.be/NLvzfOWI4aE)
+
+## Tutorials and Help
+
+- [Watch a tutorial on how to use RPG Manager](https://youtu.be/NLvzfOWI4aE)
+- [Watch an example of world building and campaign creation](https://youtu.be/die8QGKtk5A)
 
 ## Plotting Logic
 
@@ -86,6 +95,7 @@ Characters, Factions, Locations, Events, Clues)
 | **Clue**                 | `clue`     | An object or a detail the player character can encounter in the game that will help them understand something and advance the game                                                                                    |
 | **Note**                 | `note`     | A note, usually associated to a `Session`, that helps the storyteller to keep track of the player characters' decisions                                                                                               |
 | **Timeline**             | `timeline` | A list of elements organised by dates (_if you use dates in your campaign_)                                                                                                                                           |
+| **Music**                | `music`    | A link to an online song or playlist                                                                                                                                                                                  |
 
 ## Usage
 
@@ -132,7 +142,8 @@ the Frontmatter metadata in the page. The available functions are:
 | `location`            | Displays the location information and lists the characters, clues and events related to the location                                           |
 | `faction`             | Displays the faction information and lists the characters and locations related to the faction                                                 |
 | `timeline`            | Displays a timeline of every event, session and character date in the campaign                                                                 |
-| `notes`               | Currently does not display any specific type of information (_under development_)                                                              |
+| `notes`               | Currently does not display any specific type of information                                                                                    |
+| `music`               | Displays the header of the song or playlist                                                                                                    |
 
 example
 ```
@@ -179,20 +190,21 @@ rpgm/template/{type}
 
 Where the `type` identifies the type of outline or element.
 
-| Outline or Element Type | tag                                 |
-|-------------------------|-------------------------------------|
-| Campaign                | `rpgm/template/campaign`            |
-| Adventure               | `rpgm/template/adventure`           |
-| Session                 | `rpgm/template/session`             |
-| Scene                   | `rpgm/template/scene`               |
-| Player Character        | `rpgm/template/character`           |
-| Non Player character    | `rpgm/template/nonplayercharacter`  |
-| Clue                    | `rpgm/template/clue`                |
-| Event                   | `rpgm/template/event`               |
-| Faction                 | `rpgm/template/faction`             |
-| Location                | `rpgm/template/location`            |
-| Note                    | `rpgm/template/note`                |
-| Timeline                | `rpgm/template/timeline`            |
+| Outline or Element Type | tag                                |
+|-------------------------|------------------------------------|
+| Campaign                | `rpgm/template/campaign`           |
+| Adventure               | `rpgm/template/adventure`          |
+| Session                 | `rpgm/template/session`            |
+| Scene                   | `rpgm/template/scene`              |
+| Player Character        | `rpgm/template/character`          |
+| Non Player character    | `rpgm/template/nonplayercharacter` |
+| Clue                    | `rpgm/template/clue`               |
+| Event                   | `rpgm/template/event`              |
+| Faction                 | `rpgm/template/faction`            |
+| Location                | `rpgm/template/location`           |
+| Note                    | `rpgm/template/note`               |
+| Timeline                | `rpgm/template/timeline`           |
+| Music                   | `rpgm/template/music`              |
 
 ##### Generic custom templates
 
