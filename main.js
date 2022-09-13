@@ -4984,9 +4984,6 @@ var RpgManager = class extends import_obsidian19.Plugin {
       app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     });
   }
-  padTo2Digits(num) {
-    return num.toString().padStart(2, "0");
-  }
   onLayoutReady() {
     return __async(this, null, function* () {
       let reloadStart = Date.now();

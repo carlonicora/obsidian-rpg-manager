@@ -42,17 +42,12 @@ export default class RpgManager extends Plugin {
 		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
 	}
 
-	private padTo2Digits(num: number) {
-		return num.toString().padStart(2, '0');
-	}
-
 	async onLayoutReady(){
 		let reloadStart = Date.now();
 		this.io = new RpgData(this.app);
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
 		this.tagManager = new TagManager(this.app);
-
 
 		await this.io.loadCache();
 
