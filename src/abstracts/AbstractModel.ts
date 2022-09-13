@@ -93,8 +93,7 @@ export abstract class AbstractModel implements ModelInterface {
 			's' +
 				(scene.session.sessionId < 10 ? '0' + scene.session.sessionId.toString(): scene.session.sessionId.toString()) +
 				'e' +
-				(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()) +
-				' - ',
+				(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()),
 			scene.campaign.campaignId,
 			scene.adventure.adventureId,
 			scene.session.sessionId,
