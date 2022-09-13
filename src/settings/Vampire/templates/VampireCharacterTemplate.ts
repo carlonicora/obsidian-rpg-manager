@@ -1,4 +1,4 @@
-import {CharacterTemplateFactory} from "../../Agnostic/factories/CharacterTemplateFactory";
+import {CharacterTemplateFactory} from "../../../factories/templates/CharacterTemplateFactory";
 import {RpgCodeBlockInterface} from "../../../interfaces/RpgCodeBlockInterface";
 
 export class VampireCharacterTemplate extends CharacterTemplateFactory {

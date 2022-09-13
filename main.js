@@ -262,7 +262,7 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
   return CampaignSetting2;
 })(CampaignSetting || {});
 
-// src/settings/Agnostic/data/Campaign.ts
+// src/data/Campaign.ts
 var Campaign = class extends AbstractRpgOutlineData {
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -777,7 +777,7 @@ var ResponseTable = class extends AbstractResponse {
   }
 };
 
-// src/settings/Agnostic/components/SessionTableComponent.ts
+// src/components/SessionTableComponent.ts
 var SessionTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -806,7 +806,7 @@ var SessionTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/AdventureTableComponent.ts
+// src/components/AdventureTableComponent.ts
 var AdventureTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -830,7 +830,7 @@ var AdventureTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/CharacterTableComponent.ts
+// src/components/CharacterTableComponent.ts
 var CharacterTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -857,7 +857,7 @@ var CharacterTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/LocationTableComponent.ts
+// src/components/LocationTableComponent.ts
 var LocationTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -882,7 +882,7 @@ var LocationTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/EventTableComponent.ts
+// src/components/EventTableComponent.ts
 var EventTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -909,7 +909,7 @@ var EventTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/ClueTableComponent.ts
+// src/components/ClueTableComponent.ts
 var ClueTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -936,7 +936,7 @@ var ClueTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/FactionTableComponent.ts
+// src/components/FactionTableComponent.ts
 var FactionTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -961,7 +961,7 @@ var FactionTableComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/SceneTableComponent.ts
+// src/components/SceneTableComponent.ts
 var SceneTableComponent = class extends AbstractComponent {
   generateData(data, title) {
     if (data.length === 0) {
@@ -1007,11 +1007,11 @@ var AbstractRpgElementData = class extends AbstractRpgGenericData {
   }
 };
 
-// src/settings/Agnostic/data/Timeline.ts
+// src/data/Timeline.ts
 var Timeline = class extends AbstractRpgElementData {
 };
 
-// src/settings/Agnostic/components/BannerComponent.ts
+// src/components/BannerComponent.ts
 var BannerComponent = class extends AbstractComponent {
   generateData(data, title) {
     const response = new ResponseBanner(this.app);
@@ -1041,7 +1041,7 @@ var ResponseLine = class extends AbstractResponse {
   }
 };
 
-// src/settings/Agnostic/components/CharacterSynopsisComponent.ts
+// src/components/CharacterSynopsisComponent.ts
 var CharacterSynopsisComponent = class extends AbstractComponent {
   generateData(data, title) {
     var _a;
@@ -1080,7 +1080,7 @@ var ResponseImage = class extends AbstractResponse {
   }
 };
 
-// src/settings/Agnostic/components/ImageComponent.ts
+// src/components/ImageComponent.ts
 var ImageComponent = class extends AbstractComponent {
   generateData(data, title) {
     const response = new ResponseImage(this.app);
@@ -1103,7 +1103,7 @@ var ResponseHeader = class extends AbstractResponse {
   }
 };
 
-// src/settings/Agnostic/data/Character.ts
+// src/data/Character.ts
 var Character = class extends AbstractRpgElementData {
   reload(file, metadata) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -1128,7 +1128,7 @@ var Character = class extends AbstractRpgElementData {
   }
 };
 
-// src/settings/Agnostic/data/Clue.ts
+// src/data/Clue.ts
 var Clue = class extends AbstractRpgElementData {
   reload(file, metadata) {
     var _a, _b;
@@ -1140,7 +1140,7 @@ var Clue = class extends AbstractRpgElementData {
   }
 };
 
-// src/settings/Agnostic/data/Location.ts
+// src/data/Location.ts
 var Location = class extends AbstractRpgElementData {
   reload(file, metadata) {
     var _a;
@@ -1149,7 +1149,7 @@ var Location = class extends AbstractRpgElementData {
   }
 };
 
-// src/settings/Agnostic/data/Event.ts
+// src/data/Event.ts
 var Event = class extends AbstractRpgElementData {
   reload(file, metadata) {
     var _a, _b;
@@ -1158,7 +1158,7 @@ var Event = class extends AbstractRpgElementData {
   }
 };
 
-// src/settings/Agnostic/data/Scene.ts
+// src/data/Scene.ts
 var Scene = class extends AbstractRpgOutlineData {
   constructor() {
     super(...arguments);
@@ -1209,7 +1209,7 @@ var ResponseHeaderElement = class extends AbstractResponse {
   }
 };
 
-// src/settings/Agnostic/components/HeaderComponent.ts
+// src/components/HeaderComponent.ts
 var HeaderComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation = null) {
     var _a;
@@ -1283,7 +1283,7 @@ var HeaderComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/data/Adventure.ts
+// src/data/Adventure.ts
 var Adventure = class extends AbstractRpgOutlineData {
   reload(file, metadata) {
     super.reload(file, metadata);
@@ -1294,7 +1294,7 @@ var Adventure = class extends AbstractRpgOutlineData {
   }
 };
 
-// src/settings/Agnostic/components/AbtPlotComponent.ts
+// src/components/AbtPlotComponent.ts
 var AbtPlotComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
     if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
@@ -1327,7 +1327,7 @@ var AbtPlotComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Agnostic/components/StoryCirclePlotComponent.ts
+// src/components/StoryCirclePlotComponent.ts
 var StoryCirclePlotComponent = class extends AbstractComponent {
   generateData(data, title, additionalInformation) {
     if (additionalInformation == null || (additionalInformation.you == null || additionalInformation.need == null || additionalInformation.go == null || additionalInformation.search == null || additionalInformation.find == null || additionalInformation.take == null || additionalInformation.return == null || additionalInformation.change == null) || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return === "" && additionalInformation.change === "")
@@ -1696,7 +1696,7 @@ var ContentFactory = class extends AbstractFactory {
   }
 };
 
-// src/settings/Agnostic/data/Session.ts
+// src/data/Session.ts
 var Session = class extends AbstractRpgOutlineData {
   constructor() {
     super(...arguments);
@@ -1726,11 +1726,11 @@ var Session = class extends AbstractRpgOutlineData {
   }
 };
 
-// src/settings/Agnostic/data/Faction.ts
+// src/data/Faction.ts
 var Faction = class extends AbstractRpgElementData {
 };
 
-// src/settings/Agnostic/data/Note.ts
+// src/data/Note.ts
 var Note = class extends AbstractRpgOutlineData {
   reload(file, metadata) {
     super.reload(file, metadata);
@@ -1898,7 +1898,7 @@ var AbstractModalComponent = class {
   }
 };
 
-// src/settings/Agnostic/modals/CampaignModal.ts
+// src/modals/components/CampaignModal.ts
 var CampaignModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
@@ -2018,7 +2018,7 @@ var CampaignModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/AdventureModal.ts
+// src/modals/components/AdventureModal.ts
 var AdventureModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
@@ -2103,7 +2103,7 @@ var AdventureModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/SessionModal.ts
+// src/modals/components/SessionModal.ts
 var SessionModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
@@ -2187,7 +2187,7 @@ var SessionModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/SceneModal.ts
+// src/modals/components/SceneModal.ts
 var SceneModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
@@ -2223,7 +2223,7 @@ var SceneModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/CharacterModal.ts
+// src/modals/components/CharacterModal.ts
 var CharacterModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2245,7 +2245,7 @@ var CharacterModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/ClueModal.ts
+// src/modals/components/ClueModal.ts
 var ClueModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2267,7 +2267,7 @@ var ClueModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/EventModal.ts
+// src/modals/components/EventModal.ts
 var EventModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2289,7 +2289,7 @@ var EventModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/FactionModal.ts
+// src/modals/components/FactionModal.ts
 var FactionModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2311,7 +2311,7 @@ var FactionModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/LocationModal.ts
+// src/modals/components/LocationModal.ts
 var LocationModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2333,7 +2333,7 @@ var LocationModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/NonPlayerCharacterModal.ts
+// src/modals/components/NonPlayerCharacterModal.ts
 var NonPlayerCharacterModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2355,7 +2355,7 @@ var NonPlayerCharacterModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/NoteModal.ts
+// src/modals/components/NoteModal.ts
 var NoteModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2377,7 +2377,7 @@ var NoteModal = class extends AbstractModalComponent {
   }
 };
 
-// src/settings/Agnostic/modals/TimelineModal.ts
+// src/modals/components/TimelineModal.ts
 var TimelineModal = class extends AbstractModalComponent {
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2555,7 +2555,7 @@ var ResponseData = class {
   }
 };
 
-// src/settings/Agnostic/models/AdventureModel.ts
+// src/models/AdventureModel.ts
 var AdventureModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2572,7 +2572,7 @@ var AdventureModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/CampaignModel.ts
+// src/models/CampaignModel.ts
 var CampaignModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2603,7 +2603,7 @@ var CampaignModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/CampaignNavigationModel.ts
+// src/models/CampaignNavigationModel.ts
 var CampaignNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2618,7 +2618,7 @@ var CampaignNavigationModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/ClueModel.ts
+// src/models/ClueModel.ts
 var ClueModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2633,7 +2633,7 @@ var ClueModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/ErrorModel.ts
+// src/models/ErrorModel.ts
 var ErrorModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2646,7 +2646,7 @@ var ErrorModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/EventModel.ts
+// src/models/EventModel.ts
 var EventModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2661,7 +2661,7 @@ var EventModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/FactionModel.ts
+// src/models/FactionModel.ts
 var FactionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2675,7 +2675,7 @@ var FactionModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/LocationModel.ts
+// src/models/LocationModel.ts
 var LocationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2692,7 +2692,7 @@ var LocationModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/NoteModel.ts
+// src/models/NoteModel.ts
 var NoteModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2703,7 +2703,7 @@ var NoteModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/NpcModel.ts
+// src/models/NpcModel.ts
 var NpcModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2720,7 +2720,7 @@ var NpcModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/PcModel.ts
+// src/models/PcModel.ts
 var PcModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2735,7 +2735,7 @@ var PcModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/SceneModel.ts
+// src/models/SceneModel.ts
 var SceneModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2749,7 +2749,7 @@ var SceneModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/SceneNavigationModel.ts
+// src/models/SceneNavigationModel.ts
 var SceneNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2761,7 +2761,7 @@ var SceneNavigationModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/SessionModel.ts
+// src/models/SessionModel.ts
 var SessionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2772,7 +2772,7 @@ var SessionModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/SessionNavigationModel.ts
+// src/models/SessionNavigationModel.ts
 var SessionNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2817,7 +2817,7 @@ var TimelineElementResponse = class {
   }
 };
 
-// src/settings/Agnostic/models/TimelineModel.ts
+// src/models/TimelineModel.ts
 var TimelineModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -2893,7 +2893,7 @@ var TimelineModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Agnostic/models/AdventureNavigationModel.ts
+// src/models/AdventureNavigationModel.ts
 var AdventureNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
@@ -3101,21 +3101,21 @@ var AbstractTemplate = class {
   }
 };
 
-// src/settings/Agnostic/templates/CampaignTemplate.ts
+// src/templates/CampaignTemplate.ts
 var CampaignTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Notes\n\n";
   }
 };
 
-// src/settings/Agnostic/templates/AdventureTemplate.ts
+// src/templates/AdventureTemplate.ts
 var AdventureTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Notes\n\n";
   }
 };
 
-// src/settings/Agnostic/templates/CharacterTemplate.ts
+// src/templates/CharacterTemplate.ts
 var CharacterTemplate = class extends AbstractTemplate {
   getContent() {
     return `## Questionnaire
@@ -3193,42 +3193,42 @@ Do you have any enemy or person you don't go on well with?
   }
 };
 
-// src/settings/Agnostic/templates/NonPlayerCharacterTemplate.ts
+// src/templates/NonPlayerCharacterTemplate.ts
 var NonPlayerCharacterTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Notes\n- \n\n## Backstory\n";
   }
 };
 
-// src/settings/Agnostic/templates/ClueTemplate.ts
+// src/templates/ClueTemplate.ts
 var ClueTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Additional Information\n\n";
   }
 };
 
-// src/settings/Agnostic/templates/LocationTemplate.ts
+// src/templates/LocationTemplate.ts
 var LocationTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Additional Information\n\n";
   }
 };
 
-// src/settings/Agnostic/templates/FactionTemplate.ts
+// src/templates/FactionTemplate.ts
 var FactionTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Additional Information\n\n";
   }
 };
 
-// src/settings/Agnostic/templates/EventTemplate.ts
+// src/templates/EventTemplate.ts
 var EventTemplate = class extends AbstractTemplate {
   getContent() {
     return "## Additional Information\n\n";
   }
 };
 
-// src/settings/Agnostic/templates/NoteTemplate.ts
+// src/templates/NoteTemplate.ts
 var NoteTemplate = class extends AbstractTemplate {
   getContent() {
     const characters = this.app.plugins.getPlugin("rpg-manager").io.getPlayerCharacterList(this.campaignId);
@@ -3254,7 +3254,7 @@ var NoteTemplate = class extends AbstractTemplate {
   }
 };
 
-// src/settings/Agnostic/templates/TimelineTemplate.ts
+// src/templates/TimelineTemplate.ts
 var TimelineTemplate = class extends AbstractTemplate {
   getContent() {
     return "";
@@ -3426,7 +3426,7 @@ var RpgCodeBlock = class {
   }
 };
 
-// src/settings/Agnostic/factories/CampaignTemplateFactory.ts
+// src/factories/templates/CampaignTemplateFactory.ts
 var CampaignTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.campaignTag + "/" + this.campaignId);
@@ -3454,7 +3454,7 @@ var CampaignTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/AdventureTemplateFactory.ts
+// src/factories/templates/AdventureTemplateFactory.ts
 var AdventureTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.adventureTag + "/" + this.campaignId + "/" + this.adventureId);
@@ -3475,7 +3475,7 @@ var AdventureTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/SessionTemplateFactory.ts
+// src/factories/templates/SessionTemplateFactory.ts
 var SessionTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.sessionTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId);
@@ -3512,7 +3512,7 @@ var SessionTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/SceneTemplateFactory.ts
+// src/factories/templates/SceneTemplateFactory.ts
 var SceneTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.sceneTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId + "/" + this.sceneId);
@@ -3538,7 +3538,7 @@ var SceneTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/CharacterTemplateFactory.ts
+// src/factories/templates/CharacterTemplateFactory.ts
 var CharacterTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.pcTag + "/" + this.campaignId);
@@ -3559,7 +3559,7 @@ var CharacterTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/NonPlayerCharacterTemplateFactory.ts
+// src/factories/templates/NonPlayerCharacterTemplateFactory.ts
 var NonPlayerCharacterTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.npcTag + "/" + this.campaignId);
@@ -3583,7 +3583,7 @@ var NonPlayerCharacterTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/LocationTemplateFactory.ts
+// src/factories/templates/LocationTemplateFactory.ts
 var LocationTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.locationTag + "/" + this.campaignId);
@@ -3598,7 +3598,7 @@ var LocationTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/EventTemplateFactory.ts
+// src/factories/templates/EventTemplateFactory.ts
 var EventTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.eventTag + "/" + this.campaignId);
@@ -3617,7 +3617,7 @@ var EventTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/ClueTemplateFactory.ts
+// src/factories/templates/ClueTemplateFactory.ts
 var ClueTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.clueTag + "/" + this.campaignId);
@@ -3635,7 +3635,7 @@ var ClueTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/FactionTemplateFactory.ts
+// src/factories/templates/FactionTemplateFactory.ts
 var FactionTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.factionTag + "/" + this.campaignId);
@@ -3649,7 +3649,7 @@ var FactionTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/NoteTemplateFactory.ts
+// src/factories/templates/NoteTemplateFactory.ts
 var NoteTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.noteTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId);
@@ -3707,7 +3707,7 @@ var VampireCampaignTemplate = class extends CampaignTemplateFactory {
   }
 };
 
-// src/settings/Agnostic/factories/TimelineTemplateFactory.ts
+// src/factories/templates/TimelineTemplateFactory.ts
 var TimelineTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.timelineTag + "/" + this.campaignId);
@@ -3760,7 +3760,7 @@ var AbstractView = class {
   }
 };
 
-// src/settings/Agnostic/views/StringView.ts
+// src/views/StringView.ts
 var StringView = class extends AbstractView {
   render(container, data) {
     const divContainer = container.createDiv();
@@ -3768,7 +3768,7 @@ var StringView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/TableView.ts
+// src/views/TableView.ts
 var TableView = class extends AbstractView {
   render(container, data) {
     const divContainer = container.createDiv();
@@ -3834,7 +3834,7 @@ var TableView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/BannerView.ts
+// src/views/BannerView.ts
 var BannerView = class extends AbstractView {
   render(container, data) {
     if (data.image !== null) {
@@ -3851,7 +3851,7 @@ var BannerView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/BoxView.ts
+// src/views/BoxView.ts
 var import_obsidian12 = require("obsidian");
 var BoxView = class extends AbstractView {
   render(container, data) {
@@ -3865,7 +3865,7 @@ var BoxView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/BreadcrumbView.ts
+// src/views/BreadcrumbView.ts
 var import_obsidian13 = require("obsidian");
 var BreadcrumbView = class extends AbstractView {
   render(container, data) {
@@ -3919,7 +3919,7 @@ var BreadcrumbView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/TimelineView.ts
+// src/views/TimelineView.ts
 var import_obsidian14 = require("obsidian");
 var TimelineView = class extends AbstractView {
   render(container, data) {
@@ -3958,7 +3958,7 @@ var TimelineView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/ImageView.ts
+// src/views/ImageView.ts
 var ImageView = class extends AbstractView {
   render(container, data) {
     if (data.imgSrc !== null) {
@@ -3971,7 +3971,7 @@ var ImageView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/HeaderView.ts
+// src/views/HeaderView.ts
 var HeaderView = class extends AbstractView {
   render(container, data) {
     const crs = container.createDiv({ cls: "rpgm-header-info" });
@@ -4010,7 +4010,7 @@ var HeaderView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/AbtPlotView.ts
+// src/views/AbtPlotView.ts
 var AbtPlotView = class extends AbstractView {
   render(container, data) {
     const titleEl = container.createEl("h2");
@@ -4027,7 +4027,7 @@ var AbtPlotView = class extends AbstractView {
   }
 };
 
-// src/settings/Agnostic/views/StoryCirclePlotView.ts
+// src/views/StoryCirclePlotView.ts
 var StoryCirclePlotView = class extends AbstractView {
   render(container, data) {
     const titleEl = container.createEl("h2");

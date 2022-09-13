@@ -1,4 +1,4 @@
-import {NpcModel} from "../../Agnostic/models/NpcModel";
+import {NpcModel} from "../../../models/NpcModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {RawCampaignInterface} from "../interfaces/RawCampaignInterface";
