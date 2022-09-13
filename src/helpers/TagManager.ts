@@ -93,7 +93,8 @@ export class TagManager {
 
 		if (typeof tags === 'object') {
 			tags.forEach((tag: string) => {
-				if (tag != null) {
+
+				if (tag !== null && typeof tag === 'string') {
 					if (tag.startsWith(this.dataSettings.get(DataType.Campaign) ?? '?')) response = tag;
 					if (tag.startsWith(this.dataSettings.get(DataType.Adventure) ?? '?')) response = tag;
 					if (tag.startsWith(this.dataSettings.get(DataType.Session) ?? '?')) response = tag;

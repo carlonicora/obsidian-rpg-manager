@@ -4884,7 +4884,7 @@ var TagManager = class {
     if (typeof tags === "object") {
       tags.forEach((tag) => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
-        if (tag != null) {
+        if (tag !== null && typeof tag === "string") {
           if (tag.startsWith((_a = this.dataSettings.get(0 /* Campaign */)) != null ? _a : "?"))
             response = tag;
           if (tag.startsWith((_b = this.dataSettings.get(1 /* Adventure */)) != null ? _b : "?"))
