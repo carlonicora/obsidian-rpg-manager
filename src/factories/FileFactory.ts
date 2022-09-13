@@ -99,7 +99,7 @@ export class FileFactory extends AbstractFactory {
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
-			'',
+			'internal' + DataType[type],
 			name,
 			campaignId,
 			adventureId,

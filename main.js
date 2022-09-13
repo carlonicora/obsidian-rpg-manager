@@ -1981,7 +1981,7 @@ var FileFactory = class extends AbstractFactory {
         settings = campaign.settings;
         folder = campaign.folder;
       }
-      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, "", name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
+      const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, "internal" + DataType[type], name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
       const fileName = yield this.generateFilePath(type, folder, name);
       const data = yield template.generateData();
       const newFile = yield app.vault.create(fileName, data);
