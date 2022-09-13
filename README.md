@@ -46,7 +46,7 @@ frontmatter and codeblocks.
 4. Navigate your campaign easily
 5. **Send feedback**
 
-![](RpgManager.gif)
+[Watch a tutorial on how to use RPG Manager](https://youtu.be/NLvzfOWI4aE)
 
 ## Plotting Logic
 
