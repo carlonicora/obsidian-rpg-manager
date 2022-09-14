@@ -1,7 +1,6 @@
 import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {Pronoun} from "../enums/Pronoun";
-import {CachedMetadata, TFile} from "obsidian";
 
 export class Character extends AbstractRpgElementData implements CharacterInterface {
 	public dob: Date|null;
@@ -9,16 +8,14 @@ export class Character extends AbstractRpgElementData implements CharacterInterf
 	public goals: string|null;
 	public pronoun: Pronoun|null;
 
-	public reload(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super.reload(file, metadata);
-
+	protected async loadData(
+	): Promise<void> {
 		this.dob = this.initialiseDate(this.frontmatter?.dates?.dob);
 		this.death = this.initialiseDate(this.frontmatter?.dates?.death);
 		this.goals = this.frontmatter?.goals;
 		this.pronoun = this.frontmatter?.pronoun ? this.app.plugins.getPlugin('rpg-manager').factories.pronouns.create(this.frontmatter?.pronoun) : null;
+
+		super.loadData();
 	}
 
 	public get age(

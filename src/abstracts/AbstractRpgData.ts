@@ -1,5 +1,5 @@
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
-import {App, CachedMetadata, FrontMatterCache, LinkCache, TFile} from "obsidian";
+import {App, CachedMetadata, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
@@ -9,61 +9,106 @@ import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {ElementDuplicated} from "../errors/ElementDuplicated";
 import {HiddenError} from "../errors/HiddenError";
+import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {RpgGenericDataInterface} from "../interfaces/data/RpgGenericDataInterface";
 
 export abstract class AbstractRpgData implements RpgDataInterface {
-	public obsidianId: string;
-
-	public link: string;
-	public name: string;
-	public path: string;
+	public frontmatter: any;
 
 	public tags: Array<string>;
-	public tag: string|undefined;
-
-	public links: Array<string>;
 
 	public completed: boolean;
 	public synopsis: string|null = null;
 	public additionalInformation: string|null = null;
 	public imageSrc: string|null|undefined = undefined;
 
-	public frontmatter: FrontMatterCache|undefined;
+	protected relationships: Map<string, RelationshipInterface> = new Map();
+
+	private metadata: CachedMetadata;
 
 	constructor(
 		protected app: App,
+		public tag:string,
 		public type: DataType,
-		file: TFile,
-		metadata: CachedMetadata,
+		public file: TFile,
 	) {
-		this.reload(file, metadata);
+		this.loadBaseData();
+		this.loadData();
 	}
 
-	public reload(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		this.obsidianId = file.path;
+	private async loadBaseData(
+	): Promise<void> {
+		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
+		if (metadata === null) throw new Error('metadata is null');
+		this.metadata = metadata;
 
-		this.link = '[[' + file.basename + ']]';
-		this.name = file.basename;
-		this.path = file.path;
+		this.frontmatter = this.metadata.frontmatter ?? {};
+		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
 
-		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata.frontmatter?.tags);
-		this.tag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(
-			this.tags
-		);
+		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
+		this.synopsis = this.frontmatter.synopsis;
 
-		this.links = [];
+		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
+	}
 
-		(metadata.links || []).forEach((link: LinkCache) => {
-			this.links.push(link.link);
+	protected async loadData(
+	): Promise<void> {
+		if ((<RpgGenericDataInterface>(<unknown>this)).isOutline) await this.checkElementDuplication();
+	}
+
+	public async reload(
+	): Promise<void> {
+		await this.loadBaseData();
+		await this.loadData();
+	}
+
+	public abstract loadHierarchy(
+		dataList: RpgDataListInterface,
+	): void;
+
+	public loadRelationships(
+		dataList: RpgDataListInterface,
+	): void {
+		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
+			const elements = dataList.where((data: RpgDataInterface) => data.name === name).elements;
+			switch (elements.length){
+				case 0:
+					relationship.component = undefined;
+					break;
+				case 1:
+					relationship.component = elements[0]
+					break;
+			}
 		});
+		if ((<RpgGenericDataInterface>(<unknown>this)).isOutline) this.checkElementDuplication();
+	}
 
-		this.frontmatter = metadata.frontmatter;
+	public loadReverseRelationships(
+		dataList: RpgDataListInterface,
+	): void {
+	}
 
-		this.completed = metadata.frontmatter?.completed ? metadata.frontmatter?.completed : true;
-		this.synopsis = metadata.frontmatter?.synopsis;
-		//this.imageSrc = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
+	public addReverseRelationship(
+		name: string,
+		relationship: RelationshipInterface,
+	): void {
+		this.relationships.set(name, relationship);
+	}
+
+	public get name(
+	): string {
+		return this.file.basename;
+	}
+
+	public get path(
+	): string {
+		return this.file.path;
+	}
+
+	public get link(
+	): string {
+		return '[[' + this.name + ']]'
 	}
 
 	public get imageSrcElement(
@@ -84,22 +129,16 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		return this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
 	}
 
-
 	public getRelationships(
-		type: DataType
+		type: DataType,
 	): RpgDataInterface[] {
-		const response: RpgDataInterface[] = [];
+		const response:RpgDataInterface[] = [];
 
-		const relationships: any = this.frontmatter?.relationships[DataType[type].toLowerCase() + 's'];
-		if (relationships != null){
-			Object.entries(relationships).forEach(([key, value], index) => {
-				const data = this.app.plugins.getPlugin('rpg-manager').io.getElementByName(key);
-				if (data != null){
-					data.additionalInformation = <string>value;
-					response.push(data);
-				}
-			});
-		}
+		this.relationships.forEach((data: RelationshipInterface, name: string) => {
+			if (data.component !== undefined && data.component.type === type) {
+				response.push(data.component);
+			}
+		});
 
 		return response;
 	}
@@ -110,7 +149,6 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		if (date == null) return null;
 
 		const response = new Date(date);
-		response.setTime(response.getTime() + response.getTimezoneOffset() * 60 * 1000);
 		return response;
 	}
 

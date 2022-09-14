@@ -15,7 +15,7 @@ export class AdventureModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'SessionTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId)
+				this.io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId)
 					.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 						if (leftData.sessionId > rightData.sessionId) return -1;
 						if (leftData.sessionId < rightData.sessionId) return 1;

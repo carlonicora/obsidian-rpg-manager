@@ -10,7 +10,7 @@ import {
 } from 'obsidian';
 import {RpgController} from "./RpgController";
 import {DataType} from "./enums/DataType";
-import {RpgData} from "./data/RpgData";
+import {RpgIO} from "./helpers/RpgIO";
 import {RpgFunctions} from "./helpers/RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
 import {CreationModal} from "./modals/CreationModal";
@@ -27,9 +27,11 @@ export default class RpgManager extends Plugin {
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;
-	io: RpgData;
+	io: RpgIO;
 	factories: RpgFactories;
 	tagManager: TagManager;
+
+	ready = false;
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
@@ -44,22 +46,26 @@ export default class RpgManager extends Plugin {
 
 	async onLayoutReady(){
 		const reloadStart = Date.now();
-		this.io = new RpgData(this.app);
+		this.io = new RpgIO(this.app);
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
 		this.tagManager = new TagManager(this.app);
 
-		await this.io.loadCache();
+		this.io.load().then(() => {
+			//this.registerEvents();
+			//this.app.workspace.trigger("rpgmanager:refresh-views");
 
-		console.log(
-			`RPG Manager: all outlines and elements have been indexed in ${
-				(Date.now() - reloadStart) / 1000.0
-			}s.`
-		);
+			console.log(
+				`RPG Manager: all outlines and elements have been indexed in ${
+					(Date.now() - reloadStart) / 1000.0
+				}s.`
+			);
 
-		this.registerEvents();
-		this.registerCodeBlock();
-		this.registerCommands();
+			console.log(this.io);
+		});
+
+		//this.registerCodeBlock();
+		//this.registerCommands();
 	}
 
 	async onunload() {

@@ -25,11 +25,7 @@ export class LocationModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Character,
-					DataType.Faction,
-				),
+				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter),
 			)
 		);
 
@@ -37,11 +33,7 @@ export class LocationModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'EventTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Event,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Event),
 			)
 		);
 
@@ -49,11 +41,7 @@ export class LocationModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'ClueTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Clue,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Clue),
 			)
 		);
 
@@ -61,10 +49,7 @@ export class LocationModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Location),
 				'Contained locations',
 			)
 		);
@@ -73,11 +58,7 @@ export class LocationModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Location,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Location),
 				'Part of locations',
 			)
 		);

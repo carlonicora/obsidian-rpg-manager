@@ -15,10 +15,7 @@ export class SceneModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'MusicTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Music,
-				),
+				this.currentElement.getRelationships(DataType.Music),
 			)
 		);
 
@@ -26,10 +23,7 @@ export class SceneModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Character,
-				),
+				this.currentElement.getRelationships(DataType.Character),
 			)
 		);
 
@@ -37,10 +31,7 @@ export class SceneModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'FactionTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Faction,
-				),
+				this.currentElement.getRelationships(DataType.Faction),
 			)
 		);
 
@@ -48,10 +39,7 @@ export class SceneModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'ClueTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Clue,
-				),
+				this.currentElement.getRelationships(DataType.Clue),
 			)
 		);
 
@@ -59,10 +47,7 @@ export class SceneModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Location),
 			)
 		);
 

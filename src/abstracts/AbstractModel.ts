@@ -11,8 +11,11 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
 import {FileFactory} from "../factories/FileFactory";
+import {RpgIO} from "../helpers/RpgIO";
 
 export abstract class AbstractModel implements ModelInterface {
+	protected io: RpgIO;
+
 	constructor(
 		protected app: App,
 		protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
@@ -20,6 +23,7 @@ export abstract class AbstractModel implements ModelInterface {
 		protected sourcePath: string,
 		protected sourceMeta: any,
 	) {
+		this.io = this.app.plugins.getPlugin('rpg-manager').io;
 	}
 
 	protected generateBreadcrumb(

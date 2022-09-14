@@ -1,4 +1,3 @@
-import {CachedMetadata, TFile} from "obsidian";
 import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {FetcherType} from "../enums/FetcherType";
@@ -7,13 +6,11 @@ import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTub
 export class Music extends AbstractRpgElementData implements MusicInterface {
 	public url: string|undefined;
 
-	public reload(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super.reload(file, metadata);
-
+	protected async loadData(
+	): Promise<void> {
 		this.url = this.frontmatter?.url;
+
+		super.loadData();
 	}
 
 	public getThumbnail(): Promise<string|null|undefined> {

@@ -1,5 +1,6 @@
 import {RpgGenericDataInterface} from "./RpgGenericDataInterface";
+import {RpgDataListInterface} from "./RpgDataListInterface";
 
-export interface RpgOutlineDataInterface extends RpgGenericDataInterface {
-	initialiseNeighbours(): void;
+export interface RpgOutlineDataInterface {
+
 }

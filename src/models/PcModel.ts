@@ -25,10 +25,7 @@ export class PcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'FactionTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Faction,
-				),
+				this.currentElement.getRelationships(DataType.Faction),
 			)
 		);
 
@@ -36,10 +33,7 @@ export class PcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Character,
-				),
+				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter),
 			)
 		);
 
@@ -47,10 +41,7 @@ export class PcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Location),
 			)
 		);
 

@@ -34,7 +34,7 @@ export class RpgController extends MarkdownRenderChild {
 
 	private initialise(
 	): void {
-		const currentElement = this.app.plugins.getPlugin('rpg-manager').io.getElementByObsidianId(this.sourcePath);
+		const currentElement = this.app.plugins.getPlugin('rpg-manager').io.getElementByPath(this.sourcePath);
 		if (currentElement == null){
 			this.isActive = false;
 		} else {

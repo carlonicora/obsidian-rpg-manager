@@ -17,7 +17,7 @@ export class CampaignModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'AdventureTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getAdventureList(this.currentElement.campaignId)
+				this.io.getAdventureList(this.currentElement.campaignId)
 					.sort(function (leftData: AdventureInterface, rightData: AdventureInterface) {
 						if (leftData.adventureId > rightData.adventureId) return -1;
 						if (leftData.adventureId < rightData.adventureId) return 1;
@@ -30,7 +30,7 @@ export class CampaignModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'SessionTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.currentElement.campaignId)
+				this.io.getSessionList(this.currentElement.campaignId)
 					.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 						if (leftData.sessionId > rightData.sessionId) return -1;
 						if (leftData.sessionId < rightData.sessionId) return 1;
@@ -43,7 +43,7 @@ export class CampaignModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.settings,
 				'CharacterTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getCharacterList(this.currentElement.campaignId)
+				this.io.getCharacterList(this.currentElement.campaignId)
 					.sort(function (leftData: CharacterInterface, rightData: CharacterInterface) {
 						if (leftData.name > rightData.name) return 1;
 						if (leftData.name < rightData.name) return -1;

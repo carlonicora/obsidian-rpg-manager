@@ -25,10 +25,7 @@ export class MusicModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'MusicTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Music,
-				),
+				this.currentElement.getRelationships(DataType.Music),
 			)
 		);
 
@@ -36,11 +33,7 @@ export class MusicModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'SceneTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Session,
-					DataType.Music,
-				),
+				this.currentElement.getRelationships(DataType.Scene),
 			)
 		);
 
@@ -48,11 +41,7 @@ export class MusicModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'SessionTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Session,
-					DataType.Music,
-				),
+				this.currentElement.getRelationships(DataType.Session),
 			)
 		);
 

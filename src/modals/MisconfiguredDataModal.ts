@@ -1,10 +1,11 @@
-import {App, Component, MarkdownRenderer, Modal, TFile} from "obsidian";
+import {App, Component, MarkdownRenderer, Modal} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
+import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 
 export class MisconfiguredDataModal extends Modal {
 	constructor(
 		app: App,
-		private misconfiguredTags: Map<TFile, RpgErrorInterface>|undefined,
+		private misconfiguredTags: Map<RpgDataInterface, RpgErrorInterface>|undefined,
 		private singleError: RpgErrorInterface|undefined = undefined,
 	) {
 		super(app);
@@ -23,22 +24,22 @@ export class MisconfiguredDataModal extends Modal {
 			contentEl.createEl('p', {text: 'Please double check the errors and correct them.'});
 			const listEl = contentEl.createEl('ul');
 
-			this.misconfiguredTags.forEach((error: RpgErrorInterface, file: TFile) => {
+			this.misconfiguredTags.forEach((error: RpgErrorInterface, data: RpgDataInterface) => {
 				const listItemEl = listEl.createEl('li');
 
 				MarkdownRenderer.renderMarkdown(
-					'**' + file.basename + '**\n' + error.showErrorMessage(),
+					'**' + data.name + '**\n' + error.showErrorMessage(),
 					listItemEl,
-					file.path,
+					data.path,
 					null as unknown as Component,
 				);
 			});
 
 			const actionEl = contentEl.createEl('button', {text: 'Open all the misconfigured files'});
 			actionEl.addEventListener("click", () => {
-				(this.misconfiguredTags || new Map<TFile, RpgErrorInterface>()).forEach((error: RpgErrorInterface, file: TFile) => {
+				(this.misconfiguredTags || new Map<RpgDataInterface, RpgErrorInterface>()).forEach((error: RpgErrorInterface, data: RpgDataInterface) => {
 					const leaf = app.workspace.getLeaf(true);
-					leaf.openFile(file);
+					leaf.openFile(data.file);
 				});
 				this.close();
 			});

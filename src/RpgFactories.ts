@@ -10,6 +10,7 @@ import {PronounFactory} from "./factories/PronounFactory";
 import {TemplateFactory} from "./factories/TemplateFactory";
 import {ViewFactory} from "./factories/ViewFactory";
 import {FetcherFactory} from "./factories/FetcherFactory";
+import {RelationshipFactory} from "./factories/RelationshipFactory";
 
 export class RpgFactories {
 	public components: ComponentFactory;
@@ -23,6 +24,7 @@ export class RpgFactories {
 	public templates: TemplateFactory;
 	public views: ViewFactory;
 	public fetchers: FetcherFactory;
+	public relationships: RelationshipFactory;
 
 	constructor(
 		private app: App,
@@ -38,5 +40,6 @@ export class RpgFactories {
 		this.templates = new TemplateFactory(this.app);
 		this.views = new ViewFactory(this.app);
 		this.fetchers = new FetcherFactory(this.app);
+		this.relationships = new RelationshipFactory(this.app);
 	}
 }

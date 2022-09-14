@@ -26,11 +26,7 @@ export class FactionModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Character,
-					DataType.Faction,
-				),
+				this.currentElement.getRelationships(DataType.Faction),
 			)
 		);
 
@@ -38,10 +34,7 @@ export class FactionModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Location),
 			)
 		);
 

@@ -25,10 +25,7 @@ export class ClueModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Character,
-				),
+				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter),
 			)
 		);
 
@@ -36,10 +33,7 @@ export class ClueModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Location,
-				),
+				this.currentElement.getRelationships(DataType.Location),
 			)
 		);
 
@@ -47,11 +41,7 @@ export class ClueModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'EventTable',
-				this.app.plugins.getPlugin('rpg-manager').io.getRelationshipList(
-					this.currentElement,
-					DataType.Event,
-					DataType.Clue,
-				),
+				this.currentElement.getRelationships(DataType.Event),
 			)
 		);
 

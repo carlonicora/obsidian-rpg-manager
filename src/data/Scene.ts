@@ -2,7 +2,7 @@ import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {CachedMetadata, TFile} from "obsidian";
+import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 
 export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 	public sceneId: number;
@@ -15,31 +15,28 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
 
-	public reload(
-		file: TFile,
-		metadata: CachedMetadata,
-	) {
-		super.reload(file, metadata);
-
+	protected async loadData(
+	): Promise<void> {
 		this.sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
-
-		this.adventure = this.loadAdventure(this.campaign.campaignId);
-		this.session = this.loadSession(this.campaign.campaignId, this.adventure.adventureId);
-		this.checkElementDuplication();
-
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
 		this.action = this.frontmatter?.action;
+
+		super.loadData();
 	}
 
-	public initialiseNeighbours(): void {
-		if (this.campaign != null && this.adventure != null && this.session != null) {
-			this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
-			this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
+	public loadHierarchy(
+		dataList: RpgDataListInterface,
+	) {
+		super.loadHierarchy(dataList);
 
-			if (this.nextScene != null) this.nextScene.previousScene = this;
-			if (this.previousScene != null) this.previousScene.nextScene = this;
-		}
+		this.adventure = this.loadAdventure(this.campaign.campaignId);
+		this.session = this.loadSession(this.campaign.campaignId, this.adventure.adventureId);
+		this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
+		this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
+
+		if (this.nextScene != null) this.nextScene.previousScene = this;
+		if (this.previousScene != null) this.previousScene.nextScene = this;
 	}
 
 	public get duration(): string {
