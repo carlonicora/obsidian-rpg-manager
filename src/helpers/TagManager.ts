@@ -1,6 +1,6 @@
 import {App} from "obsidian";
 import {DataType} from "../enums/DataType";
-import {TagMisconfigured} from "../errors/TagMisconfigured";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 
 export class TagManager {
 	public dataSettings: Map<DataType, string>;
@@ -144,6 +144,18 @@ export class TagManager {
 		return response;
 	}
 
+	public getOptionalId(
+		type: DataType,
+		tag: string|undefined = undefined,
+		tags: Array<string>|undefined = undefined,
+	): number|undefined {
+		try {
+			return this.getId(type, tag, tags);
+		} catch (e) {
+			return undefined;
+		}
+	}
+
 	public getId(
 		type: DataType,
 		tag: string|undefined = undefined,
@@ -178,7 +190,7 @@ export class TagManager {
 		const response = variables.get(type);
 
 		if (response == null){
-			throw new TagMisconfigured(this.app, dataType, tag);
+			throw new TagMisconfiguredError(this.app, dataType, tag);
 		}
 
 		return response;

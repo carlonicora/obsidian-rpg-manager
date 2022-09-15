@@ -1,7 +1,7 @@
 import {RpgError} from "./RpgError";
 import {DataType} from "../enums/DataType";
 
-export class TagMisconfigured extends RpgError {
+export class TagMisconfiguredError extends RpgError {
 	public showErrorMessage(
 	): string {
 		let response = super.showErrorMessage();

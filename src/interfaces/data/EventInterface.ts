@@ -1,5 +1,5 @@
-import {RpgDataInterface} from "./RpgDataInterface";
+import {RecordInterface} from "../database/RecordInterface";
 
-export interface EventInterface extends RpgDataInterface {
+export interface EventInterface extends RecordInterface {
 	date: Date|null;
 }

@@ -1,7 +1,7 @@
 import {ComponentInterface} from "../interfaces/ComponentInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {App} from "obsidian";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export abstract class AbstractComponent implements ComponentInterface {
 	constructor(
@@ -10,7 +10,7 @@ export abstract class AbstractComponent implements ComponentInterface {
 	}
 
 	abstract generateData(
-		data: RpgDataInterface[] | RpgDataInterface,
+		data: RecordInterface[] | RecordInterface,
 		title: string | null,
 		additionalInformation: any | null,
 	): Promise<ResponseElementInterface | null>;

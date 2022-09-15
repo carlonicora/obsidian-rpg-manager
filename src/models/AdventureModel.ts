@@ -3,6 +3,7 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {ResponseData} from "../data/responses/ResponseData";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {DataType} from "../enums/DataType";
 
 export class AdventureModel extends AbstractModel {
 	protected currentElement: AdventureInterface;
@@ -15,12 +16,12 @@ export class AdventureModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'SessionTable',
-				this.io.getSessionList(this.currentElement.campaign.campaignId, this.currentElement.adventureId)
+				this.io.readListParametrised<SessionInterface>(undefined, DataType.Session, this.currentElement.campaign.campaignId, this.currentElement.adventureId)
 					.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 						if (leftData.sessionId > rightData.sessionId) return -1;
 						if (leftData.sessionId < rightData.sessionId) return 1;
 						return 0;
-					}).elements,
+					}),
 			)
 		);
 

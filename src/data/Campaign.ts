@@ -1,8 +1,8 @@
-import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
+import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 
-export class Campaign extends AbstractRpgOutlineData implements CampaignInterface {
+export class Campaign extends AbstractOutlineData implements CampaignInterface {
 	public campaignId: number;
 	public currentDate: Date|null;
 	public settings: CampaignSetting;

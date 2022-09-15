@@ -1,8 +1,8 @@
-import {RpgDataInterface} from "./RpgDataInterface";
+import {RecordInterface} from "../database/RecordInterface";
 import {AdventureInterface} from "./AdventureInterface";
 import {SessionInterface} from "./SessionInterface";
 
-export interface SceneInterface extends RpgDataInterface {
+export interface SceneInterface extends RecordInterface {
 	sceneId: number;
 	action: string|null;
 	startTime: Date|null;

@@ -37,10 +37,10 @@ export abstract class AbstractModalComponent implements ModalComponentInterface 
 		templateName: string,
 		name: string,
 		campaignId: number,
-		adventureId: number | null,
-		sessionId: number | null,
-		sceneId: number | null,
-		additionalInformation: any|null,
+		adventureId: number|undefined=undefined,
+		sessionId: number|undefined=undefined,
+		sceneId: number|undefined=undefined,
+		additionalInformation: any|null=null,
 	): Promise<void> {
 		this.app.plugins.getPlugin('rpg-manager').factories.files.create(
 			settings,

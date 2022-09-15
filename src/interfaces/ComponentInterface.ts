@@ -1,9 +1,9 @@
 import {ResponseElementInterface} from "./response/ResponseElementInterface";
-import {RpgDataInterface} from "./data/RpgDataInterface";
+import {RecordInterface} from "./database/RecordInterface";
 
 export interface ComponentInterface {
 	generateData(
-		data: RpgDataInterface[]|RpgDataInterface,
+		data: RecordInterface[]|RecordInterface,
 		title: string|null,
 		additionalInformation: any|null,
 	): Promise<ResponseElementInterface|null>;

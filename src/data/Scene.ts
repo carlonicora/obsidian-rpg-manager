@@ -1,10 +1,11 @@
-import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
+import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
+import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {DataType} from "../enums/DataType";
 
-export class Scene extends AbstractRpgOutlineData implements SceneInterface {
+export class Scene extends AbstractOutlineData implements SceneInterface {
 	public sceneId: number;
 	public action: string | null;
 	public startTime: Date | null;
@@ -26,17 +27,26 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 	}
 
 	public async loadHierarchy(
-		dataList: RpgDataListInterface,
+		database: DatabaseInterface,
 	): Promise<void> {
-		super.loadHierarchy(dataList);
+		super.loadHierarchy(database);
 
-		this.adventure = this.loadAdventure(dataList, this.campaign.campaignId);
-		this.session = this.loadSession(dataList, this.campaign.campaignId, this.adventure.adventureId);
-		this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
-		this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
+		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
+		this.session = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SessionInterface>(database, DataType.Session, this.tag);
 
-		if (this.nextScene != null) this.nextScene.previousScene = this;
-		if (this.previousScene != null) this.previousScene.nextScene = this;
+		try {
+			this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId - 1);
+			this.previousScene.nextScene = this;
+		} catch (e) {
+			//ignore. It can be non existing
+		}
+
+		try {
+			this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId + 1);
+			this.nextScene.previousScene = this;
+		} catch (e) {
+			//ignore. It can be non existing
+		}
 	}
 
 	public get duration(): string {

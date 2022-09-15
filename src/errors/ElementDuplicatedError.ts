@@ -1,7 +1,7 @@
 import {RpgError} from "./RpgError";
 import {DataType} from "../enums/DataType";
 
-export class ElementDuplicated extends RpgError{
+export class ElementDuplicatedError extends RpgError{
 	public showErrorMessage(
 	): string {
 		let response = super.showErrorMessage();

@@ -21,7 +21,7 @@ export class CampaignModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.campaigns = this.app.plugins.getPlugin('rpg-manager').io.getCampaigns().elements as CampaignInterface[];
+		this.campaigns = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<CampaignInterface>(undefined, DataType.Campaign);
 	}
 
 	public async addElement(

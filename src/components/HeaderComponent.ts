@@ -2,7 +2,7 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseHeader} from "../data/responses/ResponseHeader";
 import {ContentType} from "../enums/ContentType";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {Character} from "../data/Character";
 import {Clue} from "../data/Clue";
 import {Location} from "../data/Location";
@@ -14,7 +14,7 @@ import {Music} from "../data/Music";
 
 export class HeaderComponent extends AbstractComponent{
 	public async generateData(
-		data: RpgDataInterface,
+		data: RecordInterface,
 		title: string | null,
 		additionalInformation: any|null = null,
 	): Promise<ResponseElementInterface|null> {

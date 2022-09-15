@@ -2,10 +2,10 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class FactionModel extends AbstractModel {
-	protected currentElement: RpgDataInterface;
+	protected currentElement: RecordInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

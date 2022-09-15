@@ -2,12 +2,12 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {LocationInterface} from "../interfaces/data/LocationInterface";
 
 export class LocationTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RpgDataInterface[],
+		data: RecordInterface[],
 		title:string|null,
 	): Promise<ResponseElementInterface|null> {
 		if (data.length === 0){

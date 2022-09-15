@@ -8,9 +8,9 @@ export interface ModalInterface {
 	type: DataType;
 
 	campaignId: number;
-	adventureId: number|null;
-	sessionId: number|null;
-	sceneId: number|null;
+	adventureId: number|undefined;
+	sessionId: number|undefined;
+	sceneId: number|undefined;
 	settings: CampaignSetting;
 
 	additionalInformationEl: HTMLDivElement;

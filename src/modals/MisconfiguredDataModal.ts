@@ -1,11 +1,11 @@
 import {App, Component, MarkdownRenderer, Modal} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class MisconfiguredDataModal extends Modal {
 	constructor(
 		app: App,
-		private misconfiguredTags: Map<RpgDataInterface, RpgErrorInterface>|undefined,
+		private misconfiguredTags: Map<RecordInterface, RpgErrorInterface>|undefined,
 		private singleError: RpgErrorInterface|undefined = undefined,
 	) {
 		super(app);
@@ -24,7 +24,7 @@ export class MisconfiguredDataModal extends Modal {
 			contentEl.createEl('p', {text: 'Please double check the errors and correct them.'});
 			const listEl = contentEl.createEl('ul');
 
-			this.misconfiguredTags.forEach((error: RpgErrorInterface, data: RpgDataInterface) => {
+			this.misconfiguredTags.forEach((error: RpgErrorInterface, data: RecordInterface) => {
 				const listItemEl = listEl.createEl('li');
 
 				MarkdownRenderer.renderMarkdown(
@@ -37,7 +37,7 @@ export class MisconfiguredDataModal extends Modal {
 
 			const actionEl = contentEl.createEl('button', {text: 'Open all the misconfigured files'});
 			actionEl.addEventListener("click", () => {
-				(this.misconfiguredTags || new Map<RpgDataInterface, RpgErrorInterface>()).forEach((error: RpgErrorInterface, data: RpgDataInterface) => {
+				(this.misconfiguredTags || new Map<RecordInterface, RpgErrorInterface>()).forEach((error: RpgErrorInterface, data: RecordInterface) => {
 					const leaf = app.workspace.getLeaf(true);
 					leaf.openFile(data.file);
 				});

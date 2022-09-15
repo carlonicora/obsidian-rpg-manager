@@ -11,17 +11,17 @@ export class FileFactory extends AbstractFactory {
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: number|null=null,
-		adventureId: number|null = null,
-		sessionId: number|null = null,
-		sceneId: number|null = null,
-		additionalInformation: any|null = null,
+		campaignId: number|undefined=undefined,
+		adventureId: number|undefined=undefined,
+		sessionId: number|undefined=undefined,
+		sceneId: number|undefined=undefined,
+		additionalInformation: any|null=null,
 	): Promise<void> {
 		let folder = '/';
 
 		if (campaignId != null) {
-			const campaign: CampaignInterface | null = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
-			if (campaign != null) {
+			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').io.readSingleParametrised<CampaignInterface>(undefined, DataType.Campaign, campaignId);
+			if (campaign !== undefined) {
 				settings = campaign.settings;
 				folder = campaign.folder;
 			}
@@ -82,16 +82,16 @@ export class FileFactory extends AbstractFactory {
 		type: DataType,
 		name: string,
 		campaignId: number,
-		adventureId: number|null = null,
-		sessionId: number|null = null,
-		sceneId: number|null = null,
-		additionalInformation: any|null = null,
+		adventureId: number|undefined=undefined,
+		sessionId: number|undefined=undefined,
+		sceneId: number|undefined=undefined,
+		additionalInformation: any|undefined=undefined,
 	): Promise<void> {
 		let folder = '/';
 		let settings = CampaignSetting.Agnostic;
 
-		const campaign: CampaignInterface | null = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
-		if (campaign != null) {
+		const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').io.readSingleParametrised<CampaignInterface>(undefined, DataType.Campaign, campaignId);
+		if (campaign !== undefined) {
 			settings = campaign.settings;
 			folder = campaign.folder;
 		}

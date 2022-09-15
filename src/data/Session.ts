@@ -1,10 +1,11 @@
-import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
+import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
-import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
+import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {DataType} from "../enums/DataType";
 
-export class Session extends AbstractRpgOutlineData implements SessionInterface {
+export class Session extends AbstractOutlineData implements SessionInterface {
 	public sessionId: number;
 	public date: Date|null;
 	public irl: Date|null;
@@ -24,16 +25,30 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 	}
 
 	public async loadHierarchy(
-		dataList: RpgDataListInterface,
+		database: DatabaseInterface,
 	): Promise<void> {
-		super.loadHierarchy(dataList);
+		super.loadHierarchy(database);
 
-		this.adventure = this.loadAdventure(dataList, this.campaign.campaignId);
-		this.previousSession = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, null, this.sessionId - 1);
-		this.nextSession = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, null, this.sessionId + 1);
-		this.note = this.app.plugins.getPlugin('rpg-manager').io.getNote(this.campaign.campaignId, this.adventure.adventureId, this.sessionId);
+		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
 
-		if (this.nextSession != null) this.nextSession.previousSession = this;
-		if (this.nextSession != null) this.nextSession.previousSession = this;
+		try {
+			this.previousSession = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId - 1);
+			this.previousSession.nextSession = this;
+		} catch (e) {
+			//ignore. It can be non existing
+		}
+
+		try {
+			this.nextSession = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId + 1);
+			this.nextSession.previousSession = this;
+		} catch (e) {
+			//ignore. It can be non existing
+		}
+
+		try {
+			this.note = this.app.plugins.getPlugin('rpg-manager').io.readSingle<NoteInterface>(database, DataType.Note, this.tag);
+		} catch (e) {
+			//ignore. It can be non existing
+		}
 	}
 }

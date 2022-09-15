@@ -25,7 +25,7 @@ export class ClueModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter, false),
+				this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter, false),
 			)
 		);
 

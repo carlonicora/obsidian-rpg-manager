@@ -50,10 +50,10 @@ export class TemplateFactory extends AbstractFactory {
 		type: DataType,
 		templateName: string,
 		name: string,
-		campaignId: number|null,
-		adventureId: number|null,
-		sessionId: number|null,
-		sceneId: number|null,
+		campaignId: number|undefined,
+		adventureId: number|undefined,
+		sessionId: number|undefined,
+		sceneId: number|undefined,
 		additionalInformation: any|null = null,
 	): TemplateClassType<K> {
 		let templateKey: SingleTemplateKey<K> = CampaignSetting[settings] + DataType[type] as SingleTemplateKey<K>;

@@ -17,7 +17,12 @@ export class SessionModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.sessions = this.app.plugins.getPlugin('rpg-manager').io.getSessionList(this.modal.campaignId, this.modal.adventureId).elements as SessionInterface[];
+		this.sessions = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(
+			undefined,
+			DataType.Session,
+			this.modal.campaignId,
+			this.modal.adventureId,
+		);
 	}
 
 	public async addElement(

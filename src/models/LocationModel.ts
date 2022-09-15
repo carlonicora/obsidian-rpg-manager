@@ -25,7 +25,7 @@ export class LocationModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter, true),
+				this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter, true),
 			)
 		);
 

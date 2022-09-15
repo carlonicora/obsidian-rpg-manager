@@ -1,7 +1,7 @@
-import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
+import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
-export class Adventure extends AbstractRpgOutlineData implements AdventureInterface {
+export class Adventure extends AbstractOutlineData implements AdventureInterface {
 	public adventureId: number;
 
 	protected loadData(

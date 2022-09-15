@@ -19,7 +19,7 @@ import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {RawNpcModel} from "../settings/Raw/models/RawNpcModel";
 import {MusicModel} from "../models/MusicModel";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
@@ -52,7 +52,7 @@ export class ModelFactory extends AbstractFactory {
 	public create<K extends ModelKeys>(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: RpgDataInterface,
+		currentElement: RecordInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,

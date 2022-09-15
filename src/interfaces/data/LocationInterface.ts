@@ -1,5 +1,5 @@
-import {RpgDataInterface} from "./RpgDataInterface";
+import {RecordInterface} from "../database/RecordInterface";
 
-export interface LocationInterface extends RpgDataInterface {
+export interface LocationInterface extends RecordInterface {
 	address: string|null;
 }

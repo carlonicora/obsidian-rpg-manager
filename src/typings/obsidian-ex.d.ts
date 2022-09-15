@@ -3,7 +3,7 @@ import {RpgManagerSettings} from "../main";
 import {RpgFunctions} from "../helpers/RpgFunctions";
 import {RpgFactories} from "../RpgFactories";
 import {TagManager} from "../helpers/TagManager";
-import {RpgIO} from "../helpers/RpgIO";
+import {DatabaseIO} from "../database/DatabaseIO";
 
 declare module "obsidian" {
 	interface MetadataCache {
@@ -23,7 +23,7 @@ declare module "obsidian" {
 			getPlugin(plugin: "rpg-manager"): {
 				settings: RpgManagerSettings;
 				functions: RpgFunctions;
-				io: RpgIO;
+				io: DatabaseIO;
 				factories: RpgFactories;
 				tagManager: TagManager;
 			};

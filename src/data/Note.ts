@@ -1,19 +1,21 @@
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {AbstractRpgOutlineData} from "../abstracts/AbstractRpgOutlineData";
-import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
+import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
+import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {DataType} from "../enums/DataType";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
 
-export class Note extends AbstractRpgOutlineData implements NoteInterface {
+export class Note extends AbstractOutlineData implements NoteInterface {
 	public adventure: AdventureInterface;
 	public sessionId: number;
 
 	public async loadHierarchy(
-		dataList: RpgDataListInterface,
+		database: DatabaseInterface,
 	): Promise<void> {
-		super.loadHierarchy(dataList);
+		super.loadHierarchy(database);
 
-		this.adventure = this.loadAdventure(dataList, this.campaign.campaignId);
-		const session = this.loadSession(dataList, this.campaign.campaignId, this.adventure.adventureId);
+		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
+		const session = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SessionInterface>(database, DataType.Session, this.tag);
 		this.sessionId = session.sessionId;
 	}
 }

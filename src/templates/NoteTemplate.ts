@@ -1,13 +1,14 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {AbstractTemplate} from "../abstracts/AbstractTemplate";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
+import {DataType} from "../enums/DataType";
 
 export class NoteTemplate extends AbstractTemplate implements TemplateInterface {
 	public getContent(): string {
-		const characters = this.app.plugins.getPlugin('rpg-manager').io.getPlayerCharacterList(this.campaignId);
+		const characters = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<CharacterInterface>(undefined, DataType.Character | DataType.NonPlayerCharacter, this.campaignId);
 
 		let possibleRecappers = '';
-		(characters.elements || []).forEach((character: CharacterInterface) => {
+		(characters || []).forEach((character: CharacterInterface) => {
 			possibleRecappers += character.link + '/';
 		});
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
@@ -19,7 +20,7 @@ export class NoteTemplate extends AbstractTemplate implements TemplateInterface 
 		response += '---\n';
 		response += '## Feedback \n';
 		response += this.generateFeedback('GM');
-		(characters.elements || []).forEach((character: CharacterInterface) => {
+		(characters || []).forEach((character: CharacterInterface) => {
 			response += this.generateFeedback(character.link);
 		});
 

@@ -10,7 +10,7 @@ import {ResponseElementInterface} from "./interfaces/response/ResponseElementInt
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
 import {Campaign} from "./data/Campaign";
-import {RpgDataInterface} from "./interfaces/data/RpgDataInterface";
+import {RecordInterface} from "./interfaces/database/RecordInterface";
 
 export class RpgController extends MarkdownRenderChild {
 	private isActive = false;
@@ -19,7 +19,7 @@ export class RpgController extends MarkdownRenderChild {
 
 	private rendering = false;
 
-	private currentElement: RpgDataInterface;
+	private currentElement: RecordInterface;
 
 	constructor(
 		protected app: App,
@@ -33,7 +33,9 @@ export class RpgController extends MarkdownRenderChild {
 
 	private initialise(
 	): void {
-		const currentElement = this.app.plugins.getPlugin('rpg-manager').io.getElementByPath(this.sourcePath);
+		if (!this.app.plugins.getPlugin('rpg-manager').io.isReady) return;
+
+		const currentElement = this.app.plugins.getPlugin('rpg-manager').io.readByName<RecordInterface>(undefined, this.sourcePath);
 		if (currentElement == null){
 			this.isActive = false;
 		} else {

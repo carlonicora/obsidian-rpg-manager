@@ -1,13 +1,13 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseBanner} from "../data/responses/ResponseBanner";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {Campaign} from "../data/Campaign";
 import {Timeline} from "../data/Timeline";
 
 export class BannerComponent extends AbstractComponent{
 	public async generateData(
-		data: RpgDataInterface,
+		data: RecordInterface,
 		title: string | null,
 	): Promise<ResponseElementInterface|null> {
 		const response = new ResponseBanner(this.app);

@@ -1,5 +1,5 @@
-import {RpgDataInterface} from "./RpgDataInterface";
+import {RecordInterface} from "../database/RecordInterface";
 
-export interface AdventureInterface extends RpgDataInterface {
+export interface AdventureInterface extends RecordInterface {
 	adventureId: number;
 }

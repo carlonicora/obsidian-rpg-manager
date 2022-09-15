@@ -1,9 +1,9 @@
-import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
+import {AbstractElementData} from "../abstracts/database/AbstractElementData";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {FetcherType} from "../enums/FetcherType";
 import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
 
-export class Music extends AbstractRpgElementData implements MusicInterface {
+export class Music extends AbstractElementData implements MusicInterface {
 	public url: string|undefined;
 
 	protected loadData(

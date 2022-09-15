@@ -10,11 +10,14 @@ import {
 } from 'obsidian';
 import {RpgController} from "./RpgController";
 import {DataType} from "./enums/DataType";
-import {RpgIO} from "./helpers/RpgIO";
+import {DatabaseIO} from "./database/DatabaseIO";
 import {RpgFunctions} from "./helpers/RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
+import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
+import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
+import {RecordInterface} from "./interfaces/database/RecordInterface";
 
 export default class RpgManager extends Plugin {
 	/*
@@ -27,7 +30,7 @@ export default class RpgManager extends Plugin {
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;
-	io: RpgIO;
+	io: DatabaseIO;
 	factories: RpgFactories;
 	tagManager: TagManager;
 
@@ -51,19 +54,22 @@ export default class RpgManager extends Plugin {
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
 		this.tagManager = new TagManager(this.app);
-		this.io = new RpgIO(this.app);
+		this.io = new DatabaseIO(this.app);
 
-		this.io.initialise().then(() => {
-			console.log(this.io);
-			this.registerEvents();
-			this.app.workspace.trigger("rpgmanager:refresh-views");
+		new DatabaseInitialiser(this.app).getDatabase()
+			.then((database: DatabaseInterface) => {
+				this.io.initialise(database);
+				this.registerEvents();
+				this.app.workspace.trigger("rpgmanager:refresh-views");
 
-			console.log(
-				`RPG Manager: all outlines and elements have been indexed in ${
-					(Date.now() - reloadStart) / 1000.0
-				}s.`
-			);
-		});
+				console.log(database);
+
+				console.log(
+					`RPG Manager: all outlines and elements have been indexed in ${
+						(Date.now() - reloadStart) / 1000.0
+					}s.`
+				);
+			});
 
 		this.registerCodeBlock();
 		this.registerCommands();

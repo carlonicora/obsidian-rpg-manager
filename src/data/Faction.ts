@@ -1,5 +1,5 @@
-import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {FactionInterface} from "../interfaces/data/FactionInterface";
 
-export class Faction extends AbstractRpgElementData implements RpgDataInterface {
+export class Faction extends AbstractElementData implements FactionInterface {
 }

@@ -16,9 +16,9 @@ export class CreationModal extends Modal implements ModalInterface {
 	public templateEl: HTMLSelectElement;
 
 	public campaignId: number;
-	public adventureId: number|null;
-	public sessionId: number|null;
-	public sceneId: number|null;
+	public adventureId: number|undefined;
+	public sessionId: number|undefined;
+	public sceneId: number|undefined;
 	public settings: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalComponentInterface;

@@ -1,7 +1,7 @@
-import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
+import {AbstractElementData} from "../abstracts/database/AbstractElementData";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 
-export class Clue extends AbstractRpgElementData implements ClueInterface {
+export class Clue extends AbstractElementData implements ClueInterface {
 	public found: Date|null;
 
 	protected loadData(

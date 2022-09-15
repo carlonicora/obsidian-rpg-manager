@@ -1,15 +1,16 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {Adventure} from "../data/Adventure";
 import {DataType} from "../enums/DataType";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class AbtPlotComponent extends AbstractComponent {
 
 	public async generateData(
-		data: RpgDataInterface[],
+		data: RecordInterface[],
 		title:string|null,
 		additionalInformation: any|null,
 	): Promise<ResponseElementInterface|null> {
@@ -33,7 +34,7 @@ export class AbtPlotComponent extends AbstractComponent {
 
 		if (
 			data instanceof Adventure &&
-			this.app.plugins.getPlugin('rpg-manager').io.getSessionList(data.campaign.campaignId, data.adventureId).elements.length === 0 &&
+			this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(undefined, DataType.Session, data.campaign.campaignId, data.adventureId).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&

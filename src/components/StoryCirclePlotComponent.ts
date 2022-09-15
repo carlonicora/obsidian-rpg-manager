@@ -1,12 +1,12 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ContentType} from "../enums/ContentType";
 import {ResponseTable} from "../data/responses/ResponseTable";
 
 export class StoryCirclePlotComponent extends AbstractComponent {
 	public async generateData(
-		data: RpgDataInterface[],
+		data: RecordInterface[],
 		title:string|null,
 		additionalInformation: any|null,
 	): Promise<ResponseElementInterface|null> {

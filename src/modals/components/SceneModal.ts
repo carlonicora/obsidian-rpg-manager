@@ -2,6 +2,7 @@ import {AbstractModalComponent} from "../../abstracts/AbstractModalComponent";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {SceneInterface} from "../../interfaces/data/SceneInterface";
+import {DataType} from "../../enums/DataType";
 
 export class SceneModal extends AbstractModalComponent {
 	private scenes: SceneInterface[];
@@ -13,7 +14,13 @@ export class SceneModal extends AbstractModalComponent {
 		super(app, modal);
 
 		if (this.modal.adventureId != null && this.modal.sessionId != null) {
-			this.scenes = this.app.plugins.getPlugin('rpg-manager').io.getSceneList(this.modal.campaignId, this.modal.adventureId, this.modal.sessionId).elements as SceneInterface[];
+			this.scenes = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SceneInterface>(
+				undefined,
+				DataType.Scene,
+				this.modal.campaignId,
+				this.modal.adventureId,
+				this.modal.sessionId,
+			);
 		} else {
 			this.scenes = [];
 		}

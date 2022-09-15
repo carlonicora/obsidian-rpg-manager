@@ -1,5 +1,5 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
@@ -7,7 +7,7 @@ import {MusicInterface} from "../interfaces/data/MusicInterface";
 
 export class MusicTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RpgDataInterface[],
+		data: RecordInterface[],
 		title:string|null,
 	): Promise<ResponseElementInterface|null> {
 		if (data.length === 0){

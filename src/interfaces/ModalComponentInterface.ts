@@ -13,9 +13,9 @@ export interface ModalComponentInterface {
 		templateName: string,
 		name: string,
 		campaignId: number,
-		adventureId: number|null,
-		sessionId: number|null,
-		sceneId: number|null,
+		adventureId: number|undefined,
+		sessionId: number|undefined,
+		sceneId: number|undefined,
 		additionalInformation: any|null,
 	): void;
 

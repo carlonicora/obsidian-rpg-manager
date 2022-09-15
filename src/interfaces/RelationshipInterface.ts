@@ -1,7 +1,7 @@
-import {RpgDataInterface} from "./data/RpgDataInterface";
+import {RecordInterface} from "./database/RecordInterface";
 
 export interface RelationshipInterface {
-	component: RpgDataInterface|undefined,
+	component: RecordInterface|undefined,
 	description: string,
 	isReverse: boolean,
 	isInFrontmatter: boolean,

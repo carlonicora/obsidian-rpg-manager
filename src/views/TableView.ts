@@ -3,6 +3,7 @@ import {ContentInterface} from "../interfaces/ContentInterface";
 import {AbstractView} from "../abstracts/AbstractView";
 import {DataType} from "../enums/DataType";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
 export class TableView extends AbstractView {
 	public render(
@@ -21,11 +22,21 @@ export class TableView extends AbstractView {
 					createButtonEl.textContent = 'Create session from Adventure Plot';
 					createButtonEl.addEventListener("click", () => {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
-							const previousAdventure = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(data.campaignId, data.adventureId - 1);
+							const previousAdventure = this.app.plugins.getPlugin('rpg-manager').io.readSingleParametrised<AdventureInterface>(
+								undefined,
+								DataType.Adventure,
+								data.campaignId,
+								data.adventureId - 1,
+							);
 							let nextSessionId = 1;
 							if (previousAdventure != null){
-								const previousAdventureSessions = this.app.plugins.getPlugin('rpg-manager').io.getSessionList(data.campaignId, previousAdventure.adventureId);
-								previousAdventureSessions.elements.forEach((session: SessionInterface) => {
+								const previousAdventureSessions = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(
+									undefined,
+									DataType.Session,
+									data.campaignId,
+									previousAdventure.adventureId,
+								);
+								previousAdventureSessions.forEach((session: SessionInterface) => {
 									if (nextSessionId <= session.sessionId) nextSessionId = session.sessionId + 1;
 								});
 							}
@@ -39,7 +50,7 @@ export class TableView extends AbstractView {
 										data.campaignId,
 										data.adventureId,
 										nextSessionId,
-										null,
+										undefined,
 										{
 											synopsis: content.content,
 										}

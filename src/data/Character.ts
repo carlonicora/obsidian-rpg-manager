@@ -1,8 +1,8 @@
-import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
+import {AbstractElementData} from "../abstracts/database/AbstractElementData";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {Pronoun} from "../enums/Pronoun";
 
-export class Character extends AbstractRpgElementData implements CharacterInterface {
+export class Character extends AbstractElementData implements CharacterInterface {
 	public dob: Date|null;
 	public death: Date|null;
 	public goals: string|null;

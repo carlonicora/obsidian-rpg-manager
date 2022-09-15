@@ -6,17 +6,17 @@ import {BreadcrumbResponseInterface} from "../interfaces/response/BreadcrumbResp
 import {ResponseBreadcrumb} from "../data/responses/ResponseBreadcrumb";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
 import {FileFactory} from "../factories/FileFactory";
-import {RpgIO} from "../helpers/RpgIO";
+import {DatabaseIO} from "../database/DatabaseIO";
 
 export abstract class AbstractModel implements ModelInterface {
-	protected io: RpgIO;
+	protected io: DatabaseIO;
 
 	constructor(
 		protected app: App,
-		protected currentElement: RpgDataInterface,
+		protected currentElement: RecordInterface,
 		protected source: string,
 		protected sourcePath: string,
 		protected sourceMeta: any,
@@ -56,7 +56,7 @@ export abstract class AbstractModel implements ModelInterface {
 	private generateElementBreadcrumb(
 		parent: ResponseBreadcrumb|null,
 		type: DataType,
-		data: RpgDataInterface|BaseCampaignInterface,
+		data: RecordInterface|BaseCampaignInterface,
 		linkText: string|null = null,
 		isNewLine = false,
 	): ResponseBreadcrumb {

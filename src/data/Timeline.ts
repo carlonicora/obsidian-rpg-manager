@@ -1,5 +1,5 @@
-import {AbstractRpgElementData} from "../abstracts/AbstractRpgElementData";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {TimelineInterface} from "../interfaces/data/TimelineInterface";
 
-export class Timeline extends AbstractRpgElementData implements RpgDataInterface {
+export class Timeline extends AbstractElementData implements TimelineInterface {
 }

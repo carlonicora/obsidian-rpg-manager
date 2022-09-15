@@ -22,10 +22,10 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 		protected app: App,
 		protected templateName: string,
 		protected name: string,
-		protected campaignId: number|null,
-		protected adventureId: number|null,
-		protected sessionId: number|null,
-		protected sceneId: number|null,
+		protected campaignId: number|undefined,
+		protected adventureId: number|undefined,
+		protected sessionId: number|undefined,
+		protected sceneId: number|undefined,
 		protected additionalInformation: any|null,
 	) {
 	}

@@ -10,7 +10,7 @@ import {FactionTableComponent} from "../components/FactionTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
 import {BannerComponent} from "../components/BannerComponent";
 import {CharacterSynopsisComponent} from "../components/CharacterSynopsisComponent";
-import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageComponent} from "../components/ImageComponent";
 import {HeaderComponent} from "../components/HeaderComponent";
@@ -50,7 +50,7 @@ export class ComponentFactory extends AbstractFactory {
 	public async create<K extends ComponentKeys>(
 		settings: CampaignSetting,
 		type: string,
-		data: RpgDataInterface[]|RpgDataInterface,
+		data: RecordInterface[]|RecordInterface,
 		title: string|null = null,
 		additionalInformation: any|null = null,
 	): Promise<ResponseElementInterface|null> {

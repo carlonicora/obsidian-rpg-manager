@@ -1,10 +1,13 @@
 import {DataType} from "../../enums/DataType";
 import {CachedMetadata, TFile} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
-import {RpgDataListInterface} from "./RpgDataListInterface";
-import {BaseCampaignInterface} from "./BaseCampaignInterface";
+import {DatabaseInterface} from "./DatabaseInterface";
+import {BaseCampaignInterface} from "../data/BaseCampaignInterface";
+import {DataId} from "../DataId";
 
-export interface RpgDataInterface {
+export interface RecordInterface {
+	dataId: DataId|undefined;
+
 	type: DataType;
 	tag: string;
 	tags: Array<string>;
@@ -31,13 +34,15 @@ export interface RpgDataInterface {
 	): void;
 
 	loadHierarchy(
-		dataList: RpgDataListInterface,
+		database: DatabaseInterface,
 	): Promise<void>;
 
 	loadRelationships(
+		database: DatabaseInterface,
 	): Promise<void>;
 
 	loadReverseRelationships(
+		database: DatabaseInterface,
 	): Promise<void>;
 
 	addReverseRelationship(
@@ -48,11 +53,7 @@ export interface RpgDataInterface {
 	getRelationships(
 		type: DataType,
 		isReversedRelationship: boolean,
-	): RpgDataInterface[];
-
-	validateId(
-		dataList: RpgDataListInterface,
-	): void;
+	): RecordInterface[];
 
 	get name(): string;
 	get path(): string;
