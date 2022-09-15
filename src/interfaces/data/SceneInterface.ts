@@ -1,9 +1,8 @@
 import {RpgDataInterface} from "./RpgDataInterface";
-import {RpgOutlineDataInterface} from "./RpgOutlineDataInterface";
 import {AdventureInterface} from "./AdventureInterface";
 import {SessionInterface} from "./SessionInterface";
 
-export interface SceneInterface extends RpgDataInterface,RpgOutlineDataInterface {
+export interface SceneInterface extends RpgDataInterface {
 	sceneId: number;
 	action: string|null;
 	startTime: Date|null;

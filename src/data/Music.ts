@@ -6,8 +6,8 @@ import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTub
 export class Music extends AbstractRpgElementData implements MusicInterface {
 	public url: string|undefined;
 
-	protected async loadData(
-	): Promise<void> {
+	protected loadData(
+	): void {
 		this.url = this.frontmatter?.url;
 
 		super.loadData();

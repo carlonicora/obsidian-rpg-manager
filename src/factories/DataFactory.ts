@@ -1,4 +1,4 @@
-import {CachedMetadata, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {Campaign} from "../data/Campaign";
 import {Adventure} from "../data/Adventure";

@@ -25,7 +25,7 @@ export class NpcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'FactionTable',
-				this.currentElement.getRelationships(DataType.Faction),
+				this.currentElement.getRelationships(DataType.Faction, false),
 			)
 		);
 
@@ -33,7 +33,7 @@ export class NpcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter),
+				this.currentElement.getRelationships(DataType.Character || DataType.NonPlayerCharacter, false),
 			)
 		);
 
@@ -41,7 +41,7 @@ export class NpcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'EventTable',
-				this.currentElement.getRelationships(DataType.Event),
+				this.currentElement.getRelationships(DataType.Event, true),
 			)
 		);
 
@@ -49,7 +49,7 @@ export class NpcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'ClueTable',
-				this.currentElement.getRelationships(DataType.Clue),
+				this.currentElement.getRelationships(DataType.Clue, true),
 			)
 		);
 
@@ -57,7 +57,7 @@ export class NpcModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.currentElement.getRelationships(DataType.Location),
+				this.currentElement.getRelationships(DataType.Location, false),
 			)
 		);
 

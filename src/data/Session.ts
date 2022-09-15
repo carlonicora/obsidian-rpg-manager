@@ -14,8 +14,8 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 	public nextSession: SessionInterface|null=null;
 	public note: NoteInterface|null=null;
 
-	protected async loadData(
-	): Promise<void> {
+	protected loadData(
+	): void {
 		this.sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
 		this.date = this.initialiseDate(this.frontmatter?.dates?.session);
 		this.irl = this.initialiseDate(this.frontmatter?.dates?.irl);
@@ -23,12 +23,12 @@ export class Session extends AbstractRpgOutlineData implements SessionInterface 
 		super.loadData();
 	}
 
-	public loadHierarchy(
+	public async loadHierarchy(
 		dataList: RpgDataListInterface,
-	) {
+	): Promise<void> {
 		super.loadHierarchy(dataList);
 
-		this.adventure = this.loadAdventure(this.campaign.campaignId);
+		this.adventure = this.loadAdventure(dataList, this.campaign.campaignId);
 		this.previousSession = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, null, this.sessionId - 1);
 		this.nextSession = this.app.plugins.getPlugin('rpg-manager').io.getSession(this.campaign.campaignId, null, this.sessionId + 1);
 		this.note = this.app.plugins.getPlugin('rpg-manager').io.getNote(this.campaign.campaignId, this.adventure.adventureId, this.sessionId);

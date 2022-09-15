@@ -4,8 +4,8 @@ import {ClueInterface} from "../interfaces/data/ClueInterface";
 export class Clue extends AbstractRpgElementData implements ClueInterface {
 	public found: Date|null;
 
-	protected async loadData(
-	): Promise<void> {
+	protected loadData(
+	): void {
 		this.found = this.initialiseDate(this.frontmatter?.dates?.found);
 
 		super.loadData();

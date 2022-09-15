@@ -8,8 +8,8 @@ export class Character extends AbstractRpgElementData implements CharacterInterf
 	public goals: string|null;
 	public pronoun: Pronoun|null;
 
-	protected async loadData(
-	): Promise<void> {
+	protected loadData(
+	): void {
 		this.dob = this.initialiseDate(this.frontmatter?.dates?.dob);
 		this.death = this.initialiseDate(this.frontmatter?.dates?.death);
 		this.goals = this.frontmatter?.goals;

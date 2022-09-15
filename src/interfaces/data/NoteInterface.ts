@@ -1,8 +1,7 @@
 import {RpgDataInterface} from "./RpgDataInterface";
 import {AdventureInterface} from "./AdventureInterface";
-import {RpgOutlineDataInterface} from "./RpgOutlineDataInterface";
 
-export interface NoteInterface extends RpgDataInterface, RpgOutlineDataInterface {
+export interface NoteInterface extends RpgDataInterface {
 	adventure: AdventureInterface;
 	sessionId: number;
 }

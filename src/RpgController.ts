@@ -9,9 +9,8 @@ import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {RpgElementDataInterface} from "./interfaces/data/RpgElementDataInterface";
-import {RpgOutlineDataInterface} from "./interfaces/data/RpgOutlineDataInterface";
 import {Campaign} from "./data/Campaign";
+import {RpgDataInterface} from "./interfaces/data/RpgDataInterface";
 
 export class RpgController extends MarkdownRenderChild {
 	private isActive = false;
@@ -20,7 +19,7 @@ export class RpgController extends MarkdownRenderChild {
 
 	private rendering = false;
 
-	private currentElement: RpgElementDataInterface|RpgOutlineDataInterface;
+	private currentElement: RpgDataInterface;
 
 	constructor(
 		protected app: App,

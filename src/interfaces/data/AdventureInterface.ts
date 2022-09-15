@@ -1,5 +1,5 @@
-import {RpgOutlineDataInterface} from "./RpgOutlineDataInterface";
+import {RpgDataInterface} from "./RpgDataInterface";
 
-export interface AdventureInterface extends RpgOutlineDataInterface {
+export interface AdventureInterface extends RpgDataInterface {
 	adventureId: number;
 }

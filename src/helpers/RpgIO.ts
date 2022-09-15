@@ -3,8 +3,6 @@ import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {RpgDataList} from "../data/RpgDataList";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
@@ -12,15 +10,14 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
-import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
+import {MusicInterface} from "../interfaces/data/MusicInterface";
+import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
 import {RpgError} from "../errors/RpgError";
 import {HiddenError} from "../errors/HiddenError";
-import {MusicInterface} from "../interfaces/data/MusicInterface";
-import {RpgGenericDataInterface} from "../interfaces/data/RpgGenericDataInterface";
 
 export class RpgIO extends Component {
-	private data: RpgDataList;
+	private data: RpgDataListInterface;
 	private misconfiguredTags: Map<RpgDataInterface, RpgErrorInterface> = new Map();
 	private campaignSettings: Map<number, CampaignSetting> = new Map();
 
@@ -30,32 +27,19 @@ export class RpgIO extends Component {
 		super();
 
 		this.data = new RpgDataList(this.app);
+		this.loadCampaignSettings();
 	}
 
-	private loadHierarchy(
-		dataList: RpgDataListInterface,
-		type: DataType|undefined=undefined,
-	): void {
-		dataList
-			.where((data: RpgDataInterface) => ( type !== undefined ? (data.type === type) : (<RpgGenericDataInterface>data).isOutline === false))
-			.elements.forEach((data: RpgDataInterface) => {
-				data.loadHierarchy(dataList);
-				this.data.addElement(data);
-			});
-	}
-
-	public async load(
+	public async initialise(
 	): Promise<void> {
-		await this.loadCampaignSettings();
-		await this.loadComponents()
+		this.initialiseData()
 			.then((dataList: RpgDataListInterface) => {
-				this.loadHierarchy(dataList, DataType.Campaign);
-				this.loadHierarchy(dataList, DataType.Adventure);
-				this.loadHierarchy(dataList, DataType.Session);
-				this.loadHierarchy(dataList, DataType.Scene);
-				this.loadHierarchy(dataList, DataType.Note);
-				this.loadHierarchy(dataList);
-			}).then(() => {
+				this.data = dataList;
+			})
+			.then(() => {
+				this.initialiseRelationships();
+			})
+			.then(() => {
 				if (this.misconfiguredTags.size > 0){
 					new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
 				}
@@ -65,28 +49,113 @@ export class RpgIO extends Component {
 				this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.removeDataCache(file)));
 
 				this.app.workspace.trigger("rpgmanager:index-complete");
+				this.app.workspace.trigger("rpgmanager:refresh-views");
 			});
 	}
 
-	private loadRelationships(
-		dataList: RpgDataListInterface,
-		type: DataType|undefined = undefined,
-	): void {
-		let shortenedDataList: RpgDataListInterface;
+	private async initialiseRelationships(
+	): Promise<void> {
+		for (let index=0; index<this.data.elements.length; index++){
+			await this.data.elements[index].loadRelationships();
+		}
+		for (let index=0; index<this.data.elements.length; index++){
+			if (!this.data.elements[index].isOutline) {
+				await this.data.elements[index].loadReverseRelationships();
+			}
+		}
+	}
 
-		if (type === undefined) {
-			shortenedDataList = dataList;
-		} else {
-			shortenedDataList = dataList
-				.where((data: RpgDataInterface) => data.type === type);
+	private async initialiseData(
+	): Promise<RpgDataListInterface> {
+		return this.loadComponents()
+			.then((dataList: RpgDataListInterface) => {
+				return dataList;
+			})
+	}
+
+	private async initialiseHierarchy(
+		dataList: RpgDataListInterface,
+	): Promise<RpgDataListInterface> {
+		return await this.loadHierarchy(dataList, DataType.Campaign);
+	}
+
+	private async loadHierarchy(
+		dataList: RpgDataListInterface,
+		type: DataType|undefined=undefined,
+	): Promise<RpgDataListInterface> {
+		const data: RpgDataInterface[] = dataList
+			.where((data: RpgDataInterface) => ( type !== undefined ? data.type === type : data.isOutline === false))
+			.elements;
+
+		for (let index=0; index<data.length; index++){
+			data[index].loadHierarchy(dataList);
 		}
 
-		shortenedDataList
-			.elements
-			.forEach((data: RpgDataInterface) => {
+		if (type === undefined) return dataList;
+
+		switch (type) {
+			case DataType.Campaign:
+				return await this.loadHierarchy(dataList, DataType.Adventure);
+				break;
+			case DataType.Adventure:
+				return await this.loadHierarchy(dataList, DataType.Session);
+				break;
+			case DataType.Session:
+				return await this.loadHierarchy(dataList, DataType.Scene);
+				break;
+			case DataType.Scene:
+				return await this.loadHierarchy(dataList, DataType.Note);
+				break;
+			case DataType.Note:
+				return await this.loadHierarchy(dataList, undefined);
+				break;
+			default:
+				return dataList;
+				break;
+		}
+	}
+
+	private async loadComponent(
+		file: TFile,
+	): Promise<RpgDataInterface|undefined> {
+		let response: RpgDataInterface|undefined;
+
+		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+		if (metadata == null) return;
+
+		const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
+		const dataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(dataTags);
+		if (dataTag == undefined) return;
+
+		const dataType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, dataTag);
+		if (dataType === undefined) return;
+
+		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, dataTag);
+		const settings = this.campaignSettings.get(campaignId);
+		if (campaignId !== undefined && settings !== undefined) {
+			response = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
+				settings,
+				dataTag,
+				dataType,
+				file
+			);
+			await response.initialise();
+		}
+
+		return response;
+	}
+
+	private async loadComponents(
+	): Promise<RpgDataListInterface> {
+		let response: RpgDataListInterface = new RpgDataList(this.app);
+
+		const markdownFiles: TFile[] = this.app.vault.getMarkdownFiles();
+		for (let index=0; index<markdownFiles.length; index++){
+			const data:RpgDataInterface|undefined = await this.loadComponent(markdownFiles[index]);
+			if (data !== undefined) {
 				try {
-					data.loadRelationships(dataList);
-					this.data.addElement(data);
+					if (data.isOutline) data.validateId(response);
+					response.addElement(data);
 				} catch (e) {
 					if (e instanceof RpgError) {
 						const isHidden: boolean = e instanceof HiddenError;
@@ -95,11 +164,14 @@ export class RpgIO extends Component {
 						throw e;
 					}
 				}
-			});
+			}
+		}
+
+		return await this.initialiseHierarchy(response);
 	}
 
-	private async loadCampaignSettings(
-	): Promise<void> {
+	private loadCampaignSettings(
+	): void {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (metadata !== null) {
@@ -117,48 +189,10 @@ export class RpgIO extends Component {
 		});
 	}
 
-	private async loadComponents(
-	): Promise<RpgDataListInterface> {
-		const response: RpgDataListInterface = new RpgDataList(this.app);
-
-		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
-			this.loadComponent(file).then((data: RpgDataInterface) => {
-				if (data !== undefined) response.addElement(data);
-			});
-		});
-
-		return response;
-	}
-
-	private async loadComponent(
-		file: TFile,
-	): Promise<RpgOutlineDataInterface|RpgElementDataInterface|undefined> {
-		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		if (metadata == null) return;
-
-		const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
-		const dataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(dataTags);
-		if (dataTag == undefined) return;
-
-		const dataType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, dataTag);
-		if (dataType === undefined) return;
-
-		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, dataTag);
-		const settings = this.campaignSettings.get(campaignId);
-		if (campaignId !== undefined && settings !== undefined) {
-			return this.app.plugins.getPlugin('rpg-manager').factories.data.create(
-				settings,
-				dataTag,
-				dataType,
-				file
-			);
-		}
-	}
-
 	private refreshRelationships(
 	): void {
 		this.data.elements.forEach((data: RpgDataInterface) => {
-			data.loadRelationships(this.data)
+			data.loadRelationships()
 		});
 	}
 
@@ -192,12 +226,12 @@ export class RpgIO extends Component {
 		const component = await this.loadComponent(file);
 		if (component !== undefined){
 			try {
-				component.loadRelationships(this.data);
+				component.loadRelationships();
 				this.data.addElement(component);
 			} catch (e) {
 				if (e instanceof RpgError) {
 					const isHidden: boolean = e instanceof HiddenError;
-					//if (!isHidden) new MisconfiguredDataModal(this.app, undefined, e).open();
+					if (!isHidden) new MisconfiguredDataModal(this.app, undefined, e).open();
 					this.data.removeElement(component.path);
 					return;
 				} else {
@@ -209,195 +243,9 @@ export class RpgIO extends Component {
 		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*
-	public loadCache(
-	): void {
-		this.loadElements(true, DataType.Campaign);
-		this.loadElements(true, DataType.Adventure);
-		this.loadElements(true, DataType.Session);
-		this.loadElements(true, DataType.Scene);
-		this.loadElements(true, DataType.Note);
-		this.loadElements(true);
-		this.fillNeighbours();
-
-		if (this.misconfiguredTags.size > 0){
-			new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
-		}
-
-		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.refreshDataCache(file)));
-		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.renameDataCache(file, oldPath)));
-		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.removeDataCache(file)));
-	}
-
-
-
-	private fillNeighbours(
-	): void {
-		this.getOutlines().elements.forEach((data: RpgOutlineDataInterface) => {
-			data.initialiseNeighbours();
-		});
-	}
-
-	private loadElements(
-		isBootstrap: boolean,
-		type: DataType|null = null,
-	): void {
-		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
-			this.loadElement(isBootstrap, file, true, type);
-		});
-	}
-
-	private loadElement(
-		isBootstrap: boolean,
-		file: TFile,
-		restrictType = false,
-		restrictedToType: DataType|null = null,
-	): void {
-		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		if (metadata == null) return;
-
-		const tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
-		const fileDataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(tags);
-		if (fileDataTag == undefined) return;
-
-		const fileType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, fileDataTag);
-		if (fileType === undefined) return;
-
-		let settings = CampaignSetting.Agnostic;
-		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, fileDataTag);
-
-		if (fileType === DataType.Campaign) {
-			if (this.elementCount(DataType.Campaign, campaignId) > 1) {
-				this.misconfiguredTags.set(file, new ElementDuplicated(this.app, DataType.Campaign, fileDataTag, campaignId));
-				return;
-			}
-			if (metadata?.frontmatter?.settings != null) {
-				settings = CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting];
-			}
-		} else {
-			try {
-				if (campaignId != null) {
-					const campaign = this.getCampaign(campaignId);
-					if (campaign != null) {
-						settings = campaign.settings;
-					}
-				}
-			} catch (e: any) {
-				return;
-			}
-		}
-
-		if (
-			!restrictType ||
-			(
-				(restrictedToType !== null && restrictedToType === fileType) ||
-				(restrictedToType === null && (fileType !== DataType.Campaign && fileType !== DataType.Adventure && fileType !== DataType.Session && fileType !== DataType.Scene))
-			)
-		) {
-			try {
-				const element: RpgOutlineDataInterface | RpgElementDataInterface = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
-					settings,
-					fileType,
-					file,
-					metadata
-				);
-
-				if (element instanceof AbstractRpgOutlineData) element.initialiseNeighbours();
-
-				this.data.addElement(element);
-			} catch (e: any) {
-				if (e instanceof RpgError) {
-					const isHidden: boolean = e instanceof HiddenError;
-					if (!isHidden) {
-						if (isBootstrap) {
-							this.misconfiguredTags.set(file, e as RpgErrorInterface);
-						} else {
-							//throw e;
-							new MisconfiguredDataModal(this.app, undefined, e).open();
-						}
-					}
-					return;
-				} else {
-					throw e;
-				}
-			}
-		}
-	}
-	*/
-
-	public elementCount(
-		type: DataType,
-		campaignId: number,
-		adventureId: number|null = null,
-		sessionId: number|null = null,
-		sceneId: number|null = null,
-	): number {
-		let predicate: any;
-
-		switch (type){
-			case DataType.Campaign:
-				predicate = (campaign: CampaignInterface) =>
-					campaign.type === DataType.Campaign &&
-					campaign.campaignId === campaignId;
-				break;
-			case DataType.Adventure:
-				predicate = (adventure: AdventureInterface) =>
-					adventure.type === DataType.Adventure &&
-					adventure.campaign.campaignId === campaignId &&
-					adventure.adventureId === adventureId;
-				break;
-			case DataType.Session:
-			case DataType.Note:
-				predicate = (session: SessionInterface|NoteInterface) =>
-					session.type === DataType.Adventure &&
-					session.campaign.campaignId === campaignId &&
-					session.adventure.adventureId === adventureId &&
-					session.sessionId === sessionId;
-				break;
-			case DataType.Scene:
-				predicate = (scene: SceneInterface) =>
-					scene.type === DataType.Adventure &&
-					scene.campaign.campaignId === campaignId &&
-					scene.adventure.adventureId === adventureId &&
-					scene.session.sessionId === sessionId &&
-					scene.sceneId === sceneId;
-				break;
-		}
-
-		return this.data.where(predicate).elements.length;
-	}
-
 	public getOutlines(
 	): RpgDataListInterface {
-		return this.data.where((data: RpgOutlineDataInterface) =>
+		return this.data.where((data: RpgDataInterface) =>
 			data.isOutline === true
 		);
 	}
@@ -492,17 +340,17 @@ export class RpgIO extends Component {
 			data.path === path
 		);
 
-		return list.elements.length === 1 ? (<RpgOutlineDataInterface|RpgElementDataInterface>list.elements[0]) : null;
+		return list.elements.length === 1 ? list.elements[0] : null;
 	}
 
 	public getElementByName(
 		name: string,
-	): RpgOutlineDataInterface|RpgElementDataInterface|null {
+	): RpgDataInterface|null {
 		const list = this.data.where((data: RpgDataInterface) =>
 			data.name === name
 		);
 
-		return list.elements.length === 1 ? (<RpgOutlineDataInterface|RpgElementDataInterface>list.elements[0]) : null;
+		return list.elements.length === 1 ? list.elements[0] : null;
 	}
 
 	public getElements(

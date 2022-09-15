@@ -1,6 +1,4 @@
 import {RpgDataInterface} from "./RpgDataInterface";
-import {RpgOutlineDataInterface} from "./RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "./RpgElementDataInterface";
 
 export interface RpgDataListInterface {
 	elements: RpgDataInterface[];

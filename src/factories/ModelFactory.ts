@@ -15,12 +15,11 @@ import {SessionModel} from "../models/SessionModel";
 import {SessionNavigationModel} from "../models/SessionNavigationModel";
 import {TimelineModel} from "../models/TimelineModel";
 import {AdventureNavigationModel} from "../models/AdventureNavigationModel";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {RawNpcModel} from "../settings/Raw/models/RawNpcModel";
 import {MusicModel} from "../models/MusicModel";
+import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 
 const ModelsMap = {
 	AgnosticAdventure: AdventureModel,
@@ -53,7 +52,7 @@ export class ModelFactory extends AbstractFactory {
 	public create<K extends ModelKeys>(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
+		currentElement: RpgDataInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,

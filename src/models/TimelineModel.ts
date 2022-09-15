@@ -9,11 +9,10 @@ import {EventInterface} from "../interfaces/data/EventInterface";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
+import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 
 export class TimelineModel extends AbstractModel {
-	protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface;
+	protected currentElement: RpgDataInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

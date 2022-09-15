@@ -1,7 +1,6 @@
 import {RpgDataInterface} from "./RpgDataInterface";
-import {RpgElementDataInterface} from "./RpgElementDataInterface";
 
-export interface MusicInterface extends RpgDataInterface, RpgElementDataInterface {
+export interface MusicInterface extends RpgDataInterface {
 	url: string|undefined;
 
 	getThumbnail(): Promise<string|null|undefined>;

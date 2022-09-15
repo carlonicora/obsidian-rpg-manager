@@ -44,28 +44,33 @@ export default class RpgManager extends Plugin {
 		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
 	}
 
-	async onLayoutReady(){
+	private async initialise(
+	): Promise<void> {
 		const reloadStart = Date.now();
-		this.io = new RpgIO(this.app);
+
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
 		this.tagManager = new TagManager(this.app);
+		this.io = new RpgIO(this.app);
 
-		this.io.load().then(() => {
-			//this.registerEvents();
-			//this.app.workspace.trigger("rpgmanager:refresh-views");
+		this.io.initialise().then(() => {
+			console.log(this.io);
+			this.registerEvents();
+			this.app.workspace.trigger("rpgmanager:refresh-views");
 
 			console.log(
 				`RPG Manager: all outlines and elements have been indexed in ${
 					(Date.now() - reloadStart) / 1000.0
 				}s.`
 			);
-
-			console.log(this.io);
 		});
 
-		//this.registerCodeBlock();
-		//this.registerCommands();
+		this.registerCodeBlock();
+		this.registerCommands();
+	}
+
+	async onLayoutReady(){
+		await this.initialise();
 	}
 
 	async onunload() {

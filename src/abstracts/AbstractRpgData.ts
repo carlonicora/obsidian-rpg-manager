@@ -11,7 +11,7 @@ import {ElementDuplicated} from "../errors/ElementDuplicated";
 import {HiddenError} from "../errors/HiddenError";
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {RpgGenericDataInterface} from "../interfaces/data/RpgGenericDataInterface";
+import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
 
 export abstract class AbstractRpgData implements RpgDataInterface {
 	public frontmatter: any;
@@ -23,6 +23,9 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 	public additionalInformation: string|null = null;
 	public imageSrc: string|null|undefined = undefined;
 
+	public isOutline: boolean;
+	public campaign: BaseCampaignInterface;
+
 	protected relationships: Map<string, RelationshipInterface> = new Map();
 
 	private metadata: CachedMetadata;
@@ -33,16 +36,14 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		public type: DataType,
 		public file: TFile,
 	) {
-		this.loadBaseData();
-		this.loadData();
 	}
 
-	private async loadBaseData(
+	public async initialise(
 	): Promise<void> {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null) throw new Error('metadata is null');
-		this.metadata = metadata;
 
+		this.metadata = metadata;
 		this.frontmatter = this.metadata.frontmatter ?? {};
 		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
 
@@ -50,28 +51,30 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		this.synopsis = this.frontmatter.synopsis;
 
 		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
+
+		this.loadData();
 	}
 
-	protected async loadData(
-	): Promise<void> {
-		if ((<RpgGenericDataInterface>(<unknown>this)).isOutline) await this.checkElementDuplication();
+	protected loadData(
+	): void {
 	}
 
 	public async reload(
 	): Promise<void> {
-		await this.loadBaseData();
+		await this.initialise();
 		await this.loadData();
 	}
 
-	public abstract loadHierarchy(
+	public async loadHierarchy(
 		dataList: RpgDataListInterface,
-	): void;
+	): Promise<void> {
+		if (this.type !== DataType.Campaign) this.campaign = this.loadCampaign(dataList);
+	}
 
-	public loadRelationships(
-		dataList: RpgDataListInterface,
-	): void {
+	public async loadRelationships(
+	): Promise<void> {
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
-			const elements = dataList.where((data: RpgDataInterface) => data.name === name).elements;
+			const elements = this.app.plugins.getPlugin('rpg-manager').io.getElements((data: RpgDataInterface) => data.name === name).elements;
 			switch (elements.length){
 				case 0:
 					relationship.component = undefined;
@@ -81,12 +84,25 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 					break;
 			}
 		});
-		if ((<RpgGenericDataInterface>(<unknown>this)).isOutline) this.checkElementDuplication();
 	}
 
-	public loadReverseRelationships(
-		dataList: RpgDataListInterface,
-	): void {
+	public async loadReverseRelationships(
+	): Promise<void> {
+		if (!this.isOutline) {
+			this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
+				if (relationship.component !== undefined && relationship.isInFrontmatter === true){
+					relationship.component.addReverseRelationship(
+						this.name,
+						{
+							component: this,
+							description: relationship.description,
+							isReverse: true,
+							isInFrontmatter: true,
+						}
+					)
+				}
+			});
+		}
 	}
 
 	public addReverseRelationship(
@@ -131,12 +147,18 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 
 	public getRelationships(
 		type: DataType,
+		isReversedRelationship = false,
 	): RpgDataInterface[] {
 		const response:RpgDataInterface[] = [];
 
 		this.relationships.forEach((data: RelationshipInterface, name: string) => {
 			if (data.component !== undefined && data.component.type === type) {
-				response.push(data.component);
+				if (isReversedRelationship) {
+					if (data.isInFrontmatter) response.push(data.component);
+				} else {
+					response.push(data.component);
+				}
+
 			}
 		});
 
@@ -152,6 +174,7 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		return response;
 	}
 
+	/*
 	private throwCorrectError(
 		type: DataType,
 		campaignId: number,
@@ -170,51 +193,93 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 		}
 	}
 
+	 */
+
 	protected loadCampaign(
+		dataList: RpgDataListInterface,
 	): CampaignInterface {
 		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, this.tag);
-		const response = this.app.plugins.getPlugin('rpg-manager').io.getCampaign(campaignId);
-		if (response == null) this.throwCorrectError(DataType.Campaign, campaignId);
+		const campaigns: RpgDataInterface[] = dataList
+			.where((data: CampaignInterface) =>
+				data.type === DataType.Campaign &&
+				data.campaignId === campaignId
+			)
+			.elements;
 
-		return response;
+		if (campaigns.length === 0) throw new ElementNotFoundError(this.app, DataType.Campaign, this.tag, campaignId);
+		if (campaigns.length > 1) throw new ElementDuplicated(this.app, DataType.Campaign, this.tag, campaignId);
+
+		return campaigns[0] as CampaignInterface;
 	}
 
 	protected loadAdventure(
+		dataList: RpgDataListInterface,
 		campaignId: number,
 	): AdventureInterface {
 		const adventureId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Adventure, this.tag);
-		const response = this.app.plugins.getPlugin('rpg-manager').io.getAdventure(campaignId, adventureId);
-		if (response == null) this.throwCorrectError(DataType.Adventure, campaignId, adventureId);
+		const adventures: RpgDataInterface[] = dataList
+			.where((data: AdventureInterface) =>
+				data.type === DataType.Adventure &&
+				data.campaign.campaignId === campaignId &&
+				data.adventureId === adventureId
+			)
+			.elements;
 
-		return response;
+		if (adventures.length === 0) throw new ElementNotFoundError(this.app, DataType.Adventure, this.tag, campaignId, adventureId);
+		if (adventures.length > 1) throw new ElementDuplicated(this.app, DataType.Adventure, this.tag, campaignId, adventureId);
+
+		return adventures[0] as AdventureInterface;
 	}
 
 	protected loadSession(
+		dataList: RpgDataListInterface,
 		campaignId: number,
 		adventureId: number,
 	): SessionInterface {
 		const sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Session, this.tag);
-		const response = this.app.plugins.getPlugin('rpg-manager').io.getSession(campaignId, adventureId, sessionId);
-		if (response == null) this.throwCorrectError(DataType.Session, campaignId, adventureId, sessionId);
+		const sessions: RpgDataInterface[] = dataList
+			.where((data: SessionInterface) =>
+				data.type === DataType.Session &&
+				data.campaign.campaignId === campaignId &&
+				data.adventure.adventureId === adventureId &&
+				data.sessionId === sessionId
+			)
+			.elements;
 
-		return response;
+		if (sessions.length === 0) throw new ElementNotFoundError(this.app, DataType.Session, this.tag, campaignId, adventureId, sessionId);
+		if (sessions.length > 1) throw new ElementDuplicated(this.app, DataType.Session, this.tag, campaignId, adventureId, sessionId);
+
+		return sessions[0] as SessionInterface;
 	}
 
 	protected loadScene(
+		dataList: RpgDataListInterface,
 		campaignId: number,
 		adventureId: number,
 		sessionId: number,
 	): SceneInterface {
 		const sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Scene, this.tag);
-		const response = this.app.plugins.getPlugin('rpg-manager').io.getScene(campaignId, adventureId, sessionId, sceneId);
-		if (response == null) this.throwCorrectError(DataType.Scene, campaignId, adventureId, sessionId, sceneId);
+		const scenes: RpgDataInterface[] = dataList
+			.where((data: SceneInterface) =>
+				data.type === DataType.Session &&
+				data.campaign.campaignId === campaignId &&
+				data.adventure.adventureId === adventureId &&
+				data.session.sessionId === sessionId &&
+				data.sceneId === sceneId
+			)
+			.elements;
 
-		return response;
+		if (scenes.length === 0) throw new ElementNotFoundError(this.app, DataType.Scene, this.tag, campaignId, adventureId, sessionId, sceneId);
+		if (scenes.length > 1) throw new ElementDuplicated(this.app, DataType.Scene, this.tag, campaignId, adventureId, sessionId, sceneId);
+
+		return scenes[0] as SceneInterface;
 	}
 
-	protected checkElementDuplication(
+	public validateId(
+		dataList: RpgDataListInterface,
 	): void {
-		const elementCount = this.app.plugins.getPlugin('rpg-manager').io.elementCount(
+		const elementCount = this.elementCount(
+			dataList,
 			this.type,
 			(<CampaignInterface>(<unknown>this))?.campaignId,
 			(<AdventureInterface>(<unknown>this))?.adventureId ?? (<SessionInterface|SceneInterface|NoteInterface>(<unknown>this))?.adventure?.adventureId,
@@ -231,5 +296,48 @@ export abstract class AbstractRpgData implements RpgDataInterface {
 			(<SessionInterface|NoteInterface>(<unknown>this))?.sessionId ?? (<SceneInterface>(<unknown>this))?.session?.sessionId,
 			(<SceneInterface>(<unknown>this))?.sceneId,
 		);
+	}
+
+	public elementCount(
+		dataList: RpgDataListInterface,
+		type: DataType,
+		campaignId: number,
+		adventureId: number|null = null,
+		sessionId: number|null = null,
+		sceneId: number|null = null,
+	): number {
+		let predicate: any;
+
+		switch (type){
+			case DataType.Campaign:
+				predicate = (campaign: CampaignInterface) =>
+					campaign.type === DataType.Campaign &&
+					campaign.campaignId === campaignId;
+				break;
+			case DataType.Adventure:
+				predicate = (adventure: AdventureInterface) =>
+					adventure.type === DataType.Adventure &&
+					adventure.campaign.campaignId === campaignId &&
+					adventure.adventureId === adventureId;
+				break;
+			case DataType.Session:
+			case DataType.Note:
+				predicate = (session: SessionInterface|NoteInterface) =>
+					session.type === DataType.Adventure &&
+					session.campaign.campaignId === campaignId &&
+					session.adventure.adventureId === adventureId &&
+					session.sessionId === sessionId;
+				break;
+			case DataType.Scene:
+				predicate = (scene: SceneInterface) =>
+					scene.type === DataType.Adventure &&
+					scene.campaign.campaignId === campaignId &&
+					scene.adventure.adventureId === adventureId &&
+					scene.session.sessionId === sessionId &&
+					scene.sceneId === sceneId;
+				break;
+		}
+
+		return dataList.where(predicate).elements.length;
 	}
 }

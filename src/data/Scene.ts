@@ -15,8 +15,8 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
 
-	protected async loadData(
-	): Promise<void> {
+	protected loadData(
+	): void {
 		this.sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
@@ -25,13 +25,13 @@ export class Scene extends AbstractRpgOutlineData implements SceneInterface {
 		super.loadData();
 	}
 
-	public loadHierarchy(
+	public async loadHierarchy(
 		dataList: RpgDataListInterface,
-	) {
+	): Promise<void> {
 		super.loadHierarchy(dataList);
 
-		this.adventure = this.loadAdventure(this.campaign.campaignId);
-		this.session = this.loadSession(this.campaign.campaignId, this.adventure.adventureId);
+		this.adventure = this.loadAdventure(dataList, this.campaign.campaignId);
+		this.session = this.loadSession(dataList, this.campaign.campaignId, this.adventure.adventureId);
 		this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId - 1);
 		this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.getScene(this.campaign.campaignId, this.adventure.adventureId, this.session.sessionId, this.sceneId + 1);
 

@@ -2,11 +2,10 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
+import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 
 export class FactionModel extends AbstractModel {
-	protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface;
+	protected currentElement: RpgDataInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
@@ -26,7 +25,7 @@ export class FactionModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'CharacterTable',
-				this.currentElement.getRelationships(DataType.Faction),
+				this.currentElement.getRelationships(DataType.Faction, true),
 			)
 		);
 
@@ -34,7 +33,7 @@ export class FactionModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'LocationTable',
-				this.currentElement.getRelationships(DataType.Location),
+				this.currentElement.getRelationships(DataType.Location, false),
 			)
 		);
 

@@ -29,6 +29,7 @@ export class RelationshipFactory {
 					frontmatter,
 					relationship,
 				);
+
 				return relationship;
 			});
 	}
@@ -54,7 +55,7 @@ export class RelationshipFactory {
 					name = nameAndAlias.substring(0, aliasIndex);
 				}
 
-				if (relationships.get(name) === undefined) relationships.set(name, {component: undefined, description: '', isReverse: false});
+				if (relationships.get(name) === undefined) relationships.set(name, {component: undefined, description: '', isReverse: false, isInFrontmatter: false});
 			}
 		}
 	}
@@ -96,7 +97,7 @@ export class RelationshipFactory {
 				}
 
 
-				relationships.set(name, {component: undefined, description: '', isReverse: false});
+				relationships.set(name, {component: undefined, description: '', isReverse: false, isInFrontmatter: true});
 			}
 		}
 	}
@@ -108,6 +109,8 @@ export class RelationshipFactory {
 	): Array<string> {
 		const response: Array<string> = [];
 
+		let hasFrontmatterRelationshipStarted = false;
+
 		let hasFrontmatterReadStarted = false;
 		let hasFrontmatterReadEnded = false;
 		const containsFrontMatter = fileContent[0] === '---';
@@ -115,7 +118,7 @@ export class RelationshipFactory {
 		if (isFrontMatter && !containsFrontMatter) return [];
 
 		for (let fileContentLineCounter=0; fileContentLineCounter<fileContent.length; fileContentLineCounter++) {
-			const line = fileContent[fileContentLineCounter];
+			let line = fileContent[fileContentLineCounter];
 			let addLine = false;
 
 			if (line === '---') {
@@ -142,6 +145,24 @@ export class RelationshipFactory {
 				}
 			} else {
 				if (isFrontMatter || (!isFrontMatter && hasFrontmatterReadEnded)) addLine = true;
+
+				if (isFrontMatter && hasFrontmatterRelationshipStarted) {
+					if (!line.startsWith(' ')) {
+						hasFrontmatterRelationshipStarted = false;
+					} else {
+						if (!line.trimEnd().endsWith(':')){
+							let index = 0;
+							while (line[index] === ' '){
+								index++;
+							}
+							const indexOfSeparator = line.indexOf(':');
+
+							line = ' '.repeat(index) + '[[' + line.substring(index, indexOfSeparator) + ']]' + line.substring(indexOfSeparator);
+						}
+					}
+				}
+
+				if (isFrontMatter && line.toLowerCase().startsWith('relationships:')) hasFrontmatterRelationshipStarted = true;
 			}
 
 			if (addLine) response.push(line);

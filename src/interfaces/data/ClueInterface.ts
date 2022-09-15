@@ -1,7 +1,6 @@
 import {RpgDataInterface} from "./RpgDataInterface";
-import {RpgElementDataInterface} from "./RpgElementDataInterface";
 
-export interface ClueInterface extends RpgDataInterface, RpgElementDataInterface {
+export interface ClueInterface extends RpgDataInterface {
 	found: Date|null;
 
 	get isFound(): boolean;

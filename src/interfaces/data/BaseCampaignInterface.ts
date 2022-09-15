@@ -5,4 +5,7 @@ export interface BaseCampaignInterface {
 	currentDate: Date|null;
 	settings: CampaignSetting;
 	link: string;
+
+	get name(): string;
+	get image(): string|null;
 }

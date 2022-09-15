@@ -7,13 +7,13 @@ export class Note extends AbstractRpgOutlineData implements NoteInterface {
 	public adventure: AdventureInterface;
 	public sessionId: number;
 
-	public loadHierarchy(
+	public async loadHierarchy(
 		dataList: RpgDataListInterface,
-	) {
+	): Promise<void> {
 		super.loadHierarchy(dataList);
 
-		this.adventure = this.loadAdventure(this.campaign.campaignId);
-		const session = this.loadSession(this.campaign.campaignId, this.adventure.adventureId);
+		this.adventure = this.loadAdventure(dataList, this.campaign.campaignId);
+		const session = this.loadSession(dataList, this.campaign.campaignId, this.adventure.adventureId);
 		this.sessionId = session.sessionId;
 	}
 }

@@ -1,8 +1,6 @@
 import {RpgDataListInterface} from "../interfaces/data/RpgDataListInterface";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
 import {App} from "obsidian";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
 
 export class RpgDataList implements RpgDataListInterface{
 	public elements: RpgDataInterface[] = [];

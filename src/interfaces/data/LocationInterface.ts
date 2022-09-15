@@ -1,6 +1,5 @@
 import {RpgDataInterface} from "./RpgDataInterface";
-import {RpgElementDataInterface} from "./RpgElementDataInterface";
 
-export interface LocationInterface extends RpgDataInterface, RpgElementDataInterface {
+export interface LocationInterface extends RpgDataInterface {
 	address: string|null;
 }

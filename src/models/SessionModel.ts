@@ -15,7 +15,7 @@ export class SessionModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'MusicTable',
-				this.currentElement.getRelationships(DataType.Music),
+				this.currentElement.getRelationships(DataType.Music, false),
 			)
 		);
 

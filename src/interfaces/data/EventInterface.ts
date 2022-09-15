@@ -1,6 +1,5 @@
 import {RpgDataInterface} from "./RpgDataInterface";
-import {RpgElementDataInterface} from "./RpgElementDataInterface";
 
-export interface EventInterface extends RpgDataInterface, RpgElementDataInterface {
+export interface EventInterface extends RpgDataInterface {
 	date: Date|null;
 }

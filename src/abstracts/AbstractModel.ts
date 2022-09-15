@@ -4,8 +4,6 @@ import {App} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {BreadcrumbResponseInterface} from "../interfaces/response/BreadcrumbResponseInterface";
 import {ResponseBreadcrumb} from "../data/responses/ResponseBreadcrumb";
-import {RpgOutlineDataInterface} from "../interfaces/data/RpgOutlineDataInterface";
-import {RpgElementDataInterface} from "../interfaces/data/RpgElementDataInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RpgDataInterface} from "../interfaces/data/RpgDataInterface";
@@ -18,7 +16,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 	constructor(
 		protected app: App,
-		protected currentElement: RpgOutlineDataInterface|RpgElementDataInterface,
+		protected currentElement: RpgDataInterface,
 		protected source: string,
 		protected sourcePath: string,
 		protected sourceMeta: any,
