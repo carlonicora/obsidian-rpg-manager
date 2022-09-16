@@ -21,7 +21,7 @@ export interface DatabaseInterface {
 		data: RecordInterface|string,
 	): boolean;
 
-	readByName<T extends RecordInterface>(
+	readByPath<T extends RecordInterface>(
 		database: DatabaseInterface|undefined,
 		name: string,
 	): T|undefined;

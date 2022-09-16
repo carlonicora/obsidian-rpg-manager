@@ -85,7 +85,6 @@ var AbstractRecord = class {
     this.synopsis = null;
     this.additionalInformation = null;
     this.imageSrc = void 0;
-    this.relationships = /* @__PURE__ */ new Map();
   }
   initialise() {
     return __async(this, null, function* () {
@@ -96,8 +95,10 @@ var AbstractRecord = class {
       this.metadata = metadata;
       this.frontmatter = (_a = this.metadata.frontmatter) != null ? _a : {};
       this.tags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_b = this.frontmatter) == null ? void 0 : _b.tags);
+      this.basename = this.file.basename + "";
       this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
       this.synopsis = this.frontmatter.synopsis;
+      this.relationships = yield /* @__PURE__ */ new Map();
       yield this.app.plugins.getPlugin("rpg-manager").factories.relationships.read(this.file, this.relationships);
       this.loadData();
     });
@@ -181,6 +182,9 @@ var AbstractRecord = class {
       }
     });
     return response;
+  }
+  hasRelationship(name) {
+    return this.relationships.has(name);
   }
   initialiseDate(date) {
     if (date == null)
@@ -293,7 +297,7 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
     var _a;
     if (((_a = this.app.plugins.getPlugin("rpg-manager")) == null ? void 0 : _a.database) === void 0)
       return;
-    const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByName(void 0, this.sourcePath);
+    const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(void 0, this.sourcePath);
     if (currentElement == null) {
       this.isActive = false;
     } else {
@@ -4912,7 +4916,7 @@ var Logger = class {
       return;
     if ((message.type & this.debuggableTypes) !== message.type)
       return;
-    let data = [message.message + "\n"];
+    const data = [message.message + "\n"];
     if (message.object !== void 0)
       data.push(message.object);
     switch (message.type) {
@@ -4935,6 +4939,7 @@ var _Database = class extends import_obsidian18.Component {
     super();
     this.app = app2;
     this.elements = [];
+    this.basenameIndex = /* @__PURE__ */ new Map();
   }
   static initialise(app2) {
     return __async(this, null, function* () {
@@ -4970,6 +4975,7 @@ var _Database = class extends import_obsidian18.Component {
       if (this.misconfiguredTags.size > 0) {
         new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
       }
+      this.database.ready();
       return this.database;
     });
   }
@@ -4978,7 +4984,7 @@ var _Database = class extends import_obsidian18.Component {
       this.registerEvent(this.app.metadataCache.on("resolve", (file) => this.onSave(file)));
       this.registerEvent(this.app.vault.on("rename", (file, oldPath) => this.onRename(file, oldPath)));
       this.registerEvent(this.app.vault.on("delete", (file) => this.onDelete(file)));
-      yield new InfoLog(2 /* Database */, "Database ready");
+      new InfoLog(2 /* Database */, "Database ready");
       this.app.workspace.trigger("rpgmanager:index-complete");
       this.app.workspace.trigger("rpgmanager:refresh-views");
     });
@@ -4993,6 +4999,7 @@ var _Database = class extends import_obsidian18.Component {
     }
     if (isNew) {
       this.elements.push(data);
+      this.basenameIndex.set(data.path, data.basename);
     }
   }
   read(query = void 0, comparison = void 0) {
@@ -5014,15 +5021,17 @@ var _Database = class extends import_obsidian18.Component {
         break;
       }
     }
-    if (index !== void 0)
+    if (index !== void 0) {
       this.elements.splice(index, 1);
+      this.basenameIndex.delete(key);
+    }
     return index !== void 0;
   }
   internalSort(data, comparison) {
   }
-  readByName(database, name) {
-    const list = (database !== void 0 ? database : this).read((data) => data.path === name, void 0);
-    return list.length === 1 ? list[0] : void 0;
+  readByPath(database, path) {
+    const response = this.elements.filter((record) => record.path === path);
+    return response.length === 1 ? response[0] : void 0;
   }
   readSingleParametrised(database, dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
     const result = (database !== void 0 ? database : this).read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId), void 0);
@@ -5056,19 +5065,33 @@ var _Database = class extends import_obsidian18.Component {
   }
   onRename(file, oldPath) {
     return __async(this, null, function* () {
+      var _a, _b;
+      const oldBaseName = this.basenameIndex.get(oldPath);
+      const newBaseName = file.path;
       const metadata = this.app.metadataCache.getFileCache(file);
-      const data = this.read((data2) => data2.name === oldPath, void 0);
-      if (data.length === 1 && metadata != null) {
-        data[0].reload(file, metadata);
-        this.refreshRelationships();
+      const data = this.readByPath(void 0, file.path);
+      console.log("Renaming " + oldBaseName + " to " + newBaseName);
+      yield this.basenameIndex.delete(oldPath);
+      if (data !== void 0)
+        yield this.basenameIndex.set(file.path, file.basename);
+      console.log(this.basenameIndex);
+      if (oldBaseName !== void 0 && data !== void 0 && metadata != null) {
+        yield this.replaceFileContent(file, oldBaseName, newBaseName);
+        yield data.reload();
+        if (((_a = this.app.workspace.getActiveFile()) == null ? void 0 : _a.path) === file.path) {
+          yield (_b = this.app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView)) == null ? void 0 : _b.editor.refresh();
+        }
+        yield this.replaceLinkInRelationships(oldBaseName, file.basename);
+        yield this.refreshRelationships();
+        console.log(this.basenameIndex);
+        console.log(this.elements);
         this.app.workspace.trigger("rpgmanager:refresh-views");
       }
     });
   }
   onSave(file) {
     return __async(this, null, function* () {
-      const recordset = this.read((data) => data.name === file.path, void 0);
-      let component = this.readByName(this, file.path);
+      let component = this.readByPath(this, file.path);
       if (component === void 0) {
         try {
           component = yield _Database.createComponent(file);
@@ -5091,6 +5114,28 @@ var _Database = class extends import_obsidian18.Component {
         }
         yield this.refreshRelationships();
         this.app.workspace.trigger("rpgmanager:refresh-views");
+      }
+    });
+  }
+  replaceLinkInRelationships(oldBaseName, newBaseName) {
+    return __async(this, null, function* () {
+      for (let index = 0; index < this.elements.length; index++) {
+        if (this.elements[index].hasRelationship(oldBaseName)) {
+          console.log(this.elements[index].name);
+          yield this.replaceFileContent(this.elements[index].file, oldBaseName, newBaseName);
+          yield this.elements[index].reload();
+        }
+      }
+    });
+  }
+  replaceFileContent(file, oldBaseName, newBaseName) {
+    return __async(this, null, function* () {
+      const content = yield this.app.vault.read(file);
+      const newFileContent = content.replaceAll("[[" + oldBaseName + "]]", "[[" + newBaseName + "]]").replaceAll("[[" + oldBaseName + "|", "[[" + newBaseName + "|");
+      if (content !== newFileContent) {
+        return this.app.vault.modify(file, newFileContent).then(() => {
+          return;
+        });
       }
     });
   }
@@ -5176,7 +5221,6 @@ var _Database = class extends import_obsidian18.Component {
         new WarningLog(4 /* DatabaseInitialisation */, "TFile is not a record");
         return;
       }
-      ;
       new InfoLog(4 /* DatabaseInitialisation */, "Record type initialised", DataType[dataType]);
       const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, dataTag);
       if (campaignId === void 0)
@@ -5288,6 +5332,7 @@ var RpgManager = class extends import_obsidian19.Plugin {
         this.database = database;
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
+        console.log(this.database);
         console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
       });
       this.registerCodeBlock();
@@ -5296,7 +5341,7 @@ var RpgManager = class extends import_obsidian19.Plugin {
   }
   onLayoutReady() {
     return __async(this, null, function* () {
-      yield this.initialise();
+      this.initialise();
     });
   }
   onunload() {

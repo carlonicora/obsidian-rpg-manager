@@ -12,6 +12,8 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public frontmatter: any;
 
+	public basename: string;
+
 	public tags: Array<string>;
 
 	public completed: boolean;
@@ -22,7 +24,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public isOutline: boolean;
 	public campaign: BaseCampaignInterface;
 
-	protected relationships: Map<string, RelationshipInterface> = new Map();
+	protected relationships: Map<string, RelationshipInterface>;
 
 	private metadata: CachedMetadata;
 
@@ -42,10 +44,12 @@ export abstract class AbstractRecord implements RecordInterface {
 		this.metadata = metadata;
 		this.frontmatter = this.metadata.frontmatter ?? {};
 		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
+		this.basename = this.file.basename + '';
 
 		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
 		this.synopsis = this.frontmatter.synopsis;
 
+		this.relationships = await new Map();
 		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
 
 		this.loadData();
@@ -161,6 +165,12 @@ export abstract class AbstractRecord implements RecordInterface {
 		});
 
 		return response;
+	}
+
+	public hasRelationship(
+		name: string
+	): boolean {
+		return this.relationships.has(name);
 	}
 
 	protected initialiseDate(

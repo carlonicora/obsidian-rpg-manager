@@ -1,6 +1,6 @@
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {App, CachedMetadata, Component, TFile} from "obsidian";
+import {App, CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
@@ -68,6 +68,7 @@ export class Database extends Component implements DatabaseInterface {
 			new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
 		}
 
+		this.database.ready();
 		return this.database;
 	}
 
@@ -76,11 +77,13 @@ export class Database extends Component implements DatabaseInterface {
 	 * NON-STATIC
 	 */
 	public elements: Array<RecordInterface> = [];
+	private basenameIndex: Map<string, string>;
 
 	constructor(
 		private app: App,
 	) {
 		super();
+		this.basenameIndex = new Map();
 	}
 
 	public async ready(
@@ -89,7 +92,7 @@ export class Database extends Component implements DatabaseInterface {
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.onDelete(file)));
 
-		await new InfoLog(LogMessageType.Database, 'Database ready');
+		new InfoLog(LogMessageType.Database, 'Database ready');
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
@@ -109,6 +112,7 @@ export class Database extends Component implements DatabaseInterface {
 
 		if (isNew) {
 			this.elements.push(data);
+			this.basenameIndex.set(data.path, data.basename);
 		}
 	}
 
@@ -144,7 +148,10 @@ export class Database extends Component implements DatabaseInterface {
 			}
 		}
 
-		if (index !== undefined) this.elements.splice(index, 1);
+		if (index !== undefined) {
+			this.elements.splice(index, 1);
+			this.basenameIndex.delete(key);
+		}
 
 		return index !== undefined;
 	}
@@ -155,16 +162,14 @@ export class Database extends Component implements DatabaseInterface {
 	): void {
 	}
 
-	public readByName<T extends RecordInterface>(
+	public readByPath<T extends RecordInterface>(
 		database: DatabaseInterface|undefined,
-		name: string,
+		path: string,
 	): T|undefined {
-		const list = ((database !== undefined) ? database : this).read(
-			(data: RecordInterface) => data.path === name,
-			undefined,
-		);
+		const response:Array<RecordInterface> = this.elements
+			.filter((record: RecordInterface) => record.path === path);
 
-		return list.length === 1 ? <T>list[0] : undefined;
+		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
 	public readSingleParametrised<T extends RecordInterface>(
@@ -248,14 +253,37 @@ export class Database extends Component implements DatabaseInterface {
 		file: TFile,
 		oldPath: string,
 	): Promise<void> {
-		//@TODO change the files content and save them
+		/**
+		 * @TODO: What happen when I rename a file from list and a file that is open has it?
+		 * @TODO: Why when I add a frontmatter link [[link]] there is no correct refresh?
+		 */
+		const oldBaseName: string|undefined = this.basenameIndex.get(oldPath);
+		const newBaseName = file.path;
+
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+		const data: RecordInterface|undefined = this.readByPath(undefined, file.path);
 
-		const data: Array<RecordInterface> = this.read((data: RecordInterface) => data.name === oldPath, undefined);
+		console.log('Renaming ' + oldBaseName + ' to ' + newBaseName);
 
-		if (data.length === 1 && metadata != null) {
-			data[0].reload(file, metadata);
-			this.refreshRelationships();
+		await this.basenameIndex.delete(oldPath);
+		if (data !== undefined) await this.basenameIndex.set(file.path, file.basename);
+
+		console.log(this.basenameIndex);
+
+		if (oldBaseName !== undefined && data !== undefined && metadata != null) {
+			await this.replaceFileContent(file, oldBaseName, newBaseName);
+			await data.reload();
+
+			if (this.app.workspace.getActiveFile()?.path === file.path){
+				await this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
+			}
+
+			await this.replaceLinkInRelationships(oldBaseName, file.basename);
+			await this.refreshRelationships();
+
+			console.log(this.basenameIndex);
+			console.log(this.elements);
+
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
@@ -263,7 +291,7 @@ export class Database extends Component implements DatabaseInterface {
 	private async onSave(
 		file: TFile,
 	): Promise<void> {
-		let component:RecordInterface|undefined = this.readByName(this, file.path);
+		let component:RecordInterface|undefined = this.readByPath(this, file.path);
 		if (component === undefined) {
 			try {
 				component = await Database.createComponent(file);
@@ -292,6 +320,37 @@ export class Database extends Component implements DatabaseInterface {
 	/**
 	 * PRIVATE NON-STATIC METHODS
 	 */
+
+	private async replaceLinkInRelationships(
+		oldBaseName: string,
+		newBaseName: string,
+	): Promise<void> {
+		for(let index=0; index<this.elements.length; index++){
+			if (this.elements[index].hasRelationship(oldBaseName)){
+				console.log(this.elements[index].name);
+				await this.replaceFileContent(this.elements[index].file, oldBaseName, newBaseName);
+				await this.elements[index].reload();
+			}
+		}
+	}
+
+	private async replaceFileContent(
+		file: TFile,
+		oldBaseName: string,
+		newBaseName: string,
+	): Promise<void> {
+		const content = await this.app.vault.read(file);
+		const newFileContent = content
+			.replaceAll('[[' +  oldBaseName + ']]', '[[' + newBaseName + ']]')
+			.replaceAll('[[' + oldBaseName + '|', '[[' + newBaseName + '|')
+
+		if (content !== newFileContent) {
+			return this.app.vault.modify(file, newFileContent)
+				.then(() => {
+					return;
+				});
+		}
+	}
 
 	private async refreshRelationships(
 	): Promise<void> {

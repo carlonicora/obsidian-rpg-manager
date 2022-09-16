@@ -61,6 +61,8 @@ export default class RpgManager extends Plugin {
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 
+				console.log(this.database);
+
 				console.log(
 					`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${
 						(Date.now() - reloadStart) / 1000.0
@@ -73,7 +75,7 @@ export default class RpgManager extends Plugin {
 	}
 
 	async onLayoutReady(){
-		await this.initialise();
+		this.initialise();
 	}
 
 	async onunload() {

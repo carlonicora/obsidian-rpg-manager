@@ -1,5 +1,5 @@
 import {DataType} from "../../enums/DataType";
-import {CachedMetadata, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
 import {DatabaseInterface} from "./DatabaseInterface";
 import {BaseCampaignInterface} from "../data/BaseCampaignInterface";
@@ -13,6 +13,7 @@ export interface RecordInterface {
 	tags: Array<string>;
 
 	file: TFile;
+	basename: string;
 
 	frontmatter: any;
 
@@ -29,8 +30,6 @@ export interface RecordInterface {
 	): Promise<void>;
 
 	reload(
-		file: TFile,
-		metadata: CachedMetadata,
 	): void;
 
 	loadHierarchy(
@@ -49,6 +48,10 @@ export interface RecordInterface {
 		name: string,
 		relationship: RelationshipInterface,
 	): void;
+
+	hasRelationship(
+		name: string
+	): boolean;
 
 	getRelationships(
 		type: DataType,
