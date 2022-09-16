@@ -17,7 +17,8 @@ export class Logger {
 	public static initialise(
 		version: string,
 	): void {
-		if (version.indexOf('beta') !== -1) this.isDebug = true;
+		console.log(version);
+		if (version.indexOf('-') !== -1) this.isDebug = true;
 	}
 
 	public static log(
@@ -27,7 +28,7 @@ export class Logger {
 		if ((message.type & this.debuggableTypes) !== message.type) return;
 
 		console.log(
-			LogType[message.type as keyof typeof LogType],
+			LogType[message.type],
 			message.message,
 			message?.object ?? '',
 		);

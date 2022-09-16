@@ -15,6 +15,7 @@ import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {Logger, LogType} from "../helpers/Logger";
 
 export class Database extends Component implements DatabaseInterface {
 	/**
@@ -33,7 +34,7 @@ export class Database extends Component implements DatabaseInterface {
 		this.database = await new Database(this.app);
 		const temporaryDatabase = await new Database(this.app);
 
-		console.log('Database', 'initialisation start');
+		Logger.log({type: LogType.DatabaseInitialisation, message: 'Initialisation started'});
 
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 		for (let index=0; index<markdownFiles.length; index++){
@@ -53,7 +54,7 @@ export class Database extends Component implements DatabaseInterface {
 			}
 		}
 
-		console.log('Database', 'Temporary database initialised', temporaryDatabase);
+		Logger.log({type: LogType.DatabaseInitialisation, message: 'Temporary database initialised', object: temporaryDatabase});
 
 		await this.buildHierarchyAndRelationships(temporaryDatabase);
 
@@ -395,15 +396,22 @@ export class Database extends Component implements DatabaseInterface {
 		let response: RecordInterface|undefined;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		console.log('Database', 'Component creation', 'TFile metadata read', metadata);
+		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record TFile metadata read', object: metadata});
 		if (metadata == null) return;
 
 		const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
+		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record tags initialised', object: dataTags});
 		const dataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(dataTags);
+		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record tag initialised', object: dataTag});
 		if (dataTag == undefined) return;
 
 		const dataType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, dataTag);
-		if (dataType === undefined) return;
+
+		if (dataType === undefined) {
+			Logger.log({type: LogType.DatabaseInitialisation, message: 'TFile is not a record'});
+			return
+		};
+		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record type initialised', object: DataType[dataType]});
 
 		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, dataTag);
 		const settings = this.campaignSettings.get(campaignId);

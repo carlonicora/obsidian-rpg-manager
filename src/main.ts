@@ -16,6 +16,7 @@ import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
 import {Database} from "./database/Database";
+import {Logger} from "./helpers/Logger";
 
 export default class RpgManager extends Plugin {
 	/*
@@ -36,6 +37,7 @@ export default class RpgManager extends Plugin {
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
+		Logger.initialise(this.manifest.version);
 
 		await this.loadSettings();
 
