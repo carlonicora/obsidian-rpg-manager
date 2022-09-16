@@ -33,7 +33,7 @@ export class RpgController extends MarkdownRenderChild {
 
 	private initialise(
 	): void {
-		if (this.app.plugins.getPlugin('rpg-manager')?.database !== undefined) return;
+		if (this.app.plugins.getPlugin('rpg-manager')?.database === undefined) return;
 
 		const currentElement = this.app.plugins.getPlugin('rpg-manager').database.readByName<RecordInterface>(undefined, this.sourcePath);
 		if (currentElement == null){

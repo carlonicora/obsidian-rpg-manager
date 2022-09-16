@@ -15,7 +15,7 @@ import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
-import {Logger, LogType} from "../helpers/Logger";
+import {ErrorLog, InfoLog, LogMessageType, WarningLog} from "../helpers/Logger";
 
 export class Database extends Component implements DatabaseInterface {
 	/**
@@ -29,20 +29,26 @@ export class Database extends Component implements DatabaseInterface {
 	public static async initialise(
 		app: App,
 	): Promise<DatabaseInterface> {
+		await new InfoLog(LogMessageType.DatabaseInitialisation, 'Initialisation started');
+
 		this.app = app;
-		this.misconfiguredTags = await new Map()
+		this.misconfiguredTags = await new Map();
+
 		this.database = await new Database(this.app);
 		const temporaryDatabase = await new Database(this.app);
 
-		Logger.log({type: LogType.DatabaseInitialisation, message: 'Initialisation started'});
+		await this.loadCampaignSettings();
+		await new InfoLog(LogMessageType.DatabaseInitialisation, 'Campaign settings read');
 
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 		for (let index=0; index<markdownFiles.length; index++){
 			const data:RecordInterface|undefined = await this.createComponent(markdownFiles[index]);
+
+			new InfoLog(LogMessageType.DatabaseInitialisation, 'Temporary database initialised', temporaryDatabase);
 			if (data !== undefined) {
 				try {
 					if (data instanceof AbstractOutlineData) await data.checkDuplicates(temporaryDatabase);
-					temporaryDatabase.create(data);
+					await temporaryDatabase.create(data);
 				} catch (e) {
 					if (e instanceof RpgError) {
 						const isHidden: boolean = e instanceof HiddenError;
@@ -54,7 +60,7 @@ export class Database extends Component implements DatabaseInterface {
 			}
 		}
 
-		Logger.log({type: LogType.DatabaseInitialisation, message: 'Temporary database initialised', object: temporaryDatabase});
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Temporary database initialised', temporaryDatabase);
 
 		await this.buildHierarchyAndRelationships(temporaryDatabase);
 
@@ -82,6 +88,8 @@ export class Database extends Component implements DatabaseInterface {
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.onDelete(file)));
+
+		await new InfoLog(LogMessageType.Database, 'Database ready');
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
@@ -230,7 +238,6 @@ export class Database extends Component implements DatabaseInterface {
 	private async onDelete(
 		file: TFile,
 	): Promise<void> {
-
 		if (this.delete(file.path)){
 			this.refreshRelationships();
 			this.app.workspace.trigger("rpgmanager:refresh-views");
@@ -256,8 +263,6 @@ export class Database extends Component implements DatabaseInterface {
 	private async onSave(
 		file: TFile,
 	): Promise<void> {
-		const recordset: Array<RecordInterface> = this.read((data: RecordInterface) => data.name === file.path, undefined);
-
 		let component:RecordInterface|undefined = this.readByName(this, file.path);
 		if (component === undefined) {
 			try {
@@ -396,33 +401,38 @@ export class Database extends Component implements DatabaseInterface {
 		let response: RecordInterface|undefined;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record TFile metadata read', object: metadata});
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record TFile metadata read', metadata);
 		if (metadata == null) return;
 
 		const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
-		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record tags initialised', object: dataTags});
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record tags initialised', dataTags);
 		const dataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(dataTags);
-		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record tag initialised', object: dataTag});
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record tag initialised', dataTag);
 		if (dataTag == undefined) return;
 
 		const dataType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, dataTag);
 
 		if (dataType === undefined) {
-			Logger.log({type: LogType.DatabaseInitialisation, message: 'TFile is not a record'});
+			new WarningLog(LogMessageType.DatabaseInitialisation, 'TFile is not a record');
 			return
-		};
-		Logger.log({type: LogType.DatabaseInitialisation, message: 'Record type initialised', object: DataType[dataType]});
+		}
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record type initialised', DataType[dataType]);
 
 		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, dataTag);
+		if (campaignId === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', dataTag);
+
 		const settings = this.campaignSettings.get(campaignId);
+		if (settings === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Settings Missing!');
+
 		if (campaignId !== undefined && settings !== undefined) {
-			response = this.app.plugins.getPlugin('rpg-manager').factories.data.create(
+			response = await this.app.plugins.getPlugin('rpg-manager').factories.data.create(
 				settings,
 				dataTag,
 				dataType,
 				file
 			);
 			await response.initialise();
+			new InfoLog(LogMessageType.DatabaseInitialisation, 'Record Created', response);
 		}
 
 		return response;
@@ -436,10 +446,13 @@ export class Database extends Component implements DatabaseInterface {
 	private static async buildHierarchyAndRelationships(
 		temporaryDatabase: DatabaseInterface,
 	): Promise<void> {
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Building Hierarchy', temporaryDatabase);
 		return this.addHierarchy(temporaryDatabase, DataType.Campaign)
 			.then(() => {
-				return this.buildRelationships(this.database)
+				new InfoLog(LogMessageType.DatabaseInitialisation, 'Hierarchy built', temporaryDatabase);
+				return this.buildRelationships(temporaryDatabase)
 					.then(() => {
+						new InfoLog(LogMessageType.DatabaseInitialisation, 'Relationships connected', temporaryDatabase);
 						return;
 					});
 			});
@@ -456,6 +469,7 @@ export class Database extends Component implements DatabaseInterface {
 		temporaryDatabase: DatabaseInterface,
 		dataType: DataType|undefined,
 	): Promise<void> {
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Loading hierarchy', (dataType !== undefined ? DataType[dataType] : 'Elements'));
 		const data: RecordInterface[] = temporaryDatabase.read(
 			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.type) === data.type : data.isOutline === false),
 			undefined,

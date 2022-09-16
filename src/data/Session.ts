@@ -29,24 +29,24 @@ export class Session extends AbstractOutlineData implements SessionInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = this.app.plugins.getPlugin('rpg-manager').database.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
+		this.adventure = database.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
 
 		try {
-			this.previousSession = this.app.plugins.getPlugin('rpg-manager').database.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId - 1);
+			this.previousSession = database.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId - 1);
 			this.previousSession.nextSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextSession = this.app.plugins.getPlugin('rpg-manager').database.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId + 1);
+			this.nextSession = database.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId + 1);
 			this.nextSession.previousSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.note = this.app.plugins.getPlugin('rpg-manager').database.readSingle<NoteInterface>(database, DataType.Note, this.tag);
+			this.note = database.readSingle<NoteInterface>(database, DataType.Note, this.tag);
 		} catch (e) {
 			//ignore. It can be non existing
 		}

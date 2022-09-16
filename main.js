@@ -113,7 +113,7 @@ var AbstractRecord = class {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       if (this.type !== 1 /* Campaign */) {
-        this.campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 1 /* Campaign */, this.tag);
+        this.campaign = database.readSingle(database, 1 /* Campaign */, this.tag);
       }
     });
   }
@@ -291,7 +291,7 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
   }
   initialise() {
     var _a;
-    if (((_a = this.app.plugins.getPlugin("rpg-manager")) == null ? void 0 : _a.database) !== void 0)
+    if (((_a = this.app.plugins.getPlugin("rpg-manager")) == null ? void 0 : _a.database) === void 0)
       return;
     const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByName(void 0, this.sourcePath);
     if (currentElement == null) {
@@ -865,15 +865,15 @@ var Scene = class extends AbstractOutlineData {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Scene.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 2 /* Adventure */, this.tag);
-      this.session = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag);
+      this.adventure = database.readSingle(database, 2 /* Adventure */, this.tag);
+      this.session = database.readSingle(database, 4 /* Session */, this.tag);
       try {
-        this.previousScene = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId - 1);
+        this.previousScene = database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId - 1);
         this.previousScene.nextScene = this;
       } catch (e) {
       }
       try {
-        this.nextScene = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId + 1);
+        this.nextScene = database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId + 1);
         this.nextScene.previousScene = this;
       } catch (e) {
       }
@@ -1503,19 +1503,19 @@ var Session = class extends AbstractOutlineData {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Session.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 2 /* Adventure */, this.tag);
+      this.adventure = database.readSingle(database, 2 /* Adventure */, this.tag);
       try {
-        this.previousSession = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag, this.sessionId - 1);
+        this.previousSession = database.readSingle(database, 4 /* Session */, this.tag, this.sessionId - 1);
         this.previousSession.nextSession = this;
       } catch (e) {
       }
       try {
-        this.nextSession = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag, this.sessionId + 1);
+        this.nextSession = database.readSingle(database, 4 /* Session */, this.tag, this.sessionId + 1);
         this.nextSession.previousSession = this;
       } catch (e) {
       }
       try {
-        this.note = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 1024 /* Note */, this.tag);
+        this.note = database.readSingle(database, 1024 /* Note */, this.tag);
       } catch (e) {
       }
     });
@@ -1531,8 +1531,8 @@ var Note = class extends AbstractOutlineData {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Note.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 2 /* Adventure */, this.tag);
-      const session = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag);
+      this.adventure = database.readSingle(database, 2 /* Adventure */, this.tag);
+      const session = database.readSingle(database, 4 /* Session */, this.tag);
       this.sessionId = session.sessionId;
     });
   }
@@ -4868,28 +4868,66 @@ var ElementNotFoundError = class extends RpgError {
 };
 
 // src/helpers/Logger.ts
-var LogType = /* @__PURE__ */ ((LogType2) => {
-  LogType2[LogType2["Database"] = 1] = "Database";
-  LogType2[LogType2["DatabaseInitialisation"] = 2] = "DatabaseInitialisation";
-  return LogType2;
-})(LogType || {});
+var AbstractLogMessage = class {
+  constructor(type, messageType, message = "", object = void 0) {
+    this.type = type;
+    this.messageType = messageType;
+    this.message = message;
+    this.object = object;
+    Logger.log(this);
+  }
+};
+var InfoLog = class extends AbstractLogMessage {
+  constructor(mesageType, message = "", object = void 0) {
+    super(1 /* Info */, mesageType, message, object);
+  }
+};
+var WarningLog = class extends AbstractLogMessage {
+  constructor(mesageType, message = "", object = void 0) {
+    super(2 /* Warning */, mesageType, message, object);
+  }
+};
+var ErrorLog = class extends AbstractLogMessage {
+  constructor(mesageType, message = "", object = void 0) {
+    super(4 /* Error */, mesageType, message, object);
+  }
+};
 var Logger = class {
-  static initialise(version) {
-    console.log(version);
-    if (version.indexOf("-") !== -1)
+  static initialise(version, debuggableTypes = void 0) {
+    if (version.indexOf("-") !== -1) {
       this.isDebug = true;
+      this.debuggableMessageTypes = 4 /* DatabaseInitialisation */;
+      if (debuggableTypes === void 0) {
+        this.debuggableTypes = 1 /* Info */ | 2 /* Warning */ | 4 /* Error */;
+      } else {
+        this.debuggableTypes = debuggableTypes;
+      }
+      new InfoLog(1 /* System */, "Logger active");
+    } else {
+      this.isDebug = false;
+    }
   }
   static log(message) {
-    var _a;
     if (!this.isDebug)
       return;
     if ((message.type & this.debuggableTypes) !== message.type)
       return;
-    console.log(LogType[message.type], message.message, (_a = message == null ? void 0 : message.object) != null ? _a : "");
+    let data = [message.message + "\n"];
+    if (message.object !== void 0)
+      data.push(message.object);
+    switch (message.type) {
+      case 1 /* Info */:
+        console.info(...data);
+        break;
+      case 4 /* Error */:
+        console.error(...data);
+        break;
+      default:
+        console.warn(...data);
+        break;
+    }
   }
 };
-Logger.isDebug = false;
-Logger.debuggableTypes = 1 /* Database */ & 2 /* DatabaseInitialisation */;
 
 // src/database/Database.ts
 var _Database = class extends import_obsidian18.Component {
@@ -4900,19 +4938,22 @@ var _Database = class extends import_obsidian18.Component {
   }
   static initialise(app2) {
     return __async(this, null, function* () {
+      yield new InfoLog(4 /* DatabaseInitialisation */, "Initialisation started");
       this.app = app2;
       this.misconfiguredTags = yield /* @__PURE__ */ new Map();
       this.database = yield new _Database(this.app);
       const temporaryDatabase = yield new _Database(this.app);
-      Logger.log({ type: 2 /* DatabaseInitialisation */, message: "Initialisation started" });
+      yield this.loadCampaignSettings();
+      yield new InfoLog(4 /* DatabaseInitialisation */, "Campaign settings read");
       const markdownFiles = app2.vault.getMarkdownFiles();
       for (let index = 0; index < markdownFiles.length; index++) {
         const data = yield this.createComponent(markdownFiles[index]);
+        new InfoLog(4 /* DatabaseInitialisation */, "Temporary database initialised", temporaryDatabase);
         if (data !== void 0) {
           try {
             if (data instanceof AbstractOutlineData)
               yield data.checkDuplicates(temporaryDatabase);
-            temporaryDatabase.create(data);
+            yield temporaryDatabase.create(data);
           } catch (e) {
             if (e instanceof RpgError) {
               const isHidden = e instanceof HiddenError;
@@ -4924,7 +4965,7 @@ var _Database = class extends import_obsidian18.Component {
           }
         }
       }
-      Logger.log({ type: 2 /* DatabaseInitialisation */, message: "Temporary database initialised", object: temporaryDatabase });
+      new InfoLog(4 /* DatabaseInitialisation */, "Temporary database initialised", temporaryDatabase);
       yield this.buildHierarchyAndRelationships(temporaryDatabase);
       if (this.misconfiguredTags.size > 0) {
         new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
@@ -4937,6 +4978,7 @@ var _Database = class extends import_obsidian18.Component {
       this.registerEvent(this.app.metadataCache.on("resolve", (file) => this.onSave(file)));
       this.registerEvent(this.app.vault.on("rename", (file, oldPath) => this.onRename(file, oldPath)));
       this.registerEvent(this.app.vault.on("delete", (file) => this.onDelete(file)));
+      yield new InfoLog(2 /* Database */, "Database ready");
       this.app.workspace.trigger("rpgmanager:index-complete");
       this.app.workspace.trigger("rpgmanager:refresh-views");
     });
@@ -5120,35 +5162,43 @@ var _Database = class extends import_obsidian18.Component {
       var _a;
       let response;
       const metadata = this.app.metadataCache.getFileCache(file);
-      Logger.log({ type: 2 /* DatabaseInitialisation */, message: "Record TFile metadata read", object: metadata });
+      new InfoLog(4 /* DatabaseInitialisation */, "Record TFile metadata read", metadata);
       if (metadata == null)
         return;
       const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
-      Logger.log({ type: 2 /* DatabaseInitialisation */, message: "Record tags initialised", object: dataTags });
+      new InfoLog(4 /* DatabaseInitialisation */, "Record tags initialised", dataTags);
       const dataTag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(dataTags);
-      Logger.log({ type: 2 /* DatabaseInitialisation */, message: "Record tag initialised", object: dataTag });
+      new InfoLog(4 /* DatabaseInitialisation */, "Record tag initialised", dataTag);
       if (dataTag == void 0)
         return;
       const dataType = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(void 0, dataTag);
       if (dataType === void 0) {
-        Logger.log({ type: 2 /* DatabaseInitialisation */, message: "TFile is not a record" });
+        new WarningLog(4 /* DatabaseInitialisation */, "TFile is not a record");
         return;
       }
       ;
-      Logger.log({ type: 2 /* DatabaseInitialisation */, message: "Record type initialised", object: DataType[dataType] });
+      new InfoLog(4 /* DatabaseInitialisation */, "Record type initialised", DataType[dataType]);
       const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, dataTag);
+      if (campaignId === void 0)
+        new ErrorLog(4 /* DatabaseInitialisation */, "Campaign Id not found", dataTag);
       const settings = this.campaignSettings.get(campaignId);
+      if (settings === void 0)
+        new ErrorLog(4 /* DatabaseInitialisation */, "Settings Missing!");
       if (campaignId !== void 0 && settings !== void 0) {
-        response = this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, dataTag, dataType, file);
+        response = yield this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, dataTag, dataType, file);
         yield response.initialise();
+        new InfoLog(4 /* DatabaseInitialisation */, "Record Created", response);
       }
       return response;
     });
   }
   static buildHierarchyAndRelationships(temporaryDatabase) {
     return __async(this, null, function* () {
+      new InfoLog(4 /* DatabaseInitialisation */, "Building Hierarchy", temporaryDatabase);
       return this.addHierarchy(temporaryDatabase, 1 /* Campaign */).then(() => {
-        return this.buildRelationships(this.database).then(() => {
+        new InfoLog(4 /* DatabaseInitialisation */, "Hierarchy built", temporaryDatabase);
+        return this.buildRelationships(temporaryDatabase).then(() => {
+          new InfoLog(4 /* DatabaseInitialisation */, "Relationships connected", temporaryDatabase);
           return;
         });
       });
@@ -5156,6 +5206,7 @@ var _Database = class extends import_obsidian18.Component {
   }
   static addHierarchy(temporaryDatabase, dataType) {
     return __async(this, null, function* () {
+      new InfoLog(4 /* DatabaseInitialisation */, "Loading hierarchy", dataType !== void 0 ? DataType[dataType] : "Elements");
       const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false, void 0);
       for (let index = 0; index < data.length; index++) {
         yield data[index].loadHierarchy(this.database);
@@ -5220,7 +5271,7 @@ var RpgManager = class extends import_obsidian19.Plugin {
   onload() {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
-      Logger.initialise(this.manifest.version);
+      yield Logger.initialise(this.manifest.version, 4 /* Error */ | 2 /* Warning */);
       yield this.loadSettings();
       (0, import_obsidian19.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
       this.addSettingTab(new RpgManagerSettingTab(this.app, this));

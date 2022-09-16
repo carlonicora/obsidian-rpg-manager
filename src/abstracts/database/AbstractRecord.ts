@@ -65,7 +65,7 @@ export abstract class AbstractRecord implements RecordInterface {
 		database: DatabaseInterface,
 	): Promise<void> {
 		if (this.type !== DataType.Campaign) {
-			this.campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(database, DataType.Campaign, this.tag);
+			this.campaign = database.readSingle<CampaignInterface>(database, DataType.Campaign, this.tag);
 		}
 	}
 
