@@ -172,16 +172,12 @@ var AbstractRecord = class {
   get image() {
     return this.app.plugins.getPlugin("rpg-manager").functions.getImg(this.name);
   }
-  getRelationships(type, isReversedRelationship = false) {
+  getRelationships(type, requiresReversedRelationship = false) {
     const response = [];
     this.relationships.forEach((data, name) => {
       if (data.component !== void 0 && (type & data.component.type) == data.component.type) {
-        if (isReversedRelationship) {
-          if (data.isInFrontmatter)
-            response.push(data.component);
-        } else {
+        if (!requiresReversedRelationship || data.isReverse)
           response.push(data.component);
-        }
       }
     });
     return response;
@@ -338,56 +334,7 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
 // src/database/DatabaseIO.ts
 var import_obsidian4 = require("obsidian");
 
-// src/modals/MisconfiguredDataModal.ts
-var import_obsidian2 = require("obsidian");
-var MisconfiguredDataModal = class extends import_obsidian2.Modal {
-  constructor(app2, misconfiguredTags, singleError = void 0) {
-    super(app2);
-    this.misconfiguredTags = misconfiguredTags;
-    this.singleError = singleError;
-  }
-  onOpen() {
-    super.onOpen();
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.createEl("h1", { cls: "error", text: "Error" });
-    if (this.misconfiguredTags !== void 0) {
-      contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
-      contentEl.createEl("p", { text: "Please double check the errors and correct them." });
-      const listEl = contentEl.createEl("ul");
-      this.misconfiguredTags.forEach((error, data) => {
-        const listItemEl = listEl.createEl("li");
-        import_obsidian2.MarkdownRenderer.renderMarkdown("**" + data.name + "**\n" + error.showErrorMessage(), listItemEl, data.path, null);
-      });
-      const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
-      actionEl.addEventListener("click", () => {
-        (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, data) => {
-          const leaf = app.workspace.getLeaf(true);
-          leaf.openFile(data.file);
-        });
-        this.close();
-      });
-    }
-    if (this.singleError !== void 0) {
-      const errorEl = contentEl.createEl("p");
-      import_obsidian2.MarkdownRenderer.renderMarkdown(this.singleError.showErrorMessage(), errorEl, "", null);
-    }
-  }
-  onClose() {
-    super.onClose();
-    const { contentEl } = this;
-    contentEl.empty();
-  }
-};
-
-// src/errors/HiddenError.ts
-var HiddenError = class extends RpgError {
-  showErrorMessage() {
-    return "";
-  }
-};
-
-// src/database/DatabaseInitialiser.ts
+// src/database/DatabaseManager.ts
 var import_obsidian3 = require("obsidian");
 
 // src/database/Database.ts
@@ -435,25 +382,94 @@ var Database = class {
   }
 };
 
-// src/database/DatabaseInitialiser.ts
+// src/errors/HiddenError.ts
+var HiddenError = class extends RpgError {
+  showErrorMessage() {
+    return "";
+  }
+};
+
+// src/modals/MisconfiguredDataModal.ts
+var import_obsidian2 = require("obsidian");
+var MisconfiguredDataModal = class extends import_obsidian2.Modal {
+  constructor(app2, misconfiguredTags, singleError = void 0) {
+    super(app2);
+    this.misconfiguredTags = misconfiguredTags;
+    this.singleError = singleError;
+  }
+  onOpen() {
+    super.onOpen();
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl("h1", { cls: "error", text: "Error" });
+    if (this.misconfiguredTags !== void 0) {
+      contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
+      contentEl.createEl("p", { text: "Please double check the errors and correct them." });
+      const listEl = contentEl.createEl("ul");
+      this.misconfiguredTags.forEach((error, data) => {
+        const listItemEl = listEl.createEl("li");
+        import_obsidian2.MarkdownRenderer.renderMarkdown("**" + data.name + "**\n" + error.showErrorMessage(), listItemEl, data.path, null);
+      });
+      const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
+      actionEl.addEventListener("click", () => {
+        (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, data) => {
+          const leaf = app.workspace.getLeaf(true);
+          leaf.openFile(data.file);
+        });
+        this.close();
+      });
+    }
+    if (this.singleError !== void 0) {
+      const errorEl = contentEl.createEl("p");
+      import_obsidian2.MarkdownRenderer.renderMarkdown(this.singleError.showErrorMessage(), errorEl, "", null);
+    }
+  }
+  onClose() {
+    super.onClose();
+    const { contentEl } = this;
+    contentEl.empty();
+  }
+};
+
+// src/database/DatabaseManager.ts
 var DatabaseInitialiser = class extends import_obsidian3.Component {
-  constructor(app2) {
+  constructor(app2, database = void 0) {
     super();
     this.app = app2;
     this.misconfiguredTags = /* @__PURE__ */ new Map();
     this.campaignSettings = /* @__PURE__ */ new Map();
-    this.database = new Database(this.app);
+    if (database !== void 0) {
+      this.database = database;
+    } else {
+      this.database = new Database(this.app);
+    }
+    this.loadCampaignSettings();
   }
   getDatabase() {
     return __async(this, null, function* () {
-      this.loadCampaignSettings();
       return this.fetch().then(() => {
-        return this.addHierarchy(1 /* Campaign */).then(() => {
-          return this.setRelationships().then(() => {
-            if (this.misconfiguredTags.size > 0)
-              new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
-            return this.database;
-          });
+        return this.refresh(true);
+      });
+    });
+  }
+  createOrUpdateFile(file) {
+    return __async(this, null, function* () {
+      return this.loadComponent(file).then((record) => {
+        if (record !== void 0)
+          this.database.update(record);
+        return this.refresh().then(() => {
+          return record;
+        });
+      });
+    });
+  }
+  refresh(isInitialising = false) {
+    return __async(this, null, function* () {
+      return this.addHierarchy(1 /* Campaign */).then(() => {
+        return this.setRelationships().then(() => {
+          if (isInitialising && this.misconfiguredTags.size > 0)
+            new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
+          return this.database;
         });
       });
     });
@@ -605,11 +621,6 @@ var DatabaseIO = class extends import_obsidian4.Component {
       this.app.workspace.trigger("rpgmanager:refresh-views");
     });
   }
-  refreshRelationships() {
-    this.database.elements.forEach((data) => {
-      data.loadRelationships(this.database);
-    });
-  }
   removeDataCache(file) {
     if (this.database.delete(file.path)) {
       this.refreshRelationships();
@@ -629,26 +640,17 @@ var DatabaseIO = class extends import_obsidian4.Component {
   }
   refreshDataCache(file) {
     return __async(this, null, function* () {
-      const databaseInitialiser = new DatabaseInitialiser(this.app);
-      const component = yield databaseInitialiser.loadComponent(file);
+      const component = yield new DatabaseInitialiser(this.app, this.database).createOrUpdateFile(file);
       if (component !== void 0) {
-        try {
-          component.loadRelationships(this.database);
-          this.database.update(component);
-        } catch (e) {
-          if (e instanceof RpgError) {
-            const isHidden = e instanceof HiddenError;
-            if (!isHidden)
-              new MisconfiguredDataModal(this.app, void 0, e).open();
-            this.database.delete(component.path);
-            return;
-          } else {
-            throw e;
-          }
-        }
+        this.app.workspace.trigger("rpgmanager:refresh-views");
       }
-      this.refreshRelationships();
-      this.app.workspace.trigger("rpgmanager:refresh-views");
+    });
+  }
+  refreshRelationships() {
+    return __async(this, null, function* () {
+      this.database.elements.forEach((data) => {
+        data.loadRelationships(this.database);
+      });
     });
   }
   readByName(database, name) {
@@ -2875,7 +2877,7 @@ var FactionModel = class extends AbstractModel {
       const response = new ResponseData();
       response.addElement(this.generateBreadcrumb());
       response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(512 /* Faction */, true)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true)));
       response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
       return response;
     });
@@ -4735,6 +4737,8 @@ var RelationshipFactory = class {
   parseContent(fileContent, isFrontMatter) {
     const response = [];
     let hasFrontmatterRelationshipStarted = false;
+    let frontmatterRelationshipLevel = 0;
+    let frontmatterRelationshipIndentation = 0;
     let hasFrontmatterReadStarted = false;
     let hasFrontmatterReadEnded = false;
     const containsFrontMatter = fileContent[0] === "---";
@@ -4772,11 +4776,16 @@ var RelationshipFactory = class {
           if (!line.startsWith(" ")) {
             hasFrontmatterRelationshipStarted = false;
           } else {
-            if (!line.trimEnd().endsWith(":")) {
-              let index = 0;
-              while (line[index] === " ") {
-                index++;
-              }
+            let index = 0;
+            while (line[index] === " ") {
+              index++;
+            }
+            if (frontmatterRelationshipIndentation > index)
+              frontmatterRelationshipLevel--;
+            if (frontmatterRelationshipIndentation < index)
+              frontmatterRelationshipLevel++;
+            frontmatterRelationshipIndentation = index;
+            if (frontmatterRelationshipLevel === 2) {
               const indexOfSeparator = line.indexOf(":");
               line = " ".repeat(index) + "[[" + line.substring(index, indexOfSeparator) + "]]" + line.substring(indexOfSeparator);
             }
@@ -5206,8 +5215,7 @@ var RpgManager = class extends import_obsidian20.Plugin {
         this.io.initialise(database);
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
-        console.log(database);
-        console.log(`RPG Manager: all outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
+        console.log(`RPG Manager: ${database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
       });
       this.registerCodeBlock();
       this.registerCommands();

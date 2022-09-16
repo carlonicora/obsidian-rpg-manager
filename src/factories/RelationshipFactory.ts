@@ -110,6 +110,8 @@ export class RelationshipFactory {
 		const response: Array<string> = [];
 
 		let hasFrontmatterRelationshipStarted = false;
+		let frontmatterRelationshipLevel = 0;
+		let frontmatterRelationshipIndentation = 0;
 
 		let hasFrontmatterReadStarted = false;
 		let hasFrontmatterReadEnded = false;
@@ -150,11 +152,16 @@ export class RelationshipFactory {
 					if (!line.startsWith(' ')) {
 						hasFrontmatterRelationshipStarted = false;
 					} else {
-						if (!line.trimEnd().endsWith(':')){
-							let index = 0;
-							while (line[index] === ' '){
-								index++;
-							}
+						let index = 0;
+						while (line[index] === ' '){
+							index++;
+						}
+
+						if (frontmatterRelationshipIndentation > index) frontmatterRelationshipLevel--;
+						if (frontmatterRelationshipIndentation < index) frontmatterRelationshipLevel++;
+						frontmatterRelationshipIndentation = index;
+
+						if (frontmatterRelationshipLevel === 2) {
 							const indexOfSeparator = line.indexOf(':');
 
 							line = ' '.repeat(index) + '[[' + line.substring(index, indexOfSeparator) + ']]' + line.substring(indexOfSeparator);

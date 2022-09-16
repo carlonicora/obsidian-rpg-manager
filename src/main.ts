@@ -15,9 +15,8 @@ import {RpgFunctions} from "./helpers/RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
-import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
+import {DatabaseManager} from "./database/DatabaseManager";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
-import {RecordInterface} from "./interfaces/database/RecordInterface";
 
 export default class RpgManager extends Plugin {
 	/*
@@ -56,16 +55,14 @@ export default class RpgManager extends Plugin {
 		this.tagManager = new TagManager(this.app);
 		this.io = new DatabaseIO(this.app);
 
-		new DatabaseInitialiser(this.app).getDatabase()
+		new DatabaseManager(this.app).initialise()
 			.then((database: DatabaseInterface) => {
 				this.io.initialise(database);
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 
-				console.log(database);
-
 				console.log(
-					`RPG Manager: all outlines and elements have been indexed in ${
+					`RPG Manager: ${database.elements.length} outlines and elements have been indexed in ${
 						(Date.now() - reloadStart) / 1000.0
 					}s.`
 				);

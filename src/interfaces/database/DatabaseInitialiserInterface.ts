@@ -3,10 +3,19 @@ import {TFile} from "obsidian";
 import {RecordInterface} from "./RecordInterface";
 
 export interface DatabaseInitialiserInterface {
-	getDatabase(
+	initialise(
 	): Promise<DatabaseInterface>;
 
-	loadComponent(
+	updateFile(
 		file: TFile,
 	): Promise<RecordInterface|undefined>;
+
+	deleteFile(
+		file: TFile
+	): Promise<void>;
+
+	renameFile(
+		file: TFile,
+		previousName: string,
+	): Promise<RecordInterface>;
 }

@@ -6,10 +6,7 @@ import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
-import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
-import {RpgError} from "../errors/RpgError";
-import {HiddenError} from "../errors/HiddenError";
-import {DatabaseInitialiser} from "./DatabaseInitialiser";
+import {DatabaseManager} from "./DatabaseManager";
 import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
@@ -36,13 +33,6 @@ export class DatabaseIO extends Component{
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
-	}
-
-	private refreshRelationships(
-	): void {
-		this.database.elements.forEach((data: RecordInterface) => {
-			data.loadRelationships(this.database)
-		});
 	}
 
 	public removeDataCache(
@@ -73,26 +63,15 @@ export class DatabaseIO extends Component{
 	public async refreshDataCache(
 		file: TFile,
 	): Promise<void> {
-		const databaseInitialiser = new DatabaseInitialiser(this.app);
-		const component = await databaseInitialiser.loadComponent(file);
+		const component = await new DatabaseManager(this.app, this.database).updateFile(file);
+		if (component !== undefined) this.app.workspace.trigger("rpgmanager:refresh-views");
+	}
 
-		if (component !== undefined){
-			try {
-				component.loadRelationships(this.database);
-				this.database.update(component);
-			} catch (e) {
-				if (e instanceof RpgError) {
-					const isHidden: boolean = e instanceof HiddenError;
-					if (!isHidden) new MisconfiguredDataModal(this.app, undefined, e).open();
-					this.database.delete(component.path);
-					return;
-				} else {
-					throw e;
-				}
-			}
-		}
-		this.refreshRelationships();
-		this.app.workspace.trigger("rpgmanager:refresh-views");
+	private async refreshRelationships(
+	): Promise<void> {
+		this.database.elements.forEach((data: RecordInterface) => {
+			data.loadRelationships(this.database)
+		});
 	}
 
 	public readByName<T extends RecordInterface>(

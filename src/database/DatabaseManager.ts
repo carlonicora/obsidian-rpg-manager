@@ -11,36 +11,60 @@ import {DatabaseInitialiserInterface} from "../interfaces/database/DatabaseIniti
 import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
 import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
 
-export class DatabaseInitialiser extends Component implements DatabaseInitialiserInterface{
+export class DatabaseManager extends Component implements DatabaseInitialiserInterface {
 	private misconfiguredTags: Map<RecordInterface, RpgErrorInterface> = new Map();
 	private campaignSettings: Map<number, CampaignSetting> = new Map();
 	private database: DatabaseInterface;
 
 	constructor(
 		private app: App,
+		database: DatabaseInterface|undefined=undefined,
 	) {
 		super();
 
-		this.database = new Database(this.app);
+		if (database !== undefined){
+			this.database = database;
+		} else {
+			this.database = new Database(this.app);
+		}
+		this.loadCampaignSettings();
 	}
 
-	public async getDatabase(
+	public async initialise(
 	): Promise<DatabaseInterface> {
-		this.loadCampaignSettings();
 		return this.fetch()
 			.then(() => {
-				return this.addHierarchy(DataType.Campaign)
+				return this.refresh(true);
+			});
+	}
+
+	public async updateFile(
+		file: TFile,
+	): Promise<RecordInterface|undefined> {
+		return this.loadComponent(file)
+			.then((record: RecordInterface) => {
+				if (record !== undefined) this.database.update(record);
+				return this.refresh()
 					.then(() => {
-						return this.setRelationships()
-							.then(() => {
-								if (this.misconfiguredTags.size > 0) new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
-								return this.database;
-							});
+						return record;
 					});
 			});
 	}
 
-	public async loadComponent(
+	private async refresh(
+		isInitialising = false,
+	): Promise<DatabaseInterface> {
+		return this.addHierarchy(DataType.Campaign)
+			.then(() => {
+				return this.setRelationships()
+					.then(() => {
+						if (isInitialising && this.misconfiguredTags.size > 0) new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
+						return this.database;
+					});
+			});
+	}
+
+	private async loadComponent(
 		file: TFile,
 	): Promise<RecordInterface|undefined> {
 		let response: RecordInterface|undefined;

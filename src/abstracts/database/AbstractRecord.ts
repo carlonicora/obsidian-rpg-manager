@@ -150,18 +150,13 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public getRelationships(
 		type: DataType,
-		isReversedRelationship = false,
+		requiresReversedRelationship = false,
 	): RecordInterface[] {
 		const response:RecordInterface[] = [];
 
 		this.relationships.forEach((data: RelationshipInterface, name: string) => {
 			if (data.component !== undefined && (type & data.component.type) == data.component.type) {
-				if (isReversedRelationship) {
-					if (data.isInFrontmatter) response.push(data.component);
-				} else {
-					response.push(data.component);
-				}
-
+				if (!requiresReversedRelationship || data.isReverse) response.push(data.component);
 			}
 		});
 
