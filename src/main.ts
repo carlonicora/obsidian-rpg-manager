@@ -10,13 +10,12 @@ import {
 } from 'obsidian';
 import {RpgController} from "./RpgController";
 import {DataType} from "./enums/DataType";
-import {DatabaseIO} from "./database/DatabaseIO";
 import {RpgFunctions} from "./helpers/RpgFunctions";
 import {RpgFactories} from "./RpgFactories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
-import {DatabaseManager} from "./database/DatabaseManager";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
+import {Database} from "./database/Database";
 
 export default class RpgManager extends Plugin {
 	/*
@@ -29,7 +28,7 @@ export default class RpgManager extends Plugin {
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;
-	io: DatabaseIO;
+	database: DatabaseInterface;
 	factories: RpgFactories;
 	tagManager: TagManager;
 
@@ -53,20 +52,19 @@ export default class RpgManager extends Plugin {
 		this.functions = new RpgFunctions(this.app);
 		this.factories = new RpgFactories(this.app);
 		this.tagManager = new TagManager(this.app);
-		this.io = new DatabaseIO(this.app);
 
-		new DatabaseManager(this.app).initialise()
+		Database.initialise(this.app)
 			.then((database: DatabaseInterface) => {
-				this.io.initialise(database);
+				this.database = database;
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 
 				console.log(
-					`RPG Manager: ${database.elements.length} outlines and elements have been indexed in ${
+					`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${
 						(Date.now() - reloadStart) / 1000.0
 					}s.`
 				);
-			});
+			})
 
 		this.registerCodeBlock();
 		this.registerCommands();

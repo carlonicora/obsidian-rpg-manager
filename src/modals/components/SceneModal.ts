@@ -14,7 +14,7 @@ export class SceneModal extends AbstractModalComponent {
 		super(app, modal);
 
 		if (this.modal.adventureId != null && this.modal.sessionId != null) {
-			this.scenes = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SceneInterface>(
+			this.scenes = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SceneInterface>(
 				undefined,
 				DataType.Scene,
 				this.modal.campaignId,

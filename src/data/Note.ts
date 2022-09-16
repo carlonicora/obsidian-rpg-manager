@@ -14,8 +14,8 @@ export class Note extends AbstractOutlineData implements NoteInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
-		const session = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SessionInterface>(database, DataType.Session, this.tag);
+		this.adventure = this.app.plugins.getPlugin('rpg-manager').database.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
+		const session = this.app.plugins.getPlugin('rpg-manager').database.readSingle<SessionInterface>(database, DataType.Session, this.tag);
 		this.sessionId = session.sessionId;
 	}
 }

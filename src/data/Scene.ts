@@ -31,18 +31,18 @@ export class Scene extends AbstractOutlineData implements SceneInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = this.app.plugins.getPlugin('rpg-manager').io.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
-		this.session = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SessionInterface>(database, DataType.Session, this.tag);
+		this.adventure = this.app.plugins.getPlugin('rpg-manager').database.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
+		this.session = this.app.plugins.getPlugin('rpg-manager').database.readSingle<SessionInterface>(database, DataType.Session, this.tag);
 
 		try {
-			this.previousScene = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId - 1);
+			this.previousScene = this.app.plugins.getPlugin('rpg-manager').database.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId - 1);
 			this.previousScene.nextScene = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextScene = this.app.plugins.getPlugin('rpg-manager').io.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId + 1);
+			this.nextScene = this.app.plugins.getPlugin('rpg-manager').database.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId + 1);
 			this.nextScene.previousScene = this;
 		} catch (e) {
 			//ignore. It can be non existing

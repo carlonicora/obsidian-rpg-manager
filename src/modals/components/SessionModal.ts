@@ -17,7 +17,7 @@ export class SessionModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.sessions = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(
+		this.sessions = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(
 			undefined,
 			DataType.Session,
 			this.modal.campaignId,

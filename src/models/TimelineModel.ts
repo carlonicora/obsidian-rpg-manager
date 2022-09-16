@@ -57,7 +57,7 @@ export class TimelineModel extends AbstractModel {
 	private addEvents(
 		timeline: TimelineResponseInterface,
 	): void {
-		const events = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<EventInterface>(
+		const events = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<EventInterface>(
 			undefined,
 			DataType.Event,
 			this.currentElement.campaign.campaignId,
@@ -84,7 +84,7 @@ export class TimelineModel extends AbstractModel {
 	private addClues(
 		timeline: TimelineResponseInterface,
 	): void {
-		const clues = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<ClueInterface>(
+		const clues = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<ClueInterface>(
 			undefined,
 			DataType.Clue,
 			this.currentElement.campaign.campaignId
@@ -108,7 +108,7 @@ export class TimelineModel extends AbstractModel {
 	private addBirths(
 		timeline: TimelineResponseInterface,
 	): void {
-		const characters = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<CharacterInterface>(
+		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(
 			undefined,
 			DataType.Character | DataType.NonPlayerCharacter,
 			this.currentElement.campaign.campaignId,
@@ -132,7 +132,7 @@ export class TimelineModel extends AbstractModel {
 	private addDeaths(
 		timeline: TimelineResponseInterface,
 	): void {
-		const characters = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<CharacterInterface>(
+		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(
 			undefined,
 			DataType.Character | DataType.NonPlayerCharacter,
 			this.currentElement.campaign.campaignId
@@ -156,7 +156,7 @@ export class TimelineModel extends AbstractModel {
 	private addSessions(
 		timeline: TimelineResponseInterface,
 	): void {
-		const sessions = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(
+		const sessions = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(
 			undefined,
 			DataType.Session,
 			this.currentElement.campaign.campaignId,

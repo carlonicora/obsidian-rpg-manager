@@ -52,7 +52,7 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian20 = require("obsidian");
+var import_obsidian19 = require("obsidian");
 
 // src/RpgController.ts
 var import_obsidian = require("obsidian");
@@ -113,7 +113,7 @@ var AbstractRecord = class {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       if (this.type !== 1 /* Campaign */) {
-        this.campaign = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 1 /* Campaign */, this.tag);
+        this.campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 1 /* Campaign */, this.tag);
       }
     });
   }
@@ -290,9 +290,10 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
     this.rendering = false;
   }
   initialise() {
-    if (!this.app.plugins.getPlugin("rpg-manager").io.isReady)
+    var _a;
+    if (((_a = this.app.plugins.getPlugin("rpg-manager")) == null ? void 0 : _a.database) !== void 0)
       return;
-    const currentElement = this.app.plugins.getPlugin("rpg-manager").io.readByName(void 0, this.sourcePath);
+    const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByName(void 0, this.sourcePath);
     if (currentElement == null) {
       this.isActive = false;
     } else {
@@ -331,394 +332,8 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
   }
 };
 
-// src/database/DatabaseIO.ts
-var import_obsidian4 = require("obsidian");
-
-// src/database/DatabaseManager.ts
-var import_obsidian3 = require("obsidian");
-
-// src/database/Database.ts
-var Database = class {
-  constructor(app2) {
-    this.app = app2;
-    this.elements = [];
-  }
-  create(data) {
-    let isNew = true;
-    for (let elementCount = 0; elementCount < this.elements.length; elementCount++) {
-      if (this.elements[elementCount].path === data.path) {
-        this.elements[elementCount] = data;
-        isNew = false;
-      }
-    }
-    if (isNew) {
-      this.elements.push(data);
-    }
-  }
-  read(query = void 0, comparison = void 0) {
-    const response = this.elements.filter(query !== null ? query : true);
-    if (comparison !== void 0) {
-      this.internalSort(response, comparison);
-    }
-    return response;
-  }
-  update(data) {
-    this.create(data);
-  }
-  delete(data) {
-    const key = typeof data === "string" ? data : data.path;
-    let index = void 0;
-    for (let dataCounter = 0; dataCounter < this.elements.length; dataCounter++) {
-      if (this.elements[dataCounter].path === key) {
-        index = dataCounter;
-        break;
-      }
-    }
-    if (index !== void 0)
-      this.elements.splice(index, 1);
-    return index !== void 0;
-  }
-  internalSort(data, comparison) {
-  }
-};
-
-// src/errors/HiddenError.ts
-var HiddenError = class extends RpgError {
-  showErrorMessage() {
-    return "";
-  }
-};
-
-// src/modals/MisconfiguredDataModal.ts
-var import_obsidian2 = require("obsidian");
-var MisconfiguredDataModal = class extends import_obsidian2.Modal {
-  constructor(app2, misconfiguredTags, singleError = void 0) {
-    super(app2);
-    this.misconfiguredTags = misconfiguredTags;
-    this.singleError = singleError;
-  }
-  onOpen() {
-    super.onOpen();
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.createEl("h1", { cls: "error", text: "Error" });
-    if (this.misconfiguredTags !== void 0) {
-      contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
-      contentEl.createEl("p", { text: "Please double check the errors and correct them." });
-      const listEl = contentEl.createEl("ul");
-      this.misconfiguredTags.forEach((error, data) => {
-        const listItemEl = listEl.createEl("li");
-        import_obsidian2.MarkdownRenderer.renderMarkdown("**" + data.name + "**\n" + error.showErrorMessage(), listItemEl, data.path, null);
-      });
-      const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
-      actionEl.addEventListener("click", () => {
-        (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, data) => {
-          const leaf = app.workspace.getLeaf(true);
-          leaf.openFile(data.file);
-        });
-        this.close();
-      });
-    }
-    if (this.singleError !== void 0) {
-      const errorEl = contentEl.createEl("p");
-      import_obsidian2.MarkdownRenderer.renderMarkdown(this.singleError.showErrorMessage(), errorEl, "", null);
-    }
-  }
-  onClose() {
-    super.onClose();
-    const { contentEl } = this;
-    contentEl.empty();
-  }
-};
-
-// src/database/DatabaseManager.ts
-var DatabaseInitialiser = class extends import_obsidian3.Component {
-  constructor(app2, database = void 0) {
-    super();
-    this.app = app2;
-    this.misconfiguredTags = /* @__PURE__ */ new Map();
-    this.campaignSettings = /* @__PURE__ */ new Map();
-    if (database !== void 0) {
-      this.database = database;
-    } else {
-      this.database = new Database(this.app);
-    }
-    this.loadCampaignSettings();
-  }
-  getDatabase() {
-    return __async(this, null, function* () {
-      return this.fetch().then(() => {
-        return this.refresh(true);
-      });
-    });
-  }
-  createOrUpdateFile(file) {
-    return __async(this, null, function* () {
-      return this.loadComponent(file).then((record) => {
-        if (record !== void 0)
-          this.database.update(record);
-        return this.refresh().then(() => {
-          return record;
-        });
-      });
-    });
-  }
-  refresh(isInitialising = false) {
-    return __async(this, null, function* () {
-      return this.addHierarchy(1 /* Campaign */).then(() => {
-        return this.setRelationships().then(() => {
-          if (isInitialising && this.misconfiguredTags.size > 0)
-            new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
-          return this.database;
-        });
-      });
-    });
-  }
-  loadComponent(file) {
-    return __async(this, null, function* () {
-      var _a;
-      let response;
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata == null)
-        return;
-      const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
-      const dataTag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(dataTags);
-      if (dataTag == void 0)
-        return;
-      const dataType = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(void 0, dataTag);
-      if (dataType === void 0)
-        return;
-      const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, dataTag);
-      const settings = this.campaignSettings.get(campaignId);
-      if (campaignId !== void 0 && settings !== void 0) {
-        response = this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, dataTag, dataType, file);
-        yield response.initialise();
-      }
-      return response;
-    });
-  }
-  loadCampaignSettings() {
-    this.app.vault.getMarkdownFiles().forEach((file) => {
-      var _a, _b, _c;
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata !== null) {
-        const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
-        if (this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(dataTags) === 1 /* Campaign */) {
-          const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, void 0, dataTags);
-          if (campaignId !== void 0) {
-            const settings = ((_b = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _b.settings) !== void 0 ? CampaignSetting[(_c = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _c.settings] : 0 /* Agnostic */;
-            this.campaignSettings.set(campaignId, settings);
-          }
-        }
-      }
-    });
-  }
-  fetch() {
-    return __async(this, null, function* () {
-      const markdownFiles = this.app.vault.getMarkdownFiles();
-      for (let index = 0; index < markdownFiles.length; index++) {
-        const data = yield this.loadComponent(markdownFiles[index]);
-        if (data !== void 0) {
-          try {
-            if (data instanceof AbstractOutlineData)
-              data.checkDuplicates(this.database);
-            this.database.create(data);
-          } catch (e) {
-            if (e instanceof RpgError) {
-              const isHidden = e instanceof HiddenError;
-              if (!isHidden)
-                this.misconfiguredTags.set(data, e);
-            } else {
-              throw e;
-            }
-          }
-        }
-      }
-    });
-  }
-  addHierarchy(dataType) {
-    return __async(this, null, function* () {
-      const query = (data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false;
-      const data = this.database.read(query, void 0);
-      for (let index = 0; index < data.length; index++) {
-        yield data[index].loadHierarchy(this.database);
-        try {
-          this.database.create(data[index]);
-        } catch (e) {
-          if (e instanceof RpgError) {
-            const isHidden = e instanceof HiddenError;
-            if (!isHidden)
-              this.misconfiguredTags.set(data[index], e);
-          } else {
-            throw e;
-          }
-        }
-      }
-      if (dataType === void 0)
-        return;
-      switch (dataType) {
-        case 1 /* Campaign */:
-          return yield this.addHierarchy(2 /* Adventure */);
-          break;
-        case 2 /* Adventure */:
-          return yield this.addHierarchy(4 /* Session */);
-          break;
-        case 4 /* Session */:
-          return yield this.addHierarchy(8 /* Scene */);
-          break;
-        case 8 /* Scene */:
-          return yield this.addHierarchy(1024 /* Note */);
-          break;
-        case 1024 /* Note */:
-          return yield this.addHierarchy(void 0);
-          break;
-        default:
-          return;
-          break;
-      }
-    });
-  }
-  setRelationships() {
-    return __async(this, null, function* () {
-      for (let index = 0; index < this.database.elements.length; index++) {
-        yield this.database.elements[index].loadRelationships(this.database);
-      }
-      for (let index = 0; index < this.database.elements.length; index++) {
-        if (!this.database.elements[index].isOutline) {
-          yield this.database.elements[index].loadReverseRelationships(this.database);
-        }
-      }
-    });
-  }
-};
-
-// src/errors/ElementNotFoundError.ts
-var ElementNotFoundError = class extends RpgError {
-  showErrorMessage() {
-    let response = super.showErrorMessage();
-    if (this.tag != void 0)
-      response += "tag: _" + this.tag + "_\n";
-    response += "**The " + DataType[this.type] + " identifier used in the tag does not exist.**\n";
-    return response;
-  }
-};
-
-// src/database/DatabaseIO.ts
-var DatabaseIO = class extends import_obsidian4.Component {
-  constructor(app2) {
-    super();
-    this.app = app2;
-    this.isReady = false;
-  }
-  initialise(database) {
-    return __async(this, null, function* () {
-      this.database = database;
-      this.isReady = true;
-      this.registerEvent(this.app.metadataCache.on("resolve", (file) => this.refreshDataCache(file)));
-      this.registerEvent(this.app.vault.on("rename", (file, oldPath) => this.renameDataCache(file, oldPath)));
-      this.registerEvent(this.app.vault.on("delete", (file) => this.removeDataCache(file)));
-      this.app.workspace.trigger("rpgmanager:index-complete");
-      this.app.workspace.trigger("rpgmanager:refresh-views");
-    });
-  }
-  removeDataCache(file) {
-    if (this.database.delete(file.path)) {
-      this.refreshRelationships();
-      this.app.workspace.trigger("rpgmanager:refresh-views");
-    }
-  }
-  renameDataCache(file, oldPath) {
-    return __async(this, null, function* () {
-      const metadata = this.app.metadataCache.getFileCache(file);
-      const data = this.database.read((data2) => data2.name === oldPath, void 0);
-      if (data.length === 1 && metadata != null) {
-        data[0].reload(file, metadata);
-        this.refreshRelationships();
-        this.app.workspace.trigger("rpgmanager:refresh-views");
-      }
-    });
-  }
-  refreshDataCache(file) {
-    return __async(this, null, function* () {
-      const component = yield new DatabaseInitialiser(this.app, this.database).createOrUpdateFile(file);
-      if (component !== void 0) {
-        this.app.workspace.trigger("rpgmanager:refresh-views");
-      }
-    });
-  }
-  refreshRelationships() {
-    return __async(this, null, function* () {
-      this.database.elements.forEach((data) => {
-        data.loadRelationships(this.database);
-      });
-    });
-  }
-  readByName(database, name) {
-    const list = (database !== void 0 ? database : this.database).read((data) => data.path === name, void 0);
-    return list.length === 1 ? list[0] : void 0;
-  }
-  readSingleParametrised(database, dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
-    const result = (database !== void 0 ? database : this.database).read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId), void 0);
-    if (result.length === 0)
-      throw new ElementNotFoundError(this.app, dataType, void 0, campaignId, adventureId, sessionId, sceneId);
-    if (result.length > 1)
-      throw new ElementDuplicatedError(this.app, dataType, void 0, campaignId, adventureId, sessionId, sceneId);
-    return result[0];
-  }
-  readSingle(database, dataType, tag, overloadId = void 0) {
-    const result = (database !== void 0 ? database : this.database).read(this.generateQuery(dataType, false, tag, overloadId), void 0);
-    if (result.length === 0)
-      throw new ElementNotFoundError(this.app, dataType, tag);
-    if (result.length > 1)
-      throw new ElementDuplicatedError(this.app, dataType, tag);
-    return result[0];
-  }
-  readListParametrised(database, dataType, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, comparison = void 0) {
-    return (database !== void 0 ? database : this.database).read(this.generateQuery(dataType, true, void 0, void 0, campaignId, adventureId, sessionId, sceneId), comparison);
-  }
-  readList(database, dataType, comparison = void 0, tag, overloadId = void 0) {
-    return (database !== void 0 ? database : this.database).read(this.generateQuery(dataType, true, tag, overloadId), comparison);
-  }
-  generateQuery(dataType, isList, tag, overloadId, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
-    if (tag !== void 0) {
-      campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, tag);
-      adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(2 /* Adventure */, tag);
-      sessionId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(4 /* Session */, tag);
-      sceneId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(8 /* Scene */, tag);
-    }
-    switch (dataType) {
-      case 1 /* Campaign */:
-        if (overloadId !== void 0)
-          campaignId = overloadId;
-        return (data) => (dataType & data.type) === data.type && (isList ? true : data.campaignId === campaignId);
-        break;
-      case 2 /* Adventure */:
-        if (overloadId !== void 0)
-          adventureId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (isList ? true : data.adventureId === adventureId);
-        break;
-      case 4 /* Session */:
-      case 1024 /* Note */:
-        if (overloadId !== void 0)
-          sessionId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && (isList ? true : data.sessionId === sessionId);
-        break;
-      case 8 /* Scene */:
-        if (overloadId !== void 0)
-          sceneId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && data.session.sessionId === sessionId && (isList ? true : data.sceneId === sceneId);
-        break;
-      default:
-        if (overloadId !== void 0)
-          campaignId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId;
-        break;
-    }
-  }
-};
-
 // src/helpers/RpgFunctions.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian2 = require("obsidian");
 var RpgFunctions = class {
   constructor(app2) {
     this.app = app2;
@@ -735,7 +350,7 @@ var RpgFunctions = class {
   fileExists(path) {
     const abstractFile = this.app.vault.getAbstractFileByPath(path);
     let response = false;
-    if (abstractFile instanceof import_obsidian5.TAbstractFile) {
+    if (abstractFile instanceof import_obsidian2.TAbstractFile) {
       response = true;
     }
     return response;
@@ -1250,15 +865,15 @@ var Scene = class extends AbstractOutlineData {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Scene.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 2 /* Adventure */, this.tag);
-      this.session = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 4 /* Session */, this.tag);
+      this.adventure = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 2 /* Adventure */, this.tag);
+      this.session = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag);
       try {
-        this.previousScene = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 8 /* Scene */, this.tag, this.sceneId - 1);
+        this.previousScene = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId - 1);
         this.previousScene.nextScene = this;
       } catch (e) {
       }
       try {
-        this.nextScene = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 8 /* Scene */, this.tag, this.sceneId + 1);
+        this.nextScene = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId + 1);
         this.nextScene.previousScene = this;
       } catch (e) {
       }
@@ -1432,7 +1047,7 @@ var AbtPlotComponent = class extends AbstractComponent {
       if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
         return null;
       const response = new ResponseTable(this.app);
-      if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 4 /* Session */, data.campaign.campaignId, data.adventureId).length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
+      if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, data.campaign.campaignId, data.adventureId).length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
         response.create = 2 /* Adventure */;
         response.campaignId = data.campaign.campaignId;
         response.adventureId = data.adventureId;
@@ -1787,11 +1402,11 @@ var StringContent = class extends AbstractContent {
 };
 
 // src/data/content/LinkContent.ts
-var import_obsidian6 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 var LinkContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian6.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian3.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1806,11 +1421,11 @@ var NumberContent = class extends AbstractContent {
 };
 
 // src/data/content/ObjectContent.ts
-var import_obsidian7 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 var ObjectContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian7.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
+      import_obsidian4.MarkdownRenderer.renderMarkdown(this.content.toString(), container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1818,11 +1433,11 @@ var ObjectContent = class extends AbstractContent {
 };
 
 // src/data/content/MarkdownContent.ts
-var import_obsidian8 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 var MarkdownContent = class extends AbstractContent {
   fillContent(container, sourcePath) {
     if (this.content != null) {
-      import_obsidian8.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
+      import_obsidian5.MarkdownRenderer.renderMarkdown(this.content, container, sourcePath, null);
     } else {
       container.textContent = "";
     }
@@ -1888,19 +1503,19 @@ var Session = class extends AbstractOutlineData {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Session.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 2 /* Adventure */, this.tag);
+      this.adventure = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 2 /* Adventure */, this.tag);
       try {
-        this.previousSession = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 4 /* Session */, this.tag, this.sessionId - 1);
+        this.previousSession = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag, this.sessionId - 1);
         this.previousSession.nextSession = this;
       } catch (e) {
       }
       try {
-        this.nextSession = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 4 /* Session */, this.tag, this.sessionId + 1);
+        this.nextSession = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag, this.sessionId + 1);
         this.nextSession.previousSession = this;
       } catch (e) {
       }
       try {
-        this.note = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 1024 /* Note */, this.tag);
+        this.note = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 1024 /* Note */, this.tag);
       } catch (e) {
       }
     });
@@ -1916,8 +1531,8 @@ var Note = class extends AbstractOutlineData {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Note.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 2 /* Adventure */, this.tag);
-      const session = this.app.plugins.getPlugin("rpg-manager").io.readSingle(database, 4 /* Session */, this.tag);
+      this.adventure = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 2 /* Adventure */, this.tag);
+      const session = this.app.plugins.getPlugin("rpg-manager").database.readSingle(database, 4 /* Session */, this.tag);
       this.sessionId = session.sessionId;
     });
   }
@@ -1982,13 +1597,13 @@ var ErrorFactory = class extends AbstractFactory {
 };
 
 // src/factories/FileFactory.ts
-var import_obsidian9 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 var FileFactory = class extends AbstractFactory {
   create(settings, type, create, templateName, name, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, additionalInformation = null) {
     return __async(this, null, function* () {
       let folder = "/";
       if (campaignId != null) {
-        const campaign = this.app.plugins.getPlugin("rpg-manager").io.readSingleParametrised(void 0, 1 /* Campaign */, campaignId);
+        const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(void 0, 1 /* Campaign */, campaignId);
         if (campaign !== void 0) {
           settings = campaign.settings;
           folder = campaign.folder;
@@ -2008,14 +1623,14 @@ var FileFactory = class extends AbstractFactory {
   createNewFile(data, fileName) {
     return __async(this, null, function* () {
       const newFile = yield app.vault.create(fileName, data);
-      const currentLeaf = app.workspace.getActiveViewOfType(import_obsidian9.MarkdownView);
+      const currentLeaf = app.workspace.getActiveViewOfType(import_obsidian6.MarkdownView);
       const leaf = app.workspace.getLeaf(currentLeaf != null);
       yield leaf.openFile(newFile);
     });
   }
   editExistingFile(data, fileName) {
     return __async(this, null, function* () {
-      const activeView = app.workspace.getActiveViewOfType(import_obsidian9.MarkdownView);
+      const activeView = app.workspace.getActiveViewOfType(import_obsidian6.MarkdownView);
       if (activeView != null) {
         const editor = activeView.editor;
         editor.setValue(data + "\n" + editor.getValue());
@@ -2030,7 +1645,7 @@ var FileFactory = class extends AbstractFactory {
     return __async(this, null, function* () {
       let folder = "/";
       let settings = 0 /* Agnostic */;
-      const campaign = this.app.plugins.getPlugin("rpg-manager").io.readSingleParametrised(void 0, 1 /* Campaign */, campaignId);
+      const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(void 0, 1 /* Campaign */, campaignId);
       if (campaign !== void 0) {
         settings = campaign.settings;
         folder = campaign.folder;
@@ -2087,7 +1702,7 @@ var AbstractModalComponent = class {
 var CampaignModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
-    this.campaigns = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 1 /* Campaign */);
+    this.campaigns = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 1 /* Campaign */);
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2207,7 +1822,7 @@ var CampaignModal = class extends AbstractModalComponent {
 var AdventureModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
-    this.adventures = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 2 /* Adventure */, this.modal.campaignId);
+    this.adventures = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 2 /* Adventure */, this.modal.campaignId);
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2292,7 +1907,7 @@ var AdventureModal = class extends AbstractModalComponent {
 var SessionModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
-    this.sessions = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 4 /* Session */, this.modal.campaignId, this.modal.adventureId);
+    this.sessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, this.modal.campaignId, this.modal.adventureId);
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -2377,7 +1992,7 @@ var SceneModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
     if (this.modal.adventureId != null && this.modal.sessionId != null) {
-      this.scenes = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 8 /* Scene */, this.modal.campaignId, this.modal.adventureId, this.modal.sessionId);
+      this.scenes = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 8 /* Scene */, this.modal.campaignId, this.modal.adventureId, this.modal.sessionId);
     } else {
       this.scenes = [];
     }
@@ -2659,7 +2274,7 @@ var AbstractModel = class {
       const newSceneId = scene.sceneId + 1;
       fileFactory.silentCreate(8 /* Scene */, "s" + (scene.session.sessionId < 10 ? "0" + scene.session.sessionId.toString() : scene.session.sessionId.toString()) + "e" + (newSceneId < 10 ? "0" + newSceneId.toString() : newSceneId.toString()), scene.campaign.campaignId, scene.adventure.adventureId, scene.session.sessionId, newSceneId);
     };
-    this.io = this.app.plugins.getPlugin("rpg-manager").io;
+    this.io = this.app.plugins.getPlugin("rpg-manager").database;
   }
   generateBreadcrumb() {
     const response = this.generateElementBreadcrumb(null, 1 /* Campaign */, this.currentElement.campaign);
@@ -2906,7 +2521,7 @@ var NoteModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId)));
       return response;
     });
   }
@@ -2977,7 +2592,7 @@ var SessionModel = class extends AbstractModel {
     return __async(this, null, function* () {
       const response = new ResponseData();
       response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.currentElement.getRelationships(4096 /* Music */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId)));
+      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId)));
       return response;
     });
   }
@@ -3056,7 +2671,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addEvents(timeline) {
-    const events = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 128 /* Event */, this.currentElement.campaign.campaignId);
+    const events = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 128 /* Event */, this.currentElement.campaign.campaignId);
     events.filter((data) => data.date != null).forEach((event) => {
       var _a;
       if (event.date != null) {
@@ -3067,7 +2682,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addClues(timeline) {
-    const clues = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 256 /* Clue */, this.currentElement.campaign.campaignId);
+    const clues = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 256 /* Clue */, this.currentElement.campaign.campaignId);
     clues.filter((data) => data.isFound === true).forEach((clue) => {
       var _a;
       if (clue.found != null) {
@@ -3076,7 +2691,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addBirths(timeline) {
-    const characters = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
     characters.filter((data) => data.dob != null).forEach((character) => {
       var _a;
       if (character.dob != null) {
@@ -3085,7 +2700,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addDeaths(timeline) {
-    const characters = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
     characters.filter((data) => data.death != null).forEach((character) => {
       var _a;
       if (character.death != null) {
@@ -3094,7 +2709,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addSessions(timeline) {
-    const sessions = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 4 /* Session */, this.currentElement.campaign.campaignId);
+    const sessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, this.currentElement.campaign.campaignId);
     sessions.filter((data) => data.date != null).forEach((session) => {
       var _a;
       if (session.date != null) {
@@ -3268,10 +2883,10 @@ var PronounFactory = class extends AbstractFactory {
 };
 
 // src/abstracts/AbstractTemplateFactory.ts
-var import_obsidian11 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 
 // src/helpers/FileContentManager.ts
-var import_obsidian10 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 var FileContentManager = class {
   constructor(app2, templateFileName) {
     this.app = app2;
@@ -3311,7 +2926,7 @@ var FileContentManager = class {
         }
       });
       if (frontmatterContent !== "") {
-        this.templateFrontMatter = (0, import_obsidian10.parseYaml)(frontmatterContent);
+        this.templateFrontMatter = (0, import_obsidian7.parseYaml)(frontmatterContent);
       }
     });
   }
@@ -3460,7 +3075,7 @@ var EventTemplate = class extends AbstractTemplate {
 // src/templates/NoteTemplate.ts
 var NoteTemplate = class extends AbstractTemplate {
   getContent() {
-    const characters = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.campaignId);
     let possibleRecappers = "";
     (characters || []).forEach((character) => {
       possibleRecappers += character.link + "/";
@@ -3570,7 +3185,7 @@ var AbstractTemplateFactory = class {
   }
   generateResponse(frontmatter, initialCodeBlock, mainContent, lastCodeBlock) {
     let response = "";
-    const frontmatterString = (0, import_obsidian11.stringifyYaml)(frontmatter);
+    const frontmatterString = (0, import_obsidian8.stringifyYaml)(frontmatter);
     const frontmatterParsedString = frontmatterString.replaceAll("{}", "");
     response = "---\n" + frontmatterParsedString + "\n---\n";
     if (initialCodeBlock !== void 0)
@@ -3638,7 +3253,7 @@ var AbstractTemplateFactory = class {
 };
 
 // src/helpers/RpgCodeBlock.ts
-var import_obsidian12 = require("obsidian");
+var import_obsidian9 = require("obsidian");
 var RpgCodeBlock = class {
   constructor(model, additionalInformation = void 0) {
     this.model = model;
@@ -3648,7 +3263,7 @@ var RpgCodeBlock = class {
     let response = "```RpgManager\n";
     response += this.model + "\n";
     if (this.additionalInformation !== void 0) {
-      response += (0, import_obsidian12.stringifyYaml)(this.additionalInformation);
+      response += (0, import_obsidian9.stringifyYaml)(this.additionalInformation);
     }
     response += "```\n";
     return response;
@@ -4038,10 +3653,10 @@ var TableView = class extends AbstractView {
           createButtonEl.textContent = "Create session from Adventure Plot";
           createButtonEl.addEventListener("click", () => {
             if (data.campaignId !== void 0 && data.adventureId !== void 0) {
-              const previousAdventure = this.app.plugins.getPlugin("rpg-manager").io.readSingleParametrised(void 0, 2 /* Adventure */, data.campaignId, data.adventureId - 1);
+              const previousAdventure = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(void 0, 2 /* Adventure */, data.campaignId, data.adventureId - 1);
               let nextSessionId = 1;
               if (previousAdventure != null) {
-                const previousAdventureSessions = this.app.plugins.getPlugin("rpg-manager").io.readListParametrised(void 0, 4 /* Session */, data.campaignId, previousAdventure.adventureId);
+                const previousAdventureSessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, data.campaignId, previousAdventure.adventureId);
                 previousAdventureSessions.forEach((session) => {
                   if (nextSessionId <= session.sessionId)
                     nextSessionId = session.sessionId + 1;
@@ -4108,7 +3723,7 @@ var BannerView = class extends AbstractView {
 };
 
 // src/views/BoxView.ts
-var import_obsidian13 = require("obsidian");
+var import_obsidian10 = require("obsidian");
 var BoxView = class extends AbstractView {
   render(container, data) {
     const boxDiv = container.createDiv();
@@ -4117,12 +3732,12 @@ var BoxView = class extends AbstractView {
     const boxTitle = boxDiv.createDiv();
     boxTitle.addClass("title");
     boxTitle.innerText = data.title;
-    import_obsidian13.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
+    import_obsidian10.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
   }
 };
 
 // src/views/BreadcrumbView.ts
-var import_obsidian14 = require("obsidian");
+var import_obsidian11 = require("obsidian");
 var BreadcrumbView = class extends AbstractView {
   render(container, data) {
     const breadcrumbContainer = container.createDiv({ cls: "rpgm-breadcrumb" });
@@ -4159,7 +3774,7 @@ var BreadcrumbView = class extends AbstractView {
           link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
         }
       }
-      import_obsidian14.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
+      import_obsidian11.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
     }
     if (data.nextBreadcrumb != null) {
       if (data.nextBreadcrumb.isInNewLine === false) {
@@ -4176,7 +3791,7 @@ var BreadcrumbView = class extends AbstractView {
 };
 
 // src/views/TimelineView.ts
-var import_obsidian15 = require("obsidian");
+var import_obsidian12 = require("obsidian");
 var TimelineView = class extends AbstractView {
   render(container, data) {
     const timeline = container.createDiv({ cls: "rpgm-timeline" });
@@ -4208,8 +3823,8 @@ var TimelineView = class extends AbstractView {
       const details = li.createDiv({ cls: "event-details" });
       const fileLink = details.createEl("h3");
       const synopsis = details.createSpan();
-      import_obsidian15.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
-      import_obsidian15.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
+      import_obsidian12.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
+      import_obsidian12.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
     });
   }
 };
@@ -4309,7 +3924,7 @@ var StoryCirclePlotView = class extends AbstractView {
 };
 
 // src/settings/Raw/modals/RawDiceRollerModal.ts
-var import_obsidian16 = require("obsidian");
+var import_obsidian13 = require("obsidian");
 
 // src/settings/Raw/enums/RawRollResult.ts
 var RawRollResult = /* @__PURE__ */ ((RawRollResult2) => {
@@ -4361,7 +3976,7 @@ var DiceRollerHelper = class {
 };
 
 // src/settings/Raw/modals/RawDiceRollerModal.ts
-var RawDiceRollerModal = class extends import_obsidian16.Modal {
+var RawDiceRollerModal = class extends import_obsidian13.Modal {
   constructor(app2, ability) {
     super(app2);
     this.ability = ability;
@@ -4396,11 +4011,11 @@ var RawDiceRollerModal = class extends import_obsidian16.Modal {
 };
 
 // src/settings/Raw/views/RawCharacterRecordSheetView.ts
-var import_obsidian18 = require("obsidian");
+var import_obsidian15 = require("obsidian");
 
 // src/settings/Raw/modals/RawUpdateRollerModal.ts
-var import_obsidian17 = require("obsidian");
-var RawUpdateRollerModal = class extends import_obsidian17.Modal {
+var import_obsidian14 = require("obsidian");
+var RawUpdateRollerModal = class extends import_obsidian14.Modal {
   constructor(app2, ability, initialAbilityValue, updateRoll) {
     super(app2);
     this.ability = ability;
@@ -4485,7 +4100,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
   upgradeStats(ability, valueEl) {
     return __async(this, null, function* () {
       var _a;
-      const activeView = app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView);
+      const activeView = app.workspace.getActiveViewOfType(import_obsidian15.MarkdownView);
       if (activeView != null) {
         const editor = activeView.editor;
         const file = activeView.file;
@@ -4515,7 +4130,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
                   ch: 0
                 };
                 const range = editor.getRange(start, end);
-                const yaml = (_a2 = (0, import_obsidian18.parseYaml)(range)) != null ? _a2 : {};
+                const yaml = (_a2 = (0, import_obsidian15.parseYaml)(range)) != null ? _a2 : {};
                 if (((_c = (_b = yaml == null ? void 0 : yaml.raw) == null ? void 0 : _b.character) == null ? void 0 : _c.id) != null) {
                 } else {
                   if (yaml.length === 0 || (yaml == null ? void 0 : yaml.raw) == null) {
@@ -4539,7 +4154,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
                   } else {
                     this.updateAbilityValue(ability, yaml);
                   }
-                  editor.replaceRange((0, import_obsidian18.stringifyYaml)(yaml), start, end);
+                  editor.replaceRange((0, import_obsidian15.stringifyYaml)(yaml), start, end);
                 }
               }
               new RawUpdateRollerModal(this.app, ability, initialAbilityValue, upgradeRoll).open();
@@ -4821,8 +4436,8 @@ var RpgFactories = class {
 };
 
 // src/modals/CreationModal.ts
-var import_obsidian19 = require("obsidian");
-var CreationModal = class extends import_obsidian19.Modal {
+var import_obsidian16 = require("obsidian");
+var CreationModal = class extends import_obsidian16.Modal {
   constructor(app2, type, create = true, name = null, campaignId = null, adventureId = null, sessionId = null) {
     super(app2);
     this.app = app2;
@@ -4861,7 +4476,7 @@ var CreationModal = class extends import_obsidian19.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("rpgm-modal");
-    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian19.MarkdownView) == null) {
+    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian16.MarkdownView) == null) {
       contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Error" });
       contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
       return;
@@ -5189,8 +4804,385 @@ var TagManager = class {
   }
 };
 
+// src/database/Database.ts
+var import_obsidian18 = require("obsidian");
+
+// src/modals/MisconfiguredDataModal.ts
+var import_obsidian17 = require("obsidian");
+var MisconfiguredDataModal = class extends import_obsidian17.Modal {
+  constructor(app2, misconfiguredTags, singleError = void 0) {
+    super(app2);
+    this.misconfiguredTags = misconfiguredTags;
+    this.singleError = singleError;
+  }
+  onOpen() {
+    super.onOpen();
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl("h1", { cls: "error", text: "Error" });
+    if (this.misconfiguredTags !== void 0) {
+      contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
+      contentEl.createEl("p", { text: "Please double check the errors and correct them." });
+      const listEl = contentEl.createEl("ul");
+      this.misconfiguredTags.forEach((error, data) => {
+        const listItemEl = listEl.createEl("li");
+        import_obsidian17.MarkdownRenderer.renderMarkdown("**" + data.name + "**\n" + error.showErrorMessage(), listItemEl, data.path, null);
+      });
+      const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
+      actionEl.addEventListener("click", () => {
+        (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, data) => {
+          const leaf = app.workspace.getLeaf(true);
+          leaf.openFile(data.file);
+        });
+        this.close();
+      });
+    }
+    if (this.singleError !== void 0) {
+      const errorEl = contentEl.createEl("p");
+      import_obsidian17.MarkdownRenderer.renderMarkdown(this.singleError.showErrorMessage(), errorEl, "", null);
+    }
+  }
+  onClose() {
+    super.onClose();
+    const { contentEl } = this;
+    contentEl.empty();
+  }
+};
+
+// src/errors/HiddenError.ts
+var HiddenError = class extends RpgError {
+  showErrorMessage() {
+    return "";
+  }
+};
+
+// src/errors/ElementNotFoundError.ts
+var ElementNotFoundError = class extends RpgError {
+  showErrorMessage() {
+    let response = super.showErrorMessage();
+    if (this.tag != void 0)
+      response += "tag: _" + this.tag + "_\n";
+    response += "**The " + DataType[this.type] + " identifier used in the tag does not exist.**\n";
+    return response;
+  }
+};
+
+// src/database/Database.ts
+var _Database = class extends import_obsidian18.Component {
+  constructor(app2) {
+    super();
+    this.app = app2;
+    this.elements = [];
+  }
+  static initialise(app2) {
+    return __async(this, null, function* () {
+      this.app = app2;
+      this.misconfiguredTags = yield /* @__PURE__ */ new Map();
+      this.database = yield new _Database(this.app);
+      const temporaryDatabase = yield new _Database(this.app);
+      console.log("Database", "initialisation start");
+      const markdownFiles = app2.vault.getMarkdownFiles();
+      for (let index = 0; index < markdownFiles.length; index++) {
+        const data = yield this.createComponent(markdownFiles[index]);
+        if (data !== void 0) {
+          try {
+            if (data instanceof AbstractOutlineData)
+              yield data.checkDuplicates(temporaryDatabase);
+            temporaryDatabase.create(data);
+          } catch (e) {
+            if (e instanceof RpgError) {
+              const isHidden = e instanceof HiddenError;
+              if (!isHidden)
+                this.misconfiguredTags.set(data, e);
+            } else {
+              throw e;
+            }
+          }
+        }
+      }
+      console.log("Database", "Temporary database initialised", temporaryDatabase);
+      yield this.buildHierarchyAndRelationships(temporaryDatabase);
+      if (this.misconfiguredTags.size > 0) {
+        new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
+      }
+      return this.database;
+    });
+  }
+  ready() {
+    return __async(this, null, function* () {
+      this.registerEvent(this.app.metadataCache.on("resolve", (file) => this.onSave(file)));
+      this.registerEvent(this.app.vault.on("rename", (file, oldPath) => this.onRename(file, oldPath)));
+      this.registerEvent(this.app.vault.on("delete", (file) => this.onDelete(file)));
+      this.app.workspace.trigger("rpgmanager:index-complete");
+      this.app.workspace.trigger("rpgmanager:refresh-views");
+    });
+  }
+  create(data) {
+    let isNew = true;
+    for (let elementCount = 0; elementCount < this.elements.length; elementCount++) {
+      if (this.elements[elementCount].path === data.path) {
+        this.elements[elementCount] = data;
+        isNew = false;
+      }
+    }
+    if (isNew) {
+      this.elements.push(data);
+    }
+  }
+  read(query = void 0, comparison = void 0) {
+    const response = this.elements.filter(query !== null ? query : true);
+    if (comparison !== void 0) {
+      this.internalSort(response, comparison);
+    }
+    return response;
+  }
+  update(data) {
+    this.create(data);
+  }
+  delete(data) {
+    const key = typeof data === "string" ? data : data.path;
+    let index = void 0;
+    for (let dataCounter = 0; dataCounter < this.elements.length; dataCounter++) {
+      if (this.elements[dataCounter].path === key) {
+        index = dataCounter;
+        break;
+      }
+    }
+    if (index !== void 0)
+      this.elements.splice(index, 1);
+    return index !== void 0;
+  }
+  internalSort(data, comparison) {
+  }
+  readByName(database, name) {
+    const list = (database !== void 0 ? database : this).read((data) => data.path === name, void 0);
+    return list.length === 1 ? list[0] : void 0;
+  }
+  readSingleParametrised(database, dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
+    const result = (database !== void 0 ? database : this).read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId), void 0);
+    if (result.length === 0)
+      throw new ElementNotFoundError(this.app, dataType, void 0, campaignId, adventureId, sessionId, sceneId);
+    if (result.length > 1)
+      throw new ElementDuplicatedError(this.app, dataType, void 0, campaignId, adventureId, sessionId, sceneId);
+    return result[0];
+  }
+  readSingle(database, dataType, tag, overloadId = void 0) {
+    const result = (database !== void 0 ? database : this).read(this.generateQuery(dataType, false, tag, overloadId), void 0);
+    if (result.length === 0)
+      throw new ElementNotFoundError(this.app, dataType, tag);
+    if (result.length > 1)
+      throw new ElementDuplicatedError(this.app, dataType, tag);
+    return result[0];
+  }
+  readListParametrised(database, dataType, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, comparison = void 0) {
+    return (database !== void 0 ? database : this).read(this.generateQuery(dataType, true, void 0, void 0, campaignId, adventureId, sessionId, sceneId), comparison);
+  }
+  readList(database, dataType, comparison = void 0, tag, overloadId = void 0) {
+    return (database !== void 0 ? database : this).read(this.generateQuery(dataType, true, tag, overloadId), comparison);
+  }
+  onDelete(file) {
+    return __async(this, null, function* () {
+      if (this.delete(file.path)) {
+        this.refreshRelationships();
+        this.app.workspace.trigger("rpgmanager:refresh-views");
+      }
+    });
+  }
+  onRename(file, oldPath) {
+    return __async(this, null, function* () {
+      const metadata = this.app.metadataCache.getFileCache(file);
+      const data = this.read((data2) => data2.name === oldPath, void 0);
+      if (data.length === 1 && metadata != null) {
+        data[0].reload(file, metadata);
+        this.refreshRelationships();
+        this.app.workspace.trigger("rpgmanager:refresh-views");
+      }
+    });
+  }
+  onSave(file) {
+    return __async(this, null, function* () {
+      const recordset = this.read((data) => data.name === file.path, void 0);
+      let component = this.readByName(this, file.path);
+      if (component === void 0) {
+        try {
+          component = yield _Database.createComponent(file);
+          if (component !== void 0) {
+            if (component instanceof AbstractOutlineData) {
+              component.checkDuplicates(this);
+              component.loadHierarchy(this);
+            }
+            this.create(component);
+          }
+        } catch (e) {
+          if (e instanceof RpgError) {
+            const isHidden = e instanceof HiddenError;
+            if (!isHidden)
+              new MisconfiguredDataModal(this.app, void 0, e).open();
+          } else {
+            throw e;
+          }
+          return;
+        }
+        yield this.refreshRelationships();
+        this.app.workspace.trigger("rpgmanager:refresh-views");
+      }
+    });
+  }
+  refreshRelationships() {
+    return __async(this, null, function* () {
+      for (let index = 0; index < this.elements.length; index++) {
+        yield this.elements[index].loadRelationships(this);
+      }
+      for (let index = 0; index < this.elements.length; index++) {
+        if (!this.elements[index].isOutline)
+          yield this.elements[index].loadReverseRelationships(this);
+      }
+    });
+  }
+  generateQuery(dataType, isList, tag, overloadId, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
+    if (tag !== void 0) {
+      campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, tag);
+      adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(2 /* Adventure */, tag);
+      sessionId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(4 /* Session */, tag);
+      sceneId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(8 /* Scene */, tag);
+    }
+    switch (dataType) {
+      case 1 /* Campaign */:
+        if (overloadId !== void 0)
+          campaignId = overloadId;
+        return (data) => (dataType & data.type) === data.type && (isList ? true : data.campaignId === campaignId);
+        break;
+      case 2 /* Adventure */:
+        if (overloadId !== void 0)
+          adventureId = overloadId;
+        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (isList ? true : data.adventureId === adventureId);
+        break;
+      case 4 /* Session */:
+      case 1024 /* Note */:
+        if (overloadId !== void 0)
+          sessionId = overloadId;
+        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && (isList ? true : data.sessionId === sessionId);
+        break;
+      case 8 /* Scene */:
+        if (overloadId !== void 0)
+          sceneId = overloadId;
+        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && data.session.sessionId === sessionId && (isList ? true : data.sceneId === sceneId);
+        break;
+      default:
+        if (overloadId !== void 0)
+          campaignId = overloadId;
+        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId;
+        break;
+    }
+  }
+  static loadCampaignSettings() {
+    this.app.vault.getMarkdownFiles().forEach((file) => {
+      var _a, _b, _c;
+      const metadata = this.app.metadataCache.getFileCache(file);
+      if (metadata !== null) {
+        const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
+        if (this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(dataTags) === 1 /* Campaign */) {
+          const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, void 0, dataTags);
+          if (campaignId !== void 0) {
+            const settings = ((_b = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _b.settings) !== void 0 ? CampaignSetting[(_c = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _c.settings] : 0 /* Agnostic */;
+            this.campaignSettings.set(campaignId, settings);
+          }
+        }
+      }
+    });
+  }
+  static createComponent(file) {
+    return __async(this, null, function* () {
+      var _a;
+      let response;
+      const metadata = this.app.metadataCache.getFileCache(file);
+      console.log("Database", "Component creation", "TFile metadata read", metadata);
+      if (metadata == null)
+        return;
+      const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
+      const dataTag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(dataTags);
+      if (dataTag == void 0)
+        return;
+      const dataType = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(void 0, dataTag);
+      if (dataType === void 0)
+        return;
+      const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, dataTag);
+      const settings = this.campaignSettings.get(campaignId);
+      if (campaignId !== void 0 && settings !== void 0) {
+        response = this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, dataTag, dataType, file);
+        yield response.initialise();
+      }
+      return response;
+    });
+  }
+  static buildHierarchyAndRelationships(temporaryDatabase) {
+    return __async(this, null, function* () {
+      return this.addHierarchy(temporaryDatabase, 1 /* Campaign */).then(() => {
+        return this.buildRelationships(this.database).then(() => {
+          return;
+        });
+      });
+    });
+  }
+  static addHierarchy(temporaryDatabase, dataType) {
+    return __async(this, null, function* () {
+      const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false, void 0);
+      for (let index = 0; index < data.length; index++) {
+        yield data[index].loadHierarchy(this.database);
+        try {
+          this.database.create(data[index]);
+        } catch (e) {
+          if (e instanceof RpgError) {
+            const isHidden = e instanceof HiddenError;
+            if (!isHidden)
+              this.misconfiguredTags.set(data[index], e);
+          } else {
+            throw e;
+          }
+        }
+      }
+      if (dataType === void 0)
+        return;
+      switch (dataType) {
+        case 1 /* Campaign */:
+          return yield this.addHierarchy(temporaryDatabase, 2 /* Adventure */);
+          break;
+        case 2 /* Adventure */:
+          return yield this.addHierarchy(temporaryDatabase, 4 /* Session */);
+          break;
+        case 4 /* Session */:
+          return yield this.addHierarchy(temporaryDatabase, 8 /* Scene */);
+          break;
+        case 8 /* Scene */:
+          return yield this.addHierarchy(temporaryDatabase, 1024 /* Note */);
+          break;
+        case 1024 /* Note */:
+          return yield this.addHierarchy(temporaryDatabase, void 0);
+          break;
+        default:
+          return;
+          break;
+      }
+    });
+  }
+  static buildRelationships(database) {
+    return __async(this, null, function* () {
+      for (let index = 0; index < database.elements.length; index++) {
+        yield database.elements[index].loadRelationships(database);
+      }
+      for (let index = 0; index < database.elements.length; index++) {
+        if (!database.elements[index].isOutline)
+          yield database.elements[index].loadReverseRelationships(database);
+      }
+    });
+  }
+};
+var Database = _Database;
+Database.campaignSettings = /* @__PURE__ */ new Map();
+Database.misconfiguredTags = /* @__PURE__ */ new Map();
+
 // src/main.ts
-var RpgManager = class extends import_obsidian20.Plugin {
+var RpgManager = class extends import_obsidian19.Plugin {
   constructor() {
     super(...arguments);
     this.ready = false;
@@ -5199,7 +5191,7 @@ var RpgManager = class extends import_obsidian20.Plugin {
     return __async(this, null, function* () {
       console.log("Loading RpgManager " + this.manifest.version);
       yield this.loadSettings();
-      (0, import_obsidian20.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
+      (0, import_obsidian19.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
       this.addSettingTab(new RpgManagerSettingTab(this.app, this));
       app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     });
@@ -5210,12 +5202,11 @@ var RpgManager = class extends import_obsidian20.Plugin {
       this.functions = new RpgFunctions(this.app);
       this.factories = new RpgFactories(this.app);
       this.tagManager = new TagManager(this.app);
-      this.io = new DatabaseIO(this.app);
-      new DatabaseInitialiser(this.app).getDatabase().then((database) => {
-        this.io.initialise(database);
+      Database.initialise(this.app).then((database) => {
+        this.database = database;
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
-        console.log(`RPG Manager: ${database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
+        console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
       });
       this.registerCodeBlock();
       this.registerCommands();
@@ -5303,7 +5294,7 @@ var DEFAULT_SETTINGS = {
   musicTag: "rpgm/element/music",
   YouTubeKey: ""
 };
-var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
+var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
   constructor(app2, plugin) {
     super(app2, plugin);
     this.plugin = plugin;
@@ -5311,9 +5302,9 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
   fillOptionsWithFolders(dropdown, parent = void 0) {
     let folderList = [];
     if (parent != void 0) {
-      folderList = parent.children.filter((file) => file instanceof import_obsidian20.TFolder);
+      folderList = parent.children.filter((file) => file instanceof import_obsidian19.TFolder);
     } else {
-      folderList = this.app.vault.getRoot().children.filter((file) => file instanceof import_obsidian20.TFolder);
+      folderList = this.app.vault.getRoot().children.filter((file) => file instanceof import_obsidian19.TFolder);
     }
     folderList.forEach((folder) => {
       dropdown.addOption(folder.path, folder.path);
@@ -5330,7 +5321,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian20.Setting(this.containerEl).setName("Templates folder").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("Templates folder").setDesc(createFragment((frag) => {
       frag.appendText("Select the folder in which you keep the templates for RPG Manager.");
       frag.createEl("br");
       frag.appendText("If you leave this value empty, the creation of outlines and elements won't have any additional information apart from the frontmatter and the codeblocks");
@@ -5350,7 +5341,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian20.Setting(this.containerEl).setName("Auto Organisation of Notes").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("Auto Organisation of Notes").setDesc(createFragment((frag) => {
       frag.createEl("br");
       frag.appendText("RPG Manager automatically organise created or filled outlines and elements in separate folders.");
       frag.createEl("br");
@@ -5368,7 +5359,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian20.Setting(this.containerEl).setName("YouTube API Key").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("YouTube API Key").setDesc(createFragment((frag) => {
       frag.appendText("If you want to use the automation included in the `Music` element through YouTube, please generate a YouTube Api Key and add it here");
       frag.createEl("br");
       frag.appendText("To generate your YouTube Api key you can follow the instructions in ");
@@ -5391,7 +5382,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
       frag.createEl("span");
       frag.appendText(" ");
     }) });
-    new import_obsidian20.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("Campaign Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying the campaign");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -5402,7 +5393,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
         return;
       yield this.plugin.updateSettings({ campaignTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("Adventure Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying an Adventure");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -5413,7 +5404,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
         return;
       yield this.plugin.updateSettings({ adventureTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("Session Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Session");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -5424,7 +5415,7 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
         return;
       yield this.plugin.updateSettings({ sessionTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
+    new import_obsidian19.Setting(this.containerEl).setName("Scenes Outline Tag").setDesc(createFragment((frag) => {
       frag.appendText("The tag identifying a Scene");
       frag.createEl("br");
       frag.appendText("Required ids:");
@@ -5445,47 +5436,47 @@ var RpgManagerSettingTab = class extends import_obsidian20.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian20.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ pcTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ npcTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Location Tag").addText((text) => text.setPlaceholder("rpgm/element/location").setValue(this.plugin.settings.locationTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ locationTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Faction Tag").addText((text) => text.setPlaceholder("rpgm/element/faction").setValue(this.plugin.settings.factionTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ factionTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Event Tag").addText((text) => text.setPlaceholder("rpgm/element/event").setValue(this.plugin.settings.eventTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ eventTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Clue Tag").addText((text) => text.setPlaceholder("rpgm/element/clue").setValue(this.plugin.settings.clueTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ clueTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Timeline Tag").addText((text) => text.setPlaceholder("rpgm/element/timeline").setValue(this.plugin.settings.timelineTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ timelineTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Note Tag").addText((text) => text.setPlaceholder("rpgm/element/note").setValue(this.plugin.settings.noteTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ noteTag: value });
     })));
-    new import_obsidian20.Setting(this.containerEl).setName("Music Tag").addText((text) => text.setPlaceholder("rpgm/element/music").setValue(this.plugin.settings.musicTag).onChange((value) => __async(this, null, function* () {
+    new import_obsidian19.Setting(this.containerEl).setName("Music Tag").addText((text) => text.setPlaceholder("rpgm/element/music").setValue(this.plugin.settings.musicTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ musicTag: value });

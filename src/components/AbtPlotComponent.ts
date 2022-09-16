@@ -34,7 +34,7 @@ export class AbtPlotComponent extends AbstractComponent {
 
 		if (
 			data instanceof Adventure &&
-			this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(undefined, DataType.Session, data.campaign.campaignId, data.adventureId).length === 0 &&
+			this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(undefined, DataType.Session, data.campaign.campaignId, data.adventureId).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&

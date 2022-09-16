@@ -16,7 +16,7 @@ export class NoteModel extends AbstractModel {
 			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
 				this.currentElement.campaign.settings,
 				'SceneTable',
-				this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SceneInterface>(
+				this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SceneInterface>(
 					undefined,
 					DataType.Scene,
 					this.currentElement.campaign.campaignId,

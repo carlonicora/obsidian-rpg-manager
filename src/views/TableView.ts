@@ -22,7 +22,7 @@ export class TableView extends AbstractView {
 					createButtonEl.textContent = 'Create session from Adventure Plot';
 					createButtonEl.addEventListener("click", () => {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
-							const previousAdventure = this.app.plugins.getPlugin('rpg-manager').io.readSingleParametrised<AdventureInterface>(
+							const previousAdventure = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<AdventureInterface>(
 								undefined,
 								DataType.Adventure,
 								data.campaignId,
@@ -30,7 +30,7 @@ export class TableView extends AbstractView {
 							);
 							let nextSessionId = 1;
 							if (previousAdventure != null){
-								const previousAdventureSessions = this.app.plugins.getPlugin('rpg-manager').io.readListParametrised<SessionInterface>(
+								const previousAdventureSessions = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(
 									undefined,
 									DataType.Session,
 									data.campaignId,
