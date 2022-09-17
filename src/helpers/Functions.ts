@@ -1,6 +1,6 @@
 import {App, TAbstractFile, TFile} from "obsidian";
 
-export class RpgFunctions {
+export class Functions {
 	private root: string;
 	
 	constructor(

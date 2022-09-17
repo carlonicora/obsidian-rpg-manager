@@ -54,7 +54,7 @@ __export(main_exports, {
 module.exports = __toCommonJS(main_exports);
 var import_obsidian19 = require("obsidian");
 
-// src/RpgController.ts
+// src/Controller.ts
 var import_obsidian = require("obsidian");
 
 // src/enums/DataType.ts
@@ -289,7 +289,7 @@ var Campaign = class extends AbstractOutlineRecord {
   }
 };
 
-// src/RpgController.ts
+// src/Controller.ts
 var RpgController = class extends import_obsidian.MarkdownRenderChild {
   constructor(app2, container, source, component, sourcePath) {
     super(container);
@@ -349,7 +349,7 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
   }
 };
 
-// src/helpers/RpgFunctions.ts
+// src/helpers/Functions.ts
 var import_obsidian2 = require("obsidian");
 var RpgFunctions = class {
   constructor(app2) {
@@ -4305,7 +4305,7 @@ var RelationshipFactory = class {
   }
 };
 
-// src/RpgFactories.ts
+// src/Factories.ts
 var RpgFactories = class {
   constructor(app2) {
     this.app = app2;

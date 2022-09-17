@@ -10,10 +10,10 @@ import {
 	TAbstractFile,
 	TFolder, View, WorkspaceLeaf,
 } from 'obsidian';
-import {RpgController} from "./RpgController";
+import {Controller} from "./helpers/Controller";
 import {DataType} from "./enums/DataType";
-import {RpgFunctions} from "./helpers/RpgFunctions";
-import {RpgFactories} from "./RpgFactories";
+import {Functions} from "./helpers/Functions";
+import {Factories} from "./helpers/Factories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
@@ -67,19 +67,22 @@ class CreationView extends View {
 
 export default class RpgManager extends Plugin {
 	/**
-	 * @TODO: Add `image` in Record frontmatter to use online images instead of local images
-	 * @TODO: Add a setting that defines the data structure and the previous data structure, to update the tags
-	 * @TODO: Rename Session to Act
-	 * @TODO: Rename Notes to Session Notes
-	 * @TODO: Add Scene Notes
-	 * @TODO: Add Database Status View
-	 * @TODO: Add Creation View
-	 * @TODO: Add notes creation in right split
+	 * ## Version 1.3
+	 * 		Check if I can debounce the saving of the settings
+	 * 		Add a setting that defines the data structure and the previous data structure, to update the tags
+	 * ## Version 2.0
+	 * 		Rename Session to Act
+	 * 		Rename Notes to Session Notes
+	 * 		Add Scene Notes
+	 * ## Version 2.1
+	 * 		Add Database Status View
+	 * 		Add Creation View
+	 * 		Add notes creation in right split
 	 */
 	settings: RpgManagerSettings;
-	functions: RpgFunctions;
+	functions: Functions;
 	database: DatabaseInterface;
-	factories: RpgFactories;
+	factories: Factories;
 	tagManager: TagManager;
 
 	ready = false;
@@ -122,8 +125,8 @@ export default class RpgManager extends Plugin {
 	): Promise<void> {
 		const reloadStart = Date.now();
 
-		this.functions = new RpgFunctions(this.app);
-		this.factories = new RpgFactories(this.app);
+		this.functions = new Functions(this.app);
+		this.factories = new Factories(this.app);
 		this.tagManager = new TagManager(this.app);
 
 		this.registerCodeBlock();
@@ -177,7 +180,7 @@ export default class RpgManager extends Plugin {
 		sourcePath: string
 	) {
 		component.addChild(
-			new RpgController(
+			new Controller(
 				this.app,
 				el,
 				source,

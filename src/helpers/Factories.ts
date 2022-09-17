@@ -1,18 +1,18 @@
 import {App} from "obsidian";
-import {ComponentFactory} from "./factories/ComponentFactory";
-import {ContentFactory} from "./factories/ContentFactory";
-import {DataFactory} from "./factories/DataFactory";
-import {ErrorFactory} from "./factories/ErrorFactory";
-import {FileFactory} from "./factories/FileFactory";
-import {ModalFactory} from "./factories/ModalFactory";
-import {ModelFactory} from "./factories/ModelFactory";
-import {PronounFactory} from "./factories/PronounFactory";
-import {TemplateFactory} from "./factories/TemplateFactory";
-import {ViewFactory} from "./factories/ViewFactory";
-import {FetcherFactory} from "./factories/FetcherFactory";
-import {RelationshipFactory} from "./factories/RelationshipFactory";
+import {ComponentFactory} from "../factories/ComponentFactory";
+import {ContentFactory} from "../factories/ContentFactory";
+import {DataFactory} from "../factories/DataFactory";
+import {ErrorFactory} from "../factories/ErrorFactory";
+import {FileFactory} from "../factories/FileFactory";
+import {ModalFactory} from "../factories/ModalFactory";
+import {ModelFactory} from "../factories/ModelFactory";
+import {PronounFactory} from "../factories/PronounFactory";
+import {TemplateFactory} from "../factories/TemplateFactory";
+import {ViewFactory} from "../factories/ViewFactory";
+import {FetcherFactory} from "../factories/FetcherFactory";
+import {RelationshipFactory} from "../factories/RelationshipFactory";
 
-export class RpgFactories {
+export class Factories {
 	public components: ComponentFactory;
 	public contents: ContentFactory;
 	public data: DataFactory;

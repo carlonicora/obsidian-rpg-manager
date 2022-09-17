@@ -1,7 +1,7 @@
 import "obsidian";
 import {RpgManagerSettings} from "../main";
-import {RpgFunctions} from "../helpers/RpgFunctions";
-import {RpgFactories} from "../RpgFactories";
+import {Functions} from "../helpers/Functions";
+import {Factories} from "../helpers/Factories";
 import {TagManager} from "../helpers/TagManager";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 
@@ -22,9 +22,9 @@ declare module "obsidian" {
 		plugins: {
 			getPlugin(plugin: "rpg-manager"): {
 				settings: RpgManagerSettings;
-				functions: RpgFunctions;
+				functions: Functions;
 				database: DatabaseInterface;
-				factories: RpgFactories;
+				factories: Factories;
 				tagManager: TagManager;
 			};
 			enabledPlugins: Set<string>;

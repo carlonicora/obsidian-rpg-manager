@@ -5,14 +5,14 @@ import {
 	MarkdownRenderChild,
 	parseYaml, TFile
 } from "obsidian";
-import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
-import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
-import {ViewInterface} from "./interfaces/ViewInterface";
-import {ModelInterface} from "./interfaces/ModelInterface";
-import {Campaign} from "./data/Campaign";
-import {RecordInterface} from "./interfaces/database/RecordInterface";
+import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
+import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
+import {ViewInterface} from "../interfaces/ViewInterface";
+import {ModelInterface} from "../interfaces/ModelInterface";
+import {Campaign} from "../data/Campaign";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
-export class RpgController extends MarkdownRenderChild {
+export class Controller extends MarkdownRenderChild {
 	private isActive = false;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
