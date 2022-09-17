@@ -2,10 +2,8 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {EventInterface} from "../interfaces/data/EventInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {ClueInterface} from "../interfaces/data/ClueInterface";
 
 export class EventTableComponent extends AbstractComponent {
 	public async generateData(

@@ -2,9 +2,7 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {EventInterface} from "../interfaces/data/EventInterface";
 import {FactionInterface} from "../interfaces/data/FactionInterface";
 
 export class FactionTableComponent extends AbstractComponent {

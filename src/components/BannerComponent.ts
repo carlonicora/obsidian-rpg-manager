@@ -1,7 +1,6 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseBanner} from "../data/responses/ResponseBanner";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {Campaign} from "../data/Campaign";
 import {Timeline} from "../data/Timeline";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";

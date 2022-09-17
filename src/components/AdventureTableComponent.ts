@@ -2,11 +2,8 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {AVal} from "tern";
-import {Adventure} from "../data/Adventure";
 
 export class AdventureTableComponent extends AbstractComponent {
 	public async generateData(

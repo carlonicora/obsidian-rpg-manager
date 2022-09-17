@@ -1,11 +1,9 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../data/responses/ResponseData";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {DataType} from "../enums/DataType";
-import {HeaderComponent} from "../components/HeaderComponent";
 import {SessionTableComponent} from "../components/SessionTableComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
 

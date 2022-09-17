@@ -1,6 +1,5 @@
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {AbstractModel} from "../abstracts/AbstractModel";
-import {ResponseData} from "../data/responses/ResponseData";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {AbtPlotComponent} from "../components/AbtPlotComponent";

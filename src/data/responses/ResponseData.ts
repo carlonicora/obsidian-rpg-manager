@@ -3,9 +3,7 @@ import {ResponseElementInterface} from "../../interfaces/response/ResponseElemen
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {App} from "obsidian";
-import {HeaderComponent} from "../../components/HeaderComponent";
 import {AbstractRecord} from "../../abstracts/database/AbstractRecord";
-import {RelationshipFactory} from "../../factories/RelationshipFactory";
 
 export class ResponseData implements ResponseDataInterface {
 	public elements: ResponseElementInterface[];
@@ -16,7 +14,7 @@ export class ResponseData implements ResponseDataInterface {
 		this.elements = [];
 	}
 
-	public async addComponent<T>(
+	public async addComponent(
 		type: any,
 		data: RecordInterface[]|RecordInterface|RelationshipInterface[],
 		title: string|undefined=undefined,

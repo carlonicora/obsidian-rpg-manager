@@ -2,6 +2,7 @@ import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {FetcherType} from "../enums/FetcherType";
 import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
+import {YouTubeImageFetcher} from "../fetchers/YouTubeImageFetcher";
 
 export class Music extends AbstractElementRecord implements MusicInterface {
 	public url: string|undefined;
@@ -41,7 +42,9 @@ export class Music extends AbstractElementRecord implements MusicInterface {
 		if (this.url == undefined) return undefined;
 
 		if (this.url.indexOf('youtube.com') !== -1 || this.url.indexOf('youtu.be') !== -1){
-			const fetcher: YouTubeImageFetcherInterface = this.app.plugins.getPlugin('rpg-manager').factories.fetchers.create(FetcherType.YouTubeImage);
+			const fetcher: YouTubeImageFetcherInterface = await this.app.plugins.getPlugin('rpg-manager').factories.fetchers.create(
+				YouTubeImageFetcher,
+			);
 			return fetcher.fetchImage(this.url);
 		}
 	}

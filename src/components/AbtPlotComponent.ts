@@ -1,5 +1,4 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";

@@ -1,5 +1,5 @@
 import {DiceType} from "../enums/DiceType";
-import {RawRollResult} from "../settings/Raw/enums/RawRollResult";
+import {RawRollResult} from "../rpgs/Raw/enums/RawRollResult";
 
 export class DiceResult {
 	public type: DiceType;

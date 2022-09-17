@@ -2,7 +2,6 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseHeader} from "../data/responses/ResponseHeader";
 import {ContentType} from "../enums/ContentType";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {Character} from "../data/Character";
 import {Clue} from "../data/Clue";
 import {Location} from "../data/Location";

@@ -1,6 +1,5 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../data/responses/ResponseData";
 import {TimelineResponse} from "../data/responses/TimelineResponse";
 import {TimelineElementResponse} from "../data/responses/TimelineElementResponse";
 import {TimelineResponseInterface} from "../interfaces/response/TimelineResponseInterface";
@@ -11,7 +10,6 @@ import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {BannerComponent} from "../components/BannerComponent";
-import {HeaderComponent} from "../components/HeaderComponent";
 
 export class TimelineModel extends AbstractModel {
 	protected currentElement: RecordInterface;

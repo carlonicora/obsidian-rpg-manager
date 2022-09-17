@@ -13,8 +13,8 @@ import {Timeline} from "../data/Timeline";
 import {Note} from "../data/Note";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {VampireCharacter} from "../settings/Vampire/data/VampireCharacter";
-import {RawCampaign} from "../settings/Raw/data/RawCampaign";
+import {VampireCharacter} from "../rpgs/Vampire/data/VampireCharacter";
+import {RawCampaign} from "../rpgs/Raw/data/RawCampaign";
 import {Music} from "../data/Music";
 
 

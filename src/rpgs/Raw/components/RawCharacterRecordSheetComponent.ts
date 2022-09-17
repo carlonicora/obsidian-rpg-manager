@@ -1,5 +1,4 @@
 import {AbstractComponent} from "../../../abstracts/AbstractComponent";
-import {CharacterInterface} from "../../../interfaces/data/CharacterInterface";
 import {ResponseElementInterface} from "../../../interfaces/response/ResponseElementInterface";
 import {RawResponseCharacterRecordSheet} from "../data/responses/RawResponseCharacterRecordSheet";
 import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";

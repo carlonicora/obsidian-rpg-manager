@@ -1,7 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {MusicTableComponent} from "../components/MusicTableComponent";

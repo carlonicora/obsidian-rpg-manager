@@ -38,7 +38,7 @@ export class Database extends Component implements DatabaseInterface {
 		const temporaryDatabase = await new Database(this.app);
 
 		await this.loadCampaignSettings();
-		await new InfoLog(LogMessageType.DatabaseInitialisation, 'Campaign settings read');
+		await new InfoLog(LogMessageType.DatabaseInitialisation, 'Campaign rpgs read');
 
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 		for (let index=0; index<markdownFiles.length; index++){
@@ -278,7 +278,7 @@ export class Database extends Component implements DatabaseInterface {
 	): Promise<void> {
 		let component:RecordInterface|undefined = this.readByPath(file.path);
 
-		let isNewComponent = component === undefined;
+		const isNewComponent = component === undefined;
 
 		if (component !== undefined) {
 			await component.reload();
@@ -415,7 +415,7 @@ export class Database extends Component implements DatabaseInterface {
 	 */
 
 	/**
-	 * Preloads all the campaign settings used in the database
+	 * Preloads all the campaign rpgs used in the database
 	 *
 	 * @private
 	 */

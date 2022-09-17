@@ -1,9 +1,5 @@
 import "obsidian";
-import {RpgManagerSettings} from "../main";
-import {Functions} from "../helpers/Functions";
-import {Factories} from "../helpers/Factories";
-import {TagManager} from "../helpers/TagManager";
-import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 
 declare module "obsidian" {
 	interface MetadataCache {
@@ -20,13 +16,17 @@ declare module "obsidian" {
 	interface App {
 		appId?: string;
 		plugins: {
-			getPlugin(plugin: "rpg-manager"): {
-				settings: RpgManagerSettings;
+			getPlugin(plugin: "rpg-manager"): RpgManagerInterface;
+	/*
+	{
+				settings: RpgManagerSettingsInterface;
 				functions: Functions;
 				database: DatabaseInterface;
 				factories: Factories;
 				tagManager: TagManager;
 			};
+
+	 */
 			enabledPlugins: Set<string>;
 		};
 	}

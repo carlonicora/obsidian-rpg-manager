@@ -1,7 +1,32 @@
 import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
 import {AbstractFetcher} from "../abstracts/AbstractFetcher";
+import {ImageFetcherInterface} from "../interfaces/fetchers/ImageFetcherInterface";
+import {FetcherInterface} from "../interfaces/FetcherInterface";
 
-export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImageFetcherInterface{
+export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImageFetcherInterface, ImageFetcherInterface, FetcherInterface {
+	public fetchUrl ='https://www.googleapis.com/youtube/v3/';
+
+    playlistEndPoint(
+		playlistId: string,
+	): string {
+		return this.fetchUrl +
+			'playlistItems?key=' +
+			this.app.plugins.getPlugin('rpg-manager').settings.YouTubeKey +
+			'&part=snippet&playlistId=' +
+			playlistId;
+    }
+
+    songEndPoint(
+		songId: string,
+	): string {
+        return this.fetchUrl +
+			'videos?key=' +
+			this.app.plugins.getPlugin('rpg-manager').settings.YouTubeKey +
+			'&part=snippet&id=' +
+			songId;
+    }
+
+
 	public async fetchImage(
 		url: string,
 	): Promise<string|null|undefined> {
@@ -27,9 +52,9 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
 			}
 
 			if (playlistId !== undefined){
-				apiResponse = await fetch('https://www.googleapis.com/youtube/v3/playlistItems?key=' + youTubeApiKey + '&part=snippet&playlistId=' + playlistId);
+				apiResponse = await fetch(this.playlistEndPoint(playlistId));
 			} else if (songId !== undefined){
-				apiResponse = await fetch('https://www.googleapis.com/youtube/v3/videos?key=' + youTubeApiKey + '&part=snippet&id=' + songId);
+				apiResponse = await fetch(this.songEndPoint(songId));
 			}
 
 			if (apiResponse === undefined) return undefined;

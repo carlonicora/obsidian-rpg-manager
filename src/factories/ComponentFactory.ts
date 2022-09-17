@@ -1,6 +1,5 @@
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ComponentInterface} from "../interfaces/ComponentInterface";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {AbstractComponent} from "../abstracts/AbstractComponent";

@@ -1,7 +1,7 @@
 import {CampaignTemplateFactory} from "../../../factories/templates/CampaignTemplateFactory";
 import {RpgCodeBlockInterface} from "../../../interfaces/RpgCodeBlockInterface";
 
-export class RawCampaignTemplate extends CampaignTemplateFactory {
+export class VampireCampaignTemplate extends CampaignTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
@@ -20,8 +20,7 @@ export class RawCampaignTemplate extends CampaignTemplateFactory {
 /*
 protected generateFrontmatterAdditionalInformation(
 ): string {
-	return 'settings: Raw\n' +
-		'apiCampaignKey: \n';
+	return 'rpgs: Vampire\n';
 }
 
  */

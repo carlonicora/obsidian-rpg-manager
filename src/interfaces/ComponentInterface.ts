@@ -1,5 +1,4 @@
 import {ResponseElementInterface} from "./response/ResponseElementInterface";
-import {RecordInterface} from "./database/RecordInterface";
 import {RelationshipInterface} from "./RelationshipInterface";
 
 export interface ComponentInterface {

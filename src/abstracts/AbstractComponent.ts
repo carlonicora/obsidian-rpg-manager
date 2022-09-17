@@ -1,7 +1,6 @@
 import {ComponentInterface} from "../interfaces/ComponentInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {App} from "obsidian";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export abstract class AbstractComponent implements ComponentInterface {

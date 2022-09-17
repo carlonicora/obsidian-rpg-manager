@@ -1,5 +1,4 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ContentType} from "../enums/ContentType";
 import {ResponseTable} from "../data/responses/ResponseTable";
@@ -35,7 +34,6 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 			)
 		) return null;
 		if (relationship.component === undefined) return null;
-		const data = relationship.component;
 
 		const response = new ResponseTable(this.app);
 

@@ -1,7 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {MusicTableComponent} from "../components/MusicTableComponent";

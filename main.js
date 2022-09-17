@@ -47,14 +47,12 @@ var __async = (__this, __arguments, generator) => {
 // src/main.ts
 var main_exports = {};
 __export(main_exports, {
-  DEFAULT_SETTINGS: () => DEFAULT_SETTINGS,
-  RpgManagerSettingTab: () => RpgManagerSettingTab,
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian19 = require("obsidian");
+var import_obsidian20 = require("obsidian");
 
-// src/Controller.ts
+// src/helpers/Controller.ts
 var import_obsidian = require("obsidian");
 
 // src/enums/DataType.ts
@@ -289,8 +287,8 @@ var Campaign = class extends AbstractOutlineRecord {
   }
 };
 
-// src/Controller.ts
-var RpgController = class extends import_obsidian.MarkdownRenderChild {
+// src/helpers/Controller.ts
+var Controller = class extends import_obsidian.MarkdownRenderChild {
   constructor(app2, container, source, component, sourcePath) {
     super(container);
     this.app = app2;
@@ -351,7 +349,7 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
 
 // src/helpers/Functions.ts
 var import_obsidian2 = require("obsidian");
-var RpgFunctions = class {
+var Functions = class {
   constructor(app2) {
     this.app = app2;
     this.initialiseRoots();
@@ -698,7 +696,7 @@ var Note = class extends AbstractOutlineRecord {
   }
 };
 
-// src/settings/Vampire/data/VampireCharacter.ts
+// src/rpgs/Vampire/data/VampireCharacter.ts
 var VampireCharacter = class extends Character {
   initialiseData() {
     return __async(this, null, function* () {
@@ -709,7 +707,7 @@ var VampireCharacter = class extends Character {
   }
 };
 
-// src/settings/Raw/data/RawCampaign.ts
+// src/rpgs/Raw/data/RawCampaign.ts
 var RawCampaign = class extends Campaign {
   initialiseData() {
     return __async(this, null, function* () {
@@ -720,11 +718,62 @@ var RawCampaign = class extends Campaign {
   }
 };
 
-// src/enums/FetcherType.ts
-var FetcherType = /* @__PURE__ */ ((FetcherType2) => {
-  FetcherType2[FetcherType2["YouTubeImage"] = 0] = "YouTubeImage";
-  return FetcherType2;
-})(FetcherType || {});
+// src/abstracts/AbstractFetcher.ts
+var AbstractFetcher = class {
+  constructor(app2) {
+    this.app = app2;
+  }
+};
+
+// src/fetchers/YouTubeImageFetcher.ts
+var YouTubeImageFetcher = class extends AbstractFetcher {
+  constructor() {
+    super(...arguments);
+    this.fetchUrl = "https://www.googleapis.com/youtube/v3/";
+  }
+  playlistEndPoint(playlistId) {
+    return this.fetchUrl + "playlistItems?key=" + this.app.plugins.getPlugin("rpg-manager").settings.YouTubeKey + "&part=snippet&playlistId=" + playlistId;
+  }
+  songEndPoint(songId) {
+    return this.fetchUrl + "videos?key=" + this.app.plugins.getPlugin("rpg-manager").settings.YouTubeKey + "&part=snippet&id=" + songId;
+  }
+  fetchImage(url) {
+    return __async(this, null, function* () {
+      var _a, _b, _c, _d;
+      const youTubeApiKey = this.app.plugins.getPlugin("rpg-manager").settings.YouTubeKey;
+      if (youTubeApiKey === "" || youTubeApiKey == null)
+        return void 0;
+      let apiResponse;
+      const playlistIdentifier = "playlist?list=";
+      const songIdentifier = "watch?v=";
+      const alternativeSongIdentifier = "youtu.be/";
+      let playlistId;
+      let songId;
+      try {
+        if (url.indexOf(playlistIdentifier) !== -1) {
+          playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
+        } else if (url.indexOf(songIdentifier) !== -1) {
+          songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
+        } else if (url.indexOf(alternativeSongIdentifier) !== -1) {
+          songId = url.substring(url.indexOf(alternativeSongIdentifier) + alternativeSongIdentifier.length);
+        }
+        if (playlistId !== void 0) {
+          apiResponse = yield fetch(this.playlistEndPoint(playlistId));
+        } else if (songId !== void 0) {
+          apiResponse = yield fetch(this.songEndPoint(songId));
+        }
+        if (apiResponse === void 0)
+          return void 0;
+        const jsonData = yield apiResponse.json();
+        if (jsonData === void 0)
+          return void 0;
+        return (_d = (_c = (_b = (_a = jsonData.items[0]) == null ? void 0 : _a.snippet) == null ? void 0 : _b.thumbnails) == null ? void 0 : _c.high) == null ? void 0 : _d.url;
+      } catch (e) {
+        return void 0;
+      }
+    });
+  }
+};
 
 // src/data/Music.ts
 var Music = class extends AbstractElementRecord {
@@ -757,7 +806,7 @@ var Music = class extends AbstractElementRecord {
       if (this.url == void 0)
         return void 0;
       if (this.url.indexOf("youtube.com") !== -1 || this.url.indexOf("youtu.be") !== -1) {
-        const fetcher = this.app.plugins.getPlugin("rpg-manager").factories.fetchers.create(0 /* YouTubeImage */);
+        const fetcher = yield this.app.plugins.getPlugin("rpg-manager").factories.fetchers.create(YouTubeImageFetcher);
         return fetcher.fetchImage(this.url);
       }
     });
@@ -2279,7 +2328,6 @@ var StoryCirclePlotComponent = class extends AbstractComponent {
         return null;
       if (relationship.component === void 0)
         return null;
-      const data = relationship.component;
       const response = new ResponseTable(this.app);
       response.title = "Story Circle Plot";
       response.class = "rpgm-plot";
@@ -2485,13 +2533,13 @@ var AdventureNavigationModel = class extends AbstractModel {
   }
 };
 
-// src/settings/Raw/enums/RawEndpoint.ts
+// src/rpgs/Raw/enums/RawEndpoint.ts
 var RawEndpoint = /* @__PURE__ */ ((RawEndpoint2) => {
   RawEndpoint2[RawEndpoint2["Characters"] = 0] = "Characters";
   return RawEndpoint2;
 })(RawEndpoint || {});
 
-// src/settings/Raw/helpers/RawApi.ts
+// src/rpgs/Raw/helpers/RawApi.ts
 var RawApi = class {
   static get(apiCampaignKey, parentEndpoint, parentId = null, childEndpoint = null, childId = null) {
     return __async(this, null, function* () {
@@ -2517,7 +2565,7 @@ var RawApi = class {
   }
 };
 
-// src/settings/Raw/enums/RawTrait.ts
+// src/rpgs/Raw/enums/RawTrait.ts
 var RawTrait = /* @__PURE__ */ ((RawTrait2) => {
   RawTrait2[RawTrait2["Body"] = 0] = "Body";
   RawTrait2[RawTrait2["Mind"] = 1] = "Mind";
@@ -2525,7 +2573,7 @@ var RawTrait = /* @__PURE__ */ ((RawTrait2) => {
   return RawTrait2;
 })(RawTrait || {});
 
-// src/settings/Raw/data/responses/RawResponseCharacterRecordSheetAbility.ts
+// src/rpgs/Raw/data/responses/RawResponseCharacterRecordSheetAbility.ts
 var RawResponseCharacterRecordSheetAbility = class extends AbstractResponse {
   constructor(app2, id, name, value, specialisation, trait, traitValue) {
     super(app2);
@@ -2538,7 +2586,7 @@ var RawResponseCharacterRecordSheetAbility = class extends AbstractResponse {
   }
 };
 
-// src/settings/Raw/enums/RawAbility.ts
+// src/rpgs/Raw/enums/RawAbility.ts
 var RawAbility = /* @__PURE__ */ ((RawAbility2) => {
   RawAbility2[RawAbility2["athletics"] = 0] = "athletics";
   RawAbility2[RawAbility2["drive"] = 1] = "drive";
@@ -2593,7 +2641,7 @@ var RawAbilityTrait = {
   willpower: 2 /* Spirit */
 };
 
-// src/settings/Raw/data/responses/RawResponseCharacterRecordSheetTrait.ts
+// src/rpgs/Raw/data/responses/RawResponseCharacterRecordSheetTrait.ts
 var RawResponseCharacterRecordSheetTrait = class extends AbstractResponse {
   constructor(app2, trait, metadata) {
     super(app2);
@@ -2636,7 +2684,7 @@ var RawResponseCharacterRecordSheetTrait = class extends AbstractResponse {
   }
 };
 
-// src/settings/Raw/data/responses/RawResponseCharacterRecordSheet.ts
+// src/rpgs/Raw/data/responses/RawResponseCharacterRecordSheet.ts
 var RawResponseCharacterRecordSheet = class extends AbstractResponse {
   constructor(app2, metadata) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i;
@@ -2663,7 +2711,7 @@ var RawResponseCharacterRecordSheet = class extends AbstractResponse {
   }
 };
 
-// src/settings/Raw/components/RawCharacterRecordSheetComponent.ts
+// src/rpgs/Raw/components/RawCharacterRecordSheetComponent.ts
 var RawCharacterRecordSheetComponent = class extends AbstractComponent {
   generateData(relationship, title, additionalInformation) {
     return __async(this, null, function* () {
@@ -2673,7 +2721,7 @@ var RawCharacterRecordSheetComponent = class extends AbstractComponent {
   }
 };
 
-// src/settings/Raw/models/RawNpcModel.ts
+// src/rpgs/Raw/models/RawNpcModel.ts
 var RawNpcModel = class extends NpcModel {
   generateData() {
     return __async(this, null, function* () {
@@ -3437,7 +3485,7 @@ var TimelineTemplateFactory = class extends AbstractTemplateFactory {
   }
 };
 
-// src/settings/Vampire/templates/VampireCharacterTemplate.ts
+// src/rpgs/Vampire/templates/VampireCharacterTemplate.ts
 var VampireCharacterTemplate = class extends CharacterTemplateFactory {
   addFrontmatterData(frontmatter) {
   }
@@ -3449,7 +3497,7 @@ var VampireCharacterTemplate = class extends CharacterTemplateFactory {
   }
 };
 
-// src/settings/Vampire/templates/VampireNonPlayerCharacterTemplate.ts
+// src/rpgs/Vampire/templates/VampireNonPlayerCharacterTemplate.ts
 var VampireNonPlayerCharacterTemplate = class extends NonPlayerCharacterTemplateFactory {
   addFrontmatterData(frontmatter) {
   }
@@ -3461,7 +3509,7 @@ var VampireNonPlayerCharacterTemplate = class extends NonPlayerCharacterTemplate
   }
 };
 
-// src/settings/Raw/templates/RawCampaignTemplate.ts
+// src/rpgs/Raw/templates/RawCampaignTemplate.ts
 var RawCampaignTemplate = class extends CampaignTemplateFactory {
   addFrontmatterData(frontmatter) {
   }
@@ -3473,7 +3521,7 @@ var RawCampaignTemplate = class extends CampaignTemplateFactory {
   }
 };
 
-// src/settings/Vampire/templates/VampireCampaignTemplate.ts
+// src/rpgs/Vampire/templates/VampireCampaignTemplate.ts
 var VampireCampaignTemplate = class extends CampaignTemplateFactory {
   addFrontmatterData(frontmatter) {
   }
@@ -3831,10 +3879,10 @@ var StoryCirclePlotView = class extends AbstractView {
   }
 };
 
-// src/settings/Raw/modals/RawDiceRollerModal.ts
+// src/rpgs/Raw/modals/RawDiceRollerModal.ts
 var import_obsidian13 = require("obsidian");
 
-// src/settings/Raw/enums/RawRollResult.ts
+// src/rpgs/Raw/enums/RawRollResult.ts
 var RawRollResult = /* @__PURE__ */ ((RawRollResult2) => {
   RawRollResult2[RawRollResult2["Standard"] = 0] = "Standard";
   RawRollResult2[RawRollResult2["CriticalSuccess"] = 1] = "CriticalSuccess";
@@ -3883,7 +3931,7 @@ var DiceRollerHelper = class {
   }
 };
 
-// src/settings/Raw/modals/RawDiceRollerModal.ts
+// src/rpgs/Raw/modals/RawDiceRollerModal.ts
 var RawDiceRollerModal = class extends import_obsidian13.Modal {
   constructor(app2, ability) {
     super(app2);
@@ -3918,10 +3966,10 @@ var RawDiceRollerModal = class extends import_obsidian13.Modal {
   }
 };
 
-// src/settings/Raw/views/RawCharacterRecordSheetView.ts
+// src/rpgs/Raw/views/RawCharacterRecordSheetView.ts
 var import_obsidian15 = require("obsidian");
 
-// src/settings/Raw/modals/RawUpdateRollerModal.ts
+// src/rpgs/Raw/modals/RawUpdateRollerModal.ts
 var import_obsidian14 = require("obsidian");
 var RawUpdateRollerModal = class extends import_obsidian14.Modal {
   constructor(app2, ability, initialAbilityValue, updateRoll) {
@@ -3957,7 +4005,7 @@ var RawUpdateRollerModal = class extends import_obsidian14.Modal {
   }
 };
 
-// src/settings/Raw/views/RawCharacterRecordSheetView.ts
+// src/rpgs/Raw/views/RawCharacterRecordSheetView.ts
 var RawCharacterRecordSheetView = class extends AbstractView {
   render(container, data) {
     let maxAbilities = data.body.abilities.length;
@@ -4127,65 +4175,12 @@ var ViewFactory = class extends AbstractFactory {
   }
 };
 
-// src/abstracts/AbstractFetcher.ts
-var AbstractFetcher = class {
-  constructor(app2) {
-    this.app = app2;
-  }
-};
-
-// src/fetchers/YouTubeImageFetcher.ts
-var YouTubeImageFetcher = class extends AbstractFetcher {
-  fetchImage(url) {
-    return __async(this, null, function* () {
-      var _a, _b, _c, _d;
-      const youTubeApiKey = this.app.plugins.getPlugin("rpg-manager").settings.YouTubeKey;
-      if (youTubeApiKey === "" || youTubeApiKey == null)
-        return void 0;
-      let apiResponse;
-      const playlistIdentifier = "playlist?list=";
-      const songIdentifier = "watch?v=";
-      const alternativeSongIdentifier = "youtu.be/";
-      let playlistId;
-      let songId;
-      try {
-        if (url.indexOf(playlistIdentifier) !== -1) {
-          playlistId = url.substring(url.indexOf(playlistIdentifier) + playlistIdentifier.length);
-        } else if (url.indexOf(songIdentifier) !== -1) {
-          songId = url.substring(url.indexOf(songIdentifier) + songIdentifier.length);
-        } else if (url.indexOf(alternativeSongIdentifier) !== -1) {
-          songId = url.substring(url.indexOf(alternativeSongIdentifier) + alternativeSongIdentifier.length);
-        }
-        if (playlistId !== void 0) {
-          apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/playlistItems?key=" + youTubeApiKey + "&part=snippet&playlistId=" + playlistId);
-        } else if (songId !== void 0) {
-          apiResponse = yield fetch("https://www.googleapis.com/youtube/v3/videos?key=" + youTubeApiKey + "&part=snippet&id=" + songId);
-        }
-        if (apiResponse === void 0)
-          return void 0;
-        const jsonData = yield apiResponse.json();
-        if (jsonData === void 0)
-          return void 0;
-        return (_d = (_c = (_b = (_a = jsonData.items[0]) == null ? void 0 : _a.snippet) == null ? void 0 : _b.thumbnails) == null ? void 0 : _c.high) == null ? void 0 : _d.url;
-      } catch (e) {
-        return void 0;
-      }
-    });
-  }
-};
-
 // src/factories/FetcherFactory.ts
 var FetcherFactory = class extends AbstractFactory {
-  constructor(app2) {
-    super(app2);
-    this.fetchers = /* @__PURE__ */ new Map();
-    this.fetchers.set(0 /* YouTubeImage */, YouTubeImageFetcher);
-  }
-  create(type) {
-    const fetcher = this.fetchers.get(type);
-    if (fetcher === void 0)
-      throw new Error("Fetcher " + FetcherType[type] + "not configured");
-    return new fetcher(this.app);
+  create(fetcherType) {
+    return __async(this, null, function* () {
+      return new fetcherType(this.app);
+    });
   }
 };
 
@@ -4305,8 +4300,8 @@ var RelationshipFactory = class {
   }
 };
 
-// src/Factories.ts
-var RpgFactories = class {
+// src/helpers/Factories.ts
+var Factories = class {
   constructor(app2) {
     this.app = app2;
     this.components = new ComponentFactory(this.app);
@@ -4834,7 +4829,7 @@ var _Database = class extends import_obsidian18.Component {
       this.database = yield new _Database(this.app);
       const temporaryDatabase = yield new _Database(this.app);
       yield this.loadCampaignSettings();
-      yield new InfoLog(4 /* DatabaseInitialisation */, "Campaign settings read");
+      yield new InfoLog(4 /* DatabaseInitialisation */, "Campaign rpgs read");
       const markdownFiles = app2.vault.getMarkdownFiles();
       for (let index = 0; index < markdownFiles.length; index++) {
         const data = yield this.createComponent(markdownFiles[index]);
@@ -4974,7 +4969,7 @@ var _Database = class extends import_obsidian18.Component {
   onSave(file) {
     return __async(this, null, function* () {
       let component = this.readByPath(file.path);
-      let isNewComponent = component === void 0;
+      const isNewComponent = component === void 0;
       if (component !== void 0) {
         yield component.reload();
       } else {
@@ -5190,104 +5185,8 @@ var Database = _Database;
 Database.campaignSettings = /* @__PURE__ */ new Map();
 Database.misconfiguredTags = /* @__PURE__ */ new Map();
 
-// src/main.ts
-var RpgManager = class extends import_obsidian19.Plugin {
-  constructor() {
-    super(...arguments);
-    this.ready = false;
-  }
-  onload() {
-    return __async(this, null, function* () {
-      console.log("Loading RpgManager " + this.manifest.version);
-      yield Logger.initialise(this.manifest.version, 4 /* Error */ | 2 /* Warning */);
-      yield this.loadSettings();
-      yield (0, import_obsidian19.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
-      this.addSettingTab(new RpgManagerSettingTab(this.app, this));
-      app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
-    });
-  }
-  initialise() {
-    return __async(this, null, function* () {
-      const reloadStart = Date.now();
-      this.functions = new RpgFunctions(this.app);
-      this.factories = new RpgFactories(this.app);
-      this.tagManager = new TagManager(this.app);
-      this.registerCodeBlock();
-      this.registerCommands();
-      return Database.initialise(this.app).then((database) => {
-        this.database = database;
-        this.registerEvents();
-        this.app.workspace.trigger("rpgmanager:refresh-views");
-        console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
-        return;
-      });
-    });
-  }
-  onLayoutReady() {
-    return __async(this, null, function* () {
-      yield this.initialise();
-    });
-  }
-  onunload() {
-    return __async(this, null, function* () {
-      __superGet(RpgManager.prototype, this, "onunload").call(this);
-      this.app.workspace.off("resolved", this.refreshViews);
-      this.app.workspace.off("modify", this.refreshViews);
-    });
-  }
-  refreshViews() {
-    this.app.workspace.trigger("rpgmanager:refresh-views");
-  }
-  createRpgView(source, el, component, sourcePath) {
-    return __async(this, null, function* () {
-      component.addChild(new RpgController(this.app, el, source, component, sourcePath));
-    });
-  }
-  loadSettings() {
-    return __async(this, null, function* () {
-      this.settings = Object.assign({}, DEFAULT_SETTINGS, yield this.loadData());
-    });
-  }
-  updateSettings(settings) {
-    return __async(this, null, function* () {
-      Object.assign(this.settings, settings);
-      yield this.saveData(this.settings);
-    });
-  }
-  registerEvents() {
-    this.registerEvent(this.app.metadataCache.on("resolved", this.refreshViews.bind(this)));
-    this.registerEvent(this.app.workspace.on("file-open", this.refreshViews.bind(this)));
-  }
-  registerCodeBlock() {
-    this.registerMarkdownCodeBlockProcessor("RpgManager", (source, el, ctx) => __async(this, null, function* () {
-      return this.createRpgView(source, el, ctx, ctx.sourcePath);
-    }));
-  }
-  registerCommands() {
-    Object.keys(DataType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
-      this.addCommand({
-        id: "rpg-manager-create-" + type.toLowerCase(),
-        name: "Create a new " + type,
-        callback: () => {
-          new CreationModal(this.app, DataType[type]).open();
-        }
-      });
-      this.addCommand({
-        id: "rpg-manager-fill-" + type.toLowerCase(),
-        name: "Fill with " + type,
-        callback: () => {
-          let name = null;
-          const activeFile = app.workspace.getActiveFile();
-          if (activeFile != null) {
-            name = activeFile.basename;
-          }
-          new CreationModal(this.app, DataType[type], false, name).open();
-        }
-      });
-    });
-  }
-};
-var DEFAULT_SETTINGS = {
+// src/settings/RpgManagerSettingsInterface.ts
+var rpgManagerDefaultSettings = {
   campaignTag: "rpgm/outline/campaign",
   adventureTag: "rpgm/outline/adventure",
   sessionTag: "rpgm/outline/session",
@@ -5305,10 +5204,42 @@ var DEFAULT_SETTINGS = {
   musicTag: "rpgm/element/music",
   YouTubeKey: ""
 };
-var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
-  constructor(app2, plugin) {
-    super(app2, plugin);
-    this.plugin = plugin;
+
+// src/settings/RpgManagerSettings.ts
+var import_obsidian19 = require("obsidian");
+
+// src/settings/SettingsUpdater.ts
+var SettingsUpdater = class {
+  constructor(app2) {
+    this.app = app2;
+  }
+  updateElementTags(previousTag, newTag) {
+    return __async(this, null, function* () {
+      console.log(previousTag, newTag);
+      return;
+      const files = this.app.vault.getMarkdownFiles();
+      for (let index = 0; index < files.length; index++) {
+        const content = yield this.app.vault.read(files[index]);
+        if (content.indexOf(previousTag) !== -1) {
+          const newFileContent = content.replaceAll(previousTag, newTag);
+          yield this.app.vault.modify(files[index], newFileContent);
+        }
+      }
+      return Database.initialise(this.app).then((database) => {
+        this.app.plugins.getPlugin("rpg-manager").database = database;
+        this.app.workspace.trigger("rpgmanager:refresh-views");
+        return;
+      });
+    });
+  }
+};
+
+// src/settings/RpgManagerSettings.ts
+var RpgManagerSettings = class extends import_obsidian19.PluginSettingTab {
+  constructor(app2) {
+    super(app2, app2.plugins.getPlugin("rpg-manager"));
+    this.plugin = app2.plugins.getPlugin("rpg-manager");
+    this.settingsUpdater = new SettingsUpdater(this.app);
   }
   fillOptionsWithFolders(dropdown, parent = void 0) {
     let folderList = [];
@@ -5324,6 +5255,7 @@ var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
   }
   display() {
     const { containerEl } = this;
+    const pcTag = this.plugin.settings.pcTag;
     containerEl.empty();
     containerEl.createEl("h2", { text: "CampaignSetting for Role Playing Game Manager" });
     containerEl.createEl("h3", { text: "Templates" });
@@ -5376,10 +5308,10 @@ var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
       frag.appendText("To generate your YouTube Api key you can follow the instructions in ");
       frag.createEl("a", { text: "this link", href: "https://rapidapi.com/blog/how-to-get-youtube-api-key/" });
       frag.createEl("br");
-      frag.appendText("/{campaignId}");
+      frag.appendText(" ");
+      frag.createEl("br");
+      frag.appendText(" ");
     })).addText((text) => text.setPlaceholder("Your YouTube API Key").setValue(this.plugin.settings.YouTubeKey).onChange((value) => __async(this, null, function* () {
-      if (value.length == 0)
-        return;
       yield this.plugin.updateSettings({ YouTubeKey: value });
     })));
     containerEl.createEl("h3", { text: "Outlines" });
@@ -5447,10 +5379,27 @@ var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
       frag.createEl("br");
       frag.appendText(" ");
     }) });
-    new import_obsidian19.Setting(this.containerEl).setName("Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
+    let updatePcTagInDatabaseEl;
+    let updatePcTagInDatabaseButtonEl;
+    new import_obsidian19.Setting(this.containerEl).setName("Player Character Tag").setDesc(createFragment((frag) => {
+      frag.appendText("This tag identifies the Player Characters");
+      frag.createEl("br");
+      updatePcTagInDatabaseEl = frag.createDiv();
+      updatePcTagInDatabaseEl.style.display = "none";
+      updatePcTagInDatabaseButtonEl = updatePcTagInDatabaseEl.createEl("button");
+      updatePcTagInDatabaseButtonEl.textContent = "Update every setting in the database";
+      updatePcTagInDatabaseButtonEl.addEventListener("click", () => {
+        this.settingsUpdater.updateElementTags(pcTag, this.plugin.settings.pcTag);
+      });
+    })).addText((text) => text.setPlaceholder("rpgm/element/character/pc").setValue(this.plugin.settings.pcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
         return;
       yield this.plugin.updateSettings({ pcTag: value });
+      if (value !== pcTag) {
+        updatePcTagInDatabaseEl.style.display = "block";
+      } else {
+        updatePcTagInDatabaseEl.style.display = "none";
+      }
     })));
     new import_obsidian19.Setting(this.containerEl).setName("Non Player Character Tag").addText((text) => text.setPlaceholder("rpgm/element/character/npc").setValue(this.plugin.settings.npcTag).onChange((value) => __async(this, null, function* () {
       if (value.length == 0)
@@ -5492,5 +5441,98 @@ var RpgManagerSettingTab = class extends import_obsidian19.PluginSettingTab {
         return;
       yield this.plugin.updateSettings({ musicTag: value });
     })));
+  }
+};
+
+// src/main.ts
+var RpgManager = class extends import_obsidian20.Plugin {
+  constructor() {
+    super(...arguments);
+    this.ready = false;
+  }
+  onload() {
+    return __async(this, null, function* () {
+      console.log("Loading RpgManager " + this.manifest.version);
+      yield Logger.initialise(this.manifest.version, 4 /* Error */ | 2 /* Warning */);
+      yield this.loadSettings();
+      yield (0, import_obsidian20.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
+      this.addSettingTab(new RpgManagerSettings(this.app));
+      app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
+    });
+  }
+  onLayoutReady() {
+    return __async(this, null, function* () {
+      const reloadStart = Date.now();
+      this.functions = new Functions(this.app);
+      this.factories = new Factories(this.app);
+      this.tagManager = new TagManager(this.app);
+      this.registerCodeBlock();
+      this.registerCommands();
+      return Database.initialise(this.app).then((database) => {
+        this.database = database;
+        this.registerEvents();
+        this.app.workspace.trigger("rpgmanager:refresh-views");
+        console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
+        return;
+      });
+    });
+  }
+  onunload() {
+    return __async(this, null, function* () {
+      __superGet(RpgManager.prototype, this, "onunload").call(this);
+      this.app.workspace.off("resolved", this.refreshViews);
+      this.app.workspace.off("modify", this.refreshViews);
+    });
+  }
+  refreshViews() {
+    this.app.workspace.trigger("rpgmanager:refresh-views");
+  }
+  createRpgView(source, el, component, sourcePath) {
+    return __async(this, null, function* () {
+      component.addChild(new Controller(this.app, el, source, component, sourcePath));
+    });
+  }
+  loadSettings() {
+    return __async(this, null, function* () {
+      this.settings = Object.assign({}, rpgManagerDefaultSettings, yield this.loadData());
+    });
+  }
+  updateSettings(settings) {
+    return __async(this, null, function* () {
+      Object.assign(this.settings, settings);
+      yield this.saveData(this.settings);
+    });
+  }
+  registerEvents() {
+    this.registerEvent(this.app.metadataCache.on("resolved", this.refreshViews.bind(this)));
+    this.registerEvent(this.app.workspace.on("file-open", this.refreshViews.bind(this)));
+  }
+  registerCodeBlock() {
+    this.registerMarkdownCodeBlockProcessor("RpgManager", (source, el, ctx) => __async(this, null, function* () {
+      return this.createRpgView(source, el, ctx, ctx.sourcePath);
+    }));
+  }
+  registerCommands() {
+    Object.keys(DataType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
+      this.addCommand({
+        id: "rpg-manager-create-" + type.toLowerCase(),
+        name: "Create a new " + type,
+        callback: () => {
+          new CreationModal(this.app, DataType[type]).open();
+        }
+      });
+      this.addCommand({
+        id: "rpg-manager-fill-" + type.toLowerCase(),
+        name: "Fill with " + type,
+        callback: () => {
+          let name = null;
+          const activeFile = app.workspace.getActiveFile();
+          if (activeFile != null) {
+            name = activeFile.basename;
+          }
+          new CreationModal(this.app, DataType[type], false, name).open();
+        }
+      });
+    });
   }
 };

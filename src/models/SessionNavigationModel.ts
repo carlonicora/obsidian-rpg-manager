@@ -1,6 +1,5 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../data/responses/ResponseData";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {AbtPlotComponent} from "../components/AbtPlotComponent";

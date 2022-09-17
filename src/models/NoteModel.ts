@@ -1,6 +1,5 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseData} from "../data/responses/ResponseData";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {DataType} from "../enums/DataType";

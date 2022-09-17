@@ -2,7 +2,6 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 

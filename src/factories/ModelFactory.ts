@@ -17,7 +17,7 @@ import {TimelineModel} from "../models/TimelineModel";
 import {AdventureNavigationModel} from "../models/AdventureNavigationModel";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {RawNpcModel} from "../settings/Raw/models/RawNpcModel";
+import {RawNpcModel} from "../rpgs/Raw/models/RawNpcModel";
 import {MusicModel} from "../models/MusicModel";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 
