@@ -278,6 +278,8 @@ export class Database extends Component implements DatabaseInterface {
 	): Promise<void> {
 		let component:RecordInterface|undefined = this.readByPath(file.path);
 
+		let isNewComponent = component === undefined;
+
 		if (component !== undefined) {
 			await component.reload();
 		} else {
@@ -287,7 +289,7 @@ export class Database extends Component implements DatabaseInterface {
 		if (component === undefined) return;
 
 		try {
-			if (component instanceof AbstractOutlineRecord) {
+			if (isNewComponent && component instanceof AbstractOutlineRecord) {
 				await component.checkDuplicates(this);
 				await component.loadHierarchy(this);
 			}

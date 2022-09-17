@@ -4962,6 +4962,7 @@ var _Database = class extends import_obsidian18.Component {
   onSave(file) {
     return __async(this, null, function* () {
       let component = this.readByPath(file.path);
+      let isNewComponent = component === void 0;
       if (component !== void 0) {
         yield component.reload();
       } else {
@@ -4970,7 +4971,7 @@ var _Database = class extends import_obsidian18.Component {
       if (component === void 0)
         return;
       try {
-        if (component instanceof AbstractOutlineRecord) {
+        if (isNewComponent && component instanceof AbstractOutlineRecord) {
           yield component.checkDuplicates(this);
           yield component.loadHierarchy(this);
         }
