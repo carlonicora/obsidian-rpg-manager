@@ -6,6 +6,7 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
+		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
 
 		let synopsis: string|undefined = this?.additionalInformation?.synopsis;

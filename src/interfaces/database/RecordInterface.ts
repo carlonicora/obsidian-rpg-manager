@@ -21,6 +21,7 @@ export interface RecordInterface {
 	synopsis: string|null;
 
 	additionalInformation: string|null;
+	imageUrl: string|undefined;
 	imageSrc: string|null|undefined;
 
 	isOutline: boolean;

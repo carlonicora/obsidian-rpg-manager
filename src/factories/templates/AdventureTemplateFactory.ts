@@ -6,8 +6,8 @@ export class AdventureTemplateFactory extends AbstractTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
+		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.adventureTag + '/' + this.campaignId + '/' + this.adventureId);
-		frontmatter.synopsis = "";
 	}
 
 	public generateInitialCodeBlock(

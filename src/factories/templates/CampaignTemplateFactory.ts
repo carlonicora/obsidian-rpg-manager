@@ -6,8 +6,8 @@ export class CampaignTemplateFactory extends AbstractTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
+		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.campaignTag +'/' + this.campaignId);
-		frontmatter.synopsis = "";
 		frontmatter.settings = "Agnostic";
 		frontmatter.dates = {
 			current: {},

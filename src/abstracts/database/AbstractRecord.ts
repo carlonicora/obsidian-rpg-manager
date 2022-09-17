@@ -20,6 +20,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public synopsis: string|null = null;
 	public additionalInformation: string|null = null;
 	public imageSrc: string|null|undefined = undefined;
+	public imageUrl: string|undefined=undefined;
 
 	public isOutline: boolean;
 	public campaign: BaseCampaignInterface;
@@ -63,6 +64,7 @@ export abstract class AbstractRecord implements RecordInterface {
 
 		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
 		this.synopsis = this.frontmatter.synopsis;
+		this.imageUrl = this.frontmatter?.image;
 
 		await this.initialiseRelationships();
 		this.initialiseData();
@@ -151,7 +153,12 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public get image(
 	): string|null {
-		return this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
+		const localImage = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
+		if (localImage !== null) return localImage;
+
+		if (this.imageUrl !== undefined) return this.imageUrl;
+
+		return null;
 	}
 
 	public getRelationships(

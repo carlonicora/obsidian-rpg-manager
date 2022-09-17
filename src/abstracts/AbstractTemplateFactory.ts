@@ -181,9 +181,12 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 		return response;
 	}
 
-	protected abstract addFrontmatterData(
+	protected addFrontmatterData(
 		frontmatter: any,
-	): any;
+	): any {
+		frontmatter.synopsis = "";
+		frontmatter.image = "";
+	}
 
 	protected generateInitialCodeBlock(
 	): RpgCodeBlockInterface|undefined {
