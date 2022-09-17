@@ -2,34 +2,25 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseData} from "../data/responses/ResponseData";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
+import {HeaderComponent} from "../components/HeaderComponent";
+import {AbtPlotComponent} from "../components/AbtPlotComponent";
 
 export class CampaignNavigationModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
-
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.settings,
-				'Banner',
-				this.currentElement
-			)
-		);
+		await this.response.addComponent(HeaderComponent, this.currentElement);
 
 		if (this.sourceMeta?.abt != null){
-			response.addElement(
-				await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-					this.currentElement.settings,
-					'AbtPlot',
-					this.currentElement,
-					null,
-					this.sourceMeta.abt,
-				)
-			);
+			await this.response.addComponent(
+				AbtPlotComponent,
+				this.currentElement,
+				undefined,
+				this.sourceMeta.abt,
+			)
 		}
 
-		return response;
+		return this.response;
 	}
 }

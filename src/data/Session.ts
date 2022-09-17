@@ -1,11 +1,11 @@
-import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
+import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DataType} from "../enums/DataType";
 
-export class Session extends AbstractOutlineData implements SessionInterface {
+export class Session extends AbstractOutlineRecord implements SessionInterface {
 	public sessionId: number;
 	public date: Date|null;
 	public irl: Date|null;
@@ -15,13 +15,13 @@ export class Session extends AbstractOutlineData implements SessionInterface {
 	public nextSession: SessionInterface|null=null;
 	public note: NoteInterface|null=null;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
 		this.date = this.initialiseDate(this.frontmatter?.dates?.session);
 		this.irl = this.initialiseDate(this.frontmatter?.dates?.irl);
 
-		super.loadData();
+		super.initialiseData();
 	}
 
 	public async loadHierarchy(
@@ -29,24 +29,24 @@ export class Session extends AbstractOutlineData implements SessionInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
+		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.tag);
 
 		try {
-			this.previousSession = database.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId - 1);
+			this.previousSession = database.readSingle<SessionInterface>(DataType.Session, this.tag, this.sessionId - 1);
 			this.previousSession.nextSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextSession = database.readSingle<SessionInterface>(database, DataType.Session, this.tag, this.sessionId + 1);
+			this.nextSession = database.readSingle<SessionInterface>(DataType.Session, this.tag, this.sessionId + 1);
 			this.nextSession.previousSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.note = database.readSingle<NoteInterface>(database, DataType.Note, this.tag);
+			this.note = database.readSingle<NoteInterface>(DataType.Note, this.tag);
 		} catch (e) {
 			//ignore. It can be non existing
 		}

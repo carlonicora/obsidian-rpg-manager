@@ -1,21 +1,21 @@
-import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {Pronoun} from "../enums/Pronoun";
 
-export class Character extends AbstractElementData implements CharacterInterface {
+export class Character extends AbstractElementRecord implements CharacterInterface {
 	public dob: Date|null;
 	public death: Date|null;
 	public goals: string|null;
 	public pronoun: Pronoun|null;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.dob = this.initialiseDate(this.frontmatter?.dates?.dob);
 		this.death = this.initialiseDate(this.frontmatter?.dates?.death);
 		this.goals = this.frontmatter?.goals;
 		this.pronoun = this.frontmatter?.pronoun ? this.app.plugins.getPlugin('rpg-manager').factories.pronouns.create(this.frontmatter?.pronoun) : null;
 
-		super.loadData();
+		super.initialiseData();
 	}
 
 	public get age(

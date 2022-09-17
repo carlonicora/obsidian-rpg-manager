@@ -18,7 +18,7 @@ export class AdventureModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.adventures = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<AdventureInterface>(undefined, DataType.Adventure, this.modal.campaignId);
+		this.adventures = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<AdventureInterface>(DataType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(

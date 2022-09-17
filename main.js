@@ -86,6 +86,15 @@ var AbstractRecord = class {
     this.additionalInformation = null;
     this.imageSrc = void 0;
   }
+  get name() {
+    return this.file.basename;
+  }
+  get path() {
+    return this.file.path;
+  }
+  get link() {
+    return "[[" + this.name + "]]";
+  }
   initialise() {
     return __async(this, null, function* () {
       var _a, _b;
@@ -98,30 +107,35 @@ var AbstractRecord = class {
       this.basename = this.file.basename + "";
       this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
       this.synopsis = this.frontmatter.synopsis;
-      this.relationships = yield /* @__PURE__ */ new Map();
-      yield this.app.plugins.getPlugin("rpg-manager").factories.relationships.read(this.file, this.relationships);
-      this.loadData();
+      yield this.initialiseRelationships();
+      this.initialiseData();
     });
   }
-  loadData() {
+  initialiseRelationships() {
+    return __async(this, null, function* () {
+      this.relationships = yield /* @__PURE__ */ new Map();
+      yield this.app.plugins.getPlugin("rpg-manager").factories.relationships.read(this.file, this.relationships);
+    });
+  }
+  initialiseData() {
   }
   reload() {
     return __async(this, null, function* () {
       yield this.initialise();
-      yield this.loadData();
+      yield this.initialiseData();
     });
   }
   loadHierarchy(database) {
     return __async(this, null, function* () {
       if (this.type !== 1 /* Campaign */) {
-        this.campaign = database.readSingle(database, 1 /* Campaign */, this.tag);
+        this.campaign = database.readSingle(1 /* Campaign */, this.tag);
       }
     });
   }
   loadRelationships(database) {
     return __async(this, null, function* () {
       this.relationships.forEach((relationship, name) => {
-        const dataList = database.read((data) => data.name === name, void 0);
+        const dataList = database.read((data) => data.name === name);
         switch (dataList.length) {
           case 0:
             relationship.component = void 0;
@@ -137,12 +151,11 @@ var AbstractRecord = class {
     return __async(this, null, function* () {
       if (!this.isOutline) {
         this.relationships.forEach((relationship, name) => {
-          if (relationship.component !== void 0 && relationship.isInFrontmatter === true) {
+          if (relationship.component !== void 0) {
             relationship.component.addReverseRelationship(this.name, {
               component: this,
               description: relationship.description,
-              isReverse: true,
-              isInFrontmatter: true
+              isReverse: true
             });
           }
         });
@@ -151,15 +164,6 @@ var AbstractRecord = class {
   }
   addReverseRelationship(name, relationship) {
     this.relationships.set(name, relationship);
-  }
-  get name() {
-    return this.file.basename;
-  }
-  get path() {
-    return this.file.path;
-  }
-  get link() {
-    return "[[" + this.name + "]]";
   }
   get imageSrcElement() {
     if (this.imageSrc === null)
@@ -175,16 +179,13 @@ var AbstractRecord = class {
   }
   getRelationships(type, requiresReversedRelationship = false) {
     const response = [];
-    this.relationships.forEach((data, name) => {
-      if (data.component !== void 0 && (type & data.component.type) == data.component.type) {
-        if (!requiresReversedRelationship || data.isReverse)
-          response.push(data.component);
+    this.relationships.forEach((relationship, name) => {
+      if (relationship.component !== void 0 && (type & relationship.component.type) == relationship.component.type) {
+        if (!requiresReversedRelationship || requiresReversedRelationship && relationship.isReverse)
+          response.push(relationship);
       }
     });
     return response;
-  }
-  hasRelationship(name) {
-    return this.relationships.has(name);
   }
   initialiseDate(date) {
     if (date == null)
@@ -240,8 +241,8 @@ var ElementDuplicatedError = class extends RpgError {
   }
 };
 
-// src/abstracts/database/AbstractOutlineData.ts
-var AbstractOutlineData = class extends AbstractRecord {
+// src/abstracts/database/AbstractOutlineRecord.ts
+var AbstractOutlineRecord = class extends AbstractRecord {
   constructor(app2, tag, type, file) {
     super(app2, tag, type, file);
     this.isOutline = true;
@@ -255,7 +256,7 @@ var AbstractOutlineData = class extends AbstractRecord {
   }
   checkDuplicates(database) {
     const query = (data) => data.dataId === this.dataId;
-    const elements = database.read(query, void 0);
+    const elements = database.read(query);
     if (elements.length > 0)
       throw new ElementDuplicatedError(this.app, this.type, this.tag);
   }
@@ -270,14 +271,14 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
 })(CampaignSetting || {});
 
 // src/data/Campaign.ts
-var Campaign = class extends AbstractOutlineData {
-  loadData() {
+var Campaign = class extends AbstractOutlineRecord {
+  initialiseData() {
     var _a, _b, _c, _d, _e, _f;
     this.campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
     if ((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.current)
       this.currentDate = new Date((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current);
     this.settings = ((_e = this.frontmatter) == null ? void 0 : _e.settings) ? CampaignSetting[(_f = this.frontmatter) == null ? void 0 : _f.settings] : 0 /* Agnostic */;
-    super.loadData();
+    super.initialiseData();
   }
 };
 
@@ -291,26 +292,32 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
     this.component = component;
     this.sourcePath = sourcePath;
     this.isActive = false;
-    this.rendering = false;
+    this.render = (0, import_obsidian.debounce)(this.render, 250, true);
+    this.registerEvent(this.app.vault.on("rename", (file, oldPath) => this.onRename(file, oldPath)));
+  }
+  onRename(file, oldPath) {
+    return __async(this, null, function* () {
+      if (this.sourcePath === oldPath)
+        this.sourcePath = file.path;
+      this.initialise();
+      this.render();
+    });
+  }
+  generateModel() {
+    const sourceLines = this.source.split("\n");
+    let modelName = sourceLines[0].toLowerCase();
+    modelName = modelName[0].toUpperCase() + modelName.substring(1);
+    modelName = modelName.replace("navigation", "Navigation");
+    sourceLines.shift();
+    const sourceMeta = (0, import_obsidian.parseYaml)(sourceLines.join("\n"));
+    this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, modelName, this.currentElement, this.source, this.sourcePath, sourceMeta);
   }
   initialise() {
-    var _a;
-    if (((_a = this.app.plugins.getPlugin("rpg-manager")) == null ? void 0 : _a.database) === void 0)
+    const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(this.sourcePath);
+    if (currentElement === void 0)
       return;
-    const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(void 0, this.sourcePath);
-    if (currentElement == null) {
-      this.isActive = false;
-    } else {
-      this.isActive = true;
-      this.currentElement = currentElement;
-      const sourceLines = this.source.split("\n");
-      let modelName = sourceLines[0].toLowerCase();
-      modelName = modelName[0].toUpperCase() + modelName.substring(1);
-      modelName = modelName.replace("navigation", "Navigation");
-      sourceLines.shift();
-      const sourceMeta = (0, import_obsidian.parseYaml)(sourceLines.join("\n"));
-      this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, modelName, this.currentElement, this.source, this.sourcePath, sourceMeta);
-    }
+    this.currentElement = currentElement;
+    this.generateModel();
   }
   onload() {
     this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
@@ -318,20 +325,19 @@ var RpgController = class extends import_obsidian.MarkdownRenderChild {
   }
   render() {
     return __async(this, null, function* () {
-      if (!this.rendering) {
-        this.initialise();
-        if (this.isActive) {
-          this.rendering = true;
-          this.container.empty();
-          this.model.generateData().then((data) => {
-            data.elements.forEach((element) => {
-              const view = this.app.plugins.getPlugin("rpg-manager").factories.views.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, element.responseType, this.sourcePath);
-              view.render(this.container, element);
-            });
-            this.rendering = false;
-          });
-        }
-      }
+      var _a;
+      if (((_a = this.app.plugins.getPlugin("rpg-manager")) == null ? void 0 : _a.database) === void 0)
+        return;
+      this.initialise();
+      if (this.currentElement === void 0)
+        return;
+      this.container.empty();
+      this.model.generateData().then((data) => {
+        data.elements.forEach((element) => {
+          const view = this.app.plugins.getPlugin("rpg-manager").factories.views.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, element.responseType, this.sourcePath);
+          view.render(this.container, element);
+        });
+      });
     });
   }
 };
@@ -394,368 +400,6 @@ var RpgFunctions = class {
   }
 };
 
-// src/abstracts/AbstractComponent.ts
-var AbstractComponent = class {
-  constructor(app2) {
-    this.app = app2;
-  }
-};
-
-// src/abstracts/AbstractResponse.ts
-var AbstractResponse = class {
-  constructor(app2) {
-    this.app = app2;
-  }
-  addTitle(title) {
-    this.title = title;
-  }
-};
-
-// src/enums/ResponseType.ts
-var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
-  ResponseType2[ResponseType2["Table"] = 0] = "Table";
-  ResponseType2[ResponseType2["String"] = 1] = "String";
-  ResponseType2[ResponseType2["Banner"] = 2] = "Banner";
-  ResponseType2[ResponseType2["Scene"] = 3] = "Scene";
-  ResponseType2[ResponseType2["Box"] = 4] = "Box";
-  ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
-  ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
-  ResponseType2[ResponseType2["Image"] = 7] = "Image";
-  ResponseType2[ResponseType2["Header"] = 8] = "Header";
-  ResponseType2[ResponseType2["AbtPlot"] = 9] = "AbtPlot";
-  ResponseType2[ResponseType2["StoryCirclePlot"] = 10] = "StoryCirclePlot";
-  ResponseType2[ResponseType2["RawCharacterRecordSheet"] = 11] = "RawCharacterRecordSheet";
-  return ResponseType2;
-})(ResponseType || {});
-
-// src/data/responses/ResponseTable.ts
-var ResponseTable = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.responseType = 0 /* Table */;
-    this.class = null;
-    this.headers = [];
-    this.content = [];
-  }
-  addHeaders(headers) {
-    this.headers = headers;
-  }
-  addContent(content) {
-    this.content.push(content);
-  }
-  addContentList(content) {
-    this.content = content;
-  }
-};
-
-// src/components/SessionTableComponent.ts
-var SessionTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Sessions");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Session", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Play Date", 0 /* String */)
-      ]);
-      data.forEach((session) => {
-        var _a, _b;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.sessionId, 1 /* Number */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.link, 2 /* Link */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.synopsis, 4 /* Markdown */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = session.date) == null ? void 0 : _a.toDateString(), 0 /* String */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = session.irl) == null ? void 0 : _b.toDateString(), 0 /* String */, true)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/AdventureTableComponent.ts
-var AdventureTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Adventures");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Adventure", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((adventure) => {
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.adventureId, 1 /* Number */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.link, 2 /* Link */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(adventure.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/CharacterTableComponent.ts
-var CharacterTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Characters");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Age", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((character) => {
-        var _a, _b;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.age) == null ? void 0 : _a.toString(), 0 /* String */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/LocationTableComponent.ts
-var LocationTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Locations");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((location) => {
-        var _a;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(location.imageSrcElement, 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(location.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = location.additionalInformation) != null ? _a : location.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/EventTableComponent.ts
-var EventTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Events");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((event) => {
-        var _a, _b;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(event.imageSrcElement, 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(event.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = event.date) == null ? void 0 : _a.toDateString(), 0 /* String */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = event.additionalInformation) != null ? _b : event.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/ClueTableComponent.ts
-var ClueTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Clues");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Clue", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Found", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((clue) => {
-        var _a, _b;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.imageSrcElement, 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(clue.isFound ? (_a = clue.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = clue.additionalInformation) != null ? _b : clue.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/FactionTableComponent.ts
-var FactionTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Factions");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Faction", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((faction) => {
-        var _a;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(faction.imageSrcElement, 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(faction.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = faction.additionalInformation) != null ? _a : faction.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/components/SceneTableComponent.ts
-var SceneTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Scenes");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Scene", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Start", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("End", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Duration", 0 /* String */)
-      ]);
-      data.forEach((scene) => {
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link, 2 /* Link */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.synopsis, 4 /* Markdown */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.startTime), 0 /* String */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.endTime), 0 /* String */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.duration, 0 /* String */, true)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/data/responses/ResponseBanner.ts
-var ResponseBanner = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.responseType = 2 /* Banner */;
-  }
-};
-
-// src/abstracts/database/AbstractElementData.ts
-var AbstractElementData = class extends AbstractRecord {
-  constructor() {
-    super(...arguments);
-    this.isOutline = false;
-  }
-};
-
-// src/data/Timeline.ts
-var Timeline = class extends AbstractElementData {
-};
-
-// src/components/BannerComponent.ts
-var BannerComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      const response = new ResponseBanner(this.app);
-      if (data instanceof Campaign) {
-        response.image = data.image;
-        response.title = data.name;
-        response.date = data.currentDate ? data.currentDate.toDateString() : "";
-      } else if (data instanceof Timeline) {
-        response.image = data.campaign.image;
-        response.title = "Timeline";
-        response.date = data.campaign.currentDate ? data.campaign.currentDate.toDateString() : "";
-        response.subtitle = data.campaign.name;
-      }
-      return response;
-    });
-  }
-};
-
-// src/data/responses/ResponseLine.ts
-var ResponseLine = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.responseType = 1 /* String */;
-    this.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */);
-  }
-  addContent(content) {
-    this.content = content;
-  }
-};
-
-// src/components/CharacterSynopsisComponent.ts
-var CharacterSynopsisComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      var _a;
-      let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';
-      if (data.synopsis != null && data.synopsis !== "") {
-        fullSynopsis = "";
-        if (data.isDead) {
-          fullSynopsis = "_Deceased " + ((_a = data.death) == null ? void 0 : _a.toDateString()) + "_\n";
-        }
-        fullSynopsis += data.link.toString();
-        const pronoun = data.pronoun;
-        if (pronoun != null) {
-          fullSynopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
-        }
-        fullSynopsis += data.isDead ? " was " : " is ";
-        fullSynopsis += data.synopsis;
-      }
-      const response = new ResponseLine(this.app);
-      response.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(fullSynopsis, 4 /* Markdown */);
-      return response;
-    });
-  }
-};
-
 // src/abstracts/AbstractFactory.ts
 var AbstractFactory = class {
   constructor(app2) {
@@ -763,625 +407,11 @@ var AbstractFactory = class {
   }
 };
 
-// src/data/responses/ResponseImage.ts
-var ResponseImage = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.responseType = 7 /* Image */;
-  }
-};
-
-// src/components/ImageComponent.ts
-var ImageComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      const response = new ResponseImage(this.app);
-      response.imgSrc = data.image;
-      response.height = 300;
-      response.width = 300;
-      return response;
-    });
-  }
-};
-
-// src/data/responses/ResponseHeader.ts
-var ResponseHeader = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.responseType = 8 /* Header */;
-    this.elements = [];
-  }
-  addElement(element) {
-    this.elements.push(element);
-  }
-};
-
-// src/data/Character.ts
-var Character = class extends AbstractElementData {
-  loadData() {
-    var _a, _b, _c, _d, _e, _f, _g;
-    this.dob = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.dob);
-    this.death = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.death);
-    this.goals = (_e = this.frontmatter) == null ? void 0 : _e.goals;
-    this.pronoun = ((_f = this.frontmatter) == null ? void 0 : _f.pronoun) ? this.app.plugins.getPlugin("rpg-manager").factories.pronouns.create((_g = this.frontmatter) == null ? void 0 : _g.pronoun) : null;
-    super.loadData();
-  }
-  get age() {
-    if (this.dob == null || this.death == null && this.campaign.currentDate == null)
-      return null;
-    const end = this.death ? this.death : this.campaign.currentDate;
-    if (end == null)
-      return null;
-    const ageDifMs = end.valueOf() - this.dob.valueOf();
-    const ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
-  }
-  get isDead() {
-    return this.death != null;
-  }
-};
-
-// src/data/Clue.ts
-var Clue = class extends AbstractElementData {
-  loadData() {
-    var _a, _b;
-    this.found = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.found);
-    super.loadData();
-  }
-  get isFound() {
-    return this.found != null;
-  }
-};
-
-// src/data/Location.ts
-var Location = class extends AbstractElementData {
-  loadData() {
-    var _a;
-    this.address = (_a = this.frontmatter) == null ? void 0 : _a.address;
-    super.loadData();
-  }
-};
-
-// src/data/Event.ts
-var Event = class extends AbstractElementData {
-  loadData() {
-    var _a, _b;
-    this.date = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.event);
-    super.loadData();
-  }
-};
-
-// src/data/Scene.ts
-var Scene = class extends AbstractOutlineData {
-  constructor() {
-    super(...arguments);
-    this.previousScene = null;
-    this.nextScene = null;
-  }
-  loadData() {
-    var _a, _b, _c, _d, _e;
-    this.sceneId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
-    this.startTime = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.time) == null ? void 0 : _b.start);
-    this.endTime = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.time) == null ? void 0 : _d.end);
-    this.action = (_e = this.frontmatter) == null ? void 0 : _e.action;
-    super.loadData();
-  }
-  loadHierarchy(database) {
-    return __async(this, null, function* () {
-      __superGet(Scene.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = database.readSingle(database, 2 /* Adventure */, this.tag);
-      this.session = database.readSingle(database, 4 /* Session */, this.tag);
-      try {
-        this.previousScene = database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId - 1);
-        this.previousScene.nextScene = this;
-      } catch (e) {
-      }
-      try {
-        this.nextScene = database.readSingle(database, 8 /* Scene */, this.tag, this.sceneId + 1);
-        this.nextScene.previousScene = this;
-      } catch (e) {
-      }
-    });
-  }
-  get duration() {
-    let response = "";
-    if (this.startTime && this.endTime) {
-      const duration = this.endTime.getTime() - this.startTime.getTime();
-      const hours = Math.floor(duration / (1e3 * 60 * 60));
-      const minutes = Math.floor(duration / (1e3 * 60)) % 60;
-      response = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
-    }
-    return response;
-  }
-};
-
-// src/data/responses/ResponseHeaderElement.ts
-var ResponseHeaderElement = class extends AbstractResponse {
-  constructor(app2, title, content, type) {
-    super(app2);
-    this.app = app2;
-    this.title = title;
-    this.type = type;
-    this.value = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(content, 4 /* Markdown */);
-  }
-};
-
-// src/enums/FetcherType.ts
-var FetcherType = /* @__PURE__ */ ((FetcherType2) => {
-  FetcherType2[FetcherType2["YouTubeImage"] = 0] = "YouTubeImage";
-  return FetcherType2;
-})(FetcherType || {});
-
-// src/data/Music.ts
-var Music = class extends AbstractElementData {
-  loadData() {
-    var _a;
-    this.url = (_a = this.frontmatter) == null ? void 0 : _a.url;
-    super.loadData();
-  }
-  getThumbnail() {
-    const imageUrl = this.fetchImage();
-    imageUrl.then((imageUrl2) => {
-      if (imageUrl2 == null) {
-        this.imageSrc = void 0;
-      } else {
-        this.imageSrc = imageUrl2;
-      }
-    });
-    return imageUrl;
-  }
-  getDynamicImageSrcElement() {
-    return __async(this, null, function* () {
-      if (this.imageSrc === null) {
-        this.imageSrc = yield this.fetchImage();
-      }
-      return this.imageSrcElement;
-    });
-  }
-  fetchImage() {
-    return __async(this, null, function* () {
-      if (this.url == void 0)
-        return void 0;
-      if (this.url.indexOf("youtube.com") !== -1 || this.url.indexOf("youtu.be") !== -1) {
-        const fetcher = this.app.plugins.getPlugin("rpg-manager").factories.fetchers.create(0 /* YouTubeImage */);
-        return fetcher.fetchImage(this.url);
-      }
-    });
-  }
-};
-
-// src/components/HeaderComponent.ts
-var HeaderComponent = class extends AbstractComponent {
-  generateData(data, title, additionalInformation = null) {
-    return __async(this, null, function* () {
-      var _a;
-      const response = new ResponseHeader(this.app);
-      response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
-      response.name = data.name;
-      let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
-      let synopsisTitle = "Synopsis";
-      if (data instanceof Character) {
-        if (data.synopsis != null && data.synopsis !== "") {
-          synopsis = "";
-          synopsis += data.link.toString();
-          const pronoun = data.pronoun;
-          if (pronoun != null) {
-            synopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
-          }
-          synopsis += data.isDead ? " was " : " is ";
-          synopsis += data.synopsis;
-        }
-        response.addElement(new ResponseHeaderElement(this.app, "Synopsis", synopsis, 1 /* Long */));
-        if (data.goals != null)
-          response.addElement(new ResponseHeaderElement(this.app, "Goals", data.goals.toString(), 1 /* Long */));
-        if (data.pronoun != null)
-          response.addElement(new ResponseHeaderElement(this.app, "Pronoun", this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(data.pronoun), 0 /* Short */));
-        if (data.age != null || data.death != null) {
-          response.addElement(new ResponseHeaderElement(this.app, "Status", data.death ? "Dead" : "Alive", 0 /* Short */));
-        }
-        if (data.death != null) {
-          let death = data.death.toDateString();
-          if (data.age != null) {
-            death += " at age " + data.age;
-          }
-          response.addElement(new ResponseHeaderElement(this.app, "Death", death, 0 /* Short */));
-        } else if (data.age != null) {
-          response.addElement(new ResponseHeaderElement(this.app, "Age", data.age.toString(), 0 /* Short */));
-        }
-      } else {
-        if (data instanceof Scene) {
-          synopsisTitle = "Scene Goal";
-        }
-        if (data.synopsis != null && data.synopsis != "") {
-          synopsis = data.synopsis;
-        }
-        response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
-        if (data instanceof Clue) {
-          const clueFound = data.isFound ? "Clue found on " + ((_a = data.found) == null ? void 0 : _a.toDateString()) : '<span class="rpgm-missing">Clue not found yet</span>';
-          response.addElement(new ResponseHeaderElement(this.app, "Found", clueFound, 0 /* Short */));
-        } else if (data instanceof Location) {
-          if (data.address != null && data.address != "") {
-            response.addElement(new ResponseHeaderElement(this.app, "Address", data.address, 0 /* Short */));
-          }
-        } else if (data instanceof Event) {
-          if (data.date != null) {
-            response.addElement(new ResponseHeaderElement(this.app, "Date", data.date.toDateString(), 0 /* Short */));
-          }
-        } else if (data instanceof Scene) {
-          if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
-            response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
-          }
-          if (data.action != null && data.action != "") {
-            response.addElement(new ResponseHeaderElement(this.app, "Action", data.action, 1 /* Long */));
-          } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
-            response.addElement(new ResponseHeaderElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
-          }
-        } else if (data instanceof Music) {
-          if (data.image === void 0) {
-            response.imgSrc = yield data.getThumbnail();
-          } else if (data.image !== null) {
-            response.imgSrc = data.image;
-          }
-          if (data.url !== void 0)
-            response.addElement(new ResponseHeaderElement(this.app, "link", data.url, 1 /* Long */));
-        }
-      }
-      if (data.image !== null) {
-        response.imgSrc = data.image;
-        response.imgWidth = 300;
-        response.imgHeight = 300;
-      }
-      return response;
-    });
-  }
-};
-
-// src/data/Adventure.ts
-var Adventure = class extends AbstractOutlineData {
-  loadData() {
-    this.adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
-    super.loadData();
-  }
-};
-
-// src/components/AbtPlotComponent.ts
-var AbtPlotComponent = class extends AbstractComponent {
-  generateData(data, title, additionalInformation) {
-    return __async(this, null, function* () {
-      if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
-        return null;
-      const response = new ResponseTable(this.app);
-      if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, data.campaign.campaignId, data.adventureId).length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
-        response.create = 2 /* Adventure */;
-        response.campaignId = data.campaign.campaignId;
-        response.adventureId = data.adventureId;
-      }
-      response.title = "ABT Plot";
-      response.class = "rpgm-plot";
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.and ? additionalInformation.and : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.but ? additionalInformation.but : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.therefore ? additionalInformation.therefore : "", 4 /* Markdown */)
-      ]);
-      return response;
-    });
-  }
-};
-
-// src/components/StoryCirclePlotComponent.ts
-var StoryCirclePlotComponent = class extends AbstractComponent {
-  generateData(data, title, additionalInformation) {
-    return __async(this, null, function* () {
-      if (additionalInformation == null || (additionalInformation.you == null || additionalInformation.need == null || additionalInformation.go == null || additionalInformation.search == null || additionalInformation.find == null || additionalInformation.take == null || additionalInformation.return == null || additionalInformation.change == null) || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return === "" && additionalInformation.change === "")
-        return null;
-      const response = new ResponseTable(this.app);
-      response.title = "Story Circle Plot";
-      response.class = "rpgm-plot";
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.you ? additionalInformation.you : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.go ? additionalInformation.go : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.search ? additionalInformation.search : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.find ? additionalInformation.find : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.take ? additionalInformation.take : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.return ? additionalInformation.return : "", 4 /* Markdown */)
-      ]);
-      response.addContent([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.change ? additionalInformation.change : "", 4 /* Markdown */)
-      ]);
-      return response;
-    });
-  }
-};
-
-// src/settings/Vampire/components/VampireCharacterTableComponent.ts
-var VampireCharacterTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Characters");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Generation", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      data.forEach((character) => {
-        var _a, _b;
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.imageSrcElement, 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(character.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = character.generation) == null ? void 0 : _a.toString(), 0 /* String */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = character.additionalInformation) != null ? _b : character.synopsis, 4 /* Markdown */)
-        ]);
-      });
-      return response;
-    });
-  }
-};
-
-// src/settings/Vampire/components/VampireHeaderComponent.ts
-var VampireHeaderComponent = class extends HeaderComponent {
-  generateData(data, title, additionalInformation = null) {
-    return __async(this, null, function* () {
-      const response = yield __superGet(VampireHeaderComponent.prototype, this, "generateData").call(this, data, title, additionalInformation);
-      if (data.generation != null) {
-        response.addElement(new ResponseHeaderElement(this.app, "Generation", data.generation.toString(), 0 /* Short */));
-      }
-      return response;
-    });
-  }
-};
-
-// src/settings/Raw/enums/RawTrait.ts
-var RawTrait = /* @__PURE__ */ ((RawTrait2) => {
-  RawTrait2[RawTrait2["Body"] = 0] = "Body";
-  RawTrait2[RawTrait2["Mind"] = 1] = "Mind";
-  RawTrait2[RawTrait2["Spirit"] = 2] = "Spirit";
-  return RawTrait2;
-})(RawTrait || {});
-
-// src/settings/Raw/data/responses/RawResponseCharacterRecordSheetAbility.ts
-var RawResponseCharacterRecordSheetAbility = class extends AbstractResponse {
-  constructor(app2, id, name, value, specialisation, trait, traitValue) {
-    super(app2);
-    this.id = id;
-    this.name = name;
-    this.value = value;
-    this.specialisation = specialisation;
-    this.trait = trait;
-    this.traitValue = traitValue;
-  }
-};
-
-// src/settings/Raw/enums/RawAbility.ts
-var RawAbility = /* @__PURE__ */ ((RawAbility2) => {
-  RawAbility2[RawAbility2["athletics"] = 0] = "athletics";
-  RawAbility2[RawAbility2["drive"] = 1] = "drive";
-  RawAbility2[RawAbility2["firearms"] = 2] = "firearms";
-  RawAbility2[RawAbility2["handtohand"] = 3] = "handtohand";
-  RawAbility2[RawAbility2["intimidate"] = 4] = "intimidate";
-  RawAbility2[RawAbility2["melee"] = 5] = "melee";
-  RawAbility2[RawAbility2["pilot"] = 6] = "pilot";
-  RawAbility2[RawAbility2["repair"] = 7] = "repair";
-  RawAbility2[RawAbility2["cryptography"] = 8] = "cryptography";
-  RawAbility2[RawAbility2["fasttalk"] = 9] = "fasttalk";
-  RawAbility2[RawAbility2["investigation"] = 10] = "investigation";
-  RawAbility2[RawAbility2["language"] = 11] = "language";
-  RawAbility2[RawAbility2["library"] = 12] = "library";
-  RawAbility2[RawAbility2["medicine"] = 13] = "medicine";
-  RawAbility2[RawAbility2["perception"] = 14] = "perception";
-  RawAbility2[RawAbility2["technology"] = 15] = "technology";
-  RawAbility2[RawAbility2["craft"] = 16] = "craft";
-  RawAbility2[RawAbility2["empathy"] = 17] = "empathy";
-  RawAbility2[RawAbility2["leadership"] = 18] = "leadership";
-  RawAbility2[RawAbility2["occult"] = 19] = "occult";
-  RawAbility2[RawAbility2["persuasion"] = 20] = "persuasion";
-  RawAbility2[RawAbility2["stealth"] = 21] = "stealth";
-  RawAbility2[RawAbility2["survival"] = 22] = "survival";
-  RawAbility2[RawAbility2["willpower"] = 23] = "willpower";
-  return RawAbility2;
-})(RawAbility || {});
-var RawAbilityTrait = {
-  athletics: 0 /* Body */,
-  drive: 0 /* Body */,
-  firearms: 0 /* Body */,
-  handtohand: 0 /* Body */,
-  intimidate: 0 /* Body */,
-  melee: 0 /* Body */,
-  pilot: 0 /* Body */,
-  repair: 0 /* Body */,
-  cryptography: 1 /* Mind */,
-  fasttalk: 1 /* Mind */,
-  investigation: 1 /* Mind */,
-  language: 1 /* Mind */,
-  library: 1 /* Mind */,
-  medicine: 1 /* Mind */,
-  perception: 1 /* Mind */,
-  technology: 1 /* Mind */,
-  craft: 2 /* Spirit */,
-  empathy: 2 /* Spirit */,
-  leadership: 2 /* Spirit */,
-  occult: 2 /* Spirit */,
-  persuasion: 2 /* Spirit */,
-  stealth: 2 /* Spirit */,
-  survival: 2 /* Spirit */,
-  willpower: 2 /* Spirit */
-};
-
-// src/settings/Raw/data/responses/RawResponseCharacterRecordSheetTrait.ts
-var RawResponseCharacterRecordSheetTrait = class extends AbstractResponse {
-  constructor(app2, trait, metadata) {
-    super(app2);
-    this.trait = trait;
-    this.traitValue = 0;
-    this.abilities = [];
-    if (metadata != null) {
-      this.value = metadata.value != null ? metadata.value : 0;
-      if (metadata.abilities != null) {
-        Object.entries(metadata.abilities).forEach(([abilityName, value]) => {
-          var _a, _b;
-          this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, null, RawAbility[abilityName.toLowerCase()], (_a = value == null ? void 0 : value.value) != null ? _a : -10, (_b = value == null ? void 0 : value.specialisation) != null ? _b : null, this.trait, this.traitValue));
-        });
-      }
-    }
-    Object.keys(RawAbilityTrait).filter((abilityKey) => isNaN(Number(abilityKey))).forEach((abilityKey) => {
-      const ability = RawAbility[abilityKey];
-      if (this.trait === RawAbilityTrait[RawAbility[ability]] && this.getAbility(ability) == null) {
-        this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, null, ability, -10, null, this.trait, this.traitValue));
-      }
-    });
-  }
-  get value() {
-    return this.traitValue;
-  }
-  set value(value) {
-    this.traitValue = value;
-    this.abilities.forEach((ability) => {
-      ability.traitValue = this.traitValue;
-    });
-  }
-  getAbility(name, specialisation = null) {
-    let response = null;
-    this.abilities.forEach((ability) => {
-      if (ability.name === name && ability.specialisation === specialisation) {
-        response = ability;
-      }
-    });
-    return response;
-  }
-};
-
-// src/settings/Raw/data/responses/RawResponseCharacterRecordSheet.ts
-var RawResponseCharacterRecordSheet = class extends AbstractResponse {
-  constructor(app2, metadata) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-    super(app2);
-    this.responseType = 11 /* RawCharacterRecordSheet */;
-    this.body = new RawResponseCharacterRecordSheetTrait(app2, 0 /* Body */, (_b = (_a = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _a.character) == null ? void 0 : _b.body);
-    this.mind = new RawResponseCharacterRecordSheetTrait(app2, 1 /* Mind */, (_d = (_c = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _c.character) == null ? void 0 : _d.mind);
-    this.spirit = new RawResponseCharacterRecordSheetTrait(app2, 2 /* Spirit */, (_f = (_e = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _e.character) == null ? void 0 : _f.spirit);
-    this.damages = (_i = (_h = (_g = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _g.character) == null ? void 0 : _h.damages) != null ? _i : 0;
-  }
-  get lifePoints() {
-    return 30 + this.body.value - this.damages;
-  }
-  get lifePointsPercentage() {
-    return Math.trunc(100 * (30 + this.body.value) / this.lifePoints);
-  }
-  getAbility(name, specialisation = null) {
-    let response = this.body.getAbility(name, specialisation);
-    if (response == null)
-      response = this.mind.getAbility(name, specialisation);
-    if (response == null)
-      response = this.spirit.getAbility(name, specialisation);
-    return response;
-  }
-};
-
-// src/settings/Raw/components/RawCharacterRecordSheetComponent.ts
-var RawCharacterRecordSheetComponent = class extends AbstractComponent {
-  generateData(data, title, additionalInformation) {
-    return __async(this, null, function* () {
-      const response = new RawResponseCharacterRecordSheet(this.app, additionalInformation);
-      return response;
-    });
-  }
-};
-
-// src/components/MusicTableComponent.ts
-var MusicTableComponent = class extends AbstractComponent {
-  generateData(data, title) {
-    return __async(this, null, function* () {
-      var _a, _b;
-      if (data.length === 0) {
-        return null;
-      }
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Music");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Music", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("url", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      for (let musicCounter = 0; musicCounter < data.length; musicCounter++) {
-        const music = data[musicCounter];
-        response.addContent([
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(yield music.getDynamicImageSrcElement(), 5 /* Image */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create(music.link, 2 /* Link */, true),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = music.url) != null ? _a : '<span class="rpgm-missing">No URL provided</span>', 4 /* Markdown */),
-          this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = music.additionalInformation) != null ? _b : music.synopsis, 4 /* Markdown */)
-        ]);
-      }
-      return response;
-    });
-  }
-};
-
 // src/factories/ComponentFactory.ts
-var ComponentsMap = {
-  AgnosticSessionTable: SessionTableComponent,
-  AgnosticAdventureTable: AdventureTableComponent,
-  AgnosticCharacterTable: CharacterTableComponent,
-  AgnosticLocationTable: LocationTableComponent,
-  AgnosticEventTable: EventTableComponent,
-  AgnosticClueTable: ClueTableComponent,
-  AgnosticFactionTable: FactionTableComponent,
-  AgnosticSceneTable: SceneTableComponent,
-  AgnosticBanner: BannerComponent,
-  AgnosticCharacterSynopsis: CharacterSynopsisComponent,
-  AgnosticImage: ImageComponent,
-  AgnosticHeader: HeaderComponent,
-  AgnosticAbtPlot: AbtPlotComponent,
-  AgnosticStoryCirclePlot: StoryCirclePlotComponent,
-  VampireCharacterTable: VampireCharacterTableComponent,
-  VampireHeader: VampireHeaderComponent,
-  RawCharacterRecordSheet: RawCharacterRecordSheetComponent,
-  AgnosticMusicTable: MusicTableComponent
-};
 var ComponentFactory = class extends AbstractFactory {
-  create(settings, type, data, title = null, additionalInformation = null) {
+  create(componentType, data, title = void 0, additionalInformation = void 0) {
     return __async(this, null, function* () {
-      let componentKey = CampaignSetting[settings] + type;
-      if (ComponentsMap[componentKey] == null && settings !== 0 /* Agnostic */) {
-        componentKey = CampaignSetting[0 /* Agnostic */] + type;
-      }
-      const component = new ComponentsMap[componentKey](this.app);
+      const component = new componentType(this.app);
       return component.generateData(data, title, additionalInformation);
     });
   }
@@ -1489,54 +519,173 @@ var ContentFactory = class extends AbstractFactory {
   }
 };
 
+// src/data/Adventure.ts
+var Adventure = class extends AbstractOutlineRecord {
+  initialiseData() {
+    this.adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    super.initialiseData();
+  }
+};
+
 // src/data/Session.ts
-var Session = class extends AbstractOutlineData {
+var Session = class extends AbstractOutlineRecord {
   constructor() {
     super(...arguments);
     this.previousSession = null;
     this.nextSession = null;
     this.note = null;
   }
-  loadData() {
+  initialiseData() {
     var _a, _b, _c, _d;
     this.sessionId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
     this.date = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.session);
     this.irl = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.irl);
-    super.loadData();
+    super.initialiseData();
   }
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Session.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = database.readSingle(database, 2 /* Adventure */, this.tag);
+      this.adventure = database.readSingle(2 /* Adventure */, this.tag);
       try {
-        this.previousSession = database.readSingle(database, 4 /* Session */, this.tag, this.sessionId - 1);
+        this.previousSession = database.readSingle(4 /* Session */, this.tag, this.sessionId - 1);
         this.previousSession.nextSession = this;
       } catch (e) {
       }
       try {
-        this.nextSession = database.readSingle(database, 4 /* Session */, this.tag, this.sessionId + 1);
+        this.nextSession = database.readSingle(4 /* Session */, this.tag, this.sessionId + 1);
         this.nextSession.previousSession = this;
       } catch (e) {
       }
       try {
-        this.note = database.readSingle(database, 1024 /* Note */, this.tag);
+        this.note = database.readSingle(1024 /* Note */, this.tag);
       } catch (e) {
       }
     });
   }
 };
 
+// src/data/Scene.ts
+var Scene = class extends AbstractOutlineRecord {
+  constructor() {
+    super(...arguments);
+    this.previousScene = null;
+    this.nextScene = null;
+  }
+  initialiseData() {
+    var _a, _b, _c, _d, _e;
+    this.sceneId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    this.startTime = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.time) == null ? void 0 : _b.start);
+    this.endTime = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.time) == null ? void 0 : _d.end);
+    this.action = (_e = this.frontmatter) == null ? void 0 : _e.action;
+    super.initialiseData();
+  }
+  loadHierarchy(database) {
+    return __async(this, null, function* () {
+      __superGet(Scene.prototype, this, "loadHierarchy").call(this, database);
+      this.adventure = database.readSingle(2 /* Adventure */, this.tag);
+      this.session = database.readSingle(4 /* Session */, this.tag);
+      try {
+        this.previousScene = database.readSingle(8 /* Scene */, this.tag, this.sceneId - 1);
+        this.previousScene.nextScene = this;
+      } catch (e) {
+      }
+      try {
+        this.nextScene = database.readSingle(8 /* Scene */, this.tag, this.sceneId + 1);
+        this.nextScene.previousScene = this;
+      } catch (e) {
+      }
+    });
+  }
+  get duration() {
+    let response = "";
+    if (this.startTime && this.endTime) {
+      const duration = this.endTime.getTime() - this.startTime.getTime();
+      const hours = Math.floor(duration / (1e3 * 60 * 60));
+      const minutes = Math.floor(duration / (1e3 * 60)) % 60;
+      response = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
+    }
+    return response;
+  }
+};
+
+// src/abstracts/database/AbstractElementRecord.ts
+var AbstractElementRecord = class extends AbstractRecord {
+  constructor() {
+    super(...arguments);
+    this.isOutline = false;
+  }
+};
+
+// src/data/Character.ts
+var Character = class extends AbstractElementRecord {
+  initialiseData() {
+    var _a, _b, _c, _d, _e, _f, _g;
+    this.dob = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.dob);
+    this.death = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.death);
+    this.goals = (_e = this.frontmatter) == null ? void 0 : _e.goals;
+    this.pronoun = ((_f = this.frontmatter) == null ? void 0 : _f.pronoun) ? this.app.plugins.getPlugin("rpg-manager").factories.pronouns.create((_g = this.frontmatter) == null ? void 0 : _g.pronoun) : null;
+    super.initialiseData();
+  }
+  get age() {
+    if (this.dob == null || this.death == null && this.campaign.currentDate == null)
+      return null;
+    const end = this.death ? this.death : this.campaign.currentDate;
+    if (end == null)
+      return null;
+    const ageDifMs = end.valueOf() - this.dob.valueOf();
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+  get isDead() {
+    return this.death != null;
+  }
+};
+
 // src/data/Faction.ts
-var Faction = class extends AbstractElementData {
+var Faction = class extends AbstractElementRecord {
+};
+
+// src/data/Clue.ts
+var Clue = class extends AbstractElementRecord {
+  initialiseData() {
+    var _a, _b;
+    this.found = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.found);
+    super.initialiseData();
+  }
+  get isFound() {
+    return this.found != null;
+  }
+};
+
+// src/data/Location.ts
+var Location = class extends AbstractElementRecord {
+  initialiseData() {
+    var _a;
+    this.address = (_a = this.frontmatter) == null ? void 0 : _a.address;
+    super.initialiseData();
+  }
+};
+
+// src/data/Event.ts
+var Event = class extends AbstractElementRecord {
+  initialiseData() {
+    var _a, _b;
+    this.date = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.event);
+    super.initialiseData();
+  }
+};
+
+// src/data/Timeline.ts
+var Timeline = class extends AbstractElementRecord {
 };
 
 // src/data/Note.ts
-var Note = class extends AbstractOutlineData {
+var Note = class extends AbstractOutlineRecord {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Note.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = database.readSingle(database, 2 /* Adventure */, this.tag);
-      const session = database.readSingle(database, 4 /* Session */, this.tag);
+      this.adventure = database.readSingle(2 /* Adventure */, this.tag);
+      const session = database.readSingle(4 /* Session */, this.tag);
       this.sessionId = session.sessionId;
     });
   }
@@ -1544,22 +693,66 @@ var Note = class extends AbstractOutlineData {
 
 // src/settings/Vampire/data/VampireCharacter.ts
 var VampireCharacter = class extends Character {
-  loadData() {
+  initialiseData() {
     return __async(this, null, function* () {
       var _a;
       this.generation = (_a = this.frontmatter) == null ? void 0 : _a.generation;
-      __superGet(VampireCharacter.prototype, this, "loadData").call(this);
+      __superGet(VampireCharacter.prototype, this, "initialiseData").call(this);
     });
   }
 };
 
 // src/settings/Raw/data/RawCampaign.ts
 var RawCampaign = class extends Campaign {
-  loadData() {
+  initialiseData() {
     return __async(this, null, function* () {
       var _a, _b;
       this.apiCampaignKey = (_b = (_a = this.frontmatter) == null ? void 0 : _a.apiCampaignKey) != null ? _b : null;
-      __superGet(RawCampaign.prototype, this, "loadData").call(this);
+      __superGet(RawCampaign.prototype, this, "initialiseData").call(this);
+    });
+  }
+};
+
+// src/enums/FetcherType.ts
+var FetcherType = /* @__PURE__ */ ((FetcherType2) => {
+  FetcherType2[FetcherType2["YouTubeImage"] = 0] = "YouTubeImage";
+  return FetcherType2;
+})(FetcherType || {});
+
+// src/data/Music.ts
+var Music = class extends AbstractElementRecord {
+  initialiseData() {
+    var _a;
+    this.url = (_a = this.frontmatter) == null ? void 0 : _a.url;
+    super.initialiseData();
+  }
+  getThumbnail() {
+    const imageUrl = this.fetchImage();
+    imageUrl.then((imageUrl2) => {
+      if (imageUrl2 == null) {
+        this.imageSrc = void 0;
+      } else {
+        this.imageSrc = imageUrl2;
+      }
+    });
+    return imageUrl;
+  }
+  getDynamicImageSrcElement() {
+    return __async(this, null, function* () {
+      if (this.imageSrc === null) {
+        this.imageSrc = yield this.fetchImage();
+      }
+      return this.imageSrcElement;
+    });
+  }
+  fetchImage() {
+    return __async(this, null, function* () {
+      if (this.url == void 0)
+        return void 0;
+      if (this.url.indexOf("youtube.com") !== -1 || this.url.indexOf("youtu.be") !== -1) {
+        const fetcher = this.app.plugins.getPlugin("rpg-manager").factories.fetchers.create(0 /* YouTubeImage */);
+        return fetcher.fetchImage(this.url);
+      }
     });
   }
 };
@@ -1607,7 +800,7 @@ var FileFactory = class extends AbstractFactory {
     return __async(this, null, function* () {
       let folder = "/";
       if (campaignId != null) {
-        const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(void 0, 1 /* Campaign */, campaignId);
+        const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(1 /* Campaign */, campaignId);
         if (campaign !== void 0) {
           settings = campaign.settings;
           folder = campaign.folder;
@@ -1649,7 +842,7 @@ var FileFactory = class extends AbstractFactory {
     return __async(this, null, function* () {
       let folder = "/";
       let settings = 0 /* Agnostic */;
-      const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(void 0, 1 /* Campaign */, campaignId);
+      const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(1 /* Campaign */, campaignId);
       if (campaign !== void 0) {
         settings = campaign.settings;
         folder = campaign.folder;
@@ -1706,7 +899,7 @@ var AbstractModalComponent = class {
 var CampaignModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
-    this.campaigns = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 1 /* Campaign */);
+    this.campaigns = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(1 /* Campaign */);
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -1826,7 +1019,7 @@ var CampaignModal = class extends AbstractModalComponent {
 var AdventureModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
-    this.adventures = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 2 /* Adventure */, this.modal.campaignId);
+    this.adventures = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(2 /* Adventure */, this.modal.campaignId);
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -1911,7 +1104,7 @@ var AdventureModal = class extends AbstractModalComponent {
 var SessionModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
-    this.sessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, this.modal.campaignId, this.modal.adventureId);
+    this.sessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(4 /* Session */, this.modal.campaignId, this.modal.adventureId);
   }
   addElement(contentEl) {
     return __async(this, null, function* () {
@@ -1996,7 +1189,7 @@ var SceneModal = class extends AbstractModalComponent {
   constructor(app2, modal) {
     super(app2, modal);
     if (this.modal.adventureId != null && this.modal.sessionId != null) {
-      this.scenes = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 8 /* Scene */, this.modal.campaignId, this.modal.adventureId, this.modal.sessionId);
+      this.scenes = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.modal.campaignId, this.modal.adventureId, this.modal.sessionId);
     } else {
       this.scenes = [];
     }
@@ -2251,6 +1444,33 @@ var ModalFactory = class extends AbstractFactory {
   }
 };
 
+// src/abstracts/AbstractResponse.ts
+var AbstractResponse = class {
+  constructor(app2) {
+    this.app = app2;
+  }
+  addTitle(title) {
+    this.title = title;
+  }
+};
+
+// src/enums/ResponseType.ts
+var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
+  ResponseType2[ResponseType2["Table"] = 0] = "Table";
+  ResponseType2[ResponseType2["String"] = 1] = "String";
+  ResponseType2[ResponseType2["Banner"] = 2] = "Banner";
+  ResponseType2[ResponseType2["Scene"] = 3] = "Scene";
+  ResponseType2[ResponseType2["Box"] = 4] = "Box";
+  ResponseType2[ResponseType2["Breadcrumb"] = 5] = "Breadcrumb";
+  ResponseType2[ResponseType2["Timeline"] = 6] = "Timeline";
+  ResponseType2[ResponseType2["Image"] = 7] = "Image";
+  ResponseType2[ResponseType2["Header"] = 8] = "Header";
+  ResponseType2[ResponseType2["AbtPlot"] = 9] = "AbtPlot";
+  ResponseType2[ResponseType2["StoryCirclePlot"] = 10] = "StoryCirclePlot";
+  ResponseType2[ResponseType2["RawCharacterRecordSheet"] = 11] = "RawCharacterRecordSheet";
+  return ResponseType2;
+})(ResponseType || {});
+
 // src/data/responses/ResponseBreadcrumb.ts
 var ResponseBreadcrumb = class extends AbstractResponse {
   constructor(app2) {
@@ -2260,6 +1480,47 @@ var ResponseBreadcrumb = class extends AbstractResponse {
     this.mainTitle = null;
     this.function = null;
     this.responseType = 5 /* Breadcrumb */;
+  }
+};
+
+// src/data/responses/ResponseData.ts
+var ResponseData = class {
+  constructor(app2) {
+    this.app = app2;
+    this.elements = [];
+  }
+  addComponent(type, data, title = void 0, additionalInformation = void 0, position = void 0) {
+    return __async(this, null, function* () {
+      let relationships = [];
+      let relationship;
+      if (data instanceof AbstractRecord) {
+        relationship = { component: data, description: "", isReverse: false };
+      } else if (data instanceof Array) {
+        relationships = [];
+        if (data.length > 0) {
+          if (data[0] instanceof AbstractRecord) {
+            data.forEach((record) => {
+              relationships.push({ component: record, description: "", isReverse: false });
+            });
+          } else {
+            data.forEach((rel) => {
+              relationships.push(rel);
+            });
+          }
+        }
+      }
+      const element = yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(type, relationship != null ? relationship : relationships, title, additionalInformation);
+      this.addElement(element, position);
+    });
+  }
+  addElement(element, position = null) {
+    if (element != null) {
+      if (position == null) {
+        this.elements.push(element);
+      } else {
+        this.elements.splice(position, 0, element);
+      }
+    }
   }
 };
 
@@ -2279,6 +1540,8 @@ var AbstractModel = class {
       fileFactory.silentCreate(8 /* Scene */, "s" + (scene.session.sessionId < 10 ? "0" + scene.session.sessionId.toString() : scene.session.sessionId.toString()) + "e" + (newSceneId < 10 ? "0" + newSceneId.toString() : newSceneId.toString()), scene.campaign.campaignId, scene.adventure.adventureId, scene.session.sessionId, newSceneId);
     };
     this.io = this.app.plugins.getPlugin("rpg-manager").database;
+    this.componentFactory = this.app.plugins.getPlugin("rpg-manager").factories.components;
+    this.response = new ResponseData(this.app);
   }
   generateBreadcrumb() {
     const response = this.generateElementBreadcrumb(null, 1 /* Campaign */, this.currentElement.campaign);
@@ -2367,19 +1630,63 @@ var AbstractModel = class {
   }
 };
 
-// src/data/responses/ResponseData.ts
-var ResponseData = class {
-  constructor() {
-    this.elements = [];
+// src/abstracts/AbstractComponent.ts
+var AbstractComponent = class {
+  constructor(app2) {
+    this.app = app2;
   }
-  addElement(element, position = null) {
-    if (element != null) {
-      if (position == null) {
-        this.elements.push(element);
-      } else {
-        this.elements.splice(position, 0, element);
-      }
-    }
+};
+
+// src/data/responses/ResponseTable.ts
+var ResponseTable = class extends AbstractResponse {
+  constructor(app2) {
+    super(app2);
+    this.responseType = 0 /* Table */;
+    this.class = null;
+    this.headers = [];
+    this.content = [];
+  }
+  addHeaders(headers) {
+    this.headers = headers;
+  }
+  addContent(content) {
+    this.content.push(content);
+  }
+  addContentList(content) {
+    this.content = content;
+  }
+};
+
+// src/components/SessionTableComponent.ts
+var SessionTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Sessions");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Session", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Play Date", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        var _a, _b;
+        const session = relationship.component;
+        if (session !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.sessionId, 1 /* Number */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.link, 2 /* Link */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(session.synopsis, 4 /* Markdown */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = session.date) == null ? void 0 : _a.toDateString(), 0 /* String */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_b = session.irl) == null ? void 0 : _b.toDateString(), 0 /* String */, true)
+          ]);
+        }
+      });
+      return response;
+    });
   }
 };
 
@@ -2387,14 +1694,44 @@ var ResponseData = class {
 var AdventureModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.io.readListParametrised(void 0, 4 /* Session */, this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
+      yield this.response.addComponent(SessionTableComponent, this.io.readListParametrised(4 /* Session */, this.currentElement.campaign.campaignId, this.currentElement.adventureId).sort(function(leftData, rightData) {
         if (leftData.sessionId > rightData.sessionId)
           return -1;
         if (leftData.sessionId < rightData.sessionId)
           return 1;
         return 0;
-      })));
+      }));
+      return this.response;
+    });
+  }
+};
+
+// src/components/CharacterTableComponent.ts
+var CharacterTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Characters");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Character", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Age", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        var _a;
+        const record = relationship.component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = record.age) == null ? void 0 : _a.toString(), 0 /* String */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      });
       return response;
     });
   }
@@ -2404,28 +1741,170 @@ var AdventureModel = class extends AbstractModel {
 var CampaignModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AdventureTable", this.io.readListParametrised(void 0, 2 /* Adventure */, this.currentElement.campaignId).sort(function(leftData, rightData) {
-        if (leftData.adventureId > rightData.adventureId)
-          return -1;
-        if (leftData.adventureId < rightData.adventureId)
-          return 1;
-        return 0;
-      })));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "SessionTable", this.io.readListParametrised(void 0, 4 /* Session */, this.currentElement.campaignId).sort(function(leftData, rightData) {
+      yield this.response.addComponent(SessionTableComponent, this.io.readListParametrised(4 /* Session */, this.currentElement.campaignId).sort(function(leftData, rightData) {
         if (leftData.sessionId > rightData.sessionId)
           return -1;
         if (leftData.sessionId < rightData.sessionId)
           return 1;
         return 0;
-      })));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "CharacterTable", this.io.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaignId).sort(function(leftData, rightData) {
+      }));
+      yield this.response.addComponent(CharacterTableComponent, this.io.readListParametrised(16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaignId).sort(function(leftData, rightData) {
         if (leftData.name > rightData.name)
           return 1;
         if (leftData.name < rightData.name)
           return -1;
         return 0;
-      })));
+      }));
+      return this.response;
+    });
+  }
+};
+
+// src/data/responses/ResponseHeader.ts
+var ResponseHeader = class extends AbstractResponse {
+  constructor(app2) {
+    super(app2);
+    this.responseType = 8 /* Header */;
+    this.elements = [];
+  }
+  addElement(element) {
+    this.elements.push(element);
+  }
+};
+
+// src/data/responses/ResponseHeaderElement.ts
+var ResponseHeaderElement = class extends AbstractResponse {
+  constructor(app2, title, content, type) {
+    super(app2);
+    this.app = app2;
+    this.title = title;
+    this.type = type;
+    this.value = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(content, 4 /* Markdown */);
+  }
+};
+
+// src/components/HeaderComponent.ts
+var HeaderComponent = class extends AbstractComponent {
+  generateData(relationship, title, additionalInformation) {
+    return __async(this, null, function* () {
+      var _a;
+      if (relationship.component === void 0)
+        return null;
+      const data = relationship.component;
+      const response = new ResponseHeader(this.app);
+      response.link = this.app.plugins.getPlugin("rpg-manager").factories.contents.create(data.link, 2 /* Link */);
+      response.name = data.name;
+      let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
+      let synopsisTitle = "Synopsis";
+      if (data instanceof Character) {
+        if (data.synopsis != null && data.synopsis !== "") {
+          synopsis = "";
+          synopsis += data.link.toString();
+          const pronoun = data.pronoun;
+          if (pronoun != null) {
+            synopsis += this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(pronoun);
+          }
+          synopsis += data.isDead ? " was " : " is ";
+          synopsis += data.synopsis;
+        }
+        response.addElement(new ResponseHeaderElement(this.app, "Synopsis", synopsis, 1 /* Long */));
+        if (data.goals != null)
+          response.addElement(new ResponseHeaderElement(this.app, "Goals", data.goals.toString(), 1 /* Long */));
+        if (data.pronoun != null)
+          response.addElement(new ResponseHeaderElement(this.app, "Pronoun", this.app.plugins.getPlugin("rpg-manager").factories.pronouns.readPronoun(data.pronoun), 0 /* Short */));
+        if (data.age != null || data.death != null) {
+          response.addElement(new ResponseHeaderElement(this.app, "Status", data.death ? "Dead" : "Alive", 0 /* Short */));
+        }
+        if (data.death != null) {
+          let death = data.death.toDateString();
+          if (data.age != null) {
+            death += " at age " + data.age;
+          }
+          response.addElement(new ResponseHeaderElement(this.app, "Death", death, 0 /* Short */));
+        } else if (data.age != null) {
+          response.addElement(new ResponseHeaderElement(this.app, "Age", data.age.toString(), 0 /* Short */));
+        }
+      } else {
+        if (data instanceof Scene) {
+          synopsisTitle = "Scene Goal";
+        }
+        if (data.synopsis != null && data.synopsis != "") {
+          synopsis = data.synopsis;
+        }
+        response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, 1 /* Long */));
+        if (data instanceof Clue) {
+          const clueFound = data.isFound ? "Clue found on " + ((_a = data.found) == null ? void 0 : _a.toDateString()) : '<span class="rpgm-missing">Clue not found yet</span>';
+          response.addElement(new ResponseHeaderElement(this.app, "Found", clueFound, 0 /* Short */));
+        } else if (data instanceof Location) {
+          if (data.address != null && data.address != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Address", data.address, 0 /* Short */));
+          }
+        } else if (data instanceof Event) {
+          if (data.date != null) {
+            response.addElement(new ResponseHeaderElement(this.app, "Date", data.date.toDateString(), 0 /* Short */));
+          }
+        } else if (data instanceof Scene) {
+          if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Trigger", additionalInformation.trigger, 1 /* Long */));
+          }
+          if (data.action != null && data.action != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Action", data.action, 1 /* Long */));
+          } else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != "") {
+            response.addElement(new ResponseHeaderElement(this.app, "Action", additionalInformation.action, 1 /* Long */));
+          }
+        } else if (data instanceof Music) {
+          if (data.image === void 0) {
+            response.imgSrc = yield data.getThumbnail();
+          } else if (data.image !== null) {
+            response.imgSrc = data.image;
+          }
+          if (data.url !== void 0)
+            response.addElement(new ResponseHeaderElement(this.app, "link", data.url, 1 /* Long */));
+        }
+      }
+      if (data.image !== null) {
+        response.imgSrc = data.image;
+        response.imgWidth = 300;
+        response.imgHeight = 300;
+      }
+      return response;
+    });
+  }
+};
+
+// src/components/AbtPlotComponent.ts
+var AbtPlotComponent = class extends AbstractComponent {
+  generateData(relationship, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (additionalInformation == null || (additionalInformation.need == null || additionalInformation.and == null || additionalInformation.but == null || additionalInformation.therefore == null) || additionalInformation.need === "" && additionalInformation.and === "" && additionalInformation.but === "" && additionalInformation.therefore === "")
+        return null;
+      if (relationship.component === void 0)
+        return null;
+      const data = relationship.component;
+      const response = new ResponseTable(this.app);
+      if (data instanceof Adventure && this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(4 /* Session */, data.campaign.campaignId, data.adventureId).length === 0 && additionalInformation.need !== "" && additionalInformation.and !== "" && additionalInformation.but !== "" && additionalInformation.therefore !== "") {
+        response.create = 2 /* Adventure */;
+        response.campaignId = data.campaign.campaignId;
+        response.adventureId = data.adventureId;
+      }
+      response.title = "ABT Plot";
+      response.class = "rpgm-plot";
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**AND** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.and ? additionalInformation.and : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**BUT** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.but ? additionalInformation.but : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**THEREFORE** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.therefore ? additionalInformation.therefore : "", 4 /* Markdown */)
+      ]);
       return response;
     });
   }
@@ -2436,11 +1915,69 @@ var CampaignNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       var _a;
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "Banner", this.currentElement));
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
       if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+        yield this.response.addComponent(AbtPlotComponent, this.currentElement, void 0, this.sourceMeta.abt);
       }
+      return this.response;
+    });
+  }
+};
+
+// src/components/LocationTableComponent.ts
+var LocationTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Locations");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        const record = relationship.component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      });
+      return response;
+    });
+  }
+};
+
+// src/components/EventTableComponent.ts
+var EventTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Events");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Name", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Date", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        var _a;
+        const record = relationship.component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = record.date) == null ? void 0 : _a.toDateString(), 0 /* String */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      });
       return response;
     });
   }
@@ -2450,14 +1987,25 @@ var CampaignNavigationModel = class extends AbstractModel {
 var ClueModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.currentElement.getRelationships(128 /* Event */, true)));
-      return response;
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
+      return this.response;
     });
+  }
+};
+
+// src/data/responses/ResponseLine.ts
+var ResponseLine = class extends AbstractResponse {
+  constructor(app2) {
+    super(app2);
+    this.responseType = 1 /* String */;
+    this.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */);
+  }
+  addContent(content) {
+    this.content = content;
   }
 };
 
@@ -2465,10 +2013,40 @@ var ClueModel = class extends AbstractModel {
 var ErrorModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
       const status = new ResponseLine(this.app);
       status.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create('<span class="rpgm-missing">The selected function does not exist in Rpg Manager</span>', 4 /* Markdown */);
-      response.addElement(status);
+      this.response.addElement(status);
+      return this.response;
+    });
+  }
+};
+
+// src/components/ClueTableComponent.ts
+var ClueTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Clues");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Clue", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Found", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        var _a;
+        const record = relationship.component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.isFound ? (_a = record.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      });
       return response;
     });
   }
@@ -2478,13 +2056,12 @@ var ErrorModel = class extends AbstractModel {
 var EventModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.currentElement.getRelationships(256 /* Clue */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
-      return response;
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, false));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      return this.response;
     });
   }
 };
@@ -2493,12 +2070,11 @@ var EventModel = class extends AbstractModel {
 var FactionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
-      return response;
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      return this.response;
     });
   }
 };
@@ -2507,14 +2083,47 @@ var FactionModel = class extends AbstractModel {
 var LocationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.currentElement.getRelationships(128 /* Event */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.currentElement.getRelationships(256 /* Clue */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false), "Contained locations"));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, true), "Part of locations"));
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true));
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, true));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false), "Contained locations");
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, true), "Part of locations");
+      return this.response;
+    });
+  }
+};
+
+// src/components/SceneTableComponent.ts
+var SceneTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Scenes");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("#", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Scene", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Start", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("End", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Duration", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        const scene = relationship.component;
+        if (scene !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link, 2 /* Link */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.synopsis, 4 /* Markdown */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.startTime), 0 /* String */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.endTime), 0 /* String */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.duration, 0 /* String */, true)
+          ]);
+        }
+      });
       return response;
     });
   }
@@ -2524,8 +2133,35 @@ var LocationModel = class extends AbstractModel {
 var NoteModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId)));
+      yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId));
+      return this.response;
+    });
+  }
+};
+
+// src/components/FactionTableComponent.ts
+var FactionTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Factions");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Faction", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        const record = relationship.component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      });
       return response;
     });
   }
@@ -2535,15 +2171,14 @@ var NoteModel = class extends AbstractModel {
 var NpcModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.currentElement.getRelationships(512 /* Faction */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "EventTable", this.currentElement.getRelationships(128 /* Event */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.currentElement.getRelationships(256 /* Clue */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
-      return response;
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */, false));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, true));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      return this.response;
     });
   }
 };
@@ -2552,12 +2187,42 @@ var NpcModel = class extends AbstractModel {
 var PcModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.currentElement.getRelationships(512 /* Faction */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */, false));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      return this.response;
+    });
+  }
+};
+
+// src/components/MusicTableComponent.ts
+var MusicTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      var _a;
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Music");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Music", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("url", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      for (let musicCounter = 0; musicCounter < relationships.length; musicCounter++) {
+        const record = relationships[musicCounter].component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(yield record.getDynamicImageSrcElement(), 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create((_a = record.url) != null ? _a : '<span class="rpgm-missing">No URL provided</span>', 4 /* Markdown */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationships[musicCounter].description !== "" ? relationships[musicCounter].description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      }
       return response;
     });
   }
@@ -2567,13 +2232,12 @@ var PcModel = class extends AbstractModel {
 var SceneModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.currentElement.getRelationships(4096 /* Music */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "CharacterTable", this.currentElement.getRelationships(16 /* Character */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "FactionTable", this.currentElement.getRelationships(512 /* Faction */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "ClueTable", this.currentElement.getRelationships(256 /* Clue */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "LocationTable", this.currentElement.getRelationships(64 /* Location */, false)));
-      return response;
+      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */, false));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, false));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      return this.response;
     });
   }
 };
@@ -2582,10 +2246,9 @@ var SceneModel = class extends AbstractModel {
 var SceneNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement, null, this.sourceMeta));
-      return response;
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement, void 0, this.sourceMeta);
+      return this.response;
     });
   }
 };
@@ -2594,9 +2257,57 @@ var SceneNavigationModel = class extends AbstractModel {
 var SessionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.currentElement.getRelationships(4096 /* Music */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId)));
+      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
+      yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId));
+      return this.response;
+    });
+  }
+};
+
+// src/components/StoryCirclePlotComponent.ts
+var StoryCirclePlotComponent = class extends AbstractComponent {
+  generateData(relationship, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (additionalInformation == null || (additionalInformation.you == null || additionalInformation.need == null || additionalInformation.go == null || additionalInformation.search == null || additionalInformation.find == null || additionalInformation.take == null || additionalInformation.return == null || additionalInformation.change == null) || additionalInformation.you === "" && additionalInformation.need === "" && additionalInformation.go === "" && additionalInformation.search === "" && additionalInformation.find === "" && additionalInformation.take === "" && additionalInformation.return === "" && additionalInformation.change === "")
+        return null;
+      if (relationship.component === void 0)
+        return null;
+      const data = relationship.component;
+      const response = new ResponseTable(this.app);
+      response.title = "Story Circle Plot";
+      response.class = "rpgm-plot";
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**YOU** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.you ? additionalInformation.you : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**NEED** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.need ? additionalInformation.need : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**GO** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.go ? additionalInformation.go : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**SEARCH** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.search ? additionalInformation.search : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**FIND** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.find ? additionalInformation.find : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**TAKE** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.take ? additionalInformation.take : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**RETURN** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.return ? additionalInformation.return : "", 4 /* Markdown */)
+      ]);
+      response.addContent([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("**CHANGE** ", 4 /* Markdown */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create(additionalInformation.change ? additionalInformation.change : "", 4 /* Markdown */)
+      ]);
       return response;
     });
   }
@@ -2607,16 +2318,15 @@ var SessionNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       var _a, _b;
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
       if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+        yield this.response.addComponent(AbtPlotComponent, this.currentElement, void 0, this.sourceMeta.abt);
       }
       if (((_b = this.sourceMeta) == null ? void 0 : _b.storycircle) != null) {
-        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "StoryCirclePlot", this.currentElement, null, this.sourceMeta.storycircle));
+        yield this.response.addComponent(StoryCirclePlotComponent, this.currentElement, void 0, this.sourceMeta.storycircle);
       }
-      return response;
+      return this.response;
     });
   }
 };
@@ -2647,12 +2357,42 @@ var TimelineElementResponse = class {
   }
 };
 
+// src/data/responses/ResponseBanner.ts
+var ResponseBanner = class extends AbstractResponse {
+  constructor(app2) {
+    super(app2);
+    this.responseType = 2 /* Banner */;
+  }
+};
+
+// src/components/BannerComponent.ts
+var BannerComponent = class extends AbstractComponent {
+  generateData(relationship, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationship.component === void 0)
+        return null;
+      const data = relationship.component;
+      const response = new ResponseBanner(this.app);
+      if (data instanceof Campaign) {
+        response.image = data.image;
+        response.title = data.name;
+        response.date = data.currentDate ? data.currentDate.toDateString() : "";
+      } else if (data instanceof Timeline) {
+        response.image = data.campaign.image;
+        response.title = "Timeline";
+        response.date = data.campaign.currentDate ? data.campaign.currentDate.toDateString() : "";
+        response.subtitle = data.campaign.name;
+      }
+      return response;
+    });
+  }
+};
+
 // src/models/TimelineModel.ts
 var TimelineModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Banner", this.currentElement));
+      yield this.response.addComponent(BannerComponent, this.currentElement);
       const timeline = new TimelineResponse(this.app);
       if (this.sourceMeta.events === true) {
         this.addEvents(timeline);
@@ -2670,12 +2410,12 @@ var TimelineModel = class extends AbstractModel {
         this.addSessions(timeline);
       }
       timeline.sort();
-      response.addElement(timeline);
-      return response;
+      this.response.addElement(timeline);
+      return this.response;
     });
   }
   addEvents(timeline) {
-    const events = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 128 /* Event */, this.currentElement.campaign.campaignId);
+    const events = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(128 /* Event */, this.currentElement.campaign.campaignId);
     events.filter((data) => data.date != null).forEach((event) => {
       var _a;
       if (event.date != null) {
@@ -2686,7 +2426,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addClues(timeline) {
-    const clues = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 256 /* Clue */, this.currentElement.campaign.campaignId);
+    const clues = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(256 /* Clue */, this.currentElement.campaign.campaignId);
     clues.filter((data) => data.isFound === true).forEach((clue) => {
       var _a;
       if (clue.found != null) {
@@ -2695,7 +2435,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addBirths(timeline) {
-    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
     characters.filter((data) => data.dob != null).forEach((character) => {
       var _a;
       if (character.dob != null) {
@@ -2704,7 +2444,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addDeaths(timeline) {
-    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(16 /* Character */ | 32 /* NonPlayerCharacter */, this.currentElement.campaign.campaignId);
     characters.filter((data) => data.death != null).forEach((character) => {
       var _a;
       if (character.death != null) {
@@ -2713,7 +2453,7 @@ var TimelineModel = class extends AbstractModel {
     });
   }
   addSessions(timeline) {
-    const sessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, this.currentElement.campaign.campaignId);
+    const sessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(4 /* Session */, this.currentElement.campaign.campaignId);
     sessions.filter((data) => data.date != null).forEach((session) => {
       var _a;
       if (session.date != null) {
@@ -2728,13 +2468,12 @@ var AdventureNavigationModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       var _a;
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
       if (((_a = this.sourceMeta) == null ? void 0 : _a.abt) != null) {
-        response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "AbtPlot", this.currentElement, null, this.sourceMeta.abt));
+        yield this.response.addComponent(AbtPlotComponent, this.currentElement, void 0, this.sourceMeta.abt);
       }
-      return response;
+      return this.response;
     });
   }
 };
@@ -2771,6 +2510,162 @@ var RawApi = class {
   }
 };
 
+// src/settings/Raw/enums/RawTrait.ts
+var RawTrait = /* @__PURE__ */ ((RawTrait2) => {
+  RawTrait2[RawTrait2["Body"] = 0] = "Body";
+  RawTrait2[RawTrait2["Mind"] = 1] = "Mind";
+  RawTrait2[RawTrait2["Spirit"] = 2] = "Spirit";
+  return RawTrait2;
+})(RawTrait || {});
+
+// src/settings/Raw/data/responses/RawResponseCharacterRecordSheetAbility.ts
+var RawResponseCharacterRecordSheetAbility = class extends AbstractResponse {
+  constructor(app2, id, name, value, specialisation, trait, traitValue) {
+    super(app2);
+    this.id = id;
+    this.name = name;
+    this.value = value;
+    this.specialisation = specialisation;
+    this.trait = trait;
+    this.traitValue = traitValue;
+  }
+};
+
+// src/settings/Raw/enums/RawAbility.ts
+var RawAbility = /* @__PURE__ */ ((RawAbility2) => {
+  RawAbility2[RawAbility2["athletics"] = 0] = "athletics";
+  RawAbility2[RawAbility2["drive"] = 1] = "drive";
+  RawAbility2[RawAbility2["firearms"] = 2] = "firearms";
+  RawAbility2[RawAbility2["handtohand"] = 3] = "handtohand";
+  RawAbility2[RawAbility2["intimidate"] = 4] = "intimidate";
+  RawAbility2[RawAbility2["melee"] = 5] = "melee";
+  RawAbility2[RawAbility2["pilot"] = 6] = "pilot";
+  RawAbility2[RawAbility2["repair"] = 7] = "repair";
+  RawAbility2[RawAbility2["cryptography"] = 8] = "cryptography";
+  RawAbility2[RawAbility2["fasttalk"] = 9] = "fasttalk";
+  RawAbility2[RawAbility2["investigation"] = 10] = "investigation";
+  RawAbility2[RawAbility2["language"] = 11] = "language";
+  RawAbility2[RawAbility2["library"] = 12] = "library";
+  RawAbility2[RawAbility2["medicine"] = 13] = "medicine";
+  RawAbility2[RawAbility2["perception"] = 14] = "perception";
+  RawAbility2[RawAbility2["technology"] = 15] = "technology";
+  RawAbility2[RawAbility2["craft"] = 16] = "craft";
+  RawAbility2[RawAbility2["empathy"] = 17] = "empathy";
+  RawAbility2[RawAbility2["leadership"] = 18] = "leadership";
+  RawAbility2[RawAbility2["occult"] = 19] = "occult";
+  RawAbility2[RawAbility2["persuasion"] = 20] = "persuasion";
+  RawAbility2[RawAbility2["stealth"] = 21] = "stealth";
+  RawAbility2[RawAbility2["survival"] = 22] = "survival";
+  RawAbility2[RawAbility2["willpower"] = 23] = "willpower";
+  return RawAbility2;
+})(RawAbility || {});
+var RawAbilityTrait = {
+  athletics: 0 /* Body */,
+  drive: 0 /* Body */,
+  firearms: 0 /* Body */,
+  handtohand: 0 /* Body */,
+  intimidate: 0 /* Body */,
+  melee: 0 /* Body */,
+  pilot: 0 /* Body */,
+  repair: 0 /* Body */,
+  cryptography: 1 /* Mind */,
+  fasttalk: 1 /* Mind */,
+  investigation: 1 /* Mind */,
+  language: 1 /* Mind */,
+  library: 1 /* Mind */,
+  medicine: 1 /* Mind */,
+  perception: 1 /* Mind */,
+  technology: 1 /* Mind */,
+  craft: 2 /* Spirit */,
+  empathy: 2 /* Spirit */,
+  leadership: 2 /* Spirit */,
+  occult: 2 /* Spirit */,
+  persuasion: 2 /* Spirit */,
+  stealth: 2 /* Spirit */,
+  survival: 2 /* Spirit */,
+  willpower: 2 /* Spirit */
+};
+
+// src/settings/Raw/data/responses/RawResponseCharacterRecordSheetTrait.ts
+var RawResponseCharacterRecordSheetTrait = class extends AbstractResponse {
+  constructor(app2, trait, metadata) {
+    super(app2);
+    this.trait = trait;
+    this.traitValue = 0;
+    this.abilities = [];
+    if (metadata != null) {
+      this.value = metadata.value != null ? metadata.value : 0;
+      if (metadata.abilities != null) {
+        Object.entries(metadata.abilities).forEach(([abilityName, value]) => {
+          var _a, _b;
+          this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, null, RawAbility[abilityName.toLowerCase()], (_a = value == null ? void 0 : value.value) != null ? _a : -10, (_b = value == null ? void 0 : value.specialisation) != null ? _b : null, this.trait, this.traitValue));
+        });
+      }
+    }
+    Object.keys(RawAbilityTrait).filter((abilityKey) => isNaN(Number(abilityKey))).forEach((abilityKey) => {
+      const ability = RawAbility[abilityKey];
+      if (this.trait === RawAbilityTrait[RawAbility[ability]] && this.getAbility(ability) == null) {
+        this.abilities.push(new RawResponseCharacterRecordSheetAbility(app2, null, ability, -10, null, this.trait, this.traitValue));
+      }
+    });
+  }
+  get value() {
+    return this.traitValue;
+  }
+  set value(value) {
+    this.traitValue = value;
+    this.abilities.forEach((ability) => {
+      ability.traitValue = this.traitValue;
+    });
+  }
+  getAbility(name, specialisation = null) {
+    let response = null;
+    this.abilities.forEach((ability) => {
+      if (ability.name === name && ability.specialisation === specialisation) {
+        response = ability;
+      }
+    });
+    return response;
+  }
+};
+
+// src/settings/Raw/data/responses/RawResponseCharacterRecordSheet.ts
+var RawResponseCharacterRecordSheet = class extends AbstractResponse {
+  constructor(app2, metadata) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+    super(app2);
+    this.responseType = 11 /* RawCharacterRecordSheet */;
+    this.body = new RawResponseCharacterRecordSheetTrait(app2, 0 /* Body */, (_b = (_a = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _a.character) == null ? void 0 : _b.body);
+    this.mind = new RawResponseCharacterRecordSheetTrait(app2, 1 /* Mind */, (_d = (_c = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _c.character) == null ? void 0 : _d.mind);
+    this.spirit = new RawResponseCharacterRecordSheetTrait(app2, 2 /* Spirit */, (_f = (_e = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _e.character) == null ? void 0 : _f.spirit);
+    this.damages = (_i = (_h = (_g = metadata == null ? void 0 : metadata.raw) == null ? void 0 : _g.character) == null ? void 0 : _h.damages) != null ? _i : 0;
+  }
+  get lifePoints() {
+    return 30 + this.body.value - this.damages;
+  }
+  get lifePointsPercentage() {
+    return Math.trunc(100 * (30 + this.body.value) / this.lifePoints);
+  }
+  getAbility(name, specialisation = null) {
+    let response = this.body.getAbility(name, specialisation);
+    if (response == null)
+      response = this.mind.getAbility(name, specialisation);
+    if (response == null)
+      response = this.spirit.getAbility(name, specialisation);
+    return response;
+  }
+};
+
+// src/settings/Raw/components/RawCharacterRecordSheetComponent.ts
+var RawCharacterRecordSheetComponent = class extends AbstractComponent {
+  generateData(relationship, title, additionalInformation) {
+    return __async(this, null, function* () {
+      const response = new RawResponseCharacterRecordSheet(this.app, additionalInformation);
+      return response;
+    });
+  }
+};
+
 // src/settings/Raw/models/RawNpcModel.ts
 var RawNpcModel = class extends NpcModel {
   generateData() {
@@ -2791,9 +2686,7 @@ var RawNpcModel = class extends NpcModel {
   addCharacterRecordSheet(response) {
     return __async(this, null, function* () {
       response.then((response2) => {
-        this.app.plugins.getPlugin("rpg-manager").factories.components.create(1 /* Raw */, "CharacterRecordSheet", this.currentElement, null, this.sourceMeta).then((component) => {
-          response2.addElement(component, 2);
-        });
+        response2.addComponent(RawCharacterRecordSheetComponent, this.currentElement, void 0, this.sourceMeta, 2);
       });
     });
   }
@@ -2803,13 +2696,12 @@ var RawNpcModel = class extends NpcModel {
 var MusicModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      const response = new ResponseData();
-      response.addElement(this.generateBreadcrumb());
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "Header", this.currentElement));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "MusicTable", this.currentElement.getRelationships(4096 /* Music */, false)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SceneTable", this.currentElement.getRelationships(8 /* Scene */, true)));
-      response.addElement(yield this.app.plugins.getPlugin("rpg-manager").factories.components.create(this.currentElement.campaign.settings, "SessionTable", this.currentElement.getRelationships(4 /* Session */, true)));
-      return response;
+      this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(HeaderComponent, this.currentElement);
+      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
+      yield this.response.addComponent(SceneTableComponent, this.currentElement.getRelationships(8 /* Scene */, true));
+      yield this.response.addComponent(SessionTableComponent, this.currentElement.getRelationships(4 /* Session */, true));
+      return this.response;
     });
   }
 };
@@ -3079,7 +2971,7 @@ var EventTemplate = class extends AbstractTemplate {
 // src/templates/NoteTemplate.ts
 var NoteTemplate = class extends AbstractTemplate {
   getContent() {
-    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 16 /* Character */ | 32 /* NonPlayerCharacter */, this.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(16 /* Character */ | 32 /* NonPlayerCharacter */, this.campaignId);
     let possibleRecappers = "";
     (characters || []).forEach((character) => {
       possibleRecappers += character.link + "/";
@@ -3657,10 +3549,10 @@ var TableView = class extends AbstractView {
           createButtonEl.textContent = "Create session from Adventure Plot";
           createButtonEl.addEventListener("click", () => {
             if (data.campaignId !== void 0 && data.adventureId !== void 0) {
-              const previousAdventure = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(void 0, 2 /* Adventure */, data.campaignId, data.adventureId - 1);
+              const previousAdventure = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(2 /* Adventure */, data.campaignId, data.adventureId - 1);
               let nextSessionId = 1;
               if (previousAdventure != null) {
-                const previousAdventureSessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(void 0, 4 /* Session */, data.campaignId, previousAdventure.adventureId);
+                const previousAdventureSessions = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(4 /* Session */, data.campaignId, previousAdventure.adventureId);
                 previousAdventureSessions.forEach((session) => {
                   if (nextSessionId <= session.sessionId)
                     nextSessionId = session.sessionId + 1;
@@ -4297,15 +4189,15 @@ var RelationshipFactory = class {
       }).then((fileContent) => {
         const body = this.parseContent(fileContent, false);
         const frontmatter = this.parseContent(fileContent, true);
-        this.readBodyRelationships(body, relationship);
-        this.readFrontmatterRelationships(frontmatter, relationship);
-        return relationship;
+        this.readRelationships(file.basename, frontmatter, relationship, true);
+        this.readRelationships(file.basename, body, relationship, false);
+        return;
       });
     });
   }
-  readBodyRelationships(bodyContent, relationships) {
-    for (let fileContentLineCounter = 0; fileContentLineCounter < bodyContent.length; fileContentLineCounter++) {
-      let line = bodyContent[fileContentLineCounter];
+  readRelationships(baseName, content, relationships, isInFrontMatter) {
+    for (let fileContentLineCounter = 0; fileContentLineCounter < content.length; fileContentLineCounter++) {
+      let line = content[fileContentLineCounter];
       while (line.indexOf("[[") !== -1) {
         line = line.substring(line.indexOf("[[") + 2);
         const endLinkIndex = line.indexOf("]]");
@@ -4319,37 +4211,18 @@ var RelationshipFactory = class {
         } else {
           name = nameAndAlias.substring(0, aliasIndex);
         }
-        if (relationships.get(name) === void 0)
-          relationships.set(name, { component: void 0, description: "", isReverse: false, isInFrontmatter: false });
-      }
-    }
-  }
-  readFrontmatterRelationships(frontmatterContent, relationships) {
-    for (let fileContentLineCounter = 0; fileContentLineCounter < frontmatterContent.length; fileContentLineCounter++) {
-      let line = frontmatterContent[fileContentLineCounter];
-      if (line.indexOf("[[") !== -1) {
-        line = line.substring(line.indexOf("[[") + 2);
-        const endLinkIndex = line.indexOf("]]");
-        if (endLinkIndex === -1)
-          break;
-        let name = "";
-        let description = "";
-        const nameAndAlias = line.substring(0, endLinkIndex);
-        const aliasIndex = nameAndAlias.indexOf("|");
-        if (aliasIndex === -1) {
-          name = nameAndAlias;
-        } else {
-          name = nameAndAlias.substring(0, aliasIndex);
-        }
-        const remainingFrontmatter = line.substring(endLinkIndex + 2);
-        if (remainingFrontmatter[0] === ":") {
-          description = remainingFrontmatter.substring(1).trimStart();
-          if (description !== "" && description[0] === description[description.length - 1] && (description[0] === '"' || description[0] === "'")) {
-            description = description.substring(1, description.length - 1).replaceAll("\\", "");
-            this.readBodyRelationships([description], relationships);
+        let relationshipDescription = "";
+        if (isInFrontMatter) {
+          const remainingFrontmatter = line.substring(endLinkIndex + 2);
+          if (remainingFrontmatter[0] === ":") {
+            relationshipDescription = remainingFrontmatter.substring(1).trimStart();
+            if (relationshipDescription !== "" && relationshipDescription[0] === relationshipDescription[relationshipDescription.length - 1] && (relationshipDescription[0] === '"' || relationshipDescription[0] === "'")) {
+              relationshipDescription = relationshipDescription.substring(1, relationshipDescription.length - 1).replaceAll("\\", "");
+            }
           }
         }
-        relationships.set(name, { component: void 0, description: "", isReverse: false, isInFrontmatter: true });
+        if (name !== baseName && !relationships.has(name))
+          relationships.set(name, { description: relationshipDescription, isReverse: false, isInFrontmatter: isInFrontMatter });
       }
     }
   }
@@ -4956,7 +4829,7 @@ var _Database = class extends import_obsidian18.Component {
         new InfoLog(4 /* DatabaseInitialisation */, "Temporary database initialised", temporaryDatabase);
         if (data !== void 0) {
           try {
-            if (data instanceof AbstractOutlineData)
+            if (data instanceof AbstractOutlineRecord)
               yield data.checkDuplicates(temporaryDatabase);
             yield temporaryDatabase.create(data);
           } catch (e) {
@@ -4976,6 +4849,7 @@ var _Database = class extends import_obsidian18.Component {
         new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
       }
       this.database.ready();
+      new InfoLog(2 /* Database */, "Database Ready", this.database);
       return this.database;
     });
   }
@@ -5029,31 +4903,31 @@ var _Database = class extends import_obsidian18.Component {
   }
   internalSort(data, comparison) {
   }
-  readByPath(database, path) {
+  readByPath(path) {
     const response = this.elements.filter((record) => record.path === path);
     return response.length === 1 ? response[0] : void 0;
   }
-  readSingleParametrised(database, dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
-    const result = (database !== void 0 ? database : this).read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId), void 0);
+  readSingleParametrised(dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
+    const result = this.read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId));
     if (result.length === 0)
       throw new ElementNotFoundError(this.app, dataType, void 0, campaignId, adventureId, sessionId, sceneId);
     if (result.length > 1)
       throw new ElementDuplicatedError(this.app, dataType, void 0, campaignId, adventureId, sessionId, sceneId);
     return result[0];
   }
-  readSingle(database, dataType, tag, overloadId = void 0) {
-    const result = (database !== void 0 ? database : this).read(this.generateQuery(dataType, false, tag, overloadId), void 0);
+  readSingle(dataType, tag, overloadId = void 0) {
+    const result = this.read(this.generateQuery(dataType, false, tag, overloadId));
     if (result.length === 0)
       throw new ElementNotFoundError(this.app, dataType, tag);
     if (result.length > 1)
       throw new ElementDuplicatedError(this.app, dataType, tag);
     return result[0];
   }
-  readListParametrised(database, dataType, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, comparison = void 0) {
-    return (database !== void 0 ? database : this).read(this.generateQuery(dataType, true, void 0, void 0, campaignId, adventureId, sessionId, sceneId), comparison);
+  readListParametrised(dataType, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, comparison = void 0) {
+    return this.read(this.generateQuery(dataType, true, void 0, void 0, campaignId, adventureId, sessionId, sceneId), comparison);
   }
-  readList(database, dataType, comparison = void 0, tag, overloadId = void 0) {
-    return (database !== void 0 ? database : this).read(this.generateQuery(dataType, true, tag, overloadId), comparison);
+  readList(dataType, comparison = void 0, tag, overloadId = void 0) {
+    return this.read(this.generateQuery(dataType, true, tag, overloadId), comparison);
   }
   onDelete(file) {
     return __async(this, null, function* () {
@@ -5069,59 +4943,56 @@ var _Database = class extends import_obsidian18.Component {
       const oldBaseName = this.basenameIndex.get(oldPath);
       const newBaseName = file.path;
       const metadata = this.app.metadataCache.getFileCache(file);
-      const data = this.readByPath(void 0, file.path);
-      console.log("Renaming " + oldBaseName + " to " + newBaseName);
+      const data = this.readByPath(file.path);
       yield this.basenameIndex.delete(oldPath);
       if (data !== void 0)
         yield this.basenameIndex.set(file.path, file.basename);
-      console.log(this.basenameIndex);
       if (oldBaseName !== void 0 && data !== void 0 && metadata != null) {
         yield this.replaceFileContent(file, oldBaseName, newBaseName);
         yield data.reload();
-        if (((_a = this.app.workspace.getActiveFile()) == null ? void 0 : _a.path) === file.path) {
-          yield (_b = this.app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView)) == null ? void 0 : _b.editor.refresh();
-        }
         yield this.replaceLinkInRelationships(oldBaseName, file.basename);
         yield this.refreshRelationships();
-        console.log(this.basenameIndex);
-        console.log(this.elements);
+        if (((_a = this.app.workspace.getActiveFile()) == null ? void 0 : _a.path) === file.path) {
+          (_b = this.app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView)) == null ? void 0 : _b.editor.refresh();
+        }
         this.app.workspace.trigger("rpgmanager:refresh-views");
       }
     });
   }
   onSave(file) {
     return __async(this, null, function* () {
-      let component = this.readByPath(this, file.path);
-      if (component === void 0) {
-        try {
-          component = yield _Database.createComponent(file);
-          if (component !== void 0) {
-            if (component instanceof AbstractOutlineData) {
-              component.checkDuplicates(this);
-              component.loadHierarchy(this);
-            }
-            this.create(component);
-          }
-        } catch (e) {
-          if (e instanceof RpgError) {
-            const isHidden = e instanceof HiddenError;
-            if (!isHidden)
-              new MisconfiguredDataModal(this.app, void 0, e).open();
-          } else {
-            throw e;
-          }
-          return;
-        }
-        yield this.refreshRelationships();
-        this.app.workspace.trigger("rpgmanager:refresh-views");
+      let component = this.readByPath(file.path);
+      if (component !== void 0) {
+        yield component.reload();
+      } else {
+        component = yield _Database.createComponent(file);
       }
+      if (component === void 0)
+        return;
+      try {
+        if (component instanceof AbstractOutlineRecord) {
+          yield component.checkDuplicates(this);
+          yield component.loadHierarchy(this);
+        }
+        yield this.create(component);
+      } catch (e) {
+        if (e instanceof RpgError) {
+          const isHidden = e instanceof HiddenError;
+          if (!isHidden)
+            new MisconfiguredDataModal(this.app, void 0, e).open();
+        } else {
+          throw e;
+        }
+        return;
+      }
+      yield this.refreshRelationships();
+      this.app.workspace.trigger("rpgmanager:refresh-views");
     });
   }
   replaceLinkInRelationships(oldBaseName, newBaseName) {
     return __async(this, null, function* () {
       for (let index = 0; index < this.elements.length; index++) {
-        if (this.elements[index].hasRelationship(oldBaseName)) {
-          console.log(this.elements[index].name);
+        if (this.elements[index].relationships.has(oldBaseName)) {
           yield this.replaceFileContent(this.elements[index].file, oldBaseName, newBaseName);
           yield this.elements[index].reload();
         }
@@ -5251,7 +5122,7 @@ var _Database = class extends import_obsidian18.Component {
   static addHierarchy(temporaryDatabase, dataType) {
     return __async(this, null, function* () {
       new InfoLog(4 /* DatabaseInitialisation */, "Loading hierarchy", dataType !== void 0 ? DataType[dataType] : "Elements");
-      const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false, void 0);
+      const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false);
       for (let index = 0; index < data.length; index++) {
         yield data[index].loadHierarchy(this.database);
         try {
@@ -5332,7 +5203,6 @@ var RpgManager = class extends import_obsidian19.Plugin {
         this.database = database;
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
-        console.log(this.database);
         console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
       });
       this.registerCodeBlock();

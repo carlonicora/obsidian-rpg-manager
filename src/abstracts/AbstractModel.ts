@@ -10,9 +10,13 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
 import {FileFactory} from "../factories/FileFactory";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {ComponentFactory} from "../factories/ComponentFactory";
+import {ResponseData} from "../data/responses/ResponseData";
 
 export abstract class AbstractModel implements ModelInterface {
 	protected io: DatabaseInterface;
+	protected componentFactory: ComponentFactory;
+	protected response:ResponseDataInterface;
 
 	constructor(
 		protected app: App,
@@ -22,6 +26,8 @@ export abstract class AbstractModel implements ModelInterface {
 		protected sourceMeta: any,
 	) {
 		this.io = this.app.plugins.getPlugin('rpg-manager').database;
+		this.componentFactory = this.app.plugins.getPlugin('rpg-manager').factories.components;
+		this.response = new ResponseData(this.app);
 	}
 
 	protected generateBreadcrumb(

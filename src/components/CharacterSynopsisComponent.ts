@@ -3,12 +3,17 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {ResponseLine} from "../data/responses/ResponseLine";
 import {ContentType} from "../enums/ContentType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class CharacterSynopsisComponent extends AbstractComponent{
 	public async generateData(
-		data: CharacterInterface,
-		title: string | null,
+		relationship: RelationshipInterface,
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
+		if (relationship.component === undefined) return null;
+		const data = relationship.component as CharacterInterface;
+
 		let fullSynopsis = '<span class="rpgm-missing">Synopsis missing</span>';
 
 		if (data.synopsis != null && data.synopsis !== '') {

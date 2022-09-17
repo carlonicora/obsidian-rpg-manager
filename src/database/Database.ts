@@ -5,7 +5,7 @@ import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
 import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
-import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
+import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {RpgError} from "../errors/RpgError";
 import {HiddenError} from "../errors/HiddenError";
 import {ElementNotFoundError} from "../errors/ElementNotFoundError";
@@ -47,7 +47,7 @@ export class Database extends Component implements DatabaseInterface {
 			new InfoLog(LogMessageType.DatabaseInitialisation, 'Temporary database initialised', temporaryDatabase);
 			if (data !== undefined) {
 				try {
-					if (data instanceof AbstractOutlineData) await data.checkDuplicates(temporaryDatabase);
+					if (data instanceof AbstractOutlineRecord) await data.checkDuplicates(temporaryDatabase);
 					await temporaryDatabase.create(data);
 				} catch (e) {
 					if (e instanceof RpgError) {
@@ -69,6 +69,9 @@ export class Database extends Component implements DatabaseInterface {
 		}
 
 		this.database.ready();
+
+		new InfoLog(LogMessageType.Database, 'Database Ready', this.database);
+
 		return this.database;
 	}
 
@@ -163,7 +166,6 @@ export class Database extends Component implements DatabaseInterface {
 	}
 
 	public readByPath<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		path: string,
 	): T|undefined {
 		const response:Array<RecordInterface> = this.elements
@@ -173,16 +175,14 @@ export class Database extends Component implements DatabaseInterface {
 	}
 
 	public readSingleParametrised<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		campaignId: number,
 		adventureId: number|undefined=undefined,
 		sessionId: number|undefined=undefined,
 		sceneId: number|undefined=undefined,
 	): T {
-		const result = ((database !== undefined) ? database : this).read(
+		const result = this.read(
 			this.generateQuery(dataType, false, undefined, undefined, campaignId, adventureId, sessionId, sceneId),
-			undefined,
 		);
 
 		if (result.length === 0) throw new ElementNotFoundError(this.app, dataType, undefined, campaignId, adventureId, sessionId, sceneId);
@@ -193,14 +193,12 @@ export class Database extends Component implements DatabaseInterface {
 
 
 	public readSingle<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		tag: string,
 		overloadId: number|undefined = undefined,
 	): T {
-		const result = ((database !== undefined) ? database : this).read(
+		const result = this.read(
 			this.generateQuery(dataType, false, tag, overloadId),
-			undefined,
 		);
 
 		if (result.length === 0) throw new ElementNotFoundError(this.app, dataType, tag);
@@ -210,7 +208,6 @@ export class Database extends Component implements DatabaseInterface {
 	}
 
 	public readListParametrised<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		campaignId: number|undefined=undefined,
 		adventureId: number|undefined=undefined,
@@ -218,20 +215,19 @@ export class Database extends Component implements DatabaseInterface {
 		sceneId: number|undefined=undefined,
 		comparison: any|undefined = undefined,
 	): Array<T> {
-		return <Array<T>>((database !== undefined) ? database : this).read(
+		return <Array<T>>this.read(
 			this.generateQuery(dataType, true, undefined, undefined, campaignId, adventureId, sessionId, sceneId),
 			comparison,
 		);
 	}
 
 	public readList<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		comparison: any|undefined = undefined,
 		tag: string,
 		overloadId: number|undefined = undefined,
 	): Array<T> {
-		return <Array<T>>((database !== undefined) ? database : this).read(
+		return <Array<T>>this.read(
 			this.generateQuery(dataType, true, tag, overloadId),
 			comparison,
 		);
@@ -253,36 +249,25 @@ export class Database extends Component implements DatabaseInterface {
 		file: TFile,
 		oldPath: string,
 	): Promise<void> {
-		/**
-		 * @TODO: What happen when I rename a file from list and a file that is open has it?
-		 * @TODO: Why when I add a frontmatter link [[link]] there is no correct refresh?
-		 */
 		const oldBaseName: string|undefined = this.basenameIndex.get(oldPath);
 		const newBaseName = file.path;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		const data: RecordInterface|undefined = this.readByPath(undefined, file.path);
-
-		console.log('Renaming ' + oldBaseName + ' to ' + newBaseName);
+		const data: RecordInterface|undefined = this.readByPath(file.path);
 
 		await this.basenameIndex.delete(oldPath);
 		if (data !== undefined) await this.basenameIndex.set(file.path, file.basename);
-
-		console.log(this.basenameIndex);
 
 		if (oldBaseName !== undefined && data !== undefined && metadata != null) {
 			await this.replaceFileContent(file, oldBaseName, newBaseName);
 			await data.reload();
 
-			if (this.app.workspace.getActiveFile()?.path === file.path){
-				await this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
-			}
-
 			await this.replaceLinkInRelationships(oldBaseName, file.basename);
 			await this.refreshRelationships();
 
-			console.log(this.basenameIndex);
-			console.log(this.elements);
+			if (this.app.workspace.getActiveFile()?.path === file.path){
+				this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
+			}
 
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 		}
@@ -291,30 +276,34 @@ export class Database extends Component implements DatabaseInterface {
 	private async onSave(
 		file: TFile,
 	): Promise<void> {
-		let component:RecordInterface|undefined = this.readByPath(this, file.path);
-		if (component === undefined) {
-			try {
-				component = await Database.createComponent(file);
-				if (component !== undefined){
-					if (component instanceof AbstractOutlineData) {
-						component.checkDuplicates(this);
-						component.loadHierarchy(this);
-					}
-					this.create(component);
-				}
-			} catch (e) {
-				if (e instanceof RpgError) {
-					const isHidden: boolean = e instanceof HiddenError;
-					if (!isHidden) new MisconfiguredDataModal(this.app, undefined, e).open();
-				} else {
-					throw e;
-				}
-				return;
-			}
+		let component:RecordInterface|undefined = this.readByPath(file.path);
 
-			await this.refreshRelationships();
-			this.app.workspace.trigger("rpgmanager:refresh-views");
+		if (component !== undefined) {
+			await component.reload();
+		} else {
+			component = await Database.createComponent(file);
 		}
+
+		if (component === undefined) return;
+
+		try {
+			if (component instanceof AbstractOutlineRecord) {
+				await component.checkDuplicates(this);
+				await component.loadHierarchy(this);
+			}
+			await this.create(component);
+		} catch (e) {
+			if (e instanceof RpgError) {
+				const isHidden: boolean = e instanceof HiddenError;
+				if (!isHidden) new MisconfiguredDataModal(this.app, undefined, e).open();
+			} else {
+				throw e;
+			}
+			return;
+		}
+
+		await this.refreshRelationships();
+		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
 	/**
@@ -326,8 +315,7 @@ export class Database extends Component implements DatabaseInterface {
 		newBaseName: string,
 	): Promise<void> {
 		for(let index=0; index<this.elements.length; index++){
-			if (this.elements[index].hasRelationship(oldBaseName)){
-				console.log(this.elements[index].name);
+			if (this.elements[index].relationships.has(oldBaseName)){
 				await this.replaceFileContent(this.elements[index].file, oldBaseName, newBaseName);
 				await this.elements[index].reload();
 			}
@@ -531,7 +519,6 @@ export class Database extends Component implements DatabaseInterface {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Loading hierarchy', (dataType !== undefined ? DataType[dataType] : 'Elements'));
 		const data: RecordInterface[] = temporaryDatabase.read(
 			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.type) === data.type : data.isOutline === false),
-			undefined,
 		);
 
 		for (let index=0; index<data.length; index++){

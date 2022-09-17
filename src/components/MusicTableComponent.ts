@@ -4,15 +4,15 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class MusicTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RecordInterface[],
-		title:string|null,
+		relationships: RelationshipInterface[],
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		if (data.length === 0){
-			return null;
-		}
+		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
 
@@ -23,15 +23,17 @@ export class MusicTableComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('url', ContentType.String),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
-		for (let musicCounter=0; musicCounter < data.length; musicCounter++){
-			const music: MusicInterface = data[musicCounter] as MusicInterface;
+		for (let musicCounter=0; musicCounter < relationships.length; musicCounter++){
+			const record: MusicInterface|undefined = relationships[musicCounter].component as MusicInterface;
 
-			response.addContent([
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(await music.getDynamicImageSrcElement(), ContentType.Image, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(music.link, ContentType.Link, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create((music.url ?? '<span class="rpgm-missing">No URL provided</span>'), ContentType.Markdown),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(music.additionalInformation ?? music.synopsis, ContentType.Markdown),
-			]);
+			if (record !== undefined) {
+				response.addContent([
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(await record.getDynamicImageSrcElement(), ContentType.Image, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create((record.url ?? '<span class="rpgm-missing">No URL provided</span>'), ContentType.Markdown),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationships[musicCounter].description !== '' ? relationships[musicCounter].description : record.synopsis, ContentType.Markdown),
+				]);
+			}
 		}
 
 		return response;

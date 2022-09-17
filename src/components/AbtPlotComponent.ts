@@ -6,13 +6,14 @@ import {ContentType} from "../enums/ContentType";
 import {Adventure} from "../data/Adventure";
 import {DataType} from "../enums/DataType";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class AbtPlotComponent extends AbstractComponent {
 
 	public async generateData(
-		data: RecordInterface[],
-		title:string|null,
-		additionalInformation: any|null,
+		relationship: RelationshipInterface,
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
 		if (
 			additionalInformation == null ||
@@ -30,11 +31,14 @@ export class AbtPlotComponent extends AbstractComponent {
 			)
 		) return null;
 
+		if (relationship.component === undefined) return null;
+		const data = relationship.component;
+
 		const response = new ResponseTable(this.app);
 
 		if (
 			data instanceof Adventure &&
-			this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(undefined, DataType.Session, data.campaign.campaignId, data.adventureId).length === 0 &&
+			this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(DataType.Session, data.campaign.campaignId, data.adventureId).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&

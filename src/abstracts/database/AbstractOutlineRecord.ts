@@ -6,7 +6,7 @@ import {DataType} from "../../enums/DataType";
 import {DatabaseInterface} from "../../interfaces/database/DatabaseInterface";
 import {ElementDuplicatedError} from "../../errors/ElementDuplicatedError";
 
-export abstract class AbstractOutlineData extends AbstractRecord implements RecordInterface{
+export abstract class AbstractOutlineRecord extends AbstractRecord implements RecordInterface{
 	public isOutline = true;
 	public dataId: DataId;
 
@@ -31,7 +31,7 @@ export abstract class AbstractOutlineData extends AbstractRecord implements Reco
 		database: DatabaseInterface,
 	): void {
 		const query = (data: RecordInterface) => data.dataId === this.dataId;
-		const elements = database.read(query, undefined);
+		const elements = database.read(query);
 
 		if (elements.length > 0) throw new ElementDuplicatedError(this.app, this.type, this.tag);
 	}

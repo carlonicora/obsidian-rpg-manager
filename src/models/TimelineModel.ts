@@ -10,21 +10,15 @@ import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {BannerComponent} from "../components/BannerComponent";
+import {HeaderComponent} from "../components/HeaderComponent";
 
 export class TimelineModel extends AbstractModel {
 	protected currentElement: RecordInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
-
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'Banner',
-				this.currentElement,
-			)
-		);
+		await this.response.addComponent(BannerComponent,this.currentElement);
 
 		const timeline = new TimelineResponse(this.app);
 
@@ -49,16 +43,15 @@ export class TimelineModel extends AbstractModel {
 		}
 
 		timeline.sort();
-		response.addElement(timeline);
+		this.response.addElement(timeline);
 
-		return response;
+		return this.response;
 	}
 
 	private addEvents(
 		timeline: TimelineResponseInterface,
 	): void {
 		const events = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<EventInterface>(
-			undefined,
 			DataType.Event,
 			this.currentElement.campaign.campaignId,
 		);
@@ -85,7 +78,6 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const clues = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<ClueInterface>(
-			undefined,
 			DataType.Clue,
 			this.currentElement.campaign.campaignId
 		);
@@ -109,7 +101,6 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(
-			undefined,
 			DataType.Character | DataType.NonPlayerCharacter,
 			this.currentElement.campaign.campaignId,
 		);
@@ -133,7 +124,6 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(
-			undefined,
 			DataType.Character | DataType.NonPlayerCharacter,
 			this.currentElement.campaign.campaignId
 		);
@@ -157,7 +147,6 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const sessions = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(
-			undefined,
 			DataType.Session,
 			this.currentElement.campaign.campaignId,
 		);

@@ -1,16 +1,16 @@
-import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {FetcherType} from "../enums/FetcherType";
 import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
 
-export class Music extends AbstractElementData implements MusicInterface {
+export class Music extends AbstractElementRecord implements MusicInterface {
 	public url: string|undefined;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.url = this.frontmatter?.url;
 
-		super.loadData();
+		super.initialiseData();
 	}
 
 	public getThumbnail(): Promise<string|null|undefined> {

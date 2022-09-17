@@ -4,15 +4,15 @@ import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class SceneTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RecordInterface[],
-		title: string | null,
+		relationships: RelationshipInterface[],
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		if (data.length === 0){
-			return null;
-		}
+		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
 
@@ -26,15 +26,18 @@ export class SceneTableComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('End', ContentType.String),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Duration', ContentType.String),
 		]);
-		data.forEach((scene: SceneInterface) => {
-			response.addContent([
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link, ContentType.Link),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.synopsis, ContentType.Markdown),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.startTime), ContentType.String, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.endTime), ContentType.String, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.duration, ContentType.String, true),
-			])
+		relationships.forEach((relationship: RelationshipInterface) => {
+			const scene: SceneInterface|undefined = relationship.component as SceneInterface;
+			if (scene !== undefined) {
+				response.addContent([
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link, ContentType.Link),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.synopsis, ContentType.Markdown),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.startTime), ContentType.String, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.endTime), ContentType.String, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.duration, ContentType.String, true),
+				])
+			}
 		});
 		return response;
 	}

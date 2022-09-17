@@ -4,15 +4,16 @@ import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {EventInterface} from "../interfaces/data/EventInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {ClueInterface} from "../interfaces/data/ClueInterface";
 
 export class EventTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RecordInterface[],
-		title:string|null,
+		relationships: RelationshipInterface[],
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		if (data.length === 0){
-			return null;
-		}
+		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
 
@@ -23,13 +24,16 @@ export class EventTableComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Date', ContentType.String),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
-		data.forEach((event: EventInterface) => {
-			response.addContent([
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.imageSrcElement, ContentType.Image, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.link, ContentType.Link, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.date?.toDateString(), ContentType.String),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(event.additionalInformation ?? event.synopsis, ContentType.Markdown),
-			])
+		relationships.forEach((relationship: RelationshipInterface) => {
+			const record: EventInterface|undefined = relationship.component as EventInterface;
+			if (record !== undefined) {
+				response.addContent([
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.date?.toDateString(), ContentType.String),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+				])
+			}
 		});
 
 		return response;

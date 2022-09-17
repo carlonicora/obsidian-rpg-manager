@@ -1,5 +1,5 @@
-import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
 import {TimelineInterface} from "../interfaces/data/TimelineInterface";
 
-export class Timeline extends AbstractElementData implements TimelineInterface {
+export class Timeline extends AbstractElementRecord implements TimelineInterface {
 }

@@ -4,15 +4,15 @@ import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class SessionTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RecordInterface[],
-		title:string|null,
+		relationships: RelationshipInterface[],
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		if (data.length === 0){
-			return null;
-		}
+		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
 		response.addTitle(title ? title : 'Sessions');
@@ -23,14 +23,18 @@ export class SessionTableComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Date', ContentType.String),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Play Date', ContentType.String),
 		]);
-		data.forEach((session: SessionInterface) => {
-			response.addContent([
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.sessionId, ContentType.Number, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.link, ContentType.Link),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.synopsis, ContentType.Markdown),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.date?.toDateString(), ContentType.String, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
-			])
+		relationships.forEach((relationship: RelationshipInterface) => {
+			const session: SessionInterface|undefined = relationship.component as SessionInterface;
+
+			if (session !== undefined) {
+				response.addContent([
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.sessionId, ContentType.Number, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.link, ContentType.Link),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.synopsis, ContentType.Markdown),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.date?.toDateString(), ContentType.String, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
+				])
+			}
 		});
 		return response;
 	}

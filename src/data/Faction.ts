@@ -1,5 +1,5 @@
-import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
 import {FactionInterface} from "../interfaces/data/FactionInterface";
 
-export class Faction extends AbstractElementData implements FactionInterface {
+export class Faction extends AbstractElementRecord implements FactionInterface {
 }

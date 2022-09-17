@@ -1,8 +1,8 @@
 import {RecordInterface} from "./database/RecordInterface";
 
 export interface RelationshipInterface {
-	component: RecordInterface|undefined,
+	component?: RecordInterface|undefined,
 	description: string,
 	isReverse: boolean,
-	isInFrontmatter: boolean,
+	isInFrontmatter?: boolean|undefined,
 }

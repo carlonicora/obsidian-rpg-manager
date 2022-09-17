@@ -1,11 +1,11 @@
-import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
+import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DataType} from "../enums/DataType";
 
-export class Scene extends AbstractOutlineData implements SceneInterface {
+export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public sceneId: number;
 	public action: string | null;
 	public startTime: Date | null;
@@ -16,14 +16,14 @@ export class Scene extends AbstractOutlineData implements SceneInterface {
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
 		this.action = this.frontmatter?.action;
 
-		super.loadData();
+		super.initialiseData();
 	}
 
 	public async loadHierarchy(
@@ -31,18 +31,18 @@ export class Scene extends AbstractOutlineData implements SceneInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(database, DataType.Adventure, this.tag);
-		this.session = database.readSingle<SessionInterface>(database, DataType.Session, this.tag);
+		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.tag);
+		this.session = database.readSingle<SessionInterface>(DataType.Session, this.tag);
 
 		try {
-			this.previousScene = database.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId - 1);
+			this.previousScene = database.readSingle<SceneInterface>(DataType.Scene, this.tag, this.sceneId - 1);
 			this.previousScene.nextScene = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextScene = database.readSingle<SceneInterface>(database, DataType.Scene, this.tag, this.sceneId + 1);
+			this.nextScene = database.readSingle<SceneInterface>(DataType.Scene, this.tag, this.sceneId + 1);
 			this.nextScene.previousScene = this;
 		} catch (e) {
 			//ignore. It can be non existing

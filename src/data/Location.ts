@@ -1,13 +1,13 @@
-import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
 import {LocationInterface} from "../interfaces/data/LocationInterface";
 
-export class Location extends AbstractElementData implements LocationInterface {
+export class Location extends AbstractElementRecord implements LocationInterface {
 	public address: string|null;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.address = this.frontmatter?.address;
 
-		super.loadData();
+		super.initialiseData();
 	}
 }

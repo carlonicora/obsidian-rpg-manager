@@ -3,55 +3,35 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
 import {EventInterface} from "../interfaces/data/EventInterface";
+import {HeaderComponent} from "../components/HeaderComponent";
+import {CharacterTableComponent} from "../components/CharacterTableComponent";
+import {ClueTableComponent} from "../components/ClueTableComponent";
+import {LocationTableComponent} from "../components/LocationTableComponent";
 
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
+		this.response.addElement(this.generateBreadcrumb());
 
-		response.addElement(this.generateBreadcrumb());
+		await this.response.addComponent(HeaderComponent, this.currentElement);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'Header',
-				this.currentElement
-			)
+		await this.response.addComponent(
+			CharacterTableComponent,
+			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'CharacterTable',
-				this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter, false),
-			)
+		await this.response.addComponent(
+			ClueTableComponent,
+			this.currentElement.getRelationships(DataType.Clue, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'ClueTable',
-				this.currentElement.getRelationships(DataType.Clue, false),
-			)
+		await this.response.addComponent(
+			LocationTableComponent,
+			this.currentElement.getRelationships(DataType.Location, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'LocationTable',
-				this.currentElement.getRelationships(DataType.Location, false),
-			)
-		);
-
-		return response;
+		return this.response;
 	}
-
-	/*
-	public async render() {
-		this.image(450);
-	}
-
-	 */
 }

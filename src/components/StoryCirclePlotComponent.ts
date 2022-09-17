@@ -3,12 +3,13 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ContentType} from "../enums/ContentType";
 import {ResponseTable} from "../data/responses/ResponseTable";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class StoryCirclePlotComponent extends AbstractComponent {
 	public async generateData(
-		data: RecordInterface[],
-		title:string|null,
-		additionalInformation: any|null,
+		relationship: RelationshipInterface,
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
 		if (
 			additionalInformation == null ||
@@ -33,6 +34,8 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 				additionalInformation.change === ''
 			)
 		) return null;
+		if (relationship.component === undefined) return null;
+		const data = relationship.component;
 
 		const response = new ResponseTable(this.app);
 

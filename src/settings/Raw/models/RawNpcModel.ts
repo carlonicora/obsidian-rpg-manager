@@ -1,9 +1,9 @@
 import {NpcModel} from "../../../models/NpcModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
-import {CampaignSetting} from "../../../enums/CampaignSetting";
 import {RawCampaignInterface} from "../interfaces/RawCampaignInterface";
 import {RawEndpoint} from "../enums/RawEndpoint";
 import {RawApi} from "../helpers/RawApi";
+import {RawCharacterRecordSheetComponent} from "../components/RawCharacterRecordSheetComponent";
 
 export class RawNpcModel extends NpcModel {
 	public async generateData(
@@ -27,35 +27,13 @@ export class RawNpcModel extends NpcModel {
 		response: Promise<ResponseDataInterface>,
 	): Promise<void> {
 		response.then((response: ResponseDataInterface) => {
-			this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				CampaignSetting.Raw,
-				'CharacterRecordSheet',
+			response.addComponent(
+				RawCharacterRecordSheetComponent,
 				this.currentElement,
-				null,
-				this.sourceMeta
-			).then(component => {
-				response.addElement(
-					component,
-					2,
-				);
-			})
-
+				undefined,
+				this.sourceMeta,
+				2
+			)
 		});
-
-		/*
-		response.then((response: ResponseDataInterface) => {
-			response.addElement(
-				this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-					CampaignSetting.Raw,
-					'CharacterRecordSheet',
-					this.currentElement,
-					null,
-					this.sourceMeta
-				),
-				2,
-			);
-		});
-
-		 */
 	}
 }

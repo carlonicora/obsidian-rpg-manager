@@ -3,54 +3,42 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {MusicTableComponent} from "../components/MusicTableComponent";
+import {CharacterTableComponent} from "../components/CharacterTableComponent";
+import {FactionTableComponent} from "../components/FactionTableComponent";
+import {ClueTableComponent} from "../components/ClueTableComponent";
+import {LocationTableComponent} from "../components/LocationTableComponent";
 
 export class SceneModel extends AbstractModel {
 	protected currentElement: SceneInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
-
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'MusicTable',
-				this.currentElement.getRelationships(DataType.Music, false),
-			)
+		await this.response.addComponent(
+			MusicTableComponent,
+			this.currentElement.getRelationships(DataType.Music, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'CharacterTable',
-				this.currentElement.getRelationships(DataType.Character, false),
-			)
+		await this.response.addComponent(
+			CharacterTableComponent,
+			this.currentElement.getRelationships(DataType.Character|DataType.NonPlayerCharacter, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'FactionTable',
-				this.currentElement.getRelationships(DataType.Faction, false),
-			)
+		await this.response.addComponent(
+			FactionTableComponent,
+			this.currentElement.getRelationships(DataType.Faction, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'ClueTable',
-				this.currentElement.getRelationships(DataType.Clue, false),
-			)
+		await this.response.addComponent(
+			ClueTableComponent,
+			this.currentElement.getRelationships(DataType.Clue, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'LocationTable',
-				this.currentElement.getRelationships(DataType.Location, false),
-			)
+		await this.response.addComponent(
+			LocationTableComponent,
+			this.currentElement.getRelationships(DataType.Location, false),
 		);
 
-		return response;
+		return this.response;
 	}
 }

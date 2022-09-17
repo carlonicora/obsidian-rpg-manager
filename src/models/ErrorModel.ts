@@ -7,13 +7,11 @@ import {ContentType} from "../enums/ContentType";
 export class ErrorModel extends AbstractModel {
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
-
 		const status = new ResponseLine(this.app);
 		status.content =this.app.plugins.getPlugin('rpg-manager').factories.contents.create('<span class="rpgm-missing">The selected function does not exist in Rpg Manager</span>',
 			ContentType.Markdown,
 		);
-		response.addElement(status);
-		return response;
+		this.response.addElement(status);
+		return this.response;
 	}
 }

@@ -11,13 +11,17 @@ import {Scene} from "../data/Scene";
 import {ResponseHeaderElement} from "../data/responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {Music} from "../data/Music";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class HeaderComponent extends AbstractComponent{
 	public async generateData(
-		data: RecordInterface,
-		title: string | null,
-		additionalInformation: any|null = null,
+		relationship: RelationshipInterface,
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
+		if (relationship.component === undefined) return null;
+		const data = relationship.component;
+
 		const response = new ResponseHeader(this.app);
 
 		response.link = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(data.link, ContentType.Link);

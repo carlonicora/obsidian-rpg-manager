@@ -2,26 +2,22 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../data/responses/ResponseData";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {HeaderComponent} from "../components/HeaderComponent";
 
 export class SceneNavigationModel extends AbstractModel {
 	protected currentElement: SceneInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
+		this.response.addElement(this.generateBreadcrumb());
 
-		response.addElement(this.generateBreadcrumb());
-
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'Header',
-				this.currentElement,
-				null,
-				this.sourceMeta,
-			)
+		await this.response.addComponent(
+			HeaderComponent,
+			this.currentElement,
+			undefined,
+			this.sourceMeta,
 		);
 
-		return response;
+		return this.response;
 	}
 }

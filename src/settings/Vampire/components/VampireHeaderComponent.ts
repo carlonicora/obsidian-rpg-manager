@@ -4,14 +4,18 @@ import {HeaderResponseInterface} from "../../../interfaces/response/HeaderRespon
 import {ResponseHeaderElement} from "../../../data/responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {VampireCharacterInterface} from "../interfaces/VampireCharacterInterface";
+import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 
 export class VampireHeaderComponent extends HeaderComponent {
 	public async generateData(
-		data: VampireCharacterInterface,
-		title: string | null,
-		additionalInformation: any|null = null,
+		relationship: RelationshipInterface,
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		const response = await super.generateData(data, title, additionalInformation) as HeaderResponseInterface;
+		if (relationship.component === undefined) return null;
+		const data: VampireCharacterInterface|undefined = relationship.component as VampireCharacterInterface;
+
+		const response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
 		if (data.generation != null) {
 			response.addElement(new ResponseHeaderElement(this.app, 'Generation', data.generation.toString(), HeaderResponseType.Short));

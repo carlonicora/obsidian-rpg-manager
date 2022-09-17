@@ -3,48 +3,35 @@ import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../data/responses/ResponseData";
 import {DataType} from "../enums/DataType";
+import {HeaderComponent} from "../components/HeaderComponent";
+import {MusicTableComponent} from "../components/MusicTableComponent";
+import {SceneTableComponent} from "../components/SceneTableComponent";
+import {SessionTableComponent} from "../components/SessionTableComponent";
 
 export class MusicModel extends AbstractModel {
 	protected currentElement: MusicInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
+		this.response.addElement(this.generateBreadcrumb());
 
-		response.addElement(this.generateBreadcrumb());
+		await this.response.addComponent(HeaderComponent,this.currentElement);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'Header',
-				this.currentElement
-			)
+		await this.response.addComponent(
+			MusicTableComponent,
+			this.currentElement.getRelationships(DataType.Music, false),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'MusicTable',
-				this.currentElement.getRelationships(DataType.Music, false),
-			)
+		await this.response.addComponent(
+			SceneTableComponent,
+			this.currentElement.getRelationships(DataType.Scene, true),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'SceneTable',
-				this.currentElement.getRelationships(DataType.Scene, true),
-			)
+		await this.response.addComponent(
+			SessionTableComponent,
+			this.currentElement.getRelationships(DataType.Session, true),
 		);
 
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'SessionTable',
-				this.currentElement.getRelationships(DataType.Session, true),
-			)
-		);
-
-		return response;
+		return this.response;
 	}
 }

@@ -2,36 +2,27 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ResponseData} from "../data/responses/ResponseData";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
+import {HeaderComponent} from "../components/HeaderComponent";
+import {AbtPlotComponent} from "../components/AbtPlotComponent";
 
 export class AdventureNavigationModel extends AbstractModel {
 	protected currentElement: AdventureInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const response = new ResponseData();
+		this.response.addElement(this.generateBreadcrumb());
 
-		response.addElement(this.generateBreadcrumb());
-
-		response.addElement(
-			await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-				this.currentElement.campaign.settings,
-				'Header',
-				this.currentElement
-			)
-		);
+		await this.response.addComponent(HeaderComponent, this.currentElement);
 
 		if (this.sourceMeta?.abt != null){
-			response.addElement(
-				await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
-					this.currentElement.campaign.settings,
-					'AbtPlot',
-					this.currentElement,
-					null,
-					this.sourceMeta.abt,
-				)
+			await this.response.addComponent(
+				AbtPlotComponent,
+				this.currentElement,
+				undefined,
+				this.sourceMeta.abt,
 			);
 		}
 
-		return response;
+		return this.response;
 	}
 }

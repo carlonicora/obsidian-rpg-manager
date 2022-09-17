@@ -3,15 +3,15 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class CharacterTableComponent extends AbstractComponent {
 	public async generateData(
-		data: CharacterInterface[],
-		title:string|null,
+		relationships: RelationshipInterface[],
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		if (data.length === 0){
-			return null;
-		}
+		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
 
@@ -22,13 +22,16 @@ export class CharacterTableComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Age', ContentType.String),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
-		data.forEach((character: CharacterInterface) => {
-			response.addContent([
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.imageSrcElement, ContentType.Image, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.link, ContentType.Link, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.age?.toString(), ContentType.String, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.additionalInformation ?? character.synopsis, ContentType.Markdown),
-			])
+		relationships.forEach((relationship: RelationshipInterface) => {
+			const record: CharacterInterface|undefined = relationship.component as CharacterInterface;
+			if (record !== undefined) {
+				response.addContent([
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.age?.toString(), ContentType.String, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+				]);
+			}
 		});
 
 		return response;

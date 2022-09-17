@@ -9,8 +9,8 @@ export interface DatabaseInterface {
 	): void;
 
 	read(
-		query: any,
-		comparison: any,
+		query?: any,
+		comparison?: any,
 	): Array<RecordInterface>;
 
 	update(
@@ -22,12 +22,10 @@ export interface DatabaseInterface {
 	): boolean;
 
 	readByPath<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		name: string,
 	): T|undefined;
 
 	readSingleParametrised<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		campaignId: number,
 		adventureId?: number|undefined,
@@ -36,14 +34,12 @@ export interface DatabaseInterface {
 	): T;
 
 	readSingle<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		tag: string,
 		overloadId?: number|undefined,
 	): T;
 
 	readListParametrised<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		campaignId?: number|undefined,
 		adventureId?: number|undefined,
@@ -53,7 +49,6 @@ export interface DatabaseInterface {
 	): Array<T>;
 
 	readList<T extends RecordInterface>(
-		database: DatabaseInterface|undefined,
 		dataType: DataType,
 		tag: string,
 		comparison?: any|undefined,

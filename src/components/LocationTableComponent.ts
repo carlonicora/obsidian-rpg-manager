@@ -4,15 +4,16 @@ import {ContentType} from "../enums/ContentType";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {LocationInterface} from "../interfaces/data/LocationInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {FactionInterface} from "../interfaces/data/FactionInterface";
 
 export class LocationTableComponent extends AbstractComponent {
 	public async generateData(
-		data: RecordInterface[],
-		title:string|null,
+		relationships: RelationshipInterface[],
+		title:string|undefined,
+		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		if (data.length === 0){
-			return null;
-		}
+		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
 
@@ -22,13 +23,15 @@ export class LocationTableComponent extends AbstractComponent {
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Name', ContentType.String),
 			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
 		]);
-		data.forEach((location: LocationInterface
-		) => {
-			response.addContent([
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(location.imageSrcElement, ContentType.Image, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(location.link, ContentType.Link, true),
-				this.app.plugins.getPlugin('rpg-manager').factories.contents.create(location.additionalInformation ?? location.synopsis, ContentType.Markdown),
-			])
+		relationships.forEach((relationship: RelationshipInterface) => {
+			const record: FactionInterface|undefined = relationship.component as FactionInterface;
+			if (record !== undefined) {
+				response.addContent([
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+				])
+			}
 		});
 
 		return response;

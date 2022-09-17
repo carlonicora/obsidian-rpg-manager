@@ -25,6 +25,7 @@ export interface RecordInterface {
 
 	isOutline: boolean;
 	campaign: BaseCampaignInterface;
+	relationships: Map<string, RelationshipInterface>;
 
 	initialise(
 	): Promise<void>;
@@ -49,14 +50,10 @@ export interface RecordInterface {
 		relationship: RelationshipInterface,
 	): void;
 
-	hasRelationship(
-		name: string
-	): boolean;
-
 	getRelationships(
 		type: DataType,
-		isReversedRelationship: boolean,
-	): RecordInterface[];
+		requiresReversedRelationship?: boolean,
+	): Array<RelationshipInterface>;
 
 	get name(): string;
 	get path(): string;

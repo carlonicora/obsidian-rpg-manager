@@ -20,7 +20,7 @@ export class FileFactory extends AbstractFactory {
 		let folder = '/';
 
 		if (campaignId != null) {
-			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(undefined, DataType.Campaign, campaignId);
+			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
 			if (campaign !== undefined) {
 				settings = campaign.settings;
 				folder = campaign.folder;
@@ -90,7 +90,7 @@ export class FileFactory extends AbstractFactory {
 		let folder = '/';
 		let settings = CampaignSetting.Agnostic;
 
-		const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(undefined, DataType.Campaign, campaignId);
+		const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
 		if (campaign !== undefined) {
 			settings = campaign.settings;
 			folder = campaign.folder;

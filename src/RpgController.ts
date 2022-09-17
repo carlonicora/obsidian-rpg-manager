@@ -1,9 +1,9 @@
 import {
 	App,
-	Component,
+	Component, debounce,
 	MarkdownPostProcessorContext,
 	MarkdownRenderChild,
-	parseYaml
+	parseYaml, TFile
 } from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
@@ -17,8 +17,6 @@ export class RpgController extends MarkdownRenderChild {
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
 
-	private rendering = false;
-
 	private currentElement: RecordInterface;
 
 	constructor(
@@ -29,69 +27,74 @@ export class RpgController extends MarkdownRenderChild {
 		private sourcePath: string,
 	) {
 		super(container);
+		this.render = debounce(this.render, 250, true) as unknown as () => Promise<void>;
+		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
+	}
+
+	private async onRename(
+		file: TFile,
+		oldPath: string,
+	): Promise<void>{
+		if (this.sourcePath === oldPath) this.sourcePath = file.path;
+		this.initialise();
+		this.render();
+	}
+
+	private generateModel(
+	): void {
+		const sourceLines = this.source.split('\n');
+		let modelName = sourceLines[0].toLowerCase();
+		modelName = modelName[0].toUpperCase() + modelName.substring(1);
+		modelName = modelName.replace('navigation', 'Navigation');
+
+		sourceLines.shift();
+
+		const sourceMeta = parseYaml(sourceLines.join('\n'));
+
+		this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
+			((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
+			modelName,
+			this.currentElement,
+			this.source,
+			this.sourcePath,
+			sourceMeta,
+		);
 	}
 
 	private initialise(
 	): void {
-		if (this.app.plugins.getPlugin('rpg-manager')?.database === undefined) return;
+		const currentElement:RecordInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<RecordInterface>(this.sourcePath);
+		if (currentElement === undefined) return;
 
-		const currentElement = this.app.plugins.getPlugin('rpg-manager').database.readByPath<RecordInterface>(undefined, this.sourcePath);
-		if (currentElement == null){
-			this.isActive = false;
-		} else {
-			this.isActive = true;
-			this.currentElement = currentElement;
+		this.currentElement = currentElement;
+		this.generateModel();
 
-			const sourceLines = this.source.split('\n');
-			let modelName = sourceLines[0].toLowerCase();
-			modelName = modelName[0].toUpperCase() + modelName.substring(1);
-			modelName = modelName.replace('navigation', 'Navigation');
-
-			sourceLines.shift();
-
-			const sourceMeta = parseYaml(sourceLines.join('\n'));
-
-			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
-				((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
-				modelName,
-				this.currentElement,
-				this.source,
-				this.sourcePath,
-				sourceMeta,
-			);
-		}
 	}
 
 	onload() {
-		//this.render = debounce(this.render, 100, true) as unknown as () => Promise<void>;
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
 		this.render();
 	}
 
-	private async render(){
-		if (!this.rendering) {
-			//const activeLeaf = this.app.workspace.getActiveViewOfType(MarkdownView);
-			//if (activeLeaf != null && activeLeaf.file.path === this.sourcePath) {
-			this.initialise();
+	private async render(
+	): Promise<void> {
+		if (this.app.plugins.getPlugin('rpg-manager')?.database === undefined) return;
 
-			if (this.isActive) {
-				this.rendering = true;
-				this.container.empty();
+		this.initialise();
+		if (this.currentElement === undefined) return;
 
-				this.model.generateData()
-					.then((data: ResponseDataInterface) => {
-						data.elements.forEach((element: ResponseElementInterface) => {
-							const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
-								((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
-								element.responseType,
-								this.sourcePath,
-							);
-							view.render(this.container, element);
-						});
-						this.rendering = false;
-					});
-			}
-		}
-		//}
+		this.container.empty();
+
+		this.model.generateData()
+			.then((data: ResponseDataInterface) => {
+				data.elements.forEach((element: ResponseElementInterface) => {
+					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
+						((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
+						element.responseType,
+						this.sourcePath,
+					);
+					view.render(this.container, element);
+				});
+			});
 	}
 }

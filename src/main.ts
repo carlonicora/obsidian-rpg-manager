@@ -1,11 +1,13 @@
 import {
 	addIcon,
 	App,
-	Component, DropdownComponent,
+	Component,
+	DropdownComponent,
 	MarkdownPostProcessorContext,
 	Plugin,
 	PluginSettingTab,
-	Setting, TAbstractFile,
+	Setting,
+	TAbstractFile,
 	TFolder,
 } from 'obsidian';
 import {RpgController} from "./RpgController";
@@ -19,13 +21,9 @@ import {Database} from "./database/Database";
 import {Logger, LogType} from "./helpers/Logger";
 
 export default class RpgManager extends Plugin {
-	/*
-	@TODO: Add additional information to modal windows and to template
-	@TODO: RAW
-		- Update RAW Ability stats remotely
-		- POST /Characters
-		- PATCH /Characters
-		- Generate Character
+	/**
+	 * @TODO: Pass the additional information to the table views
+	 * @TODO: Add `image` in Record frontmatter to use online images instead of local images
 	 */
 	settings: RpgManagerSettings;
 	functions: RpgFunctions;
@@ -61,7 +59,7 @@ export default class RpgManager extends Plugin {
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 
-				console.log(this.database);
+
 
 				console.log(
 					`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${

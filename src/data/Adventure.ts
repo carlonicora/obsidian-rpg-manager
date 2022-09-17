@@ -1,13 +1,13 @@
-import {AbstractOutlineData} from "../abstracts/database/AbstractOutlineData";
+import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
-export class Adventure extends AbstractOutlineData implements AdventureInterface {
+export class Adventure extends AbstractOutlineRecord implements AdventureInterface {
 	public adventureId: number;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.adventureId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
 
-		super.loadData();
+		super.initialiseData();
 	}
 }

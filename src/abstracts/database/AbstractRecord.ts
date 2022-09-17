@@ -24,7 +24,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public isOutline: boolean;
 	public campaign: BaseCampaignInterface;
 
-	protected relationships: Map<string, RelationshipInterface>;
+	public relationships: Map<string, RelationshipInterface>;
 
 	private metadata: CachedMetadata;
 
@@ -34,6 +34,21 @@ export abstract class AbstractRecord implements RecordInterface {
 		public type: DataType,
 		public file: TFile,
 	) {
+	}
+
+	public get name(
+	): string {
+		return this.file.basename;
+	}
+
+	public get path(
+	): string {
+		return this.file.path;
+	}
+
+	public get link(
+	): string {
+		return '[[' + this.name + ']]'
 	}
 
 	public async initialise(
@@ -49,27 +64,31 @@ export abstract class AbstractRecord implements RecordInterface {
 		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
 		this.synopsis = this.frontmatter.synopsis;
 
-		this.relationships = await new Map();
-		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
-
-		this.loadData();
+		await this.initialiseRelationships();
+		this.initialiseData();
 	}
 
-	protected loadData(
+	protected async initialiseRelationships(
+	): Promise<void> {
+		this.relationships = await new Map();
+		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
+	}
+
+	protected initialiseData(
 	): void {
 	}
 
 	public async reload(
 	): Promise<void> {
 		await this.initialise();
-		await this.loadData();
+		await this.initialiseData();
 	}
 
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
 		if (this.type !== DataType.Campaign) {
-			this.campaign = database.readSingle<CampaignInterface>(database, DataType.Campaign, this.tag);
+			this.campaign = database.readSingle<CampaignInterface>(DataType.Campaign, this.tag);
 		}
 	}
 
@@ -79,7 +98,6 @@ export abstract class AbstractRecord implements RecordInterface {
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
 			const dataList = database.read(
 				(data: RecordInterface) => data.name === name,
-				undefined,
 			);
 
 			switch (dataList.length){
@@ -97,14 +115,13 @@ export abstract class AbstractRecord implements RecordInterface {
 	): Promise<void> {
 		if (!this.isOutline) {
 			this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
-				if (relationship.component !== undefined && relationship.isInFrontmatter === true){
+				if (relationship.component !== undefined){
 					relationship.component.addReverseRelationship(
 						this.name,
 						{
 							component: this,
 							description: relationship.description,
 							isReverse: true,
-							isInFrontmatter: true,
 						}
 					)
 				}
@@ -117,21 +134,6 @@ export abstract class AbstractRecord implements RecordInterface {
 		relationship: RelationshipInterface,
 	): void {
 		this.relationships.set(name, relationship);
-	}
-
-	public get name(
-	): string {
-		return this.file.basename;
-	}
-
-	public get path(
-	): string {
-		return this.file.path;
-	}
-
-	public get link(
-	): string {
-		return '[[' + this.name + ']]'
 	}
 
 	public get imageSrcElement(
@@ -155,22 +157,16 @@ export abstract class AbstractRecord implements RecordInterface {
 	public getRelationships(
 		type: DataType,
 		requiresReversedRelationship = false,
-	): RecordInterface[] {
-		const response:RecordInterface[] = [];
+	): Array<RelationshipInterface> {
+		const response:Array<RelationshipInterface> = [];
 
-		this.relationships.forEach((data: RelationshipInterface, name: string) => {
-			if (data.component !== undefined && (type & data.component.type) == data.component.type) {
-				if (!requiresReversedRelationship || data.isReverse) response.push(data.component);
+		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
+			if (relationship.component !== undefined && (type & relationship.component.type) == relationship.component.type) {
+				if (!requiresReversedRelationship || (requiresReversedRelationship && relationship.isReverse)) response.push(relationship);
 			}
 		});
 
 		return response;
-	}
-
-	public hasRelationship(
-		name: string
-	): boolean {
-		return this.relationships.has(name);
 	}
 
 	protected initialiseDate(

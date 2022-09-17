@@ -1,14 +1,14 @@
-import {AbstractElementData} from "../abstracts/database/AbstractElementData";
+import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 
-export class Clue extends AbstractElementData implements ClueInterface {
+export class Clue extends AbstractElementRecord implements ClueInterface {
 	public found: Date|null;
 
-	protected loadData(
+	protected initialiseData(
 	): void {
 		this.found = this.initialiseDate(this.frontmatter?.dates?.found);
 
-		super.loadData();
+		super.initialiseData();
 	}
 
 	public get isFound(
