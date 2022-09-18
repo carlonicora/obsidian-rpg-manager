@@ -1,11 +1,12 @@
 import {Setting} from "obsidian";
-import {setting, SettingType} from "../settings/RpgManagerSettings";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import {SettingType} from "../enums/SettingType";
+import {SettingInterface} from "../interfaces/SettingsInterface";
 
 export class SettingsFactory {
 	constructor(
 		private plugin: RpgManagerInterface,
-		private map: Map<SettingType, setting>,
+		private map: Map<SettingType, SettingInterface>,
 		private containerEl: HTMLElement,
 	) {
 	}
@@ -26,7 +27,7 @@ export class SettingsFactory {
 
 	public createHeader(
 		text: string,
-		level: number=2,
+		level=2,
 		additionalText: string|undefined=undefined,
 	): void {
 		const elementType = 'h' + level.toString();

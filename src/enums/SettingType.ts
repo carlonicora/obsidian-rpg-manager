@@ -1,0 +1,18 @@
+export enum SettingType {
+	PC,
+	NPC,
+	Location,
+	Faction,
+	Clue,
+	Event,
+	Music,
+	Timeline,
+	Note,
+	Campaign,
+	Adventure,
+	Session,
+	Scene,
+	automaticMove,
+	YouTubeApiKey,
+	templateFolder,
+}

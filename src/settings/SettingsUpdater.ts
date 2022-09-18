@@ -1,6 +1,6 @@
 import {App, TFile} from "obsidian";
-import {Database} from "../database/Database";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
 
 export class SettingsUpdater {
 	constructor(
@@ -26,7 +26,7 @@ export class SettingsUpdater {
 			if (newFileContent !== content) await this.app.vault.modify(files[index], newFileContent);
 		}
 
-		return await Database.initialise(this.app)
+		return await DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.app.plugins.getPlugin('rpg-manager').database = database;
 				this.app.workspace.trigger("rpgmanager:refresh-views");

@@ -5,10 +5,11 @@ import {CampaignInterface} from "../../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../../interfaces/database/DatabaseInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {BaseCampaignInterface} from "../../interfaces/data/BaseCampaignInterface";
-import {DataId} from "../../interfaces/DataId";
+import {TagValidator} from "../../helpers/TagValidator";
+import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
 
 export abstract class AbstractRecord implements RecordInterface {
-	public dataId: DataId|undefined;
+	public idMap: TagValidator;
 
 	public frontmatter: any;
 
@@ -52,10 +53,35 @@ export abstract class AbstractRecord implements RecordInterface {
 		return '[[' + this.name + ']]'
 	}
 
+	public get imageSrcElement(
+	): HTMLElement|null {
+		if (this.imageSrc === null) return null;
+
+		return this.app.plugins.getPlugin('rpg-manager').functions.getImgElement(this.image);
+	}
+
+	public get folder(
+	): string {
+		const lastSlashPosition = this.path.lastIndexOf('/');
+		return (lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : '/');
+	}
+
+	public get image(
+	): string|null {
+		const localImage = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
+		if (localImage !== null) return localImage;
+
+		if (this.imageUrl !== undefined) return this.imageUrl;
+
+		return null;
+	}
+
 	public async initialise(
 	): Promise<void> {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null) throw new Error('metadata is null');
+
+		this.validateTag();
 
 		this.metadata = metadata;
 		this.frontmatter = this.metadata.frontmatter ?? {};
@@ -68,6 +94,15 @@ export abstract class AbstractRecord implements RecordInterface {
 
 		await this.initialiseRelationships();
 		this.initialiseData();
+	}
+
+	protected validateTag(
+	): void {
+		this.idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(this.tag);
+
+		if (!this.idMap.isValid) {
+			throw new TagMisconfiguredError(this.app, this.idMap);
+		}
 	}
 
 	protected async initialiseRelationships(
@@ -136,29 +171,6 @@ export abstract class AbstractRecord implements RecordInterface {
 		relationship: RelationshipInterface,
 	): void {
 		this.relationships.set(name, relationship);
-	}
-
-	public get imageSrcElement(
-	): HTMLElement|null {
-		if (this.imageSrc === null) return null;
-
-		return this.app.plugins.getPlugin('rpg-manager').functions.getImgElement(this.image);
-	}
-
-	public get folder(
-	): string {
-		const lastSlashPosition = this.path.lastIndexOf('/');
-		return (lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : '/');
-	}
-
-	public get image(
-	): string|null {
-		const localImage = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
-		if (localImage !== null) return localImage;
-
-		if (this.imageUrl !== undefined) return this.imageUrl;
-
-		return null;
 	}
 
 	public getRelationships(

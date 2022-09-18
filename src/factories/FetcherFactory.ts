@@ -1,12 +1,5 @@
 import {AbstractFactory} from "../abstracts/AbstractFactory";
-import {FetcherInterface} from "../interfaces/FetcherInterface";
 import {App} from "obsidian";
-import {FetcherType} from "../enums/FetcherType";
-import {YouTubeImageFetcher} from "../fetchers/YouTubeImageFetcher";
-import {AbstractComponent} from "../abstracts/AbstractComponent";
-import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
-import {ComponentInterface} from "../interfaces/ComponentInterface";
 import {AbstractFetcher} from "../abstracts/AbstractFetcher";
 
 export class FetcherFactory extends AbstractFactory {

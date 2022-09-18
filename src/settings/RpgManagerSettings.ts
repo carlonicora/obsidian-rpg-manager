@@ -1,39 +1,16 @@
-import {App, DropdownComponent, PluginSettingTab, Setting, TAbstractFile, TFolder} from "obsidian";
+import {App, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {SettingsFactory} from "../factories/SettingsFactory";
 import {RpgManagerSettingsInterface} from "./RpgManagerSettingsInterface";
-
-export interface setting {
-	title: string,
-	value: any,
-	placeholder?: string|undefined,
-}
-
-export enum SettingType {
-	PC,
-	NPC,
-	Location,
-	Faction,
-	Clue,
-	Event,
-	Music,
-	Timeline,
-	Note,
-	Campaign,
-	Adventure,
-	Session,
-	Scene,
-	automaticMove,
-	YouTubeApiKey,
-	templateFolder,
-}
+import {SettingType} from "../enums/SettingType";
+import {SettingInterface} from "../interfaces/SettingsInterface";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private plugin: RpgManagerInterface;
 	private settingsFactory: SettingsFactory;
 	private settingsUpdater: SettingsUpdater;
-	private map: Map<SettingType, setting>;
+	private map: Map<SettingType, SettingInterface>;
 	public containerEl: HTMLElement;
 	private templateFolderMap: Map<string, string>;
 
@@ -313,7 +290,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.settingsFactory.createDropdownSetting(
 			SettingType.templateFolder,
 			`Select the folder in which you keep the templates for RPG Manager.
-			If you leave this value empty, the creation of outlines and elements won\'t have any additional information apart from the frontmatter and the codeblocks`,
+			If you leave this value empty, the creation of outlines and elements won't have any additional information apart from the frontmatter and the codeblocks`,
 			this.templateFolderMap,
 		)
 	}

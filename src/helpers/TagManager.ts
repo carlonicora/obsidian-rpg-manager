@@ -1,6 +1,7 @@
 import {App} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
+import {TagValidator} from "./TagValidator";
 
 export class TagManager {
 	public dataSettings: Map<DataType, string>;
@@ -57,6 +58,30 @@ export class TagManager {
 		}
 
 		return response;
+	}
+
+	public generateTag(
+		type: DataType,
+		campaignId: number,
+		adventureId: number|undefined=undefined,
+		sessionId: number|undefined=undefined,
+		sceneId: number|undefined=undefined,
+	): string {
+		let response = '';
+
+		switch (type){
+			case DataType.Scene:
+				response = '/' + sceneId ?? '';
+			case DataType.Session:
+			case DataType.Note:
+				response = '/' + sessionId ?? '';
+			case DataType.Adventure:
+				response = '/' + adventureId ?? '';
+			default:
+				response = '/' + campaignId ?? '';
+		}
+
+		return (this.dataSettings.get(type) ?? '') + response;
 	}
 
 	public getTemplateDataType(
@@ -161,6 +186,46 @@ export class TagManager {
 		tag: string|undefined = undefined,
 		tags: Array<string>|undefined = undefined,
 	): number {
+		const dataType = this.getDataType(tags, tag);
+		if (dataType === undefined) throw new Error('The tags do not contain a valid RPG Manager outline or element tag');
+
+		const idMap = this.getIdMap(tag, tags);
+
+		if (idMap.isTypeValid(type)) return idMap.getTypeValue(type);
+		throw new TagMisconfiguredError(this.app, idMap);
+	}
+
+	public getIdMap(
+		tag: string|undefined = undefined,
+		tags: Array<string>|undefined = undefined,
+	): TagValidator {
+		const dataType = this.getDataType(tags, tag);
+		if (dataType === undefined) throw new Error('The tags do not contain a valid RPG Manager outline or element tag');
+
+		const response = new TagValidator(this.app, dataType, tag, tags);
+
+		const idString = this.getTagIds(tag, tags);
+		const ids: Array<string> = idString.split('/').map(String);
+
+		switch (dataType) {
+			case DataType.Scene:
+				response.addValue(DataType.Scene, ids[3]);
+			case DataType.Session:
+			case DataType.Note:
+				response.addValue(DataType.Session, ids[2]);
+			case DataType.Adventure:
+				response.addValue(DataType.Adventure, ids[1]);
+			default:
+				response.addValue(DataType.Campaign, (idString !== '' ? ids[0] : undefined));
+		}
+
+		return response;
+	}
+
+	private getTagIds(
+		tag: string|undefined = undefined,
+		tags: Array<string>|undefined = undefined,
+	): string {
 		if (tags === undefined && tag === undefined) throw new Error('Either a tag or a list of tags should be defined');
 
 		if (tags !== undefined) tag = this.getDataTag(tags);
@@ -172,27 +237,6 @@ export class TagManager {
 		const dataSettingsTag = this.dataSettings.get(dataType);
 		if (dataSettingsTag === undefined) throw new Error('The tags do not contain a valid RPG Manager outline or element tag');
 
-		const ids: Array<number> = tag.substring(dataSettingsTag.length + 1).split('/').map(Number);
-
-		const variables: Map<DataType, number|null> = new Map();
-		if (!isNaN(ids[0])) variables.set(DataType.Campaign, ids[0]);
-		switch (dataType) {
-			case DataType.Scene:
-				if (!isNaN(ids[3])) variables.set(DataType.Scene, ids[3]);
-			case DataType.Session:
-			case DataType.Note:
-				if (!isNaN(ids[2])) variables.set(DataType.Session, ids[2]);
-			case DataType.Adventure:
-				if (!isNaN(ids[1])) variables.set(DataType.Adventure, ids[1]);
-				break;
-		}
-
-		const response = variables.get(type);
-
-		if (response == null){
-			throw new TagMisconfiguredError(this.app, dataType, tag);
-		}
-
-		return response;
+		return tag.substring(dataSettingsTag.length + 1);
 	}
 }

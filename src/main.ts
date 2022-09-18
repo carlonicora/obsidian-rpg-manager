@@ -11,11 +11,11 @@ import {Factories} from "./helpers/Factories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagManager} from "./helpers/TagManager";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
-import {Database} from "./database/Database";
 import {Logger, LogType} from "./helpers/Logger";
-import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
+import {RpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./interfaces/RpgManagerInterface";
+import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
@@ -64,7 +64,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.registerCodeBlock();
 		this.registerCommands();
 
-		return Database.initialise(this.app)
+		return DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;
 				this.registerEvents();
@@ -109,7 +109,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, rpgManagerDefaultSettings, await this.loadData());
+		this.settings = Object.assign({}, RpgManagerDefaultSettings, await this.loadData());
 	}
 
 	async updateSettings(settings: Partial<RpgManagerSettingsInterface>) {

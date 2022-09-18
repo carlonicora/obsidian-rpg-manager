@@ -8,6 +8,9 @@ export interface DatabaseInterface {
 		data: RecordInterface,
 	): void;
 
+	ready(
+	): void;
+
 	read(
 		query?: any,
 		comparison?: any,

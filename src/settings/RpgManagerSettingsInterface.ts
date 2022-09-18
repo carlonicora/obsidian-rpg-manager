@@ -17,7 +17,7 @@ export interface RpgManagerSettingsInterface {
 	YouTubeKey: string;
 }
 
-export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
+export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	campaignTag: 'rpgm/outline/campaign',
 	adventureTag: 'rpgm/outline/adventure',
 	sessionTag: 'rpgm/outline/session',
