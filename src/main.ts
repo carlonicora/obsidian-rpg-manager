@@ -20,11 +20,7 @@ import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
-	 * 		@TODO Error management during initalisation
-	 * 			@TODO Duplicated elements should be reported as two elements error and not one
-	 * 			@TODO Multiple tags in the same file
 	 * 		@TODO Error management during runtime
-	 *
 	 * 		@TODO Data structure update based on versioning and Automatic update of settings
 	 *
 	 * ## Version 2.0

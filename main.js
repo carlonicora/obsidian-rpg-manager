@@ -110,16 +110,24 @@ var TagMisconfiguredError = class extends RpgError {
   }
 };
 
+// src/errors/MultipleRpgManagerTagsError.ts
+var MultipleRpgManagerTagsError = class extends RpgError {
+  showErrorMessage() {
+    let response = "The file contains more than one RPG Manager identifier tags.\nOnly one RPG Manager Tag can be present in one file.";
+    return response;
+  }
+};
+
 // src/abstracts/database/AbstractRecord.ts
 var AbstractRecord = class {
-  constructor(app2, tag, file) {
+  constructor(app2, file, id) {
     this.app = app2;
     this.file = file;
+    this.id = id;
     this.synopsis = null;
     this.additionalInformation = null;
     this.imageSrc = void 0;
     this.imageUrl = void 0;
-    this.id = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(tag);
   }
   get name() {
     return this.file.basename;
@@ -153,11 +161,11 @@ var AbstractRecord = class {
       const metadata = this.app.metadataCache.getFileCache(this.file);
       if (metadata === null)
         throw new Error("metadata is null");
-      this.validateTag();
       this.metadata = metadata;
       this.frontmatter = (_a = this.metadata.frontmatter) != null ? _a : {};
-      this.tags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_b = this.frontmatter) == null ? void 0 : _b.tags);
-      this.basename = this.file.basename + "";
+      this.basename = this.file.basename;
+      this.tags = yield this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_b = this.frontmatter) == null ? void 0 : _b.tags);
+      this.validateTag();
       this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
       this.synopsis = this.frontmatter.synopsis;
       this.imageUrl = (_c = this.frontmatter) == null ? void 0 : _c.image;
@@ -166,6 +174,13 @@ var AbstractRecord = class {
     });
   }
   validateTag() {
+    let rpgManagerTagCounter = 0;
+    this.tags.forEach((tag) => {
+      if (this.app.plugins.getPlugin("rpg-manager").tagManager.isRpgManagerTag(tag))
+        rpgManagerTagCounter++;
+    });
+    if (rpgManagerTagCounter > 1)
+      throw new MultipleRpgManagerTagsError(this.app, this.id);
     if (!this.id.isValid)
       throw new TagMisconfiguredError(this.app, this.id);
   }
@@ -844,12 +859,12 @@ var DatasMap = {
   AgnosticMusic: Music
 };
 var DataFactory = class extends AbstractFactory {
-  create(settings, tag, type, file) {
-    let dataKey = CampaignSetting[settings] + DataType[type];
+  create(settings, file, id) {
+    let dataKey = CampaignSetting[settings] + DataType[id.type];
     if (DatasMap[dataKey] == null && settings !== 0 /* Agnostic */) {
-      dataKey = CampaignSetting[0 /* Agnostic */] + DataType[type];
+      dataKey = CampaignSetting[0 /* Agnostic */] + DataType[id.type];
     }
-    return new DatasMap[dataKey](this.app, tag, file);
+    return new DatasMap[dataKey](this.app, file, id);
   }
 };
 
@@ -4421,11 +4436,6 @@ var InfoLog = class extends AbstractLogMessage {
     super(1 /* Info */, mesageType, message, object);
   }
 };
-var WarningLog = class extends AbstractLogMessage {
-  constructor(mesageType, message = "", object = void 0) {
-    super(2 /* Warning */, mesageType, message, object);
-  }
-};
 var ErrorLog = class extends AbstractLogMessage {
   constructor(mesageType, message = "", object = void 0) {
     super(4 /* Error */, mesageType, message, object);
@@ -4514,24 +4524,17 @@ var DatabaseInitialiser = class {
       new InfoLog(4 /* DatabaseInitialisation */, "Record TFile metadata read for " + file.basename, metadata);
       if (metadata == null)
         return;
-      const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
-      new InfoLog(4 /* DatabaseInitialisation */, "Record tags initialised", dataTags);
-      const dataTag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(dataTags);
-      new InfoLog(4 /* DatabaseInitialisation */, "Record tag initialised", dataTag);
-      if (dataTag == void 0)
-        return;
-      const dataType = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(void 0, dataTag);
-      if (dataType === void 0) {
-        new WarningLog(4 /* DatabaseInitialisation */, "TFile is not a record");
-        return;
+      let id;
+      try {
+        id = this.app.plugins.getPlugin("rpg-manager").tagManager.createId(void 0, (_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
+      } catch (e) {
+        return void 0;
       }
-      new InfoLog(4 /* DatabaseInitialisation */, "Record type initialised", DataType[dataType]);
-      const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, dataTag);
-      if (campaignId === void 0)
-        new ErrorLog(4 /* DatabaseInitialisation */, "Campaign Id not found", dataTag);
-      const settings = (_b = this.campaignSettings.get(campaignId)) != null ? _b : 0 /* Agnostic */;
-      if (campaignId !== void 0 && settings !== void 0) {
-        response = yield this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, dataTag, dataType, file);
+      if (id.getTypeValue(1 /* Campaign */) === void 0)
+        new ErrorLog(4 /* DatabaseInitialisation */, "Campaign Id not found", id);
+      const settings = (_b = this.campaignSettings.get(id.getTypeValue(1 /* Campaign */))) != null ? _b : 0 /* Agnostic */;
+      if (id.getTypeValue(1 /* Campaign */) !== void 0 && settings !== void 0) {
+        response = yield this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, file, id);
         yield response.initialise();
         new InfoLog(4 /* DatabaseInitialisation */, "Record Created", response);
       }
@@ -4689,7 +4692,7 @@ var Database = class extends import_obsidian17.Component {
     const result = this.read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId));
     if (result.length === 0) {
       const dynamicallyGeneratedTag = this.app.plugins.getPlugin("rpg-manager").tagManager.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
-      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(dynamicallyGeneratedTag);
+      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.createId(dynamicallyGeneratedTag);
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
@@ -4699,7 +4702,7 @@ var Database = class extends import_obsidian17.Component {
   readSingle(dataType, tag, overloadId = void 0) {
     const result = this.read(this.generateQuery(dataType, false, tag, overloadId));
     if (result.length === 0) {
-      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(tag);
+      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.createId(tag);
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
@@ -5141,14 +5144,14 @@ var TagManager = class {
   sanitiseTags(tags) {
     if (tags === void 0)
       return [];
-    let response;
+    let response = [];
     if (typeof tags === "string") {
       response = tags.split(",");
       response.forEach((tag) => {
         tag = tag.replaceAll(" ", "").replaceAll("#", "");
       });
     } else {
-      response = tags;
+      tags.forEach((tag) => response.push(tag));
     }
     return response;
   }
@@ -5289,12 +5292,15 @@ var TagManager = class {
     const dataType = this.getDataType(tags, tag);
     if (dataType === void 0)
       throw new Error("The tags do not contain a valid RPG Manager outline or element tag");
-    const idMap = this.getIdMap(tag, tags);
+    const idMap = this.createId(tag, tags);
     if (idMap.isTypeValid(type))
       return idMap.getTypeValue(type);
     throw new TagMisconfiguredError(this.app, idMap);
   }
-  getIdMap(tag = void 0, tags = void 0) {
+  isRpgManagerTag(tag) {
+    return this.getDataType(void 0, tag) !== void 0;
+  }
+  createId(tag = void 0, tags = void 0) {
     const dataType = this.getDataType(tags, tag);
     if (dataType === void 0)
       throw new Error("The tags do not contain a valid RPG Manager outline or element tag");
