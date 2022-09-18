@@ -381,6 +381,7 @@ var Controller = class extends import_obsidian2.MarkdownRenderChild {
   }
   initialise() {
     const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(this.sourcePath);
+    console.log(currentElement);
     if (currentElement === void 0)
       return;
     this.render = (0, import_obsidian2.debounce)(this.render, 250, true);
@@ -4520,9 +4521,10 @@ var DatabaseInitialiser = class {
       } catch (e) {
         return void 0;
       }
-      if (id.getTypeValue(1 /* Campaign */) === void 0)
+      const campaignId = id.getTypeValue(1 /* Campaign */);
+      if (campaignId === void 0)
         new ErrorLog(4 /* DatabaseInitialisation */, "Campaign Id not found", id);
-      const settings = (_b = this.campaignSettings.get(id.getTypeValue(1 /* Campaign */))) != null ? _b : 0 /* Agnostic */;
+      const settings = (_b = this.campaignSettings.get(campaignId)) != null ? _b : 0 /* Agnostic */;
       if (id.getTypeValue(1 /* Campaign */) !== void 0 && settings !== void 0) {
         response = yield this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, file, id);
         yield response.initialise();
@@ -4749,10 +4751,11 @@ var Database = class extends import_obsidian16.Component {
           return;
         if (isNewComponent && component instanceof AbstractOutlineRecord) {
           yield component.checkDuplicates(this);
-          yield component.loadHierarchy(this);
         }
+        yield component.loadHierarchy(this);
         yield this.create(component);
         yield this.refreshRelationships();
+        console.log(this.elements);
         this.app.workspace.trigger("rpgmanager:refresh-views");
       } catch (e) {
         if (e instanceof RpgError) {

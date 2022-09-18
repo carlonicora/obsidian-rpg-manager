@@ -85,9 +85,10 @@ export class DatabaseInitialiser {
 			return undefined;
 		}
 
-		if (id.getTypeValue(DataType.Campaign) === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', id);
+		const campaignId = id.getTypeValue(DataType.Campaign);
+		if (campaignId === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', id);
 
-		const settings = this.campaignSettings.get(id.getTypeValue(DataType.Campaign)) ?? CampaignSetting.Agnostic;
+		const settings = this.campaignSettings.get(campaignId) ?? CampaignSetting.Agnostic;
 
 		if (id.getTypeValue(DataType.Campaign) !== undefined && settings !== undefined) {
 			response = await this.app.plugins.getPlugin('rpg-manager').factories.data.create(

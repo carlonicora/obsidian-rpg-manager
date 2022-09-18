@@ -239,10 +239,11 @@ export class Database extends Component implements DatabaseInterface {
 
 			if (isNewComponent && component instanceof AbstractOutlineRecord) {
 				await component.checkDuplicates(this);
-				await component.loadHierarchy(this);
 			}
+			await component.loadHierarchy(this);
 			await this.create(component);
 			await this.refreshRelationships();
+
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 
 		} catch (e) {
