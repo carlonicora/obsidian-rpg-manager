@@ -175,7 +175,7 @@ var AbstractRecord = class {
   }
   validateTag() {
     let rpgManagerTagCounter = 0;
-    this.tags.forEach((tag) => {
+    (this.tags || []).forEach((tag) => {
       if (this.app.plugins.getPlugin("rpg-manager").tagManager.isRpgManagerTag(tag))
         rpgManagerTagCounter++;
     });
@@ -194,6 +194,7 @@ var AbstractRecord = class {
   }
   reload() {
     return __async(this, null, function* () {
+      yield this.validateTag();
       yield this.initialise();
       yield this.initialiseData();
     });
@@ -4364,42 +4365,38 @@ var RelationshipFactory = class {
 // src/database/Database.ts
 var import_obsidian17 = require("obsidian");
 
-// src/modals/MisconfiguredDataModal.ts
+// src/modals/DatabaseErrorModal.ts
 var import_obsidian16 = require("obsidian");
-var MisconfiguredDataModal = class extends import_obsidian16.Modal {
-  constructor(app2, misconfiguredTags, singleError = void 0) {
+var DatabaseErrorModal = class extends import_obsidian16.Modal {
+  constructor(app2, misconfiguredTags, singleError = void 0, singleErrorFile = void 0) {
     super(app2);
     this.misconfiguredTags = misconfiguredTags;
     this.singleError = singleError;
+    this.singleErrorFile = singleErrorFile;
   }
   onOpen() {
     super.onOpen();
     const { contentEl } = this;
     contentEl.empty();
-    contentEl.createEl("h1", { cls: "error", text: "Error" });
+    contentEl.createEl("h1", { cls: "error", text: "RPG Manager Error" });
     if (this.misconfiguredTags !== void 0) {
       contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
       contentEl.createEl("p", { text: "Please double check the errors and correct them." });
-      const listEl = contentEl.createEl("ul");
       this.misconfiguredTags.forEach((error, file) => {
-        var _a;
-        const listItemEl = listEl.createEl("li");
-        const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
-        import_obsidian16.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), listItemEl, file.path, null);
-      });
-      const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
-      actionEl.addEventListener("click", () => {
-        (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, file) => {
-          const leaf = app.workspace.getLeaf(true);
-          leaf.openFile(file);
-        });
-        this.close();
+        this.addError(error, file);
       });
     }
     if (this.singleError !== void 0) {
-      const errorEl = contentEl.createEl("p");
-      import_obsidian16.MarkdownRenderer.renderMarkdown(this.singleError.showErrorMessage(), errorEl, "", null);
+      if (this.singleError !== void 0 && this.singleErrorFile !== void 0)
+        this.addError(this.singleError, this.singleErrorFile);
     }
+  }
+  addError(error, file) {
+    var _a;
+    const { contentEl } = this;
+    const errorEl = contentEl.createEl("div");
+    const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
+    import_obsidian16.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), errorEl, file.path, null);
   }
   onClose() {
     super.onClose();
@@ -4509,7 +4506,7 @@ var DatabaseInitialiser = class {
       new InfoLog(4 /* DatabaseInitialisation */, "Temporary database initialised", temporaryDatabase);
       yield this.buildHierarchyAndRelationships(temporaryDatabase);
       if (this.misconfiguredTags.size > 0) {
-        new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
+        new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
       }
       this.database.ready();
       new InfoLog(2 /* Database */, "Database Ready", this.database);
@@ -4748,30 +4745,30 @@ var Database = class extends import_obsidian17.Component {
   onSave(file) {
     return __async(this, null, function* () {
       let component = this.readByPath(file.path);
-      const isNewComponent = component === void 0;
-      if (component !== void 0) {
-        yield component.reload();
-      } else {
-        component = yield DatabaseInitialiser.createComponent(file);
-      }
-      if (component === void 0)
-        return;
       try {
+        const isNewComponent = component === void 0;
+        if (component !== void 0) {
+          yield component.reload();
+        } else {
+          component = yield DatabaseInitialiser.createComponent(file);
+        }
+        if (component === void 0)
+          return;
         if (isNewComponent && component instanceof AbstractOutlineRecord) {
           yield component.checkDuplicates(this);
           yield component.loadHierarchy(this);
         }
         yield this.create(component);
+        yield this.refreshRelationships();
+        this.app.workspace.trigger("rpgmanager:refresh-views");
       } catch (e) {
         if (e instanceof RpgError) {
-          new MisconfiguredDataModal(this.app, void 0, e).open();
+          new DatabaseErrorModal(this.app, void 0, e, file).open();
         } else {
           throw e;
         }
         return;
       }
-      yield this.refreshRelationships();
-      this.app.workspace.trigger("rpgmanager:refresh-views");
     });
   }
   replaceLinkInRelationships(oldBaseName, newBaseName) {
@@ -5102,7 +5099,7 @@ var Id = class {
     if (typeValue === void 0)
       throw new Error("Tag Type not found");
     if (typeValue.value === void 0)
-      throw new Error("Tag Value not found");
+      throw new TagMisconfiguredError(this.app, this);
     return typeValue.value;
   }
 };
@@ -5151,7 +5148,7 @@ var TagManager = class {
         tag = tag.replaceAll(" ", "").replaceAll("#", "");
       });
     } else {
-      tags.forEach((tag) => response.push(tag));
+      response = tags;
     }
     return response;
   }

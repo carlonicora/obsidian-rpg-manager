@@ -98,10 +98,9 @@ export abstract class AbstractRecord implements RecordInterface {
 	protected validateTag(
 	): void {
 		let rpgManagerTagCounter = 0;
-		this.tags.forEach((tag: string) => {
+		(this.tags || []).forEach((tag: string) => {
 			if (this.app.plugins.getPlugin('rpg-manager').tagManager.isRpgManagerTag(tag)) rpgManagerTagCounter++;
 		});
-
 		if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
 
 		if (!this.id.isValid) throw new TagMisconfiguredError(this.app, this.id);
@@ -119,6 +118,7 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public async reload(
 	): Promise<void> {
+		await this.validateTag();
 		await this.initialise();
 		await this.initialiseData();
 	}

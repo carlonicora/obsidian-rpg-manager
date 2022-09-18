@@ -21,6 +21,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
 	 * 		@TODO Error management during runtime
+	 * 		@TODO Refactor frontmatter to update to link in frontmatter
 	 * 		@TODO Data structure update based on versioning and Automatic update of settings
 	 *
 	 * ## Version 2.0

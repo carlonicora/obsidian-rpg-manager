@@ -6,7 +6,7 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ErrorLog, InfoLog, LogMessageType} from "../helpers/Logger";
 import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {RpgError} from "../errors/RpgError";
-import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
+import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {DataType} from "../enums/DataType";
 import {Id} from "./Id";
 
@@ -53,7 +53,7 @@ export class DatabaseInitialiser {
 		await this.buildHierarchyAndRelationships(temporaryDatabase);
 
 		if (this.misconfiguredTags.size > 0){
-			new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
+			new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
 		}
 
 		this.database.ready();
@@ -98,7 +98,6 @@ export class DatabaseInitialiser {
 			await response.initialise();
 			new InfoLog(LogMessageType.DatabaseInitialisation, 'Record Created', response);
 		}
-
 
 		return response;
 	}

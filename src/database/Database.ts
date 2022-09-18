@@ -2,7 +2,7 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App, CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
-import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
+import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {RpgError} from "../errors/RpgError";
 import {ElementNotFoundError} from "../errors/ElementNotFoundError";
@@ -226,33 +226,33 @@ export class Database extends Component implements DatabaseInterface {
 	): Promise<void> {
 		let component:RecordInterface|undefined = this.readByPath(file.path);
 
-		const isNewComponent = component === undefined;
-
-		if (component !== undefined) {
-			await component.reload();
-		} else {
-			component = await DatabaseInitialiser.createComponent(file);
-		}
-
-		if (component === undefined) return;
-
 		try {
+			const isNewComponent = component === undefined;
+
+			if (component !== undefined) {
+				await component.reload();
+			} else {
+				component = await DatabaseInitialiser.createComponent(file);
+			}
+
+			if (component === undefined) return;
+
 			if (isNewComponent && component instanceof AbstractOutlineRecord) {
 				await component.checkDuplicates(this);
 				await component.loadHierarchy(this);
 			}
 			await this.create(component);
+			await this.refreshRelationships();
+			this.app.workspace.trigger("rpgmanager:refresh-views");
+
 		} catch (e) {
 			if (e instanceof RpgError) {
-				new MisconfiguredDataModal(this.app, undefined, e).open();
+				new DatabaseErrorModal(this.app, undefined, e, file).open();
 			} else {
 				throw e;
 			}
 			return;
 		}
-
-		await this.refreshRelationships();
-		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
 	/**

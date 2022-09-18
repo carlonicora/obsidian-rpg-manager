@@ -2,6 +2,7 @@ import {DataType} from "../enums/DataType";
 import {TagValueInterface} from "../interfaces/TagValueInterface";
 import {TagStatus} from "../enums/TagStatus";
 import {App} from "obsidian";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 
 export class Id {
 	public tagMap: Map<DataType, TagValueInterface>;
@@ -115,7 +116,7 @@ export class Id {
 		const typeValue = this.tagMap.get(type);
 		if (typeValue === undefined) throw new Error('Tag Type not found');
 
-		if (typeValue.value === undefined) throw new Error('Tag Value not found');
+		if (typeValue.value === undefined) throw new TagMisconfiguredError(this.app, this);
 
 		return typeValue.value;
 	}

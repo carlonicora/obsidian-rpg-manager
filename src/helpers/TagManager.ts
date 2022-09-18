@@ -55,7 +55,7 @@ export class TagManager {
 				tag = tag.replaceAll(' ', '').replaceAll('#', '');
 			});
 		} else {
-			tags.forEach((tag: string) => response.push(tag));
+			response = tags;
 		}
 
 		return response;
