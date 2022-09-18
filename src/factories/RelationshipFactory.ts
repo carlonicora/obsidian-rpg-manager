@@ -34,6 +34,12 @@ export class RelationshipFactory {
 					false,
 				);
 
+				const content = fileContent.join('\n');
+				const newContent = (frontmatter.length > 0 ? '---\n' + frontmatter.join('\n') + '\n---\n' : '') + body.join('\n');
+				if (content !== newContent){
+					this.app.vault.modify(file, newContent);
+				}
+
 				return;
 			});
 	}
@@ -83,120 +89,6 @@ export class RelationshipFactory {
 		}
 	}
 
-	/*
-	private readBodyRelationships(
-		bodyContent: Array<string>,
-		relationships: Map<string, RelationshipInterface>,
-	): void {
-		for (let fileContentLineCounter=0; fileContentLineCounter<bodyContent.length; fileContentLineCounter++) {
-			let line = bodyContent[fileContentLineCounter];
-			while (line.indexOf('[[') !== -1){
-				line = line.substring(line.indexOf('[[') + 2);
-				const endLinkIndex = line.indexOf(']]');
-				if (endLinkIndex === -1) break;
-
-				let name = '';
-
-				const nameAndAlias = line.substring(0, endLinkIndex);
-				const aliasIndex = nameAndAlias.indexOf('|');
-				if (aliasIndex === -1){
-					name = nameAndAlias;
-				} else {
-					name = nameAndAlias.substring(0, aliasIndex);
-				}
-
-				if (relationships.get(name) === undefined) relationships.set(name, {component: undefined, description: '', isReverse: false, isInFrontmatter: false});
-			}
-		}
-	}
-
-	private readFrontmatterRelationships(
-		frontmatterContent: Array<string>,
-		relationships: Map<string, RelationshipInterface>,
-	): void {
-		for (let fileContentLineCounter=0; fileContentLineCounter<frontmatterContent.length; fileContentLineCounter++) {
-			let line = frontmatterContent[fileContentLineCounter];
-			if (line.indexOf('[[') !== -1){
-				line = line.substring(line.indexOf('[[') + 2);
-				const endLinkIndex = line.indexOf(']]');
-				if (endLinkIndex === -1) break;
-
-				let name = '';
-				let description = '';
-
-				const nameAndAlias = line.substring(0, endLinkIndex);
-				const aliasIndex = nameAndAlias.indexOf('|');
-				if (aliasIndex === -1){
-					name = nameAndAlias;
-				} else {
-					name = nameAndAlias.substring(0, aliasIndex);
-				}
-
-				const remainingFrontmatter = line.substring(endLinkIndex + 2);
-				if (remainingFrontmatter[0] === ':'){
-					description = remainingFrontmatter.substring(1).trimStart();
-
-					if (
-						description !== '' &&
-						description[0] === description[description.length - 1] &&
-						(description[0] === '"' || description[0] === "'")
-					) {
-						description = description.substring(1, description.length - 1).replaceAll('\\', '');
-						this.readBodyRelationships([description], relationships);
-					}
-				}
-
-
-				relationships.set(name, {component: undefined, description: '', isReverse: false, isInFrontmatter: true});
-			}
-		}
-	}
-
-	private addRelationshipsInLine(
-		line: string,
-	): void {
-		let indexOfFirstLinkStart = line.indexOf('[[');
-		const indexOfYamlSplitter = line.indexOf(':');
-		if (indexOfYamlSplitter === -1 || indexOfFirstLinkStart === -1 || indexOfFirstLinkStart < indexOfYamlSplitter) return;
-
-		while (indexOfFirstLinkStart !== -1) {
-			const indexOfFirstLinkEnd = line.indexOf(']]');
-
-			if (indexOfFirstLinkEnd === -1) break;
-
-			line = line.substring(0, partialLine.indexOf('[[') + 2);
-
-			let name = '';
-			let description = '';
-
-			const nameAndAlias = line.substring(0, indexOfFirstLinkEnd);
-			const aliasIndex = nameAndAlias.indexOf('|');
-			if (aliasIndex === -1){
-				name = nameAndAlias;
-			} else {
-				name = nameAndAlias.substring(0, aliasIndex);
-			}
-
-			const remainingFrontmatter = line.substring(indexOfFirstLinkEnd + 2);
-			if (remainingFrontmatter[0] === ':'){
-				description = remainingFrontmatter.substring(1).trimStart();
-
-				if (
-					description !== '' &&
-					description[0] === description[description.length - 1] &&
-					(description[0] === '"' || description[0] === "'")
-				) {
-					description = description.substring(1, description.length - 1).replaceAll('\\', '');
-					this.readBodyRelationships([description], relationships);
-				}
-			}
-
-
-			relationships.set(name, {component: undefined, description: '', isReverse: false, isInFrontmatter: true});
-		}
-	}
-	*/
-
 	private parseContent(
 		fileContent: Array<string>,
 		isFrontMatter: boolean,
@@ -213,9 +105,12 @@ export class RelationshipFactory {
 
 		if (isFrontMatter && !containsFrontMatter) return [];
 
+		const linesAtTheEnd: Array<string> = [];
+
 		for (let fileContentLineCounter=0; fileContentLineCounter<fileContent.length; fileContentLineCounter++) {
 			let line = fileContent[fileContentLineCounter];
 			let addLine = false;
+			let addLineAtTheEnd = false;
 
 			if (line === '---') {
 				if (!containsFrontMatter) {
@@ -258,17 +153,28 @@ export class RelationshipFactory {
 						if (frontmatterRelationshipLevel === 2) {
 							const indexOfSeparator = line.indexOf(':');
 
-							line = ' '.repeat(index) + '[[' + line.substring(index, indexOfSeparator) + ']]' + line.substring(indexOfSeparator);
+							line = '[[' + line.substring(index, indexOfSeparator) + ']]' + line.substring(indexOfSeparator);
+							addLineAtTheEnd = true;
 						}
 					}
 				}
 
-				if (isFrontMatter && line.toLowerCase().startsWith('relationships:')) hasFrontmatterRelationshipStarted = true;
+				if (isFrontMatter && line.toLowerCase().startsWith('relationships:')) {
+					hasFrontmatterRelationshipStarted = true;
+				}
 			}
 
-			if (addLine) response.push(line);
+			if (addLineAtTheEnd) {
+				linesAtTheEnd.push(line)
+			} else {
+				if (addLine) response.push(line);
+			}
 		}
 
-		return response;
+		if (linesAtTheEnd.length > 0){
+			return [...response, ...linesAtTheEnd];
+		} else {
+			return response;
+		}
 	}
 }

@@ -3184,7 +3184,7 @@ var AbstractTemplateFactory = class {
     let response = "";
     const frontmatterString = (0, import_obsidian8.stringifyYaml)(frontmatter);
     const frontmatterParsedString = frontmatterString.replaceAll("{}", "");
-    response = "---\n" + frontmatterParsedString + "\n---\n";
+    response = "---\n" + frontmatterParsedString + "---\n";
     if (initialCodeBlock !== void 0)
       response += initialCodeBlock;
     response += mainContent != null ? mainContent : "\n";
@@ -3243,7 +3243,7 @@ var AbstractTemplateFactory = class {
   }
   addFrontmatterData(frontmatter) {
     frontmatter.synopsis = "";
-    frontmatter.image = "";
+    frontmatter.image = {};
   }
   generateInitialCodeBlock() {
     return void 0;
@@ -4235,6 +4235,11 @@ var RelationshipFactory = class {
         const frontmatter = this.parseContent(fileContent, true);
         this.readRelationships(file.basename, frontmatter, relationship, true);
         this.readRelationships(file.basename, body, relationship, false);
+        const content = fileContent.join("\n");
+        const newContent = (frontmatter.length > 0 ? "---\n" + frontmatter.join("\n") + "\n---\n" : "") + body.join("\n");
+        if (content !== newContent) {
+          this.app.vault.modify(file, newContent);
+        }
         return;
       });
     });
@@ -4280,9 +4285,11 @@ var RelationshipFactory = class {
     const containsFrontMatter = fileContent[0] === "---";
     if (isFrontMatter && !containsFrontMatter)
       return [];
+    const linesAtTheEnd = [];
     for (let fileContentLineCounter = 0; fileContentLineCounter < fileContent.length; fileContentLineCounter++) {
       let line = fileContent[fileContentLineCounter];
       let addLine = false;
+      let addLineAtTheEnd = false;
       if (line === "---") {
         if (!containsFrontMatter) {
           addLine = true;
@@ -4323,17 +4330,30 @@ var RelationshipFactory = class {
             frontmatterRelationshipIndentation = index;
             if (frontmatterRelationshipLevel === 2) {
               const indexOfSeparator = line.indexOf(":");
-              line = " ".repeat(index) + "[[" + line.substring(index, indexOfSeparator) + "]]" + line.substring(indexOfSeparator);
+              line = "[[" + line.substring(index, indexOfSeparator) + "]]" + line.substring(indexOfSeparator);
+              addLineAtTheEnd = true;
+            } else {
+              addLine = false;
             }
           }
         }
-        if (isFrontMatter && line.toLowerCase().startsWith("relationships:"))
+        if (isFrontMatter && line.toLowerCase().startsWith("relationships:")) {
           hasFrontmatterRelationshipStarted = true;
+          addLine = false;
+        }
       }
-      if (addLine)
-        response.push(line);
+      if (addLineAtTheEnd) {
+        linesAtTheEnd.push(line);
+      } else {
+        if (addLine)
+          response.push(line);
+      }
     }
-    return response;
+    if (linesAtTheEnd.length > 0) {
+      return [...response, ...linesAtTheEnd];
+    } else {
+      return response;
+    }
   }
 };
 

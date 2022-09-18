@@ -114,7 +114,7 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 
 		const frontmatterString = stringifyYaml(frontmatter);
 		const frontmatterParsedString = frontmatterString.replaceAll('{}', '');
-		response = '---\n' + frontmatterParsedString + '\n---\n';
+		response = '---\n' + frontmatterParsedString + '---\n';
 		if (initialCodeBlock !== undefined) response += initialCodeBlock;
 		response += mainContent ?? '\n';
 		if (lastCodeBlock !== undefined) response += lastCodeBlock;
@@ -185,7 +185,7 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 		frontmatter: any,
 	): any {
 		frontmatter.synopsis = "";
-		frontmatter.image = "";
+		frontmatter.image = {};
 	}
 
 	protected generateInitialCodeBlock(
