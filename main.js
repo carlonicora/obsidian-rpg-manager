@@ -262,7 +262,7 @@ var AbstractRecord = class {
           if (relationship.component !== void 0) {
             relationship.component.addReverseRelationship(this.name, {
               component: this,
-              description: relationship.description,
+              description: "",
               isReverse: true
             });
           }
@@ -271,13 +271,14 @@ var AbstractRecord = class {
     });
   }
   addReverseRelationship(name, relationship) {
-    this.relationships.set(name, relationship);
+    if (!this.relationships.has(name))
+      this.relationships.set(name, relationship);
   }
   getRelationships(type, requiresReversedRelationship = false) {
     const response = [];
     this.relationships.forEach((relationship, name) => {
       if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
-        if (!requiresReversedRelationship || requiresReversedRelationship && relationship.isReverse)
+        if (requiresReversedRelationship === relationship.isReverse)
           response.push(relationship);
       }
     });
@@ -4332,14 +4333,11 @@ var RelationshipFactory = class {
               const indexOfSeparator = line.indexOf(":");
               line = "[[" + line.substring(index, indexOfSeparator) + "]]" + line.substring(indexOfSeparator);
               addLineAtTheEnd = true;
-            } else {
-              addLine = false;
             }
           }
         }
         if (isFrontMatter && line.toLowerCase().startsWith("relationships:")) {
           hasFrontmatterRelationshipStarted = true;
-          addLine = false;
         }
       }
       if (addLineAtTheEnd) {

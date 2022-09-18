@@ -200,7 +200,7 @@ export abstract class AbstractRecord implements RecordInterface {
 						this.name,
 						{
 							component: this,
-							description: relationship.description,
+							description: '',
 							isReverse: true,
 						}
 					)
@@ -213,7 +213,7 @@ export abstract class AbstractRecord implements RecordInterface {
 		name: string,
 		relationship: RelationshipInterface,
 	): void {
-		this.relationships.set(name, relationship);
+		if (!this.relationships.has(name)) this.relationships.set(name, relationship);
 	}
 
 	public getRelationships(
@@ -224,7 +224,7 @@ export abstract class AbstractRecord implements RecordInterface {
 
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
 			if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
-				if (!requiresReversedRelationship || (requiresReversedRelationship && relationship.isReverse)) response.push(relationship);
+				if (requiresReversedRelationship === relationship.isReverse) response.push(relationship);
 			}
 		});
 
