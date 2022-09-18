@@ -6,7 +6,6 @@ import {
 } from 'obsidian';
 import {Controller} from "./helpers/Controller";
 import {DataType} from "./enums/DataType";
-import {Functions} from "./helpers/Functions";
 import {Factories} from "./helpers/Factories";
 import {CreationModal} from "./modals/CreationModal";
 import {TagFactory} from "./factories/TagFactory";
@@ -35,7 +34,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	 *
 	 **/
 	settings: RpgManagerSettingsInterface;
-	functions: Functions;
 	database: DatabaseInterface;
 	factories: Factories;
 
@@ -55,7 +53,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	async onLayoutReady(){
 		const reloadStart = Date.now();
 
-		this.functions = new Functions(this.app);
 		this.factories = new Factories(this.app);
 
 		this.registerCodeBlock();

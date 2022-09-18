@@ -32,12 +32,23 @@ export class SceneTableComponent extends AbstractComponent {
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link, ContentType.Link),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.synopsis, ContentType.Markdown),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.startTime), ContentType.String, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.app.plugins.getPlugin('rpg-manager').functions.formatTime(scene.endTime), ContentType.String, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.duration, ContentType.String, true),
 				])
 			}
 		});
 		return response;
+	}
+
+	private formatTime(
+		date: Date|null
+	): string {
+		if (date == null) return '';
+
+		const hours = date.getHours();
+		const minutes = date.getMinutes();
+
+		return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes);
 	}
 }

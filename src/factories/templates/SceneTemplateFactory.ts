@@ -1,6 +1,5 @@
 import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
 import {RpgCodeBlockInterface} from "../../interfaces/RpgCodeBlockInterface";
-import {RpgCodeBlock} from "../../helpers/RpgCodeBlock";
 
 export class SceneTemplateFactory extends AbstractTemplateFactory {
 	public addFrontmatterData(

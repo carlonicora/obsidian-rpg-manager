@@ -1,5 +1,5 @@
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
-import {App, CachedMetadata, TFile} from "obsidian";
+import {App, CachedMetadata, TAbstractFile, TFile} from "obsidian";
 import {DataType} from "../../enums/DataType";
 import {CampaignInterface} from "../../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../../interfaces/database/DatabaseInterface";
@@ -11,6 +11,8 @@ import {MultipleRpgManagerTagsError} from "../../errors/MultipleRpgManagerTagsEr
 
 export abstract class AbstractRecord implements RecordInterface {
 	public frontmatter: any;
+
+	private root: string;
 
 	public basename: string;
 
@@ -34,6 +36,14 @@ export abstract class AbstractRecord implements RecordInterface {
 		public file: TFile,
 		public id: Id,
 	) {
+		this.initialiseRoots();
+	}
+
+	private initialiseRoots() {
+		const file = this.app.vault.getAbstractFileByPath('/');
+		this.root = this.app.vault.getResourcePath(file as TFile);
+		if (this.root.includes("?")) this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+		if (!this.root.endsWith("/")) this.root += "/";
 	}
 
 	public get name(
@@ -54,8 +64,13 @@ export abstract class AbstractRecord implements RecordInterface {
 	public get imageSrcElement(
 	): HTMLElement|null {
 		if (this.imageSrc === null) return null;
+		if (this.image === null) return null;
 
-		return this.app.plugins.getPlugin('rpg-manager').functions.getImgElement(this.image);
+		const response = new Image(75, 75);
+		response.src = this.image;
+		response.style.objectFit = 'cover';
+
+		return response;
 	}
 
 	public get folder(
@@ -66,12 +81,38 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public get image(
 	): string|null {
-		const localImage = this.app.plugins.getPlugin('rpg-manager').functions.getImg(this.name);
-		if (localImage !== null) return localImage;
-
 		if (this.imageUrl !== undefined) return this.imageUrl;
 
+		let localImage: string|undefined = undefined;
+		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
+
+		for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
+			const fileName = this.app.vault.config.attachmentFolderPath + '/' + this.basename + '.' + imageExtensions[extensionCount];
+
+			if (this.fileExists(fileName)) {
+				if (this.root == null) this.initialiseRoots();
+				localImage = this.root + fileName;
+				break;
+			}
+		}
+
+		if (localImage !== undefined) return localImage;
+
+
 		return null;
+	}
+
+	private fileExists(
+		path: string
+	): boolean {
+		const abstractFile = this.app.vault.getAbstractFileByPath(path);
+		let response = false;
+
+		if (abstractFile instanceof TAbstractFile) {
+			response = true;
+		}
+
+		return response;
 	}
 
 	public async initialise(

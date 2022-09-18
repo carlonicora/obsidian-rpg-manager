@@ -53,6 +53,9 @@ module.exports = __toCommonJS(main_exports);
 var import_obsidian20 = require("obsidian");
 
 // src/helpers/Controller.ts
+var import_obsidian2 = require("obsidian");
+
+// src/abstracts/database/AbstractRecord.ts
 var import_obsidian = require("obsidian");
 
 // src/enums/DataType.ts
@@ -128,6 +131,15 @@ var AbstractRecord = class {
     this.additionalInformation = null;
     this.imageSrc = void 0;
     this.imageUrl = void 0;
+    this.initialiseRoots();
+  }
+  initialiseRoots() {
+    const file = this.app.vault.getAbstractFileByPath("/");
+    this.root = this.app.vault.getResourcePath(file);
+    if (this.root.includes("?"))
+      this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+    if (!this.root.endsWith("/"))
+      this.root += "/";
   }
   get name() {
     return this.file.basename;
@@ -141,19 +153,42 @@ var AbstractRecord = class {
   get imageSrcElement() {
     if (this.imageSrc === null)
       return null;
-    return this.app.plugins.getPlugin("rpg-manager").functions.getImgElement(this.image);
+    if (this.image === null)
+      return null;
+    const response = new Image(75, 75);
+    response.src = this.image;
+    response.style.objectFit = "cover";
+    return response;
   }
   get folder() {
     const lastSlashPosition = this.path.lastIndexOf("/");
     return lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : "/";
   }
   get image() {
-    const localImage = this.app.plugins.getPlugin("rpg-manager").functions.getImg(this.name);
-    if (localImage !== null)
-      return localImage;
     if (this.imageUrl !== void 0)
       return this.imageUrl;
+    let localImage = void 0;
+    const imageExtensions = ["jpeg", "jpg", "png", "webp"];
+    for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
+      const fileName = this.app.vault.config.attachmentFolderPath + "/" + this.basename + "." + imageExtensions[extensionCount];
+      if (this.fileExists(fileName)) {
+        if (this.root == null)
+          this.initialiseRoots();
+        localImage = this.root + fileName;
+        break;
+      }
+    }
+    if (localImage !== void 0)
+      return localImage;
     return null;
+  }
+  fileExists(path) {
+    const abstractFile = this.app.vault.getAbstractFileByPath(path);
+    let response = false;
+    if (abstractFile instanceof import_obsidian.TAbstractFile) {
+      response = true;
+    }
+    return response;
   }
   initialise() {
     return __async(this, null, function* () {
@@ -315,7 +350,7 @@ var Campaign = class extends AbstractOutlineRecord {
 };
 
 // src/helpers/Controller.ts
-var Controller = class extends import_obsidian.MarkdownRenderChild {
+var Controller = class extends import_obsidian2.MarkdownRenderChild {
   constructor(app2, container, source, component, sourcePath) {
     super(container);
     this.app = app2;
@@ -340,14 +375,14 @@ var Controller = class extends import_obsidian.MarkdownRenderChild {
     modelName = modelName[0].toUpperCase() + modelName.substring(1);
     modelName = modelName.replace("navigation", "Navigation");
     sourceLines.shift();
-    const sourceMeta = (0, import_obsidian.parseYaml)(sourceLines.join("\n"));
+    const sourceMeta = (0, import_obsidian2.parseYaml)(sourceLines.join("\n"));
     this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, modelName, this.currentElement, this.source, this.sourcePath, sourceMeta);
   }
   initialise() {
     const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(this.sourcePath);
     if (currentElement === void 0)
       return;
-    this.render = (0, import_obsidian.debounce)(this.render, 250, true);
+    this.render = (0, import_obsidian2.debounce)(this.render, 250, true);
     this.currentElement = currentElement;
     this.generateModel();
   }
@@ -371,64 +406,6 @@ var Controller = class extends import_obsidian.MarkdownRenderChild {
         });
       });
     });
-  }
-};
-
-// src/helpers/Functions.ts
-var import_obsidian2 = require("obsidian");
-var Functions = class {
-  constructor(app2) {
-    this.app = app2;
-    this.initialiseRoots();
-  }
-  initialiseRoots() {
-    const file = this.app.vault.getAbstractFileByPath("/");
-    this.root = this.app.vault.getResourcePath(file);
-    if (this.root.includes("?"))
-      this.root = this.root.substring(0, this.root.lastIndexOf("?"));
-    if (!this.root.endsWith("/"))
-      this.root += "/";
-  }
-  fileExists(path) {
-    const abstractFile = this.app.vault.getAbstractFileByPath(path);
-    let response = false;
-    if (abstractFile instanceof import_obsidian2.TAbstractFile) {
-      response = true;
-    }
-    return response;
-  }
-  getImg(name) {
-    const imageExtensions = ["jpeg", "jpg", "png", "webp"];
-    for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
-      const fileName = this.app.vault.config.attachmentFolderPath + "/" + name + "." + imageExtensions[extensionCount];
-      if (this.fileExists(fileName)) {
-        if (this.root == null) {
-          this.initialiseRoots();
-        }
-        return this.root + fileName;
-      }
-    }
-    return null;
-  }
-  getImgElement(imgSrc, width = 75, height = 75) {
-    if (imgSrc === null)
-      return null;
-    if (width !== 75 && height === 75) {
-      height = void 0;
-    } else if (width === 75 && height !== 75) {
-      width = void 0;
-    }
-    const response = new Image(width, height);
-    response.src = imgSrc;
-    response.style.objectFit = "cover";
-    return response;
-  }
-  formatTime(date) {
-    if (date == null)
-      return "";
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
   }
 };
 
@@ -2236,14 +2213,21 @@ var SceneTableComponent = class extends AbstractComponent {
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link, 2 /* Link */),
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.synopsis, 4 /* Markdown */),
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.startTime), 0 /* String */, true),
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.app.plugins.getPlugin("rpg-manager").functions.formatTime(scene.endTime), 0 /* String */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.formatTime(scene.startTime), 0 /* String */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.formatTime(scene.endTime), 0 /* String */, true),
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.duration, 0 /* String */, true)
           ]);
         }
       });
       return response;
     });
+  }
+  formatTime(date) {
+    if (date == null)
+      return "";
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
   }
 };
 
@@ -5657,7 +5641,6 @@ var RpgManager = class extends import_obsidian20.Plugin {
   onLayoutReady() {
     return __async(this, null, function* () {
       const reloadStart = Date.now();
-      this.functions = new Functions(this.app);
       this.factories = new Factories(this.app);
       this.registerCodeBlock();
       this.registerCommands();

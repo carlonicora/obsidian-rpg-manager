@@ -17,16 +17,6 @@ declare module "obsidian" {
 		appId?: string;
 		plugins: {
 			getPlugin(plugin: "rpg-manager"): RpgManagerInterface;
-	/*
-	{
-				settings: RpgManagerSettingsInterface;
-				functions: Functions;
-				database: DatabaseInterface;
-				factories: Factories;
-				tagManager: TagFactory;
-			};
-
-	 */
 			enabledPlugins: Set<string>;
 		};
 	}
