@@ -80,6 +80,9 @@ var RpgError = class extends Error {
     this.app = app2;
     this.idMap = idMap;
   }
+  getErrorTitle() {
+    return void 0;
+  }
 };
 
 // src/errors/TagMisconfiguredError.ts
@@ -242,9 +245,24 @@ var AbstractRecord = class {
 
 // src/errors/ElementDuplicatedError.ts
 var ElementDuplicatedError = class extends RpgError {
+  constructor(app2, idMap, duplication, duplicated = void 0) {
+    super(app2, idMap);
+    this.duplication = duplication;
+    this.duplicated = duplicated;
+  }
+  getErrorTitle() {
+    return "More than one element with the same id exists in the database";
+  }
   showErrorMessage() {
-    let response = "";
-    response += "**Two elements with the same id exists in the data.**\nYou should only have one unique identifier for a " + DataType[this.idMap.type] + "\n";
+    var _a;
+    let response = this.idMap.tag + "\n";
+    if (this.duplication.length > 1) {
+      this.duplication.forEach((record) => {
+        response += " - " + record.basename + "\n";
+      });
+    } else if (this.duplicated !== void 0) {
+      response += " - " + this.duplication[0].basename + "\n - " + ((_a = this.duplicated) == null ? void 0 : _a.basename) + "\n";
+    }
     return response;
   }
 };
@@ -259,7 +277,7 @@ var AbstractOutlineRecord = class extends AbstractRecord {
     const query = (data) => data.type === this.idMap.type && data.tag === this.tag;
     const elements = database.read(query);
     if (elements.length > 0)
-      throw new ElementDuplicatedError(this.app, this.idMap);
+      throw new ElementDuplicatedError(this.app, this.idMap, elements, this);
   }
 };
 
@@ -4352,8 +4370,10 @@ var MisconfiguredDataModal = class extends import_obsidian16.Modal {
       contentEl.createEl("p", { text: "Please double check the errors and correct them." });
       const listEl = contentEl.createEl("ul");
       this.misconfiguredTags.forEach((error, file) => {
+        var _a;
         const listItemEl = listEl.createEl("li");
-        import_obsidian16.MarkdownRenderer.renderMarkdown("**" + file.basename + "**\n" + error.showErrorMessage(), listItemEl, file.path, null);
+        let title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
+        import_obsidian16.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), listItemEl, file.path, null);
       });
       const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
       actionEl.addEventListener("click", () => {
@@ -4679,7 +4699,7 @@ var Database = class extends import_obsidian17.Component {
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
-      throw new ElementDuplicatedError(this.app, result[0].idMap);
+      throw new ElementDuplicatedError(this.app, result[0].idMap, result);
     return result[0];
   }
   readSingle(dataType, tag, overloadId = void 0) {
@@ -4689,7 +4709,7 @@ var Database = class extends import_obsidian17.Component {
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
-      throw new ElementDuplicatedError(this.app, result[0].idMap);
+      throw new ElementDuplicatedError(this.app, result[0].idMap, result);
     return result[0];
   }
   readListParametrised(dataType, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, comparison = void 0) {
@@ -5657,6 +5677,7 @@ var RpgManager = class extends import_obsidian21.Plugin {
         this.database = database;
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
+        console.log(this.database);
         console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
         return;
       });

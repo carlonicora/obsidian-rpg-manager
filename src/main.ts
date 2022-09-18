@@ -20,22 +20,22 @@ import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
-	 * 		Error management during initalisation
-	 * 			Duplicated elements should be reported as two elements error and not one
-	 * 			Multiple tags in the same file
-	 * 		Error management during runtime
+	 * 		@TODO Error management during initalisation
+	 * 			@TODO Duplicated elements should be reported as two elements error and not one
+	 * 			@TODO Multiple tags in the same file
+	 * 		@TODO Error management during runtime
 	 *
-	 * 		Data structure update based on versioning and Automatic update of settings
+	 * 		@TODO Data structure update based on versioning and Automatic update of settings
 	 *
 	 * ## Version 2.0
-	 * 		Rename Session to Act
-	 * 		Rename Notes to Session Notes
-	 * 		Add Scene Notes
+	 * 		@TODO Rename Session to Act
+	 * 		@TODO Rename Notes to Session Notes
+	 * 		@TODO Add Scene Notes
 	 *
 	 * ## Version 2.1
-	 * 		Add Database Status View
-	 * 		Add Creation View
-	 * 		Add notes creation in right split
+	 * 		@TODO Add Database Status View
+	 * 		@TODO Add Creation View
+	 * 		@TODO Add notes creation in right split
 	 *
 	 **/
 	settings: RpgManagerSettingsInterface;
@@ -72,6 +72,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 				this.database = database;
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
+
+				console.log(this.database);
 
 				console.log(
 					`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${

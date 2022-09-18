@@ -1,5 +1,6 @@
 import {App, Component, MarkdownRenderer, Modal, TFile} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
+import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 
 export class MisconfiguredDataModal extends Modal {
 	constructor(
@@ -26,8 +27,10 @@ export class MisconfiguredDataModal extends Modal {
 			this.misconfiguredTags.forEach((error: RpgErrorInterface, file: TFile) => {
 				const listItemEl = listEl.createEl('li');
 
+				let title = error.getErrorTitle() ?? file.basename;
+
 				MarkdownRenderer.renderMarkdown(
-					'**' + file.basename + '**\n' + error.showErrorMessage(),
+					'**' + title + '**\n' + error.showErrorMessage(),
 					listItemEl,
 					file.path,
 					null as unknown as Component,

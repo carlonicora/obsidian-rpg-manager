@@ -10,6 +10,11 @@ export abstract class RpgError extends Error implements RpgErrorInterface {
 		super();
 	}
 
+	public getErrorTitle(
+	): string|undefined {
+		return undefined;
+	}
+
 	public abstract showErrorMessage(
 	): string;
 }

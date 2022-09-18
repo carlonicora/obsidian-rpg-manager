@@ -15,6 +15,6 @@ export abstract class AbstractOutlineRecord extends AbstractRecord implements Re
 			data.tag === this.tag;
 		const elements = database.read(query);
 
-		if (elements.length > 0) throw new ElementDuplicatedError(this.app, this.idMap);
+		if (elements.length > 0) throw new ElementDuplicatedError(this.app, this.idMap, elements, this);
 	}
 }

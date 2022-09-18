@@ -133,11 +133,10 @@ export class Database extends Component implements DatabaseInterface {
 			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(dynamicallyGeneratedTag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap);
+		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap, result);
 
 		return <T>result[0];
 	}
-
 
 	public readSingle<T extends RecordInterface>(
 		dataType: DataType,
@@ -152,7 +151,7 @@ export class Database extends Component implements DatabaseInterface {
 			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(tag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap);
+		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap, result);
 
 		return <T>result[0];
 	}
