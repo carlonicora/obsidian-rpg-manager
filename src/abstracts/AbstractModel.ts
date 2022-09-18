@@ -34,10 +34,10 @@ export abstract class AbstractModel implements ModelInterface {
 	): BreadcrumbResponseInterface {
 		const response = this.generateElementBreadcrumb(null, DataType.Campaign, this.currentElement.campaign);
 
-		if (this.currentElement.type !== DataType.Campaign){
-			response.mainTitle = DataType[this.currentElement.type];
+		if (this.currentElement.id.type !== DataType.Campaign){
+			response.mainTitle = DataType[this.currentElement.id.type];
 
-			switch (this.currentElement.type) {
+			switch (this.currentElement.id.type) {
 				case DataType.Adventure:
 					this.generateElementBreadcrumb(response, DataType.Adventure, this.currentElement);
 					break;
@@ -48,7 +48,7 @@ export abstract class AbstractModel implements ModelInterface {
 					this.generateSceneBreadcrumb(response, this.currentElement as SceneInterface);
 					break;
 				default:
-					this.generateElementBreadcrumb(response, this.currentElement.type, this.currentElement);
+					this.generateElementBreadcrumb(response, this.currentElement.id.type, this.currentElement);
 					break;
 			}
 		}

@@ -11,10 +11,10 @@ export abstract class AbstractOutlineRecord extends AbstractRecord implements Re
 	): void {
 
 		const query = (data: RecordInterface) =>
-			data.type === this.idMap.type &&
-			data.tag === this.tag;
+			data.id.type === this.id.type &&
+			data.id.tag === this.id.tag;
 		const elements = database.read(query);
 
-		if (elements.length > 0) throw new ElementDuplicatedError(this.app, this.idMap, elements, this);
+		if (elements.length > 0) throw new ElementDuplicatedError(this.app, this.id, elements, this);
 	}
 }

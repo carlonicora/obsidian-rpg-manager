@@ -27,7 +27,6 @@ export class Controller extends MarkdownRenderChild {
 		private sourcePath: string,
 	) {
 		super(container);
-		this.render = debounce(this.render, 250, true) as unknown as () => Promise<void>;
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 	}
 
@@ -66,6 +65,7 @@ export class Controller extends MarkdownRenderChild {
 		const currentElement:RecordInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<RecordInterface>(this.sourcePath);
 		if (currentElement === undefined) return;
 
+		this.render = debounce(this.render, 250, true) as unknown as () => Promise<void>;
 		this.currentElement = currentElement;
 		this.generateModel();
 

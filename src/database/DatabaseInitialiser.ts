@@ -171,26 +171,22 @@ export class DatabaseInitialiser {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Loading hierarchy', (dataType !== undefined ? DataType[dataType] : 'Elements'));
 
 		const data: RecordInterface[] = temporaryDatabase.read(
-			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.type) === data.type : data.isOutline === false),
+			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.id.type) === data.id.type : data.isOutline === false),
 		);
 
 		for (let index=0; index<data.length; index++){
-			try {
-				await data[index].loadHierarchy(this.database)
-					.then(
-						() => {
-							this.database.create(data[index]);
-						}, (e: Error) => {
-							if (e instanceof RpgError) {
-								this.misconfiguredTags.set(data[index].file, e as RpgErrorInterface);
-							} else {
-								throw e;
-							}
+			await data[index].loadHierarchy(this.database)
+				.then(
+					() => {
+						this.database.create(data[index]);
+					}, (e: Error) => {
+						if (e instanceof RpgError) {
+							this.misconfiguredTags.set(data[index].file, e as RpgErrorInterface);
+						} else {
+							throw e;
+						}
 
-						});
-			} catch (e) {
-
-			}
+					});
 		}
 
 		if (dataType === undefined) return;

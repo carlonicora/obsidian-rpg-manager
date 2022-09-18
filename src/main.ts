@@ -73,8 +73,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 
-				console.log(this.database);
-
 				console.log(
 					`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${
 						(Date.now() - reloadStart) / 1000.0

@@ -112,15 +112,14 @@ var TagMisconfiguredError = class extends RpgError {
 
 // src/abstracts/database/AbstractRecord.ts
 var AbstractRecord = class {
-  constructor(app2, tag, type, file) {
+  constructor(app2, tag, file) {
     this.app = app2;
-    this.tag = tag;
-    this.type = type;
     this.file = file;
     this.synopsis = null;
     this.additionalInformation = null;
     this.imageSrc = void 0;
     this.imageUrl = void 0;
+    this.id = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(tag);
   }
   get name() {
     return this.file.basename;
@@ -167,10 +166,8 @@ var AbstractRecord = class {
     });
   }
   validateTag() {
-    this.idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(this.tag);
-    if (!this.idMap.isValid) {
-      throw new TagMisconfiguredError(this.app, this.idMap);
-    }
+    if (!this.id.isValid)
+      throw new TagMisconfiguredError(this.app, this.id);
   }
   initialiseRelationships() {
     return __async(this, null, function* () {
@@ -188,8 +185,8 @@ var AbstractRecord = class {
   }
   loadHierarchy(database) {
     return __async(this, null, function* () {
-      if (this.type !== 1 /* Campaign */)
-        this.campaign = yield database.readSingle(1 /* Campaign */, this.tag);
+      if (this.id.type !== 1 /* Campaign */)
+        this.campaign = yield database.readSingle(1 /* Campaign */, this.id.tag);
     });
   }
   loadRelationships(database) {
@@ -228,7 +225,7 @@ var AbstractRecord = class {
   getRelationships(type, requiresReversedRelationship = false) {
     const response = [];
     this.relationships.forEach((relationship, name) => {
-      if (relationship.component !== void 0 && (type & relationship.component.type) == relationship.component.type) {
+      if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
         if (!requiresReversedRelationship || requiresReversedRelationship && relationship.isReverse)
           response.push(relationship);
       }
@@ -274,10 +271,10 @@ var AbstractOutlineRecord = class extends AbstractRecord {
     this.isOutline = true;
   }
   checkDuplicates(database) {
-    const query = (data) => data.type === this.idMap.type && data.tag === this.tag;
+    const query = (data) => data.id.type === this.id.type && data.id.tag === this.id.tag;
     const elements = database.read(query);
     if (elements.length > 0)
-      throw new ElementDuplicatedError(this.app, this.idMap, elements, this);
+      throw new ElementDuplicatedError(this.app, this.id, elements, this);
   }
 };
 
@@ -293,7 +290,7 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
 var Campaign = class extends AbstractOutlineRecord {
   initialiseData() {
     var _a, _b, _c, _d, _e, _f;
-    this.campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    this.campaignId = this.id.getTypeValue(1 /* Campaign */);
     if ((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.current)
       this.currentDate = new Date((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current);
     this.settings = ((_e = this.frontmatter) == null ? void 0 : _e.settings) ? CampaignSetting[(_f = this.frontmatter) == null ? void 0 : _f.settings] : 0 /* Agnostic */;
@@ -311,7 +308,6 @@ var Controller = class extends import_obsidian.MarkdownRenderChild {
     this.component = component;
     this.sourcePath = sourcePath;
     this.isActive = false;
-    this.render = (0, import_obsidian.debounce)(this.render, 250, true);
     this.registerEvent(this.app.vault.on("rename", (file, oldPath) => this.onRename(file, oldPath)));
   }
   onRename(file, oldPath) {
@@ -335,6 +331,7 @@ var Controller = class extends import_obsidian.MarkdownRenderChild {
     const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(this.sourcePath);
     if (currentElement === void 0)
       return;
+    this.render = (0, import_obsidian.debounce)(this.render, 250, true);
     this.currentElement = currentElement;
     this.generateModel();
   }
@@ -541,7 +538,7 @@ var ContentFactory = class extends AbstractFactory {
 // src/data/Adventure.ts
 var Adventure = class extends AbstractOutlineRecord {
   initialiseData() {
-    this.adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    this.adventureId = this.id.getTypeValue(2 /* Adventure */);
     super.initialiseData();
   }
 };
@@ -556,7 +553,7 @@ var Session = class extends AbstractOutlineRecord {
   }
   initialiseData() {
     var _a, _b, _c, _d;
-    this.sessionId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    this.sessionId = this.id.getTypeValue(4 /* Session */);
     this.date = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.session);
     this.irl = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.irl);
     super.initialiseData();
@@ -564,19 +561,19 @@ var Session = class extends AbstractOutlineRecord {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Session.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = database.readSingle(2 /* Adventure */, this.tag);
+      this.adventure = database.readSingle(2 /* Adventure */, this.id.tag);
       try {
-        this.previousSession = database.readSingle(4 /* Session */, this.tag, this.sessionId - 1);
+        this.previousSession = database.readSingle(4 /* Session */, this.id.tag, this.sessionId - 1);
         this.previousSession.nextSession = this;
       } catch (e) {
       }
       try {
-        this.nextSession = database.readSingle(4 /* Session */, this.tag, this.sessionId + 1);
+        this.nextSession = database.readSingle(4 /* Session */, this.id.tag, this.sessionId + 1);
         this.nextSession.previousSession = this;
       } catch (e) {
       }
       try {
-        this.note = database.readSingle(1024 /* Note */, this.tag);
+        this.note = database.readSingle(1024 /* Note */, this.id.tag);
       } catch (e) {
       }
     });
@@ -592,7 +589,7 @@ var Scene = class extends AbstractOutlineRecord {
   }
   initialiseData() {
     var _a, _b, _c, _d, _e;
-    this.sceneId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(this.type, this.tag);
+    this.sceneId = this.id.getTypeValue(8 /* Scene */);
     this.startTime = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.time) == null ? void 0 : _b.start);
     this.endTime = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.time) == null ? void 0 : _d.end);
     this.action = (_e = this.frontmatter) == null ? void 0 : _e.action;
@@ -601,15 +598,15 @@ var Scene = class extends AbstractOutlineRecord {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Scene.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = database.readSingle(2 /* Adventure */, this.tag);
-      this.session = database.readSingle(4 /* Session */, this.tag);
+      this.adventure = database.readSingle(2 /* Adventure */, this.id.tag);
+      this.session = database.readSingle(4 /* Session */, this.id.tag);
       try {
-        this.previousScene = database.readSingle(8 /* Scene */, this.tag, this.sceneId - 1);
+        this.previousScene = database.readSingle(8 /* Scene */, this.id.tag, this.sceneId - 1);
         this.previousScene.nextScene = this;
       } catch (e) {
       }
       try {
-        this.nextScene = database.readSingle(8 /* Scene */, this.tag, this.sceneId + 1);
+        this.nextScene = database.readSingle(8 /* Scene */, this.id.tag, this.sceneId + 1);
         this.nextScene.previousScene = this;
       } catch (e) {
       }
@@ -703,8 +700,8 @@ var Note = class extends AbstractOutlineRecord {
   loadHierarchy(database) {
     return __async(this, null, function* () {
       __superGet(Note.prototype, this, "loadHierarchy").call(this, database);
-      this.adventure = database.readSingle(2 /* Adventure */, this.tag);
-      const session = database.readSingle(4 /* Session */, this.tag);
+      this.adventure = database.readSingle(2 /* Adventure */, this.id.tag);
+      const session = database.readSingle(4 /* Session */, this.id.tag);
       this.sessionId = session.sessionId;
     });
   }
@@ -852,7 +849,7 @@ var DataFactory = class extends AbstractFactory {
     if (DatasMap[dataKey] == null && settings !== 0 /* Agnostic */) {
       dataKey = CampaignSetting[0 /* Agnostic */] + DataType[type];
     }
-    return new DatasMap[dataKey](this.app, tag, type, file);
+    return new DatasMap[dataKey](this.app, tag, file);
   }
 };
 
@@ -1615,9 +1612,9 @@ var AbstractModel = class {
   }
   generateBreadcrumb() {
     const response = this.generateElementBreadcrumb(null, 1 /* Campaign */, this.currentElement.campaign);
-    if (this.currentElement.type !== 1 /* Campaign */) {
-      response.mainTitle = DataType[this.currentElement.type];
-      switch (this.currentElement.type) {
+    if (this.currentElement.id.type !== 1 /* Campaign */) {
+      response.mainTitle = DataType[this.currentElement.id.type];
+      switch (this.currentElement.id.type) {
         case 2 /* Adventure */:
           this.generateElementBreadcrumb(response, 2 /* Adventure */, this.currentElement);
           break;
@@ -1628,7 +1625,7 @@ var AbstractModel = class {
           this.generateSceneBreadcrumb(response, this.currentElement);
           break;
         default:
-          this.generateElementBreadcrumb(response, this.currentElement.type, this.currentElement);
+          this.generateElementBreadcrumb(response, this.currentElement.id.type, this.currentElement);
           break;
       }
     }
@@ -4372,7 +4369,7 @@ var MisconfiguredDataModal = class extends import_obsidian16.Modal {
       this.misconfiguredTags.forEach((error, file) => {
         var _a;
         const listItemEl = listEl.createEl("li");
-        let title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
+        const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
         import_obsidian16.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), listItemEl, file.path, null);
       });
       const actionEl = contentEl.createEl("button", { text: "Open all the misconfigured files" });
@@ -4400,7 +4397,7 @@ var MisconfiguredDataModal = class extends import_obsidian16.Modal {
 var ElementNotFoundError = class extends RpgError {
   showErrorMessage() {
     var _a;
-    let response = "The tag `" + this.idMap.tag + "` refers to an outline that does not exist.\n";
+    const response = "The tag `" + this.idMap.tag + "` refers to an outline that does not exist.\n";
     let check = "Please check you have the followinf Outlines:\n";
     (_a = this.idMap.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
       check += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
@@ -4575,20 +4572,17 @@ var DatabaseInitialiser = class {
   static addHierarchy(temporaryDatabase, dataType) {
     return __async(this, null, function* () {
       new InfoLog(4 /* DatabaseInitialisation */, "Loading hierarchy", dataType !== void 0 ? DataType[dataType] : "Elements");
-      const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false);
+      const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.id.type) === data2.id.type : data2.isOutline === false);
       for (let index = 0; index < data.length; index++) {
-        try {
-          yield data[index].loadHierarchy(this.database).then(() => {
-            this.database.create(data[index]);
-          }, (e) => {
-            if (e instanceof RpgError) {
-              this.misconfiguredTags.set(data[index].file, e);
-            } else {
-              throw e;
-            }
-          });
-        } catch (e) {
-        }
+        yield data[index].loadHierarchy(this.database).then(() => {
+          this.database.create(data[index]);
+        }, (e) => {
+          if (e instanceof RpgError) {
+            this.misconfiguredTags.set(data[index].file, e);
+          } else {
+            throw e;
+          }
+        });
       }
       if (dataType === void 0)
         return;
@@ -4699,7 +4693,7 @@ var Database = class extends import_obsidian17.Component {
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
-      throw new ElementDuplicatedError(this.app, result[0].idMap, result);
+      throw new ElementDuplicatedError(this.app, result[0].id, result);
     return result[0];
   }
   readSingle(dataType, tag, overloadId = void 0) {
@@ -4709,7 +4703,7 @@ var Database = class extends import_obsidian17.Component {
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
-      throw new ElementDuplicatedError(this.app, result[0].idMap, result);
+      throw new ElementDuplicatedError(this.app, result[0].id, result);
     return result[0];
   }
   readListParametrised(dataType, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, comparison = void 0) {
@@ -4820,28 +4814,28 @@ var Database = class extends import_obsidian17.Component {
       case 1 /* Campaign */:
         if (overloadId !== void 0)
           campaignId = overloadId;
-        return (data) => (dataType & data.type) === data.type && (isList ? true : data.campaignId === campaignId);
+        return (data) => (dataType & data.id.type) === data.id.type && (isList ? true : data.campaignId === campaignId);
         break;
       case 2 /* Adventure */:
         if (overloadId !== void 0)
           adventureId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (isList ? true : data.adventureId === adventureId);
+        return (data) => (dataType & data.id.type) === data.id.type && data.campaign.campaignId === campaignId && (isList ? true : data.adventureId === adventureId);
         break;
       case 4 /* Session */:
       case 1024 /* Note */:
         if (overloadId !== void 0)
           sessionId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && (isList ? true : data.sessionId === sessionId);
+        return (data) => (dataType & data.id.type) === data.id.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && (isList ? true : data.sessionId === sessionId);
         break;
       case 8 /* Scene */:
         if (overloadId !== void 0)
           sceneId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && data.session.sessionId === sessionId && (isList ? true : data.sceneId === sceneId);
+        return (data) => (dataType & data.id.type) === data.id.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && data.session.sessionId === sessionId && (isList ? true : data.sceneId === sceneId);
         break;
       default:
         if (overloadId !== void 0)
           campaignId = overloadId;
-        return (data) => (dataType & data.type) === data.type && data.campaign.campaignId === campaignId;
+        return (data) => (dataType & data.id.type) === data.id.type && data.campaign.campaignId === campaignId;
         break;
     }
   }
@@ -5019,8 +5013,8 @@ var CreationModal = class extends import_obsidian18.Modal {
   }
 };
 
-// src/helpers/TagValidator.ts
-var TagValidator = class {
+// src/database/Id.ts
+var Id = class {
   constructor(app2, type, tag = void 0, tags = void 0) {
     this.app = app2;
     this.type = type;
@@ -5304,7 +5298,7 @@ var TagManager = class {
     const dataType = this.getDataType(tags, tag);
     if (dataType === void 0)
       throw new Error("The tags do not contain a valid RPG Manager outline or element tag");
-    const response = new TagValidator(this.app, dataType, tag, tags);
+    const response = new Id(this.app, dataType, tag, tags);
     const idString = this.getTagIds(tag, tags);
     const ids = idString.split("/").map(String);
     switch (dataType) {
@@ -5677,7 +5671,6 @@ var RpgManager = class extends import_obsidian21.Plugin {
         this.database = database;
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
-        console.log(this.database);
         console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
         return;
       });

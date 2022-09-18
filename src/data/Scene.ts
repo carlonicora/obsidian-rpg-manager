@@ -18,7 +18,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 
 	protected initialiseData(
 	): void {
-		this.sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(this.type, this.tag);
+		this.sceneId = this.id.getTypeValue(DataType.Scene);
 		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
 		this.action = this.frontmatter?.action;
@@ -31,18 +31,18 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.tag);
-		this.session = database.readSingle<SessionInterface>(DataType.Session, this.tag);
+		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id.tag);
+		this.session = database.readSingle<SessionInterface>(DataType.Session, this.id.tag);
 
 		try {
-			this.previousScene = database.readSingle<SceneInterface>(DataType.Scene, this.tag, this.sceneId - 1);
+			this.previousScene = database.readSingle<SceneInterface>(DataType.Scene, this.id.tag, this.sceneId - 1);
 			this.previousScene.nextScene = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextScene = database.readSingle<SceneInterface>(DataType.Scene, this.tag, this.sceneId + 1);
+			this.nextScene = database.readSingle<SceneInterface>(DataType.Scene, this.id.tag, this.sceneId + 1);
 			this.nextScene.previousScene = this;
 		} catch (e) {
 			//ignore. It can be non existing

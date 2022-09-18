@@ -1,7 +1,7 @@
-import {TagValidator} from "../helpers/TagValidator";
+import {Id} from "../database/Id";
 
 export interface RpgErrorInterface {
-	idMap: TagValidator;
+	idMap: Id;
 
 	getErrorTitle(
 	): string|undefined;

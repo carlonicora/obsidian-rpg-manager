@@ -1,11 +1,11 @@
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App} from "obsidian";
-import {TagValidator} from "../helpers/TagValidator";
+import {Id} from "../database/Id";
 
 export abstract class RpgError extends Error implements RpgErrorInterface {
 	constructor(
 		protected app: App,
-		public idMap: TagValidator,
+		public idMap: Id,
 	) {
 		super();
 	}

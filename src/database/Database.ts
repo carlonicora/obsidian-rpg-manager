@@ -14,7 +14,6 @@ import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
-import {TagValidator} from "../helpers/TagValidator";
 
 export class Database extends Component implements DatabaseInterface {
 	public elements: Array<RecordInterface> = [];
@@ -133,7 +132,7 @@ export class Database extends Component implements DatabaseInterface {
 			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(dynamicallyGeneratedTag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap, result);
+		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
 
 		return <T>result[0];
 	}
@@ -151,7 +150,7 @@ export class Database extends Component implements DatabaseInterface {
 			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(tag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap, result);
+		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
 
 		return <T>result[0];
 	}
@@ -321,13 +320,13 @@ export class Database extends Component implements DatabaseInterface {
 			case DataType.Campaign:
 				if (overloadId !== undefined) campaignId = overloadId;
 				return (data: CampaignInterface) =>
-					(dataType & data.type) === data.type &&
+					(dataType & data.id.type) === data.id.type &&
 					(isList ? true : data.campaignId === campaignId);
 				break;
 			case DataType.Adventure:
 				if (overloadId !== undefined) adventureId = overloadId;
 				return (data: AdventureInterface) =>
-					(dataType & data.type) === data.type &&
+					(dataType & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(isList ? true : data.adventureId === adventureId);
 				break;
@@ -335,7 +334,7 @@ export class Database extends Component implements DatabaseInterface {
 			case DataType.Note:
 				if (overloadId !== undefined) sessionId = overloadId;
 				return (data: SessionInterface|NoteInterface) =>
-					(dataType & data.type) === data.type &&
+					(dataType & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
 					(isList ? true : data.sessionId === sessionId);
@@ -343,7 +342,7 @@ export class Database extends Component implements DatabaseInterface {
 			case DataType.Scene:
 				if (overloadId !== undefined) sceneId = overloadId;
 				return (data: SceneInterface) =>
-					(dataType & data.type) === data.type &&
+					(dataType & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
 					data.session.sessionId === sessionId &&
@@ -352,7 +351,7 @@ export class Database extends Component implements DatabaseInterface {
 			default:
 				if (overloadId !== undefined) campaignId = overloadId;
 				return (data: RecordInterface) =>
-					(dataType & data.type) === data.type &&
+					(dataType & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId
 				break;
 		}

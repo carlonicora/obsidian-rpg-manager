@@ -3,13 +3,13 @@ import {TFile} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
 import {DatabaseInterface} from "./DatabaseInterface";
 import {BaseCampaignInterface} from "../data/BaseCampaignInterface";
-import {TagValidator} from "../../helpers/TagValidator";
+import {Id} from "../../database/Id";
 
 export interface RecordInterface {
-	idMap: TagValidator;
+	id: Id;
 
-	type: DataType;
-	tag: string;
+	//type: DataType;
+	//tag: string;
 	tags: Array<string>;
 
 	file: TFile;

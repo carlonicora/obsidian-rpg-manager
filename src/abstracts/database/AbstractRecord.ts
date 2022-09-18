@@ -5,11 +5,11 @@ import {CampaignInterface} from "../../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../../interfaces/database/DatabaseInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {BaseCampaignInterface} from "../../interfaces/data/BaseCampaignInterface";
-import {TagValidator} from "../../helpers/TagValidator";
+import {Id} from "../../database/Id";
 import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
 
 export abstract class AbstractRecord implements RecordInterface {
-	public idMap: TagValidator;
+	public id: Id;
 
 	public frontmatter: any;
 
@@ -32,10 +32,10 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	constructor(
 		protected app: App,
-		public tag:string,
-		public type: DataType,
+		tag:string,
 		public file: TFile,
 	) {
+		this.id = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(tag);
 	}
 
 	public get name(
@@ -86,7 +86,7 @@ export abstract class AbstractRecord implements RecordInterface {
 		this.metadata = metadata;
 		this.frontmatter = this.metadata.frontmatter ?? {};
 		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
-		this.basename = this.file.basename + '';
+		this.basename = this.file.basename;
 
 		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
 		this.synopsis = this.frontmatter.synopsis;
@@ -98,11 +98,7 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	protected validateTag(
 	): void {
-		this.idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(this.tag);
-
-		if (!this.idMap.isValid) {
-			throw new TagMisconfiguredError(this.app, this.idMap);
-		}
+		if (!this.id.isValid) throw new TagMisconfiguredError(this.app, this.id);
 	}
 
 	protected async initialiseRelationships(
@@ -124,7 +120,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
-		if (this.type !== DataType.Campaign) this.campaign = await database.readSingle<CampaignInterface>(DataType.Campaign, this.tag);
+		if (this.id.type !== DataType.Campaign) this.campaign = await database.readSingle<CampaignInterface>(DataType.Campaign, this.id.tag);
 	}
 
 	public async loadRelationships(
@@ -178,7 +174,7 @@ export abstract class AbstractRecord implements RecordInterface {
 		const response:Array<RelationshipInterface> = [];
 
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
-			if (relationship.component !== undefined && (type & relationship.component.type) == relationship.component.type) {
+			if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
 				if (!requiresReversedRelationship || (requiresReversedRelationship && relationship.isReverse)) response.push(relationship);
 			}
 		});

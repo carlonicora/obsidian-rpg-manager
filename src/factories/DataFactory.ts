@@ -54,6 +54,6 @@ export class DataFactory extends AbstractFactory {
 			dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleDataKey<K>;
 		}
 
-		return new DatasMap[dataKey](this.app, tag, type, file);
+		return new DatasMap[dataKey](this.app, tag, file);
 	}
 }

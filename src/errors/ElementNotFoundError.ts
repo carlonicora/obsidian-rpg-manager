@@ -1,13 +1,11 @@
 import {RpgError} from "./RpgError";
 import {DataType} from "../enums/DataType";
-import {TagStatus} from "../enums/TagStatus";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class ElementNotFoundError extends RpgError {
 
 	public showErrorMessage(
 	): string {
-		let response = 'The tag `' + this.idMap.tag + '` refers to an outline that does not exist.\n';
+		const response = 'The tag `' + this.idMap.tag + '` refers to an outline that does not exist.\n';
 
 		let check = 'Please check you have the followinf Outlines:\n';
 		this.idMap.possiblyNotFoundIds?.forEach((id: number, type: DataType) => {

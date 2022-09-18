@@ -1,13 +1,12 @@
 import {RpgError} from "./RpgError";
-import {DataType} from "../enums/DataType";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App} from "obsidian";
-import {TagValidator} from "../helpers/TagValidator";
+import {Id} from "../database/Id";
 
 export class ElementDuplicatedError extends RpgError {
 	constructor(
 		app: App,
-		idMap: TagValidator,
+		idMap: Id,
 		private duplication: Array<RecordInterface>,
 		private duplicated: RecordInterface|undefined=undefined,
 	) {

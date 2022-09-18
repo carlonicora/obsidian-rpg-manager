@@ -1,7 +1,7 @@
 import {App} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
-import {TagValidator} from "./TagValidator";
+import {Id} from "../database/Id";
 
 export class TagManager {
 	public dataSettings: Map<DataType, string>;
@@ -198,11 +198,11 @@ export class TagManager {
 	public getIdMap(
 		tag: string|undefined = undefined,
 		tags: Array<string>|undefined = undefined,
-	): TagValidator {
+	): Id {
 		const dataType = this.getDataType(tags, tag);
 		if (dataType === undefined) throw new Error('The tags do not contain a valid RPG Manager outline or element tag');
 
-		const response = new TagValidator(this.app, dataType, tag, tags);
+		const response = new Id(this.app, dataType, tag, tags);
 
 		const idString = this.getTagIds(tag, tags);
 		const ids: Array<string> = idString.split('/').map(String);

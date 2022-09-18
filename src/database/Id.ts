@@ -3,7 +3,7 @@ import {TagValueInterface} from "../interfaces/TagValueInterface";
 import {TagStatus} from "../enums/TagStatus";
 import {App} from "obsidian";
 
-export class TagValidator {
+export class Id {
 	public tagMap: Map<DataType, TagValueInterface>;
 	public tag: string;
 

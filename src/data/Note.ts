@@ -14,8 +14,8 @@ export class Note extends AbstractOutlineRecord implements NoteInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.tag);
-		const session = database.readSingle<SessionInterface>(DataType.Session, this.tag);
+		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id.tag);
+		const session = database.readSingle<SessionInterface>(DataType.Session, this.id.tag);
 		this.sessionId = session.sessionId;
 	}
 }
