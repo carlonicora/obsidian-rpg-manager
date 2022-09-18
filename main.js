@@ -102,7 +102,7 @@ var TagMisconfiguredError = class extends RpgError {
       default:
         requiredId = "/{campaignId}" + requiredId;
     }
-    response += "`" + ((_a = this.app.plugins.getPlugin("rpg-manager").tagManager.dataSettings.get(this.idMap.type)) != null ? _a : "") + requiredId + "`\n";
+    response += "`" + ((_a = this.app.plugins.getPlugin("rpg-manager").factories.tags.dataSettings.get(this.idMap.type)) != null ? _a : "") + requiredId + "`\n";
     (_b = this.idMap.invalidIds) == null ? void 0 : _b.forEach((status, type) => {
       response += " - {" + DataType[type].toLowerCase() + "Id} is " + (status === 2 /* Missing */ ? "missing" : "not a valid numeric id") + "\n";
     });
@@ -164,7 +164,7 @@ var AbstractRecord = class {
       this.metadata = metadata;
       this.frontmatter = (_a = this.metadata.frontmatter) != null ? _a : {};
       this.basename = this.file.basename;
-      this.tags = yield this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_b = this.frontmatter) == null ? void 0 : _b.tags);
+      this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_b = this.frontmatter) == null ? void 0 : _b.tags);
       this.validateTag();
       this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
       this.synopsis = this.frontmatter.synopsis;
@@ -176,7 +176,7 @@ var AbstractRecord = class {
   validateTag() {
     let rpgManagerTagCounter = 0;
     (this.tags || []).forEach((tag) => {
-      if (this.app.plugins.getPlugin("rpg-manager").tagManager.isRpgManagerTag(tag))
+      if (this.app.plugins.getPlugin("rpg-manager").factories.tags.isRpgManagerTag(tag))
         rpgManagerTagCounter++;
     });
     if (rpgManagerTagCounter > 1)
@@ -4523,7 +4523,7 @@ var DatabaseInitialiser = class {
         return;
       let id;
       try {
-        id = this.app.plugins.getPlugin("rpg-manager").tagManager.createId(void 0, (_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
+        id = this.app.plugins.getPlugin("rpg-manager").factories.tags.createId(void 0, (_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
       } catch (e) {
         return void 0;
       }
@@ -4543,10 +4543,10 @@ var DatabaseInitialiser = class {
       var _a, _b, _c;
       const metadata = this.app.metadataCache.getFileCache(file);
       if (metadata !== null) {
-        const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
-        if (this.app.plugins.getPlugin("rpg-manager").tagManager.getDataType(dataTags) === 1 /* Campaign */) {
+        const dataTags = this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
+        if (this.app.plugins.getPlugin("rpg-manager").factories.tags.getDataType(dataTags) === 1 /* Campaign */) {
           try {
-            const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, void 0, dataTags);
+            const campaignId = this.app.plugins.getPlugin("rpg-manager").factories.tags.getId(1 /* Campaign */, void 0, dataTags);
             if (campaignId !== void 0) {
               const settings = ((_b = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _b.settings) !== void 0 ? CampaignSetting[(_c = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _c.settings] : 0 /* Agnostic */;
               this.campaignSettings.set(campaignId, settings);
@@ -4688,8 +4688,8 @@ var Database = class extends import_obsidian17.Component {
   readSingleParametrised(dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
     const result = this.read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId));
     if (result.length === 0) {
-      const dynamicallyGeneratedTag = this.app.plugins.getPlugin("rpg-manager").tagManager.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
-      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.createId(dynamicallyGeneratedTag);
+      const dynamicallyGeneratedTag = this.app.plugins.getPlugin("rpg-manager").factories.tags.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
+      const idMap = this.app.plugins.getPlugin("rpg-manager").factories.tags.createId(dynamicallyGeneratedTag);
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
@@ -4699,7 +4699,7 @@ var Database = class extends import_obsidian17.Component {
   readSingle(dataType, tag, overloadId = void 0) {
     const result = this.read(this.generateQuery(dataType, false, tag, overloadId));
     if (result.length === 0) {
-      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.createId(tag);
+      const idMap = this.app.plugins.getPlugin("rpg-manager").factories.tags.createId(tag);
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
@@ -4805,10 +4805,10 @@ var Database = class extends import_obsidian17.Component {
   }
   generateQuery(dataType, isList, tag, overloadId, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
     if (tag !== void 0) {
-      campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, tag);
-      adventureId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(2 /* Adventure */, tag);
-      sessionId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(4 /* Session */, tag);
-      sceneId = this.app.plugins.getPlugin("rpg-manager").tagManager.getOptionalId(8 /* Scene */, tag);
+      campaignId = this.app.plugins.getPlugin("rpg-manager").factories.tags.getId(1 /* Campaign */, tag);
+      adventureId = this.app.plugins.getPlugin("rpg-manager").factories.tags.getOptionalId(2 /* Adventure */, tag);
+      sessionId = this.app.plugins.getPlugin("rpg-manager").factories.tags.getOptionalId(4 /* Session */, tag);
+      sceneId = this.app.plugins.getPlugin("rpg-manager").factories.tags.getOptionalId(8 /* Scene */, tag);
     }
     switch (dataType) {
       case 1 /* Campaign */:
@@ -4848,171 +4848,6 @@ var DatabaseFactory = class extends AbstractFactory {
   }
 };
 
-// src/helpers/Factories.ts
-var Factories = class {
-  constructor(app2) {
-    this.app = app2;
-    this.components = new ComponentFactory(this.app);
-    this.contents = new ContentFactory(this.app);
-    this.data = new DataFactory(this.app);
-    this.errors = new ErrorFactory(this.app);
-    this.files = new FileFactory(this.app);
-    this.modals = new ModalFactory(this.app);
-    this.models = new ModelFactory(this.app);
-    this.pronouns = new PronounFactory(this.app);
-    this.templates = new TemplateFactory(this.app);
-    this.views = new ViewFactory(this.app);
-    this.fetchers = new FetcherFactory(this.app);
-    this.relationships = new RelationshipFactory(this.app);
-    this.database = new DatabaseFactory(this.app);
-  }
-};
-
-// src/modals/CreationModal.ts
-var import_obsidian18 = require("obsidian");
-var CreationModal = class extends import_obsidian18.Modal {
-  constructor(app2, type, create = true, name = null, campaignId = null, adventureId = null, sessionId = null) {
-    super(app2);
-    this.app = app2;
-    this.type = type;
-    this.create = create;
-    this.name = name;
-    this.settings = 0 /* Agnostic */;
-    this.availableSpecificTemplates = [];
-    this.availableGenericTemplates = [];
-    if (campaignId != null)
-      this.campaignId = campaignId;
-    if (adventureId != null)
-      this.adventureId = adventureId;
-    if (sessionId != null)
-      this.sessionId = sessionId;
-    this.app.vault.getFiles().filter((file) => file.parent.path === this.app.plugins.getPlugin("rpg-manager").settings.templateFolder).forEach((file) => {
-      var _a, _b;
-      const metadata = this.app.metadataCache.getFileCache(file);
-      if (metadata != null) {
-        const tags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
-        if (tags.length > 0) {
-          const tags2 = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_b = metadata.frontmatter) == null ? void 0 : _b.tags);
-          const templateType = this.app.plugins.getPlugin("rpg-manager").tagManager.getTemplateDataType(tags2);
-          if (templateType == void 0)
-            this.availableGenericTemplates.push(file);
-          if (templateType === this.type)
-            this.availableSpecificTemplates.push(file);
-        } else {
-          this.availableGenericTemplates.push(file);
-        }
-      }
-    });
-  }
-  onOpen() {
-    super.onOpen();
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("rpgm-modal");
-    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView) == null) {
-      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Error" });
-      contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
-      return;
-    }
-    contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
-    const gridEl = contentEl.createDiv({ cls: "rpgm-grid" });
-    const navigationEl = gridEl.createDiv({ cls: "navigation" });
-    this.additionalInformationEl = gridEl.createDiv({ cls: "additionalElements" });
-    const titleEl = navigationEl.createDiv({ cls: "rpgm-input-title" });
-    titleEl.createEl("label", { text: "Title of your new " + DataType[this.type] });
-    this.title = titleEl.createEl("input", { type: "text" });
-    if (this.name !== null) {
-      this.title.value = this.name;
-    }
-    this.titleError = navigationEl.createEl("p", { cls: "error", text: "Please specify a valid title" });
-    const selectionTitleEl = navigationEl.createDiv({ cls: "rpgm-input-title" });
-    selectionTitleEl.createEl("label", { text: "Template to use" });
-    this.templateEl = selectionTitleEl.createEl("select");
-    this.templateEl.createEl("option", {
-      text: "",
-      value: ""
-    });
-    this.templateEl.createEl("option", {
-      text: "RpgManager default " + DataType[this.type] + " template",
-      value: "internal" + DataType[this.type]
-    }).selected = true;
-    this.templateEl.createEl("option", {
-      text: "",
-      value: ""
-    });
-    if (this.availableSpecificTemplates.length > 0) {
-      const templateOptionEl = this.templateEl.createEl("option", {
-        text: DataType[this.type] + "-specific templates"
-      });
-      templateOptionEl.disabled = true;
-      this.availableSpecificTemplates.forEach((file) => {
-        this.templateEl.createEl("option", {
-          text: file.basename,
-          value: file.path
-        });
-      });
-      this.templateEl.createEl("option", {
-        text: "",
-        value: ""
-      });
-    }
-    if (this.availableGenericTemplates.length > 0) {
-      const templateOptionEl = this.templateEl.createEl("option", {
-        text: "Generic templates"
-      });
-      templateOptionEl.disabled = true;
-      this.availableGenericTemplates.forEach((file) => {
-        this.templateEl.createEl("option", {
-          text: file.basename,
-          value: file.path
-        });
-      });
-    }
-    this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.settings, 1 /* Campaign */, this);
-    const childElement = navigationEl.createDiv();
-    this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
-    if (this.type !== 1 /* Campaign */) {
-      this.button.disabled = true;
-    }
-    this.button.addEventListener("click", (e) => {
-      this.save();
-    });
-    this.campaignModal.addElement(childElement);
-  }
-  onClose() {
-    const { contentEl } = this;
-    contentEl.empty();
-    super.onClose();
-  }
-  save() {
-    return __async(this, null, function* () {
-      if (this.title.value === "") {
-        this.titleError.style.display = "block";
-        return;
-      }
-      if (!this.campaignModal.validate())
-        return;
-      if (this.adventureModal != null && !this.adventureModal.validate())
-        return;
-      if (this.sessionModal != null && !this.sessionModal.validate())
-        return;
-      if (this.sceneModal != null && !this.sceneModal.validate())
-        return;
-      if (this.elementModal != null && !this.elementModal.validate())
-        return;
-      this.saver.save(this.settings, this.type, this.create, this.templateEl.value, this.title.value, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.saver.prepareAdditionalInformation());
-      this.close();
-    });
-  }
-  enableButton() {
-    this.button.disabled = false;
-  }
-  getContentEl() {
-    const { contentEl } = this;
-    return contentEl;
-  }
-};
-
 // src/database/Id.ts
 var Id = class {
   constructor(app2, type, tag = void 0, tags = void 0) {
@@ -5023,7 +4858,7 @@ var Id = class {
     if (tag !== void 0) {
       this.tag = tag;
     } else if (tag === void 0 && tags !== void 0) {
-      tag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(tags);
+      tag = this.app.plugins.getPlugin("rpg-manager").factories.tags.getDataTag(tags);
       if (tag !== void 0)
         this.tag = tag;
     }
@@ -5104,8 +4939,8 @@ var Id = class {
   }
 };
 
-// src/helpers/TagManager.ts
-var TagManager = class {
+// src/factories/TagFactory.ts
+var TagFactory = class {
   constructor(app2) {
     this.app = app2;
     const settings = this.app.plugins.getPlugin("rpg-manager").settings;
@@ -5331,6 +5166,172 @@ var TagManager = class {
     if (dataSettingsTag === void 0)
       throw new Error("The tags do not contain a valid RPG Manager outline or element tag");
     return tag.substring(dataSettingsTag.length + 1);
+  }
+};
+
+// src/helpers/Factories.ts
+var Factories = class {
+  constructor(app2) {
+    this.app = app2;
+    this.components = new ComponentFactory(this.app);
+    this.contents = new ContentFactory(this.app);
+    this.data = new DataFactory(this.app);
+    this.errors = new ErrorFactory(this.app);
+    this.files = new FileFactory(this.app);
+    this.modals = new ModalFactory(this.app);
+    this.models = new ModelFactory(this.app);
+    this.pronouns = new PronounFactory(this.app);
+    this.templates = new TemplateFactory(this.app);
+    this.views = new ViewFactory(this.app);
+    this.fetchers = new FetcherFactory(this.app);
+    this.relationships = new RelationshipFactory(this.app);
+    this.database = new DatabaseFactory(this.app);
+    this.tags = new TagFactory(this.app);
+  }
+};
+
+// src/modals/CreationModal.ts
+var import_obsidian18 = require("obsidian");
+var CreationModal = class extends import_obsidian18.Modal {
+  constructor(app2, type, create = true, name = null, campaignId = null, adventureId = null, sessionId = null) {
+    super(app2);
+    this.app = app2;
+    this.type = type;
+    this.create = create;
+    this.name = name;
+    this.settings = 0 /* Agnostic */;
+    this.availableSpecificTemplates = [];
+    this.availableGenericTemplates = [];
+    if (campaignId != null)
+      this.campaignId = campaignId;
+    if (adventureId != null)
+      this.adventureId = adventureId;
+    if (sessionId != null)
+      this.sessionId = sessionId;
+    this.app.vault.getFiles().filter((file) => file.parent.path === this.app.plugins.getPlugin("rpg-manager").settings.templateFolder).forEach((file) => {
+      var _a, _b;
+      const metadata = this.app.metadataCache.getFileCache(file);
+      if (metadata != null) {
+        const tags = this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
+        if (tags.length > 0) {
+          const tags2 = this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_b = metadata.frontmatter) == null ? void 0 : _b.tags);
+          const templateType = this.app.plugins.getPlugin("rpg-manager").factories.tags.getTemplateDataType(tags2);
+          if (templateType == void 0)
+            this.availableGenericTemplates.push(file);
+          if (templateType === this.type)
+            this.availableSpecificTemplates.push(file);
+        } else {
+          this.availableGenericTemplates.push(file);
+        }
+      }
+    });
+  }
+  onOpen() {
+    super.onOpen();
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("rpgm-modal");
+    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView) == null) {
+      contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Error" });
+      contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
+      return;
+    }
+    contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Create New " + DataType[this.type] });
+    const gridEl = contentEl.createDiv({ cls: "rpgm-grid" });
+    const navigationEl = gridEl.createDiv({ cls: "navigation" });
+    this.additionalInformationEl = gridEl.createDiv({ cls: "additionalElements" });
+    const titleEl = navigationEl.createDiv({ cls: "rpgm-input-title" });
+    titleEl.createEl("label", { text: "Title of your new " + DataType[this.type] });
+    this.title = titleEl.createEl("input", { type: "text" });
+    if (this.name !== null) {
+      this.title.value = this.name;
+    }
+    this.titleError = navigationEl.createEl("p", { cls: "error", text: "Please specify a valid title" });
+    const selectionTitleEl = navigationEl.createDiv({ cls: "rpgm-input-title" });
+    selectionTitleEl.createEl("label", { text: "Template to use" });
+    this.templateEl = selectionTitleEl.createEl("select");
+    this.templateEl.createEl("option", {
+      text: "",
+      value: ""
+    });
+    this.templateEl.createEl("option", {
+      text: "RpgManager default " + DataType[this.type] + " template",
+      value: "internal" + DataType[this.type]
+    }).selected = true;
+    this.templateEl.createEl("option", {
+      text: "",
+      value: ""
+    });
+    if (this.availableSpecificTemplates.length > 0) {
+      const templateOptionEl = this.templateEl.createEl("option", {
+        text: DataType[this.type] + "-specific templates"
+      });
+      templateOptionEl.disabled = true;
+      this.availableSpecificTemplates.forEach((file) => {
+        this.templateEl.createEl("option", {
+          text: file.basename,
+          value: file.path
+        });
+      });
+      this.templateEl.createEl("option", {
+        text: "",
+        value: ""
+      });
+    }
+    if (this.availableGenericTemplates.length > 0) {
+      const templateOptionEl = this.templateEl.createEl("option", {
+        text: "Generic templates"
+      });
+      templateOptionEl.disabled = true;
+      this.availableGenericTemplates.forEach((file) => {
+        this.templateEl.createEl("option", {
+          text: file.basename,
+          value: file.path
+        });
+      });
+    }
+    this.campaignModal = this.app.plugins.getPlugin("rpg-manager").factories.modals.create(this.settings, 1 /* Campaign */, this);
+    const childElement = navigationEl.createDiv();
+    this.button = contentEl.createEl("button", { cls: "mod-cta", text: "Create" });
+    if (this.type !== 1 /* Campaign */) {
+      this.button.disabled = true;
+    }
+    this.button.addEventListener("click", (e) => {
+      this.save();
+    });
+    this.campaignModal.addElement(childElement);
+  }
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
+    super.onClose();
+  }
+  save() {
+    return __async(this, null, function* () {
+      if (this.title.value === "") {
+        this.titleError.style.display = "block";
+        return;
+      }
+      if (!this.campaignModal.validate())
+        return;
+      if (this.adventureModal != null && !this.adventureModal.validate())
+        return;
+      if (this.sessionModal != null && !this.sessionModal.validate())
+        return;
+      if (this.sceneModal != null && !this.sceneModal.validate())
+        return;
+      if (this.elementModal != null && !this.elementModal.validate())
+        return;
+      this.saver.save(this.settings, this.type, this.create, this.templateEl.value, this.title.value, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.saver.prepareAdditionalInformation());
+      this.close();
+    });
+  }
+  enableButton() {
+    this.button.disabled = false;
+  }
+  getContentEl() {
+    const { contentEl } = this;
+    return contentEl;
   }
 };
 
@@ -5667,7 +5668,6 @@ var RpgManager = class extends import_obsidian21.Plugin {
       const reloadStart = Date.now();
       this.functions = new Functions(this.app);
       this.factories = new Factories(this.app);
-      this.tagManager = new TagManager(this.app);
       this.registerCodeBlock();
       this.registerCommands();
       return DatabaseInitialiser.initialise(this.app).then((database) => {

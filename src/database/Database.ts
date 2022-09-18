@@ -128,8 +128,8 @@ export class Database extends Component implements DatabaseInterface {
 		);
 
 		if (result.length === 0) {
-			const dynamicallyGeneratedTag = this.app.plugins.getPlugin('rpg-manager').tagManager.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
-			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.createId(dynamicallyGeneratedTag);
+			const dynamicallyGeneratedTag = this.app.plugins.getPlugin('rpg-manager').factories.tags.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
+			const idMap = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(dynamicallyGeneratedTag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
 		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
@@ -147,7 +147,7 @@ export class Database extends Component implements DatabaseInterface {
 		);
 
 		if (result.length === 0) {
-			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.createId(tag);
+			const idMap = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(tag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
 		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
@@ -310,10 +310,10 @@ export class Database extends Component implements DatabaseInterface {
 		sceneId: number|undefined=undefined,
 	): any {
 		if (tag !== undefined) {
-			campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, tag);
-			adventureId = this.app.plugins.getPlugin('rpg-manager').tagManager.getOptionalId(DataType.Adventure, tag);
-			sessionId = this.app.plugins.getPlugin('rpg-manager').tagManager.getOptionalId(DataType.Session, tag);
-			sceneId = this.app.plugins.getPlugin('rpg-manager').tagManager.getOptionalId(DataType.Scene, tag);
+			campaignId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getId(DataType.Campaign, tag);
+			adventureId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getOptionalId(DataType.Adventure, tag);
+			sessionId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getOptionalId(DataType.Session, tag);
+			sceneId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getOptionalId(DataType.Scene, tag);
 		}
 
 		switch(dataType) {

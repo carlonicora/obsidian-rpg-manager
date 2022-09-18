@@ -3,7 +3,7 @@ import {DataType} from "../enums/DataType";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {Id} from "../database/Id";
 
-export class TagManager {
+export class TagFactory {
 	public dataSettings: Map<DataType, string>;
 	private requiredIds: Map<DataType, Array<DataType>>;
 

@@ -9,7 +9,7 @@ import {DataType} from "./enums/DataType";
 import {Functions} from "./helpers/Functions";
 import {Factories} from "./helpers/Factories";
 import {CreationModal} from "./modals/CreationModal";
-import {TagManager} from "./helpers/TagManager";
+import {TagFactory} from "./factories/TagFactory";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
 import {Logger, LogType} from "./helpers/Logger";
 import {RpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
@@ -20,7 +20,6 @@ import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
-	 * 		@TODO Error management during runtime
 	 * 		@TODO Refactor frontmatter to update to link in frontmatter
 	 * 		@TODO Data structure update based on versioning and Automatic update of settings
 	 *
@@ -39,7 +38,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	functions: Functions;
 	database: DatabaseInterface;
 	factories: Factories;
-	tagManager: TagManager;
 
 	ready = false;
 
@@ -59,7 +57,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 		this.functions = new Functions(this.app);
 		this.factories = new Factories(this.app);
-		this.tagManager = new TagManager(this.app);
 
 		this.registerCodeBlock();
 		this.registerCommands();

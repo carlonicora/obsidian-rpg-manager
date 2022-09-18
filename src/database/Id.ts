@@ -18,7 +18,7 @@ export class Id {
 		if (tag !== undefined){
 			this.tag = tag;
 		} else if (tag === undefined && tags !== undefined){
-			tag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(tags);
+			tag = this.app.plugins.getPlugin('rpg-manager').factories.tags.getDataTag(tags);
 			if (tag !== undefined) this.tag = tag;
 		}
 

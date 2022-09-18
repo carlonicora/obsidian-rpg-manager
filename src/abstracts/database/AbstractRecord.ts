@@ -83,7 +83,7 @@ export abstract class AbstractRecord implements RecordInterface {
 		this.frontmatter = this.metadata.frontmatter ?? {};
 		this.basename = this.file.basename;
 
-		this.tags = await this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
+		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(this.frontmatter?.tags);
 
 		this.validateTag();
 
@@ -99,7 +99,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	): void {
 		let rpgManagerTagCounter = 0;
 		(this.tags || []).forEach((tag: string) => {
-			if (this.app.plugins.getPlugin('rpg-manager').tagManager.isRpgManagerTag(tag)) rpgManagerTagCounter++;
+			if (this.app.plugins.getPlugin('rpg-manager').factories.tags.isRpgManagerTag(tag)) rpgManagerTagCounter++;
 		});
 		if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
 

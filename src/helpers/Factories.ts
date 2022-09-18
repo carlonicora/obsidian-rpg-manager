@@ -12,6 +12,7 @@ import {ViewFactory} from "../factories/ViewFactory";
 import {FetcherFactory} from "../factories/FetcherFactory";
 import {RelationshipFactory} from "../factories/RelationshipFactory";
 import {DatabaseFactory} from "../factories/DatabaseFactory";
+import {TagFactory} from "../factories/TagFactory";
 
 export class Factories {
 	public components: ComponentFactory;
@@ -27,6 +28,7 @@ export class Factories {
 	public fetchers: FetcherFactory;
 	public relationships: RelationshipFactory;
 	public database: DatabaseFactory;
+	public tags: TagFactory;
 
 	constructor(
 		private app: App,
@@ -44,5 +46,6 @@ export class Factories {
 		this.fetchers = new FetcherFactory(this.app);
 		this.relationships = new RelationshipFactory(this.app);
 		this.database = new DatabaseFactory(this.app);
+		this.tags = new TagFactory(this.app);
 	}
 }

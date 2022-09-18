@@ -23,7 +23,7 @@ declare module "obsidian" {
 				functions: Functions;
 				database: DatabaseInterface;
 				factories: Factories;
-				tagManager: TagManager;
+				tagManager: TagFactory;
 			};
 
 	 */

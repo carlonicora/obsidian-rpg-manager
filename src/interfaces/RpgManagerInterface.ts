@@ -2,7 +2,7 @@ import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterfa
 import {Functions} from "../helpers/Functions";
 import {DatabaseInterface} from "./database/DatabaseInterface";
 import {Factories} from "../helpers/Factories";
-import {TagManager} from "../helpers/TagManager";
+import {TagFactory} from "../factories/TagFactory";
 import {Plugin_2} from "obsidian";
 
 export interface RpgManagerInterface extends Plugin_2{
@@ -10,7 +10,6 @@ export interface RpgManagerInterface extends Plugin_2{
 	functions: Functions;
 	database: DatabaseInterface;
 	factories: Factories;
-	tagManager: TagManager;
 
 	updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,

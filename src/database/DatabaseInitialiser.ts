@@ -80,7 +80,7 @@ export class DatabaseInitialiser {
 
 		let id: Id|null;
 		try {
-			id = this.app.plugins.getPlugin('rpg-manager').tagManager.createId(undefined, metadata?.frontmatter?.tags);
+			id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, metadata?.frontmatter?.tags);
 		} catch (e) {
 			return undefined;
 		}
@@ -111,10 +111,10 @@ export class DatabaseInitialiser {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (metadata !== null) {
-				const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
-				if (this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(dataTags) === DataType.Campaign){
+				const dataTags = this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata?.frontmatter?.tags);
+				if (this.app.plugins.getPlugin('rpg-manager').factories.tags.getDataType(dataTags) === DataType.Campaign){
 					try {
-						const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, undefined, dataTags);
+						const campaignId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getId(DataType.Campaign, undefined, dataTags);
 						if (campaignId !== undefined) {
 							const settings = metadata?.frontmatter?.settings !== undefined ?
 								CampaignSetting[metadata?.frontmatter?.settings as keyof typeof CampaignSetting] :
