@@ -131,11 +131,11 @@ var AbstractRecord = class {
     this.additionalInformation = null;
     this.imageSrc = void 0;
     this.imageUrl = void 0;
-    this.initialiseRoots();
+    AbstractRecord.initialiseRoots(this.app);
   }
-  initialiseRoots() {
-    const file = this.app.vault.getAbstractFileByPath("/");
-    this.root = this.app.vault.getResourcePath(file);
+  static initialiseRoots(app2) {
+    const file = app2.vault.getAbstractFileByPath("/");
+    this.root = app2.vault.getResourcePath(file);
     if (this.root.includes("?"))
       this.root = this.root.substring(0, this.root.lastIndexOf("?"));
     if (!this.root.endsWith("/"))
@@ -172,9 +172,9 @@ var AbstractRecord = class {
     for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
       const fileName = this.app.vault.config.attachmentFolderPath + "/" + this.basename + "." + imageExtensions[extensionCount];
       if (this.fileExists(fileName)) {
-        if (this.root == null)
-          this.initialiseRoots();
-        localImage = this.root + fileName;
+        if (AbstractRecord.root === void 0)
+          AbstractRecord.initialiseRoots(this.app);
+        localImage = AbstractRecord.root + fileName;
         break;
       }
     }

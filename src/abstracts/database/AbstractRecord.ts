@@ -10,9 +10,18 @@ import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
 import {MultipleRpgManagerTagsError} from "../../errors/MultipleRpgManagerTagsError";
 
 export abstract class AbstractRecord implements RecordInterface {
-	public frontmatter: any;
+	private static root: string|undefined;
 
-	private root: string;
+	private static initialiseRoots(
+		app: App,
+	) {
+		const file = app.vault.getAbstractFileByPath('/');
+		this.root = app.vault.getResourcePath(file as TFile);
+		if (this.root.includes("?")) this.root = this.root.substring(0, this.root.lastIndexOf("?"));
+		if (!this.root.endsWith("/")) this.root += "/";
+	}
+
+	public frontmatter: any;
 
 	public basename: string;
 
@@ -36,14 +45,7 @@ export abstract class AbstractRecord implements RecordInterface {
 		public file: TFile,
 		public id: Id,
 	) {
-		this.initialiseRoots();
-	}
-
-	private initialiseRoots() {
-		const file = this.app.vault.getAbstractFileByPath('/');
-		this.root = this.app.vault.getResourcePath(file as TFile);
-		if (this.root.includes("?")) this.root = this.root.substring(0, this.root.lastIndexOf("?"));
-		if (!this.root.endsWith("/")) this.root += "/";
+		AbstractRecord.initialiseRoots(this.app);
 	}
 
 	public get name(
@@ -90,8 +92,8 @@ export abstract class AbstractRecord implements RecordInterface {
 			const fileName = this.app.vault.config.attachmentFolderPath + '/' + this.basename + '.' + imageExtensions[extensionCount];
 
 			if (this.fileExists(fileName)) {
-				if (this.root == null) this.initialiseRoots();
-				localImage = this.root + fileName;
+				if (AbstractRecord.root === undefined) AbstractRecord.initialiseRoots(this.app);
+				localImage = AbstractRecord.root + fileName;
 				break;
 			}
 		}
