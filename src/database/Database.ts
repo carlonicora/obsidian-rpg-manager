@@ -130,7 +130,7 @@ export class Database extends Component implements DatabaseInterface {
 
 		if (result.length === 0) {
 			const dynamicallyGeneratedTag = this.app.plugins.getPlugin('rpg-manager').tagManager.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
-			const idMap = new TagValidator(this.app, dataType, dynamicallyGeneratedTag);
+			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(dynamicallyGeneratedTag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
 		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap);
@@ -149,7 +149,7 @@ export class Database extends Component implements DatabaseInterface {
 		);
 
 		if (result.length === 0) {
-			const idMap = new TagValidator(this.app, dataType, tag);
+			const idMap = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(tag);
 			throw new ElementNotFoundError(this.app, idMap);
 		}
 		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].idMap);

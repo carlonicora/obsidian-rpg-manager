@@ -14,12 +14,14 @@ export class TagValidator {
 		tags: Array<string>|undefined=undefined,
 	) {
 		if (tag === undefined && tags === undefined) throw new Error('Tag and Tags are undefined');
-		if (tag === undefined && tags !== undefined){
+		if (tag !== undefined){
+			this.tag = tag;
+		} else if (tag === undefined && tags !== undefined){
 			tag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(tags);
 			if (tag !== undefined) this.tag = tag;
 		}
 
-		if (tag === undefined) throw new Error('Impossible to find the tag');
+		if (this.tag === undefined) throw new Error('Impossible to find the tag');
 
 		this.tagMap = new Map();
 		this.tagMap.set(DataType.Campaign, {status: TagStatus.Missing, value: undefined});
@@ -91,6 +93,17 @@ export class TagValidator {
 
 		this.tagMap.forEach((tagValue: TagValueInterface, type: DataType) => {
 			if (tagValue.status === TagStatus.Invalid || tagValue.status === TagStatus.Missing) response.set(type, tagValue.status);
+		});
+
+		return (response.size === 0 ? undefined : response);
+	}
+
+	public get possiblyNotFoundIds(
+	): Map<DataType, number>|undefined {
+		const response: Map<DataType, number> = new Map();
+
+		this.tagMap.forEach((tagValue: TagValueInterface, type: DataType) => {
+			if (tagValue.value !== undefined) response.set(type, tagValue.value);
 		});
 
 		return (response.size === 0 ? undefined : response);

@@ -20,11 +20,14 @@ import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
-	 * 		Change the settings saving to button and database refresh
-	 * 		Data structure update based on versioning
+	 * 		Error management during initalisation
+	 * 			Duplicated elements should be reported as two elements error and not one
+	 * 			Multiple tags in the same file
+	 * 		Error management during runtime
+	 *
+	 * 		Data structure update based on versioning and Automatic update of settings
 	 *
 	 * ## Version 2.0
-	 * 		Automatic update of settings
 	 * 		Rename Session to Act
 	 * 		Rename Notes to Session Notes
 	 * 		Add Scene Notes

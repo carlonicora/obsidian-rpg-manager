@@ -124,9 +124,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
-		if (this.type !== DataType.Campaign) {
-			this.campaign = database.readSingle<CampaignInterface>(DataType.Campaign, this.tag);
-		}
+		if (this.type !== DataType.Campaign) this.campaign = await database.readSingle<CampaignInterface>(DataType.Campaign, this.tag);
 	}
 
 	public async loadRelationships(

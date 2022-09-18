@@ -85,10 +85,23 @@ var RpgError = class extends Error {
 // src/errors/TagMisconfiguredError.ts
 var TagMisconfiguredError = class extends RpgError {
   showErrorMessage() {
-    var _a;
-    let response = "The tag `" + this.idMap.tag + "` is misconfigured\n";
-    (_a = this.idMap.invalidIds) == null ? void 0 : _a.forEach((status, type) => {
-      response += "{" + DataType[type].toLowerCase() + "Id} is " + (status === 2 /* Missing */ ? "missing" : "not a valid numeric id") + "\n";
+    var _a, _b;
+    let response = "The tag `" + this.idMap.tag + "` is misconfigured\nThe correct tag should be ";
+    let requiredId = "";
+    switch (this.idMap.type) {
+      case 8 /* Scene */:
+        requiredId = "/{sceneId}" + requiredId;
+      case 4 /* Session */:
+      case 1024 /* Note */:
+        requiredId = "/{sessionId}" + requiredId;
+      case 2 /* Adventure */:
+        requiredId = "/{adventureId}" + requiredId;
+      default:
+        requiredId = "/{campaignId}" + requiredId;
+    }
+    response += "`" + ((_a = this.app.plugins.getPlugin("rpg-manager").tagManager.dataSettings.get(this.idMap.type)) != null ? _a : "") + requiredId + "`\n";
+    (_b = this.idMap.invalidIds) == null ? void 0 : _b.forEach((status, type) => {
+      response += " - {" + DataType[type].toLowerCase() + "Id} is " + (status === 2 /* Missing */ ? "missing" : "not a valid numeric id") + "\n";
     });
     return response;
   }
@@ -172,9 +185,8 @@ var AbstractRecord = class {
   }
   loadHierarchy(database) {
     return __async(this, null, function* () {
-      if (this.type !== 1 /* Campaign */) {
-        this.campaign = database.readSingle(1 /* Campaign */, this.tag);
-      }
+      if (this.type !== 1 /* Campaign */)
+        this.campaign = yield database.readSingle(1 /* Campaign */, this.tag);
     });
   }
   loadRelationships(database) {
@@ -4367,11 +4379,13 @@ var MisconfiguredDataModal = class extends import_obsidian16.Modal {
 // src/errors/ElementNotFoundError.ts
 var ElementNotFoundError = class extends RpgError {
   showErrorMessage() {
-    let response = "";
-    if (this.idMap.tag != void 0)
-      response += "tag: _" + this.idMap.tag + "_\n";
-    response += "**The " + DataType[this.idMap.type] + " identifier used in the tag does not exist.**\n";
-    return response;
+    var _a;
+    let response = "The tag `" + this.idMap.tag + "` refers to an outline that does not exist.\n";
+    let check = "Please check you have the followinf Outlines:\n";
+    (_a = this.idMap.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
+      check += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
+    });
+    return response + check;
   }
 };
 
@@ -4467,7 +4481,6 @@ var DatabaseInitialiser = class {
       }
       new InfoLog(4 /* DatabaseInitialisation */, "Temporary database initialised", temporaryDatabase);
       yield this.buildHierarchyAndRelationships(temporaryDatabase);
-      console.log(temporaryDatabase);
       if (this.misconfiguredTags.size > 0) {
         new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
       }
@@ -4478,10 +4491,10 @@ var DatabaseInitialiser = class {
   }
   static createComponent(file) {
     return __async(this, null, function* () {
-      var _a;
+      var _a, _b;
       let response;
       const metadata = this.app.metadataCache.getFileCache(file);
-      new InfoLog(4 /* DatabaseInitialisation */, "Record TFile metadata read", metadata);
+      new InfoLog(4 /* DatabaseInitialisation */, "Record TFile metadata read for " + file.basename, metadata);
       if (metadata == null)
         return;
       const dataTags = this.app.plugins.getPlugin("rpg-manager").tagManager.sanitiseTags((_a = metadata == null ? void 0 : metadata.frontmatter) == null ? void 0 : _a.tags);
@@ -4499,7 +4512,7 @@ var DatabaseInitialiser = class {
       const campaignId = this.app.plugins.getPlugin("rpg-manager").tagManager.getId(1 /* Campaign */, dataTag);
       if (campaignId === void 0)
         new ErrorLog(4 /* DatabaseInitialisation */, "Campaign Id not found", dataTag);
-      const settings = this.campaignSettings.get(campaignId);
+      const settings = (_b = this.campaignSettings.get(campaignId)) != null ? _b : 0 /* Agnostic */;
       if (campaignId !== void 0 && settings !== void 0) {
         response = yield this.app.plugins.getPlugin("rpg-manager").factories.data.create(settings, dataTag, dataType, file);
         yield response.initialise();
@@ -4530,7 +4543,7 @@ var DatabaseInitialiser = class {
   static buildHierarchyAndRelationships(temporaryDatabase) {
     return __async(this, null, function* () {
       new InfoLog(4 /* DatabaseInitialisation */, "Building Hierarchy", temporaryDatabase);
-      return this.addHierarchy(temporaryDatabase, 1 /* Campaign */).then(() => {
+      return yield this.addHierarchy(temporaryDatabase, 1 /* Campaign */).then(() => {
         new InfoLog(4 /* DatabaseInitialisation */, "Hierarchy built", temporaryDatabase);
         return this.buildRelationships(temporaryDatabase).then(() => {
           new InfoLog(4 /* DatabaseInitialisation */, "Relationships connected", temporaryDatabase);
@@ -4544,15 +4557,17 @@ var DatabaseInitialiser = class {
       new InfoLog(4 /* DatabaseInitialisation */, "Loading hierarchy", dataType !== void 0 ? DataType[dataType] : "Elements");
       const data = temporaryDatabase.read((data2) => dataType !== void 0 ? (dataType & data2.type) === data2.type : data2.isOutline === false);
       for (let index = 0; index < data.length; index++) {
-        yield data[index].loadHierarchy(this.database);
         try {
-          this.database.create(data[index]);
+          yield data[index].loadHierarchy(this.database).then(() => {
+            this.database.create(data[index]);
+          }, (e) => {
+            if (e instanceof RpgError) {
+              this.misconfiguredTags.set(data[index].file, e);
+            } else {
+              throw e;
+            }
+          });
         } catch (e) {
-          if (e instanceof RpgError) {
-            this.misconfiguredTags.set(data[index].file, e);
-          } else {
-            throw e;
-          }
         }
       }
       if (dataType === void 0)
@@ -4593,87 +4608,6 @@ var DatabaseInitialiser = class {
 };
 DatabaseInitialiser.campaignSettings = /* @__PURE__ */ new Map();
 DatabaseInitialiser.misconfiguredTags = /* @__PURE__ */ new Map();
-
-// src/helpers/TagValidator.ts
-var TagValidator = class {
-  constructor(app2, type, tag = void 0, tags = void 0) {
-    this.app = app2;
-    this.type = type;
-    if (tag === void 0 && tags === void 0)
-      throw new Error("Tag and Tags are undefined");
-    if (tag === void 0 && tags !== void 0) {
-      tag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(tags);
-      if (tag !== void 0)
-        this.tag = tag;
-    }
-    if (tag === void 0)
-      throw new Error("Impossible to find the tag");
-    this.tagMap = /* @__PURE__ */ new Map();
-    this.tagMap.set(1 /* Campaign */, { status: 2 /* Missing */, value: void 0 });
-    this.tagMap.set(2 /* Adventure */, { status: 3 /* NotRequired */, value: void 0 });
-    this.tagMap.set(4 /* Session */, { status: 3 /* NotRequired */, value: void 0 });
-    this.tagMap.set(8 /* Scene */, { status: 3 /* NotRequired */, value: void 0 });
-  }
-  generateTagValue(type, value) {
-    let status;
-    let numericValue;
-    if (value === "" || value === void 0) {
-      let isRequired = type === 1 /* Campaign */;
-      switch (this.type) {
-        case 8 /* Scene */:
-          if (type === 8 /* Scene */)
-            isRequired = true;
-        case 1024 /* Note */:
-        case 4 /* Session */:
-          if (type === 4 /* Session */)
-            isRequired = true;
-        case 2 /* Adventure */:
-          if (type === 2 /* Adventure */)
-            isRequired = true;
-      }
-      status = isRequired ? 2 /* Missing */ : 3 /* NotRequired */;
-    } else {
-      if (isNaN(+value)) {
-        status = 1 /* Invalid */;
-      } else {
-        status = 0 /* Valid */;
-        numericValue = +value;
-      }
-    }
-    return { status, value: numericValue };
-  }
-  addValue(type, value) {
-    this.tagMap.set(type, this.generateTagValue(type, value));
-  }
-  get isValid() {
-    let response = true;
-    this.tagMap.forEach((tagValue) => {
-      if (tagValue.status === 1 /* Invalid */ || tagValue.status === 2 /* Missing */)
-        response = false;
-    });
-    return response;
-  }
-  isTypeValid(type) {
-    var _a, _b;
-    return ((_a = this.tagMap.get(type)) == null ? void 0 : _a.status) === 0 /* Valid */ || ((_b = this.tagMap.get(type)) == null ? void 0 : _b.status) === 3 /* NotRequired */;
-  }
-  get invalidIds() {
-    const response = /* @__PURE__ */ new Map();
-    this.tagMap.forEach((tagValue, type) => {
-      if (tagValue.status === 1 /* Invalid */ || tagValue.status === 2 /* Missing */)
-        response.set(type, tagValue.status);
-    });
-    return response.size === 0 ? void 0 : response;
-  }
-  getTypeValue(type) {
-    const typeValue = this.tagMap.get(type);
-    if (typeValue === void 0)
-      throw new Error("Tag Type not found");
-    if (typeValue.value === void 0)
-      throw new Error("Tag Value not found");
-    return typeValue.value;
-  }
-};
 
 // src/database/Database.ts
 var Database = class extends import_obsidian17.Component {
@@ -4741,7 +4675,7 @@ var Database = class extends import_obsidian17.Component {
     const result = this.read(this.generateQuery(dataType, false, void 0, void 0, campaignId, adventureId, sessionId, sceneId));
     if (result.length === 0) {
       const dynamicallyGeneratedTag = this.app.plugins.getPlugin("rpg-manager").tagManager.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
-      const idMap = new TagValidator(this.app, dataType, dynamicallyGeneratedTag);
+      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(dynamicallyGeneratedTag);
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
@@ -4751,7 +4685,7 @@ var Database = class extends import_obsidian17.Component {
   readSingle(dataType, tag, overloadId = void 0) {
     const result = this.read(this.generateQuery(dataType, false, tag, overloadId));
     if (result.length === 0) {
-      const idMap = new TagValidator(this.app, dataType, tag);
+      const idMap = this.app.plugins.getPlugin("rpg-manager").tagManager.getIdMap(tag);
       throw new ElementNotFoundError(this.app, idMap);
     }
     if (result.length > 1)
@@ -5062,6 +4996,97 @@ var CreationModal = class extends import_obsidian18.Modal {
   getContentEl() {
     const { contentEl } = this;
     return contentEl;
+  }
+};
+
+// src/helpers/TagValidator.ts
+var TagValidator = class {
+  constructor(app2, type, tag = void 0, tags = void 0) {
+    this.app = app2;
+    this.type = type;
+    if (tag === void 0 && tags === void 0)
+      throw new Error("Tag and Tags are undefined");
+    if (tag !== void 0) {
+      this.tag = tag;
+    } else if (tag === void 0 && tags !== void 0) {
+      tag = this.app.plugins.getPlugin("rpg-manager").tagManager.getDataTag(tags);
+      if (tag !== void 0)
+        this.tag = tag;
+    }
+    if (this.tag === void 0)
+      throw new Error("Impossible to find the tag");
+    this.tagMap = /* @__PURE__ */ new Map();
+    this.tagMap.set(1 /* Campaign */, { status: 2 /* Missing */, value: void 0 });
+    this.tagMap.set(2 /* Adventure */, { status: 3 /* NotRequired */, value: void 0 });
+    this.tagMap.set(4 /* Session */, { status: 3 /* NotRequired */, value: void 0 });
+    this.tagMap.set(8 /* Scene */, { status: 3 /* NotRequired */, value: void 0 });
+  }
+  generateTagValue(type, value) {
+    let status;
+    let numericValue;
+    if (value === "" || value === void 0) {
+      let isRequired = type === 1 /* Campaign */;
+      switch (this.type) {
+        case 8 /* Scene */:
+          if (type === 8 /* Scene */)
+            isRequired = true;
+        case 1024 /* Note */:
+        case 4 /* Session */:
+          if (type === 4 /* Session */)
+            isRequired = true;
+        case 2 /* Adventure */:
+          if (type === 2 /* Adventure */)
+            isRequired = true;
+      }
+      status = isRequired ? 2 /* Missing */ : 3 /* NotRequired */;
+    } else {
+      if (isNaN(+value)) {
+        status = 1 /* Invalid */;
+      } else {
+        status = 0 /* Valid */;
+        numericValue = +value;
+      }
+    }
+    return { status, value: numericValue };
+  }
+  addValue(type, value) {
+    this.tagMap.set(type, this.generateTagValue(type, value));
+  }
+  get isValid() {
+    let response = true;
+    this.tagMap.forEach((tagValue) => {
+      if (tagValue.status === 1 /* Invalid */ || tagValue.status === 2 /* Missing */)
+        response = false;
+    });
+    return response;
+  }
+  isTypeValid(type) {
+    var _a, _b;
+    return ((_a = this.tagMap.get(type)) == null ? void 0 : _a.status) === 0 /* Valid */ || ((_b = this.tagMap.get(type)) == null ? void 0 : _b.status) === 3 /* NotRequired */;
+  }
+  get invalidIds() {
+    const response = /* @__PURE__ */ new Map();
+    this.tagMap.forEach((tagValue, type) => {
+      if (tagValue.status === 1 /* Invalid */ || tagValue.status === 2 /* Missing */)
+        response.set(type, tagValue.status);
+    });
+    return response.size === 0 ? void 0 : response;
+  }
+  get possiblyNotFoundIds() {
+    const response = /* @__PURE__ */ new Map();
+    this.tagMap.forEach((tagValue, type) => {
+      if (tagValue.value !== void 0)
+        response.set(type, tagValue.value);
+    });
+    return response.size === 0 ? void 0 : response;
+  }
+  getTypeValue(type) {
+    const typeValue = this.tagMap.get(type);
+    if (typeValue === void 0)
+      throw new Error("Tag Type not found");
+    if (typeValue.value === void 0)
+      throw new Error("Tag Value not found");
+    return typeValue.value;
   }
 };
 

@@ -51,8 +51,6 @@ export class DatabaseInitialiser {
 
 		await this.buildHierarchyAndRelationships(temporaryDatabase);
 
-		console.log(temporaryDatabase);
-
 		if (this.misconfiguredTags.size > 0){
 			new MisconfiguredDataModal(this.app, this.misconfiguredTags).open();
 		}
@@ -76,7 +74,7 @@ export class DatabaseInitialiser {
 		let response: RecordInterface|undefined;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record TFile metadata read', metadata);
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record TFile metadata read for ' + file.basename, metadata);
 		if (metadata == null) return;
 
 		const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
@@ -96,8 +94,7 @@ export class DatabaseInitialiser {
 		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, dataTag);
 		if (campaignId === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', dataTag);
 
-		const settings = this.campaignSettings.get(campaignId);
-		//if (settings === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Settings Missing!');
+		const settings = this.campaignSettings.get(campaignId) ?? CampaignSetting.Agnostic;
 
 		if (campaignId !== undefined && settings !== undefined) {
 			response = await this.app.plugins.getPlugin('rpg-manager').factories.data.create(
@@ -149,7 +146,7 @@ export class DatabaseInitialiser {
 		temporaryDatabase: DatabaseInterface,
 	): Promise<void> {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Building Hierarchy', temporaryDatabase);
-		return this.addHierarchy(temporaryDatabase, DataType.Campaign)
+		return await this.addHierarchy(temporaryDatabase, DataType.Campaign)
 			.then(() => {
 				new InfoLog(LogMessageType.DatabaseInitialisation, 'Hierarchy built', temporaryDatabase);
 				return this.buildRelationships(temporaryDatabase)
@@ -172,20 +169,27 @@ export class DatabaseInitialiser {
 		dataType: DataType|undefined,
 	): Promise<void> {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Loading hierarchy', (dataType !== undefined ? DataType[dataType] : 'Elements'));
+
 		const data: RecordInterface[] = temporaryDatabase.read(
 			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.type) === data.type : data.isOutline === false),
 		);
 
 		for (let index=0; index<data.length; index++){
-			await data[index].loadHierarchy(this.database);
 			try {
-				this.database.create(data[index]);
+				await data[index].loadHierarchy(this.database)
+					.then(
+						() => {
+							this.database.create(data[index]);
+						}, (e: Error) => {
+							if (e instanceof RpgError) {
+								this.misconfiguredTags.set(data[index].file, e as RpgErrorInterface);
+							} else {
+								throw e;
+							}
+
+						});
 			} catch (e) {
-				if (e instanceof RpgError) {
-					this.misconfiguredTags.set(data[index].file, e as RpgErrorInterface);
-				} else {
-					throw e;
-				}
+
 			}
 		}
 
