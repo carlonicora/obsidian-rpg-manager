@@ -7,6 +7,7 @@ import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {BaseCampaignInterface} from "../../interfaces/data/BaseCampaignInterface";
 import {Id} from "../../database/Id";
 import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
+import {MultipleRpgManagerTagsError} from "../../errors/MultipleRpgManagerTagsError";
 
 export abstract class AbstractRecord implements RecordInterface {
 	public id: Id;
@@ -81,12 +82,13 @@ export abstract class AbstractRecord implements RecordInterface {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null) throw new Error('metadata is null');
 
-		this.validateTag();
+		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
 
 		this.metadata = metadata;
 		this.frontmatter = this.metadata.frontmatter ?? {};
-		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
 		this.basename = this.file.basename;
+
+		this.validateTag();
 
 		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
 		this.synopsis = this.frontmatter.synopsis;
@@ -99,6 +101,13 @@ export abstract class AbstractRecord implements RecordInterface {
 	protected validateTag(
 	): void {
 		if (!this.id.isValid) throw new TagMisconfiguredError(this.app, this.id);
+
+		let rpgManagerTagConter = 0;
+		this.tags.forEach((tag: string) => {
+			if (this.app.plugins.getPlugin('rpg-manager').tagManager.isRpgManagerTag(tag)) rpgManagerTagConter++;
+		});
+
+		if (rpgManagerTagConter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
 	}
 
 	protected async initialiseRelationships(
