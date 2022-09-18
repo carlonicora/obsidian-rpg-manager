@@ -3,11 +3,12 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App, CachedMetadata, TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
-import {ErrorLog, InfoLog, LogMessageType, WarningLog} from "../helpers/Logger";
+import {ErrorLog, InfoLog, LogMessageType} from "../helpers/Logger";
 import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
 import {RpgError} from "../errors/RpgError";
 import {MisconfiguredDataModal} from "../modals/MisconfiguredDataModal";
 import {DataType} from "../enums/DataType";
+import {Id} from "./Id";
 
 export class DatabaseInitialiser {
     private static campaignSettings: Map<number, CampaignSetting> = new Map();
@@ -77,35 +78,27 @@ export class DatabaseInitialiser {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record TFile metadata read for ' + file.basename, metadata);
 		if (metadata == null) return;
 
-		const dataTags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(metadata?.frontmatter?.tags);
-		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record tags initialised', dataTags);
-		const dataTag = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataTag(dataTags);
-		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record tag initialised', dataTag);
-		if (dataTag == undefined) return;
-
-		const dataType = this.app.plugins.getPlugin('rpg-manager').tagManager.getDataType(undefined, dataTag);
-
-		if (dataType === undefined) {
-			new WarningLog(LogMessageType.DatabaseInitialisation, 'TFile is not a record');
-			return
+		let id: Id|null;
+		try {
+			id = this.app.plugins.getPlugin('rpg-manager').tagManager.createId(undefined, metadata?.frontmatter?.tags);
+		} catch (e) {
+			return undefined;
 		}
-		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record type initialised', DataType[dataType]);
 
-		const campaignId = this.app.plugins.getPlugin('rpg-manager').tagManager.getId(DataType.Campaign, dataTag);
-		if (campaignId === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', dataTag);
+		if (id.getTypeValue(DataType.Campaign) === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', id);
 
-		const settings = this.campaignSettings.get(campaignId) ?? CampaignSetting.Agnostic;
+		const settings = this.campaignSettings.get(id.getTypeValue(DataType.Campaign)) ?? CampaignSetting.Agnostic;
 
-		if (campaignId !== undefined && settings !== undefined) {
+		if (id.getTypeValue(DataType.Campaign) !== undefined && settings !== undefined) {
 			response = await this.app.plugins.getPlugin('rpg-manager').factories.data.create(
 				settings,
-				dataTag,
-				dataType,
-				file
+				file,
+				id,
 			);
 			await response.initialise();
 			new InfoLog(LogMessageType.DatabaseInitialisation, 'Record Created', response);
 		}
+
 
 		return response;
 	}

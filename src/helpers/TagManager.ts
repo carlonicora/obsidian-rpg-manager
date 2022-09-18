@@ -47,14 +47,15 @@ export class TagManager {
 	): Array<string> {
 		if (tags === undefined) return [];
 
-		let response: Array<string>;
+		let response: Array<string> = [];
+
 		if (typeof tags === 'string'){
 			response = tags.split(',');
 			response.forEach((tag: string) => {
 				tag = tag.replaceAll(' ', '').replaceAll('#', '');
 			});
 		} else {
-			response = tags;
+			tags.forEach((tag: string) => response.push(tag));
 		}
 
 		return response;
@@ -189,7 +190,7 @@ export class TagManager {
 		const dataType = this.getDataType(tags, tag);
 		if (dataType === undefined) throw new Error('The tags do not contain a valid RPG Manager outline or element tag');
 
-		const idMap = this.getIdMap(tag, tags);
+		const idMap = this.createId(tag, tags);
 
 		if (idMap.isTypeValid(type)) return idMap.getTypeValue(type);
 		throw new TagMisconfiguredError(this.app, idMap);
@@ -201,7 +202,7 @@ export class TagManager {
 		return (this.getDataType(undefined, tag) !== undefined);
 	}
 
-	public getIdMap(
+	public createId(
 		tag: string|undefined = undefined,
 		tags: Array<string>|undefined = undefined,
 	): Id {

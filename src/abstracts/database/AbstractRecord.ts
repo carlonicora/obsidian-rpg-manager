@@ -10,8 +10,6 @@ import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
 import {MultipleRpgManagerTagsError} from "../../errors/MultipleRpgManagerTagsError";
 
 export abstract class AbstractRecord implements RecordInterface {
-	public id: Id;
-
 	public frontmatter: any;
 
 	public basename: string;
@@ -33,10 +31,9 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	constructor(
 		protected app: App,
-		tag:string,
 		public file: TFile,
+		public id: Id,
 	) {
-		this.id = this.app.plugins.getPlugin('rpg-manager').tagManager.getIdMap(tag);
 	}
 
 	public get name(
@@ -82,11 +79,11 @@ export abstract class AbstractRecord implements RecordInterface {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null) throw new Error('metadata is null');
 
-		this.tags = this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
-
 		this.metadata = metadata;
 		this.frontmatter = this.metadata.frontmatter ?? {};
 		this.basename = this.file.basename;
+
+		this.tags = await this.app.plugins.getPlugin('rpg-manager').tagManager.sanitiseTags(this.frontmatter?.tags);
 
 		this.validateTag();
 
@@ -100,14 +97,14 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	protected validateTag(
 	): void {
-		if (!this.id.isValid) throw new TagMisconfiguredError(this.app, this.id);
-
-		let rpgManagerTagConter = 0;
+		let rpgManagerTagCounter = 0;
 		this.tags.forEach((tag: string) => {
-			if (this.app.plugins.getPlugin('rpg-manager').tagManager.isRpgManagerTag(tag)) rpgManagerTagConter++;
+			if (this.app.plugins.getPlugin('rpg-manager').tagManager.isRpgManagerTag(tag)) rpgManagerTagCounter++;
 		});
 
-		if (rpgManagerTagConter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
+		if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
+
+		if (!this.id.isValid) throw new TagMisconfiguredError(this.app, this.id);
 	}
 
 	protected async initialiseRelationships(

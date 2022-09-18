@@ -16,6 +16,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {VampireCharacter} from "../rpgs/Vampire/data/VampireCharacter";
 import {RawCampaign} from "../rpgs/Raw/data/RawCampaign";
 import {Music} from "../data/Music";
+import {Id} from "../database/Id";
 
 
 const DatasMap = {
@@ -45,15 +46,14 @@ type DataClassType<A extends DataKeys> = Extract<Tuples<DataKeys>, [A, any]>[1];
 export class DataFactory extends AbstractFactory {
 	public create<K extends DataKeys>(
 		settings: CampaignSetting,
-		tag: string,
-		type: DataType,
 		file: TFile,
+		id: Id,
 	): DataClassType<K> {
-		let dataKey: SingleDataKey<K> = CampaignSetting[settings] + DataType[type] as SingleDataKey<K>;
+		let dataKey: SingleDataKey<K> = CampaignSetting[settings] + DataType[id.type] as SingleDataKey<K>;
 		if (DatasMap[dataKey] == null && settings !== CampaignSetting.Agnostic){
-			dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleDataKey<K>;
+			dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[id.type] as SingleDataKey<K>;
 		}
 
-		return new DatasMap[dataKey](this.app, tag, file);
+		return new DatasMap[dataKey](this.app, file, id);
 	}
 }
