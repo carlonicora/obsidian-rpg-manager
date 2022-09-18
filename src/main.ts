@@ -20,17 +20,21 @@ import {RpgManagerInterface} from "./interfaces/RpgManagerInterface";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
-	 * 		Check if I can debounce the saving of the rpgs
-	 * 		Add a setting that defines the data structure and the previous data structure, to update the tags
+	 * 		Change the settings saving to button and database refresh
+	 * 		Data structure update based on versioning
+	 *
 	 * ## Version 2.0
+	 * 		Automatic update of settings
 	 * 		Rename Session to Act
 	 * 		Rename Notes to Session Notes
 	 * 		Add Scene Notes
+	 *
 	 * ## Version 2.1
 	 * 		Add Database Status View
 	 * 		Add Creation View
 	 * 		Add notes creation in right split
-	 */
+	 *
+	 **/
 	settings: RpgManagerSettingsInterface;
 	functions: Functions;
 	database: DatabaseInterface;

@@ -1,10 +1,41 @@
 import {App, DropdownComponent, PluginSettingTab, Setting, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import {SettingsFactory} from "../factories/SettingsFactory";
+import {RpgManagerSettingsInterface} from "./RpgManagerSettingsInterface";
+
+export interface setting {
+	title: string,
+	value: any,
+	placeholder?: string|undefined,
+}
+
+export enum SettingType {
+	PC,
+	NPC,
+	Location,
+	Faction,
+	Clue,
+	Event,
+	Music,
+	Timeline,
+	Note,
+	Campaign,
+	Adventure,
+	Session,
+	Scene,
+	automaticMove,
+	YouTubeApiKey,
+	templateFolder,
+}
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private plugin: RpgManagerInterface;
+	private settingsFactory: SettingsFactory;
 	private settingsUpdater: SettingsUpdater;
+	private map: Map<SettingType, setting>;
+	public containerEl: HTMLElement;
+	private templateFolderMap: Map<string, string>;
 
 	constructor(
 		app: App,
@@ -15,338 +46,292 @@ export class RpgManagerSettings extends PluginSettingTab {
 		);
 
 		this.plugin = app.plugins.getPlugin('rpg-manager');
+
+		const {containerEl} = this;
+		this.containerEl = containerEl;
+
+		this.map = new Map();
+		this.map.set(SettingType.PC, {title: 'Player Character Tag', value: this.plugin.settings.pcTag, placeholder: 'rpgm/element/character/pc'});
+		this.map.set(SettingType.NPC, {title: 'Non Player Character Tag', value: this.plugin.settings.npcTag, placeholder: 'rpgm/element/character/npc'});
+		this.map.set(SettingType.Location, {title: 'Location Tag', value: this.plugin.settings.locationTag, placeholder: 'rpgm/element/location'});
+		this.map.set(SettingType.Faction, {title: 'Faction Tag', value: this.plugin.settings.factionTag, placeholder: 'rpgm/element/faction'});
+		this.map.set(SettingType.Clue, {title: 'Clue Tag', value: this.plugin.settings.eventTag, placeholder: 'rpgm/element/event'});
+		this.map.set(SettingType.Event, {title: 'Event Tag', value: this.plugin.settings.clueTag, placeholder: 'rpgm/element/clue'});
+		this.map.set(SettingType.Timeline, {title: 'Timeline Tag', value: this.plugin.settings.timelineTag, placeholder: 'rpgm/element/timeline'});
+		this.map.set(SettingType.Note, {title: 'Note Tag', value: this.plugin.settings.noteTag, placeholder: 'rpgm/element/note'});
+		this.map.set(SettingType.Music, {title: 'Music Tag', value: this.plugin.settings.musicTag, placeholder: 'rpgm/element/music'});
+
+		this.map.set(SettingType.Campaign, {title: 'Campaign Outline Tag', value: this.plugin.settings.campaignTag, placeholder: 'rpgm/outline/campaign'});
+		this.map.set(SettingType.Adventure, {title: 'Adventure Outline Tag', value: this.plugin.settings.adventureTag, placeholder: 'rpgm/outline/adventure'});
+		this.map.set(SettingType.Session, {title: 'Session Outline Tag', value: this.plugin.settings.sessionTag, placeholder: 'rpgm/outline/session'});
+		this.map.set(SettingType.Scene, {title: 'Scene Outline Tag', value: this.plugin.settings.sceneTag, placeholder: 'rpgm/outline/scene'});
+
+		this.map.set(SettingType.YouTubeApiKey, {title: 'YouTube API Key', value: this.plugin.settings.YouTubeKey, placeholder: 'Your YouTube API Key'});
+		this.map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this.plugin.settings.automaticMove, placeholder: 'Organise new elements'});
+		this.map.set(SettingType.templateFolder, {title: 'Template folder', value: this.plugin.settings.templateFolder, placeholder: 'Template Folder'});
+
 		this.settingsUpdater = new SettingsUpdater(this.app);
+		this.settingsFactory = new SettingsFactory(this.plugin, this.map, this.containerEl);
 	}
 
-	private fillOptionsWithFolders(
-		dropdown: DropdownComponent,
-		parent: TFolder|undefined = undefined,
+	display(): void {
+		this.containerEl.empty();
+
+		this.createTemplateFolderMap();
+
+		this.settingsFactory.createHeader('CampaignSetting for Role Playing Game Manager');
+
+		this.loadTemplatesSettings();
+		this.loadAutomationSettings();
+		this.loadExternalServicesSettings();
+		this.loadOutlineSettings();
+		this.loadElementSettings();
+
+		const saveButtonEl = this.containerEl.createEl('button');
+		const saved = this.containerEl.createEl('p', {text: 'Settings Saved'});
+		saved.style.display = 'none';
+		saveButtonEl.textContent = 'Save Settings';
+		saveButtonEl.addEventListener("click", () => {
+			saved.style.display = 'none';
+			this.saveSettings()
+				.then((response: string) => {
+					saved.textContent = response;
+					saved.style.display = 'block';
+				});
+		});
+	}
+
+	private async saveSettings(
+	): Promise<string> {
+		let response = 'No changes to the settings have been made.';
+		const updatedTags: Map<string, string> = new Map();
+
+		let doUpdate = false;
+		const settingsToUpdate: Partial<RpgManagerSettingsInterface> = {};
+
+		if (this.plugin.settings.campaignTag !== this.map.get(SettingType.Campaign)?.value) {
+			settingsToUpdate.campaignTag = this.map.get(SettingType.Campaign)?.value;
+			updatedTags.set(this.plugin.settings.campaignTag, this.map.get(SettingType.Campaign)?.value);
+		}
+
+		if (this.plugin.settings.adventureTag !== this.map.get(SettingType.Adventure)?.value) {
+			settingsToUpdate.adventureTag = this.map.get(SettingType.Adventure)?.value;
+			updatedTags.set(this.plugin.settings.adventureTag, this.map.get(SettingType.Adventure)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.sessionTag !== this.map.get(SettingType.Session)?.value) {
+			settingsToUpdate.sessionTag = this.map.get(SettingType.Session)?.value;
+			updatedTags.set(this.plugin.settings.sessionTag, this.map.get(SettingType.Session)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.sceneTag !== this.map.get(SettingType.Scene)?.value) {
+			settingsToUpdate.sceneTag = this.map.get(SettingType.Scene)?.value;
+			updatedTags.set(this.plugin.settings.sceneTag, this.map.get(SettingType.Scene)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.noteTag !== this.map.get(SettingType.Note)?.value) {
+			settingsToUpdate.noteTag = this.map.get(SettingType.Note)?.value;
+			updatedTags.set(this.plugin.settings.noteTag, this.map.get(SettingType.Note)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.pcTag !== this.map.get(SettingType.PC)?.value) {
+			settingsToUpdate.pcTag = this.map.get(SettingType.PC)?.value;
+			updatedTags.set(this.plugin.settings.pcTag, this.map.get(SettingType.PC)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.npcTag !== this.map.get(SettingType.NPC)?.value) {
+			settingsToUpdate.npcTag = this.map.get(SettingType.NPC)?.value;
+			updatedTags.set(this.plugin.settings.npcTag, this.map.get(SettingType.NPC)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.factionTag !== this.map.get(SettingType.Faction)?.value) {
+			settingsToUpdate.factionTag = this.map.get(SettingType.Faction)?.value;
+			updatedTags.set(this.plugin.settings.factionTag, this.map.get(SettingType.Faction)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.locationTag !== this.map.get(SettingType.Location)?.value) {
+			settingsToUpdate.locationTag = this.map.get(SettingType.Location)?.value;
+			updatedTags.set(this.plugin.settings.locationTag, this.map.get(SettingType.Location)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.eventTag !== this.map.get(SettingType.Event)?.value) {
+			settingsToUpdate.eventTag = this.map.get(SettingType.Event)?.value;
+			updatedTags.set(this.plugin.settings.eventTag, this.map.get(SettingType.Event)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.clueTag !== this.map.get(SettingType.Clue)?.value) {
+			settingsToUpdate.clueTag = this.map.get(SettingType.Clue)?.value;
+			updatedTags.set(this.plugin.settings.clueTag, this.map.get(SettingType.Clue)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.musicTag !== this.map.get(SettingType.Music)?.value) {
+			settingsToUpdate.musicTag = this.map.get(SettingType.Music)?.value;
+			updatedTags.set(this.plugin.settings.musicTag, this.map.get(SettingType.Music)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.timelineTag !== this.map.get(SettingType.Timeline)?.value) {
+			settingsToUpdate.timelineTag = this.map.get(SettingType.Timeline)?.value;
+			updatedTags.set(this.plugin.settings.timelineTag, this.map.get(SettingType.Timeline)?.value);
+			doUpdate = true;
+		}
+
+		if (doUpdate){
+			await this.plugin.updateSettings(settingsToUpdate);
+			await this.settingsUpdater.updateTags(updatedTags);
+
+			response = 'Settings saved and database re-initialised';
+		}
+
+		return response;
+	}
+
+	private loadElementSettings(
+	): void {
+		this.settingsFactory.createHeader('Elements', 3, `Elements are all the parts of the campaign which are not a plot.
+		The elements do not have a hyerarchical structure, but they only identify the campaign they belong to.
+		Each tag that identifies an element should be followed by the {campaignId}`);
+		this.settingsFactory.createWarning(`Warning: These settings will be saved only after pressing the button below
+		All the tags will be updates in your notes.`);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.PC,
+			'This tag identifies the Player Characters',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.NPC,
+			'This tag identifies the Non Player Characters',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Location,
+			'This tag identifies the Locations',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Faction,
+			'This tag identifies the Factions',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Event,
+			'This tag identifies the Events',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Clue,
+			'This tag identifies the Clues',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Timeline,
+			'This tag identifies the Timelines',
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Music,
+			'This tag identifies the Musics',
+		);
+	}
+
+	private loadOutlineSettings(
+	): void {this.settingsFactory.createHeader('Outlines', 3, `Outlines are the plot part of RPG Manager.
+		They are hierarchically organised in campaigns > adventures > sessions > scenes
+		Each tag that identifies an outline should contain the ids of the parent outlines and end with a unique identifier`);
+		this.settingsFactory.createWarning(`Warning: These settings will be saved only after pressing the button below
+		All the tags will be updates in your notes.`);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Campaign,
+			`The tag identifying the campaigns
+			Required ids: /{campaignId}`,
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Adventure,
+			`The tag identifying the adventures
+			Required ids: /{campaignId}/{adventureId}`,
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Session,
+			`The tag identifying the sessions
+			Required ids: /{campaignId}/{adventureId}/{sessionId}`,
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Scene,
+			`The tag identifying the scenes
+			Required ids: /{campaignId}/{adventureId}/{sessionId}/{sceneId}`,
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Note,
+			`The tag identifying the notes
+			Required ids: /{campaignId}/{adventureId}/{sessionId}`,
+		);
+	}
+
+	private loadExternalServicesSettings(
+	): void {
+		this.settingsFactory.createHeader('External Service', 3, `Use this area to setup the information relative to third party services.`);
+		this.settingsFactory.createWarning(`**ATTENTION**: the configurations are saved in a file in your vault. If you share your vault, any secret key might be shared!`);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.YouTubeApiKey,
+			`If you want to use the automation included in the Music element through YouTube, please generate a YouTube Api Key and add it here. \n
+			To generate your YouTube Api key you can follow the instructions at https://rapidapi.com/blog/how-to-get-youtube-api-key/`,
+		);
+	}
+
+	private loadAutomationSettings(
+	): void {
+		this.settingsFactory.createHeader('Automations', 3, 'Set your preferences for the automations RPG Manager offers.');
+
+		this.settingsFactory.createToggleSetting(
+			SettingType.automaticMove,
+			`RPG Manager automatically organise created or filled outlines and elements in separate folders.
+			You can avoid the automatical move of your notes by disabling this setting.`,
+		);
+	}
+
+	private loadTemplatesSettings(
+	): void {
+		this.settingsFactory.createHeader('Templates', 3, 'Select the folder you use to store your templates.');
+
+		this.settingsFactory.createDropdownSetting(
+			SettingType.templateFolder,
+			`Select the folder in which you keep the templates for RPG Manager.
+			If you leave this value empty, the creation of outlines and elements won\'t have any additional information apart from the frontmatter and the codeblocks`,
+			this.templateFolderMap,
+		)
+	}
+
+	private createTemplateFolderMap(
+		parent: TFolder|undefined=undefined,
 	): void {
 		let folderList: TAbstractFile[] = [];
 		if (parent != undefined) {
 			folderList = parent.children.filter((file: TAbstractFile) => file instanceof TFolder);
 		} else {
+			this.templateFolderMap = new Map();
 			folderList = this.app.vault.getRoot().children.filter((file: TAbstractFile) => file instanceof TFolder);
 		}
 
 		folderList.forEach((folder: TFolder) => {
-			dropdown.addOption(folder.path, folder.path);
-			this.fillOptionsWithFolders(dropdown, folder);
+			this.templateFolderMap.set(folder.path, folder.path);
+			this.createTemplateFolderMap(folder);
 		});
-	}
-
-	display(): void {
-		const {containerEl} = this;
-
-		const pcTag = this.plugin.settings.pcTag;
-
-		containerEl.empty();
-		containerEl.createEl('h2', {text: 'CampaignSetting for Role Playing Game Manager'});
-
-		containerEl.createEl('h3', {text: 'Templates'});
-		containerEl.createEl('span', {text: createFragment(frag => {
-				frag.appendText('Manage the folder RPG Manager can read the templates from');
-				frag.createEl('br');
-				frag.appendText(' ');
-			})});
-
-		new Setting(this.containerEl)
-			.setName("Templates folder")
-			.setDesc(createFragment(frag => {
-				frag.appendText('Select the folder in which you keep the templates for RPG Manager.');
-				frag.createEl('br');
-				frag.appendText('If you leave this value empty, the creation of outlines and elements won\'t have any additional information apart from the frontmatter and the codeblocks');
-				frag.createEl('br');
-				frag.appendText(' ');
-			}))
-			.addDropdown(dropdown => {
-				dropdown.addOption('', '');
-				this.fillOptionsWithFolders(dropdown);
-
-				dropdown.setValue(this.plugin.settings.templateFolder);
-
-				dropdown.onChange(async value => await this.plugin.updateSettings({templateFolder: value}));
-			});
-
-		containerEl.createEl('h3', {text: 'Automations'});
-		containerEl.createEl('span', {text: createFragment(frag => {
-				frag.appendText('Set your preferences for the automations RPG Manager offers.');
-				frag.createEl('br');
-				frag.appendText(' ');
-			})});
-
-		new Setting(this.containerEl)
-			.setName("Auto Organisation of Notes")
-			.setDesc(createFragment(frag => {
-				frag.createEl('br');
-				frag.appendText('RPG Manager automatically organise created or filled outlines and elements in separate folders.');
-				frag.createEl('br');
-				frag.appendText('You can avoid the automatical move of your notes by disabling this setting.');
-				frag.createEl('br');
-				frag.appendText(' ');
-			}))
-			.addToggle(toggle =>
-				toggle
-					.setValue(this.plugin.settings.automaticMove)
-					.onChange(async value => await this.plugin.updateSettings({ automaticMove: value }))
-			);
-
-		containerEl.createEl('h2', {text: 'External Services'});
-		containerEl.createEl('span', {text: createFragment(frag => {
-				frag.appendText('Use this area to setup the information relative to third party services');
-				frag.createEl('br');
-				frag.createEl('p', {text: 'ATTENTION: the configurations are saved in a file in your vault. If you share your vault, any secret key might be shared!'}).style.color = 'var(--text-error)';
-				frag.createEl('br');
-				frag.appendText(' ');
-			})});
-
-		new Setting(this.containerEl)
-			.setName("YouTube API Key")
-			.setDesc(createFragment(frag => {
-				frag.appendText('If you want to use the automation included in the `Music` element through YouTube, please generate a YouTube Api Key and add it here');
-				frag.createEl('br');
-				frag.appendText('To generate your YouTube Api key you can follow the instructions in ');
-				frag.createEl('a', {text: 'this link', href: 'https://rapidapi.com/blog/how-to-get-youtube-api-key/'});
-				frag.createEl('br');
-				frag.appendText(' ');
-				frag.createEl('br');
-				frag.appendText(' ');
-			}))
-			.addText(text =>
-				text
-					.setPlaceholder('Your YouTube API Key')
-					.setValue(this.plugin.settings.YouTubeKey)
-					.onChange(async value => {
-						await this.plugin.updateSettings({ YouTubeKey: value });
-					})
-			);
-
-		containerEl.createEl('h3', {text: 'Outlines'});
-		containerEl.createEl('span', {text: createFragment(frag => {
-				frag.appendText('Outlines are the plot part of the campaign.');
-				frag.createEl('br');
-				frag.appendText('The outlines are organised as campaigns > adventures > sessions > scenes');
-				frag.createEl('br');
-				frag.appendText('Each tag that identifies an outline should be followed by the ids of the parent outlines and end with a unique identifier for the current outline');
-				frag.createEl('br');
-				frag.createEl('span');
-				frag.appendText(' ');
-			})});
-
-		new Setting(this.containerEl)
-			.setName("Campaign Outline Tag")
-			.setDesc(createFragment(frag => {
-				frag.appendText('The tag identifying the campaign');
-				frag.createEl('br');
-				frag.appendText('Required ids:');
-				frag.createEl('br');
-				frag.appendText('/{campaignId}');
-			}))
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/outline/campaign')
-					.setValue(this.plugin.settings.campaignTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ campaignTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Adventure Outline Tag")
-			.setDesc(createFragment(frag => {
-				frag.appendText('The tag identifying an Adventure');
-				frag.createEl('br');
-				frag.appendText('Required ids:');
-				frag.createEl('br');
-				frag.appendText('/{campaignId}/{adventureId}');
-			}))
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/outline/adventure')
-					.setValue(this.plugin.settings.adventureTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ adventureTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Session Outline Tag")
-			.setDesc(createFragment(frag => {
-				frag.appendText('The tag identifying a Session');
-				frag.createEl('br');
-				frag.appendText('Required ids:');
-				frag.createEl('br');
-				frag.appendText('/{campaignId}/{adventureId}/{sessionId}');
-			}))
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/outline/session')
-					.setValue(this.plugin.settings.sessionTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ sessionTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Scenes Outline Tag")
-			.setDesc(createFragment(frag => {
-				frag.appendText('The tag identifying a Scene');
-				frag.createEl('br');
-				frag.appendText('Required ids:');
-				frag.createEl('br');
-				frag.appendText('/{campaignId}/{adventureId}/{sessionId}/{sceneId}');
-			}))
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/outline/scene')
-					.setValue(this.plugin.settings.sceneTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ sceneTag: value });
-					})
-			);
-
-		containerEl.createEl('h3', {text: 'Elements'});
-		containerEl.createEl('span', {text: createFragment(frag => {
-				frag.appendText('Elements are all the parts of the campaign which are not a plot.');
-				frag.createEl('br');
-				frag.appendText('The elements do not have a hyerarchical structure, but they only identify the campaign they belong to.');
-				frag.createEl('br');
-				frag.appendText('Each tag that identifies an element should be followed by the {campaignId}');
-				frag.createEl('br');
-				frag.appendText(' ');
-			})});
-
-		let updatePcTagInDatabaseEl: HTMLDivElement;
-		let updatePcTagInDatabaseButtonEl: HTMLButtonElement;
-		new Setting(this.containerEl)
-			.setName("Player Character Tag")
-			.setDesc(createFragment(frag => {
-				frag.appendText('This tag identifies the Player Characters');
-				frag.createEl('br');
-				updatePcTagInDatabaseEl = frag.createDiv();
-				updatePcTagInDatabaseEl.style.display = 'none';
-				updatePcTagInDatabaseButtonEl = updatePcTagInDatabaseEl.createEl('button');
-				updatePcTagInDatabaseButtonEl.textContent = 'Update every setting in the database';
-				updatePcTagInDatabaseButtonEl.addEventListener("click", () => {
-					this.settingsUpdater.updateElementTags(
-						pcTag,
-						this.plugin.settings.pcTag,
-					);
-				});
-			}))
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/character/pc')
-					.setValue(this.plugin.settings.pcTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ pcTag: value });
-						if (value !== pcTag){
-							updatePcTagInDatabaseEl.style.display = 'block';
-						} else {
-							updatePcTagInDatabaseEl.style.display = 'none';
-						}
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Non Player Character Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/character/npc')
-					.setValue(this.plugin.settings.npcTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ npcTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Location Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/location')
-					.setValue(this.plugin.settings.locationTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ locationTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Faction Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/faction')
-					.setValue(this.plugin.settings.factionTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ factionTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Event Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/event')
-					.setValue(this.plugin.settings.eventTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ eventTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Clue Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/clue')
-					.setValue(this.plugin.settings.clueTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ clueTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Timeline Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/timeline')
-					.setValue(this.plugin.settings.timelineTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ timelineTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Note Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/note')
-					.setValue(this.plugin.settings.noteTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ noteTag: value });
-					})
-			);
-
-		new Setting(this.containerEl)
-			.setName("Music Tag")
-			.addText(text =>
-				text
-					.setPlaceholder('rpgm/element/music')
-					.setValue(this.plugin.settings.musicTag)
-					.onChange(async value => {
-						if (value.length == 0) return;
-						await this.plugin.updateSettings({ musicTag: value });
-					})
-			);
 	}
 }

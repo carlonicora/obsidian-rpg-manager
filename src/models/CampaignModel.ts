@@ -6,12 +6,24 @@ import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {DataType} from "../enums/DataType";
 import {SessionTableComponent} from "../components/SessionTableComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
+import {AdventureTableComponent} from "../components/AdventureTableComponent";
+import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
 export class CampaignModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
+		await this.response.addComponent(
+			AdventureTableComponent,
+			this.io.readListParametrised<AdventureInterface>(DataType.Adventure, this.currentElement.campaignId)
+				.sort(function (leftData: AdventureInterface, rightData: AdventureInterface) {
+					if (leftData.adventureId > rightData.adventureId) return -1;
+					if (leftData.adventureId < rightData.adventureId) return 1;
+					return 0;
+				}),
+		);
+
 		await this.response.addComponent(
 			SessionTableComponent,
 			this.io.readListParametrised<SessionInterface>(DataType.Session, this.currentElement.campaignId)

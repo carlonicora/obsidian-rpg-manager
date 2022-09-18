@@ -471,7 +471,7 @@ export class Database extends Component implements DatabaseInterface {
 		if (campaignId === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', dataTag);
 
 		const settings = this.campaignSettings.get(campaignId);
-		if (settings === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Settings Missing!');
+		//if (settings === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Settings Missing!');
 
 		if (campaignId !== undefined && settings !== undefined) {
 			response = await this.app.plugins.getPlugin('rpg-manager').factories.data.create(
