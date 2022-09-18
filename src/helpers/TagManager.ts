@@ -195,6 +195,12 @@ export class TagManager {
 		throw new TagMisconfiguredError(this.app, idMap);
 	}
 
+	public isRpgManagerTag(
+		tag: string,
+	): boolean {
+		return (this.getDataType(undefined, tag) !== undefined);
+	}
+
 	public getIdMap(
 		tag: string|undefined = undefined,
 		tags: Array<string>|undefined = undefined,
