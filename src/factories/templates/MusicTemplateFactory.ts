@@ -15,7 +15,7 @@ export class MusicTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock('music');
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock('music');
 	}
 }

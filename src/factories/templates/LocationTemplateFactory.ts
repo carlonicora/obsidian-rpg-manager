@@ -15,7 +15,7 @@ export class LocationTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock('location');
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock('location');
 	}
 }

@@ -50,7 +50,7 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian21 = require("obsidian");
+var import_obsidian20 = require("obsidian");
 
 // src/helpers/Controller.ts
 var import_obsidian = require("obsidian");
@@ -3202,10 +3202,10 @@ var AbstractTemplateFactory = class {
     const frontmatterParsedString = frontmatterString.replaceAll("{}", "");
     response = "---\n" + frontmatterParsedString + "\n---\n";
     if (initialCodeBlock !== void 0)
-      response += initialCodeBlock.toString();
+      response += initialCodeBlock;
     response += mainContent != null ? mainContent : "\n";
     if (lastCodeBlock !== void 0)
-      response += lastCodeBlock.toString();
+      response += lastCodeBlock;
     return response;
   }
   mergeFrontmatters(frontmatter, additionalFrontMatter) {
@@ -3267,20 +3267,11 @@ var AbstractTemplateFactory = class {
   generateLastCodeBlock() {
     return void 0;
   }
-};
-
-// src/helpers/RpgCodeBlock.ts
-var import_obsidian9 = require("obsidian");
-var RpgCodeBlock = class {
-  constructor(model, additionalInformation = void 0) {
-    this.model = model;
-    this.additionalInformation = additionalInformation;
-  }
-  toString() {
+  generateRpgManagerCodeBlock(model, additionalInformation = void 0) {
     let response = "```RpgManager\n";
-    response += this.model + "\n";
-    if (this.additionalInformation !== void 0) {
-      response += (0, import_obsidian9.stringifyYaml)(this.additionalInformation);
+    response += model + "\n";
+    if (additionalInformation !== void 0) {
+      response += (0, import_obsidian8.stringifyYaml)(additionalInformation);
     }
     response += "```\n";
     return response;
@@ -3302,7 +3293,7 @@ var CampaignTemplateFactory = class extends AbstractTemplateFactory {
     }
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("campaignNavigation", {
+    return this.generateRpgManagerCodeBlock("campaignNavigation", {
       abt: {
         need: "",
         and: "",
@@ -3312,7 +3303,7 @@ var CampaignTemplateFactory = class extends AbstractTemplateFactory {
     });
   }
   generateLastCodeBlock() {
-    return new RpgCodeBlock("campaign");
+    return this.generateRpgManagerCodeBlock("campaign");
   }
 };
 
@@ -3323,7 +3314,7 @@ var AdventureTemplateFactory = class extends AbstractTemplateFactory {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.adventureTag + "/" + this.campaignId + "/" + this.adventureId);
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("adventureNavigation", {
+    return this.generateRpgManagerCodeBlock("adventureNavigation", {
       abt: {
         need: "",
         and: "",
@@ -3333,7 +3324,7 @@ var AdventureTemplateFactory = class extends AbstractTemplateFactory {
     });
   }
   generateLastCodeBlock() {
-    return new RpgCodeBlock("adventure");
+    return this.generateRpgManagerCodeBlock("adventure");
   }
 };
 
@@ -3359,7 +3350,7 @@ var SessionTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("sessionNavigation", {
+    return this.generateRpgManagerCodeBlock("sessionNavigation", {
       abt: {
         need: "",
         and: "",
@@ -3379,7 +3370,7 @@ var SessionTemplateFactory = class extends AbstractTemplateFactory {
     });
   }
   generateLastCodeBlock() {
-    return new RpgCodeBlock("session");
+    return this.generateRpgManagerCodeBlock("session");
   }
 };
 
@@ -3400,13 +3391,13 @@ var SceneTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("sceneNavigation", {
+    return this.generateRpgManagerCodeBlock("sceneNavigation", {
       trigger: "",
       action: ""
     });
   }
   generateLastCodeBlock() {
-    return new RpgCodeBlock("scene");
+    return this.generateRpgManagerCodeBlock("scene");
   }
 };
 
@@ -3427,7 +3418,7 @@ var CharacterTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("pc");
+    return this.generateRpgManagerCodeBlock("pc");
   }
 };
 
@@ -3448,7 +3439,7 @@ var NonPlayerCharacterTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("npc");
+    return this.generateRpgManagerCodeBlock("npc");
   }
   generateLastCodeBlock() {
     return void 0;
@@ -3466,7 +3457,7 @@ var LocationTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("location");
+    return this.generateRpgManagerCodeBlock("location");
   }
 };
 
@@ -3485,7 +3476,7 @@ var EventTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("event");
+    return this.generateRpgManagerCodeBlock("event");
   }
 };
 
@@ -3503,7 +3494,7 @@ var ClueTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("clue");
+    return this.generateRpgManagerCodeBlock("clue");
   }
 };
 
@@ -3517,7 +3508,7 @@ var FactionTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("faction");
+    return this.generateRpgManagerCodeBlock("faction");
   }
 };
 
@@ -3527,7 +3518,7 @@ var NoteTemplateFactory = class extends AbstractTemplateFactory {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.noteTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId);
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("note");
+    return this.generateRpgManagerCodeBlock("note");
   }
 };
 
@@ -3537,7 +3528,7 @@ var TimelineTemplateFactory = class extends AbstractTemplateFactory {
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.timelineTag + "/" + this.campaignId);
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("timeline", {
+    return this.generateRpgManagerCodeBlock("timeline", {
       sessions: true,
       events: true,
       births: false,
@@ -3607,7 +3598,7 @@ var MusicTemplateFactory = class extends AbstractTemplateFactory {
     };
   }
   generateInitialCodeBlock() {
-    return new RpgCodeBlock("music");
+    return this.generateRpgManagerCodeBlock("music");
   }
 };
 
@@ -3741,7 +3732,7 @@ var BannerView = class extends AbstractView {
 };
 
 // src/views/BoxView.ts
-var import_obsidian10 = require("obsidian");
+var import_obsidian9 = require("obsidian");
 var BoxView = class extends AbstractView {
   render(container, data) {
     const boxDiv = container.createDiv();
@@ -3750,12 +3741,12 @@ var BoxView = class extends AbstractView {
     const boxTitle = boxDiv.createDiv();
     boxTitle.addClass("title");
     boxTitle.innerText = data.title;
-    import_obsidian10.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
+    import_obsidian9.MarkdownRenderer.renderMarkdown(data.content != null && data.content !== "" ? data.content : '<span class="rpgm-missing">Missing ' + data.title + "</span>", boxDiv, this.sourcePath, null);
   }
 };
 
 // src/views/BreadcrumbView.ts
-var import_obsidian11 = require("obsidian");
+var import_obsidian10 = require("obsidian");
 var BreadcrumbView = class extends AbstractView {
   render(container, data) {
     const breadcrumbContainer = container.createDiv({ cls: "rpgm-breadcrumb" });
@@ -3792,7 +3783,7 @@ var BreadcrumbView = class extends AbstractView {
           link = link.substring(0, link.indexOf("]]")) + "|" + data.linkText + "]]";
         }
       }
-      import_obsidian11.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
+      import_obsidian10.MarkdownRenderer.renderMarkdown(link, value, this.sourcePath, null);
     }
     if (data.nextBreadcrumb != null) {
       if (data.nextBreadcrumb.isInNewLine === false) {
@@ -3809,7 +3800,7 @@ var BreadcrumbView = class extends AbstractView {
 };
 
 // src/views/TimelineView.ts
-var import_obsidian12 = require("obsidian");
+var import_obsidian11 = require("obsidian");
 var TimelineView = class extends AbstractView {
   render(container, data) {
     const timeline = container.createDiv({ cls: "rpgm-timeline" });
@@ -3841,8 +3832,8 @@ var TimelineView = class extends AbstractView {
       const details = li.createDiv({ cls: "event-details" });
       const fileLink = details.createEl("h3");
       const synopsis = details.createSpan();
-      import_obsidian12.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
-      import_obsidian12.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
+      import_obsidian11.MarkdownRenderer.renderMarkdown(timeline2.synopsis, synopsis, this.sourcePath, null);
+      import_obsidian11.MarkdownRenderer.renderMarkdown(timeline2.link.toString(), fileLink, this.sourcePath, null);
     });
   }
 };
@@ -3942,7 +3933,7 @@ var StoryCirclePlotView = class extends AbstractView {
 };
 
 // src/rpgs/Raw/modals/RawDiceRollerModal.ts
-var import_obsidian13 = require("obsidian");
+var import_obsidian12 = require("obsidian");
 
 // src/rpgs/Raw/enums/RawRollResult.ts
 var RawRollResult = /* @__PURE__ */ ((RawRollResult2) => {
@@ -3994,7 +3985,7 @@ var DiceRollerHelper = class {
 };
 
 // src/rpgs/Raw/modals/RawDiceRollerModal.ts
-var RawDiceRollerModal = class extends import_obsidian13.Modal {
+var RawDiceRollerModal = class extends import_obsidian12.Modal {
   constructor(app2, ability) {
     super(app2);
     this.ability = ability;
@@ -4029,11 +4020,11 @@ var RawDiceRollerModal = class extends import_obsidian13.Modal {
 };
 
 // src/rpgs/Raw/views/RawCharacterRecordSheetView.ts
-var import_obsidian15 = require("obsidian");
+var import_obsidian14 = require("obsidian");
 
 // src/rpgs/Raw/modals/RawUpdateRollerModal.ts
-var import_obsidian14 = require("obsidian");
-var RawUpdateRollerModal = class extends import_obsidian14.Modal {
+var import_obsidian13 = require("obsidian");
+var RawUpdateRollerModal = class extends import_obsidian13.Modal {
   constructor(app2, ability, initialAbilityValue, updateRoll) {
     super(app2);
     this.ability = ability;
@@ -4118,7 +4109,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
   upgradeStats(ability, valueEl) {
     return __async(this, null, function* () {
       var _a;
-      const activeView = app.workspace.getActiveViewOfType(import_obsidian15.MarkdownView);
+      const activeView = app.workspace.getActiveViewOfType(import_obsidian14.MarkdownView);
       if (activeView != null) {
         const editor = activeView.editor;
         const file = activeView.file;
@@ -4148,7 +4139,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
                   ch: 0
                 };
                 const range = editor.getRange(start, end);
-                const yaml = (_a2 = (0, import_obsidian15.parseYaml)(range)) != null ? _a2 : {};
+                const yaml = (_a2 = (0, import_obsidian14.parseYaml)(range)) != null ? _a2 : {};
                 if (((_c = (_b = yaml == null ? void 0 : yaml.raw) == null ? void 0 : _b.character) == null ? void 0 : _c.id) != null) {
                 } else {
                   if (yaml.length === 0 || (yaml == null ? void 0 : yaml.raw) == null) {
@@ -4172,7 +4163,7 @@ var RawCharacterRecordSheetView = class extends AbstractView {
                   } else {
                     this.updateAbilityValue(ability, yaml);
                   }
-                  editor.replaceRange((0, import_obsidian15.stringifyYaml)(yaml), start, end);
+                  editor.replaceRange((0, import_obsidian14.stringifyYaml)(yaml), start, end);
                 }
               }
               new RawUpdateRollerModal(this.app, ability, initialAbilityValue, upgradeRoll).open();
@@ -4363,11 +4354,11 @@ var RelationshipFactory = class {
 };
 
 // src/database/Database.ts
-var import_obsidian17 = require("obsidian");
+var import_obsidian16 = require("obsidian");
 
 // src/modals/DatabaseErrorModal.ts
-var import_obsidian16 = require("obsidian");
-var DatabaseErrorModal = class extends import_obsidian16.Modal {
+var import_obsidian15 = require("obsidian");
+var DatabaseErrorModal = class extends import_obsidian15.Modal {
   constructor(app2, misconfiguredTags, singleError = void 0, singleErrorFile = void 0) {
     super(app2);
     this.misconfiguredTags = misconfiguredTags;
@@ -4396,7 +4387,7 @@ var DatabaseErrorModal = class extends import_obsidian16.Modal {
     const { contentEl } = this;
     const errorEl = contentEl.createEl("div");
     const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
-    import_obsidian16.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), errorEl, file.path, null);
+    import_obsidian15.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), errorEl, file.path, null);
   }
   onClose() {
     super.onClose();
@@ -4624,7 +4615,7 @@ DatabaseInitialiser.campaignSettings = /* @__PURE__ */ new Map();
 DatabaseInitialiser.misconfiguredTags = /* @__PURE__ */ new Map();
 
 // src/database/Database.ts
-var Database = class extends import_obsidian17.Component {
+var Database = class extends import_obsidian16.Component {
   constructor(app2) {
     super();
     this.app = app2;
@@ -4736,7 +4727,7 @@ var Database = class extends import_obsidian17.Component {
         yield this.replaceLinkInRelationships(oldBaseName, file.basename);
         yield this.refreshRelationships();
         if (((_a = this.app.workspace.getActiveFile()) == null ? void 0 : _a.path) === file.path) {
-          (_b = this.app.workspace.getActiveViewOfType(import_obsidian17.MarkdownView)) == null ? void 0 : _b.editor.refresh();
+          (_b = this.app.workspace.getActiveViewOfType(import_obsidian16.MarkdownView)) == null ? void 0 : _b.editor.refresh();
         }
         this.app.workspace.trigger("rpgmanager:refresh-views");
       }
@@ -5191,8 +5182,8 @@ var Factories = class {
 };
 
 // src/modals/CreationModal.ts
-var import_obsidian18 = require("obsidian");
-var CreationModal = class extends import_obsidian18.Modal {
+var import_obsidian17 = require("obsidian");
+var CreationModal = class extends import_obsidian17.Modal {
   constructor(app2, type, create = true, name = null, campaignId = null, adventureId = null, sessionId = null) {
     super(app2);
     this.app = app2;
@@ -5231,7 +5222,7 @@ var CreationModal = class extends import_obsidian18.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("rpgm-modal");
-    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian18.MarkdownView) == null) {
+    if (!this.create && this.app.workspace.getActiveViewOfType(import_obsidian17.MarkdownView) == null) {
       contentEl.createEl("h2", { cls: "rpgm-modal-title", text: "Error" });
       contentEl.createSpan({ cls: "", text: "To fill a note with a RPG Manager element you must have a valid file opened." });
       return;
@@ -5356,7 +5347,7 @@ var RpgManagerDefaultSettings = {
 };
 
 // src/settings/RpgManagerSettings.ts
-var import_obsidian20 = require("obsidian");
+var import_obsidian19 = require("obsidian");
 
 // src/settings/SettingsUpdater.ts
 var SettingsUpdater = class {
@@ -5385,7 +5376,7 @@ var SettingsUpdater = class {
 };
 
 // src/factories/SettingsFactory.ts
-var import_obsidian19 = require("obsidian");
+var import_obsidian18 = require("obsidian");
 var SettingsFactory = class {
   constructor(plugin, map, containerEl) {
     this.plugin = plugin;
@@ -5416,7 +5407,7 @@ var SettingsFactory = class {
     const settings = this.map.get(type);
     if (settings === void 0)
       throw new Error("Setting type not found");
-    return new import_obsidian19.Setting(this.containerEl).setName(settings.title).setDesc(this.generateFragment(description)).addText((text) => {
+    return new import_obsidian18.Setting(this.containerEl).setName(settings.title).setDesc(this.generateFragment(description)).addText((text) => {
       var _a;
       return text.setPlaceholder((_a = settings.placeholder) != null ? _a : "").setValue(settings.value).onChange((value) => {
         settings.value = value;
@@ -5427,7 +5418,7 @@ var SettingsFactory = class {
     const settings = this.map.get(type);
     if (settings === void 0)
       throw new Error("Setting type not found");
-    return new import_obsidian19.Setting(this.containerEl).setName(settings.title).setDesc(this.generateFragment(description)).addDropdown((dropdown) => {
+    return new import_obsidian18.Setting(this.containerEl).setName(settings.title).setDesc(this.generateFragment(description)).addDropdown((dropdown) => {
       dropdown.addOption("", "");
       options.forEach((value, display) => {
         dropdown.addOption(value, display);
@@ -5446,7 +5437,7 @@ var SettingsFactory = class {
     const settings = this.map.get(type);
     if (settings === void 0)
       throw new Error("Setting type not found");
-    return new import_obsidian19.Setting(this.containerEl).setName(settings.title).setDesc(this.generateFragment(description)).addToggle((toggle) => toggle.setValue(settings.value).onChange((value) => __async(this, null, function* () {
+    return new import_obsidian18.Setting(this.containerEl).setName(settings.title).setDesc(this.generateFragment(description)).addToggle((toggle) => toggle.setValue(settings.value).onChange((value) => __async(this, null, function* () {
       switch (type) {
         case 13 /* automaticMove */:
           yield this.plugin.updateSettings({ automaticMove: value });
@@ -5457,7 +5448,7 @@ var SettingsFactory = class {
 };
 
 // src/settings/RpgManagerSettings.ts
-var RpgManagerSettings = class extends import_obsidian20.PluginSettingTab {
+var RpgManagerSettings = class extends import_obsidian19.PluginSettingTab {
   constructor(app2) {
     super(app2, app2.plugins.getPlugin("rpg-manager"));
     this.plugin = app2.plugins.getPlugin("rpg-manager");
@@ -5635,10 +5626,10 @@ var RpgManagerSettings = class extends import_obsidian20.PluginSettingTab {
   createTemplateFolderMap(parent = void 0) {
     let folderList = [];
     if (parent != void 0) {
-      folderList = parent.children.filter((file) => file instanceof import_obsidian20.TFolder);
+      folderList = parent.children.filter((file) => file instanceof import_obsidian19.TFolder);
     } else {
       this.templateFolderMap = /* @__PURE__ */ new Map();
-      folderList = this.app.vault.getRoot().children.filter((file) => file instanceof import_obsidian20.TFolder);
+      folderList = this.app.vault.getRoot().children.filter((file) => file instanceof import_obsidian19.TFolder);
     }
     folderList.forEach((folder) => {
       this.templateFolderMap.set(folder.path, folder.path);
@@ -5648,7 +5639,7 @@ var RpgManagerSettings = class extends import_obsidian20.PluginSettingTab {
 };
 
 // src/main.ts
-var RpgManager = class extends import_obsidian21.Plugin {
+var RpgManager = class extends import_obsidian20.Plugin {
   constructor() {
     super(...arguments);
     this.ready = false;
@@ -5658,7 +5649,7 @@ var RpgManager = class extends import_obsidian21.Plugin {
       console.log("Loading RpgManager " + this.manifest.version);
       yield Logger.initialise(this.manifest.version, 4 /* Error */ | 2 /* Warning */);
       yield this.loadSettings();
-      yield (0, import_obsidian21.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
+      yield (0, import_obsidian20.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
       this.addSettingTab(new RpgManagerSettings(this.app));
       app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     });

@@ -22,14 +22,14 @@ export class NonPlayerCharacterTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock(
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock(
 			'npc',
 		);
 	}
 
 	public generateLastCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
 	}
 }

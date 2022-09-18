@@ -8,12 +8,12 @@ export class VampireCharacterTemplate extends CharacterTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
 	}
 
 	public generateLastCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
 	}
 

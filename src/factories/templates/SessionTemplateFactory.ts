@@ -28,8 +28,8 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock(
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock(
 			'sessionNavigation',
 			{
 				abt: {
@@ -53,8 +53,8 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateLastCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock(
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock(
 			'session',
 		);
 	}

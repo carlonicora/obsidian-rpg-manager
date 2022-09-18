@@ -18,7 +18,7 @@ export class ClueTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock('clue');
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock('clue');
 	}
 }

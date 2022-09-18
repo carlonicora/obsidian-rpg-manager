@@ -94,8 +94,8 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 		this.addFrontmatterData(frontmatter);
 		this.mergeFrontmatters(frontmatter, templateFrontmatter);
 
-		const initialCodeblock: RpgCodeBlockInterface|undefined = this.generateInitialCodeBlock();
-		const lastCodeblock: RpgCodeBlockInterface|undefined = this.generateLastCodeBlock();
+		const initialCodeblock: string|undefined = this.generateInitialCodeBlock();
+		const lastCodeblock: string|undefined = this.generateLastCodeBlock();
 
 		if (this.internalTemplate !== undefined){
 			templateContent = this.internalTemplate.getContent();
@@ -106,18 +106,18 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 
 	private generateResponse(
 		frontmatter: any,
-		initialCodeBlock: RpgCodeBlockInterface|undefined,
+		initialCodeBlock: string|undefined,
 		mainContent: string|undefined,
-		lastCodeBlock: RpgCodeBlockInterface|undefined,
+		lastCodeBlock: string|undefined,
 	): string {
 		let response = '';
 
 		const frontmatterString = stringifyYaml(frontmatter);
 		const frontmatterParsedString = frontmatterString.replaceAll('{}', '');
 		response = '---\n' + frontmatterParsedString + '\n---\n';
-		if (initialCodeBlock !== undefined) response += initialCodeBlock.toString();
+		if (initialCodeBlock !== undefined) response += initialCodeBlock;
 		response += mainContent ?? '\n';
-		if (lastCodeBlock !== undefined) response += lastCodeBlock.toString();
+		if (lastCodeBlock !== undefined) response += lastCodeBlock;
 
 		return response;
 	}
@@ -189,12 +189,28 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 	}
 
 	protected generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
 	}
 
 	protected generateLastCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
+	}
+
+	protected generateRpgManagerCodeBlock(
+		model: string,
+		additionalInformation: any|undefined = undefined,
+	): string {
+		let response = '```RpgManager\n';
+		response += model + '\n';
+
+		if (additionalInformation !== undefined){
+			response += stringifyYaml(additionalInformation);
+		}
+
+		response += '```\n';
+
+		return response;
 	}
 }

@@ -11,8 +11,8 @@ export class AdventureTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock(
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock(
 			'adventureNavigation',
 			{
 				abt: {
@@ -26,8 +26,8 @@ export class AdventureTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateLastCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock(
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock(
 			'adventure',
 		);
 	}

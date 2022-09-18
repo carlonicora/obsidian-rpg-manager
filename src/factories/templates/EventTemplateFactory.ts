@@ -19,8 +19,8 @@ export class EventTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock('event');
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock('event');
 	}
 }
 

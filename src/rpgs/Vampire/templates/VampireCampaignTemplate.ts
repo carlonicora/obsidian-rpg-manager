@@ -8,12 +8,12 @@ export class VampireCampaignTemplate extends CampaignTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
 	}
 
 	public generateLastCodeBlock(
-	): RpgCodeBlockInterface|undefined {
+	): string|undefined {
 		return undefined;
 	}
 

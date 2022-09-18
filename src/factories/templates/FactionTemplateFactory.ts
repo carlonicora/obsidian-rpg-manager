@@ -14,7 +14,7 @@ export class FactionTemplateFactory extends AbstractTemplateFactory {
 	}
 
 	public generateInitialCodeBlock(
-	): RpgCodeBlockInterface|undefined {
-		return new RpgCodeBlock('faction');
+	): string|undefined {
+		return this.generateRpgManagerCodeBlock('faction');
 	}
 }
