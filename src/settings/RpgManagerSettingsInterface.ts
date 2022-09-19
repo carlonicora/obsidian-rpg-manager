@@ -15,6 +15,7 @@ export interface RpgManagerSettingsInterface {
 	templateFolder: string;
 	musicTag: string;
 	YouTubeKey: string;
+	previousVersion: string;
 }
 
 export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
@@ -34,4 +35,5 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	templateFolder: '',
 	musicTag: 'rpgm/element/music',
 	YouTubeKey: '',
+	previousVersion: '',
 }

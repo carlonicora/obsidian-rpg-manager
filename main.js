@@ -127,7 +127,7 @@ var TagMisconfiguredError = class extends AbstractRpgError {
 // src/errors/MultipleRpgManagerTagsError.ts
 var MultipleRpgManagerTagsError = class extends AbstractRpgError {
   showErrorMessage() {
-    let response = "The file contains more than one RPG Manager identifier tags.\nOnly one RPG Manager Tag can be present in one file.";
+    const response = "The file contains more than one RPG Manager identifier tags.\nOnly one RPG Manager Tag can be present in one file.";
     return response;
   }
   showErrorActions() {
@@ -329,7 +329,7 @@ var ElementDuplicatedError = class extends AbstractRpgError {
     return response;
   }
   showErrorActions() {
-    let response = "Two or more outlines have the same tag. The identifier of the outline must be unique\nPlease change one of the following:\n";
+    const response = "Two or more outlines have the same tag. The identifier of the outline must be unique\nPlease change one of the following:\n";
     return response;
   }
   getErrorLinks() {
@@ -5400,7 +5400,8 @@ var RpgManagerDefaultSettings = {
   automaticMove: true,
   templateFolder: "",
   musicTag: "rpgm/element/music",
-  YouTubeKey: ""
+  YouTubeKey: "",
+  previousVersion: ""
 };
 
 // src/settings/RpgManagerSettings.ts
@@ -5787,6 +5788,69 @@ var ErrorView = class extends AbstractView {
   }
 };
 
+// src/abstracts/AbstractDatabaseWorker.ts
+var AbstractDatabaseWorker = class {
+  constructor(app2) {
+    this.app = app2;
+  }
+};
+
+// src/database/workers/V1_2_to_1_3_worker.ts
+var V1_2_worker = class extends AbstractDatabaseWorker {
+  run() {
+    return __async(this, null, function* () {
+      console.log("updating version 1.2 to 1.3");
+      return;
+    });
+  }
+};
+
+// src/database/workers/V1_3_to_2_0_worker.ts
+var V1_3_worker = class extends AbstractDatabaseWorker {
+  run() {
+    return __async(this, null, function* () {
+      console.log("updating version 1.3 to 1.4");
+      return;
+    });
+  }
+};
+
+// src/database/DatabaseUpdater.ts
+var VersionMap = {
+  "1.2": V1_2_worker,
+  "1.3": V1_3_worker
+};
+var DatabaseUpdater = class {
+  constructor(app2, rpgManager) {
+    this.app = app2;
+    this.rpgManager = rpgManager;
+    this.versionsHistory = /* @__PURE__ */ new Map();
+    this.versionsHistory.set("1.2", { previousVersion: "1.2", nextVersion: "1.3" });
+  }
+  update(previousVersion, currentVersion) {
+    return __async(this, null, function* () {
+      if (previousVersion === "")
+        previousVersion = "1.2";
+      const previousVersionMajorMinor = this.getMajorMinor(previousVersion);
+      const currentVersionMajorMinor = this.getMajorMinor(currentVersion);
+      if (previousVersionMajorMinor === void 0 || currentVersionMajorMinor === void 0)
+        return;
+      let updater = this.versionsHistory.get(previousVersionMajorMinor);
+      while (updater !== void 0) {
+        const worker = yield new VersionMap[updater.previousVersion](this.app);
+        worker.run();
+        updater = this.versionsHistory.get(updater.nextVersion);
+      }
+    });
+  }
+  getMajorMinor(version) {
+    const versionParts = version.split(".");
+    if (versionParts.length < 2)
+      return void 0;
+    return versionParts[0] + "." + versionParts[1];
+  }
+};
+
 // src/main.ts
 var RpgManager = class extends import_obsidian22.Plugin {
   constructor() {
@@ -5799,6 +5863,10 @@ var RpgManager = class extends import_obsidian22.Plugin {
       yield Logger.initialise(this.manifest.version, 4 /* Error */ | 2 /* Warning */);
       yield this.loadSettings();
       this.addSettingTab(new RpgManagerSettings(this.app));
+      if (this.settings.previousVersion !== this.manifest.version) {
+        const databaseUpdater = yield new DatabaseUpdater(this.app, this);
+        yield databaseUpdater.update(this.settings.previousVersion, this.manifest.version);
+      }
       yield (0, import_obsidian22.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
       this.registerView("rpgm-error-view" /* Errors */.toString(), (leaf) => new ErrorView(leaf));
       app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
