@@ -1,5 +1,6 @@
 import {App, Component, MarkdownRenderer, Modal, TFile} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
+import {ViewType} from "../enums/ViewType";
 
 export class DatabaseErrorModal extends Modal {
 	constructor(
@@ -24,10 +25,12 @@ export class DatabaseErrorModal extends Modal {
 			this.misconfiguredTags.set(this.singleErrorFile, this.singleError);
 		}
 
+		if (this.misconfiguredTags === undefined) this.misconfiguredTags = new Map<TFile, RpgErrorInterface>();
+
 		contentEl.createEl('p', {text: 'One or more of the tags that define an outline or an element are not correctly misconfigured and can\'t be read!'});
 		contentEl.createEl('p', {text: 'Please double check the errors and correct them.'});
 
-		(this.misconfiguredTags || new Map()).forEach((error: RpgErrorInterface, file: TFile) => {
+		this.misconfiguredTags.forEach((error: RpgErrorInterface, file: TFile) => {
 			const errorEl = contentEl.createEl('div');
 
 			const title = error.getErrorTitle() ?? file.basename;
@@ -38,6 +41,15 @@ export class DatabaseErrorModal extends Modal {
 				file.path,
 				null as unknown as Component,
 			);
+		});
+
+		const viewErrorsButtonEl = contentEl.createEl('button', {text: 'Fix errors'});
+		viewErrorsButtonEl.addEventListener("click", () => {
+			this.app.plugins.getPlugin('rpg-manager').factories.views.showObsidianView(
+				ViewType.Errors,
+				[this.misconfiguredTags],
+			)
+			this.close();
 		});
 	}
 

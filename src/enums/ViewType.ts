@@ -1,20 +1,3 @@
-export enum ViewType{
-	AdventureList,
-	CharacterList,
-	Timeline,
-	SessionList,
-	ClueStatus,
-	Image,
-	Synopsis,
-	ClueRelationshipList,
-	LocationList,
-	EventList,
-	ClueList,
-	CharacterInfo,
-	FactionList,
-	SessionNavigator,
-	SceneList,
-	SceneNavigation,
-	SceneAction,
-	CampaignNavigation,
+export enum ViewType {
+	Errors = 'rpgm-error-view',
 }

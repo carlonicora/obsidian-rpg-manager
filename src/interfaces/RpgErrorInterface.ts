@@ -8,4 +8,10 @@ export interface RpgErrorInterface {
 
 	showErrorMessage(
 	): string;
+
+	showErrorActions(
+	): string
+
+	getErrorLinks(
+	): Array<string>|undefined;
 }

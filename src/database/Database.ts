@@ -4,7 +4,7 @@ import {App, CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
-import {RpgError} from "../errors/RpgError";
+import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
@@ -247,7 +247,7 @@ export class Database extends Component implements DatabaseInterface {
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 
 		} catch (e) {
-			if (e instanceof RpgError) {
+			if (e instanceof AbstractRpgError) {
 				new DatabaseErrorModal(this.app, undefined, e, file).open();
 			} else {
 				throw e;

@@ -1,8 +1,8 @@
-import {RpgError} from "./RpgError";
+import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {DataType} from "../enums/DataType";
 import {TagStatus} from "../enums/TagStatus";
 
-export class TagMisconfiguredError extends RpgError {
+export class TagMisconfiguredError extends AbstractRpgError {
 	public showErrorMessage(
 	): string {
 		let response = 'The tag `' + this.idMap.tag + '` is misconfigured\n' +
@@ -26,6 +26,19 @@ export class TagMisconfiguredError extends RpgError {
 
 		this.idMap.invalidIds?.forEach((status: TagStatus, type: DataType) => {
 			response += ' - {' + DataType[type].toLowerCase() + 'Id} is ' +
+				(status === TagStatus.Missing ? 'missing' : 'not a valid numeric id') + '\n';
+		});
+
+		return response;
+	}
+
+	public showErrorActions(
+	): string {
+		let response = 'The tag `' + this.idMap.tag + '` is invalid.\n' +
+			'The following ids are either missing or invalid:\n';
+
+		this.idMap.invalidIds?.forEach((status: TagStatus, type: DataType) => {
+			response += ' - `{' + DataType[type].toLowerCase() + 'Id}` is ' +
 				(status === TagStatus.Missing ? 'missing' : 'not a valid numeric id') + '\n';
 		});
 

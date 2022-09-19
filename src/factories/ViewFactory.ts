@@ -12,6 +12,9 @@ import {StoryCirclePlotView} from "../views/components/StoryCirclePlotView";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
 import {RawCharacterRecordSheetView} from "../rpgs/Raw/views/RawCharacterRecordSheetView";
+import {ViewType} from "../enums/ViewType";
+import {AbstractView} from "../abstracts/AbstractView";
+import {WorkspaceLeaf} from "obsidian";
 
 const ViewsMap = {
 	AgnosticString: StringView,
@@ -44,5 +47,25 @@ export class ViewFactory extends AbstractFactory {
 			viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type] as SingleViewKey<K>;
 		}
 		return new ViewsMap[viewKey](this.app, sourcePath);
+	}
+
+	public async showObsidianView(
+		viewType: ViewType,
+		params: Array<any> = [],
+	): Promise<void> {
+		this.app.workspace.detachLeavesOfType(viewType.toString());
+
+		await this.app.workspace.getRightLeaf(false).setViewState({
+			type: viewType.toString(),
+			active: true,
+		});
+
+		const leaf: WorkspaceLeaf = this.app.workspace.getLeavesOfType(viewType.toString())[0];
+
+		const view: AbstractView = leaf.view as AbstractView;
+		view.initialise(params);
+		view.render();
+
+		this.app.workspace.revealLeaf(leaf);
 	}
 }

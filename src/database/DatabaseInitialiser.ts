@@ -5,7 +5,7 @@ import {App, CachedMetadata, TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ErrorLog, InfoLog, LogMessageType} from "../helpers/Logger";
 import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
-import {RpgError} from "../errors/RpgError";
+import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {DataType} from "../enums/DataType";
 import {Id} from "./Id";
@@ -40,7 +40,7 @@ export class DatabaseInitialiser {
 					await temporaryDatabase.create(data);
 				}
 			} catch (e) {
-				if (e instanceof RpgError) {
+				if (e instanceof AbstractRpgError) {
 					this.misconfiguredTags.set(markdownFiles[index], e as RpgErrorInterface);
 				} else {
 					throw e;
@@ -173,7 +173,7 @@ export class DatabaseInitialiser {
 					() => {
 						this.database.create(data[index]);
 					}, (e: Error) => {
-						if (e instanceof RpgError) {
+						if (e instanceof AbstractRpgError) {
 							this.misconfiguredTags.set(data[index].file, e as RpgErrorInterface);
 						} else {
 							throw e;

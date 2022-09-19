@@ -2,7 +2,7 @@ import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App} from "obsidian";
 import {Id} from "../database/Id";
 
-export abstract class RpgError extends Error implements RpgErrorInterface {
+export abstract class AbstractRpgError extends Error implements RpgErrorInterface {
 	constructor(
 		protected app: App,
 		public idMap: Id,
@@ -17,4 +17,12 @@ export abstract class RpgError extends Error implements RpgErrorInterface {
 
 	public abstract showErrorMessage(
 	): string;
+
+	public abstract showErrorActions(
+	): string;
+
+	public getErrorLinks(
+	): Array<string>|undefined {
+		return undefined;
+	}
 }
