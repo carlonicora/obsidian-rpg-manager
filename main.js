@@ -2385,7 +2385,18 @@ var SessionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
       yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
-      yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId));
+      yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId, void 0).sort(function(leftData, rightData) {
+        if (leftData.sceneId > rightData.sceneId)
+          return 1;
+        if (leftData.sceneId < rightData.sceneId)
+          return -1;
+        return 0;
+      }));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */));
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(16 /* Character */ | 128 /* Event */));
       return this.response;
     });
   }
