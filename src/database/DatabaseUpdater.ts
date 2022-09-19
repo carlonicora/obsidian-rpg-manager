@@ -3,6 +3,7 @@ import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerI
 import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
+import {ViewType} from "../enums/ViewType";
 
 const VersionMap = {
 	'1.2': V1_2_to_1_3_worker,
@@ -28,23 +29,35 @@ export class DatabaseUpdater {
 	public async update(
 		previousVersion: string,
 		currentVersion: string,
-	): Promise<void> {
+	): Promise<boolean> {
+		let response = false;
+
 		if (previousVersion === '') previousVersion = '1.2';
 
 		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(previousVersion);
 		const currentVersionMajorMinor = this.getMajorMinor(currentVersion);
 
-		if (previousVersionMajorMinor === undefined || currentVersionMajorMinor === undefined) return;
+		if (
+			previousVersionMajorMinor === undefined ||
+			currentVersionMajorMinor === undefined ||
+			previousVersionMajorMinor === currentVersionMajorMinor
+		) return false;
+
 
 		let updater = this.versionsHistory.get(previousVersionMajorMinor);
 		while (updater !== undefined){
+			response = true;
 			const worker: DatabaseUpdateWorkerInterface = await new VersionMap[updater.previousVersion as keyof typeof VersionMap](this.app);
 			worker.run();
 
 			updater = this.versionsHistory.get(updater.nextVersion);
 		}
 
-		//this.rpgManager.updateSettings({previousVersion: currentVersion});
+		//TODO remove
+
+		//await this.rpgManager.updateSettings({previousVersion: currentVersion});
+
+		return response;
 	}
 
 	private getMajorMinor(
