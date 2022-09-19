@@ -21,13 +21,15 @@ import {ReleaseNoteView} from "./views/ReleaseNoteView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
-	 * ## Version 1.3
-	 *
 	 * ## Version 2.0
+	 * 		@TODO Remove date from Act
+	 * 		@TODO Remove irl from Act
 	 * 		@TODO Rename Session to Act
-	 * 		@TODO Rename Notes to Session Notes
 	 * 		@TODO Add Scene Notes
 	 * 		@TODO Tag update based on versioning and Automatic update of settings
+	 * 		@TODO Create new Session
+	 * 		@TODO Add irl to New Session
+	 * 		@TODO Rename Notes to Session Notes
 	 *
 	 * ## Version 2.1
 	 * 		@TODO Add Database Status View
