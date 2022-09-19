@@ -1,5 +1,5 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {ImageResponseInterface} from "../interfaces/response/ImageResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {ImageResponseInterface} from "../../interfaces/response/ImageResponseInterface";
 
 export class ImageView extends AbstractView {
 	public render(

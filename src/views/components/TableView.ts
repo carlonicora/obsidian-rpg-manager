@@ -1,9 +1,9 @@
-import {TableResponseInterface} from "../interfaces/response/TableResponseInterface";
-import {ContentInterface} from "../interfaces/ContentInterface";
-import {AbstractView} from "../abstracts/AbstractView";
-import {DataType} from "../enums/DataType";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {AdventureInterface} from "../interfaces/data/AdventureInterface";
+import {TableResponseInterface} from "../../interfaces/response/TableResponseInterface";
+import {ContentInterface} from "../../interfaces/ContentInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {DataType} from "../../enums/DataType";
+import {SessionInterface} from "../../interfaces/data/SessionInterface";
+import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 
 export class TableView extends AbstractView {
 	public render(

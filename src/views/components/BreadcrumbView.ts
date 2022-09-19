@@ -1,5 +1,5 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {BreadcrumbResponseInterface} from "../interfaces/response/BreadcrumbResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {BreadcrumbResponseInterface} from "../../interfaces/response/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 
 export class BreadcrumbView extends AbstractView {

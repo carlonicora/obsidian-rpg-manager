@@ -1,5 +1,5 @@
-import {StringResponseInterface} from "../interfaces/response/StringResponseInterface";
-import {AbstractView} from "../abstracts/AbstractView";
+import {StringResponseInterface} from "../../interfaces/response/StringResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
 
 export class StringView extends AbstractView {
 	render(

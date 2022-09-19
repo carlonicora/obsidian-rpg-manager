@@ -1,5 +1,5 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {StoryCirclePlotResponseInterface} from "../interfaces/response/StoryCirclePlotResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {StoryCirclePlotResponseInterface} from "../../interfaces/response/StoryCirclePlotResponseInterface";
 
 export class StoryCirclePlotView extends AbstractView {
 	public render(

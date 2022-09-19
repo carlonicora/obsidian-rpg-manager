@@ -1,5 +1,5 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {AbtPlotResponseInterface} from "../interfaces/response/AbtPlotResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {AbtPlotResponseInterface} from "../../interfaces/response/AbtPlotResponseInterface";
 
 export class AbtPlotView extends AbstractView {
 	public render(

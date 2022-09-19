@@ -1,6 +1,6 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {TimelineElementResponseInterface} from "../interfaces/response/TimelineElementResponseInterface";
-import {TimelineResponseInterface} from "../interfaces/response/TimelineResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {TimelineElementResponseInterface} from "../../interfaces/response/TimelineElementResponseInterface";
+import {TimelineResponseInterface} from "../../interfaces/response/TimelineResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 
 export class TimelineView extends AbstractView {

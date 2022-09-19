@@ -381,7 +381,6 @@ var Controller = class extends import_obsidian2.MarkdownRenderChild {
   }
   initialise() {
     const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(this.sourcePath);
-    console.log(currentElement);
     if (currentElement === void 0)
       return;
     this.render = (0, import_obsidian2.debounce)(this.render, 250, true);
@@ -4755,7 +4754,6 @@ var Database = class extends import_obsidian16.Component {
         yield component.loadHierarchy(this);
         yield this.create(component);
         yield this.refreshRelationships();
-        console.log(this.elements);
         this.app.workspace.trigger("rpgmanager:refresh-views");
       } catch (e) {
         if (e instanceof RpgError) {

@@ -19,9 +19,8 @@ import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3
-	 * 		@TODO Fix Bug on New entity creation!!!
-	 * 		@TODO Data structure update based on versioning and Automatic update of settings
 	 * 		@TODO Show error modal in Right View
+	 * 		@TODO Tag update based on versioning and Automatic update of settings
 	 *
 	 * ## Version 2.0
 	 * 		@TODO Rename Session to Act

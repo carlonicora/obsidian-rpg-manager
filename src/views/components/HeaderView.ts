@@ -1,7 +1,7 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {HeaderResponseInterface} from "../interfaces/response/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../interfaces/response/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../enums/HeaderResponseType";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {HeaderResponseInterface} from "../../interfaces/response/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../interfaces/response/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../enums/HeaderResponseType";
 
 export class HeaderView extends AbstractView {
 	render(

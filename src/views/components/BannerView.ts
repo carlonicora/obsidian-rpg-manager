@@ -1,5 +1,5 @@
-import {AbstractView} from "../abstracts/AbstractView";
-import {BannerResponseInterface} from "../interfaces/response/BannerResponseInterface";
+import {AbstractView} from "../../abstracts/AbstractView";
+import {BannerResponseInterface} from "../../interfaces/response/BannerResponseInterface";
 
 export class BannerView extends AbstractView {
 	public render(
