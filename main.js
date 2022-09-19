@@ -50,7 +50,7 @@ __export(main_exports, {
   default: () => RpgManager
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian20 = require("obsidian");
+var import_obsidian22 = require("obsidian");
 
 // src/helpers/Controller.ts
 var import_obsidian2 = require("obsidian");
@@ -76,8 +76,8 @@ var DataType = /* @__PURE__ */ ((DataType2) => {
   return DataType2;
 })(DataType || {});
 
-// src/errors/RpgError.ts
-var RpgError = class extends Error {
+// src/abstracts/AbstractRpgError.ts
+var AbstractRpgError = class extends Error {
   constructor(app2, idMap) {
     super();
     this.app = app2;
@@ -86,10 +86,13 @@ var RpgError = class extends Error {
   getErrorTitle() {
     return void 0;
   }
+  getErrorLinks() {
+    return void 0;
+  }
 };
 
 // src/errors/TagMisconfiguredError.ts
-var TagMisconfiguredError = class extends RpgError {
+var TagMisconfiguredError = class extends AbstractRpgError {
   showErrorMessage() {
     var _a, _b;
     let response = "The tag `" + this.idMap.tag + "` is misconfigured\nThe correct tag should be ";
@@ -111,13 +114,24 @@ var TagMisconfiguredError = class extends RpgError {
     });
     return response;
   }
+  showErrorActions() {
+    var _a;
+    let response = "The tag `" + this.idMap.tag + "` is invalid.\nThe following ids are either missing or invalid:\n";
+    (_a = this.idMap.invalidIds) == null ? void 0 : _a.forEach((status, type) => {
+      response += " - `{" + DataType[type].toLowerCase() + "Id}` is " + (status === 2 /* Missing */ ? "missing" : "not a valid numeric id") + "\n";
+    });
+    return response;
+  }
 };
 
 // src/errors/MultipleRpgManagerTagsError.ts
-var MultipleRpgManagerTagsError = class extends RpgError {
+var MultipleRpgManagerTagsError = class extends AbstractRpgError {
   showErrorMessage() {
     let response = "The file contains more than one RPG Manager identifier tags.\nOnly one RPG Manager Tag can be present in one file.";
     return response;
+  }
+  showErrorActions() {
+    return this.showErrorMessage();
   }
 };
 
@@ -293,14 +307,14 @@ var AbstractRecord = class {
 };
 
 // src/errors/ElementDuplicatedError.ts
-var ElementDuplicatedError = class extends RpgError {
+var ElementDuplicatedError = class extends AbstractRpgError {
   constructor(app2, idMap, duplication, duplicated = void 0) {
     super(app2, idMap);
     this.duplication = duplication;
     this.duplicated = duplicated;
   }
   getErrorTitle() {
-    return "More than one element with the same id exists in the database";
+    return "Duplicated outline id";
   }
   showErrorMessage() {
     var _a;
@@ -311,6 +325,23 @@ var ElementDuplicatedError = class extends RpgError {
       });
     } else if (this.duplicated !== void 0) {
       response += " - " + this.duplication[0].basename + "\n - " + ((_a = this.duplicated) == null ? void 0 : _a.basename) + "\n";
+    }
+    return response;
+  }
+  showErrorActions() {
+    let response = "Two or more outlines have the same tag. The identifier of the outline must be unique\nPlease change one of the following:\n";
+    return response;
+  }
+  getErrorLinks() {
+    var _a;
+    const response = [];
+    if (this.duplication.length > 1) {
+      this.duplication.forEach((record) => {
+        response.push(record.path);
+      });
+    } else if (this.duplicated !== void 0) {
+      response.push(this.duplication[0].path);
+      response.push((_a = this.duplicated) == null ? void 0 : _a.path);
     }
     return response;
   }
@@ -3617,8 +3648,8 @@ var TemplateFactory = class extends AbstractFactory {
   }
 };
 
-// src/abstracts/AbstractView.ts
-var AbstractView = class {
+// src/abstracts/AbstractComponentView.ts
+var AbstractComponentView = class {
   constructor(app2, sourcePath) {
     this.app = app2;
     this.sourcePath = sourcePath;
@@ -3626,7 +3657,7 @@ var AbstractView = class {
 };
 
 // src/views/components/StringView.ts
-var StringView = class extends AbstractView {
+var StringView = class extends AbstractComponentView {
   render(container, data) {
     const divContainer = container.createDiv();
     data.content.fillContent(divContainer, this.sourcePath);
@@ -3634,7 +3665,7 @@ var StringView = class extends AbstractView {
 };
 
 // src/views/components/TableView.ts
-var TableView = class extends AbstractView {
+var TableView = class extends AbstractComponentView {
   render(container, data) {
     const divContainer = container.createDiv();
     if (data.title != null) {
@@ -3700,7 +3731,7 @@ var TableView = class extends AbstractView {
 };
 
 // src/views/components/BannerView.ts
-var BannerView = class extends AbstractView {
+var BannerView = class extends AbstractComponentView {
   render(container, data) {
     if (data.image !== null) {
       const bannerContainer = container.createDiv({ cls: "rpg-container" });
@@ -3718,7 +3749,7 @@ var BannerView = class extends AbstractView {
 
 // src/views/components/BoxView.ts
 var import_obsidian9 = require("obsidian");
-var BoxView = class extends AbstractView {
+var BoxView = class extends AbstractComponentView {
   render(container, data) {
     const boxDiv = container.createDiv();
     boxDiv.addClass("rpgm-box");
@@ -3732,7 +3763,7 @@ var BoxView = class extends AbstractView {
 
 // src/views/components/BreadcrumbView.ts
 var import_obsidian10 = require("obsidian");
-var BreadcrumbView = class extends AbstractView {
+var BreadcrumbView = class extends AbstractComponentView {
   render(container, data) {
     const breadcrumbContainer = container.createDiv({ cls: "rpgm-breadcrumb" });
     breadcrumbContainer.createEl("h2").textContent = data.mainTitle;
@@ -3786,7 +3817,7 @@ var BreadcrumbView = class extends AbstractView {
 
 // src/views/components/TimelineView.ts
 var import_obsidian11 = require("obsidian");
-var TimelineView = class extends AbstractView {
+var TimelineView = class extends AbstractComponentView {
   render(container, data) {
     const timeline = container.createDiv({ cls: "rpgm-timeline" });
     const ul = timeline.createEl("ul");
@@ -3824,7 +3855,7 @@ var TimelineView = class extends AbstractView {
 };
 
 // src/views/components/ImageView.ts
-var ImageView = class extends AbstractView {
+var ImageView = class extends AbstractComponentView {
   render(container, data) {
     if (data.imgSrc != null) {
       const divContainer = container.createDiv();
@@ -3837,7 +3868,7 @@ var ImageView = class extends AbstractView {
 };
 
 // src/views/components/HeaderView.ts
-var HeaderView = class extends AbstractView {
+var HeaderView = class extends AbstractComponentView {
   render(container, data) {
     const crs = container.createDiv({ cls: "rpgm-header-info" });
     const crsTitle = crs.createDiv({ cls: "title" });
@@ -3876,7 +3907,7 @@ var HeaderView = class extends AbstractView {
 };
 
 // src/views/components/AbtPlotView.ts
-var AbtPlotView = class extends AbstractView {
+var AbtPlotView = class extends AbstractComponentView {
   render(container, data) {
     const titleEl = container.createEl("h2");
     titleEl.textContent = "ABT Plot";
@@ -3893,7 +3924,7 @@ var AbtPlotView = class extends AbstractView {
 };
 
 // src/views/components/StoryCirclePlotView.ts
-var StoryCirclePlotView = class extends AbstractView {
+var StoryCirclePlotView = class extends AbstractComponentView {
   render(container, data) {
     const titleEl = container.createEl("h2");
     titleEl.textContent = "Story Circle Plot";
@@ -4044,7 +4075,7 @@ var RawUpdateRollerModal = class extends import_obsidian13.Modal {
 };
 
 // src/rpgs/Raw/views/RawCharacterRecordSheetView.ts
-var RawCharacterRecordSheetView = class extends AbstractView {
+var RawCharacterRecordSheetView = class extends AbstractComponentView {
   render(container, data) {
     let maxAbilities = data.body.abilities.length;
     if (data.mind.abilities.length > maxAbilities)
@@ -4211,6 +4242,20 @@ var ViewFactory = class extends AbstractFactory {
     }
     return new ViewsMap[viewKey](this.app, sourcePath);
   }
+  showObsidianView(_0) {
+    return __async(this, arguments, function* (viewType, params = []) {
+      this.app.workspace.detachLeavesOfType(viewType.toString());
+      yield this.app.workspace.getRightLeaf(false).setViewState({
+        type: viewType.toString(),
+        active: true
+      });
+      const leaf = this.app.workspace.getLeavesOfType(viewType.toString())[0];
+      const view = leaf.view;
+      view.initialise(params);
+      view.render();
+      this.app.workspace.revealLeaf(leaf);
+    });
+  }
 };
 
 // src/factories/FetcherFactory.ts
@@ -4376,13 +4421,20 @@ var DatabaseErrorModal = class extends import_obsidian15.Modal {
       this.misconfiguredTags = /* @__PURE__ */ new Map();
       this.misconfiguredTags.set(this.singleErrorFile, this.singleError);
     }
+    if (this.misconfiguredTags === void 0)
+      this.misconfiguredTags = /* @__PURE__ */ new Map();
     contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
     contentEl.createEl("p", { text: "Please double check the errors and correct them." });
-    (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, file) => {
+    this.misconfiguredTags.forEach((error, file) => {
       var _a;
       const errorEl = contentEl.createEl("div");
       const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
       import_obsidian15.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), errorEl, file.path, null);
+    });
+    const viewErrorsButtonEl = contentEl.createEl("button", { text: "Fix errors" });
+    viewErrorsButtonEl.addEventListener("click", () => {
+      this.app.plugins.getPlugin("rpg-manager").factories.views.showObsidianView("rpgm-error-view" /* Errors */, [this.misconfiguredTags]);
+      this.close();
     });
   }
   onClose() {
@@ -4393,7 +4445,7 @@ var DatabaseErrorModal = class extends import_obsidian15.Modal {
 };
 
 // src/errors/ElementNotFoundError.ts
-var ElementNotFoundError = class extends RpgError {
+var ElementNotFoundError = class extends AbstractRpgError {
   showErrorMessage() {
     var _a;
     const response = "The tag `" + this.idMap.tag + "` refers to an outline that does not exist.\n";
@@ -4402,6 +4454,14 @@ var ElementNotFoundError = class extends RpgError {
       check += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
     });
     return response + check;
+  }
+  showErrorActions() {
+    var _a;
+    let response = "The tag `" + this.idMap.tag + "` refers to a non-existing outline.\nThe following ids might be either missing or invalid:\n";
+    (_a = this.idMap.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
+      response += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
+    });
+    return response;
   }
 };
 
@@ -4483,7 +4543,7 @@ var DatabaseInitialiser = class {
             yield temporaryDatabase.create(data);
           }
         } catch (e) {
-          if (e instanceof RpgError) {
+          if (e instanceof AbstractRpgError) {
             this.misconfiguredTags.set(markdownFiles[index], e);
           } else {
             throw e;
@@ -4565,7 +4625,7 @@ var DatabaseInitialiser = class {
         yield data[index].loadHierarchy(this.database).then(() => {
           this.database.create(data[index]);
         }, (e) => {
-          if (e instanceof RpgError) {
+          if (e instanceof AbstractRpgError) {
             this.misconfiguredTags.set(data[index].file, e);
           } else {
             throw e;
@@ -4750,7 +4810,7 @@ var Database = class extends import_obsidian16.Component {
         yield this.refreshRelationships();
         this.app.workspace.trigger("rpgmanager:refresh-views");
       } catch (e) {
-        if (e instanceof RpgError) {
+        if (e instanceof AbstractRpgError) {
           new DatabaseErrorModal(this.app, void 0, e, file).open();
         } else {
           throw e;
@@ -5635,8 +5695,100 @@ var RpgManagerSettings = class extends import_obsidian19.PluginSettingTab {
   }
 };
 
+// src/views/ErrorView.ts
+var import_obsidian21 = require("obsidian");
+
+// src/abstracts/AbstractView.ts
+var import_obsidian20 = require("obsidian");
+var AbstractView = class extends import_obsidian20.ItemView {
+  constructor(leaf) {
+    super(leaf);
+  }
+  getViewType() {
+    return this.viewType;
+  }
+  getDisplayText() {
+    return this.displayText;
+  }
+  onOpen() {
+    return __async(this, null, function* () {
+      const container = this.containerEl.children[1];
+      container.empty();
+      container.createEl("h2", { text: this.displayText });
+    });
+  }
+  onClose() {
+    return __async(this, null, function* () {
+    });
+  }
+};
+
+// src/views/ErrorView.ts
+var ErrorView = class extends AbstractView {
+  constructor() {
+    super(...arguments);
+    this.viewType = "rpgm-error-view" /* Errors */.toString();
+    this.displayText = "RPG Manager Errors";
+    this.icon = "d20";
+    this.errors = /* @__PURE__ */ new Map();
+  }
+  initialise(params) {
+    this.errors = params[0];
+  }
+  render() {
+    return __async(this, null, function* () {
+      if (this.errors !== void 0 && this.errors.size > 0) {
+        this.errors.forEach((error, file) => {
+          const errorEl = this.contentEl.createEl("div");
+          const errorTitle = error.getErrorTitle();
+          let title;
+          if (errorTitle !== void 0) {
+            title = errorEl.createEl("span");
+            title.textContent = errorTitle;
+          } else {
+            title = errorEl.createEl("a");
+            this.addLink(title, file.path);
+          }
+          title.style.fontWeight = "bold";
+          const errorDescriptionEl = errorEl.createEl("div");
+          import_obsidian21.MarkdownRenderer.renderMarkdown(error.showErrorActions(), errorDescriptionEl, file.path, null);
+          const errorLinks = error.getErrorLinks();
+          if (errorLinks !== void 0) {
+            const errorLinksEl = errorDescriptionEl.createEl("ul");
+            errorLinks.forEach((path) => {
+              const errorLinkEl = errorLinksEl.createEl("li");
+              const errorLinkAnchor = errorLinkEl.createEl("a");
+              this.addLink(errorLinkAnchor, path);
+            });
+          }
+        });
+      }
+      const closeButtonEl = this.contentEl.createEl("button", { text: "Close" });
+      closeButtonEl.addEventListener("click", () => {
+        this.app.workspace.detachLeavesOfType("rpgm-error-view" /* Errors */.toString());
+      });
+    });
+  }
+  addLink(contentEl, linkOrFile) {
+    let file;
+    if (linkOrFile instanceof import_obsidian21.TFile) {
+      file = linkOrFile;
+      linkOrFile = file.basename;
+    } else {
+      file = this.app.vault.getAbstractFileByPath(linkOrFile);
+    }
+    if (file != null) {
+      contentEl.textContent = file.basename;
+      contentEl.style.textDecoration = "underlined";
+      contentEl.addEventListener("click", () => {
+        this.app.workspace.getLeaf(false).openFile(file);
+      });
+    }
+  }
+};
+
 // src/main.ts
-var RpgManager = class extends import_obsidian20.Plugin {
+var RpgManager = class extends import_obsidian22.Plugin {
   constructor() {
     super(...arguments);
     this.ready = false;
@@ -5646,8 +5798,9 @@ var RpgManager = class extends import_obsidian20.Plugin {
       console.log("Loading RpgManager " + this.manifest.version);
       yield Logger.initialise(this.manifest.version, 4 /* Error */ | 2 /* Warning */);
       yield this.loadSettings();
-      yield (0, import_obsidian20.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
       this.addSettingTab(new RpgManagerSettings(this.app));
+      yield (0, import_obsidian22.addIcon)("d20", '<g cx="50" cy="50" r="50" fill="currentColor" g transform="translate(0.000000,0.000000) scale(0.018)" stroke="none"><path d="M1940 4358 l-612 -753 616 -3 c339 -1 893 -1 1232 0 l616 3 -612 753 c-337 413 -616 752 -620 752 -4 0 -283 -339 -620 -752z"/><path d="M1180 4389 c-399 -231 -731 -424 -739 -428 -9 -6 3 -17 40 -38 30 -17 152 -87 271 -156 l217 -126 476 585 c261 321 471 584 467 583 -4 0 -333 -189 -732 -420z"/><path d="M3676 4225 c457 -562 477 -585 498 -572 11 8 133 78 269 157 l249 143 -29 17 c-62 39 -1453 840 -1458 840 -2 0 210 -263 471 -585z"/><path d="M281 2833 c0 -472 4 -849 8 -838 24 58 520 1362 523 1373 3 12 -168 116 -474 291 l-58 32 1 -858z"/><path d="M4571 3536 c-145 -84 -264 -156 -264 -160 -1 -4 118 -320 263 -701 l265 -694 3 430 c1 237 1 621 0 854 l-3 424 -264 -153z"/><path d="M1272 3290 c7 -20 1283 -2229 1288 -2229 5 0 1281 2209 1288 2229 2 7 -451 10 -1288 10 -837 0 -1290 -3 -1288 -10z"/><path d="M1025 3079 c-2 -8 -158 -416 -345 -906 -187 -491 -340 -897 -340 -903 0 -5 4 -10 8 -10 5 0 415 -65 913 -145 497 -80 928 -149 957 -154 l52 -8 -23 41 c-85 150 -1202 2083 -1208 2090 -5 6 -10 3 -14 -5z"/><path d="M3470 2028 c-337 -585 -614 -1066 -616 -1069 -2 -3 7 -4 19 -2 12 2 445 71 962 154 517 82 941 152 943 154 3 2 -1 19 -7 37 -33 93 -675 1774 -681 1781 -4 4 -283 -471 -620 -1055z"/><path d="M955 842 c17 -11 336 -196 710 -412 374 -216 695 -401 713 -412 l32 -20 0 314 0 314 -707 113 c-390 62 -724 115 -743 118 l-35 5 30 -20z"/><path d="M3428 741 l-718 -116 0 -313 0 -314 33 20 c17 11 347 201 732 422 385 222 704 407 710 412 16 14 -22 8 -757 -111z"/></g>');
+      this.registerView("rpgm-error-view" /* Errors */.toString(), (leaf) => new ErrorView(leaf));
       app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     });
   }
@@ -5669,6 +5822,7 @@ var RpgManager = class extends import_obsidian20.Plugin {
   onunload() {
     return __async(this, null, function* () {
       __superGet(RpgManager.prototype, this, "onunload").call(this);
+      this.app.workspace.detachLeavesOfType("rpgm-error-view" /* Errors */.toString());
       this.app.workspace.off("resolved", this.refreshViews);
       this.app.workspace.off("modify", this.refreshViews);
     });
