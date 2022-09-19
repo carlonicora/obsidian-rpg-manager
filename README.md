@@ -1,216 +1,195 @@
 # Role Playing Game Manager Obsidian Plugin 
 
 Obsidian Role Playing Game Manager is an Obsidian plugin that helps you plot and manage your tabletop role playing game 
-campaigns.
+campaigns. The plugin revolves around three main points:Plots, Elements and in-game organisation (_coming in 
+version 2_).
 
-The plugin works well in conjunction with a
-[structured plotting style](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
+RPG Manager helps you creating the plot of a campaign, organising and referencing elements where they are used.
 
-The plugin collects data and Frontmatter metadata from the notes and organise them into easy-to access references in
-form of tables and links.
+_Do you have a non-player character that is involved in a scene? The relationship will be automatically presented in an 
+easy-to-reach table which will allow you to works smart_.
 
-### Update notes
+The **goal** of RPG Manager is to lower the time needed to write a plot and to increase the quality of the sessions you 
+run for your players.
 
-#### version 1.2 (2022-09-12)
+> If you are new to RPG Manager, I would suggest you to skim through the [data structure](#data-structure) and their 
+> [hierarchy](#hierarchy-of-plots) and to read more about the various [plots and elements](#plots-and-elements) RPG 
+> Manager supports. Once you know these, using this plugin will be a breeze.
 
-`Music` element added.
+Creating a new plot or element is as easy as opening the Obsidian Commands and look for the RPG Manager options to 
+create a new element or add the frontmatter and codeblocks to an existing note.
 
-#### version 1.1 (2022-09-12)
-
-Templating added. Please refer to the [templating](#templates) section in this document.
-
-#### version 1.0 (2022-09-10)
-
-From version `1.0` RPG Manager does not require the Dataview plugin any longer
+## Table of Contents
+1. **[Data Structure](#data-structure)**
+2. **[Hierarchy of Plots](#hierarchy-of-plots)**
+3. **[Creating new Plots and Elements](#creating-new-plots-and-elements)**
+4. **[Relationships between elements](#relationships-between-elements)**
+5. **[Frontmatter keys](#frontmatter-keys)**
+6. **[Tutorials and help](#tutorials-and-help)**
+7. **[Templates](#templates)**
+8. **[Change Log](#change-log)**
+9. **[Contributing to RPG Manager](#contributing)**
 
 ## Data Structure
 
-The plugin organises the notes in `Outlines` and `Elements`. Each of them has a structure that helps writing and keeping
-track of a campaign. The structure is as follow:
+The plugin organises the Obsidian notes in `Plots` and `Elements`. Each of them has a structure that helps writing and 
+keeping track of campaigns. The structure is as follow:
 
-- Campaign (_Outline_)
-  - Adventures (_Outline_)
-    - Sessions (_Outline_)
-      - Scenes (_Outline_)
-  - Player Characters (_Element_)
-  - Non Player Characters (_Element_)
-  - Events (_Element_)
-  - Clues (_Element_)
-  - Factions (_Element_)
-  - Locations (_Element_)
-  - Timelines (_Element_)
-  - Notes (_Element_)
-  - Music (_Element_)
+**Plots**
+- Campaign
+  - Adventures
+    - Sessions (_WARNING: this will be renamed to `Acts` in v2_)
+      - Scenes
 
-## TL;DR
+| Plot              | Description                                                                |
+|-------------------|----------------------------------------------------------------------------|
+| **Campaign**      | The overarching plot of the story                                          |
+| **Adventure**     | A self contained story arc focusing on the player characters               |
+| **Session (Act)** | The part of the story that is centred on a specific moment of an adventure |
+| **Scene**         | A short encounter, or a location, that the player characters plays         |
 
-1. Use the `Rpg Manager` **commands** to create a new outline or element or to fill an existing note with the correct 
-frontmatter and codeblocks.
-2. Add the information in the Frontmatter metadata 
-3. See everything linking together 
-4. Navigate your campaign easily
-5. **Send feedback**
+Every element MUST refer to a campaign they belong to
 
+| Element                  | Descripton                                                     |
+|--------------------------|----------------------------------------------------------------|
+| **Player Character**     | A character of a player                                        |
+| **Non Player Character** | A character managed by the storyteller                         |
+| **Event**                | An event which happened without the player characters          |
+| **Clue**                 | An item that can provide information to the player characters  |
+| **Faction**              | A group of characters                                          |
+| **Location**             | A place in your world                                          |
+| **Music**                | A specific song or playlist to associate to scenes             |
+
+### How a plot or an element is identified by RPG Manager
+
+RPG Manager uses tags to uniquely identify a plot or to relate an element to a campaign. When using the Obsidian Command
+tool to create new plots and elements, RPG Manager will take care of automatically create these tags for you.
+
+**Be aware of editing these tags**: they contain numeric identifiers which allow RPG Manager to work.
+
+## Hierarchy of Plots
+
+RPG Manager follows a structured approach to plotting.
+
+Each **campaign** have many adventures; every **adventure** is composed by three or four acts and evey **act** can contain multiple 
+**scenes**.
+
+### A note about plotting
+
+RPG Manager was built with two plotting techniques in mind: 
+[ABT](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md#abt) and 
+[Story Circle](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md#abt). These two plotting styles are
+very similar and I found them to be very effective to write consistent plots. They are, though, not required from the 
+plugin. You can use the style you like.
+
+## Creating new plots and elements
+
+To create new plots and elements, you just need to open the Obsidian Command pane and search for the RPG Manager 
+options. For each type of plot or element you will find two options:
+- Create
+- Fill
+
+When you **create** a new plot or element, RPG Manager will create a new obsidian note. If you **fill** a pre-existing 
+note, RPG Manager will add required information to the currently open note.
+
+In either cases, a guided form will help you creating your new plot or element and will fill all the relevant 
+frontmatter information and codeblocks.
+
+## Relationships between elements
+
+RPG Manager uses markdown links to create relationships between plots and elements. It knows the type of any specific 
+plot and element and presents them in easy-to read tables. If you want to specify the description of a relationship,
+you can add the markdown link in the frontmatter of a note followed by the description in the following way:
+
+```
+---
+[[link to a plot or an element]]: "Description" 
+---
+```
+
+## Frontmatter keys
+
+RPG Manager uses a series of frontmatter keys in each plot or element. Every key is **optional**.
+
+Each dates (excluding the `in real-life` ones) refers to the in-game calendar inside the campaign. Supported dates are 
+only  valid Gregorian calendar dates. The `in-real-life` dates and times refers to real-life dates. 
+
+| Key           | Used in                                    | Description                                                                                                                                |
+|---------------|--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| synopsis      | every plot and element                     | The short description of a plot or element                                                                                                 |
+| image         | every plot and element                     | A URL to an image to be used as thubnail for the plot or element                                                                           |
+| settings      | `campaign`                                 | The type of role playing game setting to use. RPG Manager is setting-agnostic, but settings for Vampire The Masquerade are in the pipeline |
+| dates.current | `campaign`                                 | The date the player characters are playing in your campaign.                                                                               |
+| dates.session | `session`                                  | The date the player characters are or have played.                                                                                         |
+| dates.irl     | `session`                                  | The real-life date in which the session has been played                                                                                    |
+| times.start   | `scene`                                    | The real-life date and time (in YYYY-MM-DD`T`HH:MM format) in which a scene started                                                        |
+| times.end     | `scene`                                    | The real-lide date and time (in YYYY-MM-DD`T`HH:MM format) in which a scene ended                                                          |
+| pronoun       | `player character`, `non player character` | The pronoun of the character. It accepts `t` (_them/they_), `s` (_she/her?) or `h` (_he/him_)                                              |
+| dates.dob     | `player character`, `non player character` | The date of birth of the character.                                                                                                        |
+| dates.death   | `player character`, `non player character` | The date of death of the character.                                                                                                        |
+| goals         | `non player character`                     | The goals of a non player character                                                                                                        |
+| dates.found   | `clue`                                     | The date in which a clue/information has been found by the player character.                                                               |
+| dates.event   | `event`                                    | The date in which an event took place                                                                                                      |
+| address       | `location`                                 | The address of a location                                                                                                                  |
+| url           | `music`                                    | The link to the song or playlist.                                                                                                          |
+
+### A note on images
+
+If you add an image with the same name of a plot or element, this will be used as the note image.
 
 ## Tutorials and Help
 
 - [Watch a tutorial on how to use RPG Manager](https://youtu.be/NLvzfOWI4aE)
 - [Watch an example of world building and campaign creation](https://youtu.be/die8QGKtk5A)
 
-## Plotting Logic
 
-The plotting style used in this plugin is based on a series of `outlines` and  `elements` that helps the creation of a 
-storyline.
+## Templates
 
-A plot is the blueprint of how the story should go, but it is never written in stone, as the actions of the player 
-characters define the resulting story.
-
-This style is _setting agnostic_, which means that can be used with any tabletop role playing game, and _rules light_,
-which means that it does not (yet) extend into stats or dice rolling. It is a tool to plot stories.
-
-### Outlines
-
-Outlines are the plots of a Campaign, Adventure, Session or Scene. You can read more 
-[here](https://github.com/carlonicora/RAW/blob/master/StorytellingGuide.md).
-
-| Element                  | Codeblocks                          | Description                                                                       |
-|--------------------------|-------------------------------------|-----------------------------------------------------------------------------------|
-| **Campaign**             | `campaign` + `campaignNavigation`   | The overarching story plot for a series of `Adventures`                           |
-| **Adventure**            | `adventure` + `adventureNavigation` | A single, self contain storyarc divided in `Sessions`                             |
-| **Session**              | `session` + `sessionNavigation`     | A single session of a role playing game containing a series of `Scenes`           |
-| **Scene**                | `scene` + `sceneNavigation`         | A part of a `Session` in which the player characters are expected to do something |
-
-### Elements
-
-Elements are other information related to the campaign, which are not in a plot (Player Characters, Non Player 
-Characters, Factions, Locations, Events, Clues)
-
-| Element                  | Codeblock  | Description                                                                                                                                                                                                           |
-|--------------------------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Player Character**     | `pc`       | The record sheet of a player character                                                                                                                                                                                |
-| **Non Player Character** | `npc`      | The record sheet of a non-playing character                                                                                                                                                                           |
-| **Faction**              | `faction`  | A group of player and non-player characters                                                                                                                                                                           |
-| **Location**             | `location` | A physical location in the game                                                                                                                                                                                       |
-| **Event**                | `event`    | Something that happened in the game. This is something that happened **without the player characters** and it is used to give more details to the storyteller and to simplify the creation of investigative campaigns |
-| **Clue**                 | `clue`     | An object or a detail the player character can encounter in the game that will help them understand something and advance the game                                                                                    |
-| **Note**                 | `note`     | A note, usually associated to a `Session`, that helps the storyteller to keep track of the player characters' decisions                                                                                               |
-| **Timeline**             | `timeline` | A list of elements organised by dates (_if you use dates in your campaign_)                                                                                                                                           |
-| **Music**                | `music`    | A link to an online song or playlist                                                                                                                                                                                  |
-
-## Usage
-
-### Frontmatter Metadata
-
-A complete readme on the required structure of the Frontmatter metadata is available [here](frontmatter.md).
-
-### Frontmatter Examples
-
-For more examples of the Frontmatter metadata to be used in each [element](#elements), please refer to the 
-[Frontmatter Metadata Documentation](frontmatter.md).
-
-### RpgManager Codeblock
-
-RpgManager uses codeblocks to parse information. You can add one or more codeblocks in a page to display the relevant 
-information.
-
-Example of a session codeblock
-```
-```RpgManager
-session
-```
-
-### RpgManager Available Codeblock Functions
-
-RpgManager supports the creation of different views. These views are associated to the page element, and they feed from 
-the Frontmatter metadata in the page. The available functions are:
-
-| Function              | Description                                                                                                                                    |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `campaignNavigation`  | Displays the banner of the campaign                                                                                                            |
-| `campaign`            | Lists the adventures, sessions and characters for the campaign                                                                                 |
-| `adventureNavigation` | Displays the breadcrumb and the header                                                                                                         |
-| `adventure`           | Lists the adventure sessions                                                                                                                   |
-| `sessionNavigation`   | Displays the session navigator                                                                                                                 |
-| `session`             | Lists the session scenes                                                                                                                       |
-| `sessionNavigation`   | Displays the breadcrumb and the header                                                                                                         |
-| `sceneNavigation`     | Displays the breadcrumb and the header                                                                                                         |
-| `scene`               | Displays the scene navigator and lists the characters, locations and clues for the scene                                                       |
-| `npc`                 | Displays the non player character information and lists the list of factions, characters, events, clues and locations related to the character |
-| `pc`                  | Displays the player character information and lists the list of factions, characters and locations related to the character                    |
-| `clue`                | Displays the clue information and lists the characters, locations and events related to the clue                                               |
-| `event`               | Displays the event information and lists the characters, clues and locations related to the event                                              |
-| `location`            | Displays the location information and lists the characters, clues and events related to the location                                           |
-| `faction`             | Displays the faction information and lists the characters and locations related to the faction                                                 |
-| `timeline`            | Displays a timeline of every event, session and character date in the campaign                                                                 |
-| `notes`               | Currently does not display any specific type of information                                                                                    |
-| `music`               | Displays the header of the song or playlist                                                                                                    |
-
-example
-```
-```RpgManager
-campaign
-```
-
-### Images
-
-Rpg Manager automatically includes images in the `Attachment` folder. To display an image in an element, the image must 
-have the same name of the note. Supported files extensions are `.jpg`, `.jpeg`, `.png` and `.webp`. 
-
-### Templates
-
-Rpg Manager comes with the ability to create outline and elements thrugh Obsidian Commands (`Create a new...` and 
-`Fill with...`). The created outlines and elements contains the correct frontmatter and codeblocs, but users can decide 
-to add a template to their outline and elements. There are three types of templates available:
-- Internal Templates
-- Custom Templates
-  - Outline-specific and Element-specific custom templates
-  - Generic custom templates
-
-#### Internal templates
-
-These templates are hard-coded and always available.
-
-#### Custom Templates
+RPG Manager comes with the ability to create plots and elements with specific templates. The plugin comes with some 
+intermal templates, but you can specify your own templates when you create a new plot or element.
 
 To use custom templates, please open RPG Manager Settings in Obsidian and specify the folder where your templates 
-reside.
+reside. Your templates can contain both frontmatter and content. Please note, the frontmatter MUST be a valid 
+frontmatter for the template to work. The frontmatter in the template will be merged with the frontmatter generated by 
+RPG Manager, while the content of the template will be placed between or after the RPG Manager codeblocks.
 
-In the template folder you specified, just add new notes with your templates. The templates can contain both 
-frontmatter and content. Please note, the frontmatter MUST be a valid frontmatter for the template to work. The 
-frontmatter in the template will be merged with the frontmatter generated by RPG Manager, while the content of the 
-template will be placed between or after the RPG Manager codeblocks.
+## Change Log
 
-##### Outline-specific and Element-specific custom templates
+### Version 1.2: Relationships Update
+_2022-09-19_
 
-To create a template that works only with a specific type of RPG Manager outline or element, you just need to add one tag in your template. The tag is:
+- Relationships updated
+- New `image` frontmatter element added
 
-```yaml
-rpgm/template/{type}
-```
+**Relationships**
+Version 1.2 updated the way RPG Manager handles relationships between elements. All the links in a note are now automatically read as a relationships between elements.
+If you want to specify a description in the relationship, you can add the link in the frontmatter.
+In the frontmatter, the old structure has been replaced with a simple list of links with their description. Each link can be written as a markdown link, without the need to remove the brackets any longer.
 
-Where the `type` identifies the type of outline or element.
+`---`
+`[[Link to another element]]: "Relationship details"`
+`---`
 
-| Outline or Element Type | tag                                |
-|-------------------------|------------------------------------|
-| Campaign                | `rpgm/template/campaign`           |
-| Adventure               | `rpgm/template/adventure`          |
-| Session                 | `rpgm/template/session`            |
-| Scene                   | `rpgm/template/scene`              |
-| Player Character        | `rpgm/template/character`          |
-| Non Player character    | `rpgm/template/nonplayercharacter` |
-| Clue                    | `rpgm/template/clue`               |
-| Event                   | `rpgm/template/event`              |
-| Faction                 | `rpgm/template/faction`            |
-| Location                | `rpgm/template/location`           |
-| Note                    | `rpgm/template/note`               |
-| Timeline                | `rpgm/template/timeline`           |
-| Music                   | `rpgm/template/music`              |
+The frontmatters have been automatically upgraded in all your notes to reflect this change.
 
-##### Generic custom templates
+**New image frontmatter element**
+A new frontmatter element (`image`) has been added to the frontmatter. it accepts a valid url to an image, and instead of using a local image, RPG Manager will show the image of the `image` frontmatter.
+If a local image exists in the vault, that will be used and the `image` frontmatter will be ignored.
 
-Generic templates are templates that can be used with every type of RPG Manager outlines and elements. To make a 
-template generic, do NOT add the outline-specific or element-specific template tag as described 
-[above](#outline-specific-and-element-specific-custom-templates) 
+### version 1.2
+_2022-09-12_
+
+`Music` element added.
+
+### version 1.1
+_2022-09-12_
+
+Templating added. Please refer to the [templating](#templates) section in this document.
+
+### version 1.0
+_2022-09-10_
+
+From version `1.0` RPG Manager does not require the Dataview plugin any longer
 
 ## Contributing
 

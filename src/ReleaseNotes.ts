@@ -1,6 +1,6 @@
 export const releaseNotes = `
 ### Version 1.2: Relationships Update
-_19.09.2020_
+_2022-09-19_
 
 - Relationships updated
 - New \`image\` frontmatter element added
