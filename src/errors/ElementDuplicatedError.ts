@@ -1,12 +1,12 @@
 import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App} from "obsidian";
-import {Id} from "../database/Id";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
 export class ElementDuplicatedError extends AbstractRpgError {
 	constructor(
 		app: App,
-		idMap: Id,
+		idMap: IdInterface,
 		private duplication: Array<RecordInterface>,
 		private duplicated: RecordInterface|undefined=undefined,
 	) {
@@ -20,7 +20,7 @@ export class ElementDuplicatedError extends AbstractRpgError {
 
 	public showErrorMessage(
 	): string {
-		let response = this.idMap.tag + '\n';
+		let response = this.id.tag + '\n';
 
 		if (this.duplication.length > 1) {
 			this.duplication.forEach((record: RecordInterface) => {
@@ -36,7 +36,7 @@ export class ElementDuplicatedError extends AbstractRpgError {
 
 	public showErrorActions(
 	): string {
-		let response = 'Two or more outlines have the same tag. The identifier of the outline must be unique\nPlease change one of the following:\n';
+		const response = 'Two or more outlines have the same tag. The identifier of the outline must be unique\nPlease change one of the following:\n';
 
 		return response;
 	}

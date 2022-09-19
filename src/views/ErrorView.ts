@@ -1,13 +1,12 @@
-import {Component, MarkdownRenderer, MarkdownView, TAbstractFile, TFile, WorkspaceLeaf} from "obsidian";
+import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {AbstractView} from "../abstracts/AbstractView";
 import {ViewType} from "../enums/ViewType";
-import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 
 export class ErrorView extends AbstractView {
 	protected viewType: string = ViewType.Errors.toString();
-	protected displayText: string = 'RPG Manager Errors';
-	public icon: string = 'd20';
+	protected displayText = 'RPG Manager Errors';
+	public icon = 'd20';
 
 	private errors: Map<TFile, RpgErrorInterface> = new Map();
 

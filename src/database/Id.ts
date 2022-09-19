@@ -3,8 +3,9 @@ import {TagValueInterface} from "../interfaces/TagValueInterface";
 import {TagStatus} from "../enums/TagStatus";
 import {App} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
-export class Id {
+export class Id implements IdInterface{
 	public tagMap: Map<DataType, TagValueInterface>;
 	public tag: string;
 

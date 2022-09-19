@@ -2,7 +2,6 @@ import {App} from "obsidian";
 import {ComponentFactory} from "../factories/ComponentFactory";
 import {ContentFactory} from "../factories/ContentFactory";
 import {DataFactory} from "../factories/DataFactory";
-import {ErrorFactory} from "../factories/ErrorFactory";
 import {FileFactory} from "../factories/FileFactory";
 import {ModalFactory} from "../factories/ModalFactory";
 import {ModelFactory} from "../factories/ModelFactory";
@@ -18,7 +17,6 @@ export class Factories {
 	public components: ComponentFactory;
 	public contents: ContentFactory;
 	public data: DataFactory;
-	public errors: ErrorFactory;
 	public files: FileFactory;
 	public modals: ModalFactory;
 	public models: ModelFactory;
@@ -36,7 +34,6 @@ export class Factories {
 		this.components = new ComponentFactory(this.app);
 		this.contents = new ContentFactory(this.app);
 		this.data = new DataFactory(this.app);
-		this.errors = new ErrorFactory(this.app);
 		this.files = new FileFactory(this.app);
 		this.modals = new ModalFactory(this.app);
 		this.models = new ModelFactory(this.app);

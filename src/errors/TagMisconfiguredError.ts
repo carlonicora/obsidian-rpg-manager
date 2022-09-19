@@ -5,11 +5,11 @@ import {TagStatus} from "../enums/TagStatus";
 export class TagMisconfiguredError extends AbstractRpgError {
 	public showErrorMessage(
 	): string {
-		let response = 'The tag `' + this.idMap.tag + '` is misconfigured\n' +
+		let response = 'The tag `' + this.id.tag + '` is misconfigured\n' +
 			'The correct tag should be ';
 
 		let requiredId = '';
-		switch (this.idMap.type){
+		switch (this.id.type){
 			case DataType.Scene:
 				requiredId = '/{sceneId}' + requiredId;
 			case DataType.Session:
@@ -21,10 +21,10 @@ export class TagMisconfiguredError extends AbstractRpgError {
 				requiredId = '/{campaignId}' + requiredId;
 		}
 		response += '`' +
-			(this.app.plugins.getPlugin('rpg-manager').factories.tags.dataSettings.get(this.idMap.type) ?? '')
+			(this.app.plugins.getPlugin('rpg-manager').factories.tags.dataSettings.get(this.id.type) ?? '')
 			+ requiredId + '`\n';
 
-		this.idMap.invalidIds?.forEach((status: TagStatus, type: DataType) => {
+		this.id.invalidIds?.forEach((status: TagStatus, type: DataType) => {
 			response += ' - {' + DataType[type].toLowerCase() + 'Id} is ' +
 				(status === TagStatus.Missing ? 'missing' : 'not a valid numeric id') + '\n';
 		});
@@ -34,10 +34,10 @@ export class TagMisconfiguredError extends AbstractRpgError {
 
 	public showErrorActions(
 	): string {
-		let response = 'The tag `' + this.idMap.tag + '` is invalid.\n' +
+		let response = 'The tag `' + this.id.tag + '` is invalid.\n' +
 			'The following ids are either missing or invalid:\n';
 
-		this.idMap.invalidIds?.forEach((status: TagStatus, type: DataType) => {
+		this.id.invalidIds?.forEach((status: TagStatus, type: DataType) => {
 			response += ' - `{' + DataType[type].toLowerCase() + 'Id}` is ' +
 				(status === TagStatus.Missing ? 'missing' : 'not a valid numeric id') + '\n';
 		});

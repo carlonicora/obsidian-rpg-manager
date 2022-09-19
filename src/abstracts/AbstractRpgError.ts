@@ -1,11 +1,11 @@
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App} from "obsidian";
-import {Id} from "../database/Id";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
 export abstract class AbstractRpgError extends Error implements RpgErrorInterface {
 	constructor(
 		protected app: App,
-		public idMap: Id,
+		public id: IdInterface,
 	) {
 		super();
 	}

@@ -78,10 +78,10 @@ var DataType = /* @__PURE__ */ ((DataType2) => {
 
 // src/abstracts/AbstractRpgError.ts
 var AbstractRpgError = class extends Error {
-  constructor(app2, idMap) {
+  constructor(app2, id) {
     super();
     this.app = app2;
-    this.idMap = idMap;
+    this.id = id;
   }
   getErrorTitle() {
     return void 0;
@@ -95,9 +95,9 @@ var AbstractRpgError = class extends Error {
 var TagMisconfiguredError = class extends AbstractRpgError {
   showErrorMessage() {
     var _a, _b;
-    let response = "The tag `" + this.idMap.tag + "` is misconfigured\nThe correct tag should be ";
+    let response = "The tag `" + this.id.tag + "` is misconfigured\nThe correct tag should be ";
     let requiredId = "";
-    switch (this.idMap.type) {
+    switch (this.id.type) {
       case 8 /* Scene */:
         requiredId = "/{sceneId}" + requiredId;
       case 4 /* Session */:
@@ -108,16 +108,16 @@ var TagMisconfiguredError = class extends AbstractRpgError {
       default:
         requiredId = "/{campaignId}" + requiredId;
     }
-    response += "`" + ((_a = this.app.plugins.getPlugin("rpg-manager").factories.tags.dataSettings.get(this.idMap.type)) != null ? _a : "") + requiredId + "`\n";
-    (_b = this.idMap.invalidIds) == null ? void 0 : _b.forEach((status, type) => {
+    response += "`" + ((_a = this.app.plugins.getPlugin("rpg-manager").factories.tags.dataSettings.get(this.id.type)) != null ? _a : "") + requiredId + "`\n";
+    (_b = this.id.invalidIds) == null ? void 0 : _b.forEach((status, type) => {
       response += " - {" + DataType[type].toLowerCase() + "Id} is " + (status === 2 /* Missing */ ? "missing" : "not a valid numeric id") + "\n";
     });
     return response;
   }
   showErrorActions() {
     var _a;
-    let response = "The tag `" + this.idMap.tag + "` is invalid.\nThe following ids are either missing or invalid:\n";
-    (_a = this.idMap.invalidIds) == null ? void 0 : _a.forEach((status, type) => {
+    let response = "The tag `" + this.id.tag + "` is invalid.\nThe following ids are either missing or invalid:\n";
+    (_a = this.id.invalidIds) == null ? void 0 : _a.forEach((status, type) => {
       response += " - `{" + DataType[type].toLowerCase() + "Id}` is " + (status === 2 /* Missing */ ? "missing" : "not a valid numeric id") + "\n";
     });
     return response;
@@ -318,7 +318,7 @@ var ElementDuplicatedError = class extends AbstractRpgError {
   }
   showErrorMessage() {
     var _a;
-    let response = this.idMap.tag + "\n";
+    let response = this.id.tag + "\n";
     if (this.duplication.length > 1) {
       this.duplication.forEach((record) => {
         response += " - " + record.basename + "\n";
@@ -875,13 +875,6 @@ var DataFactory = class extends AbstractFactory {
       dataKey = CampaignSetting[0 /* Agnostic */] + DataType[id.type];
     }
     return new DatasMap[dataKey](this.app, file, id);
-  }
-};
-
-// src/factories/ErrorFactory.ts
-var ErrorFactory = class extends AbstractFactory {
-  create(errorMessage) {
-    console.log("RpgManager Error: " + errorMessage);
   }
 };
 
@@ -4448,17 +4441,17 @@ var DatabaseErrorModal = class extends import_obsidian15.Modal {
 var ElementNotFoundError = class extends AbstractRpgError {
   showErrorMessage() {
     var _a;
-    const response = "The tag `" + this.idMap.tag + "` refers to an outline that does not exist.\n";
+    const response = "The tag `" + this.id.tag + "` refers to an outline that does not exist.\n";
     let check = "Please check you have the followinf Outlines:\n";
-    (_a = this.idMap.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
+    (_a = this.id.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
       check += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
     });
     return response + check;
   }
   showErrorActions() {
     var _a;
-    let response = "The tag `" + this.idMap.tag + "` refers to a non-existing outline.\nThe following ids might be either missing or invalid:\n";
-    (_a = this.idMap.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
+    let response = "The tag `" + this.id.tag + "` refers to a non-existing outline.\nThe following ids might be either missing or invalid:\n";
+    (_a = this.id.possiblyNotFoundIds) == null ? void 0 : _a.forEach((id, type) => {
       response += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
     });
     return response;
@@ -5224,7 +5217,6 @@ var Factories = class {
     this.components = new ComponentFactory(this.app);
     this.contents = new ContentFactory(this.app);
     this.data = new DataFactory(this.app);
-    this.errors = new ErrorFactory(this.app);
     this.files = new FileFactory(this.app);
     this.modals = new ModalFactory(this.app);
     this.models = new ModelFactory(this.app);
@@ -5796,7 +5788,7 @@ var AbstractDatabaseWorker = class {
 };
 
 // src/database/workers/V1_2_to_1_3_worker.ts
-var V1_2_worker = class extends AbstractDatabaseWorker {
+var V1_2_to_1_3_worker = class extends AbstractDatabaseWorker {
   run() {
     return __async(this, null, function* () {
       console.log("updating version 1.2 to 1.3");
@@ -5806,7 +5798,7 @@ var V1_2_worker = class extends AbstractDatabaseWorker {
 };
 
 // src/database/workers/V1_3_to_2_0_worker.ts
-var V1_3_worker = class extends AbstractDatabaseWorker {
+var V1_3_to_2_0_worker = class extends AbstractDatabaseWorker {
   run() {
     return __async(this, null, function* () {
       console.log("updating version 1.3 to 1.4");
@@ -5817,8 +5809,8 @@ var V1_3_worker = class extends AbstractDatabaseWorker {
 
 // src/database/DatabaseUpdater.ts
 var VersionMap = {
-  "1.2": V1_2_worker,
-  "1.3": V1_3_worker
+  "1.2": V1_2_to_1_3_worker,
+  "1.3": V1_3_to_2_0_worker
 };
 var DatabaseUpdater = class {
   constructor(app2, rpgManager) {
