@@ -3,6 +3,7 @@ import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+const path = require('path');
 
 export class FileFactory extends AbstractFactory {
 	public async create(
@@ -127,16 +128,16 @@ export class FileFactory extends AbstractFactory {
 			let fullPath: string;
 			if (type !== DataType.Campaign) {
 				fullPath = folder + DataType[type] + 's';
-				if (fullPath.startsWith('/')) fullPath = fullPath.substring(1);
+				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(1);
 				if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
 					await app.vault.createFolder(fullPath);
 				}
 			} else {
 				fullPath = folder;
-				if (fullPath.startsWith('/')) fullPath = fullPath.substring(1);
+				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(1);
 			}
 
-			response = fullPath + '/' + response;
+			response = fullPath + path.sep + response;
 		}
 
 		return response;

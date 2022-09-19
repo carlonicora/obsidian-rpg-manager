@@ -196,8 +196,8 @@ var AbstractRecord = class {
       return localImage;
     return null;
   }
-  fileExists(path) {
-    const abstractFile = this.app.vault.getAbstractFileByPath(path);
+  fileExists(path2) {
+    const abstractFile = this.app.vault.getAbstractFileByPath(path2);
     let response = false;
     if (abstractFile instanceof import_obsidian.TAbstractFile) {
       response = true;
@@ -247,7 +247,6 @@ var AbstractRecord = class {
         throw new Error("metadata is null");
       this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
       this.id = this.app.plugins.getPlugin("rpg-manager").factories.tags.createId(void 0, this.tags);
-      console.log(this.id);
       yield this.validateTag();
       yield this.initialise();
       yield this.initialiseData(metadata.frontmatter);
@@ -882,6 +881,7 @@ var DataFactory = class extends AbstractFactory {
 
 // src/factories/FileFactory.ts
 var import_obsidian6 = require("obsidian");
+var path = require("path");
 var FileFactory = class extends AbstractFactory {
   create(settings, type, create, templateName, name, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, additionalInformation = null) {
     return __async(this, null, function* () {
@@ -949,17 +949,17 @@ var FileFactory = class extends AbstractFactory {
         let fullPath;
         if (type !== 1 /* Campaign */) {
           fullPath = folder + DataType[type] + "s";
-          if (fullPath.startsWith("/"))
+          if (fullPath.startsWith(path.sep))
             fullPath = fullPath.substring(1);
           if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
             yield app.vault.createFolder(fullPath);
           }
         } else {
           fullPath = folder;
-          if (fullPath.startsWith("/"))
+          if (fullPath.startsWith(path.sep))
             fullPath = fullPath.substring(1);
         }
-        response = fullPath + "/" + response;
+        response = fullPath + path.sep + response;
       }
       return response;
     });
@@ -4701,8 +4701,8 @@ var Database = class extends import_obsidian16.Component {
   }
   internalSort(data, comparison) {
   }
-  readByPath(path) {
-    const response = this.elements.filter((record) => record.path === path);
+  readByPath(path2) {
+    const response = this.elements.filter((record) => record.path === path2);
     return response.length === 1 ? response[0] : void 0;
   }
   readSingleParametrised(dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
@@ -5727,10 +5727,10 @@ var ErrorView = class extends AbstractView {
           const errorLinks = error.getErrorLinks();
           if (errorLinks !== void 0) {
             const errorLinksEl = errorDescriptionEl.createEl("ul");
-            errorLinks.forEach((path) => {
+            errorLinks.forEach((path2) => {
               const errorLinkEl = errorLinksEl.createEl("li");
               const errorLinkAnchor = errorLinkEl.createEl("a");
-              this.addLink(errorLinkAnchor, path);
+              this.addLink(errorLinkAnchor, path2);
             });
           }
         });
@@ -5770,7 +5770,6 @@ var AbstractDatabaseWorker = class {
 var V1_2_to_1_3_worker = class extends AbstractDatabaseWorker {
   run() {
     return __async(this, null, function* () {
-      console.log("updating version 1.2 to 1.3");
       return;
     });
   }
@@ -5780,7 +5779,6 @@ var V1_2_to_1_3_worker = class extends AbstractDatabaseWorker {
 var V1_3_to_2_0_worker = class extends AbstractDatabaseWorker {
   run() {
     return __async(this, null, function* () {
-      console.log("updating version 1.3 to 1.4");
       return;
     });
   }
