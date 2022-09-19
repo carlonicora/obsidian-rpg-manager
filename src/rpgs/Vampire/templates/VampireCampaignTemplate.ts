@@ -1,5 +1,4 @@
 import {CampaignTemplateFactory} from "../../../factories/templates/CampaignTemplateFactory";
-import {RpgCodeBlockInterface} from "../../../interfaces/RpgCodeBlockInterface";
 
 export class VampireCampaignTemplate extends CampaignTemplateFactory {
 	public addFrontmatterData(

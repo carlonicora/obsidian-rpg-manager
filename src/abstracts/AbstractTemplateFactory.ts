@@ -1,7 +1,6 @@
 import {TemplateFactoryInterface} from "../interfaces/TemplateFactoryInterface";
 import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../helpers/FileContentManager";
-import {RpgCodeBlockInterface} from "../interfaces/RpgCodeBlockInterface";
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {DataType} from "../enums/DataType";
 import {CampaignTemplate} from "../templates/CampaignTemplate";

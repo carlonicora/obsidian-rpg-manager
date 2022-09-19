@@ -1,5 +1,4 @@
 import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
-import {RpgCodeBlockInterface} from "../../interfaces/RpgCodeBlockInterface";
 
 export class ClueTemplateFactory extends AbstractTemplateFactory {
 	public addFrontmatterData(

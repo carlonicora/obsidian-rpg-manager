@@ -1,5 +1,4 @@
 import {NonPlayerCharacterTemplateFactory} from "../../../factories/templates/NonPlayerCharacterTemplateFactory";
-import {RpgCodeBlockInterface} from "../../../interfaces/RpgCodeBlockInterface";
 
 export class VampireNonPlayerCharacterTemplate extends NonPlayerCharacterTemplateFactory {
 	public addFrontmatterData(
