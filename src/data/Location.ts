@@ -1,4 +1,4 @@
-import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
+import {AbstractElementRecord} from "../abstracts/AbstractElementRecord";
 import {LocationInterface} from "../interfaces/data/LocationInterface";
 
 export class Location extends AbstractElementRecord implements LocationInterface {

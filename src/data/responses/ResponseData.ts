@@ -3,7 +3,7 @@ import {ResponseElementInterface} from "../../interfaces/response/ResponseElemen
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {App} from "obsidian";
-import {AbstractRecord} from "../../abstracts/database/AbstractRecord";
+import {AbstractRecord} from "../../abstracts/AbstractRecord";
 
 export class ResponseData implements ResponseDataInterface {
 	public elements: ResponseElementInterface[];

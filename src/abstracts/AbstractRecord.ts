@@ -1,13 +1,13 @@
-import {RecordInterface} from "../../interfaces/database/RecordInterface";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App, CachedMetadata, TAbstractFile, TFile} from "obsidian";
-import {DataType} from "../../enums/DataType";
-import {CampaignInterface} from "../../interfaces/data/CampaignInterface";
-import {DatabaseInterface} from "../../interfaces/database/DatabaseInterface";
-import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
-import {BaseCampaignInterface} from "../../interfaces/data/BaseCampaignInterface";
-import {Id} from "../../database/Id";
-import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
-import {MultipleRpgManagerTagsError} from "../../errors/MultipleRpgManagerTagsError";
+import {DataType} from "../enums/DataType";
+import {CampaignInterface} from "../interfaces/data/CampaignInterface";
+import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
+import {Id} from "../database/Id";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
+import {MultipleRpgManagerTagsError} from "../errors/MultipleRpgManagerTagsError";
 
 export abstract class AbstractRecord implements RecordInterface {
 	private static root: string|undefined;

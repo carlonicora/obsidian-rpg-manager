@@ -1,4 +1,4 @@
-import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
+import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {DataType} from "../enums/DataType";
 

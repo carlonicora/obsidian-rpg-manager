@@ -1,4 +1,4 @@
-import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
+import {AbstractElementRecord} from "../abstracts/AbstractElementRecord";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 
 export class Clue extends AbstractElementRecord implements ClueInterface {

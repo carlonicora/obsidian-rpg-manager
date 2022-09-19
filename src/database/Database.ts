@@ -3,7 +3,7 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App, CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
-import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
+import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
@@ -240,6 +240,7 @@ export class Database extends Component implements DatabaseInterface {
 			if (isNewComponent && component instanceof AbstractOutlineRecord) {
 				await component.checkDuplicates(this);
 			}
+
 			await component.loadHierarchy(this);
 			await this.create(component);
 			await this.refreshRelationships();

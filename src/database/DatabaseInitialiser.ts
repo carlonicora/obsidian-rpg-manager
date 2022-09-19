@@ -4,7 +4,7 @@ import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App, CachedMetadata, TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ErrorLog, InfoLog, LogMessageType} from "../helpers/Logger";
-import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
+import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {DataType} from "../enums/DataType";

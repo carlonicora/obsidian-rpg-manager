@@ -1,4 +1,4 @@
-import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
+import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";

@@ -1,6 +1,6 @@
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
+import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DataType} from "../enums/DataType";
 import {SessionInterface} from "../interfaces/data/SessionInterface";

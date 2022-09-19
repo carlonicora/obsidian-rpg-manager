@@ -1,4 +1,4 @@
-import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
+import {AbstractElementRecord} from "../abstracts/AbstractElementRecord";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
 import {YouTubeImageFetcher} from "../fetchers/YouTubeImageFetcher";

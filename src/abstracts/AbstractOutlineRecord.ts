@@ -1,7 +1,7 @@
 import {AbstractRecord} from "./AbstractRecord";
-import {RecordInterface} from "../../interfaces/database/RecordInterface";
-import {DatabaseInterface} from "../../interfaces/database/DatabaseInterface";
-import {ElementDuplicatedError} from "../../errors/ElementDuplicatedError";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
+import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 
 export abstract class AbstractOutlineRecord extends AbstractRecord implements RecordInterface{
 	public isOutline = true;

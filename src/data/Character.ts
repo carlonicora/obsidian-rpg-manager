@@ -1,4 +1,4 @@
-import {AbstractElementRecord} from "../abstracts/database/AbstractElementRecord";
+import {AbstractElementRecord} from "../abstracts/AbstractElementRecord";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {Pronoun} from "../enums/Pronoun";
 

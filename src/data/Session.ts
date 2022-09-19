@@ -1,4 +1,4 @@
-import {AbstractOutlineRecord} from "../abstracts/database/AbstractOutlineRecord";
+import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
