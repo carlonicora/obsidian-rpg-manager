@@ -7,9 +7,6 @@ export class LocationTemplateFactory extends AbstractTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.locationTag + '/' + this.campaignId);
 		frontmatter.address = "";
-		frontmatter.relationships = {
-			locations: {},
-		};
 	}
 
 	public generateInitialCodeBlock(

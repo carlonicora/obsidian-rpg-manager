@@ -3354,9 +3354,6 @@ var SessionTemplateFactory = class extends AbstractTemplateFactory {
       session: {},
       irl: {}
     };
-    frontmatter.relationships = {
-      musics: {}
-    };
   }
   generateInitialCodeBlock() {
     return this.generateRpgManagerCodeBlock("sessionNavigation", {
@@ -3388,12 +3385,6 @@ var SceneTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.sceneTag + "/" + this.campaignId + "/" + this.adventureId + "/" + this.sessionId + "/" + this.sceneId);
-    frontmatter.relationships = {
-      clues: {},
-      characters: {},
-      locations: {},
-      musics: {}
-    };
     frontmatter.times = {
       start: {},
       end: {}
@@ -3415,11 +3406,6 @@ var CharacterTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.pcTag + "/" + this.campaignId);
-    frontmatter.relationships = {
-      characters: {},
-      locations: {},
-      factions: {}
-    };
     frontmatter.pronoun = "";
     frontmatter.dates = {
       dob: {},
@@ -3436,12 +3422,7 @@ var NonPlayerCharacterTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.npcTag + "/" + this.campaignId);
-    frontmatter.goals = "", frontmatter.relationships = {
-      characters: {},
-      locations: {},
-      factions: {}
-    };
-    frontmatter.pronoun = "";
+    frontmatter.goals = "", frontmatter.pronoun = "";
     frontmatter.dates = {
       dob: {},
       death: {}
@@ -3461,9 +3442,6 @@ var LocationTemplateFactory = class extends AbstractTemplateFactory {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.locationTag + "/" + this.campaignId);
     frontmatter.address = "";
-    frontmatter.relationships = {
-      locations: {}
-    };
   }
   generateInitialCodeBlock() {
     return this.generateRpgManagerCodeBlock("location");
@@ -3475,11 +3453,6 @@ var EventTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.eventTag + "/" + this.campaignId);
-    frontmatter.relationships = {
-      characters: {},
-      clues: {},
-      locations: {}
-    };
     frontmatter.dates = {
       event: {}
     };
@@ -3494,10 +3467,6 @@ var ClueTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.clueTag + "/" + this.campaignId);
-    frontmatter.relationships = {
-      characters: {},
-      locations: {}
-    };
     frontmatter.dates = {
       found: {}
     };
@@ -3512,9 +3481,6 @@ var FactionTemplateFactory = class extends AbstractTemplateFactory {
   addFrontmatterData(frontmatter) {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.factionTag + "/" + this.campaignId);
-    frontmatter.relationships = {
-      locations: {}
-    };
   }
   generateInitialCodeBlock() {
     return this.generateRpgManagerCodeBlock("faction");
@@ -3602,9 +3568,6 @@ var MusicTemplateFactory = class extends AbstractTemplateFactory {
     super.addFrontmatterData(frontmatter);
     frontmatter.tags.push(this.app.plugins.getPlugin("rpg-manager").settings.musicTag + "/" + this.campaignId);
     frontmatter.url = (_b = (_a = this == null ? void 0 : this.additionalInformation) == null ? void 0 : _a.url) != null ? _b : "";
-    frontmatter.relationships = {
-      music: {}
-    };
   }
   generateInitialCodeBlock() {
     return this.generateRpgManagerCodeBlock("music");
@@ -5835,7 +5798,7 @@ var DatabaseUpdater = class {
         worker.run();
         updater = this.versionsHistory.get(updater.nextVersion);
       }
-      response = true;
+      yield this.rpgManager.updateSettings({ previousVersion: currentVersion });
       return response;
     });
   }
@@ -5855,15 +5818,24 @@ var releaseNotes = `
 ### Version 1.2: Relationships Update
 _19.09.2020_
 
+- Relationships updated
+- New \`image\` frontmatter element added
+
+#### Relationships
 Version 1.2 updated the way RPG Manager handles relationships between elements. All the links in a note are now automatically read as a relationships between elements.
 If you want to specify a description in the relationship, you can add the link in the frontmatter.
 In the frontmatter, the old structure has been replaced with a simple list of links with their description. Each link can be written as a markdown link, without the need to remove the brackets any longer.
 
-\`\`\`
-[[Link to another element]]: "Relationship details"
-\`\`\`
+\`---\`
+\`[[Link to another element]]: "Relationship details"\`
+\`---\`
 
-The frontmatters have been automatically upgraded in all your notes to reflect this change.`;
+The frontmatters have been automatically upgraded in all your notes to reflect this change.
+
+#### New image frontmatter element
+A new frontmatter element (\`image\`) has been added to the frontmatter. it accepts a valid url to an image, and instead of using a local image, RPG Manager will show the image of the \`image\` frontmatter.
+If a local image exists in the vault, that will be used and the \`image\` frontmatter will be ignored. 
+`;
 
 // src/views/ReleaseNoteView.ts
 var ReleaseNoteView = class extends AbstractView {
@@ -5878,8 +5850,9 @@ var ReleaseNoteView = class extends AbstractView {
   render() {
     return __async(this, null, function* () {
       const releaseNotesEl = this.contentEl.createDiv();
+      releaseNotesEl.style.fontSize = "0.8em";
       import_obsidian22.MarkdownRenderer.renderMarkdown(releaseNotes, releaseNotesEl, "", null);
-      const closeButtonEl = this.contentEl.createEl("button", { text: "Close" });
+      const closeButtonEl = this.contentEl.createEl("button", { text: "Close the release notes" });
       closeButtonEl.addEventListener("click", () => {
         this.app.workspace.detachLeavesOfType("rpgm-release-note-view" /* ReleaseNote */.toString());
       });
@@ -5907,7 +5880,6 @@ var RpgManager = class extends import_obsidian23.Plugin {
       if (this.settings.previousVersion !== this.manifest.version) {
         const databaseUpdater = yield new DatabaseUpdater(this.app, this);
         this.isVersionUpdated = yield databaseUpdater.update(this.settings.previousVersion, this.manifest.version);
-        console.log(this.isVersionUpdated);
       }
       app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     });
@@ -5922,8 +5894,11 @@ var RpgManager = class extends import_obsidian23.Plugin {
         this.registerEvents();
         this.app.workspace.trigger("rpgmanager:refresh-views");
         console.log(`RPG Manager: ${this.database.elements.length} outlines and elements have been indexed in ${(Date.now() - reloadStart) / 1e3}s.`);
-        if (this.isVersionUpdated)
+        if (this.isVersionUpdated) {
           this.app.plugins.getPlugin("rpg-manager").factories.views.showObsidianView("rpgm-release-note-view" /* ReleaseNote */);
+        } else {
+          this.app.workspace.detachLeavesOfType("rpgm-release-note-view" /* ReleaseNote */.toString());
+        }
         return;
       });
     });

@@ -7,11 +7,6 @@ export class NonPlayerCharacterTemplateFactory extends AbstractTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.npcTag + '/' + this.campaignId);
 		frontmatter.goals = "",
-		frontmatter.relationships = {
-			characters: {},
-			locations: {},
-			factions: {},
-		};
 		frontmatter.pronoun = "";
 		frontmatter.dates = {
 			dob: {},

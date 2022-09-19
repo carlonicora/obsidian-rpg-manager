@@ -6,9 +6,6 @@ export class FactionTemplateFactory extends AbstractTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.factionTag + '/' + this.campaignId);
-		frontmatter.relationships = {
-			locations: {},
-		};
 	}
 
 	public generateInitialCodeBlock(

@@ -3,7 +3,6 @@ import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerI
 import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
-import {ViewType} from "../enums/ViewType";
 
 const VersionMap = {
 	'1.2': V1_2_to_1_3_worker,
@@ -53,9 +52,7 @@ export class DatabaseUpdater {
 			updater = this.versionsHistory.get(updater.nextVersion);
 		}
 
-		//TODO remove
-
-		//await this.rpgManager.updateSettings({previousVersion: currentVersion});
+		await this.rpgManager.updateSettings({previousVersion: currentVersion});
 
 		return response;
 	}

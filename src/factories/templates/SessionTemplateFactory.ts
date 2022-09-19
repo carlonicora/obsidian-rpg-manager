@@ -20,9 +20,6 @@ export class SessionTemplateFactory extends AbstractTemplateFactory {
 			session: {},
 			irl: {},
 		}
-		frontmatter.relationships = {
-			musics: {},
-		};
 	}
 
 	public generateInitialCodeBlock(

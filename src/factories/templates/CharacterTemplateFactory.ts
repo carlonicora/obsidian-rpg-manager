@@ -6,11 +6,6 @@ export class CharacterTemplateFactory extends AbstractTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.pcTag + '/' + this.campaignId);
-		frontmatter.relationships = {
-			characters: {},
-			locations: {},
-			factions: {},
-		};
 		frontmatter.pronoun = "";
 		frontmatter.dates = {
 			dob: {},

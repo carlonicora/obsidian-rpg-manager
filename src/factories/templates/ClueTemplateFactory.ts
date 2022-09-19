@@ -6,10 +6,6 @@ export class ClueTemplateFactory extends AbstractTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.clueTag + '/' + this.campaignId);
-		frontmatter.relationships = {
-			characters: {},
-			locations: {},
-		};
 		frontmatter.dates = {
 			found: {},
 		};

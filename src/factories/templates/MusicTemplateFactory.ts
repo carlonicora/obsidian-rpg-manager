@@ -7,9 +7,6 @@ export class MusicTemplateFactory extends AbstractTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.musicTag + '/' + this.campaignId);
 		frontmatter.url = this?.additionalInformation?.url ?? "";
-		frontmatter.relationships = {
-			music: {},
-		};
 	}
 
 	public generateInitialCodeBlock(

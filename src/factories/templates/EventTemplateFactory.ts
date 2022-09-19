@@ -6,11 +6,6 @@ export class EventTemplateFactory extends AbstractTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.eventTag + '/' + this.campaignId);
-		frontmatter.relationships = {
-			characters: {},
-			clues: {},
-			locations: {},
-		};
 		frontmatter.dates = {
 			event: {},
 		};

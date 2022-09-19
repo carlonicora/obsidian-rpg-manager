@@ -1,7 +1,6 @@
 import {AbstractView} from "../abstracts/AbstractView";
 import {ViewType} from "../enums/ViewType";
-import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
-import {Component, MarkdownRenderer, TFile} from "obsidian";
+import {Component, MarkdownRenderer} from "obsidian";
 import {releaseNotes} from "../ReleaseNotes";
 
 export class ReleaseNoteView extends AbstractView {
@@ -17,6 +16,7 @@ export class ReleaseNoteView extends AbstractView {
 	public async render(
 	): Promise<void> {
 		const releaseNotesEl = this.contentEl.createDiv();
+		releaseNotesEl.style.fontSize = '0.8em';
 
 		MarkdownRenderer.renderMarkdown(
 			releaseNotes,
@@ -25,7 +25,7 @@ export class ReleaseNoteView extends AbstractView {
 			null as unknown as Component,
 		);
 
-		const closeButtonEl = this.contentEl.createEl('button', {text: 'Close'});
+		const closeButtonEl = this.contentEl.createEl('button', {text: 'Close the release notes'});
 		closeButtonEl.addEventListener("click", () => {
 			this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
 		});

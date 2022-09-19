@@ -58,7 +58,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		if (this.settings.previousVersion !== this.manifest.version){
 			const databaseUpdater = await new DatabaseUpdater(this.app, this);
 			this.isVersionUpdated = await databaseUpdater.update(this.settings.previousVersion, this.manifest.version);
-			console.log(this.isVersionUpdated);
 		}
 
 		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
@@ -82,7 +81,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 					}s.`
 				);
 
-				if (this.isVersionUpdated) this.app.plugins.getPlugin('rpg-manager').factories.views.showObsidianView(ViewType.ReleaseNote);
+				if (this.isVersionUpdated) {
+					this.app.plugins.getPlugin('rpg-manager').factories.views.showObsidianView(ViewType.ReleaseNote);
+				} else {
+					this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
+				}
 
 				return;
 			})
