@@ -1,6 +1,7 @@
 import {AbstractElementRecord} from "../abstracts/AbstractElementRecord";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {Pronoun} from "../enums/Pronoun";
+import {FrontMatterCache} from "obsidian";
 
 export class Character extends AbstractElementRecord implements CharacterInterface {
 	public dob: Date|null;
@@ -9,13 +10,14 @@ export class Character extends AbstractElementRecord implements CharacterInterfa
 	public pronoun: Pronoun|null;
 
 	protected initialiseData(
+		frontmatter: FrontMatterCache|undefined,
 	): void {
-		this.dob = this.initialiseDate(this.frontmatter?.dates?.dob);
-		this.death = this.initialiseDate(this.frontmatter?.dates?.death);
-		this.goals = this.frontmatter?.goals;
-		this.pronoun = this.frontmatter?.pronoun ? this.app.plugins.getPlugin('rpg-manager').factories.pronouns.create(this.frontmatter?.pronoun) : null;
+		this.dob = this.initialiseDate(frontmatter?.dates?.dob);
+		this.death = this.initialiseDate(frontmatter?.dates?.death);
+		this.goals = frontmatter?.goals;
+		this.pronoun = frontmatter?.pronoun ? this.app.plugins.getPlugin('rpg-manager').factories.pronouns.create(frontmatter?.pronoun) : null;
 
-		super.initialiseData();
+		super.initialiseData(frontmatter);
 	}
 
 	public get age(

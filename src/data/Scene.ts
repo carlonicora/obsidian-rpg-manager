@@ -4,6 +4,7 @@ import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DataType} from "../enums/DataType";
+import {FrontMatterCache} from "obsidian";
 
 export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public sceneId: number;
@@ -17,13 +18,14 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public nextScene: SceneInterface | null = null;
 
 	protected initialiseData(
+		frontmatter: FrontMatterCache|undefined,
 	): void {
 		this.sceneId = this.id.getTypeValue(DataType.Scene);
-		this.startTime = this.initialiseDate(this.frontmatter?.time?.start);
-		this.endTime = this.initialiseDate(this.frontmatter?.time?.end);
-		this.action = this.frontmatter?.action;
+		this.startTime = this.initialiseDate(frontmatter?.time?.start);
+		this.endTime = this.initialiseDate(frontmatter?.time?.end);
+		this.action = frontmatter?.action;
 
-		super.initialiseData();
+		super.initialiseData(frontmatter);
 	}
 
 	public async loadHierarchy(

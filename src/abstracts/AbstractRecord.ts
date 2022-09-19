@@ -1,5 +1,5 @@
 import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {App, CachedMetadata, TAbstractFile, TFile} from "obsidian";
+import {App, CachedMetadata, FrontMatterCache, TAbstractFile, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
@@ -21,8 +21,6 @@ export abstract class AbstractRecord implements RecordInterface {
 		if (!this.root.endsWith("/")) this.root += "/";
 	}
 
-	public frontmatter: any;
-
 	public basename: string;
 
 	public tags: Array<string>;
@@ -37,8 +35,6 @@ export abstract class AbstractRecord implements RecordInterface {
 	public campaign: BaseCampaignInterface;
 
 	public relationships: Map<string, RelationshipInterface>;
-
-	private metadata: CachedMetadata;
 
 	constructor(
 		protected app: App,
@@ -122,20 +118,18 @@ export abstract class AbstractRecord implements RecordInterface {
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null) throw new Error('metadata is null');
 
-		this.metadata = metadata;
-		this.frontmatter = this.metadata.frontmatter ?? {};
 		this.basename = this.file.basename;
 
-		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(this.frontmatter?.tags);
+		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
 
 		this.validateTag();
 
-		this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
-		this.synopsis = this.frontmatter.synopsis;
-		this.imageUrl = this.frontmatter?.image;
+		this.completed = metadata.frontmatter?.completed ? metadata.frontmatter.completed : true;
+		this.synopsis = metadata.frontmatter?.synopsis;
+		this.imageUrl = metadata.frontmatter?.image;
 
 		await this.initialiseRelationships();
-		this.initialiseData();
+		this.initialiseData(metadata.frontmatter);
 	}
 
 	protected validateTag(
@@ -156,14 +150,21 @@ export abstract class AbstractRecord implements RecordInterface {
 	}
 
 	protected initialiseData(
+		frontmatter: FrontMatterCache|undefined,
 	): void {
 	}
 
 	public async reload(
 	): Promise<void> {
+		const metadata: CachedMetadata|null = await this.app.metadataCache.getFileCache(this.file);
+		if (metadata === null) throw new Error('metadata is null');
+
+		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
+		this.id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, this.tags);
+		console.log(this.id);
 		await this.validateTag();
 		await this.initialise();
-		await this.initialiseData();
+		await this.initialiseData(metadata.frontmatter);
 	}
 
 	public async loadHierarchy(

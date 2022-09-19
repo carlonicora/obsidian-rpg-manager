@@ -2,15 +2,18 @@ import {AbstractElementRecord} from "../abstracts/AbstractElementRecord";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
 import {YouTubeImageFetcher} from "../fetchers/YouTubeImageFetcher";
+import {FrontMatterCache} from "obsidian";
 
 export class Music extends AbstractElementRecord implements MusicInterface {
 	public url: string|undefined;
 
 	protected initialiseData(
-	): void {
-		this.url = this.frontmatter?.url;
 
-		super.initialiseData();
+		frontmatter: FrontMatterCache|undefined,
+	): void {
+		this.url = frontmatter?.url;
+
+		super.initialiseData(frontmatter);
 	}
 
 	public getThumbnail(): Promise<string|null|undefined> {

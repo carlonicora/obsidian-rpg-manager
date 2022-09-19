@@ -8,14 +8,10 @@ import {Id} from "../../database/Id";
 export interface RecordInterface {
 	id: Id;
 
-	//type: DataType;
-	//tag: string;
 	tags: Array<string>;
 
 	file: TFile;
 	basename: string;
-
-	frontmatter: any;
 
 	completed: boolean;
 	synopsis: string|null;

@@ -4,6 +4,7 @@ import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DataType} from "../enums/DataType";
+import {FrontMatterCache} from "obsidian";
 
 export class Session extends AbstractOutlineRecord implements SessionInterface {
 	public sessionId: number;
@@ -16,12 +17,13 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 	public note: NoteInterface|null=null;
 
 	protected initialiseData(
+		frontmatter: FrontMatterCache|undefined,
 	): void {
 		this.sessionId = this.id.getTypeValue(DataType.Session);
-		this.date = this.initialiseDate(this.frontmatter?.dates?.session);
-		this.irl = this.initialiseDate(this.frontmatter?.dates?.irl);
+		this.date = this.initialiseDate(frontmatter?.dates?.session);
+		this.irl = this.initialiseDate(frontmatter?.dates?.irl);
 
-		super.initialiseData();
+		super.initialiseData(frontmatter);
 	}
 
 	public async loadHierarchy(

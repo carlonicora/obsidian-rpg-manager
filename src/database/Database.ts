@@ -1,6 +1,6 @@
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {App, CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
+import {App, CachedMetadata, Component, debounce, MarkdownView, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
@@ -24,13 +24,15 @@ export class Database extends Component implements DatabaseInterface {
 	) {
 		super();
 		this.basenameIndex = new Map();
+
+		this.onSave = debounce(this.onSave, 2000, true) as unknown as () => Promise<void>;
+		this.onDelete = debounce(this.onDelete, 2000, true) as unknown as () => Promise<void>;
+		this.onRename = debounce(this.onRename, 2000, true) as unknown as () => Promise<void>;
 	}
 
 	/**
 	 * PUBLIC METHODS
 	 */
-
-
 	public async ready(
 	): Promise<void> {
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));

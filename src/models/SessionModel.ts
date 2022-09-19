@@ -5,7 +5,6 @@ import {DataType} from "../enums/DataType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {MusicTableComponent} from "../components/MusicTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
 import {FactionTableComponent} from "../components/FactionTableComponent";

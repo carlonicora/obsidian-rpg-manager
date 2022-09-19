@@ -55,7 +55,7 @@ var import_obsidian23 = require("obsidian");
 // src/helpers/Controller.ts
 var import_obsidian2 = require("obsidian");
 
-// src/abstracts/database/AbstractRecord.ts
+// src/abstracts/AbstractRecord.ts
 var import_obsidian = require("obsidian");
 
 // src/enums/DataType.ts
@@ -135,7 +135,7 @@ var MultipleRpgManagerTagsError = class extends AbstractRpgError {
   }
 };
 
-// src/abstracts/database/AbstractRecord.ts
+// src/abstracts/AbstractRecord.ts
 var AbstractRecord = class {
   constructor(app2, file, id) {
     this.app = app2;
@@ -206,20 +206,18 @@ var AbstractRecord = class {
   }
   initialise() {
     return __async(this, null, function* () {
-      var _a, _b, _c;
+      var _a, _b, _c, _d;
       const metadata = this.app.metadataCache.getFileCache(this.file);
       if (metadata === null)
         throw new Error("metadata is null");
-      this.metadata = metadata;
-      this.frontmatter = (_a = this.metadata.frontmatter) != null ? _a : {};
       this.basename = this.file.basename;
-      this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_b = this.frontmatter) == null ? void 0 : _b.tags);
+      this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
       this.validateTag();
-      this.completed = this.frontmatter.completed ? this.frontmatter.completed : true;
-      this.synopsis = this.frontmatter.synopsis;
-      this.imageUrl = (_c = this.frontmatter) == null ? void 0 : _c.image;
+      this.completed = ((_b = metadata.frontmatter) == null ? void 0 : _b.completed) ? metadata.frontmatter.completed : true;
+      this.synopsis = (_c = metadata.frontmatter) == null ? void 0 : _c.synopsis;
+      this.imageUrl = (_d = metadata.frontmatter) == null ? void 0 : _d.image;
       yield this.initialiseRelationships();
-      this.initialiseData();
+      this.initialiseData(metadata.frontmatter);
     });
   }
   validateTag() {
@@ -239,13 +237,20 @@ var AbstractRecord = class {
       yield this.app.plugins.getPlugin("rpg-manager").factories.relationships.read(this.file, this.relationships);
     });
   }
-  initialiseData() {
+  initialiseData(frontmatter) {
   }
   reload() {
     return __async(this, null, function* () {
+      var _a;
+      const metadata = yield this.app.metadataCache.getFileCache(this.file);
+      if (metadata === null)
+        throw new Error("metadata is null");
+      this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
+      this.id = this.app.plugins.getPlugin("rpg-manager").factories.tags.createId(void 0, this.tags);
+      console.log(this.id);
       yield this.validateTag();
       yield this.initialise();
-      yield this.initialiseData();
+      yield this.initialiseData(metadata.frontmatter);
     });
   }
   loadHierarchy(database) {
@@ -347,7 +352,7 @@ var ElementDuplicatedError = class extends AbstractRpgError {
   }
 };
 
-// src/abstracts/database/AbstractOutlineRecord.ts
+// src/abstracts/AbstractOutlineRecord.ts
 var AbstractOutlineRecord = class extends AbstractRecord {
   constructor() {
     super(...arguments);
@@ -371,13 +376,13 @@ var CampaignSetting = /* @__PURE__ */ ((CampaignSetting2) => {
 
 // src/data/Campaign.ts
 var Campaign = class extends AbstractOutlineRecord {
-  initialiseData() {
-    var _a, _b, _c, _d, _e, _f;
+  initialiseData(frontmatter) {
+    var _a, _b;
     this.campaignId = this.id.getTypeValue(1 /* Campaign */);
-    if ((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.current)
-      this.currentDate = new Date((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.current);
-    this.settings = ((_e = this.frontmatter) == null ? void 0 : _e.settings) ? CampaignSetting[(_f = this.frontmatter) == null ? void 0 : _f.settings] : 0 /* Agnostic */;
-    super.initialiseData();
+    if ((_a = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _a.current)
+      this.currentDate = new Date((_b = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _b.current);
+    this.settings = (frontmatter == null ? void 0 : frontmatter.settings) ? CampaignSetting[frontmatter == null ? void 0 : frontmatter.settings] : 0 /* Agnostic */;
+    super.initialiseData(frontmatter);
   }
 };
 
@@ -562,9 +567,9 @@ var ContentFactory = class extends AbstractFactory {
 
 // src/data/Adventure.ts
 var Adventure = class extends AbstractOutlineRecord {
-  initialiseData() {
+  initialiseData(frontmatter) {
     this.adventureId = this.id.getTypeValue(2 /* Adventure */);
-    super.initialiseData();
+    super.initialiseData(frontmatter);
   }
 };
 
@@ -576,12 +581,12 @@ var Session = class extends AbstractOutlineRecord {
     this.nextSession = null;
     this.note = null;
   }
-  initialiseData() {
-    var _a, _b, _c, _d;
+  initialiseData(frontmatter) {
+    var _a, _b;
     this.sessionId = this.id.getTypeValue(4 /* Session */);
-    this.date = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.session);
-    this.irl = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.irl);
-    super.initialiseData();
+    this.date = this.initialiseDate((_a = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _a.session);
+    this.irl = this.initialiseDate((_b = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _b.irl);
+    super.initialiseData(frontmatter);
   }
   loadHierarchy(database) {
     return __async(this, null, function* () {
@@ -612,13 +617,13 @@ var Scene = class extends AbstractOutlineRecord {
     this.previousScene = null;
     this.nextScene = null;
   }
-  initialiseData() {
-    var _a, _b, _c, _d, _e;
+  initialiseData(frontmatter) {
+    var _a, _b;
     this.sceneId = this.id.getTypeValue(8 /* Scene */);
-    this.startTime = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.time) == null ? void 0 : _b.start);
-    this.endTime = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.time) == null ? void 0 : _d.end);
-    this.action = (_e = this.frontmatter) == null ? void 0 : _e.action;
-    super.initialiseData();
+    this.startTime = this.initialiseDate((_a = frontmatter == null ? void 0 : frontmatter.time) == null ? void 0 : _a.start);
+    this.endTime = this.initialiseDate((_b = frontmatter == null ? void 0 : frontmatter.time) == null ? void 0 : _b.end);
+    this.action = frontmatter == null ? void 0 : frontmatter.action;
+    super.initialiseData(frontmatter);
   }
   loadHierarchy(database) {
     return __async(this, null, function* () {
@@ -649,7 +654,7 @@ var Scene = class extends AbstractOutlineRecord {
   }
 };
 
-// src/abstracts/database/AbstractElementRecord.ts
+// src/abstracts/AbstractElementRecord.ts
 var AbstractElementRecord = class extends AbstractRecord {
   constructor() {
     super(...arguments);
@@ -659,13 +664,13 @@ var AbstractElementRecord = class extends AbstractRecord {
 
 // src/data/Character.ts
 var Character = class extends AbstractElementRecord {
-  initialiseData() {
-    var _a, _b, _c, _d, _e, _f, _g;
-    this.dob = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.dob);
-    this.death = this.initialiseDate((_d = (_c = this.frontmatter) == null ? void 0 : _c.dates) == null ? void 0 : _d.death);
-    this.goals = (_e = this.frontmatter) == null ? void 0 : _e.goals;
-    this.pronoun = ((_f = this.frontmatter) == null ? void 0 : _f.pronoun) ? this.app.plugins.getPlugin("rpg-manager").factories.pronouns.create((_g = this.frontmatter) == null ? void 0 : _g.pronoun) : null;
-    super.initialiseData();
+  initialiseData(frontmatter) {
+    var _a, _b;
+    this.dob = this.initialiseDate((_a = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _a.dob);
+    this.death = this.initialiseDate((_b = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _b.death);
+    this.goals = frontmatter == null ? void 0 : frontmatter.goals;
+    this.pronoun = (frontmatter == null ? void 0 : frontmatter.pronoun) ? this.app.plugins.getPlugin("rpg-manager").factories.pronouns.create(frontmatter == null ? void 0 : frontmatter.pronoun) : null;
+    super.initialiseData(frontmatter);
   }
   get age() {
     if (this.dob == null || this.death == null && this.campaign.currentDate == null)
@@ -688,10 +693,10 @@ var Faction = class extends AbstractElementRecord {
 
 // src/data/Clue.ts
 var Clue = class extends AbstractElementRecord {
-  initialiseData() {
-    var _a, _b;
-    this.found = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.found);
-    super.initialiseData();
+  initialiseData(frontmatter) {
+    var _a;
+    this.found = this.initialiseDate((_a = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _a.found);
+    super.initialiseData(frontmatter);
   }
   get isFound() {
     return this.found != null;
@@ -700,19 +705,18 @@ var Clue = class extends AbstractElementRecord {
 
 // src/data/Location.ts
 var Location = class extends AbstractElementRecord {
-  initialiseData() {
-    var _a;
-    this.address = (_a = this.frontmatter) == null ? void 0 : _a.address;
-    super.initialiseData();
+  initialiseData(frontmatter) {
+    this.address = frontmatter == null ? void 0 : frontmatter.address;
+    super.initialiseData(frontmatter);
   }
 };
 
 // src/data/Event.ts
 var Event = class extends AbstractElementRecord {
-  initialiseData() {
-    var _a, _b;
-    this.date = this.initialiseDate((_b = (_a = this.frontmatter) == null ? void 0 : _a.dates) == null ? void 0 : _b.event);
-    super.initialiseData();
+  initialiseData(frontmatter) {
+    var _a;
+    this.date = this.initialiseDate((_a = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _a.event);
+    super.initialiseData(frontmatter);
   }
 };
 
@@ -734,22 +738,21 @@ var Note = class extends AbstractOutlineRecord {
 
 // src/rpgs/Vampire/data/VampireCharacter.ts
 var VampireCharacter = class extends Character {
-  initialiseData() {
+  initialiseData(frontmatter) {
     return __async(this, null, function* () {
-      var _a;
-      this.generation = (_a = this.frontmatter) == null ? void 0 : _a.generation;
-      __superGet(VampireCharacter.prototype, this, "initialiseData").call(this);
+      this.generation = frontmatter == null ? void 0 : frontmatter.generation;
+      __superGet(VampireCharacter.prototype, this, "initialiseData").call(this, frontmatter);
     });
   }
 };
 
 // src/rpgs/Raw/data/RawCampaign.ts
 var RawCampaign = class extends Campaign {
-  initialiseData() {
+  initialiseData(frontmatter) {
     return __async(this, null, function* () {
-      var _a, _b;
-      this.apiCampaignKey = (_b = (_a = this.frontmatter) == null ? void 0 : _a.apiCampaignKey) != null ? _b : null;
-      __superGet(RawCampaign.prototype, this, "initialiseData").call(this);
+      var _a;
+      this.apiCampaignKey = (_a = frontmatter == null ? void 0 : frontmatter.apiCampaignKey) != null ? _a : null;
+      __superGet(RawCampaign.prototype, this, "initialiseData").call(this, frontmatter);
     });
   }
 };
@@ -813,10 +816,9 @@ var YouTubeImageFetcher = class extends AbstractFetcher {
 
 // src/data/Music.ts
 var Music = class extends AbstractElementRecord {
-  initialiseData() {
-    var _a;
-    this.url = (_a = this.frontmatter) == null ? void 0 : _a.url;
-    super.initialiseData();
+  initialiseData(frontmatter) {
+    this.url = frontmatter == null ? void 0 : frontmatter.url;
+    super.initialiseData(frontmatter);
   }
   getThumbnail() {
     const imageUrl = this.fetchImage();
@@ -4645,6 +4647,9 @@ var Database = class extends import_obsidian16.Component {
     this.app = app2;
     this.elements = [];
     this.basenameIndex = /* @__PURE__ */ new Map();
+    this.onSave = (0, import_obsidian16.debounce)(this.onSave, 2e3, true);
+    this.onDelete = (0, import_obsidian16.debounce)(this.onDelete, 2e3, true);
+    this.onRename = (0, import_obsidian16.debounce)(this.onRename, 2e3, true);
   }
   ready() {
     return __async(this, null, function* () {
