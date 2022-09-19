@@ -1,11 +1,11 @@
 import {TableResponseInterface} from "../../interfaces/response/TableResponseInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {DataType} from "../../enums/DataType";
 import {SessionInterface} from "../../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 
-export class TableView extends AbstractView {
+export class TableView extends AbstractComponentView {
 	public render(
 		container: HTMLElement,
 		data: TableResponseInterface,

@@ -1,4 +1,4 @@
-import {AbstractView} from "../../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../../abstracts/AbstractComponentView";
 import {RawResponseCharacterRecordSheet} from "../data/responses/RawResponseCharacterRecordSheet";
 import {RawAbility} from "../enums/RawAbility";
 import {RawTrait} from "../enums/RawTrait";
@@ -13,7 +13,7 @@ import {DiceResult} from "../../../helpers/DiceResult";
 import {RawRollResult} from "../enums/RawRollResult";
 import {RawUpdateRollerModal} from "../modals/RawUpdateRollerModal";
 
-export class RawCharacterRecordSheetView extends AbstractView {
+export class RawCharacterRecordSheetView extends AbstractComponentView {
 	private characterRecordSheetContainerEl: HTMLDivElement;
 
 	render(

@@ -1,7 +1,7 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {StoryCirclePlotResponseInterface} from "../../interfaces/response/StoryCirclePlotResponseInterface";
 
-export class StoryCirclePlotView extends AbstractView {
+export class StoryCirclePlotView extends AbstractComponentView {
 	public render(
 		container: HTMLElement,
 		data: StoryCirclePlotResponseInterface,

@@ -1,7 +1,7 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {AbtPlotResponseInterface} from "../../interfaces/response/AbtPlotResponseInterface";
 
-export class AbtPlotView extends AbstractView {
+export class AbtPlotView extends AbstractComponentView {
 	public render(
 		container: HTMLElement,
 		data: AbtPlotResponseInterface,

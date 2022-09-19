@@ -1,7 +1,7 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {ImageResponseInterface} from "../../interfaces/response/ImageResponseInterface";
 
-export class ImageView extends AbstractView {
+export class ImageView extends AbstractComponentView {
 	public render(
 		container: HTMLElement,
 		data: ImageResponseInterface,

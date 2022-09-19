@@ -1,7 +1,7 @@
 import {StringResponseInterface} from "../../interfaces/response/StringResponseInterface";
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 
-export class StringView extends AbstractView {
+export class StringView extends AbstractComponentView {
 	render(
 		container: HTMLElement,
 		data: StringResponseInterface,

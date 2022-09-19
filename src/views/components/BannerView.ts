@@ -1,7 +1,7 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {BannerResponseInterface} from "../../interfaces/response/BannerResponseInterface";
 
-export class BannerView extends AbstractView {
+export class BannerView extends AbstractComponentView {
 	public render(
 		container: HTMLElement,
 		data: BannerResponseInterface,

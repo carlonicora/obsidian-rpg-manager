@@ -1,9 +1,9 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {HeaderResponseInterface} from "../../interfaces/response/HeaderResponseInterface";
 import {HeaderResponseElementInterface} from "../../interfaces/response/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../enums/HeaderResponseType";
 
-export class HeaderView extends AbstractView {
+export class HeaderView extends AbstractComponentView {
 	render(
 		container: HTMLElement,
 		data: HeaderResponseInterface,

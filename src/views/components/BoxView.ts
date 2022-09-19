@@ -1,8 +1,8 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {Component, MarkdownRenderer} from "obsidian";
 import {BoxResponseInterface} from "../../interfaces/response/BoxResponseInterface";
 
-export class BoxView extends AbstractView {
+export class BoxView extends AbstractComponentView {
 	public render(
 		container: HTMLElement,
 		data: BoxResponseInterface,

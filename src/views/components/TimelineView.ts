@@ -1,9 +1,9 @@
-import {AbstractView} from "../../abstracts/AbstractView";
+import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {TimelineElementResponseInterface} from "../../interfaces/response/TimelineElementResponseInterface";
 import {TimelineResponseInterface} from "../../interfaces/response/TimelineResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 
-export class TimelineView extends AbstractView {
+export class TimelineView extends AbstractComponentView {
 	render(
 		container: HTMLElement,
 		data: TimelineResponseInterface,
