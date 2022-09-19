@@ -3625,7 +3625,7 @@ var AbstractView = class {
   }
 };
 
-// src/views/StringView.ts
+// src/views/components/StringView.ts
 var StringView = class extends AbstractView {
   render(container, data) {
     const divContainer = container.createDiv();
@@ -3633,7 +3633,7 @@ var StringView = class extends AbstractView {
   }
 };
 
-// src/views/TableView.ts
+// src/views/components/TableView.ts
 var TableView = class extends AbstractView {
   render(container, data) {
     const divContainer = container.createDiv();
@@ -3699,7 +3699,7 @@ var TableView = class extends AbstractView {
   }
 };
 
-// src/views/BannerView.ts
+// src/views/components/BannerView.ts
 var BannerView = class extends AbstractView {
   render(container, data) {
     if (data.image !== null) {
@@ -3716,7 +3716,7 @@ var BannerView = class extends AbstractView {
   }
 };
 
-// src/views/BoxView.ts
+// src/views/components/BoxView.ts
 var import_obsidian9 = require("obsidian");
 var BoxView = class extends AbstractView {
   render(container, data) {
@@ -3730,7 +3730,7 @@ var BoxView = class extends AbstractView {
   }
 };
 
-// src/views/BreadcrumbView.ts
+// src/views/components/BreadcrumbView.ts
 var import_obsidian10 = require("obsidian");
 var BreadcrumbView = class extends AbstractView {
   render(container, data) {
@@ -3784,7 +3784,7 @@ var BreadcrumbView = class extends AbstractView {
   }
 };
 
-// src/views/TimelineView.ts
+// src/views/components/TimelineView.ts
 var import_obsidian11 = require("obsidian");
 var TimelineView = class extends AbstractView {
   render(container, data) {
@@ -3823,7 +3823,7 @@ var TimelineView = class extends AbstractView {
   }
 };
 
-// src/views/ImageView.ts
+// src/views/components/ImageView.ts
 var ImageView = class extends AbstractView {
   render(container, data) {
     if (data.imgSrc != null) {
@@ -3836,7 +3836,7 @@ var ImageView = class extends AbstractView {
   }
 };
 
-// src/views/HeaderView.ts
+// src/views/components/HeaderView.ts
 var HeaderView = class extends AbstractView {
   render(container, data) {
     const crs = container.createDiv({ cls: "rpgm-header-info" });
@@ -3875,7 +3875,7 @@ var HeaderView = class extends AbstractView {
   }
 };
 
-// src/views/AbtPlotView.ts
+// src/views/components/AbtPlotView.ts
 var AbtPlotView = class extends AbstractView {
   render(container, data) {
     const titleEl = container.createEl("h2");
@@ -3892,7 +3892,7 @@ var AbtPlotView = class extends AbstractView {
   }
 };
 
-// src/views/StoryCirclePlotView.ts
+// src/views/components/StoryCirclePlotView.ts
 var StoryCirclePlotView = class extends AbstractView {
   render(container, data) {
     const titleEl = container.createEl("h2");
@@ -4372,24 +4372,18 @@ var DatabaseErrorModal = class extends import_obsidian15.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.createEl("h1", { cls: "error", text: "RPG Manager Error" });
-    if (this.misconfiguredTags !== void 0) {
-      contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
-      contentEl.createEl("p", { text: "Please double check the errors and correct them." });
-      this.misconfiguredTags.forEach((error, file) => {
-        this.addError(error, file);
-      });
+    if (this.singleError !== void 0 && this.singleErrorFile !== void 0 && this.misconfiguredTags === void 0) {
+      this.misconfiguredTags = /* @__PURE__ */ new Map();
+      this.misconfiguredTags.set(this.singleErrorFile, this.singleError);
     }
-    if (this.singleError !== void 0) {
-      if (this.singleError !== void 0 && this.singleErrorFile !== void 0)
-        this.addError(this.singleError, this.singleErrorFile);
-    }
-  }
-  addError(error, file) {
-    var _a;
-    const { contentEl } = this;
-    const errorEl = contentEl.createEl("div");
-    const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
-    import_obsidian15.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), errorEl, file.path, null);
+    contentEl.createEl("p", { text: "One or more of the tags that define an outline or an element are not correctly misconfigured and can't be read!" });
+    contentEl.createEl("p", { text: "Please double check the errors and correct them." });
+    (this.misconfiguredTags || /* @__PURE__ */ new Map()).forEach((error, file) => {
+      var _a;
+      const errorEl = contentEl.createEl("div");
+      const title = (_a = error.getErrorTitle()) != null ? _a : file.basename;
+      import_obsidian15.MarkdownRenderer.renderMarkdown("**" + title + "**\n" + error.showErrorMessage(), errorEl, file.path, null);
+    });
   }
   onClose() {
     super.onClose();
