@@ -161,7 +161,6 @@ export abstract class AbstractRecord implements RecordInterface {
 
 		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
 		this.id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, this.tags);
-		console.log(this.id);
 		await this.validateTag();
 		await this.initialise();
 		await this.initialiseData(metadata.frontmatter);
