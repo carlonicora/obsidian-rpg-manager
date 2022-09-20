@@ -30,7 +30,7 @@ export class SceneTableComponent extends AbstractComponent {
 			if (scene !== undefined) {
 				response.addContent([
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link, ContentType.Link),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.synopsis, ContentType.Markdown),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true),

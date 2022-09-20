@@ -2331,7 +2331,7 @@ var SceneTableComponent = class extends AbstractComponent {
         if (scene !== void 0) {
           response.addContent([
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.completed ? scene.sceneId.toString() : "**" + scene.sceneId + "**", 4 /* Markdown */, true),
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link, 2 /* Link */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.link + (scene.completed ? "" : " _(incomplete)_"), 2 /* Link */),
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(scene.synopsis, 4 /* Markdown */),
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.formatTime(scene.startTime), 0 /* String */, true),
             this.app.plugins.getPlugin("rpg-manager").factories.contents.create(this.formatTime(scene.endTime), 0 /* String */, true),
