@@ -1,10 +1,4 @@
-import {
-	App,
-	Component, debounce,
-	MarkdownPostProcessorContext,
-	MarkdownRenderChild,
-	parseYaml, TFile
-} from "obsidian";
+import {App, Component, debounce, MarkdownPostProcessorContext, MarkdownRenderChild, parseYaml, TFile} from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
@@ -52,7 +46,15 @@ export class Controller extends MarkdownRenderChild {
 
 		const sourceMeta = parseYaml(sourceLines.join('\n'));
 
-		const settings = ((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings);
+		let settings: CampaignSetting;
+		if (this.currentElement instanceof Campaign){
+			settings = this.currentElement.settings;
+		} else {
+			settings = this.currentElement.campaign.settings;
+		}
+
+		if (settings === undefined) settings = CampaignSetting.Agnostic;
+
 		try {
 			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
 				settings,

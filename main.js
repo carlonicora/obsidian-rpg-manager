@@ -483,7 +483,14 @@ var Controller = class extends import_obsidian2.MarkdownRenderChild {
     modelName = modelName.replace("navigation", "Navigation");
     sourceLines.shift();
     const sourceMeta = (0, import_obsidian2.parseYaml)(sourceLines.join("\n"));
-    const settings = this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings;
+    let settings;
+    if (this.currentElement instanceof Campaign) {
+      settings = this.currentElement.settings;
+    } else {
+      settings = this.currentElement.campaign.settings;
+    }
+    if (settings === void 0)
+      settings = 0 /* Agnostic */;
     try {
       this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(settings, modelName, this.currentElement, this.source, this.sourcePath, sourceMeta);
     } catch (e) {
