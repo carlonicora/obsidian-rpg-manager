@@ -4,6 +4,7 @@ import {RelationshipInterface} from "../RelationshipInterface";
 import {DatabaseInterface} from "./DatabaseInterface";
 import {BaseCampaignInterface} from "../data/BaseCampaignInterface";
 import {Id} from "../../database/Id";
+import {RelationshipType} from "../../enums/RelationshipType";
 
 export interface RecordInterface {
 	id: Id;
@@ -50,8 +51,7 @@ export interface RecordInterface {
 
 	getRelationships(
 		type: DataType,
-		requiresReversedRelationship?:boolean,
-		requiresFrontMatterRelationship?:boolean,
+		requiredRelationshipType?: RelationshipType,
 	): Array<RelationshipInterface>;
 
 	get name(): string;

@@ -2,7 +2,6 @@ import {AdventureModel} from "../models/AdventureModel";
 import {CampaignModel} from "../models/CampaignModel";
 import {CampaignNavigationModel} from "../models/CampaignNavigationModel";
 import {ClueModel} from "../models/ClueModel";
-import {ErrorModel} from "../models/ErrorModel";
 import {EventModel} from "../models/EventModel";
 import {FactionModel} from "../models/FactionModel";
 import {LocationModel} from "../models/LocationModel";
@@ -27,7 +26,6 @@ const ModelsMap = {
 	AgnosticCampaign: CampaignModel,
 	AgnosticCampaignNavigation: CampaignNavigationModel,
 	AgnosticClue: ClueModel,
-	AgnosticError: ErrorModel,
 	AgnosticEvent: EventModel,
 	AgnosticFaction: FactionModel,
 	AgnosticLocation: LocationModel,

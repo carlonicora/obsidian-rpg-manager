@@ -1,6 +1,6 @@
 import {App, TFile} from "obsidian";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {base} from "w3c-keyname";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class RelationshipFactory {
 	constructor(
@@ -89,9 +89,9 @@ export class RelationshipFactory {
 
 				if (name !== baseName) {
 					if (isInFrontMatter && isMainFrontLink) {
-						relationships.set(name, {description: relationshipDescription, isInFrontmatter: true});
+						relationships.set(name, {description: relationshipDescription, type: RelationshipType.DirectInFrontmatter});
 					} else if (!relationships.has(name)) {
-						relationships.set(name, {description: relationshipDescription, isInFrontmatter: false});
+						relationships.set(name, {description: relationshipDescription, type: RelationshipType.Direct});
 					}
 				}
 			}
