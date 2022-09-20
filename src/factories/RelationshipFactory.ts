@@ -1,5 +1,6 @@
 import {App, TFile} from "obsidian";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {base} from "w3c-keyname";
 
 export class RelationshipFactory {
 	constructor(
@@ -53,6 +54,8 @@ export class RelationshipFactory {
 		for (let fileContentLineCounter=0; fileContentLineCounter<content.length; fileContentLineCounter++) {
 			let line = content[fileContentLineCounter];
 			while (line.indexOf('[[') !== -1){
+				let isMainFrontLink = false;
+				if (line.trimStart().indexOf('[[') === 0) isMainFrontLink = true;
 				line = line.substring(line.indexOf('[[') + 2);
 				const endLinkIndex = line.indexOf(']]');
 				if (endLinkIndex === -1) break;
@@ -84,7 +87,13 @@ export class RelationshipFactory {
 					}
 				}
 
-				if (name !== baseName && !relationships.has(name)) relationships.set(name, {description: relationshipDescription, isReverse: false, isInFrontmatter: isInFrontMatter});
+				if (name !== baseName) {
+					if (isInFrontMatter && isMainFrontLink) {
+						relationships.set(name, {description: relationshipDescription, isInFrontmatter: true});
+					} else if (!relationships.has(name)) {
+						relationships.set(name, {description: relationshipDescription, isInFrontmatter: false});
+					}
+				}
 			}
 		}
 	}

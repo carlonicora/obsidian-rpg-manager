@@ -335,13 +335,19 @@ export class Database extends Component implements DatabaseInterface {
 					(isList ? true : data.adventureId === adventureId);
 				break;
 			case DataType.Session:
-			case DataType.Note:
 				if (overloadId !== undefined) sessionId = overloadId;
-				return (data: SessionInterface|NoteInterface) =>
+				return (data: SessionInterface) =>
 					(dataType & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
 					(isList ? true : data.sessionId === sessionId);
+				break;
+			case DataType.Note:
+				return (note: NoteInterface) =>
+					dataType === note.id.type &&
+					note.campaign.campaignId === campaignId &&
+					(adventureId !== undefined ? note.adventure.adventureId === adventureId : true) &&
+					note.sessionId === sessionId;
 				break;
 			case DataType.Scene:
 				if (overloadId !== undefined) sceneId = overloadId;

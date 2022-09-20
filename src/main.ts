@@ -4,7 +4,7 @@ import {
 	MarkdownPostProcessorContext,
 	Plugin,
 } from 'obsidian';
-import {Controller} from "./helpers/Controller";
+import {Controller} from "./Controller";
 import {DataType} from "./enums/DataType";
 import {Factories} from "./helpers/Factories";
 import {CreationModal} from "./modals/CreationModal";
@@ -21,6 +21,9 @@ import {ReleaseNoteView} from "./views/ReleaseNoteView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
+	 * ## Version 1.3.3
+	 * 		Move timeline to Obsidian side view
+	 *
 	 * ## Version 2.0
 	 * 		@TODO Remove date from Act
 	 * 		@TODO Remove irl from Act

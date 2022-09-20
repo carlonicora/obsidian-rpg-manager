@@ -61,6 +61,7 @@ export class ModelFactory extends AbstractFactory {
 		if (ModelsMap[modelKey] == null && settings !== CampaignSetting.Agnostic){
 			modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName as SingleModelKey<K>;
 		}
+
 		return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
 	}
 }

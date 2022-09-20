@@ -35,6 +35,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public campaign: BaseCampaignInterface;
 
 	public relationships: Map<string, RelationshipInterface>;
+	public reverseRelationships: Map<string, RelationshipInterface>;
 
 	constructor(
 		protected app: App,
@@ -79,7 +80,7 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public get image(
 	): string|null {
-		if (this.imageUrl !== undefined) return this.imageUrl;
+		if (this.imageUrl != null && this.imageUrl !== '') return this.imageUrl;
 
 		let localImage: string|undefined = undefined;
 		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
@@ -146,6 +147,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	protected async initialiseRelationships(
 	): Promise<void> {
 		this.relationships = await new Map();
+		this.reverseRelationships = await new Map();
 		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
 	}
 
@@ -157,7 +159,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public async reload(
 	): Promise<void> {
 		const metadata: CachedMetadata|null = await this.app.metadataCache.getFileCache(this.file);
-		if (metadata === null) throw new Error('metadata is null');
+		if (metadata === null || metadata.frontmatter === undefined) return;
 
 		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
 		this.id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, this.tags);
@@ -201,7 +203,7 @@ export abstract class AbstractRecord implements RecordInterface {
 						{
 							component: this,
 							description: '',
-							isReverse: true,
+							isInFrontmatter: relationship.isInFrontmatter,
 						}
 					)
 				}
@@ -213,20 +215,29 @@ export abstract class AbstractRecord implements RecordInterface {
 		name: string,
 		relationship: RelationshipInterface,
 	): void {
-		if (!this.relationships.has(name)) this.relationships.set(name, relationship);
+		if (!this.reverseRelationships.has(name)) this.reverseRelationships.set(name, relationship);
 	}
 
 	public getRelationships(
 		type: DataType,
-		requiresReversedRelationship = false,
+		requiresReversedRelationship:boolean=false,
+		requiresFrontMatterRelationship:boolean=false,
 	): Array<RelationshipInterface> {
 		const response:Array<RelationshipInterface> = [];
 
-		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
-			if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
-				if (requiresReversedRelationship === relationship.isReverse) response.push(relationship);
-			}
-		});
+		if (requiresReversedRelationship) {
+			this.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
+				if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
+					if (!requiresFrontMatterRelationship || relationship.isInFrontmatter) response.push(relationship);
+				}
+			});
+		} else {
+			this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
+				if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
+					if (!requiresFrontMatterRelationship || relationship.isInFrontmatter) response.push(relationship);
+				}
+			});
+		}
 
 		return response;
 	}

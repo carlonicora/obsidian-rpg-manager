@@ -13,29 +13,30 @@ export class SceneModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
+
 		await this.response.addComponent(
 			MusicTableComponent,
-			this.currentElement.getRelationships(DataType.Music, false),
+			this.currentElement.getRelationships(DataType.Music),
 		);
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character|DataType.NonPlayerCharacter, false),
+			this.currentElement.getRelationships(DataType.Character|DataType.NonPlayerCharacter),
 		);
 
 		await this.response.addComponent(
 			FactionTableComponent,
-			this.currentElement.getRelationships(DataType.Faction, false),
+			this.currentElement.getRelationships(DataType.Faction),
 		);
 
 		await this.response.addComponent(
 			ClueTableComponent,
-			this.currentElement.getRelationships(DataType.Clue, false),
+			this.currentElement.getRelationships(DataType.Clue),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, false),
+			this.currentElement.getRelationships(DataType.Location),
 		);
 
 		return this.response;

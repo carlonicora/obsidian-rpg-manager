@@ -3,7 +3,6 @@ import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DataType} from "../enums/DataType";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class Note extends AbstractOutlineRecord implements NoteInterface {
 	public adventure: AdventureInterface;
@@ -15,7 +14,6 @@ export class Note extends AbstractOutlineRecord implements NoteInterface {
 		super.loadHierarchy(database);
 
 		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id.tag);
-		const session = database.readSingle<SessionInterface>(DataType.Session, this.id.tag);
-		this.sessionId = session.sessionId;
+		this.sessionId = this.id.getTypeValue(DataType.Session);
 	}
 }

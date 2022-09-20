@@ -21,8 +21,8 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		frontmatter: FrontMatterCache|undefined,
 	): void {
 		this.sceneId = this.id.getTypeValue(DataType.Scene);
-		this.startTime = this.initialiseDate(frontmatter?.time?.start);
-		this.endTime = this.initialiseDate(frontmatter?.time?.end);
+		this.startTime = this.initialiseDate(frontmatter?.times?.start ?? frontmatter?.time?.start);
+		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;
 
 		super.initialiseData(frontmatter);

@@ -22,7 +22,7 @@ export class FactionModel extends AbstractModel {
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, false),
+			this.currentElement.getRelationships(DataType.Location),
 		);
 
 		return this.response;
