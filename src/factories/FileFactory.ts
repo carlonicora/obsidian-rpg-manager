@@ -98,7 +98,7 @@ export class FileFactory extends AbstractFactory {
 		sceneId: number|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 	): Promise<void> {
-		let folder = '/';
+		let folder = path.sep;
 		let settings = CampaignSetting.Agnostic;
 
 		const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);

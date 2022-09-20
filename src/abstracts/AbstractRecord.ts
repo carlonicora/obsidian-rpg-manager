@@ -204,7 +204,7 @@ export abstract class AbstractRecord implements RecordInterface {
 						this.name,
 						{
 							component: this,
-							description: '',
+							description: (relationship.type === RelationshipType.DirectInFrontmatter ? relationship.description : ''),
 							type: (relationship.type === RelationshipType.DirectInFrontmatter ? RelationshipType.ReverseInFrontmatter : RelationshipType.Reverse),
 						}
 					)
@@ -217,7 +217,9 @@ export abstract class AbstractRecord implements RecordInterface {
 		name: string,
 		relationship: RelationshipInterface,
 	): void {
-		if (!this.reverseRelationships.has(name)) this.reverseRelationships.set(name, relationship);
+		const existingRelationship = this.reverseRelationships.get(name);
+
+		if (existingRelationship === undefined || relationship.type === RelationshipType.ReverseInFrontmatter) this.reverseRelationships.set(name, relationship);
 	}
 
 	public getRelationships(

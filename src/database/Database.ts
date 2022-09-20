@@ -245,10 +245,9 @@ export class Database extends Component implements DatabaseInterface {
 
 			await component.loadHierarchy(this);
 			await this.create(component);
-			await this.refreshRelationships();
+			await this.refreshRelationships(component);
 
 			this.app.workspace.trigger("rpgmanager:refresh-views");
-
 		} catch (e) {
 			if (e instanceof AbstractRpgError) {
 				new DatabaseErrorModal(this.app, undefined, e, file).open();
@@ -294,12 +293,19 @@ export class Database extends Component implements DatabaseInterface {
 	}
 
 	private async refreshRelationships(
+		element: RecordInterface|undefined=undefined,
 	): Promise<void> {
-		for (let index=0; index<this.elements.length; index++){
-			await this.elements[index].loadRelationships(this);
-		}
-		for (let index=0; index<this.elements.length; index++){
-			if (!this.elements[index].isOutline) await this.elements[index].loadReverseRelationships(this);
+		if (element !== undefined){
+			console.log('Refreshing relationships for', element);
+			await element.loadRelationships(this);
+			if (!element.isOutline) await element.loadReverseRelationships(this);
+		} else {
+			for (let index = 0; index < this.elements.length; index++) {
+				await this.elements[index].loadRelationships(this);
+			}
+			for (let index=0; index<this.elements.length; index++){
+				if (!this.elements[index].isOutline) await this.elements[index].loadReverseRelationships(this);
+			}
 		}
 	}
 

@@ -281,7 +281,7 @@ var AbstractRecord = class {
           if (relationship.component !== void 0) {
             relationship.component.addReverseRelationship(this.name, {
               component: this,
-              description: "",
+              description: relationship.type === 2 /* DirectInFrontmatter */ ? relationship.description : "",
               type: relationship.type === 2 /* DirectInFrontmatter */ ? 8 /* ReverseInFrontmatter */ : 4 /* Reverse */
             });
           }
@@ -290,7 +290,8 @@ var AbstractRecord = class {
     });
   }
   addReverseRelationship(name, relationship) {
-    if (!this.reverseRelationships.has(name))
+    const existingRelationship = this.reverseRelationships.get(name);
+    if (existingRelationship === void 0 || relationship.type === 8 /* ReverseInFrontmatter */)
       this.reverseRelationships.set(name, relationship);
   }
   getRelationships(type, requiredRelationshipType = 1 /* Direct */ | 2 /* DirectInFrontmatter */) {
@@ -1000,7 +1001,7 @@ var FileFactory = class extends AbstractFactory {
   }
   silentCreate(type, name, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0, additionalInformation = void 0) {
     return __async(this, null, function* () {
-      let folder = "/";
+      let folder = path.sep;
       let settings = 0 /* Agnostic */;
       const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(1 /* Campaign */, campaignId);
       if (campaign !== void 0) {
@@ -2258,7 +2259,7 @@ var FactionModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, 15 /* All */));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, 8 /* ReverseInFrontmatter */));
       yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
@@ -4798,7 +4799,7 @@ var Database = class extends import_obsidian16.Component {
         }
         yield component.loadHierarchy(this);
         yield this.create(component);
-        yield this.refreshRelationships();
+        yield this.refreshRelationships(component);
         this.app.workspace.trigger("rpgmanager:refresh-views");
       } catch (e) {
         if (e instanceof AbstractRpgError) {
@@ -4831,14 +4832,21 @@ var Database = class extends import_obsidian16.Component {
       }
     });
   }
-  refreshRelationships() {
+  refreshRelationships(element = void 0) {
     return __async(this, null, function* () {
-      for (let index = 0; index < this.elements.length; index++) {
-        yield this.elements[index].loadRelationships(this);
-      }
-      for (let index = 0; index < this.elements.length; index++) {
-        if (!this.elements[index].isOutline)
-          yield this.elements[index].loadReverseRelationships(this);
+      if (element !== void 0) {
+        console.log("Refreshing relationships for", element);
+        yield element.loadRelationships(this);
+        if (!element.isOutline)
+          yield element.loadReverseRelationships(this);
+      } else {
+        for (let index = 0; index < this.elements.length; index++) {
+          yield this.elements[index].loadRelationships(this);
+        }
+        for (let index = 0; index < this.elements.length; index++) {
+          if (!this.elements[index].isOutline)
+            yield this.elements[index].loadReverseRelationships(this);
+        }
       }
     });
   }
