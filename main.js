@@ -196,8 +196,8 @@ var AbstractRecord = class {
       return localImage;
     return null;
   }
-  fileExists(path2) {
-    const abstractFile = this.app.vault.getAbstractFileByPath(path2);
+  fileExists(path3) {
+    const abstractFile = this.app.vault.getAbstractFileByPath(path3);
     let response = false;
     if (abstractFile instanceof import_obsidian.TAbstractFile) {
       response = true;
@@ -952,7 +952,7 @@ var path = require("path");
 var FileFactory = class extends AbstractFactory {
   create(settings, type, create, templateName, name, campaignId = void 0, adventureId = void 0, sessionId = void 0, sceneId = void 0, additionalInformation = null) {
     return __async(this, null, function* () {
-      let folder = "/";
+      let folder = path.sep;
       if (campaignId != null) {
         let campaign;
         try {
@@ -1001,7 +1001,7 @@ var FileFactory = class extends AbstractFactory {
   }
   silentCreate(type, name, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0, additionalInformation = void 0) {
     return __async(this, null, function* () {
-      let folder = path.sep;
+      let folder = "";
       let settings = 0 /* Agnostic */;
       const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(1 /* Campaign */, campaignId);
       if (campaign !== void 0) {
@@ -1018,15 +1018,23 @@ var FileFactory = class extends AbstractFactory {
   }
   generateFilePath(type, folder, name) {
     return __async(this, null, function* () {
+      if (folder.startsWith(path.sep))
+        folder = folder.substring(path.sep.length);
+      if (folder.endsWith(path.sep))
+        folder = folder.substring(0, folder.length - path.sep.length);
       let response = name + ".md";
       if (this.app.plugins.getPlugin("rpg-manager").settings.automaticMove) {
         let fullPath;
         if (type !== 1 /* Campaign */) {
-          fullPath = folder + DataType[type] + "s";
+          fullPath = folder + path.sep + DataType[type] + "s";
           if (fullPath.startsWith(path.sep))
-            fullPath = fullPath.substring(1);
-          if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
-            yield app.vault.createFolder(fullPath);
+            fullPath = fullPath.substring(path.sep.length);
+          const fileOrFolder = yield this.app.vault.getAbstractFileByPath(fullPath);
+          if (fileOrFolder == null) {
+            try {
+              yield this.app.vault.createFolder(fullPath);
+            } catch (e) {
+            }
           }
         } else {
           fullPath = folder;
@@ -4721,8 +4729,8 @@ var Database = class extends import_obsidian16.Component {
   }
   internalSort(data, comparison) {
   }
-  readByPath(path2) {
-    const response = this.elements.filter((record) => record.path === path2);
+  readByPath(path3) {
+    const response = this.elements.filter((record) => record.path === path3);
     return response.length === 1 ? response[0] : void 0;
   }
   readSingleParametrised(dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
@@ -4835,7 +4843,6 @@ var Database = class extends import_obsidian16.Component {
   refreshRelationships(element = void 0) {
     return __async(this, null, function* () {
       if (element !== void 0) {
-        console.log("Refreshing relationships for", element);
         yield element.loadRelationships(this);
         if (!element.isOutline)
           yield element.loadReverseRelationships(this);
@@ -5756,10 +5763,10 @@ var ErrorView = class extends AbstractView {
           const errorLinks = error.getErrorLinks();
           if (errorLinks !== void 0) {
             const errorLinksEl = errorDescriptionEl.createEl("ul");
-            errorLinks.forEach((path2) => {
+            errorLinks.forEach((path3) => {
               const errorLinkEl = errorLinksEl.createEl("li");
               const errorLinkAnchor = errorLinkEl.createEl("a");
-              this.addLink(errorLinkAnchor, path2);
+              this.addLink(errorLinkAnchor, path3);
             });
           }
         });
@@ -5904,6 +5911,7 @@ var ReleaseNoteView = class extends AbstractView {
 };
 
 // src/main.ts
+var path2 = require("path");
 var RpgManager = class extends import_obsidian23.Plugin {
   constructor() {
     super(...arguments);

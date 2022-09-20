@@ -296,7 +296,6 @@ export class Database extends Component implements DatabaseInterface {
 		element: RecordInterface|undefined=undefined,
 	): Promise<void> {
 		if (element !== undefined){
-			console.log('Refreshing relationships for', element);
 			await element.loadRelationships(this);
 			if (!element.isOutline) await element.loadReverseRelationships(this);
 		} else {

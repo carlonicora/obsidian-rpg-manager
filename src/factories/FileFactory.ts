@@ -19,7 +19,7 @@ export class FileFactory extends AbstractFactory {
 		sceneId: number|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
-		let folder = '/';
+		let folder = path.sep;
 
 		if (campaignId != null) {
 
@@ -98,7 +98,7 @@ export class FileFactory extends AbstractFactory {
 		sceneId: number|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 	): Promise<void> {
-		let folder = path.sep;
+		let folder = '';
 		let settings = CampaignSetting.Agnostic;
 
 		const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
@@ -132,15 +132,24 @@ export class FileFactory extends AbstractFactory {
 		folder: string,
 		name: string,
 	): Promise<string> {
+		if (folder.startsWith(path.sep)) folder = folder.substring(path.sep.length);
+		if (folder.endsWith(path.sep)) folder = folder.substring(0, folder.length - path.sep.length);
 		let response = name + '.md';
 
 		if (this.app.plugins.getPlugin('rpg-manager').settings.automaticMove){
 			let fullPath: string;
 			if (type !== DataType.Campaign) {
-				fullPath = folder + DataType[type] + 's';
-				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(1);
-				if (this.app.vault.getAbstractFileByPath(fullPath) == null) {
-					await app.vault.createFolder(fullPath);
+				fullPath = folder + path.sep + DataType[type] + 's';
+
+				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(path.sep.length);
+
+				const fileOrFolder = await this.app.vault.getAbstractFileByPath(fullPath);
+				if (fileOrFolder == null) {
+					try {
+						await this.app.vault.createFolder(fullPath);
+					} catch (e) {
+						//no need to catch any error here
+					}
 				}
 			} else {
 				fullPath = folder;
