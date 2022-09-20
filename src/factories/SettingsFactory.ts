@@ -83,6 +83,7 @@ export class SettingsFactory {
 					switch (type) {
 						case SettingType.templateFolder:
 							await this.plugin.updateSettings({templateFolder: value});
+							settings.value = value;
 							break;
 					}
 				})

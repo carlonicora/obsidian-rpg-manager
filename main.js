@@ -5523,6 +5523,8 @@ var SettingsFactory = class {
     });
   }
   createDropdownSetting(type, description, options) {
+    console.log(type);
+    console.log(this.map);
     const settings = this.map.get(type);
     if (settings === void 0)
       throw new Error("Setting type not found");
@@ -5531,11 +5533,13 @@ var SettingsFactory = class {
       options.forEach((value, display) => {
         dropdown.addOption(value, display);
       });
+      console.log(settings.value);
       dropdown.setValue(settings.value);
       dropdown.onChange((value) => __async(this, null, function* () {
         switch (type) {
           case 15 /* templateFolder */:
             yield this.plugin.updateSettings({ templateFolder: value });
+            settings.value = value;
             break;
         }
       }));
