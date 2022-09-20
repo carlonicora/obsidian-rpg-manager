@@ -27,7 +27,7 @@ export class ClueTableComponent extends AbstractComponent {
 			if (record !== undefined) {
 				response.addContent([
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
+					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create((record.isFound ? record.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
 					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				])
