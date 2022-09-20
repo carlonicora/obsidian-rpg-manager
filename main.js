@@ -1733,7 +1733,7 @@ var AbstractModel = class {
       response.mainTitle = DataType[this.currentElement.id.type];
       switch (this.currentElement.id.type) {
         case 2 /* Adventure */:
-          this.generateElementBreadcrumb(response, 2 /* Adventure */, this.currentElement);
+          this.generateAventureBreadcrumb(response, this.currentElement);
           break;
         case 4 /* Session */:
           this.generateSessionBreadcrumb(response, this.currentElement);
@@ -1762,6 +1762,34 @@ var AbstractModel = class {
     if (parent != null)
       parent.nextBreadcrumb = response;
     return response;
+  }
+  generateAventureBreadcrumb(parent, adventure) {
+    const adventureBreadcrumb = this.generateElementBreadcrumb(parent, 2 /* Adventure */, adventure);
+    let previousAdventure;
+    let nextAdventure;
+    try {
+      previousAdventure = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(2 /* Adventure */, adventure.campaign.campaignId, adventure.adventureId - 1);
+    } catch (e) {
+    }
+    try {
+      nextAdventure = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(2 /* Adventure */, adventure.campaign.campaignId, adventure.adventureId + 1);
+    } catch (e) {
+    }
+    let previousBreadcrumb = void 0;
+    let nextBreadcrumb = void 0;
+    if (previousAdventure !== void 0) {
+      previousBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, 2 /* Adventure */, previousAdventure, "<< prev adventure", true);
+    }
+    if (nextAdventure !== void 0) {
+      nextBreadcrumb = this.generateElementBreadcrumb(previousBreadcrumb != null ? previousBreadcrumb : adventureBreadcrumb, 2 /* Adventure */, nextAdventure, "next adventure >>", previousAdventure !== void 0 ? false : true);
+    }
+    if (nextBreadcrumb !== void 0) {
+      return nextBreadcrumb;
+    } else {
+      if (previousBreadcrumb !== void 0)
+        return previousBreadcrumb;
+      return adventureBreadcrumb;
+    }
   }
   generateSessionBreadcrumb(parent, session) {
     const adventureBreadcrumb = this.generateElementBreadcrumb(parent, 2 /* Adventure */, session.adventure);

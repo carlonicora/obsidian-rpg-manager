@@ -13,6 +13,7 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ComponentFactory} from "../factories/ComponentFactory";
 import {ResponseData} from "../data/responses/ResponseData";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
+import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
 export abstract class AbstractModel implements ModelInterface {
 	protected io: DatabaseInterface;
@@ -40,7 +41,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 			switch (this.currentElement.id.type) {
 				case DataType.Adventure:
-					this.generateElementBreadcrumb(response, DataType.Adventure, this.currentElement);
+					this.generateAventureBreadcrumb(response, this.currentElement as AdventureInterface);
 					break;
 				case DataType.Session:
 					this.generateSessionBreadcrumb(response, this.currentElement as SessionInterface);
@@ -111,6 +112,54 @@ export abstract class AbstractModel implements ModelInterface {
 			scene.session.sessionId,
 			newSceneId,
 		);
+	}
+
+	private generateAventureBreadcrumb(
+		parent: ResponseBreadcrumb,
+		adventure: AdventureInterface
+	): ResponseBreadcrumb {
+		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, DataType.Adventure, adventure);
+
+		let previousAdventure: AdventureInterface|undefined;
+		let nextAdventure: AdventureInterface|undefined;
+		try {
+			previousAdventure = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<AdventureInterface>(DataType.Adventure, adventure.campaign.campaignId, adventure.adventureId - 1);
+		} catch (e) {
+			//no need to trigger anything, previousAdventure can be null
+		}
+		try {
+			nextAdventure = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<AdventureInterface>(DataType.Adventure, adventure.campaign.campaignId, adventure.adventureId + 1);
+		} catch (e) {
+			//no need to trigger anything, previousAdventure can be null
+		}
+
+		let previousBreadcrumb: ResponseBreadcrumb|undefined = undefined;
+		let nextBreadcrumb: ResponseBreadcrumb|undefined = undefined;
+		if (previousAdventure !== undefined) {
+			previousBreadcrumb = this.generateElementBreadcrumb(
+				adventureBreadcrumb,
+				DataType.Adventure,
+				previousAdventure,
+				'<< prev adventure',
+				true,
+			);
+		}
+		if (nextAdventure !== undefined) {
+			nextBreadcrumb = this.generateElementBreadcrumb(
+				(previousBreadcrumb ?? adventureBreadcrumb),
+				DataType.Adventure,
+				nextAdventure,
+				'next adventure >>',
+				(previousAdventure !== undefined ? false : true),
+			);
+		}
+
+		if (nextBreadcrumb !== undefined){
+			return nextBreadcrumb;
+		} else {
+			if (previousBreadcrumb !== undefined) return previousBreadcrumb;
+			return adventureBreadcrumb;
+		}
 	}
 
 	private generateSessionBreadcrumb(
