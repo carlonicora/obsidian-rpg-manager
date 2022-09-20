@@ -11,8 +11,8 @@ import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
 import {Campaign} from "./data/Campaign";
 import {RecordInterface} from "./interfaces/database/RecordInterface";
-import {AbstractLogMessage, ErrorLog, LogMessageType} from "./helpers/Logger";
 import {CampaignSetting} from "./enums/CampaignSetting";
+import {ErrorLog, LogMessageType} from "./helpers/Logger";
 
 export class Controller extends MarkdownRenderChild {
 	private isActive = false;

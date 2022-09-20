@@ -7,6 +7,7 @@ import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {EventTableComponent} from "../components/EventTableComponent";
 import {ClueTableComponent} from "../components/ClueTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class LocationModel extends AbstractModel {
 	protected currentElement: LocationInterface;
@@ -19,28 +20,28 @@ export class LocationModel extends AbstractModel {
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter, true),
+			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter),
 		);
 
 		await this.response.addComponent(
 			EventTableComponent,
-			this.currentElement.getRelationships(DataType.Event, true),
+			this.currentElement.getRelationships(DataType.Event, RelationshipType.Reverse),
 		);
 
 		await this.response.addComponent(
 			ClueTableComponent,
-			this.currentElement.getRelationships(DataType.Clue, true),
+			this.currentElement.getRelationships(DataType.Clue),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, false, true),
+			this.currentElement.getRelationships(DataType.Location, RelationshipType.DirectInFrontmatter),
 			'Location contained',
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, true, true),
+			this.currentElement.getRelationships(DataType.Location, RelationshipType.ReverseInFrontmatter),
 			'Part of locations',
 		);
 

@@ -282,7 +282,7 @@ var AbstractRecord = class {
             relationship.component.addReverseRelationship(this.name, {
               component: this,
               description: "",
-              isInFrontmatter: relationship.isInFrontmatter
+              type: relationship.type === 2 /* DirectInFrontmatter */ ? 8 /* ReverseInFrontmatter */ : 4 /* Reverse */
             });
           }
         });
@@ -293,23 +293,18 @@ var AbstractRecord = class {
     if (!this.reverseRelationships.has(name))
       this.reverseRelationships.set(name, relationship);
   }
-  getRelationships(type, requiresReversedRelationship = false, requiresFrontMatterRelationship = false) {
+  getRelationships(type, requiredRelationshipType = 1 /* Direct */ | 2 /* DirectInFrontmatter */) {
     const response = [];
-    if (requiresReversedRelationship) {
-      this.reverseRelationships.forEach((relationship, name) => {
-        if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
-          if (!requiresFrontMatterRelationship || relationship.isInFrontmatter)
-            response.push(relationship);
-        }
-      });
-    } else {
-      this.relationships.forEach((relationship, name) => {
-        if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
-          if (!requiresFrontMatterRelationship || relationship.isInFrontmatter)
-            response.push(relationship);
-        }
-      });
-    }
+    this.reverseRelationships.forEach((relationship, name) => {
+      if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type && (relationship.type & requiredRelationshipType) === relationship.type) {
+        response.push(relationship);
+      }
+    });
+    this.relationships.forEach((relationship, name) => {
+      if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type && (relationship.type & requiredRelationshipType) === relationship.type) {
+        response.push(relationship);
+      }
+    });
     return response;
   }
   initialiseDate(date) {
@@ -1659,7 +1654,7 @@ var ResponseData = class {
       let relationships = [];
       let relationship;
       if (data instanceof AbstractRecord) {
-        relationship = { component: data, description: "" };
+        relationship = { component: data, description: "", type: 1 /* Direct */ };
       } else if (data instanceof Array) {
         relationships = [];
         if (data.length > 0) {
@@ -2237,31 +2232,7 @@ var ClueModel = class extends AbstractModel {
       yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
       yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */));
-      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
-      return this.response;
-    });
-  }
-};
-
-// src/data/responses/ResponseLine.ts
-var ResponseLine = class extends AbstractResponse {
-  constructor(app2) {
-    super(app2);
-    this.responseType = 1 /* String */;
-    this.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */);
-  }
-  addContent(content) {
-    this.content = content;
-  }
-};
-
-// src/models/ErrorModel.ts
-var ErrorModel = class extends AbstractModel {
-  generateData() {
-    return __async(this, null, function* () {
-      const status = new ResponseLine(this.app);
-      status.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create('<span class="rpgm-missing">The selected function does not exist in Rpg Manager</span>', 4 /* Markdown */);
-      this.response.addElement(status);
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */));
       return this.response;
     });
   }
@@ -2287,7 +2258,7 @@ var FactionModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, 15 /* All */));
       yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
@@ -2300,11 +2271,11 @@ var LocationModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true));
-      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
-      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, true));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false, true), "Location contained");
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, true, true), "Part of locations");
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, 4 /* Reverse */));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, 2 /* DirectInFrontmatter */), "Location contained");
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, 8 /* ReverseInFrontmatter */), "Part of locations");
       return this.response;
     });
   }
@@ -2404,8 +2375,8 @@ var NpcModel = class extends AbstractModel {
       yield this.response.addComponent(HeaderComponent, this.currentElement);
       yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */));
       yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
-      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
-      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, true));
+      yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, 4 /* Reverse */));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, 4 /* Reverse */));
       yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
@@ -2486,7 +2457,6 @@ var SceneNavigationModel = class extends AbstractModel {
 var SessionModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
       yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId, void 0).sort(function(leftData, rightData) {
         if (leftData.sceneId > rightData.sceneId)
           return 1;
@@ -2937,9 +2907,8 @@ var MusicModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */));
-      yield this.response.addComponent(SceneTableComponent, this.currentElement.getRelationships(8 /* Scene */, true));
-      yield this.response.addComponent(SessionTableComponent, this.currentElement.getRelationships(4 /* Session */, true));
+      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, 2 /* DirectInFrontmatter */));
+      yield this.response.addComponent(SceneTableComponent, this.currentElement.getRelationships(8 /* Scene */, 8 /* ReverseInFrontmatter */));
       return this.response;
     });
   }
@@ -2952,7 +2921,6 @@ var ModelsMap = {
   AgnosticCampaign: CampaignModel,
   AgnosticCampaignNavigation: CampaignNavigationModel,
   AgnosticClue: ClueModel,
-  AgnosticError: ErrorModel,
   AgnosticEvent: EventModel,
   AgnosticFaction: FactionModel,
   AgnosticLocation: LocationModel,
@@ -4390,9 +4358,9 @@ var RelationshipFactory = class {
         }
         if (name !== baseName) {
           if (isInFrontMatter && isMainFrontLink) {
-            relationships.set(name, { description: relationshipDescription, isInFrontmatter: true });
+            relationships.set(name, { description: relationshipDescription, type: 2 /* DirectInFrontmatter */ });
           } else if (!relationships.has(name)) {
-            relationships.set(name, { description: relationshipDescription, isInFrontmatter: false });
+            relationships.set(name, { description: relationshipDescription, type: 1 /* Direct */ });
           }
         }
       }

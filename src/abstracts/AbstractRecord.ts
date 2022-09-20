@@ -8,6 +8,7 @@ import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
 import {Id} from "../database/Id";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {MultipleRpgManagerTagsError} from "../errors/MultipleRpgManagerTagsError";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export abstract class AbstractRecord implements RecordInterface {
 	private static root: string|undefined;
@@ -204,7 +205,7 @@ export abstract class AbstractRecord implements RecordInterface {
 						{
 							component: this,
 							description: '',
-							isInFrontmatter: relationship.isInFrontmatter,
+							type: (relationship.type === RelationshipType.DirectInFrontmatter ? RelationshipType.ReverseInFrontmatter : RelationshipType.Reverse),
 						}
 					)
 				}
@@ -221,24 +222,29 @@ export abstract class AbstractRecord implements RecordInterface {
 
 	public getRelationships(
 		type: DataType,
-		requiresReversedRelationship:boolean=false,
-		requiresFrontMatterRelationship:boolean=false,
+		requiredRelationshipType: RelationshipType = RelationshipType.Direct|RelationshipType.DirectInFrontmatter,
 	): Array<RelationshipInterface> {
 		const response:Array<RelationshipInterface> = [];
 
-		if (requiresReversedRelationship) {
-			this.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
-				if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
-					if (!requiresFrontMatterRelationship || relationship.isInFrontmatter) response.push(relationship);
-				}
-			});
-		} else {
-			this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
-				if (relationship.component !== undefined && (type & relationship.component.id.type) == relationship.component.id.type) {
-					if (!requiresFrontMatterRelationship || relationship.isInFrontmatter) response.push(relationship);
-				}
-			});
-		}
+		this.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
+			if (
+				relationship.component !== undefined &&
+				(type & relationship.component.id.type) == relationship.component.id.type &&
+				(relationship.type & requiredRelationshipType) === relationship.type
+			) {
+				response.push(relationship);
+			}
+		});
+
+		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
+			if (
+				relationship.component !== undefined &&
+				(type & relationship.component.id.type) == relationship.component.id.type &&
+				(relationship.type & requiredRelationshipType) === relationship.type
+			) {
+				response.push(relationship);
+			}
+		});
 
 		return response;
 	}

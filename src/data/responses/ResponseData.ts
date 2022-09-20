@@ -4,6 +4,7 @@ import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {App} from "obsidian";
 import {AbstractRecord} from "../../abstracts/AbstractRecord";
+import {RelationshipType} from "../../enums/RelationshipType";
 
 export class ResponseData implements ResponseDataInterface {
 	public elements: ResponseElementInterface[];
@@ -25,7 +26,7 @@ export class ResponseData implements ResponseDataInterface {
 		let relationship: RelationshipInterface|undefined;
 
 		if (data instanceof AbstractRecord){
-			relationship = {component: data, description: ''} as RelationshipInterface;
+			relationship = {component: data, description: '', type: RelationshipType.Direct} as RelationshipInterface;
 		} else if (data instanceof Array){
 			relationships = [];
 			if (data.length > 0){

@@ -5,7 +5,7 @@ import {DataType} from "../enums/DataType";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {MusicTableComponent} from "../components/MusicTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
-import {SessionTableComponent} from "../components/SessionTableComponent";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class MusicModel extends AbstractModel {
 	protected currentElement: MusicInterface;
@@ -18,17 +18,12 @@ export class MusicModel extends AbstractModel {
 
 		await this.response.addComponent(
 			MusicTableComponent,
-			this.currentElement.getRelationships(DataType.Music),
+			this.currentElement.getRelationships(DataType.Music, RelationshipType.DirectInFrontmatter),
 		);
 
 		await this.response.addComponent(
 			SceneTableComponent,
-			this.currentElement.getRelationships(DataType.Scene, true),
-		);
-
-		await this.response.addComponent(
-			SessionTableComponent,
-			this.currentElement.getRelationships(DataType.Session, true),
+			this.currentElement.getRelationships(DataType.Scene, RelationshipType.ReverseInFrontmatter),
 		);
 
 		return this.response;

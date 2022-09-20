@@ -8,6 +8,7 @@ import {ClueTableComponent} from "../components/ClueTableComponent";
 import {FactionTableComponent} from "../components/FactionTableComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class NpcModel extends AbstractModel {
 	protected currentElement: CharacterInterface;
@@ -30,12 +31,12 @@ export class NpcModel extends AbstractModel {
 
 		await this.response.addComponent(
 			EventTableComponent,
-			this.currentElement.getRelationships(DataType.Event, true),
+			this.currentElement.getRelationships(DataType.Event, RelationshipType.Reverse),
 		);
 
 		await this.response.addComponent(
 			ClueTableComponent,
-			this.currentElement.getRelationships(DataType.Clue, true),
+			this.currentElement.getRelationships(DataType.Clue, RelationshipType.Reverse),
 		);
 
 		await this.response.addComponent(

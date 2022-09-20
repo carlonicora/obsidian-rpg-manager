@@ -3,7 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {DataType} from "../enums/DataType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
-import {MusicTableComponent} from "../components/MusicTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
@@ -16,11 +15,6 @@ export class SessionModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		await this.response.addComponent(
-			MusicTableComponent,
-			this.currentElement.getRelationships(DataType.Music, false),
-		);
-
 		await this.response.addComponent(
 			SceneTableComponent,
 			this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SceneInterface>(
