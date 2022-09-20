@@ -395,6 +395,63 @@ var Campaign = class extends AbstractOutlineRecord {
   }
 };
 
+// src/helpers/Logger.ts
+var AbstractLogMessage = class {
+  constructor(type, messageType, message = "", object = void 0) {
+    this.type = type;
+    this.messageType = messageType;
+    this.message = message;
+    this.object = object;
+    Logger.log(this);
+  }
+};
+var InfoLog = class extends AbstractLogMessage {
+  constructor(mesageType, message = "", object = void 0) {
+    super(1 /* Info */, mesageType, message, object);
+  }
+};
+var ErrorLog = class extends AbstractLogMessage {
+  constructor(mesageType, message = "", object = void 0) {
+    super(4 /* Error */, mesageType, message, object);
+  }
+};
+var Logger = class {
+  static initialise(version, debuggableTypes = void 0) {
+    if (version.indexOf("-") !== -1) {
+      this.isDebug = true;
+      this.debuggableMessageTypes = 4 /* DatabaseInitialisation */;
+      if (debuggableTypes === void 0) {
+        this.debuggableTypes = 1 /* Info */ | 2 /* Warning */ | 4 /* Error */;
+      } else {
+        this.debuggableTypes = debuggableTypes;
+      }
+      new InfoLog(1 /* System */, "Logger active");
+    } else {
+      this.isDebug = false;
+    }
+  }
+  static log(message) {
+    if (!this.isDebug)
+      return;
+    if ((message.type & this.debuggableTypes) !== message.type)
+      return;
+    const data = [message.message + "\n"];
+    if (message.object !== void 0)
+      data.push(message.object);
+    switch (message.type) {
+      case 1 /* Info */:
+        console.info(...data);
+        break;
+      case 4 /* Error */:
+        console.error(...data);
+        break;
+      default:
+        console.warn(...data);
+        break;
+    }
+  }
+};
+
 // src/Controller.ts
 var Controller = class extends import_obsidian2.MarkdownRenderChild {
   constructor(app2, container, source, component, sourcePath) {
@@ -422,7 +479,12 @@ var Controller = class extends import_obsidian2.MarkdownRenderChild {
     modelName = modelName.replace("navigation", "Navigation");
     sourceLines.shift();
     const sourceMeta = (0, import_obsidian2.parseYaml)(sourceLines.join("\n"));
-    this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings, modelName, this.currentElement, this.source, this.sourcePath, sourceMeta);
+    const settings = this.currentElement instanceof Campaign ? this.currentElement.settings : this.currentElement.campaign.settings;
+    try {
+      this.model = this.app.plugins.getPlugin("rpg-manager").factories.models.create(settings, modelName, this.currentElement, this.source, this.sourcePath, sourceMeta);
+    } catch (e) {
+      new ErrorLog(8 /* Model */, "Cannot create model " + CampaignSetting[settings] + modelName);
+    }
   }
   initialise() {
     const currentElement = this.app.plugins.getPlugin("rpg-manager").database.readByPath(this.sourcePath);
@@ -2910,12 +2972,7 @@ var ModelFactory = class extends AbstractFactory {
     if (ModelsMap[modelKey] == null && settings !== 0 /* Agnostic */) {
       modelKey = CampaignSetting[0 /* Agnostic */] + modelName;
     }
-    try {
-      return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
-    } catch (e) {
-      console.log(modelKey);
-    } finally {
-    }
+    return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
   }
 };
 
@@ -4481,63 +4538,6 @@ var ElementNotFoundError = class extends AbstractRpgError {
       response += " - " + DataType[type].toLowerCase() + " with an id of `" + id.toString() + "`\n";
     });
     return response;
-  }
-};
-
-// src/helpers/Logger.ts
-var AbstractLogMessage = class {
-  constructor(type, messageType, message = "", object = void 0) {
-    this.type = type;
-    this.messageType = messageType;
-    this.message = message;
-    this.object = object;
-    Logger.log(this);
-  }
-};
-var InfoLog = class extends AbstractLogMessage {
-  constructor(mesageType, message = "", object = void 0) {
-    super(1 /* Info */, mesageType, message, object);
-  }
-};
-var ErrorLog = class extends AbstractLogMessage {
-  constructor(mesageType, message = "", object = void 0) {
-    super(4 /* Error */, mesageType, message, object);
-  }
-};
-var Logger = class {
-  static initialise(version, debuggableTypes = void 0) {
-    if (version.indexOf("-") !== -1) {
-      this.isDebug = true;
-      this.debuggableMessageTypes = 4 /* DatabaseInitialisation */;
-      if (debuggableTypes === void 0) {
-        this.debuggableTypes = 1 /* Info */ | 2 /* Warning */ | 4 /* Error */;
-      } else {
-        this.debuggableTypes = debuggableTypes;
-      }
-      new InfoLog(1 /* System */, "Logger active");
-    } else {
-      this.isDebug = false;
-    }
-  }
-  static log(message) {
-    if (!this.isDebug)
-      return;
-    if ((message.type & this.debuggableTypes) !== message.type)
-      return;
-    const data = [message.message + "\n"];
-    if (message.object !== void 0)
-      data.push(message.object);
-    switch (message.type) {
-      case 1 /* Info */:
-        console.info(...data);
-        break;
-      case 4 /* Error */:
-        console.error(...data);
-        break;
-      default:
-        console.warn(...data);
-        break;
-    }
   }
 };
 
