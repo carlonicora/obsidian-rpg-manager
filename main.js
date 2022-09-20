@@ -206,16 +206,16 @@ var AbstractRecord = class {
   }
   initialise() {
     return __async(this, null, function* () {
-      var _a, _b, _c, _d;
+      var _a, _b, _c, _d, _e;
       const metadata = this.app.metadataCache.getFileCache(this.file);
       if (metadata === null)
         throw new Error("metadata is null");
       this.basename = this.file.basename;
       this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
       this.validateTag();
-      this.completed = ((_b = metadata.frontmatter) == null ? void 0 : _b.completed) ? metadata.frontmatter.completed : true;
-      this.synopsis = (_c = metadata.frontmatter) == null ? void 0 : _c.synopsis;
-      this.imageUrl = (_d = metadata.frontmatter) == null ? void 0 : _d.image;
+      this.completed = (_c = (_b = metadata.frontmatter) == null ? void 0 : _b.completed) != null ? _c : true;
+      this.synopsis = (_d = metadata.frontmatter) == null ? void 0 : _d.synopsis;
+      this.imageUrl = (_e = metadata.frontmatter) == null ? void 0 : _e.image;
       yield this.initialiseRelationships();
       this.initialiseData(metadata.frontmatter);
     });

@@ -125,7 +125,8 @@ export abstract class AbstractRecord implements RecordInterface {
 
 		this.validateTag();
 
-		this.completed = metadata.frontmatter?.completed ? metadata.frontmatter.completed : true;
+		this.completed = metadata.frontmatter?.completed ?? true;
+
 		this.synopsis = metadata.frontmatter?.synopsis;
 		this.imageUrl = metadata.frontmatter?.image;
 
