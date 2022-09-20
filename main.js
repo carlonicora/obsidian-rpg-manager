@@ -244,8 +244,8 @@ var AbstractRecord = class {
     return __async(this, null, function* () {
       var _a;
       const metadata = yield this.app.metadataCache.getFileCache(this.file);
-      if (metadata === null)
-        throw new Error("metadata is null");
+      if (metadata === null || metadata.frontmatter === void 0)
+        return;
       this.tags = yield this.app.plugins.getPlugin("rpg-manager").factories.tags.sanitiseTags((_a = metadata.frontmatter) == null ? void 0 : _a.tags);
       this.id = this.app.plugins.getPlugin("rpg-manager").factories.tags.createId(void 0, this.tags);
       yield this.validateTag();

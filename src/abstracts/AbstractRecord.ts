@@ -159,7 +159,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	public async reload(
 	): Promise<void> {
 		const metadata: CachedMetadata|null = await this.app.metadataCache.getFileCache(this.file);
-		if (metadata === null) throw new Error('metadata is null');
+		if (metadata === null || metadata.frontmatter === undefined) return;
 
 		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
 		this.id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, this.tags);
