@@ -25,13 +25,13 @@ export class ResponseData implements ResponseDataInterface {
 		let relationship: RelationshipInterface|undefined;
 
 		if (data instanceof AbstractRecord){
-			relationship = {component: data, description: '', isReverse: false} as RelationshipInterface;
+			relationship = {component: data, description: ''} as RelationshipInterface;
 		} else if (data instanceof Array){
 			relationships = [];
 			if (data.length > 0){
 				if (data[0] instanceof AbstractRecord){
 					data.forEach((record: any) => {
-						relationships.push({component: record, description: '', isReverse: false} as RelationshipInterface);
+						relationships.push({component: record, description: ''} as RelationshipInterface);
 					})
 				} else {
 					data.forEach((rel: any) => {

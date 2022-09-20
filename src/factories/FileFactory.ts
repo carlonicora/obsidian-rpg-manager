@@ -3,6 +3,7 @@ import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+
 const path = require('path');
 
 export class FileFactory extends AbstractFactory {
@@ -21,10 +22,19 @@ export class FileFactory extends AbstractFactory {
 		let folder = '/';
 
 		if (campaignId != null) {
-			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
+
+			let campaign: CampaignInterface|undefined;
+			try {
+				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
+			} catch (e) {
+				campaign = undefined;
+			}
+
 			if (campaign !== undefined) {
 				settings = campaign.settings;
 				folder = campaign.folder;
+			} else {
+				settings = CampaignSetting.Agnostic;
 			}
 		}
 

@@ -52,7 +52,7 @@ __export(main_exports, {
 module.exports = __toCommonJS(main_exports);
 var import_obsidian23 = require("obsidian");
 
-// src/helpers/Controller.ts
+// src/Controller.ts
 var import_obsidian2 = require("obsidian");
 
 // src/abstracts/AbstractRecord.ts
@@ -179,7 +179,7 @@ var AbstractRecord = class {
     return lastSlashPosition !== -1 ? this.path.substring(0, lastSlashPosition + 1) : "/";
   }
   get image() {
-    if (this.imageUrl !== void 0)
+    if (this.imageUrl != null && this.imageUrl !== "")
       return this.imageUrl;
     let localImage = void 0;
     const imageExtensions = ["jpeg", "jpg", "png", "webp"];
@@ -234,6 +234,7 @@ var AbstractRecord = class {
   initialiseRelationships() {
     return __async(this, null, function* () {
       this.relationships = yield /* @__PURE__ */ new Map();
+      this.reverseRelationships = yield /* @__PURE__ */ new Map();
       yield this.app.plugins.getPlugin("rpg-manager").factories.relationships.read(this.file, this.relationships);
     });
   }
@@ -281,7 +282,7 @@ var AbstractRecord = class {
             relationship.component.addReverseRelationship(this.name, {
               component: this,
               description: "",
-              isReverse: true
+              isInFrontmatter: relationship.isInFrontmatter
             });
           }
         });
@@ -289,17 +290,26 @@ var AbstractRecord = class {
     });
   }
   addReverseRelationship(name, relationship) {
-    if (!this.relationships.has(name))
-      this.relationships.set(name, relationship);
+    if (!this.reverseRelationships.has(name))
+      this.reverseRelationships.set(name, relationship);
   }
-  getRelationships(type, requiresReversedRelationship = false) {
+  getRelationships(type, requiresReversedRelationship = false, requiresFrontMatterRelationship = false) {
     const response = [];
-    this.relationships.forEach((relationship, name) => {
-      if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
-        if (requiresReversedRelationship === relationship.isReverse)
-          response.push(relationship);
-      }
-    });
+    if (requiresReversedRelationship) {
+      this.reverseRelationships.forEach((relationship, name) => {
+        if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
+          if (!requiresFrontMatterRelationship || relationship.isInFrontmatter)
+            response.push(relationship);
+        }
+      });
+    } else {
+      this.relationships.forEach((relationship, name) => {
+        if (relationship.component !== void 0 && (type & relationship.component.id.type) == relationship.component.id.type) {
+          if (!requiresFrontMatterRelationship || relationship.isInFrontmatter)
+            response.push(relationship);
+        }
+      });
+    }
     return response;
   }
   initialiseDate(date) {
@@ -385,7 +395,7 @@ var Campaign = class extends AbstractOutlineRecord {
   }
 };
 
-// src/helpers/Controller.ts
+// src/Controller.ts
 var Controller = class extends import_obsidian2.MarkdownRenderChild {
   constructor(app2, container, source, component, sourcePath) {
     super(container);
@@ -617,10 +627,10 @@ var Scene = class extends AbstractOutlineRecord {
     this.nextScene = null;
   }
   initialiseData(frontmatter) {
-    var _a, _b;
+    var _a, _b, _c, _d, _e, _f;
     this.sceneId = this.id.getTypeValue(8 /* Scene */);
-    this.startTime = this.initialiseDate((_a = frontmatter == null ? void 0 : frontmatter.time) == null ? void 0 : _a.start);
-    this.endTime = this.initialiseDate((_b = frontmatter == null ? void 0 : frontmatter.time) == null ? void 0 : _b.end);
+    this.startTime = this.initialiseDate((_c = (_a = frontmatter == null ? void 0 : frontmatter.times) == null ? void 0 : _a.start) != null ? _c : (_b = frontmatter == null ? void 0 : frontmatter.time) == null ? void 0 : _b.start);
+    this.endTime = this.initialiseDate((_f = (_d = frontmatter == null ? void 0 : frontmatter.times) == null ? void 0 : _d.end) != null ? _f : (_e = frontmatter == null ? void 0 : frontmatter.time) == null ? void 0 : _e.end);
     this.action = frontmatter == null ? void 0 : frontmatter.action;
     super.initialiseData(frontmatter);
   }
@@ -729,8 +739,7 @@ var Note = class extends AbstractOutlineRecord {
     return __async(this, null, function* () {
       __superGet(Note.prototype, this, "loadHierarchy").call(this, database);
       this.adventure = database.readSingle(2 /* Adventure */, this.id.tag);
-      const session = database.readSingle(4 /* Session */, this.id.tag);
-      this.sessionId = session.sessionId;
+      this.sessionId = this.id.getTypeValue(4 /* Session */);
     });
   }
 };
@@ -887,10 +896,17 @@ var FileFactory = class extends AbstractFactory {
     return __async(this, null, function* () {
       let folder = "/";
       if (campaignId != null) {
-        const campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(1 /* Campaign */, campaignId);
+        let campaign;
+        try {
+          campaign = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(1 /* Campaign */, campaignId);
+        } catch (e) {
+          campaign = void 0;
+        }
         if (campaign !== void 0) {
           settings = campaign.settings;
           folder = campaign.folder;
+        } else {
+          settings = 0 /* Agnostic */;
         }
       }
       const template = this.app.plugins.getPlugin("rpg-manager").factories.templates.create(settings, type, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
@@ -1581,13 +1597,13 @@ var ResponseData = class {
       let relationships = [];
       let relationship;
       if (data instanceof AbstractRecord) {
-        relationship = { component: data, description: "", isReverse: false };
+        relationship = { component: data, description: "" };
       } else if (data instanceof Array) {
         relationships = [];
         if (data.length > 0) {
           if (data[0] instanceof AbstractRecord) {
             data.forEach((record) => {
-              relationships.push({ component: record, description: "", isReverse: false });
+              relationships.push({ component: record, description: "" });
             });
           } else {
             data.forEach((rel) => {
@@ -1643,6 +1659,9 @@ var AbstractModel = class {
           break;
         case 8 /* Scene */:
           this.generateSceneBreadcrumb(response, this.currentElement);
+          break;
+        case 1024 /* Note */:
+          this.generatNoteBreadcrumb(response, this.currentElement);
           break;
         default:
           this.generateElementBreadcrumb(response, this.currentElement.id.type, this.currentElement);
@@ -1714,6 +1733,17 @@ var AbstractModel = class {
       }
     }
     return nextBreadcrumb != null ? nextBreadcrumb : previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb;
+  }
+  generatNoteBreadcrumb(parent, note) {
+    if (note.adventure === void 0)
+      return parent;
+    const adventureBreadcrumb = this.generateElementBreadcrumb(parent, 2 /* Adventure */, note.adventure);
+    const session = this.app.plugins.getPlugin("rpg-manager").database.readSingleParametrised(4 /* Session */, note.campaign.campaignId, note.adventure.adventureId, note.sessionId);
+    if (session === void 0)
+      return adventureBreadcrumb;
+    const sessionBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, 4 /* Session */, session);
+    const noteBreadcrumb = this.generateElementBreadcrumb(sessionBreadcrumb, 1024 /* Note */, note);
+    return noteBreadcrumb;
   }
 };
 
@@ -2111,8 +2141,8 @@ var ClueModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
       return this.response;
     });
@@ -2181,8 +2211,8 @@ var EventModel = class extends AbstractModel {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
       yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
-      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, false));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
   }
@@ -2195,7 +2225,7 @@ var FactionModel = class extends AbstractModel {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
       yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
   }
@@ -2210,8 +2240,8 @@ var LocationModel = class extends AbstractModel {
       yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, true));
       yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
       yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, true));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false), "Contained locations");
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, true), "Part of locations");
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false, true), "Location contained");
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, true, true), "Part of locations");
       return this.response;
     });
   }
@@ -2262,7 +2292,14 @@ var SceneTableComponent = class extends AbstractComponent {
 var NoteModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId));
+      yield this.response.addElement(this.generateBreadcrumb());
+      yield this.response.addComponent(SceneTableComponent, this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(8 /* Scene */, this.currentElement.campaign.campaignId, this.currentElement.adventure.adventureId, this.currentElement.sessionId).sort(function(leftData, rightData) {
+        if (leftData.sceneId > rightData.sceneId)
+          return 1;
+        if (leftData.sceneId < rightData.sceneId)
+          return -1;
+        return 0;
+      }));
       return this.response;
     });
   }
@@ -2302,11 +2339,11 @@ var NpcModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */, false));
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
       yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
       yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, true));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
   }
@@ -2318,9 +2355,9 @@ var PcModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */, false));
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
   }
@@ -2361,11 +2398,11 @@ var MusicTableComponent = class extends AbstractComponent {
 var SceneModel = class extends AbstractModel {
   generateData() {
     return __async(this, null, function* () {
-      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
-      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */, false));
-      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */, false));
-      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */, false));
-      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */, false));
+      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */));
+      yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
+      yield this.response.addComponent(FactionTableComponent, this.currentElement.getRelationships(512 /* Faction */));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */));
+      yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
       return this.response;
     });
   }
@@ -2837,7 +2874,7 @@ var MusicModel = class extends AbstractModel {
     return __async(this, null, function* () {
       this.response.addElement(this.generateBreadcrumb());
       yield this.response.addComponent(HeaderComponent, this.currentElement);
-      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */, false));
+      yield this.response.addComponent(MusicTableComponent, this.currentElement.getRelationships(4096 /* Music */));
       yield this.response.addComponent(SceneTableComponent, this.currentElement.getRelationships(8 /* Scene */, true));
       yield this.response.addComponent(SessionTableComponent, this.currentElement.getRelationships(4 /* Session */, true));
       return this.response;
@@ -2873,7 +2910,12 @@ var ModelFactory = class extends AbstractFactory {
     if (ModelsMap[modelKey] == null && settings !== 0 /* Agnostic */) {
       modelKey = CampaignSetting[0 /* Agnostic */] + modelName;
     }
-    return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
+    try {
+      return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
+    } catch (e) {
+      console.log(modelKey);
+    } finally {
+    }
   }
 };
 
@@ -3110,7 +3152,7 @@ var EventTemplate = class extends AbstractTemplate {
 // src/templates/NoteTemplate.ts
 var NoteTemplate = class extends AbstractTemplate {
   getContent() {
-    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(16 /* Character */ | 32 /* NonPlayerCharacter */, this.campaignId);
+    const characters = this.app.plugins.getPlugin("rpg-manager").database.readListParametrised(16 /* Character */, this.campaignId);
     let possibleRecappers = "";
     (characters || []).forEach((character) => {
       possibleRecappers += character.link + "/";
@@ -4263,6 +4305,9 @@ var RelationshipFactory = class {
     for (let fileContentLineCounter = 0; fileContentLineCounter < content.length; fileContentLineCounter++) {
       let line = content[fileContentLineCounter];
       while (line.indexOf("[[") !== -1) {
+        let isMainFrontLink = false;
+        if (line.trimStart().indexOf("[[") === 0)
+          isMainFrontLink = true;
         line = line.substring(line.indexOf("[[") + 2);
         const endLinkIndex = line.indexOf("]]");
         if (endLinkIndex === -1)
@@ -4285,8 +4330,13 @@ var RelationshipFactory = class {
             }
           }
         }
-        if (name !== baseName && !relationships.has(name))
-          relationships.set(name, { description: relationshipDescription, isReverse: false, isInFrontmatter: isInFrontMatter });
+        if (name !== baseName) {
+          if (isInFrontMatter && isMainFrontLink) {
+            relationships.set(name, { description: relationshipDescription, isInFrontmatter: true });
+          } else if (!relationships.has(name)) {
+            relationships.set(name, { description: relationshipDescription, isInFrontmatter: false });
+          }
+        }
       }
     }
   }
@@ -4608,15 +4658,15 @@ var DatabaseInitialiser = class {
           return yield this.addHierarchy(temporaryDatabase, 2 /* Adventure */);
           break;
         case 2 /* Adventure */:
+          return yield this.addHierarchy(temporaryDatabase, 1024 /* Note */);
+          break;
+        case 1024 /* Note */:
           return yield this.addHierarchy(temporaryDatabase, 4 /* Session */);
           break;
         case 4 /* Session */:
           return yield this.addHierarchy(temporaryDatabase, 8 /* Scene */);
           break;
         case 8 /* Scene */:
-          return yield this.addHierarchy(temporaryDatabase, 1024 /* Note */);
-          break;
-        case 1024 /* Note */:
           return yield this.addHierarchy(temporaryDatabase, void 0);
           break;
         default:
@@ -4842,10 +4892,12 @@ var Database = class extends import_obsidian16.Component {
         return (data) => (dataType & data.id.type) === data.id.type && data.campaign.campaignId === campaignId && (isList ? true : data.adventureId === adventureId);
         break;
       case 4 /* Session */:
-      case 1024 /* Note */:
         if (overloadId !== void 0)
           sessionId = overloadId;
         return (data) => (dataType & data.id.type) === data.id.type && data.campaign.campaignId === campaignId && (adventureId !== void 0 ? data.adventure.adventureId === adventureId : true) && (isList ? true : data.sessionId === sessionId);
+        break;
+      case 1024 /* Note */:
+        return (note) => dataType === note.id.type && note.campaign.campaignId === campaignId && (adventureId !== void 0 ? note.adventure.adventureId === adventureId : true) && note.sessionId === sessionId;
         break;
       case 8 /* Scene */:
         if (overloadId !== void 0)
@@ -5830,7 +5882,7 @@ var import_obsidian22 = require("obsidian");
 // src/ReleaseNotes.ts
 var releaseNotes = `
 ### Version 1.2: Relationships Update
-_19.09.2020_
+_2022-09-19_
 
 - Relationships updated
 - New \`image\` frontmatter element added

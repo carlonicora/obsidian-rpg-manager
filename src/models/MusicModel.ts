@@ -18,7 +18,7 @@ export class MusicModel extends AbstractModel {
 
 		await this.response.addComponent(
 			MusicTableComponent,
-			this.currentElement.getRelationships(DataType.Music, false),
+			this.currentElement.getRelationships(DataType.Music),
 		);
 
 		await this.response.addComponent(

@@ -5,12 +5,14 @@ import {
 	MarkdownRenderChild,
 	parseYaml, TFile
 } from "obsidian";
-import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
-import {ViewInterface} from "../interfaces/ViewInterface";
-import {ModelInterface} from "../interfaces/ModelInterface";
-import {Campaign} from "../data/Campaign";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
+import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
+import {ViewInterface} from "./interfaces/ViewInterface";
+import {ModelInterface} from "./interfaces/ModelInterface";
+import {Campaign} from "./data/Campaign";
+import {RecordInterface} from "./interfaces/database/RecordInterface";
+import {AbstractLogMessage, ErrorLog, LogMessageType} from "./helpers/Logger";
+import {CampaignSetting} from "./enums/CampaignSetting";
 
 export class Controller extends MarkdownRenderChild {
 	private isActive = false;
@@ -50,14 +52,19 @@ export class Controller extends MarkdownRenderChild {
 
 		const sourceMeta = parseYaml(sourceLines.join('\n'));
 
-		this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
-			((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
-			modelName,
-			this.currentElement,
-			this.source,
-			this.sourcePath,
-			sourceMeta,
-		);
+		const settings = ((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings);
+		try {
+			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
+				settings,
+				modelName,
+				this.currentElement,
+				this.source,
+				this.sourcePath,
+				sourceMeta,
+			);
+		} catch (e) {
+			new ErrorLog(LogMessageType.Model, 'Cannot create model ' + CampaignSetting[settings] + modelName)
+		}
 	}
 
 	private initialise(

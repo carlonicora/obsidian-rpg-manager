@@ -8,6 +8,7 @@ export enum LogMessageType {
 	System=0b1,
 	Database=0b10,
 	DatabaseInitialisation=0b100,
+	Model=0b1000,
 }
 export interface LogMessageInterface {
 	type: LogType,

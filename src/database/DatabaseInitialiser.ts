@@ -189,15 +189,15 @@ export class DatabaseInitialiser {
 				return await this.addHierarchy(temporaryDatabase, DataType.Adventure);
 				break;
 			case DataType.Adventure:
+				return await this.addHierarchy(temporaryDatabase, DataType.Note);
+				break;
+			case DataType.Note:
 				return await this.addHierarchy(temporaryDatabase, DataType.Session);
 				break;
 			case DataType.Session:
 				return await this.addHierarchy(temporaryDatabase, DataType.Scene);
 				break;
 			case DataType.Scene:
-				return await this.addHierarchy(temporaryDatabase, DataType.Note);
-				break;
-			case DataType.Note:
 				return await this.addHierarchy(temporaryDatabase, undefined);
 				break;
 			default:

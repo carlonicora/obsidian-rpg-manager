@@ -34,13 +34,13 @@ export class LocationModel extends AbstractModel {
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, false),
-			'Contained locations',
+			this.currentElement.getRelationships(DataType.Location, false, true),
+			'Location contained',
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, true),
+			this.currentElement.getRelationships(DataType.Location, true, true),
 			'Part of locations',
 		);
 

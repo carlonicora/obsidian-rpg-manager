@@ -5,7 +5,7 @@ import {DataType} from "../enums/DataType";
 
 export class NoteTemplate extends AbstractTemplate implements TemplateInterface {
 	public getContent(): string {
-		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(DataType.Character | DataType.NonPlayerCharacter, this.campaignId);
+		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(DataType.Character, this.campaignId);
 
 		let possibleRecappers = '';
 		(characters || []).forEach((character: CharacterInterface) => {

@@ -4,7 +4,7 @@ import {
 	MarkdownPostProcessorContext,
 	Plugin,
 } from 'obsidian';
-import {Controller} from "./helpers/Controller";
+import {Controller} from "./Controller";
 import {DataType} from "./enums/DataType";
 import {Factories} from "./helpers/Factories";
 import {CreationModal} from "./modals/CreationModal";

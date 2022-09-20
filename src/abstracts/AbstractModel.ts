@@ -12,6 +12,7 @@ import {FileFactory} from "../factories/FileFactory";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ComponentFactory} from "../factories/ComponentFactory";
 import {ResponseData} from "../data/responses/ResponseData";
+import {NoteInterface} from "../interfaces/data/NoteInterface";
 
 export abstract class AbstractModel implements ModelInterface {
 	protected io: DatabaseInterface;
@@ -46,6 +47,9 @@ export abstract class AbstractModel implements ModelInterface {
 					break;
 				case DataType.Scene:
 					this.generateSceneBreadcrumb(response, this.currentElement as SceneInterface);
+					break;
+				case DataType.Note:
+					this.generatNoteBreadcrumb(response, this.currentElement as NoteInterface);
 					break;
 				default:
 					this.generateElementBreadcrumb(response, this.currentElement.id.type, this.currentElement);
@@ -171,5 +175,21 @@ export abstract class AbstractModel implements ModelInterface {
 		}
 
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb));
+	}
+
+	private generatNoteBreadcrumb(
+		parent: ResponseBreadcrumb,
+		note: NoteInterface,
+	): ResponseBreadcrumb {
+		if (note.adventure === undefined) return parent;
+		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, DataType.Adventure, note.adventure);
+
+		const session = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<SessionInterface>(DataType.Session, note.campaign.campaignId, note.adventure.adventureId, note.sessionId);
+		if (session === undefined) return adventureBreadcrumb;
+
+		const sessionBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, DataType.Session, session);
+		const noteBreadcrumb = this.generateElementBreadcrumb(sessionBreadcrumb, DataType.Note, note);
+
+		return noteBreadcrumb;
 	}
 }

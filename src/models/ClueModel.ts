@@ -18,12 +18,12 @@ export class ClueModel extends AbstractModel {
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter, false),
+			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location, false),
+			this.currentElement.getRelationships(DataType.Location),
 		);
 
 		await this.response.addComponent(
