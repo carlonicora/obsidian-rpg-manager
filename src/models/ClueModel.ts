@@ -6,6 +6,8 @@ import {HeaderComponent} from "../components/HeaderComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
 import {EventTableComponent} from "../components/EventTableComponent";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {ClueTableComponent} from "../components/ClueTableComponent";
 
 export class ClueModel extends AbstractModel {
 	protected currentElement: ClueInterface;
@@ -24,6 +26,11 @@ export class ClueModel extends AbstractModel {
 		await this.response.addComponent(
 			LocationTableComponent,
 			this.currentElement.getRelationships(DataType.Location),
+		);
+
+		await this.response.addComponent(
+			ClueTableComponent,
+			this.currentElement.getRelationships(DataType.Clue),
 		);
 
 		await this.response.addComponent(
