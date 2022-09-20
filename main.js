@@ -196,8 +196,8 @@ var AbstractRecord = class {
       return localImage;
     return null;
   }
-  fileExists(path3) {
-    const abstractFile = this.app.vault.getAbstractFileByPath(path3);
+  fileExists(path2) {
+    const abstractFile = this.app.vault.getAbstractFileByPath(path2);
     let response = false;
     if (abstractFile instanceof import_obsidian.TAbstractFile) {
       response = true;
@@ -386,7 +386,15 @@ var Campaign = class extends AbstractOutlineRecord {
     this.campaignId = this.id.getTypeValue(1 /* Campaign */);
     if ((_a = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _a.current)
       this.currentDate = new Date((_b = frontmatter == null ? void 0 : frontmatter.dates) == null ? void 0 : _b.current);
-    this.settings = (frontmatter == null ? void 0 : frontmatter.settings) ? CampaignSetting[frontmatter == null ? void 0 : frontmatter.settings] : 0 /* Agnostic */;
+    if ((frontmatter == null ? void 0 : frontmatter.settings) !== void 0) {
+      try {
+        this.settings = CampaignSetting[frontmatter == null ? void 0 : frontmatter.settings];
+      } catch (e) {
+        this.settings = 0 /* Agnostic */;
+      }
+    }
+    if (this.settings === void 0)
+      this.settings = 0 /* Agnostic */;
     super.initialiseData(frontmatter);
   }
 };
@@ -4729,8 +4737,8 @@ var Database = class extends import_obsidian16.Component {
   }
   internalSort(data, comparison) {
   }
-  readByPath(path3) {
-    const response = this.elements.filter((record) => record.path === path3);
+  readByPath(path2) {
+    const response = this.elements.filter((record) => record.path === path2);
     return response.length === 1 ? response[0] : void 0;
   }
   readSingleParametrised(dataType, campaignId, adventureId = void 0, sessionId = void 0, sceneId = void 0) {
@@ -5763,10 +5771,10 @@ var ErrorView = class extends AbstractView {
           const errorLinks = error.getErrorLinks();
           if (errorLinks !== void 0) {
             const errorLinksEl = errorDescriptionEl.createEl("ul");
-            errorLinks.forEach((path3) => {
+            errorLinks.forEach((path2) => {
               const errorLinkEl = errorLinksEl.createEl("li");
               const errorLinkAnchor = errorLinkEl.createEl("a");
-              this.addLink(errorLinkAnchor, path3);
+              this.addLink(errorLinkAnchor, path2);
             });
           }
         });
@@ -5911,7 +5919,6 @@ var ReleaseNoteView = class extends AbstractView {
 };
 
 // src/main.ts
-var path2 = require("path");
 var RpgManager = class extends import_obsidian23.Plugin {
   constructor() {
     super(...arguments);

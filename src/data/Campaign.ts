@@ -14,7 +14,16 @@ export class Campaign extends AbstractOutlineRecord implements CampaignInterface
 	): void {
 		this.campaignId = this.id.getTypeValue(DataType.Campaign);
 		if (frontmatter?.dates?.current) this.currentDate = new Date(frontmatter?.dates?.current);
-		this.settings = frontmatter?.settings ? CampaignSetting[frontmatter?.settings as keyof typeof CampaignSetting] : CampaignSetting.Agnostic;
+
+		if (frontmatter?.settings !== undefined) {
+			try {
+				this.settings = CampaignSetting[frontmatter?.settings as keyof typeof CampaignSetting];
+			} catch (e) {
+				this.settings = CampaignSetting.Agnostic;
+			}
+		}
+
+		if (this.settings === undefined) this.settings = CampaignSetting.Agnostic;
 
 		super.initialiseData(frontmatter);
 	}

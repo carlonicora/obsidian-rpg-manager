@@ -19,8 +19,6 @@ import {ViewType} from "./enums/ViewType";
 import {DatabaseUpdater} from "./database/DatabaseUpdater";
 import {ReleaseNoteView} from "./views/ReleaseNoteView";
 
-const path = require('path');
-
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3.3
@@ -72,16 +70,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async onLayoutReady(){
-		/*
-		console.log('1', await this.app.vault.getAbstractFileByPath('RPGMTEST'));
-		console.log('2', await this.app.vault.getAbstractFileByPath('/RPGMTEST'));
-		console.log('3', await this.app.vault.getAbstractFileByPath(path.sep + 'RPGMTEST'));
-		console.log('4', await this.app.vault.getAbstractFileByPath('RPGMTEST/RPGMTEST'));
-		console.log('5', await this.app.vault.getAbstractFileByPath('RPGMTEST' + path.sep + 'RPGMTEST'));
-		console.log('6', await this.app.vault.getAbstractFileByPath('/RPGMTEST/RPGMTEST'));
-		console.log('7', await this.app.vault.getAbstractFileByPath(path.sep + 'RPGMTEST' + path.sep + 'RPGMTEST'));
-		*/
-
 		const reloadStart = Date.now();
 
 		this.registerCodeBlock();
