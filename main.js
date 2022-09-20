@@ -2197,6 +2197,37 @@ var EventTableComponent = class extends AbstractComponent {
   }
 };
 
+// src/components/ClueTableComponent.ts
+var ClueTableComponent = class extends AbstractComponent {
+  generateData(relationships, title, additionalInformation) {
+    return __async(this, null, function* () {
+      if (relationships.length === 0)
+        return null;
+      const response = new ResponseTable(this.app);
+      response.addTitle(title ? title : "Clues");
+      response.addHeaders([
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Clue", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Found", 0 /* String */),
+        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
+      ]);
+      relationships.forEach((relationship) => {
+        var _a;
+        const record = relationship.component;
+        if (record !== void 0) {
+          response.addContent([
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.isFound ? (_a = record.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
+            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
+          ]);
+        }
+      });
+      return response;
+    });
+  }
+};
+
 // src/models/ClueModel.ts
 var ClueModel = class extends AbstractModel {
   generateData() {
@@ -2205,6 +2236,7 @@ var ClueModel = class extends AbstractModel {
       yield this.response.addComponent(HeaderComponent, this.currentElement);
       yield this.response.addComponent(CharacterTableComponent, this.currentElement.getRelationships(16 /* Character */ | 32 /* NonPlayerCharacter */));
       yield this.response.addComponent(LocationTableComponent, this.currentElement.getRelationships(64 /* Location */));
+      yield this.response.addComponent(ClueTableComponent, this.currentElement.getRelationships(256 /* Clue */));
       yield this.response.addComponent(EventTableComponent, this.currentElement.getRelationships(128 /* Event */, true));
       return this.response;
     });
@@ -2231,37 +2263,6 @@ var ErrorModel = class extends AbstractModel {
       status.content = this.app.plugins.getPlugin("rpg-manager").factories.contents.create('<span class="rpgm-missing">The selected function does not exist in Rpg Manager</span>', 4 /* Markdown */);
       this.response.addElement(status);
       return this.response;
-    });
-  }
-};
-
-// src/components/ClueTableComponent.ts
-var ClueTableComponent = class extends AbstractComponent {
-  generateData(relationships, title, additionalInformation) {
-    return __async(this, null, function* () {
-      if (relationships.length === 0)
-        return null;
-      const response = new ResponseTable(this.app);
-      response.addTitle(title ? title : "Clues");
-      response.addHeaders([
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("", 0 /* String */, true),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Clue", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Found", 0 /* String */),
-        this.app.plugins.getPlugin("rpg-manager").factories.contents.create("Synopsis", 0 /* String */)
-      ]);
-      relationships.forEach((relationship) => {
-        var _a;
-        const record = relationship.component;
-        if (record !== void 0) {
-          response.addContent([
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.imageSrcElement, 5 /* Image */, true),
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.link, 2 /* Link */, true),
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(record.isFound ? (_a = record.found) == null ? void 0 : _a.toDateString() : '<span class="rpgm-missing">no</span>', 4 /* Markdown */),
-            this.app.plugins.getPlugin("rpg-manager").factories.contents.create(relationship.description !== "" ? relationship.description : record.synopsis, 4 /* Markdown */)
-          ]);
-        }
-      });
-      return response;
     });
   }
 };

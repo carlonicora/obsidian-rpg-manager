@@ -22,9 +22,10 @@ import {ReleaseNoteView} from "./views/ReleaseNoteView";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 1.3.3
-	 * 		Move timeline to Obsidian side view
 	 *
 	 * ## Version 2.0
+	 * 		@TODO Add view to create new elements
+	 * 		@TODO Move timeline to Obsidian side view
 	 * 		@TODO Remove date from Act
 	 * 		@TODO Remove irl from Act
 	 * 		@TODO Rename Session to Act

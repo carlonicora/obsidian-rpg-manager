@@ -367,5 +367,3 @@ export class Database extends Component implements DatabaseInterface {
 		}
 	}
 }
-
-
