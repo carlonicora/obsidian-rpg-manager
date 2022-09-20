@@ -108,6 +108,7 @@ export class SettingsFactory {
 						switch (type){
 							case SettingType.automaticMove:
 								await this.plugin.updateSettings({ automaticMove: value })
+								settings.value = value;
 								break;
 						}
 					})
