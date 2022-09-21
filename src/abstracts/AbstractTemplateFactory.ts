@@ -125,7 +125,7 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 		frontmatter: any,
 		additionalFrontMatter: any|undefined,
 	): void {
-		if (additionalFrontMatter !== undefined){
+		if (additionalFrontMatter != null){
 			Object.entries(frontmatter).forEach(([frontmatterElementName, frontmatterElementValue]: [string, any]) => {
 
 				if (typeof frontmatterElementValue !== 'object'){
@@ -141,7 +141,12 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 									});
 
 									if (index === undefined) {
-										if (!(additionalFrontmatterElementValue as string).startsWith('rpgm/template/')) frontmatterElementValue[frontmatterElementValue.length] = additionalFrontmatterElementValue;
+										if (
+											!(additionalFrontmatterElementValue as string).startsWith('rpgm/template/') &&
+											this.app.plugins.getPlugin('rpg-manager').factories.tags.getDataType(undefined, additionalFrontmatterElementValue) === undefined
+										) {
+											frontmatterElementValue[frontmatterElementValue.length] = additionalFrontmatterElementValue;
+										}
 									}
 								});
 							} else {
@@ -159,8 +164,12 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 			});
 
 			Object.entries(additionalFrontMatter).forEach(([name, childFrontmatter]: [string, any]) => {
-				if (frontmatter[name] == null && !(childFrontmatter as string).startsWith('rpgm/template')) {
-					frontmatter[name] = childFrontmatter;
+				if (frontmatter[name] == null) {
+					if (typeof childFrontmatter === 'string') {
+						if (!(childFrontmatter as string).startsWith('rpgm/template')) frontmatter[name] = childFrontmatter;
+					} else {
+						frontmatter[name] = childFrontmatter;
+					}
 				}
 			});
 		}

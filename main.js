@@ -3351,7 +3351,7 @@ var AbstractTemplateFactory = class {
     return response;
   }
   mergeFrontmatters(frontmatter, additionalFrontMatter) {
-    if (additionalFrontMatter !== void 0) {
+    if (additionalFrontMatter != null) {
       Object.entries(frontmatter).forEach(([frontmatterElementName, frontmatterElementValue]) => {
         if (typeof frontmatterElementValue !== "object") {
           if (additionalFrontMatter[frontmatterElementName] != null)
@@ -3367,8 +3367,9 @@ var AbstractTemplateFactory = class {
                       index = +frontmatterSubElementName;
                   });
                   if (index === void 0) {
-                    if (!additionalFrontmatterElementValue.startsWith("rpgm/template/"))
+                    if (!additionalFrontmatterElementValue.startsWith("rpgm/template/") && this.app.plugins.getPlugin("rpg-manager").factories.tags.getDataType(void 0, additionalFrontmatterElementValue) === void 0) {
                       frontmatterElementValue[frontmatterElementValue.length] = additionalFrontmatterElementValue;
+                    }
                   }
                 });
               } else {
@@ -3384,8 +3385,13 @@ var AbstractTemplateFactory = class {
         }
       });
       Object.entries(additionalFrontMatter).forEach(([name, childFrontmatter]) => {
-        if (frontmatter[name] == null && !childFrontmatter.startsWith("rpgm/template")) {
-          frontmatter[name] = childFrontmatter;
+        if (frontmatter[name] == null) {
+          if (typeof childFrontmatter === "string") {
+            if (!childFrontmatter.startsWith("rpgm/template"))
+              frontmatter[name] = childFrontmatter;
+          } else {
+            frontmatter[name] = childFrontmatter;
+          }
         }
       });
     }
@@ -5523,8 +5529,6 @@ var SettingsFactory = class {
     });
   }
   createDropdownSetting(type, description, options) {
-    console.log(type);
-    console.log(this.map);
     const settings = this.map.get(type);
     if (settings === void 0)
       throw new Error("Setting type not found");
@@ -5533,7 +5537,6 @@ var SettingsFactory = class {
       options.forEach((value, display) => {
         dropdown.addOption(value, display);
       });
-      console.log(settings.value);
       dropdown.setValue(settings.value);
       dropdown.onChange((value) => __async(this, null, function* () {
         switch (type) {
@@ -5553,6 +5556,7 @@ var SettingsFactory = class {
       switch (type) {
         case 13 /* automaticMove */:
           yield this.plugin.updateSettings({ automaticMove: value });
+          settings.value = value;
           break;
       }
     })));
