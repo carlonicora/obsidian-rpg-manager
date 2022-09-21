@@ -7,10 +7,12 @@ export interface IdInterface {
 	tagMap: Map<DataType, TagValueInterface>;
 	tag: string;
 
-	addValue(
-		type: DataType,
-		value: string|undefined,
-	): void;
+	get id(
+	):number;
+
+	set id(
+		id: number,
+	);
 
 	get isValid(
 	): boolean;

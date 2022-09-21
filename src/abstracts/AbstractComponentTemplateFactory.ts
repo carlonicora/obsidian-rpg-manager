@@ -1,4 +1,4 @@
-import {TemplateFactoryInterface} from "../interfaces/TemplateFactoryInterface";
+import {ComponentTemplateFactoryInterface} from "../interfaces/ComponentTemplateFactoryInterface";
 import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../helpers/FileContentManager";
 import {TemplateInterface} from "../interfaces/TemplateInterface";
@@ -13,12 +13,13 @@ import {FactionTemplate} from "../templates/FactionTemplate";
 import {EventTemplate} from "../templates/EventTemplate";
 import {NoteTemplate} from "../templates/NoteTemplate";
 import {TimelineTemplate} from "../templates/TimelineTemplate";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export abstract class AbstractTemplateFactory implements TemplateFactoryInterface {
+export abstract class AbstractComponentTemplateFactory extends AbstractRpgManager implements ComponentTemplateFactoryInterface {
 	protected internalTemplate: TemplateInterface|undefined;
 
 	constructor(
-		protected app: App,
+		app: App,
 		protected templateName: string,
 		protected name: string,
 		protected campaignId: number|undefined,
@@ -27,6 +28,7 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 		protected sceneId: number|undefined,
 		protected additionalInformation: any|null,
 	) {
+		super(app);
 	}
 
 	public async generateData(
@@ -143,7 +145,7 @@ export abstract class AbstractTemplateFactory implements TemplateFactoryInterfac
 									if (index === undefined) {
 										if (
 											!(additionalFrontmatterElementValue as string).startsWith('rpgm/template/') &&
-											this.app.plugins.getPlugin('rpg-manager').factories.tags.getDataType(undefined, additionalFrontmatterElementValue) === undefined
+											this.tagHelper.getTemplateDataType([additionalFrontmatterElementValue]) === undefined
 										) {
 											frontmatterElementValue[frontmatterElementValue.length] = additionalFrontmatterElementValue;
 										}

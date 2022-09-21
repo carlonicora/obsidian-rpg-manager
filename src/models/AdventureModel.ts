@@ -12,7 +12,7 @@ export class AdventureModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addComponent(
 			SessionTableComponent,
-			this.io.readListParametrised<SessionInterface>(DataType.Session, this.currentElement.campaign.campaignId, this.currentElement.adventureId)
+			this.database.readList<SessionInterface>(DataType.Session, this.currentElement.id)
 				.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 					if (leftData.sessionId > rightData.sessionId) return -1;
 					if (leftData.sessionId < rightData.sessionId) return 1;

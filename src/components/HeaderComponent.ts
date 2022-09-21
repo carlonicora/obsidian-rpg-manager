@@ -23,7 +23,7 @@ export class HeaderComponent extends AbstractComponent{
 
 		const response = new ResponseHeader(this.app);
 
-		response.link = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(data.link, ContentType.Link);
+		response.link = this.factories.contents.create(data.link, ContentType.Link);
 		response.name = data.name;
 
 		let synopsis = '<span class="rpgm-missing">Synopsis missing</span>';
@@ -35,7 +35,7 @@ export class HeaderComponent extends AbstractComponent{
 				synopsis += data.link.toString();
 				const pronoun = data.pronoun;
 				if (pronoun != null) {
-					synopsis += this.app.plugins.getPlugin('rpg-manager').factories.pronouns.readPronoun(pronoun);
+					synopsis += this.factories.pronouns.readPronoun(pronoun);
 				}
 				synopsis += (data.isDead) ? ' was ' : ' is ';
 				synopsis += data.synopsis;
@@ -44,7 +44,7 @@ export class HeaderComponent extends AbstractComponent{
 
 			if (data.goals != null) response.addElement(new ResponseHeaderElement(this.app, 'Goals', data.goals.toString(), HeaderResponseType.Long));
 
-			if (data.pronoun != null) response.addElement(new ResponseHeaderElement(this.app, 'Pronoun', this.app.plugins.getPlugin('rpg-manager').factories.pronouns.readPronoun(data.pronoun), HeaderResponseType.Short));
+			if (data.pronoun != null) response.addElement(new ResponseHeaderElement(this.app, 'Pronoun', this.factories.pronouns.readPronoun(data.pronoun), HeaderResponseType.Short));
 			if (data.age != null || data.death != null) {
 				response.addElement(new ResponseHeaderElement(this.app, 'Status', data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
 			}

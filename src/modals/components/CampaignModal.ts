@@ -4,6 +4,7 @@ import {DataType} from "../../enums/DataType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {CampaignInterface} from "../../interfaces/data/CampaignInterface";
+import {IdInterface} from "../../interfaces/data/IdInterface";
 
 export class CampaignModal extends AbstractModalComponent {
 	private campaigns: CampaignInterface[];
@@ -21,7 +22,7 @@ export class CampaignModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.campaigns = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CampaignInterface>(DataType.Campaign);
+		this.campaigns = this.database.readList<CampaignInterface>(DataType.Campaign, undefined);
 	}
 
 	public async addElement(
@@ -56,8 +57,8 @@ export class CampaignModal extends AbstractModalComponent {
 		containerEl: HTMLElement
 	): Promise<void> {
 		if (this.modal.type !== DataType.Adventure && this.modal.type !== DataType.Session && this.modal.type !== DataType.Scene && this.modal.type !== DataType.Note) {
-			this.modal.elementModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-				this.modal.settings,
+			this.modal.elementModal = this.factories.modals.create(
+				this.modal.campaignSetting,
 				this.modal.type,
 				this.modal,
 			);
@@ -65,8 +66,8 @@ export class CampaignModal extends AbstractModalComponent {
 				containerEl,
 			)
 		} else {
-			this.modal.adventureModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-				this.modal.settings,
+			this.modal.adventureModal = this.factories.modals.create(
+				this.modal.campaignSetting,
 				DataType.Adventure,
 				this.modal,
 			);
@@ -85,10 +86,12 @@ export class CampaignModal extends AbstractModalComponent {
 	private addNewCampaignElements(
 		containerEl: HTMLElement,
 	): void {
-		this.modal.campaignId = 1;
-		this.campaigns.forEach((data: CampaignInterface) => {
-			if (data.campaignId >= this.modal.campaignId) this.modal.campaignId = (data.campaignId + 1);
-		});
+		if (this.modal.campaignId !== undefined) {
+			this.modal.campaignId.id = 1;
+			this.campaigns.forEach((data: CampaignInterface) => {
+				if (data.campaignId >= (this.modal.campaignId.id ?? 0)) this.modal.campaignId.id = (data.campaignId + 1);
+			});
+		}
 		containerEl.createEl('label', {text: 'Select Campaign Settings'});
 		this.campaignSettingsEl = containerEl.createEl('select');
 
@@ -148,12 +151,14 @@ export class CampaignModal extends AbstractModalComponent {
 
 	private selectSetting(
 	): void {
-		this.modal.settings = CampaignSetting[this.campaignSettingsEl.value as keyof typeof CampaignSetting];
+		this.modal.campaignSetting = CampaignSetting[this.campaignSettingsEl.value as keyof typeof CampaignSetting];
 	}
 
 	private selectCampaign(
 	): void {
-		this.modal.campaignId = +this.campaignEl.value;
+		const campaignId:IdInterface|undefined = this.factories.id.create(DataType.Campaign, +this.campaignEl.value);
+		if (campaignId !== undefined) this.modal.campaignId = campaignId;
+		
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}

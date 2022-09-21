@@ -17,20 +17,20 @@ export class VampireCharacterTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Characters');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Character', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Generation', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('', ContentType.String, true),
+			this.factories.contents.create('Character', ContentType.String),
+			this.factories.contents.create('Generation', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const character: VampireCharacterInterface|undefined = relationship.component as VampireCharacterInterface;
 
 			if (character !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.imageSrcElement, ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.link, ContentType.Link, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.generation?.toString(), ContentType.String, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(character.additionalInformation ?? character.synopsis, ContentType.Markdown),
+					this.factories.contents.create(character.imageSrcElement, ContentType.Image, true),
+					this.factories.contents.create(character.link, ContentType.Link, true),
+					this.factories.contents.create(character.generation?.toString(), ContentType.String, true),
+					this.factories.contents.create(character.additionalInformation ?? character.synopsis, ContentType.Markdown),
 				])
 			}
 		});

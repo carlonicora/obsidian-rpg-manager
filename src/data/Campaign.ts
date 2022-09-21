@@ -7,7 +7,7 @@ import {FrontMatterCache} from "obsidian";
 export class Campaign extends AbstractOutlineRecord implements CampaignInterface {
 	public campaignId: number;
 	public currentDate: Date|null;
-	public settings: CampaignSetting;
+	public campaignSettings: CampaignSetting;
 
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
@@ -17,13 +17,13 @@ export class Campaign extends AbstractOutlineRecord implements CampaignInterface
 
 		if (frontmatter?.settings !== undefined) {
 			try {
-				this.settings = CampaignSetting[frontmatter?.settings as keyof typeof CampaignSetting];
+				this.campaignSettings = CampaignSetting[frontmatter?.settings as keyof typeof CampaignSetting];
 			} catch (e) {
-				this.settings = CampaignSetting.Agnostic;
+				this.campaignSettings = CampaignSetting.Agnostic;
 			}
 		}
 
-		if (this.settings === undefined) this.settings = CampaignSetting.Agnostic;
+		if (this.campaignSettings === undefined) this.campaignSettings = CampaignSetting.Agnostic;
 
 		super.initialiseData(frontmatter);
 	}

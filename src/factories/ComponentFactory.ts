@@ -2,11 +2,11 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {ComponentInterface} from "../interfaces/ComponentInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {App} from "obsidian";
+import {ComponentFactoryInterface} from "../interfaces/factories/ComponentFactoryInterface";
 
-export class ComponentFactory extends AbstractFactory {
-	public async create<T extends AbstractComponent>(
+export class ComponentFactory extends AbstractFactory implements ComponentFactoryInterface{
+	public async create<T extends ComponentInterface>(
 		componentType: (new (app: App) => T),
 		data: RelationshipInterface|RelationshipInterface[],
 		title: string|undefined=undefined,

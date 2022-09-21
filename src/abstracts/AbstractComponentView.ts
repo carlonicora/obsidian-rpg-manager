@@ -1,12 +1,14 @@
 import {ViewInterface} from "../interfaces/ViewInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {App} from "obsidian";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export abstract class AbstractComponentView implements ViewInterface {
+export abstract class AbstractComponentView extends AbstractRpgManager implements ViewInterface {
 	constructor(
-		protected app: App,
+		app: App,
 		protected sourcePath: string,
 	) {
+		super(app);
 	}
 
 	abstract render(

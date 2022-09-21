@@ -1,9 +1,15 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {App} from "obsidian";
+import {AbstractRpgManager} from "./AbstractRpgManager";
+import {DataType} from "../enums/DataType";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
-export abstract class AbstractTemplate implements TemplateInterface {
+export abstract class AbstractTemplate extends AbstractRpgManager implements TemplateInterface {
+	protected type: DataType;
+	protected id: IdInterface|undefined;
+
 	constructor(
-		protected app: App,
+		app: App,
 		protected name: string,
 		protected campaignId: number|undefined,
 		protected adventureId: number|undefined,
@@ -11,6 +17,9 @@ export abstract class AbstractTemplate implements TemplateInterface {
 		protected sceneId: number|undefined,
 		protected additionalInformation: any|undefined,
 	) {
+		super(app);
+
+		if (campaignId !== undefined) this.id = this.factories.id.create(this.type, campaignId, adventureId, sessionId, sceneId);
 	}
 	
 	abstract getContent(): string;

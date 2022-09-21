@@ -1,6 +1,6 @@
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {App, CachedMetadata, Component, debounce, MarkdownView, TFile} from "obsidian";
+import {App, CachedMetadata, debounce, MarkdownView, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
@@ -14,15 +14,17 @@ import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
+import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerComponent";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
-export class Database extends Component implements DatabaseInterface {
+export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public elements: Array<RecordInterface> = [];
 	private basenameIndex: Map<string, string>;
 
 	constructor(
-		private app: App,
+		app: App,
 	) {
-		super();
+		super(app);
 		this.basenameIndex = new Map();
 
 		this.onSave = debounce(this.onSave, 2000, true) as unknown as () => Promise<void>;
@@ -118,67 +120,29 @@ export class Database extends Component implements DatabaseInterface {
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
-	public readSingleParametrised<T extends RecordInterface>(
-		dataType: DataType,
-		campaignId: number,
-		adventureId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
-	): T {
-		const result = this.read(
-			this.generateQuery(dataType, false, undefined, undefined, campaignId, adventureId, sessionId, sceneId),
-		);
-
-		if (result.length === 0) {
-			const dynamicallyGeneratedTag = this.app.plugins.getPlugin('rpg-manager').factories.tags.generateTag(dataType, campaignId, adventureId, sessionId, sceneId);
-			const idMap = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(dynamicallyGeneratedTag);
-			throw new ElementNotFoundError(this.app, idMap);
-		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
-
-		return <T>result[0];
-	}
-
 	public readSingle<T extends RecordInterface>(
-		dataType: DataType,
-		tag: string,
-		overloadId: number|undefined = undefined,
+		type: DataType,
+		id: IdInterface,
+		overloadId: number|undefined=undefined,
 	): T {
-		const result = this.read(
-			this.generateQuery(dataType, false, tag, overloadId),
-		);
+		const result = this.read(this.generateQuery(type, id, false, overloadId));
 
 		if (result.length === 0) {
-			const idMap = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(tag);
-			throw new ElementNotFoundError(this.app, idMap);
+			throw new ElementNotFoundError(this.app, id);
 		}
 		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
 
 		return <T>result[0];
-	}
-
-	public readListParametrised<T extends RecordInterface>(
-		dataType: DataType,
-		campaignId: number|undefined=undefined,
-		adventureId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
-		comparison: any|undefined = undefined,
-	): Array<T> {
-		return <Array<T>>this.read(
-			this.generateQuery(dataType, true, undefined, undefined, campaignId, adventureId, sessionId, sceneId),
-			comparison,
-		);
 	}
 
 	public readList<T extends RecordInterface>(
-		dataType: DataType,
+		type: DataType,
+		id: IdInterface|undefined,
 		comparison: any|undefined = undefined,
-		tag: string,
 		overloadId: number|undefined = undefined,
 	): Array<T> {
 		return <Array<T>>this.read(
-			this.generateQuery(dataType, true, tag, overloadId),
+			this.generateQuery(type, id, true, overloadId),
 			comparison,
 		);
 	}
@@ -309,47 +273,51 @@ export class Database extends Component implements DatabaseInterface {
 	}
 
 	private generateQuery(
+		type: DataType,
+		id: IdInterface|undefined,
+		isList: boolean,
+		overloadId: number|undefined=undefined,
+		/*
 		dataType: DataType,
 		isList: boolean,
 		tag: string|undefined,
-		overloadId: number|undefined,
+
 		campaignId: number|undefined=undefined,
 		adventureId: number|undefined=undefined,
 		sessionId: number|undefined=undefined,
 		sceneId: number|undefined=undefined,
+		 */
 	): any {
-		if (tag !== undefined) {
-			campaignId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getId(DataType.Campaign, tag);
-			adventureId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getOptionalId(DataType.Adventure, tag);
-			sessionId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getOptionalId(DataType.Session, tag);
-			sceneId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getOptionalId(DataType.Scene, tag);
-		}
+		let campaignId:number|undefined=id?.getTypeValue(DataType.Campaign);
+		let adventureId:number|undefined=id?.getTypeValue(DataType.Adventure);
+		let sessionId:number|undefined=id?.getTypeValue(DataType.Session);
+		let sceneId:number|undefined=id?.getTypeValue(DataType.Scene);
 
-		switch(dataType) {
+		switch(type) {
 			case DataType.Campaign:
 				if (overloadId !== undefined) campaignId = overloadId;
 				return (data: CampaignInterface) =>
-					(dataType & data.id.type) === data.id.type &&
+					(type & data.id.type) === data.id.type &&
 					(isList ? true : data.campaignId === campaignId);
 				break;
 			case DataType.Adventure:
 				if (overloadId !== undefined) adventureId = overloadId;
 				return (data: AdventureInterface) =>
-					(dataType & data.id.type) === data.id.type &&
+					(type & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(isList ? true : data.adventureId === adventureId);
 				break;
 			case DataType.Session:
 				if (overloadId !== undefined) sessionId = overloadId;
 				return (data: SessionInterface) =>
-					(dataType & data.id.type) === data.id.type &&
+					(type & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
 					(isList ? true : data.sessionId === sessionId);
 				break;
 			case DataType.Note:
 				return (note: NoteInterface) =>
-					dataType === note.id.type &&
+					type === note.id.type &&
 					note.campaign.campaignId === campaignId &&
 					(adventureId !== undefined ? note.adventure.adventureId === adventureId : true) &&
 					note.sessionId === sessionId;
@@ -357,7 +325,7 @@ export class Database extends Component implements DatabaseInterface {
 			case DataType.Scene:
 				if (overloadId !== undefined) sceneId = overloadId;
 				return (data: SceneInterface) =>
-					(dataType & data.id.type) === data.id.type &&
+					(type & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId &&
 					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
 					data.session.sessionId === sessionId &&
@@ -366,7 +334,7 @@ export class Database extends Component implements DatabaseInterface {
 			default:
 				if (overloadId !== undefined) campaignId = overloadId;
 				return (data: RecordInterface) =>
-					(dataType & data.id.type) === data.id.type &&
+					(type & data.id.type) === data.id.type &&
 					data.campaign.campaignId === campaignId
 				break;
 		}

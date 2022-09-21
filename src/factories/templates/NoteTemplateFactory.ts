@@ -1,10 +1,10 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class NoteTemplateFactory extends AbstractTemplateFactory {
+export class NoteTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.noteTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
+		frontmatter.tags.push(this.settings.noteTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
 	}
 
 	public generateInitialCodeBlock(

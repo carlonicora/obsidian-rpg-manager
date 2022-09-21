@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class LocationTemplateFactory extends AbstractTemplateFactory {
+export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.locationTag + '/' + this.campaignId);
+		frontmatter.tags.push(this.settings.locationTag + '/' + this.campaignId);
 		frontmatter.address = "";
 	}
 

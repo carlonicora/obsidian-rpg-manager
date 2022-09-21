@@ -2,7 +2,7 @@ import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App} from "obsidian";
 import {IdInterface} from "../interfaces/data/IdInterface";
 
-export abstract class AbstractRpgError extends Error implements RpgErrorInterface {
+export abstract class AbstractRpgError extends  Error implements RpgErrorInterface {
 	constructor(
 		protected app: App,
 		public id: IdInterface,

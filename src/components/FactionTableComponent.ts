@@ -17,17 +17,17 @@ export class FactionTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Factions');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Faction', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('', ContentType.String, true),
+			this.factories.contents.create('Faction', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const record: FactionInterface|undefined = relationship.component as FactionInterface;
 			if (record !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.factories.contents.create(record.link, ContentType.Link, true),
+					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				])
 			}
 		});

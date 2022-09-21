@@ -9,12 +9,12 @@ export class ResponseHeaderElement extends AbstractResponse implements HeaderRes
 	public value: ContentInterface;
 
 	constructor(
-		protected app: App,
+		app: App,
 		public title: string,
 		content: string,
 		public type: HeaderResponseType,
 	) {
 		super(app);
-		this.value = this.app.plugins.getPlugin('rpg-manager').factories.contents.create(content, ContentType.Markdown);
+		this.value = this.factories.contents.create(content, ContentType.Markdown);
 	}
 }

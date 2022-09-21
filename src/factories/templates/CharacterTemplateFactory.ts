@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class CharacterTemplateFactory extends AbstractTemplateFactory {
+export class CharacterTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.pcTag + '/' + this.campaignId);
+		frontmatter.tags.push(this.settings.pcTag + '/' + this.campaignId);
 		frontmatter.pronoun = "";
 		frontmatter.dates = {
 			dob: {},

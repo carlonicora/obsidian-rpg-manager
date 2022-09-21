@@ -1,17 +1,18 @@
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalComponentInterface} from "./ModalComponentInterface";
 import {DataType} from "../enums/DataType";
+import {IdInterface} from "./data/IdInterface";
 
 export interface ModalInterface {
 	saver: ModalComponentInterface
 
 	type: DataType;
 
-	campaignId: number;
-	adventureId: number|undefined;
-	sessionId: number|undefined;
-	sceneId: number|undefined;
-	settings: CampaignSetting;
+	campaignId: IdInterface;
+	adventureId: IdInterface|undefined;
+	sessionId: IdInterface|undefined;
+	sceneId: IdInterface|undefined;
+	campaignSetting: CampaignSetting;
 
 	additionalInformationEl: HTMLDivElement;
 

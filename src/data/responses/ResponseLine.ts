@@ -13,7 +13,7 @@ export class ResponseLine extends AbstractResponse implements StringResponseInte
 	) {
 		super(app);
 		this.responseType = ResponseType.String;
-		this.content = this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String);
+		this.content = this.factories.contents.create('', ContentType.String);
 	}
 
 	public addContent(

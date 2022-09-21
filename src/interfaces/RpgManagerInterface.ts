@@ -1,12 +1,13 @@
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
 import {DatabaseInterface} from "./database/DatabaseInterface";
-import {Factories} from "../helpers/Factories";
-import {Plugin_2} from "obsidian";
+import {FactoriesInterface} from "./FactoriesInterface";
+import {TagHelper} from "../helpers/TagHelper";
 
-export interface RpgManagerInterface extends Plugin_2{
+export interface RpgManagerInterface {
 	settings: RpgManagerSettingsInterface;
 	database: DatabaseInterface;
-	factories: Factories;
+	factories: FactoriesInterface;
+	tagHelper: TagHelper;
 
 	updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,

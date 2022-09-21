@@ -1,11 +1,6 @@
-import {App} from "obsidian";
 import {FetcherInterface} from "../interfaces/FetcherInterface";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export class AbstractFetcher implements FetcherInterface{
+export class AbstractFetcher extends AbstractRpgManager implements FetcherInterface{
 	public fetchUrl: string;
-
-	constructor(
-		protected app: App,
-	) {
-	}
 }

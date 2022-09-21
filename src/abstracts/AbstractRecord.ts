@@ -5,12 +5,13 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
-import {Id} from "../database/Id";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {MultipleRpgManagerTagsError} from "../errors/MultipleRpgManagerTagsError";
 import {RelationshipType} from "../enums/RelationshipType";
+import {AbstractRpgManager} from "./AbstractRpgManager";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
-export abstract class AbstractRecord implements RecordInterface {
+export abstract class AbstractRecord extends AbstractRpgManager implements RecordInterface {
 	private static root: string|undefined;
 
 	private static initialiseRoots(
@@ -39,10 +40,11 @@ export abstract class AbstractRecord implements RecordInterface {
 	public reverseRelationships: Map<string, RelationshipInterface>;
 
 	constructor(
-		protected app: App,
+		app: App,
 		public file: TFile,
-		public id: Id,
+		public id: IdInterface,
 	) {
+		super(app);
 		AbstractRecord.initialiseRoots(this.app);
 	}
 
@@ -122,7 +124,7 @@ export abstract class AbstractRecord implements RecordInterface {
 
 		this.basename = this.file.basename;
 
-		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
+		this.tags = await this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
 
 		this.validateTag();
 
@@ -139,7 +141,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	): void {
 		let rpgManagerTagCounter = 0;
 		(this.tags || []).forEach((tag: string) => {
-			if (this.app.plugins.getPlugin('rpg-manager').factories.tags.isRpgManagerTag(tag)) rpgManagerTagCounter++;
+			if (this.factories.id.createFromTag(tag) !== undefined) rpgManagerTagCounter++;
 		});
 		if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
 
@@ -150,7 +152,7 @@ export abstract class AbstractRecord implements RecordInterface {
 	): Promise<void> {
 		this.relationships = await new Map();
 		this.reverseRelationships = await new Map();
-		await this.app.plugins.getPlugin('rpg-manager').factories.relationships.read(this.file, this.relationships);
+		await this.factories.relationships.read(this.file, this.relationships);
 	}
 
 	protected initialiseData(
@@ -163,8 +165,11 @@ export abstract class AbstractRecord implements RecordInterface {
 		const metadata: CachedMetadata|null = await this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null || metadata.frontmatter === undefined) return;
 
-		this.tags = await this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
-		this.id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, this.tags);
+		this.tags = await this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
+		const id: IdInterface|undefined = this.factories.id.createFromTags(this.tags);
+		if (id === undefined) throw new Error('');
+
+		this.id = id;
 		await this.validateTag();
 		await this.initialise();
 		await this.initialiseData(metadata.frontmatter);
@@ -173,7 +178,8 @@ export abstract class AbstractRecord implements RecordInterface {
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
-		if (this.id.type !== DataType.Campaign) this.campaign = await database.readSingle<CampaignInterface>(DataType.Campaign, this.id.tag);
+		if (this.id.type !== DataType.Campaign) this.campaign =
+			await database.readSingle<CampaignInterface>(DataType.Campaign, this.id);
 	}
 
 	public async loadRelationships(

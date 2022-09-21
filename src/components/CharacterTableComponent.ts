@@ -17,19 +17,19 @@ export class CharacterTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Characters');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Character', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Age', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('', ContentType.String, true),
+			this.factories.contents.create('Character', ContentType.String),
+			this.factories.contents.create('Age', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const record: CharacterInterface|undefined = relationship.component as CharacterInterface;
 			if (record !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.age?.toString(), ContentType.String, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.factories.contents.create(record.link, ContentType.Link, true),
+					this.factories.contents.create(record.age?.toString(), ContentType.String, true),
+					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				]);
 			}
 		});

@@ -16,7 +16,7 @@ export class CampaignModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addComponent(
 			AdventureTableComponent,
-			this.io.readListParametrised<AdventureInterface>(DataType.Adventure, this.currentElement.campaignId)
+			this.database.readList<AdventureInterface>(DataType.Adventure, this.currentElement.id)
 				.sort(function (leftData: AdventureInterface, rightData: AdventureInterface) {
 					if (leftData.adventureId > rightData.adventureId) return -1;
 					if (leftData.adventureId < rightData.adventureId) return 1;
@@ -26,7 +26,7 @@ export class CampaignModel extends AbstractModel {
 
 		await this.response.addComponent(
 			SessionTableComponent,
-			this.io.readListParametrised<SessionInterface>(DataType.Session, this.currentElement.campaignId)
+			this.database.readList<SessionInterface>(DataType.Session, this.currentElement.id)
 				.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 					if (leftData.sessionId > rightData.sessionId) return -1;
 					if (leftData.sessionId < rightData.sessionId) return 1;
@@ -36,7 +36,7 @@ export class CampaignModel extends AbstractModel {
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.io.readListParametrised<CharacterInterface>(DataType.Character | DataType.NonPlayerCharacter, this.currentElement.campaignId)
+			this.database.readList<CharacterInterface>(DataType.Character | DataType.NonPlayerCharacter, this.currentElement.id)
 				.sort(function (leftData: CharacterInterface, rightData: CharacterInterface) {
 					if (leftData.name > rightData.name) return 1;
 					if (leftData.name < rightData.name) return -1;

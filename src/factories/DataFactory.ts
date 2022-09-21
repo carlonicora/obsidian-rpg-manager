@@ -1,4 +1,4 @@
-import {TFile} from "obsidian";
+import {App, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {Campaign} from "../data/Campaign";
 import {Adventure} from "../data/Adventure";
@@ -16,44 +16,47 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {VampireCharacter} from "../rpgs/Vampire/data/VampireCharacter";
 import {RawCampaign} from "../rpgs/Raw/data/RawCampaign";
 import {Music} from "../data/Music";
-import {Id} from "../database/Id";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {DataFactoryInterface} from "../interfaces/factories/DataFactoryInterface";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
+export class DataFactory extends AbstractFactory implements DataFactoryInterface{
+	private recordTypeMap: Map<string,any>;
 
-const DatasMap = {
-	AgnosticCampaign: Campaign,
-	AgnosticAdventure: Adventure,
-	AgnosticSession: Session,
-	AgnosticScene: Scene,
-	AgnosticCharacter: Character,
-	AgnosticNonPlayerCharacter: Character,
-	AgnosticFaction: Faction,
-	AgnosticClue: Clue,
-	AgnosticLocation: Location,
-	AgnosticEvent: Event,
-	AgnosticTimeline: Timeline,
-	AgnosticNote: Note,
-	VampireCharacter: VampireCharacter,
-	VampireNonPlayerCharacter: VampireCharacter,
-	RawCampaign: RawCampaign,
-	AgnosticMusic: Music,
-};
-type DatasMapType = typeof DatasMap;
-type DataKeys = keyof DatasMapType;
-type Tuples<T> = T extends DataKeys ? [T, InstanceType<DatasMapType[T]>] : never;
-type SingleDataKey<K> = [K] extends (K extends DataKeys ? [K] : never) ? K : never;
-type DataClassType<A extends DataKeys> = Extract<Tuples<DataKeys>, [A, any]>[1];
+	constructor(
+		app: App,
+	) {
+		super(app);
 
-export class DataFactory extends AbstractFactory {
-	public create<K extends DataKeys>(
+		this.recordTypeMap = new Map([
+			['AgnosticCampaign', Campaign],
+			['AgnosticAdventure', Adventure],
+			['AgnosticSession', Session],
+			['AgnosticScene', Scene],
+			['AgnosticCharacter', Character],
+			['AgnosticNonPlayerCharacter', Character],
+			['AgnosticFaction', Faction],
+			['AgnosticClue', Clue],
+			['AgnosticLocation', Location],
+			['AgnosticEvent', Event],
+			['AgnosticTimeline', Timeline],
+			['AgnosticNote', Note],
+			['VampireCharacter', VampireCharacter],
+			['VampireNonPlayerCharacter', VampireCharacter],
+			['RawCampaign', RawCampaign],
+			['AgnosticMusic', Music],
+		]);
+	}
+
+	public create(
 		settings: CampaignSetting,
 		file: TFile,
-		id: Id,
-	): DataClassType<K> {
-		let dataKey: SingleDataKey<K> = CampaignSetting[settings] + DataType[id.type] as SingleDataKey<K>;
-		if (DatasMap[dataKey] == null && settings !== CampaignSetting.Agnostic){
-			dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[id.type] as SingleDataKey<K>;
-		}
+		id: IdInterface,
+	): RecordInterface {
+		let dataKey = CampaignSetting[settings] + DataType[id.type];
+		if (!this.recordTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[id.type];
+		if (!this.recordTypeMap.has(dataKey)) throw new Error('Type of data ' + CampaignSetting[settings] + DataType[id.type] + ' cannot be found');
 
-		return new DatasMap[dataKey](this.app, file, id);
+		return new (this.recordTypeMap.get(dataKey))(this.app, file, id);
 	}
 }

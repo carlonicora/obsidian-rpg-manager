@@ -1,10 +1,10 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class TimelineTemplateFactory extends AbstractTemplateFactory {
+export class TimelineTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.timelineTag + '/' + this.campaignId);
+		frontmatter.tags.push(this.settings.timelineTag + '/' + this.campaignId);
 	}
 
 	public generateInitialCodeBlock(

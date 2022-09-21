@@ -44,7 +44,7 @@ export class Music extends AbstractElementRecord implements MusicInterface {
 		if (this.url == undefined) return undefined;
 
 		if (this.url.indexOf('youtube.com') !== -1 || this.url.indexOf('youtu.be') !== -1){
-			const fetcher: YouTubeImageFetcherInterface = await this.app.plugins.getPlugin('rpg-manager').factories.fetchers.create(
+			const fetcher: YouTubeImageFetcherInterface = await this.factories.fetchers.create(
 				YouTubeImageFetcher,
 			);
 			return fetcher.fetchImage(this.url);

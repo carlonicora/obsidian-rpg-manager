@@ -2,18 +2,12 @@ import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInter
 import {ResponseElementInterface} from "../../interfaces/response/ResponseElementInterface";
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
-import {App} from "obsidian";
 import {AbstractRecord} from "../../abstracts/AbstractRecord";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 
-export class ResponseData implements ResponseDataInterface {
-	public elements: ResponseElementInterface[];
-
-	constructor(
-		private app: App,
-	) {
-		this.elements = [];
-	}
+export class ResponseData extends AbstractRpgManager implements ResponseDataInterface {
+	public elements: ResponseElementInterface[] = [];
 
 	public async addComponent(
 		type: any,
@@ -41,7 +35,7 @@ export class ResponseData implements ResponseDataInterface {
 				}
 			}
 		}
-		const element = await this.app.plugins.getPlugin('rpg-manager').factories.components.create(
+		const element = await this.factories.components.create(
 			type,
 			relationship ?? relationships,
 			title,

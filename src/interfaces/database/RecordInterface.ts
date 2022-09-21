@@ -3,11 +3,11 @@ import {TFile} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
 import {DatabaseInterface} from "./DatabaseInterface";
 import {BaseCampaignInterface} from "../data/BaseCampaignInterface";
-import {Id} from "../../database/Id";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {IdInterface} from "../data/IdInterface";
 
 export interface RecordInterface {
-	id: Id;
+	id: IdInterface;
 
 	tags: Array<string>;
 

@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class FactionTemplateFactory extends AbstractTemplateFactory {
+export class FactionTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.factionTag + '/' + this.campaignId);
+		frontmatter.tags.push(this.settings.factionTag + '/' + this.campaignId);
 	}
 
 	public generateInitialCodeBlock(

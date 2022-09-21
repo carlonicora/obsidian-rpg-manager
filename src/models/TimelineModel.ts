@@ -49,9 +49,9 @@ export class TimelineModel extends AbstractModel {
 	private addEvents(
 		timeline: TimelineResponseInterface,
 	): void {
-		const events = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<EventInterface>(
+		const events = this.database.readList<EventInterface>(
 			DataType.Event,
-			this.currentElement.campaign.campaignId,
+			this.currentElement.id,
 		);
 
 		events.filter((data: EventInterface) => data.date != null).forEach((event: EventInterface) => {
@@ -75,9 +75,9 @@ export class TimelineModel extends AbstractModel {
 	private addClues(
 		timeline: TimelineResponseInterface,
 	): void {
-		const clues = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<ClueInterface>(
+		const clues = this.database.readList<ClueInterface>(
 			DataType.Clue,
-			this.currentElement.campaign.campaignId
+			this.currentElement.id,
 		);
 		clues.filter((data: ClueInterface) => data.isFound === true).forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
@@ -98,9 +98,9 @@ export class TimelineModel extends AbstractModel {
 	private addBirths(
 		timeline: TimelineResponseInterface,
 	): void {
-		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(
+		const characters = this.database.readList<CharacterInterface>(
 			DataType.Character | DataType.NonPlayerCharacter,
-			this.currentElement.campaign.campaignId,
+			this.currentElement.id,
 		);
 		characters.filter((data: CharacterInterface) => data.dob != null).forEach((character: CharacterInterface) => {
 			if (character.dob != null) {
@@ -121,9 +121,9 @@ export class TimelineModel extends AbstractModel {
 	private addDeaths(
 		timeline: TimelineResponseInterface,
 	): void {
-		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(
+		const characters = this.database.readList<CharacterInterface>(
 			DataType.Character | DataType.NonPlayerCharacter,
-			this.currentElement.campaign.campaignId
+			this.currentElement.id,
 		);
 		characters.filter((data: CharacterInterface) => data.death != null).forEach((character: CharacterInterface) => {
 			if (character.death != null) {
@@ -144,9 +144,9 @@ export class TimelineModel extends AbstractModel {
 	private addSessions(
 		timeline: TimelineResponseInterface,
 	): void {
-		const sessions = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(
+		const sessions = this.database.readList<SessionInterface>(
 			DataType.Session,
-			this.currentElement.campaign.campaignId,
+			this.currentElement.id,
 		);
 		sessions.filter((data: SessionInterface) => data.date != null).forEach((session: SessionInterface) => {
 			if (session.date != null) {

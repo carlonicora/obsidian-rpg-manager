@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class EventTemplateFactory extends AbstractTemplateFactory {
+export class EventTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.eventTag + '/' + this.campaignId);
+		frontmatter.tags.push(this.settings.eventTag + '/' + this.campaignId);
 		frontmatter.dates = {
 			event: {},
 		};

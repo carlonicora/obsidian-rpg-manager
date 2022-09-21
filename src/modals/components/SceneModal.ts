@@ -14,12 +14,7 @@ export class SceneModal extends AbstractModalComponent {
 		super(app, modal);
 
 		if (this.modal.adventureId != null && this.modal.sessionId != null) {
-			this.scenes = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SceneInterface>(
-				DataType.Scene,
-				this.modal.campaignId,
-				this.modal.adventureId,
-				this.modal.sessionId,
-			);
+			this.scenes = this.database.readList<SceneInterface>(DataType.Scene, this.modal.sessionId);
 		} else {
 			this.scenes = [];
 		}
@@ -30,10 +25,12 @@ export class SceneModal extends AbstractModalComponent {
 	): Promise<void> {
 		contentEl.createDiv({cls: 'sceneContainer'});
 
-		this.modal.sceneId = 1;
-		this.scenes.forEach((data: SceneInterface) => {
-			if (data.sceneId >= (this.modal.sceneId ?? 0)) this.modal.sceneId = (data.sceneId + 1);
-		});
+		if (this.modal.sceneId !== undefined) {
+			this.modal.sceneId.id = 1;
+			this.scenes.forEach((data: SceneInterface) => {
+				if (this.modal.sceneId !== undefined && data.sceneId >= (this.modal.sceneId.id ?? 0)) this.modal.sceneId.id = (data.sceneId + 1);
+			});
+		}
 
 		this.modal.saver = this;
 		this.modal.enableButton();

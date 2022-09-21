@@ -37,7 +37,7 @@ export class AbtPlotComponent extends AbstractComponent {
 
 		if (
 			data instanceof Adventure &&
-			this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(DataType.Session, data.campaign.campaignId, data.adventureId).length === 0 &&
+			this.database.readList<SessionInterface>(DataType.Session, data.id).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&
@@ -52,20 +52,20 @@ export class AbtPlotComponent extends AbstractComponent {
 		response.class = 'rpgm-plot';
 
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**NEED** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.need ? additionalInformation.need : ''), ContentType.Markdown),
+			this.factories.contents.create('**NEED** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.need ? additionalInformation.need : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**AND** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.and ? additionalInformation.and : ''), ContentType.Markdown),
+			this.factories.contents.create('**AND** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.and ? additionalInformation.and : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**BUT** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.but ? additionalInformation.but : ''), ContentType.Markdown),
+			this.factories.contents.create('**BUT** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.but ? additionalInformation.but : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**THEREFORE** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.therefore ? additionalInformation.therefore : ''), ContentType.Markdown),
+			this.factories.contents.create('**THEREFORE** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.therefore ? additionalInformation.therefore : ''), ContentType.Markdown),
 		]);
 
 		return response;

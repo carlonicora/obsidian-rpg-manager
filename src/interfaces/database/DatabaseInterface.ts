@@ -1,4 +1,5 @@
 import {RecordInterface} from "./RecordInterface";
+import {IdInterface} from "../data/IdInterface";
 import {DataType} from "../../enums/DataType";
 
 export interface DatabaseInterface {
@@ -28,32 +29,15 @@ export interface DatabaseInterface {
 		name: string,
 	): T|undefined;
 
-	readSingleParametrised<T extends RecordInterface>(
-		dataType: DataType,
-		campaignId: number,
-		adventureId?: number|undefined,
-		sessionId?: number|undefined,
-		sceneId?: number|undefined,
-	): T;
-
 	readSingle<T extends RecordInterface>(
-		dataType: DataType,
-		tag: string,
+		type: DataType,
+		id: IdInterface,
 		overloadId?: number|undefined,
 	): T;
 
-	readListParametrised<T extends RecordInterface>(
-		dataType: DataType,
-		campaignId?: number|undefined,
-		adventureId?: number|undefined,
-		sessionId?: number|undefined,
-		sceneId?: number|undefined,
-		comparison?: any|undefined,
-	): Array<T>;
-
 	readList<T extends RecordInterface>(
-		dataType: DataType,
-		tag: string,
+		type: DataType,
+		id: IdInterface|undefined,
 		comparison?: any|undefined,
 		overloadId?: number|undefined,
 	): Array<T>;

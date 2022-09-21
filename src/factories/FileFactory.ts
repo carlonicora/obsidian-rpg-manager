@@ -3,10 +3,11 @@ import {DataType} from "../enums/DataType";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {FileFactoryInterface} from "../interfaces/factories/FileFactoryInterface";
 
 const path = require('path');
 
-export class FileFactory extends AbstractFactory {
+export class FileFactory extends AbstractFactory implements FileFactoryInterface{
 	public async create(
 		settings: CampaignSetting,
 		type: DataType,
@@ -22,23 +23,26 @@ export class FileFactory extends AbstractFactory {
 		let folder = path.sep;
 
 		if (campaignId != null) {
-
 			let campaign: CampaignInterface|undefined;
-			try {
-				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
-			} catch (e) {
-				campaign = undefined;
+			const id = this.factories.id.create(DataType.Campaign, campaignId);
+
+			if (id !== undefined){
+				try {
+					campaign = this.database.readSingle<CampaignInterface>(DataType.Campaign, id);
+				} catch (e) {
+					campaign = undefined;
+				}
 			}
 
 			if (campaign !== undefined) {
-				settings = campaign.settings;
+				settings = campaign.campaignSettings;
 				folder = campaign.folder;
 			} else {
 				settings = CampaignSetting.Agnostic;
 			}
 		}
 
-		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
+		const template = this.factories.templates.create(
 			settings,
 			type,
 			templateName,
@@ -101,13 +105,23 @@ export class FileFactory extends AbstractFactory {
 		let folder = '';
 		let settings = CampaignSetting.Agnostic;
 
-		const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<CampaignInterface>(DataType.Campaign, campaignId);
+		let campaign: CampaignInterface|undefined;
+		const id = this.factories.id.create(DataType.Campaign, campaignId);
+
+		if (id !== undefined){
+			try {
+				campaign = this.database.readSingle<CampaignInterface>(DataType.Campaign, id);
+			} catch (e) {
+				campaign = undefined;
+			}
+		}
+
 		if (campaign !== undefined) {
-			settings = campaign.settings;
+			settings = campaign.campaignSettings;
 			folder = campaign.folder;
 		}
 
-		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
+		const template = this.factories.templates.create(
 			settings,
 			type,
 			'internal' + DataType[type],
@@ -136,7 +150,7 @@ export class FileFactory extends AbstractFactory {
 		if (folder.endsWith(path.sep)) folder = folder.substring(0, folder.length - path.sep.length);
 		let response = name + '.md';
 
-		if (this.app.plugins.getPlugin('rpg-manager').settings.automaticMove){
+		if (this.settings.automaticMove){
 			let fullPath: string;
 			if (type !== DataType.Campaign) {
 				fullPath = folder + path.sep + DataType[type] + 's';

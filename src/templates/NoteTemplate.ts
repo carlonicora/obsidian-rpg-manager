@@ -4,8 +4,11 @@ import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {DataType} from "../enums/DataType";
 
 export class NoteTemplate extends AbstractTemplate implements TemplateInterface {
+	protected type:DataType = DataType.Note;
 	public getContent(): string {
-		const characters = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<CharacterInterface>(DataType.Character, this.campaignId);
+		if (this.id === undefined) return '';
+
+		const characters = this.database.readList<CharacterInterface>(DataType.Character, this.id);
 
 		let possibleRecappers = '';
 		(characters || []).forEach((character: CharacterInterface) => {

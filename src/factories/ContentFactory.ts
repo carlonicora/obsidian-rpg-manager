@@ -7,8 +7,9 @@ import {ObjectContent} from "../data/content/ObjectContent";
 import {MarkdownContent} from "../data/content/MarkdownContent";
 import {ImageContent} from "../data/content/ImageContent";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {ContentFactoryInterface} from "../interfaces/factories/ContentFactoryInterface";
 
-export class ContentFactory extends AbstractFactory {
+export class ContentFactory extends AbstractFactory implements ContentFactoryInterface{
 	public create(
 		content: any,
 		type: ContentType,
@@ -16,22 +17,22 @@ export class ContentFactory extends AbstractFactory {
 	): ContentInterface {
 		switch (type) {
 			case ContentType.String:
-				return new StringContent(content, isInline);
+				return new StringContent(this.app, content, isInline);
 				break;
 			case ContentType.Link:
-				return new LinkContent(content, isInline);
+				return new LinkContent(this.app, content, isInline);
 				break;
 			case ContentType.Number:
-				return new NumberContent(content, isInline);
+				return new NumberContent(this.app, content, isInline);
 				break;
 			case ContentType.Object:
-				return new ObjectContent(content, isInline);
+				return new ObjectContent(this.app, content, isInline);
 				break;
 			case ContentType.Markdown:
-				return new MarkdownContent(content, isInline);
+				return new MarkdownContent(this.app, content, isInline);
 				break;
 			case ContentType.Image:
-				return new ImageContent(content, isInline);
+				return new ImageContent(this.app, content, isInline);
 				break;
 		}
 	}

@@ -17,11 +17,9 @@ export class SessionModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addComponent(
 			SceneTableComponent,
-			this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SceneInterface>(
+			this.database.readList<SceneInterface>(
 				DataType.Scene,
-				this.currentElement.campaign.campaignId,
-				this.currentElement.adventure.adventureId,
-				this.currentElement.sessionId,
+				this.currentElement.id,
 				undefined,
 			).sort(function (leftData: SceneInterface, rightData: SceneInterface) {
 				if (leftData.sceneId > rightData.sceneId) return +1;

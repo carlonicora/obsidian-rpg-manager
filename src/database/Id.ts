@@ -4,32 +4,43 @@ import {TagStatus} from "../enums/TagStatus";
 import {App} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {IdInterface} from "../interfaces/data/IdInterface";
+import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 
-export class Id implements IdInterface{
+export class Id extends AbstractRpgManager implements IdInterface{
 	public tagMap: Map<DataType, TagValueInterface>;
 	public tag: string;
 
 	constructor(
-		private app: App,
+		app: App,
 		public type: DataType,
-		tag: string|undefined=undefined,
-		tags: Array<string>|undefined=undefined,
+		campaignId: number,
+		adventureId: number|undefined,
+		sessionId: number|undefined,
+		sceneId: number|undefined,
 	) {
-		if (tag === undefined && tags === undefined) throw new Error('Tag and Tags are undefined');
-		if (tag !== undefined){
-			this.tag = tag;
-		} else if (tag === undefined && tags !== undefined){
-			tag = this.app.plugins.getPlugin('rpg-manager').factories.tags.getDataTag(tags);
-			if (tag !== undefined) this.tag = tag;
-		}
-
-		if (this.tag === undefined) throw new Error('Impossible to find the tag');
+		super(app);
 
 		this.tagMap = new Map();
-		this.tagMap.set(DataType.Campaign, {status: TagStatus.Missing, value: undefined});
-		this.tagMap.set(DataType.Adventure, {status: TagStatus.NotRequired, value: undefined});
-		this.tagMap.set(DataType.Session, {status: TagStatus.NotRequired, value: undefined});
-		this.tagMap.set(DataType.Scene, {status: TagStatus.NotRequired, value: undefined});
+		this.tagMap.set(DataType.Campaign, {status: TagStatus.Missing, value: campaignId});
+		this.tagMap.set(DataType.Adventure, {status: TagStatus.NotRequired, value: adventureId});
+		this.tagMap.set(DataType.Session, {status: TagStatus.NotRequired, value: sessionId});
+		this.tagMap.set(DataType.Scene, {status: TagStatus.NotRequired, value: sceneId});
+	}
+
+	public get id(
+	): number {
+		const response:number|undefined = this.tagMap.get(this.type)?.value;
+		if (response === undefined) throw new Error('');
+
+		return response;
+	}
+
+	public set id(
+		id: number,
+	) {
+		const tagValue:TagValueInterface|undefined = this.tagMap.get(DataType.Adventure);
+
+		if (tagValue !== undefined) tagValue.value = id;
 	}
 
 	private generateTagValue(
@@ -63,13 +74,6 @@ export class Id implements IdInterface{
 		}
 
 		return {status: status, value: numericValue};
-	}
-
-	public addValue(
-		type: DataType,
-		value: string|undefined,
-	): void {
-		this.tagMap.set(type, this.generateTagValue(type, value));
 	}
 
 	public get isValid(

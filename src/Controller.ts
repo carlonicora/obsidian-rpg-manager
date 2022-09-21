@@ -1,4 +1,4 @@
-import {App, Component, debounce, MarkdownPostProcessorContext, MarkdownRenderChild, parseYaml, TFile} from "obsidian";
+import {App, Component, debounce, MarkdownPostProcessorContext, parseYaml, TFile} from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
@@ -7,8 +7,9 @@ import {Campaign} from "./data/Campaign";
 import {RecordInterface} from "./interfaces/database/RecordInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {ErrorLog, LogMessageType} from "./helpers/Logger";
+import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
 
-export class Controller extends MarkdownRenderChild {
+export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
@@ -16,13 +17,13 @@ export class Controller extends MarkdownRenderChild {
 	private currentElement: RecordInterface;
 
 	constructor(
-		protected app: App,
-		protected container: HTMLElement,
+		app: App,
+		container: HTMLElement,
 		private source: string,
 		private component: Component | MarkdownPostProcessorContext,
 		private sourcePath: string,
 	) {
-		super(container);
+		super(app, container);
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 	}
 
@@ -48,9 +49,9 @@ export class Controller extends MarkdownRenderChild {
 
 		let settings: CampaignSetting;
 		if (this.currentElement instanceof Campaign){
-			settings = this.currentElement.settings;
+			settings = this.currentElement.campaignSettings;
 		} else {
-			settings = this.currentElement.campaign.settings;
+			settings = this.currentElement.campaign.campaignSettings;
 		}
 
 		if (settings === undefined) settings = CampaignSetting.Agnostic;
@@ -98,7 +99,7 @@ export class Controller extends MarkdownRenderChild {
 			.then((data: ResponseDataInterface) => {
 				data.elements.forEach((element: ResponseElementInterface) => {
 					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
-						((this.currentElement instanceof Campaign) ? this.currentElement.settings : this.currentElement.campaign.settings),
+						((this.currentElement instanceof Campaign) ? this.currentElement.campaignSettings : this.currentElement.campaign.campaignSettings),
 						element.responseType,
 						this.sourcePath,
 					);

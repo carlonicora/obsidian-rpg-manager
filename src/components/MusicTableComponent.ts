@@ -17,20 +17,20 @@ export class MusicTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Music');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Music', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('url', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('', ContentType.String, true),
+			this.factories.contents.create('Music', ContentType.String),
+			this.factories.contents.create('url', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
 		]);
 		for (let musicCounter=0; musicCounter < relationships.length; musicCounter++){
 			const record: MusicInterface|undefined = relationships[musicCounter].component as MusicInterface;
 
 			if (record !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(await record.getDynamicImageSrcElement(), ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create((record.url ?? '<span class="rpgm-missing">No URL provided</span>'), ContentType.Markdown),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationships[musicCounter].description !== '' ? relationships[musicCounter].description : record.synopsis, ContentType.Markdown),
+					this.factories.contents.create(await record.getDynamicImageSrcElement(), ContentType.Image, true),
+					this.factories.contents.create(record.link, ContentType.Link, true),
+					this.factories.contents.create((record.url ?? '<span class="rpgm-missing">No URL provided</span>'), ContentType.Markdown),
+					this.factories.contents.create(relationships[musicCounter].description !== '' ? relationships[musicCounter].description : record.synopsis, ContentType.Markdown),
 				]);
 			}
 		}

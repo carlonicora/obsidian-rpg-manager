@@ -8,7 +8,7 @@ import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AbstractRpgError} from "../abstracts/AbstractRpgError";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {DataType} from "../enums/DataType";
-import {Id} from "./Id";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
 export class DatabaseInitialiser {
     private static campaignSettings: Map<number, CampaignSetting> = new Map();
@@ -78,12 +78,8 @@ export class DatabaseInitialiser {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record TFile metadata read for ' + file.basename, metadata);
 		if (metadata == null) return;
 
-		let id: Id|null;
-		try {
-			id = this.app.plugins.getPlugin('rpg-manager').factories.tags.createId(undefined, metadata?.frontmatter?.tags);
-		} catch (e) {
-			return undefined;
-		}
+		const id:IdInterface|undefined = this.app.plugins.getPlugin('rpg-manager').factories.id.createFromTags(metadata?.frontmatter?.tags);
+		if (id === undefined) return undefined;
 
 		const campaignId = id.getTypeValue(DataType.Campaign);
 		if (campaignId === undefined) new ErrorLog(LogMessageType.DatabaseInitialisation, 'Campaign Id not found', id);
@@ -111,17 +107,15 @@ export class DatabaseInitialiser {
 	): void {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-			if (metadata !== null) {
-				const dataTags = this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata?.frontmatter?.tags);
-				if (this.app.plugins.getPlugin('rpg-manager').factories.tags.getDataType(dataTags) === DataType.Campaign){
+			if (metadata !== null && metadata?.frontmatter?.tags !== undefined) {
+				const id = this.app.plugins.getPlugin('rpg-manager').factories.id.createFromTags(metadata.frontmatter.tags);
+
+				if (id !== undefined && id.type === DataType.Campaign){
 					try {
-						const campaignId = this.app.plugins.getPlugin('rpg-manager').factories.tags.getId(DataType.Campaign, undefined, dataTags);
-						if (campaignId !== undefined) {
-							const settings = metadata?.frontmatter?.settings !== undefined ?
-								CampaignSetting[metadata?.frontmatter?.settings as keyof typeof CampaignSetting] :
-								CampaignSetting.Agnostic;
-							this.campaignSettings.set(campaignId, settings);
-						}
+						const settings = metadata?.frontmatter?.settings !== undefined ?
+							CampaignSetting[metadata?.frontmatter?.settings as keyof typeof CampaignSetting] :
+							CampaignSetting.Agnostic;
+						this.campaignSettings.set(id.getTypeValue(DataType.Campaign), settings);
 					} catch (e) {
 						//No need to trap the errors here
 					}

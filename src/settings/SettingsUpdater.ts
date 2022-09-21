@@ -1,14 +1,9 @@
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
+import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 
-export class SettingsUpdater {
-	constructor(
-		private app: App,
-	) {
-
-	}
-
+export class SettingsUpdater extends AbstractRpgManager{
 	public async updateTags(
 		updatedTags: Map<string,string>,
 	): Promise<void> {
@@ -28,7 +23,7 @@ export class SettingsUpdater {
 
 		return await DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
-				this.app.plugins.getPlugin('rpg-manager').database = database;
+				this.database = database;
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 				return;
 			});

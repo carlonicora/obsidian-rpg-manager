@@ -17,19 +17,19 @@ export class EventTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Events');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Name', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Date', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('', ContentType.String, true),
+			this.factories.contents.create('Name', ContentType.String),
+			this.factories.contents.create('Date', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const record: EventInterface|undefined = relationship.component as EventInterface;
 			if (record !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.date?.toDateString(), ContentType.String),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.factories.contents.create(record.link, ContentType.Link, true),
+					this.factories.contents.create(record.date?.toDateString(), ContentType.String),
+					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				])
 			}
 		});

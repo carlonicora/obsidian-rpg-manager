@@ -1,8 +1,9 @@
-import {App, Component, MarkdownRenderer, Modal, TFile} from "obsidian";
+import {App, Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {ViewType} from "../enums/ViewType";
+import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 
-export class DatabaseErrorModal extends Modal {
+export class DatabaseErrorModal extends AbstractRpgManagerModal {
 	constructor(
 		app: App,
 		private misconfiguredTags: Map<TFile, RpgErrorInterface>|undefined,

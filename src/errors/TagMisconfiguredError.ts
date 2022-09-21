@@ -21,7 +21,7 @@ export class TagMisconfiguredError extends AbstractRpgError {
 				requiredId = '/{campaignId}' + requiredId;
 		}
 		response += '`' +
-			(this.app.plugins.getPlugin('rpg-manager').factories.tags.dataSettings.get(this.id.type) ?? '')
+			(this.app.plugins.getPlugin('rpg-manager').tagHelper.dataSettings.get(this.id.type) ?? '')
 			+ requiredId + '`\n';
 
 		this.id.invalidIds?.forEach((status: TagStatus, type: DataType) => {

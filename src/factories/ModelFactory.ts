@@ -1,6 +1,5 @@
 import {AdventureModel} from "../models/AdventureModel";
 import {CampaignModel} from "../models/CampaignModel";
-import {CampaignNavigationModel} from "../models/CampaignNavigationModel";
 import {ClueModel} from "../models/ClueModel";
 import {EventModel} from "../models/EventModel";
 import {FactionModel} from "../models/FactionModel";
@@ -19,47 +18,52 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {RawNpcModel} from "../rpgs/Raw/models/RawNpcModel";
 import {MusicModel} from "../models/MusicModel";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {App} from "obsidian";
+import {ModelInterface} from "../interfaces/ModelInterface";
+import {ModelFactoryInterface} from "../interfaces/factories/ModelFactoryInterface";
+import {CampaignNavigationModel} from "../models/CampaignNavigationModel";
 
-const ModelsMap = {
-	AgnosticAdventure: AdventureModel,
-	AgnosticAdventureNavigation: AdventureNavigationModel,
-	AgnosticCampaign: CampaignModel,
-	AgnosticCampaignNavigation: CampaignNavigationModel,
-	AgnosticClue: ClueModel,
-	AgnosticEvent: EventModel,
-	AgnosticFaction: FactionModel,
-	AgnosticLocation: LocationModel,
-	AgnosticNote: NoteModel,
-	AgnosticNpc: NpcModel,
-	AgnosticPc: PcModel,
-	AgnosticScene: SceneModel,
-	AgnosticSceneNavigation: SceneNavigationModel,
-	AgnosticSession: SessionModel,
-	AgnosticSessionNavigation: SessionNavigationModel,
-	AgnosticTimeline: TimelineModel,
-	RawNpc: RawNpcModel,
-	AgnosticMusic: MusicModel,
-};
-type ModelsMapType = typeof ModelsMap;
-type ModelKeys = keyof ModelsMapType;
-type Tuples<T> = T extends ModelKeys ? [T, InstanceType<ModelsMapType[T]>] : never;
-type SingleModelKey<K> = [K] extends (K extends ModelKeys ? [K] : never) ? K : never;
-type ModelClassType<A extends ModelKeys> = Extract<Tuples<ModelKeys>, [A, any]>[1];
+export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
+	private modelTypeMap: Map<string,any>;
 
-export class ModelFactory extends AbstractFactory {
-	public create<K extends ModelKeys>(
+	constructor(
+		app: App,
+	) {
+		super(app);
+		
+		this.modelTypeMap = new Map();
+		this.modelTypeMap.set('AgnosticAdventure', AdventureModel);
+		this.modelTypeMap.set('AgnosticAdventureNavigation', AdventureNavigationModel);
+		this.modelTypeMap.set('AgnosticCampaign', CampaignModel);
+		this.modelTypeMap.set('AgnosticCampaignNavigation', CampaignNavigationModel);
+		this.modelTypeMap.set('AgnosticClue', ClueModel);
+		this.modelTypeMap.set('AgnosticEvent', EventModel);
+		this.modelTypeMap.set('AgnosticFaction', FactionModel);
+		this.modelTypeMap.set('AgnosticLocation', LocationModel);
+		this.modelTypeMap.set('AgnosticNote', NoteModel);
+		this.modelTypeMap.set('AgnosticNpc', NpcModel);
+		this.modelTypeMap.set('AgnosticPc', PcModel);
+		this.modelTypeMap.set('AgnosticScene', SceneModel);
+		this.modelTypeMap.set('AgnosticSceneNavigation', SceneNavigationModel);
+		this.modelTypeMap.set('AgnosticSession', SessionModel);
+		this.modelTypeMap.set('AgnosticSessionNavigation', SessionNavigationModel);
+		this.modelTypeMap.set('AgnosticTimeline', TimelineModel);
+		this.modelTypeMap.set('RawNpc', RawNpcModel);
+		this.modelTypeMap.set('AgnosticMusic', MusicModel);
+	}
+
+	public create(
 		settings: CampaignSetting,
 		modelName: string,
 		currentElement: RecordInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,
-	): ModelClassType<K> {
-		let modelKey: SingleModelKey<K> = CampaignSetting[settings] + modelName as SingleModelKey<K>;
-		if (ModelsMap[modelKey] == null && settings !== CampaignSetting.Agnostic){
-			modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName as SingleModelKey<K>;
-		}
+	): ModelInterface {
+		let modelKey = CampaignSetting[settings] + modelName;
+		if (!this.modelTypeMap.has(modelKey)) modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName;
+		if (!this.modelTypeMap.has(modelKey)) throw new Error('Type of data ' + CampaignSetting[settings] + modelName + ' cannot be found');
 
-		return new ModelsMap[modelKey](this.app, currentElement, source, sourcePath, sourceMeta);
+		return new (this.modelTypeMap.get(modelKey))(this.app, currentElement, source, sourcePath, sourceMeta);
 	}
 }

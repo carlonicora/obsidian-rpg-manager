@@ -15,7 +15,7 @@ export class Character extends AbstractElementRecord implements CharacterInterfa
 		this.dob = this.initialiseDate(frontmatter?.dates?.dob);
 		this.death = this.initialiseDate(frontmatter?.dates?.death);
 		this.goals = frontmatter?.goals;
-		this.pronoun = frontmatter?.pronoun ? this.app.plugins.getPlugin('rpg-manager').factories.pronouns.create(frontmatter?.pronoun) : null;
+		this.pronoun = frontmatter?.pronoun ? this.factories.pronouns.create(frontmatter?.pronoun) : null;
 
 		super.initialiseData(frontmatter);
 	}

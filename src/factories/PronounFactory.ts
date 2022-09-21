@@ -1,7 +1,8 @@
 import {Pronoun} from "../enums/Pronoun";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {PronounFactoryInterface} from "../interfaces/factories/PronounFactoryInterface";
 
-export class PronounFactory extends AbstractFactory {
+export class PronounFactory extends AbstractFactory implements PronounFactoryInterface{
 	public create(
 		pronoun: string|null,
 	): Pronoun|null {

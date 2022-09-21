@@ -16,22 +16,22 @@ export class SessionTableComponent extends AbstractComponent {
 		const response = new ResponseTable(this.app);
 		response.addTitle(title ? title : 'Sessions');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('#', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Session', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Date', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Play Date', ContentType.String),
+			this.factories.contents.create('#', ContentType.String, true),
+			this.factories.contents.create('Session', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('Date', ContentType.String),
+			this.factories.contents.create('Play Date', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const session: SessionInterface|undefined = relationship.component as SessionInterface;
 
 			if (session !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.sessionId, ContentType.Number, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.link, ContentType.Link),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.synopsis, ContentType.Markdown),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.date?.toDateString(), ContentType.String, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
+					this.factories.contents.create(session.sessionId, ContentType.Number, true),
+					this.factories.contents.create(session.link, ContentType.Link),
+					this.factories.contents.create(session.synopsis, ContentType.Markdown),
+					this.factories.contents.create(session.date?.toDateString(), ContentType.String, true),
+					this.factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
 				])
 			}
 		});

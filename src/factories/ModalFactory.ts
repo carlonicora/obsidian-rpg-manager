@@ -16,36 +16,41 @@ import {NonPlayerCharacterModal} from "../modals/components/NonPlayerCharacterMo
 import {NoteModal} from "../modals/components/NoteModal";
 import {TimelineModal} from "../modals/components/TimelineModal";
 import {MusicModal} from "../modals/components/MusicModal";
+import {App} from "obsidian";
+import {ModalFactoryInterface} from "../interfaces/factories/ModalFactoryInterface";
 
-const ModalsMap = {
-	AgnosticCampaign: CampaignModal,
-	AgnosticAdventure: AdventureModal,
-	AgnosticSession: SessionModal,
-	AgnosticScene: SceneModal,
-	AgnosticCharacter: CharacterModal,
-	AgnosticClue: ClueModal,
-	AgnosticEvent: EventModal,
-	AgnosticFaction: FactionModal,
-	AgnosticLocation: LocationModal,
-	AgnosticNonPlayerCharacter: NonPlayerCharacterModal,
-	AgnosticNote: NoteModal,
-	AgnosticTimeline: TimelineModal,
-	AgnosticMusic: MusicModal,
-};
-type ModalsMapType = typeof ModalsMap;
-type ModalKeys = keyof ModalsMapType;
-type SingleModalKey<K> = [K] extends (K extends ModalKeys ? [K] : never) ? K : never;
+export class ModalFactory extends AbstractFactory implements ModalFactoryInterface{
+	private modalTypeMap: Map<string,any>;
 
-export class ModalFactory extends AbstractFactory {
-	public create<K extends ModalKeys>(
+	constructor(
+		app: App,
+	) {
+		super(app);
+		this.modalTypeMap = new Map();
+		this.modalTypeMap.set('AgnosticCampaign', CampaignModal);
+		this.modalTypeMap.set('AgnosticAdventure', AdventureModal);
+		this.modalTypeMap.set('AgnosticSession', SessionModal);
+		this.modalTypeMap.set('AgnosticScene', SceneModal);
+		this.modalTypeMap.set('AgnosticCharacter', CharacterModal);
+		this.modalTypeMap.set('AgnosticClue', ClueModal);
+		this.modalTypeMap.set('AgnosticEvent', EventModal);
+		this.modalTypeMap.set('AgnosticFaction', FactionModal);
+		this.modalTypeMap.set('AgnosticLocation', LocationModal);
+		this.modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModal);
+		this.modalTypeMap.set('AgnosticNote', NoteModal);
+		this.modalTypeMap.set('AgnosticTimeline', TimelineModal);
+		this.modalTypeMap.set('AgnosticMusic', MusicModal);
+
+	}
+	public create(
 		settings: CampaignSetting,
 		type: DataType,
 		modal: ModalInterface,
 	): ModalComponentInterface {
-		let modalKey: SingleModalKey<K> = CampaignSetting[settings] + DataType[type] as SingleModalKey<K>;
-		if (ModalsMap[modalKey] == null && settings !== CampaignSetting.Agnostic){
-			modalKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleModalKey<K>;
-		}
-		return new ModalsMap[modalKey](this.app, modal);
+		let modalKey:string = CampaignSetting[settings] + DataType[type];
+		if (!this.modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type];
+		if (!this.modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + DataType[type] + ' cannot be found');
+
+		return new (this.modalTypeMap.get(modalKey))(this.app, modal);
 	}
 }

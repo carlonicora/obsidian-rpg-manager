@@ -1,12 +1,7 @@
 import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerInterface";
-import {App} from "obsidian";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export abstract class AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
-	public constructor(
-		protected app: App,
-	) {
-	}
-
+export abstract class AbstractDatabaseWorker extends AbstractRpgManager implements DatabaseUpdateWorkerInterface {
 	public abstract run(
 	): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import {App, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
+import {App, Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {SettingsFactory} from "../factories/SettingsFactory";
@@ -19,7 +19,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 	) {
 		super(
 			app,
-			app.plugins.getPlugin('rpg-manager'),
+			(<unknown>app.plugins.getPlugin('rpg-manager')) as Plugin_2,
 		);
 
 		this.plugin = app.plugins.getPlugin('rpg-manager');

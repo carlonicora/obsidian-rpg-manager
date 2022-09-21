@@ -18,34 +18,38 @@ import {MusicTemplateFactory} from "./templates/MusicTemplateFactory";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
+import {App} from "obsidian";
+import {TemplateFactoryInterface} from "../interfaces/factories/TemplateFactoryInterface";
+import {ComponentTemplateFactoryInterface} from "../interfaces/ComponentTemplateFactoryInterface";
 
-const TemplatesMap = {
-	AgnosticCampaign: CampaignTemplateFactory,
-	AgnosticAdventure: AdventureTemplateFactory,
-	AgnosticSession: SessionTemplateFactory,
-	AgnosticScene: SceneTemplateFactory,
-	AgnosticCharacter: CharacterTemplateFactory,
-	AgnosticNonPlayerCharacter: NonPlayerCharacterTemplateFactory,
-	AgnosticLocation: LocationTemplateFactory,
-	AgnosticEvent: EventTemplateFactory,
-	AgnosticClue: ClueTemplateFactory,
-	AgnosticFaction: FactionTemplateFactory,
-	AgnosticNote: NoteTemplateFactory,
-	AgnosticTimeline: TimelineTemplateFactory,
-	VampireCharacter: VampireCharacterTemplate,
-	VampireNonPlayerCharacter: VampireNonPlayerCharacterTemplate,
-	RawCampaign: RawCampaignTemplate,
-	VampireCampaign: VampireCampaignTemplate,
-	AgnosticMusic: MusicTemplateFactory,
-};
-type TemplatesMapType = typeof TemplatesMap;
-type TemplateKeys = keyof TemplatesMapType;
-type Tuples<T> = T extends TemplateKeys ? [T, InstanceType<TemplatesMapType[T]>] : never;
-type SingleTemplateKey<K> = [K] extends (K extends TemplateKeys ? [K] : never) ? K : never;
-type TemplateClassType<A extends TemplateKeys> = Extract<Tuples<TemplateKeys>, [A, any]>[1];
+export class TemplateFactory extends AbstractFactory implements TemplateFactoryInterface{
+	private templateTypeMap: Map<string,any>;
 
-export class TemplateFactory extends AbstractFactory {
-	public create<K extends TemplateKeys>(
+	constructor(
+		app: App,
+	) {
+		super(app);
+		this.templateTypeMap = new Map();
+		this.templateTypeMap.set('AgnosticCampaign', CampaignTemplateFactory);
+		this.templateTypeMap.set('AgnosticAdventure', AdventureTemplateFactory);
+		this.templateTypeMap.set('AgnosticSession', SessionTemplateFactory);
+		this.templateTypeMap.set('AgnosticScene', SceneTemplateFactory);
+		this.templateTypeMap.set('AgnosticCharacter', CharacterTemplateFactory);
+		this.templateTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterTemplateFactory);
+		this.templateTypeMap.set('AgnosticLocation', LocationTemplateFactory);
+		this.templateTypeMap.set('AgnosticEvent', EventTemplateFactory);
+		this.templateTypeMap.set('AgnosticClue', ClueTemplateFactory);
+		this.templateTypeMap.set('AgnosticFaction', FactionTemplateFactory);
+		this.templateTypeMap.set('AgnosticNote', NoteTemplateFactory);
+		this.templateTypeMap.set('AgnosticTimeline', TimelineTemplateFactory);
+		this.templateTypeMap.set('VampireCharacter', VampireCharacterTemplate);
+		this.templateTypeMap.set('VampireNonPlayerCharacter', VampireNonPlayerCharacterTemplate);
+		this.templateTypeMap.set('RawCampaign', RawCampaignTemplate);
+		this.templateTypeMap.set('VampireCampaign', VampireCampaignTemplate);
+		this.templateTypeMap.set('AgnosticMusic', MusicTemplateFactory);
+	}
+
+	public create(
 		settings: CampaignSetting,
 		type: DataType,
 		templateName: string,
@@ -55,11 +59,11 @@ export class TemplateFactory extends AbstractFactory {
 		sessionId: number|undefined,
 		sceneId: number|undefined,
 		additionalInformation: any|null = null,
-	): TemplateClassType<K> {
-		let templateKey: SingleTemplateKey<K> = CampaignSetting[settings] + DataType[type] as SingleTemplateKey<K>;
-		if (TemplatesMap[templateKey] == null && settings !== CampaignSetting.Agnostic){
-			templateKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type] as SingleTemplateKey<K>;
-		}
-		return new TemplatesMap[templateKey](this.app, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
+	): ComponentTemplateFactoryInterface {
+		let templateKey = CampaignSetting[settings] + DataType[type];
+		if (!this.templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type];
+		if (!this.templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + DataType[type] + ' cannot be found');
+
+		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
 	}
 }

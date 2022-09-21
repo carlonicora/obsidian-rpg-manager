@@ -1,13 +1,10 @@
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
+import {RelationshipFactoryInterface} from "../interfaces/factories/RelationshipFactoryInterface";
+import {AbstractFactory} from "../abstracts/AbstractFactory";
 
-export class RelationshipFactory {
-	constructor(
-		private app: App,
-	) {
-	}
-
+export class RelationshipFactory extends AbstractFactory implements RelationshipFactoryInterface {
 	public async read(
 		file: TFile,
 		relationship: Map<string, RelationshipInterface>,

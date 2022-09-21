@@ -31,24 +31,24 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id.tag);
+		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id);
 
 		try {
-			this.previousSession = database.readSingle<SessionInterface>(DataType.Session, this.id.tag, this.sessionId - 1);
+			this.previousSession = database.readSingle<SessionInterface>(DataType.Session, this.id, this.sessionId - 1);
 			this.previousSession.nextSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextSession = database.readSingle<SessionInterface>(DataType.Session, this.id.tag, this.sessionId + 1);
+			this.nextSession = database.readSingle<SessionInterface>(DataType.Session, this.id, this.sessionId + 1);
 			this.nextSession.previousSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.note = database.readSingle<NoteInterface>(DataType.Note, this.id.tag);
+			this.note = database.readSingle<NoteInterface>(DataType.Note, this.id);
 		} catch (e) {
 			//ignore. It can be non existing
 		}

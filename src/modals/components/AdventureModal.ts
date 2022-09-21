@@ -18,7 +18,7 @@ export class AdventureModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.adventures = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<AdventureInterface>(DataType.Adventure, this.modal.campaignId);
+		this.adventures = this.database.readList<AdventureInterface>(DataType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -53,8 +53,8 @@ export class AdventureModal extends AbstractModalComponent {
 	public async loadChild(
 		containerEl: HTMLElement,
 	): Promise<void> {
-		this.modal.sessionModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-			this.modal.settings,
+		this.modal.sessionModal = this.factories.modals.create(
+			this.modal.campaignSetting,
 			DataType.Session,
 			this.modal,
 		);
@@ -72,10 +72,14 @@ export class AdventureModal extends AbstractModalComponent {
 	private addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		this.modal.adventureId = 1;
-		this.adventures.forEach((data: AdventureInterface) => {
-			if (data.adventureId >= (this.modal.adventureId ?? 0)) this.modal.adventureId = (data.adventureId + 1);
-		});
+		if (this.modal.adventureId !== undefined) {
+			this.modal.adventureId.id = 1;
+			this.adventures.forEach((data: AdventureInterface) => {
+				if (this.modal.adventureId !== undefined && data.adventureId >= (this.modal.adventureId.id ?? 0)) {
+					this.modal.adventureId.id = (data.adventureId + 1);
+				}
+			});
+		}
 	}
 
 	private selectAdventureElements(
@@ -116,7 +120,7 @@ export class AdventureModal extends AbstractModalComponent {
 
 	private selectAdventure(
 	): void {
-		this.modal.adventureId = +this.adventureEl.value;
+		this.modal.adventureId = this.factories.id.create(DataType.Adventure, this.modal.campaignId.id, +this.adventureEl.value);
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}

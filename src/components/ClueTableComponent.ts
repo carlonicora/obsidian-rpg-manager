@@ -17,19 +17,19 @@ export class ClueTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Clues');
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Clue', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Found', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('', ContentType.String, true),
+			this.factories.contents.create('Clue', ContentType.String),
+			this.factories.contents.create('Found', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const record: ClueInterface|undefined = relationship.component as ClueInterface;
 			if (record !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(record.link, ContentType.Link),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create((record.isFound ? record.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
+					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
+					this.factories.contents.create(record.link, ContentType.Link),
+					this.factories.contents.create((record.isFound ? record.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
+					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				])
 			}
 		});

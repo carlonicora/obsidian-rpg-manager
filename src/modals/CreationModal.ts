@@ -1,11 +1,13 @@
-import {App, CachedMetadata, MarkdownView, Modal, TFile} from "obsidian";
+import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
 import {DataType} from "../enums/DataType";
 import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {TemplateInterface} from "../interfaces/TemplateInterface";
+import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
-export class CreationModal extends Modal implements ModalInterface {
+export class CreationModal extends AbstractRpgManagerModal implements ModalInterface {
 	public saver: ModalComponentInterface;
 
 	public button: HTMLButtonElement;
@@ -15,11 +17,11 @@ export class CreationModal extends Modal implements ModalInterface {
 	public additionalInformationEl: HTMLDivElement;
 	public templateEl: HTMLSelectElement;
 
-	public campaignId: number;
-	public adventureId: number|undefined;
-	public sessionId: number|undefined;
-	public sceneId: number|undefined;
-	public settings: CampaignSetting = CampaignSetting.Agnostic;
+	public campaignId: IdInterface;
+	public adventureId: IdInterface|undefined;
+	public sessionId: IdInterface|undefined;
+	public sceneId: IdInterface|undefined;
+	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalComponentInterface;
 	public adventureModal: ModalComponentInterface;
@@ -43,9 +45,19 @@ export class CreationModal extends Modal implements ModalInterface {
 	) {
 		super(app);
 
-		if (campaignId != null) this.campaignId = campaignId;
-		if (adventureId != null) this.adventureId = adventureId;
-		if (sessionId != null) this.sessionId = sessionId;
+		if (campaignId != null) {
+			const campaign:IdInterface|undefined = this.factories.id.create(DataType.Campaign, campaignId);
+			if (campaign !== undefined) {
+				this.campaignId = campaign;
+
+				if (adventureId != null) {
+					this.adventureId = this.factories.id.create(DataType.Adventure, campaignId, adventureId);
+
+					if (sessionId != null) this.sessionId = this.factories.id.create(DataType.Adventure, campaignId, adventureId, sessionId);
+				}
+			}
+		}
+
 
 		this.app.vault.getFiles()
 			.filter((file: TFile) =>
@@ -54,10 +66,10 @@ export class CreationModal extends Modal implements ModalInterface {
 			.forEach((file: TFile) => {
 				const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 				if (metadata != null) {
-					const tags = this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
+					const tags = this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
 					if (tags.length > 0) {
-						const tags = this.app.plugins.getPlugin('rpg-manager').factories.tags.sanitiseTags(metadata.frontmatter?.tags);
-						const templateType = this.app.plugins.getPlugin('rpg-manager').factories.tags.getTemplateDataType(tags);
+						const tags = this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
+						const templateType = this.tagHelper.getTemplateDataType(tags);
 						if (templateType == undefined) this.availableGenericTemplates.push(file);
 						if (templateType === this.type) this.availableSpecificTemplates.push(file);
 					} else {
@@ -148,7 +160,7 @@ export class CreationModal extends Modal implements ModalInterface {
 		}
 
 		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-			this.settings,
+			this.campaignSetting,
 			DataType.Campaign,
 			this,
 		)
@@ -191,15 +203,15 @@ export class CreationModal extends Modal implements ModalInterface {
 		if (this.elementModal != null && !this.elementModal.validate()) return;
 
 		this.saver.save(
-			this.settings,
+			this.campaignSetting,
 			this.type,
 			this.create,
 			this.templateEl.value,
 			this.title.value,
-			this.campaignId,
-			this.adventureId,
-			this.sessionId,
-			this.sceneId,
+			this.campaignId.id,
+			this.adventureId?.id,
+			this.sessionId?.id,
+			this.sceneId?.id,
 			this.saver.prepareAdditionalInformation(),
 		)
 		this.close();

@@ -9,26 +9,24 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
 import {FileFactory} from "../factories/FileFactory";
-import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ComponentFactory} from "../factories/ComponentFactory";
 import {ResponseData} from "../data/responses/ResponseData";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export abstract class AbstractModel implements ModelInterface {
-	protected io: DatabaseInterface;
+export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected componentFactory: ComponentFactory;
 	protected response:ResponseDataInterface;
 
 	constructor(
-		protected app: App,
+		app: App,
 		protected currentElement: RecordInterface,
 		protected source: string,
 		protected sourcePath: string,
 		protected sourceMeta: any,
 	) {
-		this.io = this.app.plugins.getPlugin('rpg-manager').database;
-		this.componentFactory = this.app.plugins.getPlugin('rpg-manager').factories.components;
+		super(app);
 		this.response = new ResponseData(this.app);
 	}
 
@@ -123,12 +121,12 @@ export abstract class AbstractModel implements ModelInterface {
 		let previousAdventure: AdventureInterface|undefined;
 		let nextAdventure: AdventureInterface|undefined;
 		try {
-			previousAdventure = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<AdventureInterface>(DataType.Adventure, adventure.campaign.campaignId, adventure.adventureId - 1);
+			previousAdventure = this.database.readSingle<AdventureInterface>(DataType.Adventure, adventure.id, adventure.adventureId - 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextAdventure = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<AdventureInterface>(DataType.Adventure, adventure.campaign.campaignId, adventure.adventureId + 1);
+			nextAdventure = this.database.readSingle<AdventureInterface>(DataType.Adventure, adventure.id, adventure.adventureId + 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -179,7 +177,7 @@ export abstract class AbstractModel implements ModelInterface {
 			sessionNotesBreadcrumb = new ResponseBreadcrumb(this.app);
 			sessionNotesBreadcrumb.link = '';
 			sessionNotesBreadcrumb.linkText = 'create session notes';
-			sessionNotesBreadcrumb.functionParameters = [this.currentElement as SessionInterface, this.app.plugins.getPlugin('rpg-manager').factories.files]
+			sessionNotesBreadcrumb.functionParameters = [this.currentElement as SessionInterface, this.factories.files]
 			sessionNotesBreadcrumb.function = this.noteCreator;
 			if (previousBreadcrumb != null) {
 				previousBreadcrumb.nextBreadcrumb = sessionNotesBreadcrumb;
@@ -213,7 +211,7 @@ export abstract class AbstractModel implements ModelInterface {
 			const newSceneBreadcrumb = new ResponseBreadcrumb(this.app);
 			newSceneBreadcrumb.link = '';
 			newSceneBreadcrumb.linkText = '+ add scene >>';
-			newSceneBreadcrumb.functionParameters = [this.currentElement as SceneInterface, this.app.plugins.getPlugin('rpg-manager').factories.files];
+			newSceneBreadcrumb.functionParameters = [this.currentElement as SceneInterface, this.factories.files];
 			newSceneBreadcrumb.function = this.sceneCreator;
 			if (previousBreadcrumb == null){
 				newSceneBreadcrumb.isInNewLine = true;
@@ -233,7 +231,7 @@ export abstract class AbstractModel implements ModelInterface {
 		if (note.adventure === undefined) return parent;
 		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, DataType.Adventure, note.adventure);
 
-		const session = this.app.plugins.getPlugin('rpg-manager').database.readSingleParametrised<SessionInterface>(DataType.Session, note.campaign.campaignId, note.adventure.adventureId, note.sessionId);
+		const session = this.database.readSingle<SessionInterface>(DataType.Session, note.id);
 		if (session === undefined) return adventureBreadcrumb;
 
 		const sessionBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, DataType.Session, session);

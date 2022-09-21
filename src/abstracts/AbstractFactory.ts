@@ -1,8 +1,4 @@
-import {App} from "obsidian";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export abstract class AbstractFactory {
-	constructor(
-		protected app: App,
-	) {
-	}
+export abstract class AbstractFactory extends AbstractRpgManager {
 }

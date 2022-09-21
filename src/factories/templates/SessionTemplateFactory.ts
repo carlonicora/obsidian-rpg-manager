@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class SessionTemplateFactory extends AbstractTemplateFactory {
+export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
+		frontmatter.tags.push(this.settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
 
 		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
 

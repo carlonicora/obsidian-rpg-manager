@@ -13,7 +13,7 @@ export class Note extends AbstractOutlineRecord implements NoteInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id.tag);
+		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id);
 		this.sessionId = this.id.getTypeValue(DataType.Session);
 	}
 }

@@ -3,12 +3,14 @@ import {App} from "obsidian";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {DataType} from "../enums/DataType";
 import {ModalInterface} from "../interfaces/ModalInterface";
+import {AbstractRpgManager} from "./AbstractRpgManager";
 
-export abstract class AbstractModalComponent implements ModalComponentInterface {
+export abstract class AbstractModalComponent extends AbstractRpgManager implements ModalComponentInterface {
 	constructor(
-		protected app: App,
+		app: App,
 		protected modal: ModalInterface,
 	) {
+		super(app);
 	}
 
 	abstract addElement(
@@ -42,7 +44,7 @@ export abstract class AbstractModalComponent implements ModalComponentInterface 
 		sceneId: number|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
-		this.app.plugins.getPlugin('rpg-manager').factories.files.create(
+		this.factories.files.create(
 			settings,
 			type,
 			create,

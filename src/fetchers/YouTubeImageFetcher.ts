@@ -11,7 +11,7 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
 	): string {
 		return this.fetchUrl +
 			'playlistItems?key=' +
-			this.app.plugins.getPlugin('rpg-manager').settings.YouTubeKey +
+			this.settings.YouTubeKey +
 			'&part=snippet&playlistId=' +
 			playlistId;
     }
@@ -21,7 +21,7 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
 	): string {
         return this.fetchUrl +
 			'videos?key=' +
-			this.app.plugins.getPlugin('rpg-manager').settings.YouTubeKey +
+			this.settings.YouTubeKey +
 			'&part=snippet&id=' +
 			songId;
     }
@@ -30,7 +30,7 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
 	public async fetchImage(
 		url: string,
 	): Promise<string|null|undefined> {
-		const youTubeApiKey = this.app.plugins.getPlugin('rpg-manager').settings.YouTubeKey;
+		const youTubeApiKey = this.settings.YouTubeKey;
 
 		if (youTubeApiKey === '' || youTubeApiKey == null) return undefined;
 		let apiResponse: any|undefined;

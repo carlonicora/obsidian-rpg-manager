@@ -14,39 +14,41 @@ import {ResponseType} from "../enums/ResponseType";
 import {RawCharacterRecordSheetView} from "../rpgs/Raw/views/RawCharacterRecordSheetView";
 import {ViewType} from "../enums/ViewType";
 import {AbstractView} from "../abstracts/AbstractView";
-import {WorkspaceLeaf} from "obsidian";
+import {App, WorkspaceLeaf} from "obsidian";
+import {ViewFactoryInterface} from "../interfaces/factories/ViewFactoryInterface";
+import {ViewInterface} from "../interfaces/ViewInterface";
+import {DataType} from "../enums/DataType";
 
-const ViewsMap = {
-	AgnosticString: StringView,
-	AgnosticTable: TableView,
-	AgnosticBanner: BannerView,
-	AgnosticBox: BoxView,
-	AgnosticBreadcrumb: BreadcrumbView,
-	AgnosticTimeline: TimelineView,
-	AgnosticImage: ImageView,
-	AgnosticHeader: HeaderView,
-	AgnosticAbtPlot: AbtPlotView,
-	AgnosticStoryCirclePlot: StoryCirclePlotView,
-	RawRawCharacterRecordSheet: RawCharacterRecordSheetView,
-};
-type ViewsMapType = typeof ViewsMap;
-type ViewKeys = keyof ViewsMapType;
-type Tuples<T> = T extends ViewKeys ? [T, InstanceType<ViewsMapType[T]>] : never;
-type SingleViewKey<K> = [K] extends (K extends ViewKeys ? [K] : never) ? K : never;
-type ViewClassType<A extends ViewKeys> = Extract<Tuples<ViewKeys>, [A, any]>[1];
-
-export class ViewFactory extends AbstractFactory {
-	public create<K extends ViewKeys>(
+export class ViewFactory extends AbstractFactory implements ViewFactoryInterface{
+	private viewTypeMap: Map<string,any>;
+	constructor(
+		app: App,
+	) {
+		super(app);
+		this.viewTypeMap = new Map();
+		this.viewTypeMap.set('AgnosticString', StringView);
+		this.viewTypeMap.set('AgnosticTable', TableView);
+		this.viewTypeMap.set('AgnosticBanner', BannerView);
+		this.viewTypeMap.set('AgnosticBox', BoxView);
+		this.viewTypeMap.set('AgnosticBreadcrumb', BreadcrumbView);
+		this.viewTypeMap.set('AgnosticTimeline', TimelineView);
+		this.viewTypeMap.set('AgnosticImage', ImageView);
+		this.viewTypeMap.set('AgnosticHeader', HeaderView);
+		this.viewTypeMap.set('AgnosticAbtPlot', AbtPlotView);
+		this.viewTypeMap.set('AgnosticStoryCirclePlot', StoryCirclePlotView);
+		this.viewTypeMap.set('RawRawCharacterRecordSheet', RawCharacterRecordSheetView);
+	}
+	
+	public create(
 		settings: CampaignSetting,
 		type: ResponseType,
 		sourcePath: string,
-	): ViewClassType<K> {
+	): ViewInterface {
+		let viewKey:string = CampaignSetting[settings] + ResponseType[type];
+		if (!this.viewTypeMap.has(viewKey)) viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type];
+		if (!this.viewTypeMap.has(viewKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + DataType[type] + ' cannot be found');
 
-		let viewKey: SingleViewKey<K> = CampaignSetting[settings] + ResponseType[type] as SingleViewKey<K>;
-		if (ViewsMap[viewKey] == null && settings !== CampaignSetting.Agnostic){
-			viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type] as SingleViewKey<K>;
-		}
-		return new ViewsMap[viewKey](this.app, sourcePath);
+		return new (this.viewTypeMap.get(viewKey))(this.app, sourcePath);
 	}
 
 	public async showObsidianView(

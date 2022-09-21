@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class NonPlayerCharacterTemplateFactory extends AbstractTemplateFactory {
+export class NonPlayerCharacterTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.npcTag + '/' + this.campaignId);
+		frontmatter.tags.push(this.settings.npcTag + '/' + this.campaignId);
 		frontmatter.goals = "",
 		frontmatter.pronoun = "";
 		frontmatter.dates = {

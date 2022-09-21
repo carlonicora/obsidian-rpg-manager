@@ -1,11 +1,11 @@
-import {AbstractTemplateFactory} from "../../abstracts/AbstractTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class CampaignTemplateFactory extends AbstractTemplateFactory {
+export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.app.plugins.getPlugin('rpg-manager').settings.campaignTag +'/' + this.campaignId);
+		frontmatter.tags.push(this.settings.campaignTag +'/' + this.campaignId);
 		frontmatter.settings = "Agnostic";
 		frontmatter.dates = {
 			current: {},

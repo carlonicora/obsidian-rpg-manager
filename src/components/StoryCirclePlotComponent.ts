@@ -41,69 +41,69 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 		response.class = 'rpgm-plot';
 
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**YOU** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.you ? additionalInformation.you : ''), ContentType.Markdown),
+			this.factories.contents.create('**YOU** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.you ? additionalInformation.you : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**NEED** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.need ? additionalInformation.need : ''), ContentType.Markdown),
+			this.factories.contents.create('**NEED** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.need ? additionalInformation.need : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**GO** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.go ? additionalInformation.go : ''), ContentType.Markdown),
+			this.factories.contents.create('**GO** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.go ? additionalInformation.go : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**SEARCH** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.search ? additionalInformation.search : ''), ContentType.Markdown),
+			this.factories.contents.create('**SEARCH** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.search ? additionalInformation.search : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**FIND** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.find ? additionalInformation.find : ''), ContentType.Markdown),
+			this.factories.contents.create('**FIND** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.find ? additionalInformation.find : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**TAKE** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.take ? additionalInformation.take : ''), ContentType.Markdown),
+			this.factories.contents.create('**TAKE** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.take ? additionalInformation.take : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**RETURN** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.return ? additionalInformation.return : ''), ContentType.Markdown),
+			this.factories.contents.create('**RETURN** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.return ? additionalInformation.return : ''), ContentType.Markdown),
 		]);
 		response.addContent([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('**CHANGE** ', ContentType.Markdown, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create((additionalInformation.change ? additionalInformation.change : ''), ContentType.Markdown),
+			this.factories.contents.create('**CHANGE** ', ContentType.Markdown, true),
+			this.factories.contents.create((additionalInformation.change ? additionalInformation.change : ''), ContentType.Markdown),
 		]);
 
 		/*
 		const response = new ResponseStoryCirclePlot(this.app);
-		response.you = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.you = this.templates.contents.create(
 			'**YOU:** ' + (additionalInformation.you ? additionalInformation.you : ''),
 			ContentType.Markdown,
 		);
-		response.need = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.need = this.templates.contents.create(
 			'**NEED:** ' + (additionalInformation.need ? additionalInformation.need : ''),
 			ContentType.Markdown,
 		);
-		response.go = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.go = this.templates.contents.create(
 			'**GO:** ' + (additionalInformation.go ? additionalInformation.go : ''),
 			ContentType.Markdown,
 		);
-		response.search = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.search = this.templates.contents.create(
 			'**SEARCH >** ' + (additionalInformation.search ? additionalInformation.search : ''),
 			ContentType.Markdown,
 		);
-		response.find = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.find = this.templates.contents.create(
 			'**FIND >** ' + (additionalInformation.find ? additionalInformation.find : ''),
 			ContentType.Markdown,
 		);
-		response.take = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.take = this.templates.contents.create(
 			'**TAKE >** ' + (additionalInformation.take ? additionalInformation.take : ''),
 			ContentType.Markdown,
 		);
-		response.change = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.change = this.templates.contents.create(
 			'**RETURN >** ' + (additionalInformation.return ? additionalInformation.return : ''),
 			ContentType.Markdown,
 		);
-		response.return = this.app.plugins.getPlugin('rpg-manager').templates.contents.create(
+		response.return = this.templates.contents.create(
 			'**CHANGE >** ' + (additionalInformation.change ? additionalInformation.change : ''),
 			ContentType.Markdown,
 		);

@@ -18,23 +18,23 @@ export class SceneTableComponent extends AbstractComponent {
 		response.addTitle(title ? title : 'Scenes');
 
 		response.addHeaders([
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('#', ContentType.String, true),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Scene', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Synopsis', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Start', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('End', ContentType.String),
-			this.app.plugins.getPlugin('rpg-manager').factories.contents.create('Duration', ContentType.String),
+			this.factories.contents.create('#', ContentType.String, true),
+			this.factories.contents.create('Scene', ContentType.String),
+			this.factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('Start', ContentType.String),
+			this.factories.contents.create('End', ContentType.String),
+			this.factories.contents.create('Duration', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const scene: SceneInterface|undefined = relationship.component as SceneInterface;
 			if (scene !== undefined) {
 				response.addContent([
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.synopsis, ContentType.Markdown),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true),
-					this.app.plugins.getPlugin('rpg-manager').factories.contents.create(scene.duration, ContentType.String, true),
+					this.factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
+					this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
+					this.factories.contents.create(scene.synopsis, ContentType.Markdown),
+					this.factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true),
+					this.factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true),
+					this.factories.contents.create(scene.duration, ContentType.String, true),
 				])
 			}
 		});

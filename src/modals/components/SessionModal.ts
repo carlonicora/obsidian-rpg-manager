@@ -17,9 +17,8 @@ export class SessionModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.sessions = this.app.plugins.getPlugin('rpg-manager').database.readListParametrised<SessionInterface>(
+		this.sessions = this.database.readList<SessionInterface>(
 			DataType.Session,
-			this.modal.campaignId,
 			this.modal.adventureId,
 		);
 	}
@@ -55,8 +54,8 @@ export class SessionModal extends AbstractModalComponent {
 	public async loadChild(
 		containerEl: HTMLElement,
 	): Promise<void> {
-		this.modal.sceneModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
-			this.modal.settings,
+		this.modal.sceneModal = this.factories.modals.create(
+			this.modal.campaignSetting,
 			DataType.Scene,
 			this.modal,
 		);
@@ -74,10 +73,12 @@ export class SessionModal extends AbstractModalComponent {
 	private addNewSessionElements(
 		containerEl: HTMLElement,
 	): void {
-		this.modal.sessionId = 1;
-		this.sessions.forEach((data: SessionInterface) => {
-			if (data.sessionId >= (this.modal.sessionId ?? 0)) this.modal.sessionId = (data.sessionId + 1);
-		});
+		if (this.modal.sessionId !== undefined) {
+			this.modal.sessionId.id = 1;
+			this.sessions.forEach((data: SessionInterface) => {
+				if (this.modal.sessionId !== undefined && data.sessionId >= (this.modal.sessionId.id ?? 0)) this.modal.sessionId.id = (data.sessionId + 1);
+			});
+		}
 	}
 
 	private selectSessionElements(
@@ -119,7 +120,7 @@ export class SessionModal extends AbstractModalComponent {
 
 	private selectSession(
 	): void {
-		this.modal.sessionId = +this.sessionEl.value;
+		this.modal.sessionId = this.factories.id.create(DataType.Session, this.modal.campaignId.id, this.modal.adventureId?.id, +this.sessionEl.value);
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}
