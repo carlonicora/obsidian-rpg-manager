@@ -24,15 +24,15 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO Create new Sessions
+	 * 		@TODO (*****) Create new Sessions
+	 * 		@TODO (*****) Associate session to scene -> in the header, add a button to select a list of scenes
+	 * 		@TODO (****) Add scenes to session -> in the header, add a dropdown to select the session
+	 * 		@TODO (****) Add scene Story Circle stage selector -> in the header add a dropdown to select the stage of he scene in the Act Story Circle -> save it in the frontmatter
+	 * 		@TODO (**) Add Story Circle Stage stage in the Scene List (ideally a circle icon with a 1/8 black and rotate it
 	 *
-	 * 		@TODO Add view to create new elements
-	 * 		@TODO Move timeline to Obsidian side view
-	 * 		@TODO Remove date from Act
-	 * 		@TODO Remove irl from Act
-	 * 		@TODO Add Scene Notes
-	 * 		@TODO Add irl to New Act
-	 * 		@TODO Rename Notes to Act Notes
+	 * 		@TODO (*) Add view to create new elements
+	 * 		@TODO (*) Move timeline to Obsidian side view
+	 * 		@TODO (?) Rename Notes to Act Notes
 	 *
 	 * ## Version 2.1
 	 * 		@TODO Add Database Status View

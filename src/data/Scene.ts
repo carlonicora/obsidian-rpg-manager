@@ -6,14 +6,17 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public sceneId: number;
-	public action: string | null;
-	public startTime: Date | null;
-	public endTime: Date | null;
+	public sessionId: number|undefined;
+	public action: string|null;
+	public startTime: Date|null;
+	public endTime: Date|null;
 
 	public adventure: AdventureInterface;
+	public session: SessionInterface|undefined=undefined;
 	public act: ActInterface;
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
@@ -25,6 +28,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		if (sceneId === undefined) throw new TagMisconfiguredError(this.app, this.id);
 
 		this.sceneId = sceneId;
+		this.sessionId = frontmatter?.session;
 		this.startTime = this.initialiseDate(frontmatter?.times?.start ?? frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;
@@ -38,6 +42,13 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		super.loadHierarchy(database);
 
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
+		const sessions = database.read<SessionInterface>(
+			(data: SessionInterface) =>
+				data.id.type === RecordType.Session &&
+				data.id.campaignId === this.campaign.campaignId &&
+				data.id.sessionId === this.sessionId
+		);
+		if (sessions.length === 1) this.session = sessions[0];
 		this.act = database.readSingle<ActInterface>(RecordType.Act, this.id);
 
 		try {
