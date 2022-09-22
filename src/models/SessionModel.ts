@@ -63,7 +63,7 @@ export class SessionModel extends AbstractModel {
 
 		await this.response.addComponent(
 			EventTableComponent,
-			this.currentElement.getRelationships(RecordType.Event, RelationshipType.ReverseInFrontmatter),
+			this.currentElement.getRelationships(RecordType.Event),
 		);
 
 		return this.response;

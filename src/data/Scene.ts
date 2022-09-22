@@ -39,17 +39,20 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
-		super.loadHierarchy(database);
+		await super.loadHierarchy(database);
 
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
-		const sessions = database.read<SessionInterface>(
-			(data: SessionInterface) =>
-				data.id.type === RecordType.Session &&
-				data.id.campaignId === this.campaign.campaignId &&
-				data.id.sessionId === this.sessionId
-		);
-		if (sessions.length === 1) this.session = sessions[0];
 		this.act = database.readSingle<ActInterface>(RecordType.Act, this.id);
+
+		if (this.sessionId !== undefined) {
+			const sessions = await database.read<SessionInterface>(
+				(data: SessionInterface) =>
+					data.id.type === RecordType.Session &&
+					data.id.campaignId === this.campaign.campaignId &&
+					data.id.sessionId === this.sessionId
+			);
+			if (sessions.length === 1) this.session = sessions[0];
+		}
 
 		try {
 			this.previousScene = database.readSingle<SceneInterface>(RecordType.Scene, this.id, this.sceneId - 1);

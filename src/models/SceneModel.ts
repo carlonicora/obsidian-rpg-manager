@@ -7,6 +7,7 @@ import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {FactionTableComponent} from "../components/FactionTableComponent";
 import {ClueTableComponent} from "../components/ClueTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
+import {EventTableComponent} from "../components/EventTableComponent";
 
 export class SceneModel extends AbstractModel {
 	protected currentElement: SceneInterface;
@@ -37,6 +38,11 @@ export class SceneModel extends AbstractModel {
 		await this.response.addComponent(
 			LocationTableComponent,
 			this.currentElement.getRelationships(RecordType.Location),
+		);
+
+		await this.response.addComponent(
+			EventTableComponent,
+			this.currentElement.getRelationships(RecordType.Event),
 		);
 
 		return this.response;
