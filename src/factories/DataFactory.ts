@@ -1,5 +1,5 @@
 import {App, TFile} from "obsidian";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {Campaign} from "../data/Campaign";
 import {Adventure} from "../data/Adventure";
 import {Session} from "../data/Session";
@@ -53,9 +53,9 @@ export class DataFactory extends AbstractFactory implements DataFactoryInterface
 		file: TFile,
 		id: IdInterface,
 	): RecordInterface {
-		let dataKey = CampaignSetting[settings] + DataType[id.type];
-		if (!this.recordTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[id.type];
-		if (!this.recordTypeMap.has(dataKey)) throw new Error('Type of data ' + CampaignSetting[settings] + DataType[id.type] + ' cannot be found');
+		let dataKey = CampaignSetting[settings] + RecordType[id.type];
+		if (!this.recordTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + RecordType[id.type];
+		if (!this.recordTypeMap.has(dataKey)) throw new Error('Type of data ' + CampaignSetting[settings] + RecordType[id.type] + ' cannot be found');
 
 		return new (this.recordTypeMap.get(dataKey))(this.app, file, id);
 	}

@@ -1,10 +1,10 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 
 export interface FileFactoryInterface {
 	create(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		create: boolean,
 		templateName: string,
 		name: string,
@@ -16,7 +16,7 @@ export interface FileFactoryInterface {
 	): Promise<void>;
 
 	silentCreate(
-		type: DataType,
+		type: RecordType,
 		name: string,
 		campaignId: number,
 		adventureId?: number|undefined,

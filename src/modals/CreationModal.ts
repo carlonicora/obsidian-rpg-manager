@@ -1,5 +1,5 @@
 import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalInterface} from "../interfaces/ModalInterface";
@@ -32,11 +32,11 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 	public availableSpecificTemplates: Array<TFile> = [];
 	public availableGenericTemplates: Array<TFile> = [];
 
-	private internalTemplates: Map<DataType, TemplateInterface>;
+	private internalTemplates: Map<RecordType, TemplateInterface>;
 
 	constructor(
 		public app: App,
-		public type: DataType,
+		public type: RecordType,
 		private create: boolean = true,
 		private name: string|null = null,
 		campaignId: number|null = null,
@@ -46,14 +46,14 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		super(app);
 
 		if (campaignId != null) {
-			const campaign:IdInterface|undefined = this.factories.id.create(DataType.Campaign, campaignId);
+			const campaign:IdInterface|undefined = this.factories.id.create(RecordType.Campaign, campaignId);
 			if (campaign !== undefined) {
 				this.campaignId = campaign;
 
 				if (adventureId != null) {
-					this.adventureId = this.factories.id.create(DataType.Adventure, campaignId, adventureId);
+					this.adventureId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId);
 
-					if (sessionId != null) this.sessionId = this.factories.id.create(DataType.Adventure, campaignId, adventureId, sessionId);
+					if (sessionId != null) this.sessionId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId, sessionId);
 				}
 			}
 		}
@@ -93,7 +93,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			return;
 		}
 		//Modal Title
-		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + DataType[this.type]});
+		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + RecordType[this.type]});
 
 		//Navigation & Additional Info
 		const gridEl = contentEl.createDiv({cls: 'rpgm-grid'})
@@ -102,7 +102,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		//Title Input
 		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
-		titleEl.createEl('label', {text: 'Title of your new ' + DataType[this.type]});
+		titleEl.createEl('label', {text: 'Title of your new ' + RecordType[this.type]});
 		this.title = titleEl.createEl('input', {type: 'text'});
 		if (this.name !== null) {
 			this.title.value = this.name;
@@ -120,8 +120,8 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 
 		this.templateEl.createEl('option', {
-			text: 'RpgManager default ' + DataType[this.type] + ' template',
-			value: 'internal' + DataType[this.type],
+			text: 'RpgManager default ' + RecordType[this.type] + ' template',
+			value: 'internal' + RecordType[this.type],
 		}).selected = true;
 
 		this.templateEl.createEl('option', {
@@ -131,7 +131,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		if (this.availableSpecificTemplates.length > 0) {
 			const templateOptionEl = this.templateEl.createEl('option', {
-				text: DataType[this.type] + '-specific templates',
+				text: RecordType[this.type] + '-specific templates',
 			});
 			templateOptionEl.disabled = true;
 			this.availableSpecificTemplates.forEach((file: TFile) => {
@@ -161,7 +161,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
 			this.campaignSetting,
-			DataType.Campaign,
+			RecordType.Campaign,
 			this,
 		)
 
@@ -171,7 +171,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		//Create Button
 		this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
 
-		if (this.type !== DataType.Campaign){
+		if (this.type !== RecordType.Campaign){
 			this.button.disabled = true;
 		}
 

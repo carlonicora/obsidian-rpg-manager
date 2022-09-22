@@ -3,7 +3,7 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {SessionTableComponent} from "../components/SessionTableComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {AdventureTableComponent} from "../components/AdventureTableComponent";
@@ -16,7 +16,7 @@ export class CampaignModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addComponent(
 			AdventureTableComponent,
-			this.database.readList<AdventureInterface>(DataType.Adventure, this.currentElement.id)
+			this.database.readList<AdventureInterface>(RecordType.Adventure, this.currentElement.id)
 				.sort(function (leftData: AdventureInterface, rightData: AdventureInterface) {
 					if (leftData.adventureId > rightData.adventureId) return -1;
 					if (leftData.adventureId < rightData.adventureId) return 1;
@@ -26,7 +26,7 @@ export class CampaignModel extends AbstractModel {
 
 		await this.response.addComponent(
 			SessionTableComponent,
-			this.database.readList<SessionInterface>(DataType.Session, this.currentElement.id)
+			this.database.readList<SessionInterface>(RecordType.Session, this.currentElement.id)
 				.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 					if (leftData.sessionId > rightData.sessionId) return -1;
 					if (leftData.sessionId < rightData.sessionId) return 1;
@@ -36,7 +36,7 @@ export class CampaignModel extends AbstractModel {
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.database.readList<CharacterInterface>(DataType.Character | DataType.NonPlayerCharacter, this.currentElement.id)
+			this.database.readList<CharacterInterface>(RecordType.Character | RecordType.NonPlayerCharacter, this.currentElement.id)
 				.sort(function (leftData: CharacterInterface, rightData: CharacterInterface) {
 					if (leftData.name > rightData.name) return 1;
 					if (leftData.name < rightData.name) return -1;

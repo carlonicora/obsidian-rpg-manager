@@ -2,7 +2,7 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {SessionTableComponent} from "../components/SessionTableComponent";
 
 export class AdventureModel extends AbstractModel {
@@ -12,7 +12,7 @@ export class AdventureModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addComponent(
 			SessionTableComponent,
-			this.database.readList<SessionInterface>(DataType.Session, this.currentElement.id)
+			this.database.readList<SessionInterface>(RecordType.Session, this.currentElement.id)
 				.sort(function (leftData: SessionInterface, rightData: SessionInterface) {
 					if (leftData.sessionId > rightData.sessionId) return -1;
 					if (leftData.sessionId < rightData.sessionId) return 1;

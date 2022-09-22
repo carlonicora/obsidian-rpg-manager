@@ -1,4 +1,4 @@
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {CampaignSetting} from "../enums/CampaignSetting";
 
 export interface ModalComponentInterface {
@@ -8,7 +8,7 @@ export interface ModalComponentInterface {
 
 	save(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		create: boolean,
 		templateName: string,
 		name: string,

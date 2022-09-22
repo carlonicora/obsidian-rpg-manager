@@ -1,7 +1,7 @@
 import {TableResponseInterface} from "../../interfaces/response/TableResponseInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {SessionInterface} from "../../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 import {IdInterface} from "../../interfaces/data/IdInterface";
@@ -23,14 +23,14 @@ export class TableView extends AbstractComponentView {
 
 
 			switch(data.create){
-				case DataType.Adventure:
+				case RecordType.Adventure:
 					createButtonEl.textContent = 'Create session from Adventure Plot';
 					createButtonEl.addEventListener("click", () => {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
-							id = this.factories.id.create(DataType.Adventure, data.campaignId, data.adventureId);
+							id = this.factories.id.create(RecordType.Adventure, data.campaignId, data.adventureId);
 							if (id !== undefined) {
 								const previousAdventure = this.database.readSingle<AdventureInterface>(
-									DataType.Adventure,
+									RecordType.Adventure,
 									id,
 									data.adventureId - 1,
 								);
@@ -38,7 +38,7 @@ export class TableView extends AbstractComponentView {
 								let nextSessionId = 1;
 								if (previousAdventure != null){
 									const previousAdventureSessions = this.database.readList<SessionInterface>(
-										DataType.Session,
+										RecordType.Session,
 										id,
 										undefined,
 										previousAdventure.adventureId,
@@ -52,7 +52,7 @@ export class TableView extends AbstractComponentView {
 									const content = element[1];
 									if (data.campaignId != null) {
 										this.factories.files.silentCreate(
-											DataType.Session,
+											RecordType.Session,
 											'Session ' + nextSessionId,
 											data.campaignId,
 											data.adventureId,

@@ -3,8 +3,9 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 
 export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public sceneId: number;
@@ -20,7 +21,10 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
 	): void {
-		this.sceneId = this.id.getTypeValue(DataType.Scene);
+		const sceneId = this.id.sceneId;
+		if (sceneId === undefined) throw new TagMisconfiguredError(this.app, this.id);
+
+		this.sceneId = sceneId;
 		this.startTime = this.initialiseDate(frontmatter?.times?.start ?? frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;
@@ -33,18 +37,18 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id);
-		this.session = database.readSingle<SessionInterface>(DataType.Session, this.id);
+		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
+		this.session = database.readSingle<SessionInterface>(RecordType.Session, this.id);
 
 		try {
-			this.previousScene = database.readSingle<SceneInterface>(DataType.Scene, this.id, this.sceneId - 1);
+			this.previousScene = database.readSingle<SceneInterface>(RecordType.Scene, this.id, this.sceneId - 1);
 			this.previousScene.nextScene = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextScene = database.readSingle<SceneInterface>(DataType.Scene, this.id, this.sceneId + 1);
+			this.nextScene = database.readSingle<SceneInterface>(RecordType.Scene, this.id, this.sceneId + 1);
 			this.nextScene.previousScene = this;
 		} catch (e) {
 			//ignore. It can be non existing

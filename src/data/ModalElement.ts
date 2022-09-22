@@ -1,9 +1,9 @@
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {ModalElementInterface} from "../interfaces/ModalElementInterface";
 
 export class ModalElement implements ModalElementInterface {
 	constructor(
-		public type: DataType,
+		public type: RecordType,
 		public id: number,
 		public name: string,
 	) {

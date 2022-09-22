@@ -1,7 +1,7 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
 
 export class Campaign extends AbstractOutlineRecord implements CampaignInterface {
@@ -12,7 +12,7 @@ export class Campaign extends AbstractOutlineRecord implements CampaignInterface
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
 	): void {
-		this.campaignId = this.id.getTypeValue(DataType.Campaign);
+		this.campaignId = this.id.campaignId;
 		if (frontmatter?.dates?.current) this.currentDate = new Date(frontmatter?.dates?.current);
 
 		if (frontmatter?.settings !== undefined) {

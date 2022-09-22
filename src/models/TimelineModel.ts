@@ -3,7 +3,7 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {TimelineResponse} from "../data/responses/TimelineResponse";
 import {TimelineElementResponse} from "../data/responses/TimelineElementResponse";
 import {TimelineResponseInterface} from "../interfaces/response/TimelineResponseInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {EventInterface} from "../interfaces/data/EventInterface";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
@@ -50,7 +50,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const events = this.database.readList<EventInterface>(
-			DataType.Event,
+			RecordType.Event,
 			this.currentElement.id,
 		);
 
@@ -76,7 +76,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const clues = this.database.readList<ClueInterface>(
-			DataType.Clue,
+			RecordType.Clue,
 			this.currentElement.id,
 		);
 		clues.filter((data: ClueInterface) => data.isFound === true).forEach((clue: ClueInterface) => {
@@ -99,7 +99,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const characters = this.database.readList<CharacterInterface>(
-			DataType.Character | DataType.NonPlayerCharacter,
+			RecordType.Character | RecordType.NonPlayerCharacter,
 			this.currentElement.id,
 		);
 		characters.filter((data: CharacterInterface) => data.dob != null).forEach((character: CharacterInterface) => {
@@ -122,7 +122,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const characters = this.database.readList<CharacterInterface>(
-			DataType.Character | DataType.NonPlayerCharacter,
+			RecordType.Character | RecordType.NonPlayerCharacter,
 			this.currentElement.id,
 		);
 		characters.filter((data: CharacterInterface) => data.death != null).forEach((character: CharacterInterface) => {
@@ -145,7 +145,7 @@ export class TimelineModel extends AbstractModel {
 		timeline: TimelineResponseInterface,
 	): void {
 		const sessions = this.database.readList<SessionInterface>(
-			DataType.Session,
+			RecordType.Session,
 			this.currentElement.id,
 		);
 		sessions.filter((data: SessionInterface) => data.date != null).forEach((session: SessionInterface) => {

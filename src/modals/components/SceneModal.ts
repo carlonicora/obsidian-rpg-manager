@@ -2,7 +2,7 @@ import {AbstractModalComponent} from "../../abstracts/AbstractModalComponent";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {SceneInterface} from "../../interfaces/data/SceneInterface";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 
 export class SceneModal extends AbstractModalComponent {
 	private scenes: SceneInterface[];
@@ -14,7 +14,7 @@ export class SceneModal extends AbstractModalComponent {
 		super(app, modal);
 
 		if (this.modal.adventureId != null && this.modal.sessionId != null) {
-			this.scenes = this.database.readList<SceneInterface>(DataType.Scene, this.modal.sessionId);
+			this.scenes = this.database.readList<SceneInterface>(RecordType.Scene, this.modal.sessionId);
 		} else {
 			this.scenes = [];
 		}

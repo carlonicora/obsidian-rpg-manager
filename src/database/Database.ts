@@ -1,7 +1,7 @@
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App, CachedMetadata, debounce, MarkdownView, TFile} from "obsidian";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AbstractRpgError} from "../abstracts/AbstractRpgError";
@@ -121,7 +121,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public readSingle<T extends RecordInterface>(
-		type: DataType,
+		type: RecordType,
 		id: IdInterface,
 		overloadId: number|undefined=undefined,
 	): T {
@@ -136,7 +136,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public readList<T extends RecordInterface>(
-		type: DataType,
+		type: RecordType,
 		id: IdInterface|undefined,
 		comparison: any|undefined = undefined,
 		overloadId: number|undefined = undefined,
@@ -147,78 +147,61 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		);
 	}
 
-	/**
-	 * EVENTS
-	 */
-	private async onDelete(
-		file: TFile,
-	): Promise<void> {
-		if (this.delete(file.path)){
-			this.refreshRelationships();
-			this.app.workspace.trigger("rpgmanager:refresh-views");
-		}
-	}
+	private generateQuery(
+		type: RecordType,
+		id: IdInterface|undefined,
+		isList: boolean,
+		overloadId: number|undefined=undefined,
+	): any {
+		let campaignId:number|undefined=id?.campaignId;
+		let adventureId:number|undefined=id?.adventureId;
+		let sessionId:number|undefined=id?.sessionId;
+		let sceneId:number|undefined=id?.sceneId;
 
-	private async onRename(
-		file: TFile,
-		oldPath: string,
-	): Promise<void> {
-		const oldBaseName: string|undefined = this.basenameIndex.get(oldPath);
-		const newBaseName = file.path;
-
-		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		const data: RecordInterface|undefined = this.readByPath(file.path);
-
-		await this.basenameIndex.delete(oldPath);
-		if (data !== undefined) await this.basenameIndex.set(file.path, file.basename);
-
-		if (oldBaseName !== undefined && data !== undefined && metadata != null) {
-			await this.replaceFileContent(file, oldBaseName, newBaseName);
-			await data.reload();
-
-			await this.replaceLinkInRelationships(oldBaseName, file.basename);
-			await this.refreshRelationships();
-
-			if (this.app.workspace.getActiveFile()?.path === file.path){
-				this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
-			}
-
-			this.app.workspace.trigger("rpgmanager:refresh-views");
-		}
-	}
-
-	private async onSave(
-		file: TFile,
-	): Promise<void> {
-		let component:RecordInterface|undefined = this.readByPath(file.path);
-
-		try {
-			const isNewComponent = component === undefined;
-
-			if (component !== undefined) {
-				await component.reload();
-			} else {
-				component = await DatabaseInitialiser.createComponent(file);
-			}
-
-			if (component === undefined) return;
-
-			if (isNewComponent && component instanceof AbstractOutlineRecord) {
-				await component.checkDuplicates(this);
-			}
-
-			await component.loadHierarchy(this);
-			await this.create(component);
-			await this.refreshRelationships(component);
-
-			this.app.workspace.trigger("rpgmanager:refresh-views");
-		} catch (e) {
-			if (e instanceof AbstractRpgError) {
-				new DatabaseErrorModal(this.app, undefined, e, file).open();
-			} else {
-				throw e;
-			}
-			return;
+		switch(type) {
+			case RecordType.Campaign:
+				if (overloadId !== undefined) campaignId = overloadId;
+				return (data: CampaignInterface) =>
+					(type & data.id.type) === data.id.type &&
+					(isList ? true : data.id.campaignId === campaignId);
+				break;
+			case RecordType.Adventure:
+				if (overloadId !== undefined) adventureId = overloadId;
+				return (data: AdventureInterface) =>
+					(type & data.id.type) === data.id.type &&
+					data.id.campaignId === campaignId &&
+					(isList ? true : data.id.adventureId === adventureId);
+				break;
+			case RecordType.Session:
+				if (overloadId !== undefined) sessionId = overloadId;
+				return (data: SessionInterface) =>
+					(type & data.id.type) === data.id.type &&
+					data.id.campaignId === campaignId &&
+					(adventureId !== undefined ? data.id.adventureId === adventureId : true) &&
+					(isList ? true : data.id.sessionId === sessionId);
+				break;
+			case RecordType.Note:
+				return (note: NoteInterface) =>
+					type === note.id.type &&
+					note.id.campaignId === campaignId &&
+					(adventureId !== undefined ? note.id.adventureId === adventureId : true) &&
+					note.id.sessionId === sessionId;
+				break;
+			case RecordType.Scene:
+				if (overloadId !== undefined) sceneId = overloadId;
+				return (data: SceneInterface) =>
+					(type & data.id.type) === data.id.type &&
+					data.id.campaignId === campaignId &&
+					(adventureId !== undefined ? data.id.adventureId === adventureId : true) &&
+					data.id.sessionId === sessionId &&
+					(isList ? true : data.id.sceneId === sceneId);
+				break;
+			default:
+				if (overloadId !== undefined) campaignId = overloadId;
+				return (data: RecordInterface) =>
+					(type & data.id.type) === data.id.type &&
+					data.id.campaignId === campaignId
+				break;
 		}
 	}
 
@@ -272,71 +255,78 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		}
 	}
 
-	private generateQuery(
-		type: DataType,
-		id: IdInterface|undefined,
-		isList: boolean,
-		overloadId: number|undefined=undefined,
-		/*
-		dataType: DataType,
-		isList: boolean,
-		tag: string|undefined,
+	/**
+	 * EVENTS
+	 */
+	private async onDelete(
+		file: TFile,
+	): Promise<void> {
+		if (this.delete(file.path)){
+			this.refreshRelationships();
+			this.app.workspace.trigger("rpgmanager:refresh-views");
+		}
+	}
 
-		campaignId: number|undefined=undefined,
-		adventureId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
-		 */
-	): any {
-		let campaignId:number|undefined=id?.getTypeValue(DataType.Campaign);
-		let adventureId:number|undefined=id?.getTypeValue(DataType.Adventure);
-		let sessionId:number|undefined=id?.getTypeValue(DataType.Session);
-		let sceneId:number|undefined=id?.getTypeValue(DataType.Scene);
+	private async onRename(
+		file: TFile,
+		oldPath: string,
+	): Promise<void> {
+		const oldBaseName: string|undefined = this.basenameIndex.get(oldPath);
+		const newBaseName = file.path;
 
-		switch(type) {
-			case DataType.Campaign:
-				if (overloadId !== undefined) campaignId = overloadId;
-				return (data: CampaignInterface) =>
-					(type & data.id.type) === data.id.type &&
-					(isList ? true : data.campaignId === campaignId);
-				break;
-			case DataType.Adventure:
-				if (overloadId !== undefined) adventureId = overloadId;
-				return (data: AdventureInterface) =>
-					(type & data.id.type) === data.id.type &&
-					data.campaign.campaignId === campaignId &&
-					(isList ? true : data.adventureId === adventureId);
-				break;
-			case DataType.Session:
-				if (overloadId !== undefined) sessionId = overloadId;
-				return (data: SessionInterface) =>
-					(type & data.id.type) === data.id.type &&
-					data.campaign.campaignId === campaignId &&
-					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
-					(isList ? true : data.sessionId === sessionId);
-				break;
-			case DataType.Note:
-				return (note: NoteInterface) =>
-					type === note.id.type &&
-					note.campaign.campaignId === campaignId &&
-					(adventureId !== undefined ? note.adventure.adventureId === adventureId : true) &&
-					note.sessionId === sessionId;
-				break;
-			case DataType.Scene:
-				if (overloadId !== undefined) sceneId = overloadId;
-				return (data: SceneInterface) =>
-					(type & data.id.type) === data.id.type &&
-					data.campaign.campaignId === campaignId &&
-					(adventureId !== undefined ? data.adventure.adventureId === adventureId : true) &&
-					data.session.sessionId === sessionId &&
-					(isList ? true : data.sceneId === sceneId);
-				break;
-			default:
-				if (overloadId !== undefined) campaignId = overloadId;
-				return (data: RecordInterface) =>
-					(type & data.id.type) === data.id.type &&
-					data.campaign.campaignId === campaignId
-				break;
+		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+		const data: RecordInterface|undefined = this.readByPath(file.path);
+
+		await this.basenameIndex.delete(oldPath);
+		if (data !== undefined) await this.basenameIndex.set(file.path, file.basename);
+
+		if (oldBaseName !== undefined && data !== undefined && metadata != null) {
+			await this.replaceFileContent(file, oldBaseName, newBaseName);
+			await data.reload();
+
+			await this.replaceLinkInRelationships(oldBaseName, file.basename);
+			await this.refreshRelationships();
+
+			if (this.app.workspace.getActiveFile()?.path === file.path){
+				this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
+			}
+
+			this.app.workspace.trigger("rpgmanager:refresh-views");
+		}
+	}
+
+	private async onSave(
+		file: TFile,
+	): Promise<void> {
+		let component:RecordInterface|undefined = this.readByPath(file.path);
+
+		try {
+			const isNewComponent = component === undefined;
+
+			if (component !== undefined) {
+				await component.reload();
+			} else {
+				component = await DatabaseInitialiser.createRecord(file);
+			}
+
+			if (component === undefined) return;
+
+			if (isNewComponent && component instanceof AbstractOutlineRecord) {
+				await component.checkDuplicates(this);
+			}
+
+			await component.loadHierarchy(this);
+			await this.create(component);
+			await this.refreshRelationships(component);
+
+			this.app.workspace.trigger("rpgmanager:refresh-views");
+		} catch (e) {
+			if (e instanceof AbstractRpgError) {
+				new DatabaseErrorModal(this.app, undefined, e, file).open();
+			} else {
+				throw e;
+			}
+			return;
 		}
 	}
 }

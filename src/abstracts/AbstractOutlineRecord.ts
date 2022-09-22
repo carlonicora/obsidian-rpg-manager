@@ -2,6 +2,8 @@ import {AbstractRecord} from "./AbstractRecord";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
+import {RecordType} from "../enums/RecordType";
+import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 
 export abstract class AbstractOutlineRecord extends AbstractRecord implements RecordInterface{
 	public isOutline = true;
@@ -9,12 +11,13 @@ export abstract class AbstractOutlineRecord extends AbstractRecord implements Re
 	public checkDuplicates(
 		database: DatabaseInterface,
 	): void {
-
-		const query = (data: RecordInterface) =>
-			data.id.type === this.id.type &&
-			data.id.tag === this.id.tag;
-		const elements = database.read(query);
-
-		if (elements.length > 0) throw new ElementDuplicatedError(this.app, this.id, elements, this);
+		try {
+			const duplicate = database.readSingle(this.id.type, this.id);
+			throw new ElementDuplicatedError(this.app, this.id, [duplicate], this);
+		} catch (e) {
+			if (e instanceof ElementNotFoundError === false) {
+				throw e;
+			}
+		}
 	}
 }

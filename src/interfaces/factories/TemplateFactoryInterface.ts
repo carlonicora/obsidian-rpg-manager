@@ -1,11 +1,11 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {ComponentTemplateFactoryInterface} from "../ComponentTemplateFactoryInterface";
 
 export interface TemplateFactoryInterface {
 	create(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		templateName: string,
 		name: string,
 		campaignId: number|undefined,

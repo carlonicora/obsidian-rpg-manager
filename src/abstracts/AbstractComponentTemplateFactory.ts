@@ -2,7 +2,7 @@ import {ComponentTemplateFactoryInterface} from "../interfaces/ComponentTemplate
 import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../helpers/FileContentManager";
 import {TemplateInterface} from "../interfaces/TemplateInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {CampaignTemplate} from "../templates/CampaignTemplate";
 import {AdventureTemplate} from "../templates/AdventureTemplate";
 import {CharacterTemplate} from "../templates/CharacterTemplate";
@@ -38,41 +38,41 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 
 		if (this.templateName != null && this.templateName != ""){
 			if (this.templateName.startsWith('internal')){
-				switch (DataType[this.templateName.substring(8) as keyof typeof DataType]){
-					case DataType.Campaign:
+				switch (RecordType[this.templateName.substring(8) as keyof typeof RecordType]){
+					case RecordType.Campaign:
 						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Adventure:
+					case RecordType.Adventure:
 						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Session:
+					case RecordType.Session:
 						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Scene:
+					case RecordType.Scene:
 						this.internalTemplate = new AdventureTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Character:
+					case RecordType.Character:
 						this.internalTemplate = new CharacterTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.NonPlayerCharacter:
+					case RecordType.NonPlayerCharacter:
 						this.internalTemplate = new NonPlayerCharacterTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Clue:
+					case RecordType.Clue:
 						this.internalTemplate = new ClueTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Location:
+					case RecordType.Location:
 						this.internalTemplate = new LocationTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Faction:
+					case RecordType.Faction:
 						this.internalTemplate = new FactionTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Event:
+					case RecordType.Event:
 						this.internalTemplate = new EventTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Note:
+					case RecordType.Note:
 						this.internalTemplate = new NoteTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
-					case DataType.Timeline:
+					case RecordType.Timeline:
 						this.internalTemplate = new TimelineTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
 						break;
 

@@ -1,4 +1,4 @@
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {TFile} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
 import {DatabaseInterface} from "./DatabaseInterface";
@@ -50,7 +50,7 @@ export interface RecordInterface {
 	): void;
 
 	getRelationships(
-		type: DataType,
+		type: RecordType,
 		requiredRelationshipType?: RelationshipType,
 	): Array<RelationshipInterface>;
 

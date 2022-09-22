@@ -1,6 +1,6 @@
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App, CachedMetadata, FrontMatterCache, TAbstractFile, TFile} from "obsidian";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
@@ -141,7 +141,7 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 	): void {
 		let rpgManagerTagCounter = 0;
 		(this.tags || []).forEach((tag: string) => {
-			if (this.factories.id.createFromTag(tag) !== undefined) rpgManagerTagCounter++;
+			if (this.tagHelper.isRpgManagerTag(tag) !== undefined) rpgManagerTagCounter++;
 		});
 		if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
 
@@ -178,8 +178,8 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
-		if (this.id.type !== DataType.Campaign) this.campaign =
-			await database.readSingle<CampaignInterface>(DataType.Campaign, this.id);
+		if (this.id.type !== RecordType.Campaign) this.campaign =
+			await database.readSingle<CampaignInterface>(RecordType.Campaign, this.id);
 	}
 
 	public async loadRelationships(
@@ -229,7 +229,7 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 	}
 
 	public getRelationships(
-		type: DataType,
+		type: RecordType,
 		requiredRelationshipType: RelationshipType = RelationshipType.Direct|RelationshipType.DirectInFrontmatter,
 	): Array<RelationshipInterface> {
 		const response:Array<RelationshipInterface> = [];

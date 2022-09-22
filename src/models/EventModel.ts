@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {EventInterface} from "../interfaces/data/EventInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
@@ -18,17 +18,17 @@ export class EventModel extends AbstractModel {
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter),
+			this.currentElement.getRelationships(RecordType.Character | RecordType.NonPlayerCharacter),
 		);
 
 		await this.response.addComponent(
 			ClueTableComponent,
-			this.currentElement.getRelationships(DataType.Clue),
+			this.currentElement.getRelationships(RecordType.Clue),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location),
+			this.currentElement.getRelationships(RecordType.Location),
 		);
 
 		return this.response;

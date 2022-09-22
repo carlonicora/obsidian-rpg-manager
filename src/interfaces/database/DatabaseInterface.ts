@@ -1,6 +1,7 @@
 import {RecordInterface} from "./RecordInterface";
 import {IdInterface} from "../data/IdInterface";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
+import {CampaignInterface} from "../data/CampaignInterface";
 
 export interface DatabaseInterface {
 	elements: RecordInterface[];
@@ -30,13 +31,13 @@ export interface DatabaseInterface {
 	): T|undefined;
 
 	readSingle<T extends RecordInterface>(
-		type: DataType,
+		type: RecordType,
 		id: IdInterface,
 		overloadId?: number|undefined,
 	): T;
 
 	readList<T extends RecordInterface>(
-		type: DataType,
+		type: RecordType,
 		id: IdInterface|undefined,
 		comparison?: any|undefined,
 		overloadId?: number|undefined,

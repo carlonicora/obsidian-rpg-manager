@@ -1,5 +1,5 @@
 import {AbstractModalComponent} from "../../abstracts/AbstractModalComponent";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {SessionInterface} from "../../interfaces/data/SessionInterface";
@@ -18,7 +18,7 @@ export class SessionModal extends AbstractModalComponent {
 		super(app, modal);
 
 		this.sessions = this.database.readList<SessionInterface>(
-			DataType.Session,
+			RecordType.Session,
 			this.modal.adventureId,
 		);
 	}
@@ -28,14 +28,14 @@ export class SessionModal extends AbstractModalComponent {
 	): Promise<void> {
 		const sessionEl = contentEl.createDiv({cls: 'sessionContainer'});
 
-		if (this.modal.type === DataType.Session){
+		if (this.modal.type === RecordType.Session){
 			this.addNewSessionElements(sessionEl);
 		} else {
 			if (this.sessions.length === 0){
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Sessions missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Session for the selected adventure. Before creating a ' + DataType[this.modal.type] + ', please initialise your first session for the adventure.'});
+				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Session for the selected adventure. Before creating a ' + RecordType[this.modal.type] + ', please initialise your first session for the adventure.'});
 			} else {
 				this.childEl = contentEl.createDiv({cls: 'child'});
 				this.childEl.id = 'SessionChild';
@@ -45,7 +45,7 @@ export class SessionModal extends AbstractModalComponent {
 
 		}
 
-		if (this.modal.type === DataType.Session){
+		if (this.modal.type === RecordType.Session){
 			this.modal.saver = this;
 			this.modal.enableButton();
 		}
@@ -56,7 +56,7 @@ export class SessionModal extends AbstractModalComponent {
 	): Promise<void> {
 		this.modal.sceneModal = this.factories.modals.create(
 			this.modal.campaignSetting,
-			DataType.Scene,
+			RecordType.Scene,
 			this.modal,
 		);
 
@@ -120,7 +120,7 @@ export class SessionModal extends AbstractModalComponent {
 
 	private selectSession(
 	): void {
-		this.modal.sessionId = this.factories.id.create(DataType.Session, this.modal.campaignId.id, this.modal.adventureId?.id, +this.sessionEl.value);
+		this.modal.sessionId = this.factories.id.create(RecordType.Session, this.modal.campaignId.id, this.modal.adventureId?.id, +this.sessionEl.value);
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}

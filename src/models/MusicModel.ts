@@ -1,7 +1,7 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {MusicTableComponent} from "../components/MusicTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
@@ -18,12 +18,12 @@ export class MusicModel extends AbstractModel {
 
 		await this.response.addComponent(
 			MusicTableComponent,
-			this.currentElement.getRelationships(DataType.Music, RelationshipType.DirectInFrontmatter),
+			this.currentElement.getRelationships(RecordType.Music, RelationshipType.DirectInFrontmatter),
 		);
 
 		await this.response.addComponent(
 			SceneTableComponent,
-			this.currentElement.getRelationships(DataType.Scene, RelationshipType.ReverseInFrontmatter),
+			this.currentElement.getRelationships(RecordType.Scene, RelationshipType.ReverseInFrontmatter),
 		);
 
 		return this.response;

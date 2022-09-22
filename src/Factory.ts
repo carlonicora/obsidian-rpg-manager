@@ -27,7 +27,7 @@ import {DatabaseFactoryInterface} from "./interfaces/factories/DatabaseFactoryIn
 import {IdFactoryInterface} from "./interfaces/factories/IdFactoryInterface";
 import {IdFactory} from "./factories/IdFactory";
 
-export class Factories implements FactoriesInterface{
+export class Factory implements FactoriesInterface{
 	public components: ComponentFactoryInterface;
 	public contents: ContentFactoryInterface;
 	public data: DataFactoryInterface;

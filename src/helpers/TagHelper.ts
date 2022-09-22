@@ -1,48 +1,48 @@
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 
 export class TagHelper {
-	public dataSettings: Map<DataType, string>;
-	private requiredIds: Map<DataType, Array<DataType>>;
+	public dataSettings: Map<RecordType, string>;
+	private requiredIds: Map<RecordType, Array<RecordType>>;
 
 	constructor(
 		private settings: RpgManagerSettingsInterface,
 	) {
 		this.dataSettings = new Map();
-		this.dataSettings.set(DataType.Campaign, settings.campaignTag);
-		this.dataSettings.set(DataType.Adventure, settings.adventureTag);
-		this.dataSettings.set(DataType.Session, settings.sessionTag);
-		this.dataSettings.set(DataType.Scene, settings.sceneTag);
-		this.dataSettings.set(DataType.Character, settings.pcTag);
-		this.dataSettings.set(DataType.Clue, settings.clueTag);
-		this.dataSettings.set(DataType.Event, settings.eventTag);
-		this.dataSettings.set(DataType.Faction, settings.factionTag);
-		this.dataSettings.set(DataType.Location, settings.locationTag);
-		this.dataSettings.set(DataType.NonPlayerCharacter, settings.npcTag);
-		this.dataSettings.set(DataType.Note, settings.noteTag);
-		this.dataSettings.set(DataType.Timeline, settings.timelineTag);
-		this.dataSettings.set(DataType.Music, settings.musicTag);
+		this.dataSettings.set(RecordType.Campaign, settings.campaignTag);
+		this.dataSettings.set(RecordType.Adventure, settings.adventureTag);
+		this.dataSettings.set(RecordType.Session, settings.sessionTag);
+		this.dataSettings.set(RecordType.Scene, settings.sceneTag);
+		this.dataSettings.set(RecordType.Character, settings.pcTag);
+		this.dataSettings.set(RecordType.Clue, settings.clueTag);
+		this.dataSettings.set(RecordType.Event, settings.eventTag);
+		this.dataSettings.set(RecordType.Faction, settings.factionTag);
+		this.dataSettings.set(RecordType.Location, settings.locationTag);
+		this.dataSettings.set(RecordType.NonPlayerCharacter, settings.npcTag);
+		this.dataSettings.set(RecordType.Note, settings.noteTag);
+		this.dataSettings.set(RecordType.Timeline, settings.timelineTag);
+		this.dataSettings.set(RecordType.Music, settings.musicTag);
 
 		this.requiredIds = new Map();
-		this.requiredIds.set(DataType.Campaign, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Adventure, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Session, [DataType.Campaign, DataType.Adventure]);
-		this.requiredIds.set(DataType.Scene, [DataType.Campaign, DataType.Adventure, DataType.Session, DataType.Scene]);
-		this.requiredIds.set(DataType.Character, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Clue, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Event, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Faction, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Location, [DataType.Campaign]);
-		this.requiredIds.set(DataType.NonPlayerCharacter, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Note, [DataType.Campaign, DataType.Adventure, DataType.Session]);
-		this.requiredIds.set(DataType.Timeline, [DataType.Campaign]);
-		this.requiredIds.set(DataType.Music, [DataType.Music]);
+		this.requiredIds.set(RecordType.Campaign, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Adventure, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Session, [RecordType.Campaign, RecordType.Adventure]);
+		this.requiredIds.set(RecordType.Scene, [RecordType.Campaign, RecordType.Adventure, RecordType.Session, RecordType.Scene]);
+		this.requiredIds.set(RecordType.Character, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Clue, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Event, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Faction, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Location, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.NonPlayerCharacter, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Note, [RecordType.Campaign, RecordType.Adventure, RecordType.Session]);
+		this.requiredIds.set(RecordType.Timeline, [RecordType.Campaign]);
+		this.requiredIds.set(RecordType.Music, [RecordType.Music]);
 	}
 
 	public sanitiseTags(
 		tags: string|Array<string>|undefined,
 	): Array<string> {
-		if (tags === undefined) return [];
+		if (tags == null) return [];
 
 		let response: Array<string> = [];
 
@@ -60,28 +60,46 @@ export class TagHelper {
 
 	public getDataType(
 		tag: string,
-	): DataType|undefined {
-		let response: DataType|undefined;
+	): RecordType|undefined {
+		if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) return RecordType.Campaign;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return RecordType.Adventure;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) return RecordType.Session;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) return RecordType.Scene;
+		if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) return RecordType.NonPlayerCharacter;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) return RecordType.Character;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) return RecordType.Clue;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Location) ?? '?')) return RecordType.Location;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) return RecordType.Faction;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) return RecordType.Event;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Timeline) ?? '?')) return RecordType.Timeline;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Note) ?? '?')) return RecordType.Note;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) return RecordType.Music;
 
-		if (tag.startsWith(this.dataSettings.get(DataType.Campaign) ?? '?')) response = DataType.Campaign;
-		if (tag.startsWith(this.dataSettings.get(DataType.Adventure) ?? '?')) response = DataType.Adventure;
-		if (tag.startsWith(this.dataSettings.get(DataType.Session) ?? '?')) response = DataType.Session;
-		if (tag.startsWith(this.dataSettings.get(DataType.Scene) ?? '?')) response = DataType.Scene;
-		if (tag.startsWith(this.dataSettings.get(DataType.NonPlayerCharacter) ?? '?')) response = DataType.NonPlayerCharacter;
-		if (tag.startsWith(this.dataSettings.get(DataType.Character) ?? '?')) response = DataType.Character;
-		if (tag.startsWith(this.dataSettings.get(DataType.Clue) ?? '?')) response = DataType.Clue;
-		if (tag.startsWith(this.dataSettings.get(DataType.Location) ?? '?')) response = DataType.Location;
-		if (tag.startsWith(this.dataSettings.get(DataType.Faction) ?? '?')) response = DataType.Faction;
-		if (tag.startsWith(this.dataSettings.get(DataType.Event) ?? '?')) response = DataType.Event;
-		if (tag.startsWith(this.dataSettings.get(DataType.Timeline) ?? '?')) response = DataType.Timeline;
-		if (tag.startsWith(this.dataSettings.get(DataType.Note) ?? '?')) response = DataType.Note;
-		if (tag.startsWith(this.dataSettings.get(DataType.Music) ?? '?')) response = DataType.Music;
+		return undefined;
+	}
 
-		return response;
+	public isRpgManagerTag(
+		tag: string,
+	): boolean {
+		if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Location) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Timeline) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Note) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) return true;
+
+		return false;
 	}
 
 	public getId(
-		type: DataType,
+		type: RecordType,
 		tag: string,
 	): number|undefined {
 		let response: number|undefined=undefined;
@@ -89,7 +107,7 @@ export class TagHelper {
 		const tagType = this.getDataType(tag);
 		if (tagType === undefined) return undefined;
 
-		const settings = this.dataSettings.get(type);
+		const settings = this.dataSettings.get(tagType);
 		if (settings === undefined) return undefined;
 
 		const ids = tag.substring(settings.length + 1);
@@ -98,17 +116,17 @@ export class TagHelper {
 		const tagIds: Array<string> = ids.split('/');
 
 		switch (type) {
-			case DataType.Campaign:
-				response = +tagIds[0];
+			case RecordType.Campaign:
+				response = tagIds[0] ? +tagIds[0] : undefined;
 				break;
-			case DataType.Adventure:
-				response = +tagIds[1];
+			case RecordType.Adventure:
+				response = +tagIds[1] ? +tagIds[1] : undefined;
 				break;
-			case DataType.Session:
-				response = +tagIds[2];
+			case RecordType.Session:
+				response = +tagIds[2] ? +tagIds[2] : undefined;
 				break;
-			case DataType.Scene:
-				response = +tagIds[3];
+			case RecordType.Scene:
+				response = +tagIds[3] ? +tagIds[3] : undefined;
 				break;
 		}
 
@@ -116,55 +134,53 @@ export class TagHelper {
 	}
 
 	public getTag(
-		tags: Array<string>|number,
+		tags: Array<string>,
 	): string|undefined {
 		if (tags == null) return undefined;
 
 		let response: string|undefined;
 
-		if (typeof tags === 'object') {
-			tags.forEach((tag: string) => {
-				if (tag !== null && typeof tag === 'string') {
-					if (tag.startsWith(this.dataSettings.get(DataType.Campaign) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Adventure) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Session) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Scene) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.NonPlayerCharacter) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Character) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Clue) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Location) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Faction) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Event) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Timeline) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Note) ?? '?')) response = tag;
-					if (tag.startsWith(this.dataSettings.get(DataType.Music) ?? '?')) response = tag;
-				}
-			});
-		}
+		tags.forEach((tag: string) => {
+			if (tag !== null && typeof tag === 'string') {
+				if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Location) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Timeline) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Note) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) response = tag;
+			}
+		});
 
 		return response;
 	}
 
 	public getTemplateDataType(
 		tags: Array<string>|null,
-	): DataType|undefined {
+	): RecordType|undefined {
 		if (tags == null) return undefined;
 
-		let response: DataType|undefined;
+		let response: RecordType|undefined;
 		tags.forEach((tag: string) => {
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Campaign].toLowerCase())) response = DataType.Campaign;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Adventure].toLowerCase())) response = DataType.Adventure;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Session].toLowerCase())) response = DataType.Session;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Scene].toLowerCase())) response = DataType.Scene;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.NonPlayerCharacter].toLowerCase())) response = DataType.NonPlayerCharacter;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Character].toLowerCase())) response = DataType.Character;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Clue].toLowerCase())) response = DataType.Clue;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Location].toLowerCase())) response = DataType.Location;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Faction].toLowerCase())) response = DataType.Faction;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Event].toLowerCase())) response = DataType.Event;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Timeline].toLowerCase())) response = DataType.Timeline;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Note].toLowerCase())) response = DataType.Note;
-			if (tag.startsWith('rpgm/template/' + DataType[DataType.Music].toLowerCase())) response = DataType.Music;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Campaign].toLowerCase())) response = RecordType.Campaign;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Adventure].toLowerCase())) response = RecordType.Adventure;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Session].toLowerCase())) response = RecordType.Session;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Scene].toLowerCase())) response = RecordType.Scene;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.NonPlayerCharacter].toLowerCase())) response = RecordType.NonPlayerCharacter;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Character].toLowerCase())) response = RecordType.Character;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Clue].toLowerCase())) response = RecordType.Clue;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Location].toLowerCase())) response = RecordType.Location;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Faction].toLowerCase())) response = RecordType.Faction;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Event].toLowerCase())) response = RecordType.Event;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Timeline].toLowerCase())) response = RecordType.Timeline;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Note].toLowerCase())) response = RecordType.Note;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Music].toLowerCase())) response = RecordType.Music;
 		});
 
 		return response;

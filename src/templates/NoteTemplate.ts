@@ -1,14 +1,14 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {AbstractTemplate} from "../abstracts/AbstractTemplate";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 
 export class NoteTemplate extends AbstractTemplate implements TemplateInterface {
-	protected type:DataType = DataType.Note;
+	protected type:RecordType = RecordType.Note;
 	public getContent(): string {
 		if (this.id === undefined) return '';
 
-		const characters = this.database.readList<CharacterInterface>(DataType.Character, this.id);
+		const characters = this.database.readList<CharacterInterface>(RecordType.Character, this.id);
 
 		let possibleRecappers = '';
 		(characters || []).forEach((character: CharacterInterface) => {

@@ -1,5 +1,5 @@
 import {AbstractModalComponent} from "../../abstracts/AbstractModalComponent";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
@@ -18,7 +18,7 @@ export class AdventureModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.adventures = this.database.readList<AdventureInterface>(DataType.Adventure, this.modal.campaignId);
+		this.adventures = this.database.readList<AdventureInterface>(RecordType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -26,7 +26,7 @@ export class AdventureModal extends AbstractModalComponent {
 	): Promise<void> {
 		const adventureEl = contentEl.createDiv({cls: 'adventureContainer'});
 
-		if (this.modal.type === DataType.Adventure){
+		if (this.modal.type === RecordType.Adventure){
 			this.addAdditionalElements();
 			this.addNewAdventureElements(adventureEl);
 		} else {
@@ -34,7 +34,7 @@ export class AdventureModal extends AbstractModalComponent {
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Adventures missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Adventure for the selected campaign. Before creating a ' + DataType[this.modal.type] + ', please initialise your first adventure for the campaign.'});
+				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Adventure for the selected campaign. Before creating a ' + RecordType[this.modal.type] + ', please initialise your first adventure for the campaign.'});
 			} else {
 				this.childEl = contentEl.createDiv({cls: 'child'});
 				this.childEl.id = 'AdventureChild';
@@ -44,7 +44,7 @@ export class AdventureModal extends AbstractModalComponent {
 
 		}
 
-		if (this.modal.type === DataType.Adventure){
+		if (this.modal.type === RecordType.Adventure){
 			this.modal.saver = this;
 			this.modal.enableButton();
 		}
@@ -55,7 +55,7 @@ export class AdventureModal extends AbstractModalComponent {
 	): Promise<void> {
 		this.modal.sessionModal = this.factories.modals.create(
 			this.modal.campaignSetting,
-			DataType.Session,
+			RecordType.Session,
 			this.modal,
 		);
 
@@ -120,7 +120,7 @@ export class AdventureModal extends AbstractModalComponent {
 
 	private selectAdventure(
 	): void {
-		this.modal.adventureId = this.factories.id.create(DataType.Adventure, this.modal.campaignId.id, +this.adventureEl.value);
+		this.modal.adventureId = this.factories.id.create(RecordType.Adventure, this.modal.campaignId.id, +this.adventureEl.value);
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}
@@ -132,7 +132,7 @@ export class AdventureModal extends AbstractModalComponent {
 			this.modal.additionalInformationEl.style.display = 'block';
 			this.modal.additionalInformationEl.createEl('h2', {
 				cls: 'rpgm-modal-title',
-				text: 'Additional Information for the ' + DataType[this.modal.type]
+				text: 'Additional Information for the ' + RecordType[this.modal.type]
 			});
 			this.modal.additionalInformationEl.createEl('p', {text: 'Synopsis'});
 		}

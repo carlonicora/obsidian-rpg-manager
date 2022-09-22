@@ -17,7 +17,7 @@ import {AbstractView} from "../abstracts/AbstractView";
 import {App, WorkspaceLeaf} from "obsidian";
 import {ViewFactoryInterface} from "../interfaces/factories/ViewFactoryInterface";
 import {ViewInterface} from "../interfaces/ViewInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 
 export class ViewFactory extends AbstractFactory implements ViewFactoryInterface{
 	private viewTypeMap: Map<string,any>;
@@ -46,7 +46,7 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 	): ViewInterface {
 		let viewKey:string = CampaignSetting[settings] + ResponseType[type];
 		if (!this.viewTypeMap.has(viewKey)) viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type];
-		if (!this.viewTypeMap.has(viewKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + DataType[type] + ' cannot be found');
+		if (!this.viewTypeMap.has(viewKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + RecordType[type] + ' cannot be found');
 
 		return new (this.viewTypeMap.get(viewKey))(this.app, sourcePath);
 	}

@@ -1,11 +1,10 @@
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {TagValueInterface} from "../TagValueInterface";
 import {TagStatus} from "../../enums/TagStatus";
 
 export interface IdInterface {
-	type: DataType;
-	tagMap: Map<DataType, TagValueInterface>;
-	tag: string;
+	type: RecordType;
+	tagMap: Map<RecordType, TagValueInterface>;
 
 	get id(
 	):number;
@@ -14,20 +13,35 @@ export interface IdInterface {
 		id: number,
 	);
 
+	get tag(
+	): string;
+
+	get campaignId(
+	): number;
+
+	get adventureId(
+	): number|undefined;
+
+	get sessionId(
+	): number|undefined;
+
+	get sceneId(
+	): number|undefined;
+
 	get isValid(
 	): boolean;
 
 	isTypeValid(
-		type: DataType,
+		type: RecordType,
 	): boolean;
 
 	get invalidIds(
-	): Map<DataType, TagStatus>|undefined;
+	): Map<RecordType, TagStatus>|undefined;
 
 	get possiblyNotFoundIds(
-	): Map<DataType, number>|undefined;
+	): Map<RecordType, number>|undefined;
 
 	getTypeValue(
-		type: DataType,
-	): number;
+		type: RecordType,
+	): number|undefined;
 }

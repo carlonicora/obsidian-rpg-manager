@@ -1,11 +1,11 @@
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {App} from "obsidian";
 import {AbstractRpgManager} from "./AbstractRpgManager";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {IdInterface} from "../interfaces/data/IdInterface";
 
 export abstract class AbstractTemplate extends AbstractRpgManager implements TemplateInterface {
-	protected type: DataType;
+	protected type: RecordType;
 	protected id: IdInterface|undefined;
 
 	constructor(

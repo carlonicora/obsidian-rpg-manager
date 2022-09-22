@@ -3,7 +3,7 @@ import {ResponseElementInterface} from "../interfaces/response/ResponseElementIn
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {Adventure} from "../data/Adventure";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
@@ -37,13 +37,13 @@ export class AbtPlotComponent extends AbstractComponent {
 
 		if (
 			data instanceof Adventure &&
-			this.database.readList<SessionInterface>(DataType.Session, data.id).length === 0 &&
+			this.database.readList<SessionInterface>(RecordType.Session, data.id).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&
 			additionalInformation.therefore !== ''
 		) {
-			response.create = DataType.Adventure;
+			response.create = RecordType.Adventure;
 			response.campaignId = data.campaign.campaignId;
 			response.adventureId = data.adventureId;
 		}

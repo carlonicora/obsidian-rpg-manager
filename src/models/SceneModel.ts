@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {MusicTableComponent} from "../components/MusicTableComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
@@ -16,27 +16,27 @@ export class SceneModel extends AbstractModel {
 
 		await this.response.addComponent(
 			MusicTableComponent,
-			this.currentElement.getRelationships(DataType.Music),
+			this.currentElement.getRelationships(RecordType.Music),
 		);
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character|DataType.NonPlayerCharacter),
+			this.currentElement.getRelationships(RecordType.Character|RecordType.NonPlayerCharacter),
 		);
 
 		await this.response.addComponent(
 			FactionTableComponent,
-			this.currentElement.getRelationships(DataType.Faction),
+			this.currentElement.getRelationships(RecordType.Faction),
 		);
 
 		await this.response.addComponent(
 			ClueTableComponent,
-			this.currentElement.getRelationships(DataType.Clue),
+			this.currentElement.getRelationships(RecordType.Clue),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location),
+			this.currentElement.getRelationships(RecordType.Location),
 		);
 
 		return this.response;

@@ -17,7 +17,7 @@ import {VampireCampaignTemplate} from "../rpgs/Vampire/templates/VampireCampaign
 import {MusicTemplateFactory} from "./templates/MusicTemplateFactory";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {App} from "obsidian";
 import {TemplateFactoryInterface} from "../interfaces/factories/TemplateFactoryInterface";
 import {ComponentTemplateFactoryInterface} from "../interfaces/ComponentTemplateFactoryInterface";
@@ -51,7 +51,7 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 
 	public create(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		templateName: string,
 		name: string,
 		campaignId: number|undefined,
@@ -60,9 +60,9 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		sceneId: number|undefined,
 		additionalInformation: any|null = null,
 	): ComponentTemplateFactoryInterface {
-		let templateKey = CampaignSetting[settings] + DataType[type];
-		if (!this.templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type];
-		if (!this.templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + DataType[type] + ' cannot be found');
+		let templateKey = CampaignSetting[settings] + RecordType[type];
+		if (!this.templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + RecordType[type];
+		if (!this.templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + RecordType[type] + ' cannot be found');
 
 		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
 	}

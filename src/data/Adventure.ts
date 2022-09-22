@@ -1,7 +1,8 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 
 export class Adventure extends AbstractOutlineRecord implements AdventureInterface {
 	public adventureId: number;
@@ -9,7 +10,10 @@ export class Adventure extends AbstractOutlineRecord implements AdventureInterfa
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
 	): void {
-		this.adventureId = this.id.getTypeValue(DataType.Adventure);
+		const adventureId = this.id.adventureId;
+		if (adventureId === undefined) throw new TagMisconfiguredError(this.app, this.id);
+
+		this.adventureId = adventureId;
 
 		super.initialiseData(frontmatter);
 	}

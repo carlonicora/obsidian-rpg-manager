@@ -2,7 +2,7 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {SceneTableComponent} from "../components/SceneTableComponent";
 
 export class NoteModel extends AbstractModel {
@@ -15,7 +15,7 @@ export class NoteModel extends AbstractModel {
 		await this.response.addComponent(
 			SceneTableComponent,
 			this.database.readList<SceneInterface>(
-				DataType.Scene,
+				RecordType.Scene,
 				this.currentElement.id,
 			).sort(function (leftData: SceneInterface, rightData: SceneInterface) {
 				if (leftData.sceneId > rightData.sceneId) return +1;

@@ -1,12 +1,12 @@
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalComponentInterface} from "./ModalComponentInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {IdInterface} from "./data/IdInterface";
 
 export interface ModalInterface {
 	saver: ModalComponentInterface
 
-	type: DataType;
+	type: RecordType;
 
 	campaignId: IdInterface;
 	adventureId: IdInterface|undefined;

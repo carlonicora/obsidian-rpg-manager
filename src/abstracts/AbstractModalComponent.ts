@@ -1,7 +1,7 @@
 import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
 import {App} from "obsidian";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 
@@ -34,7 +34,7 @@ export abstract class AbstractModalComponent extends AbstractRpgManager implemen
 
 	public async save(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		create: boolean,
 		templateName: string,
 		name: string,

@@ -1,5 +1,5 @@
 import {AbstractRpgError} from "../abstracts/AbstractRpgError";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {TagStatus} from "../enums/TagStatus";
 
 export class TagMisconfiguredError extends AbstractRpgError {
@@ -10,12 +10,12 @@ export class TagMisconfiguredError extends AbstractRpgError {
 
 		let requiredId = '';
 		switch (this.id.type){
-			case DataType.Scene:
+			case RecordType.Scene:
 				requiredId = '/{sceneId}' + requiredId;
-			case DataType.Session:
-			case DataType.Note:
+			case RecordType.Session:
+			case RecordType.Note:
 				requiredId = '/{sessionId}' + requiredId;
-			case DataType.Adventure:
+			case RecordType.Adventure:
 				requiredId = '/{adventureId}' + requiredId;
 			default:
 				requiredId = '/{campaignId}' + requiredId;
@@ -24,8 +24,8 @@ export class TagMisconfiguredError extends AbstractRpgError {
 			(this.app.plugins.getPlugin('rpg-manager').tagHelper.dataSettings.get(this.id.type) ?? '')
 			+ requiredId + '`\n';
 
-		this.id.invalidIds?.forEach((status: TagStatus, type: DataType) => {
-			response += ' - {' + DataType[type].toLowerCase() + 'Id} is ' +
+		this.id.invalidIds?.forEach((status: TagStatus, type: RecordType) => {
+			response += ' - {' + RecordType[type].toLowerCase() + 'Id} is ' +
 				(status === TagStatus.Missing ? 'missing' : 'not a valid numeric id') + '\n';
 		});
 
@@ -37,8 +37,8 @@ export class TagMisconfiguredError extends AbstractRpgError {
 		let response = 'The tag `' + this.id.tag + '` is invalid.\n' +
 			'The following ids are either missing or invalid:\n';
 
-		this.id.invalidIds?.forEach((status: TagStatus, type: DataType) => {
-			response += ' - `{' + DataType[type].toLowerCase() + 'Id}` is ' +
+		this.id.invalidIds?.forEach((status: TagStatus, type: RecordType) => {
+			response += ' - `{' + RecordType[type].toLowerCase() + 'Id}` is ' +
 				(status === TagStatus.Missing ? 'missing' : 'not a valid numeric id') + '\n';
 		});
 

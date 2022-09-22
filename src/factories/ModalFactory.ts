@@ -1,4 +1,4 @@
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
@@ -44,12 +44,12 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 	}
 	public create(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		modal: ModalInterface,
 	): ModalComponentInterface {
-		let modalKey:string = CampaignSetting[settings] + DataType[type];
-		if (!this.modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + DataType[type];
-		if (!this.modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + DataType[type] + ' cannot be found');
+		let modalKey:string = CampaignSetting[settings] + RecordType[type];
+		if (!this.modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + RecordType[type];
+		if (!this.modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + RecordType[type] + ' cannot be found');
 
 		return new (this.modalTypeMap.get(modalKey))(this.app, modal);
 	}

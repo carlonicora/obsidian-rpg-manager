@@ -3,8 +3,9 @@ import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 
 export class Session extends AbstractOutlineRecord implements SessionInterface {
 	public sessionId: number;
@@ -19,7 +20,10 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
 	): void {
-		this.sessionId = this.id.getTypeValue(DataType.Session);
+		const sessionId = this.id.sessionId;
+		if (sessionId === undefined) throw new TagMisconfiguredError(this.app, this.id);
+
+		this.sessionId = sessionId;
 		this.date = this.initialiseDate(frontmatter?.dates?.session);
 		this.irl = this.initialiseDate(frontmatter?.dates?.irl);
 
@@ -31,24 +35,24 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 	): Promise<void> {
 		super.loadHierarchy(database);
 
-		this.adventure = database.readSingle<AdventureInterface>(DataType.Adventure, this.id);
+		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
 
 		try {
-			this.previousSession = database.readSingle<SessionInterface>(DataType.Session, this.id, this.sessionId - 1);
+			this.previousSession = database.readSingle<SessionInterface>(RecordType.Session, this.id, this.sessionId - 1);
 			this.previousSession.nextSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.nextSession = database.readSingle<SessionInterface>(DataType.Session, this.id, this.sessionId + 1);
+			this.nextSession = database.readSingle<SessionInterface>(RecordType.Session, this.id, this.sessionId + 1);
 			this.nextSession.previousSession = this;
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
 		try {
-			this.note = database.readSingle<NoteInterface>(DataType.Note, this.id);
+			this.note = database.readSingle<NoteInterface>(RecordType.Note, this.id);
 		} catch (e) {
 			//ignore. It can be non existing
 		}

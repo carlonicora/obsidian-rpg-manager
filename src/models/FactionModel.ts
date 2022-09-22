@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {CharacterTableComponent} from "../components/CharacterTableComponent";
@@ -18,12 +18,12 @@ export class FactionModel extends AbstractModel {
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character|DataType.NonPlayerCharacter, RelationshipType.ReverseInFrontmatter),
+			this.currentElement.getRelationships(RecordType.Character|RecordType.NonPlayerCharacter, RelationshipType.ReverseInFrontmatter),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location),
+			this.currentElement.getRelationships(RecordType.Location),
 		);
 
 		return this.response;

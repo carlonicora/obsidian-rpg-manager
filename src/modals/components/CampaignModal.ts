@@ -1,6 +1,6 @@
 import {AbstractModalComponent} from "../../abstracts/AbstractModalComponent";
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {CampaignInterface} from "../../interfaces/data/CampaignInterface";
@@ -22,7 +22,7 @@ export class CampaignModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.campaigns = this.database.readList<CampaignInterface>(DataType.Campaign, undefined);
+		this.campaigns = this.database.readList<CampaignInterface>(RecordType.Campaign, undefined);
 	}
 
 	public async addElement(
@@ -30,7 +30,7 @@ export class CampaignModal extends AbstractModalComponent {
 	): Promise<void> {
 		const campaignEl = contentEl.createDiv({cls: 'campaignContainer'});
 
-		if (this.modal.type === DataType.Campaign){
+		if (this.modal.type === RecordType.Campaign){
 			this.addAdditionalElements();
 			this.addNewCampaignElements(campaignEl);
 		} else {
@@ -38,7 +38,7 @@ export class CampaignModal extends AbstractModalComponent {
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Main campaign missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a ' + DataType[this.modal.type] + ', please initialise your first campaign.'});
+				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a ' + RecordType[this.modal.type] + ', please initialise your first campaign.'});
 			} else {
 				this.childEl = contentEl.createDiv({cls: 'child'});
 				this.childEl.id = 'CampaignChild';
@@ -48,7 +48,7 @@ export class CampaignModal extends AbstractModalComponent {
 
 		}
 
-		if (this.modal.type === DataType.Campaign){
+		if (this.modal.type === RecordType.Campaign){
 			this.modal.saver = this;
 		}
 	}
@@ -56,7 +56,7 @@ export class CampaignModal extends AbstractModalComponent {
 	public async loadChild(
 		containerEl: HTMLElement
 	): Promise<void> {
-		if (this.modal.type !== DataType.Adventure && this.modal.type !== DataType.Session && this.modal.type !== DataType.Scene && this.modal.type !== DataType.Note) {
+		if (this.modal.type !== RecordType.Adventure && this.modal.type !== RecordType.Session && this.modal.type !== RecordType.Scene && this.modal.type !== RecordType.Note) {
 			this.modal.elementModal = this.factories.modals.create(
 				this.modal.campaignSetting,
 				this.modal.type,
@@ -68,7 +68,7 @@ export class CampaignModal extends AbstractModalComponent {
 		} else {
 			this.modal.adventureModal = this.factories.modals.create(
 				this.modal.campaignSetting,
-				DataType.Adventure,
+				RecordType.Adventure,
 				this.modal,
 			);
 
@@ -156,9 +156,9 @@ export class CampaignModal extends AbstractModalComponent {
 
 	private selectCampaign(
 	): void {
-		const campaignId:IdInterface|undefined = this.factories.id.create(DataType.Campaign, +this.campaignEl.value);
+		const campaignId:IdInterface|undefined = this.factories.id.create(RecordType.Campaign, +this.campaignEl.value);
 		if (campaignId !== undefined) this.modal.campaignId = campaignId;
-		
+
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}
@@ -169,7 +169,7 @@ export class CampaignModal extends AbstractModalComponent {
 			this.modal.additionalInformationEl.style.display = 'block';
 			this.modal.additionalInformationEl.createEl('h2', {
 				cls: 'rpgm-modal-title',
-				text: 'Additional Information for the ' + DataType[this.modal.type]
+				text: 'Additional Information for the ' + RecordType[this.modal.type]
 			});
 			this.modal.additionalInformationEl.createEl('label', {text: 'Current Date'});
 			this.currentDateEl = this.modal.additionalInformationEl.createEl('input', {type: 'text'});

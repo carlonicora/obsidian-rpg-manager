@@ -1,5 +1,5 @@
 import {MarkdownView} from "obsidian";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
@@ -10,7 +10,7 @@ const path = require('path');
 export class FileFactory extends AbstractFactory implements FileFactoryInterface{
 	public async create(
 		settings: CampaignSetting,
-		type: DataType,
+		type: RecordType,
 		create: boolean,
 		templateName: string,
 		name: string,
@@ -24,11 +24,11 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 
 		if (campaignId != null) {
 			let campaign: CampaignInterface|undefined;
-			const id = this.factories.id.create(DataType.Campaign, campaignId);
+			const id = this.factories.id.create(RecordType.Campaign, campaignId);
 
 			if (id !== undefined){
 				try {
-					campaign = this.database.readSingle<CampaignInterface>(DataType.Campaign, id);
+					campaign = this.database.readSingle<CampaignInterface>(RecordType.Campaign, id);
 				} catch (e) {
 					campaign = undefined;
 				}
@@ -94,7 +94,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 	}
 
 	public async silentCreate(
-		type: DataType,
+		type: RecordType,
 		name: string,
 		campaignId: number,
 		adventureId: number|undefined=undefined,
@@ -106,11 +106,11 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let settings = CampaignSetting.Agnostic;
 
 		let campaign: CampaignInterface|undefined;
-		const id = this.factories.id.create(DataType.Campaign, campaignId);
+		const id = this.factories.id.create(RecordType.Campaign, campaignId);
 
 		if (id !== undefined){
 			try {
-				campaign = this.database.readSingle<CampaignInterface>(DataType.Campaign, id);
+				campaign = this.database.readSingle<CampaignInterface>(RecordType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}
@@ -124,7 +124,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		const template = this.factories.templates.create(
 			settings,
 			type,
-			'internal' + DataType[type],
+			'internal' + RecordType[type],
 			name,
 			campaignId,
 			adventureId,
@@ -142,7 +142,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 	}
 
 	private async generateFilePath(
-		type: DataType,
+		type: RecordType,
 		folder: string,
 		name: string,
 	): Promise<string> {
@@ -152,8 +152,8 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 
 		if (this.settings.automaticMove){
 			let fullPath: string;
-			if (type !== DataType.Campaign) {
-				fullPath = folder + path.sep + DataType[type] + 's';
+			if (type !== RecordType.Campaign) {
+				fullPath = folder + path.sep + RecordType[type] + 's';
 
 				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(path.sep.length);
 

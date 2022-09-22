@@ -1,8 +1,9 @@
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 import {IdInterface} from "../data/IdInterface";
 
-export interface IdFactoryInterface {create(
-		type: DataType,
+export interface IdFactoryInterface {
+	create(
+		type: RecordType,
 		campaignId: number,
 		adventureId?: number|undefined,
 		sessionId?: number|undefined,

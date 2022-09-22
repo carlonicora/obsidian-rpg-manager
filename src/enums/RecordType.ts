@@ -1,4 +1,4 @@
-export enum DataType {
+export enum RecordType {
 	Campaign=0b1,
 	Adventure=0b10,
 	Session=0b100,

@@ -1,12 +1,12 @@
 import {ResponseElementInterface} from "./ResponseElementInterface";
 import {ContentInterface} from "../ContentInterface";
-import {DataType} from "../../enums/DataType";
+import {RecordType} from "../../enums/RecordType";
 
 export interface TableResponseInterface extends ResponseElementInterface {
 	class: string|null;
 	headers: Array<ContentInterface>;
 	content: Array<Array<ContentInterface>>;
-	create: DataType|undefined;
+	create: RecordType|undefined;
 	campaignId: number|undefined;
 	adventureId: number|undefined;
 	sessionId: number|undefined;

@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {DataType} from "../enums/DataType";
+import {RecordType} from "../enums/RecordType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {EventTableComponent} from "../components/EventTableComponent";
@@ -21,27 +21,27 @@ export class NpcModel extends AbstractModel {
 
 		await this.response.addComponent(
 			FactionTableComponent,
-			this.currentElement.getRelationships(DataType.Faction),
+			this.currentElement.getRelationships(RecordType.Faction),
 		);
 
 		await this.response.addComponent(
 			CharacterTableComponent,
-			this.currentElement.getRelationships(DataType.Character | DataType.NonPlayerCharacter),
+			this.currentElement.getRelationships(RecordType.Character | RecordType.NonPlayerCharacter),
 		);
 
 		await this.response.addComponent(
 			EventTableComponent,
-			this.currentElement.getRelationships(DataType.Event, RelationshipType.Reverse),
+			this.currentElement.getRelationships(RecordType.Event, RelationshipType.Reverse),
 		);
 
 		await this.response.addComponent(
 			ClueTableComponent,
-			this.currentElement.getRelationships(DataType.Clue, RelationshipType.Reverse),
+			this.currentElement.getRelationships(RecordType.Clue, RelationshipType.Reverse),
 		);
 
 		await this.response.addComponent(
 			LocationTableComponent,
-			this.currentElement.getRelationships(DataType.Location),
+			this.currentElement.getRelationships(RecordType.Location),
 		);
 
 		return this.response;
