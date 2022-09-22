@@ -11,6 +11,7 @@ import {FetcherFactoryInterface} from "./factories/FetcherFactoryInterface";
 import {RelationshipFactoryInterface} from "./factories/RelationshipFactoryInterface";
 import {DatabaseFactoryInterface} from "./factories/DatabaseFactoryInterface";
 import {IdFactoryInterface} from "./factories/IdFactoryInterface";
+import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface";
 
 export interface FactoriesInterface {
 	components: ComponentFactoryInterface;
@@ -26,4 +27,5 @@ export interface FactoriesInterface {
 	relationships: RelationshipFactoryInterface;
 	database: DatabaseFactoryInterface;
 	id: IdFactoryInterface;
+	breadcrumb: BreadcrumbFactoryInterface;
 }

@@ -10,7 +10,7 @@ export class NoteModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		await this.response.addElement(this.generateBreadcrumb());
+		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
 		await this.response.addComponent(
 			SceneTableComponent,

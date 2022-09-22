@@ -14,7 +14,7 @@ export class LocationModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		this.response.addElement(this.generateBreadcrumb());
+		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 
