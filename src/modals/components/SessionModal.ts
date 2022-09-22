@@ -16,6 +16,8 @@ export class SessionModal extends AbstractModalComponent {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
+		this.modal.sessionId = this.factories.id.create(RecordType.Session, this.modal.campaignId.id, this.modal.adventureId?.id);
+		this.modal.sessionId.id = 1;
 
 		this.sessions = this.database.readList<SessionInterface>(
 			RecordType.Session,
@@ -73,12 +75,11 @@ export class SessionModal extends AbstractModalComponent {
 	private addNewSessionElements(
 		containerEl: HTMLElement,
 	): void {
-		if (this.modal.sessionId !== undefined) {
-			this.modal.sessionId.id = 1;
-			this.sessions.forEach((data: SessionInterface) => {
-				if (this.modal.sessionId !== undefined && data.sessionId >= (this.modal.sessionId.id ?? 0)) this.modal.sessionId.id = (data.sessionId + 1);
-			});
-		}
+		this.sessions.forEach((data: SessionInterface) => {
+			if (this.modal.sessionId !== undefined && data.sessionId >= (this.modal.sessionId.id ?? 0)) {
+				this.modal.sessionId.id = (data.sessionId + 1);
+			}
+		});
 	}
 
 	private selectSessionElements(
@@ -120,7 +121,14 @@ export class SessionModal extends AbstractModalComponent {
 
 	private selectSession(
 	): void {
-		this.modal.sessionId = this.factories.id.create(RecordType.Session, this.modal.campaignId.id, this.modal.adventureId?.id, +this.sessionEl.value);
+		if (this.modal.sessionId === undefined) {
+			this.modal.sessionId = this.factories.id.create(RecordType.Adventure, this.modal.campaignId.id, this.modal.adventureId?.id);
+		}
+
+		if (this.modal.sessionId !== undefined){
+			this.modal.sessionId.id = +this.sessionEl.value;
+		}
+
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}

@@ -39,9 +39,12 @@ export class Id extends AbstractRpgManager implements IdInterface{
 	public set id(
 		id: number,
 	) {
-		const tagValue:TagValueInterface|undefined = this.tagMap.get(RecordType.Adventure);
+		const tagValue:TagValueInterface|undefined = this.tagMap.get(this.type);
 
-		if (tagValue !== undefined) tagValue.value = id;
+		if (tagValue !== undefined) {
+			tagValue.value = id;
+			tagValue.status = TagStatus.Valid;
+		}
 	}
 
 	public get tag(

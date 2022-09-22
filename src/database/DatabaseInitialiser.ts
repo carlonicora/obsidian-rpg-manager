@@ -109,8 +109,9 @@ export class DatabaseInitialiser {
 		if (metadata != null) {
 			new InfoLog(LogMessageType.RecordInitialisation, '1/5 -> Record TFile metadata read for ' + file.basename, metadata);
 
+			if (!this.tagHelper.hasRpgManagerTags(this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags))) return undefined;
+
 			const id: IdInterface | undefined = this.factories.id.createFromTags(metadata?.frontmatter?.tags);
-			if (id === undefined) return undefined;
 
 			new InfoLog(LogMessageType.RecordInitialisation, '2/5 -> Id for ' + file.basename + ' created', id);
 
@@ -153,13 +154,21 @@ export class DatabaseInitialiser {
 	): void {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-			if (metadata !== null && metadata?.frontmatter?.tags != undefined) {
-				const id = this.factories.id.createFromTags(metadata.frontmatter.tags);
+			if (
+				metadata?.frontmatter?.tags != null &&
+				this.tagHelper.hasRpgManagerTags(this.tagHelper.sanitiseTags(metadata.frontmatter.tags))
+			) {
+				const tag = this.tagHelper.getTag(this.tagHelper.sanitiseTags(metadata.frontmatter.tags));
+				if (tag === undefined) return;
 
-				if (id !== undefined && id.type === RecordType.Campaign){
+				const type = this.tagHelper.getDataType(tag);
+				if (type === undefined) return;
+
+				if (type === RecordType.Campaign){
+					const id = this.factories.id.createFromTag(tag);
 					try {
 						const settings = metadata?.frontmatter?.settings != undefined ?
-							CampaignSetting[metadata?.frontmatter?.settings as keyof typeof CampaignSetting] :
+							CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :
 							CampaignSetting.Agnostic;
 						this.campaignSettings.set(id.campaignId, settings);
 					} catch (e) {
@@ -206,8 +215,6 @@ export class DatabaseInitialiser {
 		const record: RecordInterface[] = temporaryDatabase.read(
 			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.id.type) === data.id.type : data.isOutline === false),
 		);
-
-		console.log(dataType ? RecordType[dataType] : 'Everything Else', temporaryDatabase.recordset, record);
 
 		for (let index=0; index<record.length; index++){
 			await record[index].loadHierarchy(this.database)

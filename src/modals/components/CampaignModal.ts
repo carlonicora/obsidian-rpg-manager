@@ -86,12 +86,16 @@ export class CampaignModal extends AbstractModalComponent {
 	private addNewCampaignElements(
 		containerEl: HTMLElement,
 	): void {
-		if (this.modal.campaignId !== undefined) {
-			this.modal.campaignId.id = 1;
-			this.campaigns.forEach((data: CampaignInterface) => {
-				if (data.campaignId >= (this.modal.campaignId.id ?? 0)) this.modal.campaignId.id = (data.campaignId + 1);
-			});
+		if (this.modal.campaignId === undefined) {
+			this.modal.campaignId = this.factories.id.create(RecordType.Campaign, 1);
 		}
+
+		this.campaigns.forEach((campaign: CampaignInterface) => {
+			if (this.modal.campaignId !== undefined && campaign.campaignId >= this.modal.campaignId.id) {
+				this.modal.campaignId.id = (campaign.campaignId + 1);
+			}
+		});
+
 		containerEl.createEl('label', {text: 'Select Campaign Settings'});
 		this.campaignSettingsEl = containerEl.createEl('select');
 
@@ -156,7 +160,7 @@ export class CampaignModal extends AbstractModalComponent {
 
 	private selectCampaign(
 	): void {
-		const campaignId:IdInterface|undefined = this.factories.id.create(RecordType.Campaign, +this.campaignEl.value);
+		const campaignId:IdInterface|undefined = this.factories.id.create(RecordType.Campaign, this.campaignEl.value);
 		if (campaignId !== undefined) this.modal.campaignId = campaignId;
 
 		this.childEl.empty();

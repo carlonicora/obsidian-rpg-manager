@@ -4,6 +4,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {FileFactoryInterface} from "../interfaces/factories/FileFactoryInterface";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
 const path = require('path');
 
@@ -14,43 +15,31 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: number|undefined=undefined,
-		adventureId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
+		campaignId: IdInterface,
+		adventureId: IdInterface|undefined=undefined,
+		sessionId: IdInterface|undefined=undefined,
+		sceneId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
 		let folder = path.sep;
 
-		if (campaignId != null) {
-			let campaign: CampaignInterface|undefined;
-			const id = this.factories.id.create(RecordType.Campaign, campaignId);
-
-			if (id !== undefined){
-				try {
-					campaign = this.database.readSingle<CampaignInterface>(RecordType.Campaign, id);
-				} catch (e) {
-					campaign = undefined;
-				}
-			}
-
-			if (campaign !== undefined) {
-				settings = campaign.campaignSettings;
-				folder = campaign.folder;
-			} else {
-				settings = CampaignSetting.Agnostic;
-			}
+		try {
+			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(RecordType.Campaign, campaignId);
+			settings = campaign.campaignSettings;
+			folder = campaign.folder;
+		} catch (e) {
+			//no need to catch it here
 		}
 
-		const template = this.factories.templates.create(
+		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
 			templateName,
 			name,
-			campaignId,
-			adventureId,
-			sessionId,
-			sceneId,
+			campaignId.id,
+			adventureId?.id,
+			sessionId?.id,
+			sceneId?.id,
 			additionalInformation,
 		);
 
@@ -110,7 +99,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 
 		if (id !== undefined){
 			try {
-				campaign = this.database.readSingle<CampaignInterface>(RecordType.Campaign, id);
+				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(RecordType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}
@@ -121,7 +110,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			folder = campaign.folder;
 		}
 
-		const template = this.factories.templates.create(
+		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
 			'internal' + RecordType[type],

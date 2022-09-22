@@ -9,7 +9,7 @@ export class AdventureNavigationModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		//this.response.addElement(this.generateBreadcrumb());
+		this.response.addElement(this.generateBreadcrumb());
 
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 

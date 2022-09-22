@@ -3,7 +3,7 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 
-export class SettingsUpdater extends AbstractRpgManager{
+export class SettingsUpdater extends AbstractRpgManager {
 	public async updateTags(
 		updatedTags: Map<string,string>,
 	): Promise<void> {

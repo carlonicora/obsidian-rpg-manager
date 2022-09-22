@@ -1,5 +1,6 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
 import {RecordType} from "../../enums/RecordType";
+import {IdInterface} from "../data/IdInterface";
 
 export interface FileFactoryInterface {
 	create(
@@ -8,10 +9,10 @@ export interface FileFactoryInterface {
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId?: number|undefined,
-		adventureId?: number|undefined,
-		sessionId?: number|undefined,
-		sceneId?: number|undefined,
+		campaignId: IdInterface,
+		adventureId?: IdInterface|undefined,
+		sessionId?: IdInterface|undefined,
+		sceneId?: IdInterface|undefined,
 		additionalInformation?: any|null,
 	): Promise<void>;
 

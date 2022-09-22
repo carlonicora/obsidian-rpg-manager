@@ -4,6 +4,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {RecordType} from "../enums/RecordType";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
+import {IdInterface} from "../interfaces/data/IdInterface";
 
 export abstract class AbstractModalComponent extends AbstractRpgManager implements ModalComponentInterface {
 	constructor(
@@ -38,10 +39,10 @@ export abstract class AbstractModalComponent extends AbstractRpgManager implemen
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: number,
-		adventureId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
+		campaignId: IdInterface,
+		adventureId: IdInterface|undefined=undefined,
+		sessionId: IdInterface|undefined=undefined,
+		sceneId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
 		this.factories.files.create(

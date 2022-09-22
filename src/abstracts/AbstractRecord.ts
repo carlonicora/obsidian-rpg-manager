@@ -151,10 +151,8 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 		if (metadata === null || metadata.frontmatter === undefined) return;
 
 		this.tags = await this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
-		const id: IdInterface|undefined = this.factories.id.createFromTags(this.tags);
-		if (id === undefined) throw new Error('');
+		this.id = this.factories.id.createFromTags(this.tags);
 
-		this.id = id;
 		await this.initialise();
 		await this.initialiseData(metadata.frontmatter);
 	}

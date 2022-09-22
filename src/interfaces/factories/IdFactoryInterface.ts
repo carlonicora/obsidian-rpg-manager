@@ -9,13 +9,13 @@ export interface IdFactoryInterface {
 		sessionId?: string|number|undefined,
 		sceneId?: string|number|undefined,
 		existingTag?: string|undefined,
-	): IdInterface|undefined;
+	): IdInterface;
 
 	createFromTag(
 		tag: string,
-	): IdInterface|undefined;
+	): IdInterface;
 
 	createFromTags(
 		tags: Array<string>,
-	): IdInterface|undefined;
+	): IdInterface;
 }

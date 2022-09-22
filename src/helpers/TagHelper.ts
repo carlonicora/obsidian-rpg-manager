@@ -78,6 +78,16 @@ export class TagHelper {
 		return undefined;
 	}
 
+	public hasRpgManagerTags(
+		tags: Array<string>,
+	): boolean {
+		for (let tagIndex=0; tagIndex<tags.length; tagIndex++){
+			if (this.isRpgManagerTag(tags[tagIndex])) return true;
+		}
+
+		return false;
+	}
+
 	public isRpgManagerTag(
 		tag: string,
 	): boolean {

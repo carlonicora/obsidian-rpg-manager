@@ -1,5 +1,6 @@
 import {RecordType} from "../enums/RecordType";
 import {CampaignSetting} from "../enums/CampaignSetting";
+import {IdInterface} from "./data/IdInterface";
 
 export interface ModalComponentInterface {
 	addElement(
@@ -12,10 +13,10 @@ export interface ModalComponentInterface {
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: number,
-		adventureId: number|undefined,
-		sessionId: number|undefined,
-		sceneId: number|undefined,
+		campaignId: IdInterface,
+		adventureId: IdInterface|undefined,
+		sessionId: IdInterface|undefined,
+		sceneId: IdInterface|undefined,
 		additionalInformation: any|null,
 	): void;
 

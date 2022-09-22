@@ -12,6 +12,8 @@ export class SceneModal extends AbstractModalComponent {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
+		this.modal.sceneId = this.factories.id.create(RecordType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.sessionId?.id);
+		this.modal.sceneId.id = 1;
 
 		if (this.modal.adventureId != null && this.modal.sessionId != null) {
 			this.scenes = this.database.readList<SceneInterface>(RecordType.Scene, this.modal.sessionId);
@@ -25,12 +27,11 @@ export class SceneModal extends AbstractModalComponent {
 	): Promise<void> {
 		contentEl.createDiv({cls: 'sceneContainer'});
 
-		if (this.modal.sceneId !== undefined) {
-			this.modal.sceneId.id = 1;
-			this.scenes.forEach((data: SceneInterface) => {
-				if (this.modal.sceneId !== undefined && data.sceneId >= (this.modal.sceneId.id ?? 0)) this.modal.sceneId.id = (data.sceneId + 1);
-			});
-		}
+		this.scenes.forEach((scene: SceneInterface) => {
+			if (this.modal.sceneId !== undefined && scene.sceneId >= (this.modal.sceneId.id ?? 0)) {
+				this.modal.sceneId.id = (scene.sceneId + 1);
+			}
+		});
 
 		this.modal.saver = this;
 		this.modal.enableButton();

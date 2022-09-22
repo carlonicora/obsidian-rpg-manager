@@ -26,9 +26,9 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 
 	public createFromTag(
 		tag: string,
-	): IdInterface|undefined {
+	): IdInterface {
 		const type: RecordType|undefined = this.tagHelper.getDataType(tag);
-		if (type === undefined) return undefined;
+		if (type === undefined) throw new Error('');
 
 		const campaignId: string|undefined = this.tagHelper.getId(RecordType.Campaign, tag);
 		const adventureId: string|undefined = this.tagHelper.getId(RecordType.Adventure, tag);
@@ -40,9 +40,9 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 
 	public createFromTags(
 		tags: Array<string>,
-	): IdInterface|undefined {
+	): IdInterface {
 		const tag: string|undefined = this.tagHelper.getTag(tags);
-		if (tag === undefined) return undefined;
+		if (tag === undefined) throw new Error('');
 
 		return this.createFromTag(tag);
 	}

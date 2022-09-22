@@ -17,6 +17,8 @@ export class AdventureModal extends AbstractModalComponent {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
+		this.modal.adventureId = this.factories.id.create(RecordType.Adventure, this.modal.campaignId.id);
+		this.modal.adventureId.id = 1;
 
 		this.adventures = this.database.readList<AdventureInterface>(RecordType.Adventure, this.modal.campaignId);
 	}
@@ -72,14 +74,11 @@ export class AdventureModal extends AbstractModalComponent {
 	private addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		if (this.modal.adventureId !== undefined) {
-			this.modal.adventureId.id = 1;
-			this.adventures.forEach((data: AdventureInterface) => {
-				if (this.modal.adventureId !== undefined && data.adventureId >= (this.modal.adventureId.id ?? 0)) {
-					this.modal.adventureId.id = (data.adventureId + 1);
-				}
-			});
-		}
+		this.adventures.forEach((adventure: AdventureInterface) => {
+			if (this.modal.adventureId !== undefined && adventure.adventureId >= (this.modal.adventureId.id ?? 0)) {
+				this.modal.adventureId.id = (adventure.adventureId + 1);
+			}
+		});
 	}
 
 	private selectAdventureElements(
@@ -120,7 +119,9 @@ export class AdventureModal extends AbstractModalComponent {
 
 	private selectAdventure(
 	): void {
-		this.modal.adventureId = this.factories.id.create(RecordType.Adventure, this.modal.campaignId.id, +this.adventureEl.value);
+		if (this.modal.adventureId !== undefined){
+			this.modal.adventureId.id = +this.adventureEl.value;
+		}
 		this.childEl.empty();
 		this.loadChild(this.childEl);
 	}

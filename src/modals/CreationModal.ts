@@ -118,7 +118,6 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			value: '',
 		});
 
-
 		this.templateEl.createEl('option', {
 			text: 'RpgManager default ' + RecordType[this.type] + ' template',
 			value: 'internal' + RecordType[this.type],
@@ -159,14 +158,13 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			});
 		}
 
-		this.campaignModal = this.app.plugins.getPlugin('rpg-manager').factories.modals.create(
+		this.campaignModal = this.factories.modals.create(
 			this.campaignSetting,
 			RecordType.Campaign,
 			this,
 		)
 
 		const childElement = navigationEl.createDiv();
-
 
 		//Create Button
 		this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
@@ -208,10 +206,10 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			this.create,
 			this.templateEl.value,
 			this.title.value,
-			this.campaignId.id,
-			this.adventureId?.id,
-			this.sessionId?.id,
-			this.sceneId?.id,
+			this.campaignId,
+			this.adventureId,
+			this.sessionId,
+			this.sceneId,
 			this.saver.prepareAdditionalInformation(),
 		)
 		this.close();
