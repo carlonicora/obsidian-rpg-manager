@@ -27,7 +27,7 @@ export class CharacterTableComponent extends AbstractComponent {
 			if (record !== undefined) {
 				response.addContent([
 					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.factories.contents.create(record.link, ContentType.Link, true),
+					this.factories.contents.create(record.link + (record.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true),
 					this.factories.contents.create(record.age?.toString(), ContentType.String, true),
 					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				]);
