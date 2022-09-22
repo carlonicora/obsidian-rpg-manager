@@ -26,8 +26,10 @@ import {RelationshipFactoryInterface} from "./interfaces/factories/RelationshipF
 import {DatabaseFactoryInterface} from "./interfaces/factories/DatabaseFactoryInterface";
 import {IdFactoryInterface} from "./interfaces/factories/IdFactoryInterface";
 import {IdFactory} from "./factories/IdFactory";
+import {BreadcrumbFactoryInterface} from "./interfaces/factories/BreadcrumbFactoryInterface";
+import {BreadcrumbFactory} from "./factories/BreadcrumbFactory";
 
-export class Factory implements FactoriesInterface{
+export class Factories implements FactoriesInterface{
 	public components: ComponentFactoryInterface;
 	public contents: ContentFactoryInterface;
 	public data: DataFactoryInterface;
@@ -41,6 +43,7 @@ export class Factory implements FactoriesInterface{
 	public relationships: RelationshipFactoryInterface;
 	public database: DatabaseFactoryInterface;
 	public id: IdFactoryInterface;
+	public breadcrumb: BreadcrumbFactoryInterface;
 
 	constructor(
 		private app: App,
@@ -58,5 +61,6 @@ export class Factory implements FactoriesInterface{
 		this.relationships = new RelationshipFactory(this.app);
 		this.database = new DatabaseFactory(this.app);
 		this.id = new IdFactory(this.app);
+		this.breadcrumb = new BreadcrumbFactory(this.app);
 	}
 }
