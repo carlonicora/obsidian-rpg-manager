@@ -5,7 +5,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.settings.actTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId);
+		frontmatter.tags.push(this.settings.sessionTag + '/' + this.campaignId + '/' + this.sessionId);
 
 		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
 
