@@ -65,17 +65,17 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		}
 	}
 
-	public read(
+	public read<T>(
 		query: any|undefined = undefined,
 		comparison: any|undefined = undefined,
-	): Array<RecordInterface> {
+	): Array<T> {
 		const response = this.recordset.filter((query !== null ? query : true));
 
 		if (comparison !== undefined){
 			this.internalSort(response, comparison);
 		}
 
-		return response;
+		return (<unknown>response) as Array<T>;
 	}
 
 	public update(
@@ -130,7 +130,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		if (result.length === 0) {
 			throw new ElementNotFoundError(this.app, id);
 		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, result[0].id, result);
+		if (result.length > 1) throw new ElementDuplicatedError(this.app, (<T>result[0]).id, <Array<T>>result);
 
 		return <T>result[0];
 	}

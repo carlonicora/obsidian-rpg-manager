@@ -168,7 +168,7 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 		database: DatabaseInterface,
 	): Promise<void> {
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
-			const dataList = database.read(
+			const dataList = database.read<RecordInterface>(
 				(data: RecordInterface) => data.name === name,
 			);
 

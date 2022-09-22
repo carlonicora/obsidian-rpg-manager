@@ -12,10 +12,10 @@ export interface DatabaseInterface {
 	ready(
 	): void;
 
-	read(
+	read<T>(
 		query?: any,
 		comparison?: any,
-	): Array<RecordInterface>;
+	): Array<T>;
 
 	update(
 		data: RecordInterface,

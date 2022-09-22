@@ -6,6 +6,7 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class Session extends AbstractOutlineRecord implements SessionInterface {
 	public sessionId: number;
@@ -38,15 +39,26 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
 
 		try {
-			this.previousSession = database.readSingle<SessionInterface>(RecordType.Session, this.id, this.sessionId - 1);
-			this.previousSession.nextSession = this;
+			const query = database.read<SessionInterface>((record: RecordInterface) =>
+				record.id.type === RecordType.Session &&
+				record.id.campaignId === this.id.campaignId &&
+				record.id.sessionId === this.sessionId - 1);
+			if (query.length === 1) {
+				this.previousSession = query[0];
+				this.previousSession.nextSession = this;
+			}
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
-		try {
-			this.nextSession = database.readSingle<SessionInterface>(RecordType.Session, this.id, this.sessionId + 1);
-			this.nextSession.previousSession = this;
+		try {const query = database.read<SessionInterface>((record: RecordInterface) =>
+			record.id.type === RecordType.Session &&
+			record.id.campaignId === this.id.campaignId &&
+			record.id.sessionId === this.sessionId + 1);
+			if (query.length === 1) {
+				this.nextSession = query[0];
+				this.nextSession.previousSession = this;
+			}
 		} catch (e) {
 			//ignore. It can be non existing
 		}
