@@ -1,6 +1,6 @@
-import {AbstractRpgError} from "../abstracts/AbstractRpgError";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 
-export class MultipleRpgManagerTagsError extends AbstractRpgError {
+export class MultipleRpgManagerTagsError extends AbstractRpgManagerError {
 	public showErrorMessage(
 	): string {
 		const response = 'The file contains more than one RPG Manager identifier tags.\n' +

@@ -5,8 +5,6 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
-import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
-import {MultipleRpgManagerTagsError} from "../errors/MultipleRpgManagerTagsError";
 import {RelationshipType} from "../enums/RelationshipType";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {IdInterface} from "../interfaces/data/IdInterface";
@@ -126,8 +124,6 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 
 		this.tags = await this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
 
-		this.validateTag();
-
 		this.completed = metadata.frontmatter?.completed ?? true;
 
 		this.synopsis = metadata.frontmatter?.synopsis;
@@ -135,17 +131,6 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 
 		await this.initialiseRelationships();
 		this.initialiseData(metadata.frontmatter);
-	}
-
-	protected validateTag(
-	): void {
-		let rpgManagerTagCounter = 0;
-		(this.tags || []).forEach((tag: string) => {
-			if (this.tagHelper.isRpgManagerTag(tag) !== undefined) rpgManagerTagCounter++;
-		});
-		if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, this.id);
-
-		if (!this.id.isValid) throw new TagMisconfiguredError(this.app, this.id);
 	}
 
 	protected async initialiseRelationships(
@@ -170,7 +155,6 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 		if (id === undefined) throw new Error('');
 
 		this.id = id;
-		await this.validateTag();
 		await this.initialise();
 		await this.initialiseData(metadata.frontmatter);
 	}

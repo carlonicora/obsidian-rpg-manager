@@ -101,8 +101,8 @@ export class TagHelper {
 	public getId(
 		type: RecordType,
 		tag: string,
-	): number|undefined {
-		let response: number|undefined=undefined;
+	): string|undefined {
+		let response: string|undefined=undefined;
 
 		const tagType = this.getDataType(tag);
 		if (tagType === undefined) return undefined;
@@ -117,16 +117,16 @@ export class TagHelper {
 
 		switch (type) {
 			case RecordType.Campaign:
-				response = tagIds[0] ? +tagIds[0] : undefined;
+				response = tagIds[0] ? tagIds[0] : undefined;
 				break;
 			case RecordType.Adventure:
-				response = +tagIds[1] ? +tagIds[1] : undefined;
+				response = +tagIds[1] ? tagIds[1] : undefined;
 				break;
 			case RecordType.Session:
-				response = +tagIds[2] ? +tagIds[2] : undefined;
+				response = +tagIds[2] ? tagIds[2] : undefined;
 				break;
 			case RecordType.Scene:
-				response = +tagIds[3] ? +tagIds[3] : undefined;
+				response = +tagIds[3] ? tagIds[3] : undefined;
 				break;
 		}
 

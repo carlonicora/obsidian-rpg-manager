@@ -4,7 +4,7 @@ import {App, CachedMetadata, debounce, MarkdownView, TFile} from "obsidian";
 import {RecordType} from "../enums/RecordType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
-import {AbstractRpgError} from "../abstracts/AbstractRpgError";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
@@ -18,7 +18,7 @@ import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerCompon
 import {IdInterface} from "../interfaces/data/IdInterface";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
-	public elements: Array<RecordInterface> = [];
+	public recordset: Array<RecordInterface> = [];
 	private basenameIndex: Map<string, string>;
 
 	constructor(
@@ -52,15 +52,15 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	): void {
 		let isNew = true;
 
-		for (let elementCount = 0; elementCount < this.elements.length; elementCount++) {
-			if (this.elements[elementCount].path === data.path){
-				this.elements[elementCount] = data;
+		for (let elementCount = 0; elementCount < this.recordset.length; elementCount++) {
+			if (this.recordset[elementCount].path === data.path){
+				this.recordset[elementCount] = data;
 				isNew = false;
 			}
 		}
 
 		if (isNew) {
-			this.elements.push(data);
+			this.recordset.push(data);
 			this.basenameIndex.set(data.path, data.basename);
 		}
 	}
@@ -69,7 +69,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		query: any|undefined = undefined,
 		comparison: any|undefined = undefined,
 	): Array<RecordInterface> {
-		const response = this.elements.filter((query !== null ? query : true));
+		const response = this.recordset.filter((query !== null ? query : true));
 
 		if (comparison !== undefined){
 			this.internalSort(response, comparison);
@@ -90,15 +90,15 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		const key = (typeof data === 'string') ? data : data.path;
 
 		let index: number|undefined = undefined;
-		for (let dataCounter=0; dataCounter<this.elements.length; dataCounter++){
-			if (this.elements[dataCounter].path === key){
+		for (let dataCounter=0; dataCounter<this.recordset.length; dataCounter++){
+			if (this.recordset[dataCounter].path === key){
 				index = dataCounter;
 				break;
 			}
 		}
 
 		if (index !== undefined) {
-			this.elements.splice(index, 1);
+			this.recordset.splice(index, 1);
 			this.basenameIndex.delete(key);
 		}
 
@@ -114,7 +114,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public readByPath<T extends RecordInterface>(
 		path: string,
 	): T|undefined {
-		const response:Array<RecordInterface> = this.elements
+		const response:Array<RecordInterface> = this.recordset
 			.filter((record: RecordInterface) => record.path === path);
 
 		return ((response.length) === 1 ? <T>response[0] : undefined);
@@ -213,10 +213,10 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		oldBaseName: string,
 		newBaseName: string,
 	): Promise<void> {
-		for(let index=0; index<this.elements.length; index++){
-			if (this.elements[index].relationships.has(oldBaseName)){
-				await this.replaceFileContent(this.elements[index].file, oldBaseName, newBaseName);
-				await this.elements[index].reload();
+		for(let index=0; index<this.recordset.length; index++){
+			if (this.recordset[index].relationships.has(oldBaseName)){
+				await this.replaceFileContent(this.recordset[index].file, oldBaseName, newBaseName);
+				await this.recordset[index].reload();
 			}
 		}
 	}
@@ -246,11 +246,11 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 			await element.loadRelationships(this);
 			if (!element.isOutline) await element.loadReverseRelationships(this);
 		} else {
-			for (let index = 0; index < this.elements.length; index++) {
-				await this.elements[index].loadRelationships(this);
+			for (let index = 0; index < this.recordset.length; index++) {
+				await this.recordset[index].loadRelationships(this);
 			}
-			for (let index=0; index<this.elements.length; index++){
-				if (!this.elements[index].isOutline) await this.elements[index].loadReverseRelationships(this);
+			for (let index=0; index<this.recordset.length; index++){
+				if (!this.recordset[index].isOutline) await this.recordset[index].loadReverseRelationships(this);
 			}
 		}
 	}
@@ -321,7 +321,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 		} catch (e) {
-			if (e instanceof AbstractRpgError) {
+			if (e instanceof AbstractRpgManagerError) {
 				new DatabaseErrorModal(this.app, undefined, e, file).open();
 			} else {
 				throw e;

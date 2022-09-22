@@ -1,10 +1,9 @@
 import {RecordInterface} from "./RecordInterface";
 import {IdInterface} from "../data/IdInterface";
 import {RecordType} from "../../enums/RecordType";
-import {CampaignInterface} from "../data/CampaignInterface";
 
 export interface DatabaseInterface {
-	elements: RecordInterface[];
+	recordset: RecordInterface[];
 
 	create(
 		data: RecordInterface,

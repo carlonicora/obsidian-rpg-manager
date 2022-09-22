@@ -1,7 +1,6 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
 
 export class Campaign extends AbstractOutlineRecord implements CampaignInterface {

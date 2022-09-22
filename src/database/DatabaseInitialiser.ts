@@ -5,11 +5,14 @@ import {App, CachedMetadata, TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ErrorLog, InfoLog, LogMessageType} from "../helpers/Logger";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
-import {AbstractRpgError} from "../abstracts/AbstractRpgError";
-import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {RecordType} from "../enums/RecordType";
 import {IdInterface} from "../interfaces/data/IdInterface";
 import {FactoriesInterface} from "../interfaces/FactoriesInterface";
+import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
+import {MultipleRpgManagerTagsError} from "../errors/MultipleRpgManagerTagsError";
+import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
+import {TagHelper} from "../helpers/TagHelper";
 
 export class DatabaseInitialiser {
     private static campaignSettings: Map<number, CampaignSetting> = new Map();
@@ -18,15 +21,18 @@ export class DatabaseInitialiser {
 
 	private static database: DatabaseInterface;
 	private static factories: FactoriesInterface;
+	private static tagHelper: TagHelper;
 
 	public static async initialise(
 		app: App,
 	): Promise<DatabaseInterface> {
-		this.factories = this.app.plugins.getPlugin('rpg-manager').factories ;
 		await new InfoLog(LogMessageType.DatabaseInitialisation, 'Initialisation started');
 
 		this.app = app;
 		this.misconfiguredTags = await new Map();
+
+		this.factories = this.app.plugins.getPlugin('rpg-manager').factories;
+		this.tagHelper = this.app.plugins.getPlugin('rpg-manager').tagHelper;
 
 		this.database = await this.factories.database.create();
 		const temporaryDatabase = await this.factories.database.create();
@@ -38,25 +44,38 @@ export class DatabaseInitialiser {
 		for (let index=0; index<markdownFiles.length; index++){
 			let record: RecordInterface|undefined;
 			try {
-				console.log('---');
+				new InfoLog(LogMessageType.DatabaseInitialisation, '\x1b[48;2;220;220;220mLog ---START OF ' + markdownFiles[index].basename + ' ---\x1b[0m');
+
 				record = await this.createRecord(markdownFiles[index]);
 
 				if (record !== undefined) {
-					console.log(record?.id.tag)
+					new InfoLog(LogMessageType.DatabaseInitialisation, 'tag', record.id.tag);
+
 					if (record instanceof AbstractOutlineRecord) await record.checkDuplicates(temporaryDatabase);
-					console.log('duplicates checked');
+
+					new InfoLog(LogMessageType.DatabaseInitialisation, 'No duplicates in the temporary database', record.id.tag);
+
 					await temporaryDatabase.create(record);
-					console.log('record added to the temporary database');
+
+					new InfoLog(LogMessageType.DatabaseInitialisation, 'Record added to the temporary database', record);
 				}
 			} catch (e) {
-				if (e instanceof AbstractRpgError) {
-					//@ts-ignore
-					console.error(RecordType[record?.id.type], record.id.campaignId, record.id.adventureId, record.id.sessionId, record.id.sceneId, e.showErrorMessage());
+				if (e instanceof AbstractRpgManagerError) {
+					new ErrorLog(LogMessageType.DatabaseInitialisation, 'Error in generating the record', [
+						record ? RecordType[record.id.type] : 'No type',
+						record?.id.campaignId,
+						record?.id.adventureId,
+						record?.id.sessionId,
+						record?.id.sceneId,
+						record,
+					]);
 					this.misconfiguredTags.set(markdownFiles[index], e as RpgErrorInterface);
 				} else {
 					throw e;
 				}
 			}
+
+			new InfoLog(LogMessageType.DatabaseInitialisation, '\x1b[48;2;240;240;240mLog ---END OF ' + markdownFiles[index].basename + ' ---\x1b[0m');
 		}
 
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Temporary database initialised', temporaryDatabase);
@@ -64,7 +83,7 @@ export class DatabaseInitialiser {
 		await this.buildHierarchyAndRelationships(temporaryDatabase);
 
 		if (this.misconfiguredTags.size > 0){
-			//new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
+			new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
 		}
 
 		this.database.ready();
@@ -86,23 +105,41 @@ export class DatabaseInitialiser {
 		let response: RecordInterface|undefined;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		new InfoLog(LogMessageType.DatabaseInitialisation, 'Record TFile metadata read for ' + file.basename, metadata);
 
-		if (metadata == null) return undefined;
+		if (metadata != null) {
+			new InfoLog(LogMessageType.RecordInitialisation, '1/5 -> Record TFile metadata read for ' + file.basename, metadata);
 
-		const id:IdInterface|undefined = this.factories.id.createFromTags(metadata?.frontmatter?.tags);
-		if (id === undefined) return undefined;
+			const id: IdInterface | undefined = this.factories.id.createFromTags(metadata?.frontmatter?.tags);
+			if (id === undefined) return undefined;
 
-		const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
+			new InfoLog(LogMessageType.RecordInitialisation, '2/5 -> Id for ' + file.basename + ' created', id);
 
-		if (id.getTypeValue(RecordType.Campaign) !== undefined && settings !== undefined) {
+			if (!id.isValid) throw new TagMisconfiguredError(this.app, id);
+
+			let rpgManagerTagCounter = 0;
+			const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
+			for (let tagIndex=0; tagIndex<tags.length; tagIndex++){
+				if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
+				if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, id);
+			}
+
+			const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
+
+			new InfoLog(LogMessageType.RecordInitialisation, '3/5 -> Setting for ' + file.basename, CampaignSetting[settings]);
+
 			response = await this.factories.data.create(
 				settings,
 				file,
 				id,
 			);
+
+			new InfoLog(LogMessageType.RecordInitialisation, '4/5 -> Record created for ' + file.basename, response);
+
 			await response.initialise();
-			new InfoLog(LogMessageType.DatabaseInitialisation, 'Record Created', response);
+
+			new InfoLog(LogMessageType.RecordInitialisation, '5/5 -> Record initialised for ' + file.basename, response);
+		} else {
+			new InfoLog(LogMessageType.RecordInitialisation, 'TFile ' + file.basename + ' does not have metadata');
 		}
 
 		return response;
@@ -170,7 +207,7 @@ export class DatabaseInitialiser {
 			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.id.type) === data.id.type : data.isOutline === false),
 		);
 
-		console.log(dataType ? RecordType[dataType] : 'Everything Else', temporaryDatabase.elements, record);
+		console.log(dataType ? RecordType[dataType] : 'Everything Else', temporaryDatabase.recordset, record);
 
 		for (let index=0; index<record.length; index++){
 			await record[index].loadHierarchy(this.database)
@@ -178,7 +215,7 @@ export class DatabaseInitialiser {
 					() => {
 						this.database.create(record[index]);
 					}, (e: Error) => {
-						if (e instanceof AbstractRpgError) {
+						if (e instanceof AbstractRpgManagerError) {
 							this.misconfiguredTags.set(record[index].file, e as RpgErrorInterface);
 						} else {
 							throw e;
@@ -219,11 +256,11 @@ export class DatabaseInitialiser {
 	private static async buildRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		for (let index=0; index<database.elements.length; index++){
-			await database.elements[index].loadRelationships(database);
+		for (let index=0; index<database.recordset.length; index++){
+			await database.recordset[index].loadRelationships(database);
 		}
-		for (let index=0; index<database.elements.length; index++){
-			if (!database.elements[index].isOutline) await database.elements[index].loadReverseRelationships(database);
+		for (let index=0; index<database.recordset.length; index++){
+			if (!database.recordset[index].isOutline) await database.recordset[index].loadReverseRelationships(database);
 		}
 	}
 }

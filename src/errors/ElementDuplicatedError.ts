@@ -1,9 +1,9 @@
-import {AbstractRpgError} from "../abstracts/AbstractRpgError";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {App} from "obsidian";
 import {IdInterface} from "../interfaces/data/IdInterface";
 
-export class ElementDuplicatedError extends AbstractRpgError {
+export class ElementDuplicatedError extends AbstractRpgManagerError {
 	constructor(
 		app: App,
 		idMap: IdInterface,

@@ -4,10 +4,11 @@ import {IdInterface} from "../data/IdInterface";
 export interface IdFactoryInterface {
 	create(
 		type: RecordType,
-		campaignId: number,
-		adventureId?: number|undefined,
-		sessionId?: number|undefined,
-		sceneId?: number|undefined,
+		campaignId: string|number,
+		adventureId?: string|number|undefined,
+		sessionId?: string|number|undefined,
+		sceneId?: string|number|undefined,
+		existingTag?: string|undefined,
 	): IdInterface|undefined;
 
 	createFromTag(

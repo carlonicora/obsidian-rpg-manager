@@ -8,7 +8,9 @@ export enum LogMessageType {
 	System=0b1,
 	Database=0b10,
 	DatabaseInitialisation=0b100,
-	Model=0b1000,
+	RecordInitialisation=0b1000,
+
+	Model=0b10000,
 }
 export interface LogMessageInterface {
 	type: LogType,
@@ -87,12 +89,24 @@ export class Logger {
 		if (!this.isDebug) return;
 		if ((message.type & this.debuggableTypes) !== message.type) return;
 
-		const data = [message.message + '\n'];
+		let messageContent = message.message;
+		let messageHeader: string|undefined;
+		if (messageContent.startsWith('\x1b')){
+			messageHeader = messageContent.substring(0, messageContent.indexOf('\x1b[0m') + 6) + '\n';
+			messageContent = messageContent.substring(messageContent.indexOf('\x1b[0m') + 6);
+		}
+		const data = [
+			messageContent + '\n'
+		];
 		if(message.object !== undefined) data.push(message.object);
 
 		switch(message.type){
 			case LogType.Info:
-				console.info(...data);
+				if (messageHeader !== undefined){
+					console.info('\x1b[38;2;102;178;155m' + LogMessageType[message.messageType] + '\x1b[0m\n' + messageHeader, ...data);
+				} else {
+					console.info('\x1b[38;2;102;178;155m' + LogMessageType[message.messageType] + '\x1b[0m\n', ...data);
+				}
 				break;
 			case LogType.Error:
 				console.error(...data);

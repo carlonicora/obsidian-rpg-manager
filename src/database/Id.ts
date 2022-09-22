@@ -12,42 +12,20 @@ export class Id extends AbstractRpgManager implements IdInterface{
 	constructor(
 		app: App,
 		public type: RecordType,
-		campaignId: number,
-		adventureId: number|undefined,
-		sessionId: number|undefined,
-		sceneId: number|undefined,
+		campaignId: string|undefined,
+		adventureId: string|undefined,
+		sessionId: string|undefined,
+		sceneId: string|undefined,
+		private existingTag: string|undefined,
 	) {
 		super(app);
 
 		this.tagMap = new Map();
-		this.tagMap.set(
-			RecordType.Campaign,
-			{
-				status: campaignId !== undefined ? TagStatus.Valid : TagStatus.Missing,
-				value: campaignId,
-			}
-		);
-		this.tagMap.set(
-			RecordType.Adventure,
-			{
-				status: adventureId !== undefined ? TagStatus.Valid : TagStatus.NotRequired,
-				value: adventureId,
-			}
-		);
-		this.tagMap.set(
-			RecordType.Session,
-			{
-				status: sessionId !== undefined ? TagStatus.Valid : TagStatus.NotRequired,
-				value: sessionId,
-			}
-		);
-		this.tagMap.set(
-			RecordType.Scene,
-			{
-				status: sceneId !== undefined ? TagStatus.Valid : TagStatus.NotRequired,
-				value: sceneId,
-			}
-		);
+
+		this.generateTagValue(RecordType.Campaign, campaignId);
+		this.generateTagValue(RecordType.Adventure, adventureId);
+		this.generateTagValue(RecordType.Session, sessionId);
+		this.generateTagValue(RecordType.Scene, sceneId);
 	}
 
 	public get id(
@@ -68,20 +46,27 @@ export class Id extends AbstractRpgManager implements IdInterface{
 
 	public get tag(
 	): string {
+		if (this.existingTag !== undefined) return this.existingTag;
+
 		const tag = this.tagHelper.dataSettings.get(this.type);
 		if (tag === undefined) throw new Error('');
 
 		let ids = '';
+		let id:number|undefined;
 		switch (this.type){
 			case RecordType.Scene:
-				ids = '/' + this.sceneId + ids;
+				id = this.tagMap.get(RecordType.Scene)?.value;
+				if (id !== undefined) ids = '/' + id + ids;
 			case RecordType.Note:
 			case RecordType.Session:
-				ids = '/' + this.sessionId + ids;
+				id = this.tagMap.get(RecordType.Session)?.value;
+				if (id !== undefined) ids = '/' + id + ids;
 			case RecordType.Adventure:
-				ids = '/' + this.adventureId + ids;
+				id = this.tagMap.get(RecordType.Adventure)?.value;
+				if (id !== undefined) ids = '/' + id + ids;
 			default:
-				ids = '/' + this.campaignId + ids;
+				id = this.tagMap.get(RecordType.Campaign)?.value;
+				if (id !== undefined) ids = '/' + id + ids;
 				break;
 		}
 
@@ -90,7 +75,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 
 	get campaignId(
 	): number {
-		let response = this.getTypeValue(RecordType.Campaign);
+		const response = this.getTypeValue(RecordType.Campaign);
 
 		if (response === undefined) throw new TagMisconfiguredError(this.app, this);
 
@@ -115,7 +100,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 	private generateTagValue(
 		type: RecordType,
 		value: string|undefined,
-	): TagValueInterface {
+	): void {
 		let status: TagStatus;
 		let numericValue: number|undefined;
 
@@ -142,14 +127,14 @@ export class Id extends AbstractRpgManager implements IdInterface{
 			}
 		}
 
-		return {status: status, value: numericValue};
+		this.tagMap.set(type, {status: status, value: numericValue})
 	}
 
 	public get isValid(
 	): boolean {
 		let response = true;
 
-		this.tagMap.forEach((tagValue: TagValueInterface) => {
+		this.tagMap.forEach((tagValue: TagValueInterface, recordType:RecordType) => {
 			if (tagValue.status === TagStatus.Invalid || tagValue.status === TagStatus.Missing) response = false;
 		});
 

@@ -1,7 +1,7 @@
-import {AbstractRpgError} from "../abstracts/AbstractRpgError";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {RecordType} from "../enums/RecordType";
 
-export class ElementNotFoundError extends AbstractRpgError {
+export class ElementNotFoundError extends AbstractRpgManagerError {
 	public showErrorMessage(
 	): string {
 		const response = 'The tag `' + this.id.tag + '` refers to an outline that does not exist.\n';

@@ -1,6 +1,5 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 

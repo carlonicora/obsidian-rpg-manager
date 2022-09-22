@@ -1,8 +1,8 @@
-import {AbstractRpgError} from "../abstracts/AbstractRpgError";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {RecordType} from "../enums/RecordType";
 import {TagStatus} from "../enums/TagStatus";
 
-export class TagMisconfiguredError extends AbstractRpgError {
+export class TagMisconfiguredError extends AbstractRpgManagerError {
 	public showErrorMessage(
 	): string {
 		let response = 'The tag `' + this.id.tag + '` is misconfigured\n' +
@@ -21,7 +21,7 @@ export class TagMisconfiguredError extends AbstractRpgError {
 				requiredId = '/{campaignId}' + requiredId;
 		}
 		response += '`' +
-			(this.app.plugins.getPlugin('rpg-manager').tagHelper.dataSettings.get(this.id.type) ?? '')
+			(this.tagHelper.dataSettings.get(this.id.type) ?? '')
 			+ requiredId + '`\n';
 
 		this.id.invalidIds?.forEach((status: TagStatus, type: RecordType) => {
