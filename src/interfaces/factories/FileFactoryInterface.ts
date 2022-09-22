@@ -13,6 +13,7 @@ export interface FileFactoryInterface {
 		adventureId?: IdInterface|undefined,
 		actId?: IdInterface|undefined,
 		sceneId?: IdInterface|undefined,
+		sessionId?: IdInterface|undefined,
 		additionalInformation?: any|null,
 	): Promise<void>;
 
@@ -23,6 +24,7 @@ export interface FileFactoryInterface {
 		adventureId?: number|undefined,
 		actId?: number|undefined,
 		sceneId?: number|undefined,
+		sessionId?: number|undefined,
 		additionalInformation?: any|undefined,
 	): Promise<void>;
 }

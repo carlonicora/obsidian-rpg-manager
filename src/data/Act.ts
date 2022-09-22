@@ -10,8 +10,6 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class Act extends AbstractOutlineRecord implements ActInterface {
 	public actId: number;
-	public date: Date|null;
-	public irl: Date|null;
 
 	public adventure: AdventureInterface;
 	public previousAct: ActInterface|null=null;
@@ -25,8 +23,6 @@ export class Act extends AbstractOutlineRecord implements ActInterface {
 		if (actId === undefined) throw new TagMisconfiguredError(this.app, this.id);
 
 		this.actId = actId;
-		this.date = this.initialiseDate(frontmatter?.dates?.act);
-		this.irl = this.initialiseDate(frontmatter?.dates?.irl);
 
 		super.initialiseData(frontmatter);
 	}

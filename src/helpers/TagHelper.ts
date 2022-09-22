@@ -13,6 +13,7 @@ export class TagHelper {
 		this.dataSettings.set(RecordType.Adventure, settings.adventureTag);
 		this.dataSettings.set(RecordType.Act, settings.actTag);
 		this.dataSettings.set(RecordType.Scene, settings.sceneTag);
+		this.dataSettings.set(RecordType.Session, settings.sessionTag);
 		this.dataSettings.set(RecordType.Character, settings.pcTag);
 		this.dataSettings.set(RecordType.Clue, settings.clueTag);
 		this.dataSettings.set(RecordType.Event, settings.eventTag);
@@ -28,6 +29,7 @@ export class TagHelper {
 		this.requiredIds.set(RecordType.Adventure, [RecordType.Campaign]);
 		this.requiredIds.set(RecordType.Act, [RecordType.Campaign, RecordType.Adventure]);
 		this.requiredIds.set(RecordType.Scene, [RecordType.Campaign, RecordType.Adventure, RecordType.Act, RecordType.Scene]);
+		this.requiredIds.set(RecordType.Session, [RecordType.Campaign, RecordType.Session]);
 		this.requiredIds.set(RecordType.Character, [RecordType.Campaign]);
 		this.requiredIds.set(RecordType.Clue, [RecordType.Campaign]);
 		this.requiredIds.set(RecordType.Event, [RecordType.Campaign]);
@@ -65,6 +67,7 @@ export class TagHelper {
 		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return RecordType.Adventure;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) return RecordType.Act;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) return RecordType.Scene;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) return RecordType.Session;
 		if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) return RecordType.NonPlayerCharacter;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) return RecordType.Character;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) return RecordType.Clue;
@@ -95,6 +98,7 @@ export class TagHelper {
 		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) return true;
@@ -132,6 +136,9 @@ export class TagHelper {
 			case RecordType.Adventure:
 				response = +tagIds[1] ? tagIds[1] : undefined;
 				break;
+			case RecordType.Session:
+				response = +tagIds[1] ? tagIds[1] : undefined;
+				break;
 			case RecordType.Act:
 				response = +tagIds[2] ? tagIds[2] : undefined;
 				break;
@@ -156,6 +163,7 @@ export class TagHelper {
 				if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) response = tag;
@@ -182,6 +190,7 @@ export class TagHelper {
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Adventure].toLowerCase())) response = RecordType.Adventure;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Act].toLowerCase())) response = RecordType.Act;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Scene].toLowerCase())) response = RecordType.Scene;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Session].toLowerCase())) response = RecordType.Session;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.NonPlayerCharacter].toLowerCase())) response = RecordType.NonPlayerCharacter;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Character].toLowerCase())) response = RecordType.Character;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Clue].toLowerCase())) response = RecordType.Clue;

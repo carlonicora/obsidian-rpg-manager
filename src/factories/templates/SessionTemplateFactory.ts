@@ -1,6 +1,6 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class ActTemplateFactory extends AbstractComponentTemplateFactory {
+export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
@@ -16,37 +16,21 @@ export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 		}
 
 		frontmatter.synopsis = synopsis;
+		frontmatter.dates = {
+			session: {},
+			irl: {},
+		}
 	}
 
 	public generateInitialCodeBlock(
 	): string|undefined {
-		return this.generateRpgManagerCodeBlock(
-			'actNavigation',
-			{
-				abt: {
-					need: "",
-					and: "",
-					but: "",
-					therefore: "",
-				},
-				storycircle: {
-					you: "",
-					need: "",
-					go: "",
-					search: "",
-					find: "",
-					take: "",
-					return: "",
-					change: "",
-				}
-			}
-		);
+		return this.generateRpgManagerCodeBlock('sessionNavigation');
 	}
 
 	public generateLastCodeBlock(
 	): string|undefined {
 		return this.generateRpgManagerCodeBlock(
-			'act',
+			'session',
 		);
 	}
 }

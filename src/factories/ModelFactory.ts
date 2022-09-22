@@ -8,7 +8,6 @@ import {NoteModel} from "../models/NoteModel";
 import {NpcModel} from "../models/NpcModel";
 import {PcModel} from "../models/PcModel";
 import {SceneModel} from "../models/SceneModel";
-import {SceneNavigationModel} from "../models/SceneNavigationModel";
 import {ActModel} from "../models/ActModel";
 import {ActNavigationModel} from "../models/ActNavigationModel";
 import {TimelineModel} from "../models/TimelineModel";
@@ -22,6 +21,9 @@ import {App} from "obsidian";
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {ModelFactoryInterface} from "../interfaces/factories/ModelFactoryInterface";
 import {CampaignNavigationModel} from "../models/CampaignNavigationModel";
+import {SessionModel} from "../models/SessionModel";
+import {SessionNavigationModel} from "../models/SessionNavigationModel";
+import {SceneNavigationModel} from "../models/SceneNavigationModel";
 
 export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
 	private modelTypeMap: Map<string,any>;
@@ -45,6 +47,8 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		this.modelTypeMap.set('AgnosticPc', PcModel);
 		this.modelTypeMap.set('AgnosticScene', SceneModel);
 		this.modelTypeMap.set('AgnosticSceneNavigation', SceneNavigationModel);
+		this.modelTypeMap.set('AgnosticSession', SessionModel);
+		this.modelTypeMap.set('AgnosticSessionNavigation', SessionNavigationModel);
 		this.modelTypeMap.set('AgnosticAct', ActModel);
 		this.modelTypeMap.set('AgnosticActNavigation', ActNavigationModel);
 		this.modelTypeMap.set('AgnosticTimeline', TimelineModel);

@@ -19,6 +19,7 @@ import {Music} from "../data/Music";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {DataFactoryInterface} from "../interfaces/factories/DataFactoryInterface";
 import {IdInterface} from "../interfaces/data/IdInterface";
+import {Session} from "../data/Session";
 
 export class DataFactory extends AbstractFactory implements DataFactoryInterface{
 	private recordTypeMap: Map<string,any>;
@@ -33,6 +34,7 @@ export class DataFactory extends AbstractFactory implements DataFactoryInterface
 			['AgnosticAdventure', Adventure],
 			['AgnosticAct', Act],
 			['AgnosticScene', Scene],
+			['AgnosticSession', Session],
 			['AgnosticCharacter', Character],
 			['AgnosticNonPlayerCharacter', Character],
 			['AgnosticFaction', Faction],

@@ -10,6 +10,7 @@ import {FileFactory} from "./FileFactory";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFactoryInterface {
 	public create(
@@ -23,6 +24,9 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 			switch (record.id.type) {
 				case RecordType.Adventure:
 					this.generateAventureBreadcrumb(response, record as AdventureInterface);
+					break;
+				case RecordType.Session:
+					this.generateSessionBreadcrumb(response, record as SessionInterface);
 					break;
 				case RecordType.Act:
 					this.generateActBreadcrumb(response, record as ActInterface);
@@ -140,6 +144,54 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		}
 	}
 
+	private generateSessionBreadcrumb(
+		parent: ResponseBreadcrumb,
+		session: SessionInterface
+	): ResponseBreadcrumb {
+		const sessionBreadcrumb = this.generateElementBreadcrumb(parent, RecordType.Session, session);
+
+		let previousSession: SessionInterface|undefined;
+		let nextSession: SessionInterface|undefined;
+		try {
+			previousSession = this.database.readSingle<SessionInterface>(RecordType.Session, session.id, session.sessionId - 1);
+		} catch (e) {
+			//no need to trigger anything, previousAdventure can be null
+		}
+		try {
+			nextSession = this.database.readSingle<SessionInterface>(RecordType.Session, session.id, session.sessionId + 1);
+		} catch (e) {
+			//no need to trigger anything, previousAdventure can be null
+		}
+
+		let previousBreadcrumb: ResponseBreadcrumb|undefined = undefined;
+		let nextBreadcrumb: ResponseBreadcrumb|undefined = undefined;
+		if (previousSession !== undefined) {
+			previousBreadcrumb = this.generateElementBreadcrumb(
+				sessionBreadcrumb,
+				RecordType.Session,
+				previousSession,
+				'<< prev session',
+				true,
+			);
+		}
+		if (nextSession !== undefined) {
+			nextBreadcrumb = this.generateElementBreadcrumb(
+				(previousBreadcrumb ?? sessionBreadcrumb),
+				RecordType.Session,
+				nextSession,
+				'next session >>',
+				(previousSession !== undefined ? false : true),
+			);
+		}
+
+		if (nextBreadcrumb !== undefined){
+			return nextBreadcrumb;
+		} else {
+			if (previousBreadcrumb !== undefined) return previousBreadcrumb;
+			return sessionBreadcrumb;
+		}
+	}
+
 	private generateActBreadcrumb(
 		parent: ResponseBreadcrumb,
 		act: ActInterface
@@ -150,6 +202,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		let previousBreadcrumb: ResponseBreadcrumb|null = null;
 		if (act.previousAct != null) previousBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, RecordType.Act, act.previousAct, '<< prev act', true);
 
+		/*
 		let actNotesBreadcrumb: ResponseBreadcrumb;
 		if (act.note != null) {
 			actNotesBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), RecordType.Note, act.note, 'notes');
@@ -166,11 +219,14 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 				actBreadcrumb.nextBreadcrumb = actNotesBreadcrumb;
 			}
 		}
+		*/
 
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
-		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb(actNotesBreadcrumb, RecordType.Act, act.nextAct, 'next act >>');
+		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), RecordType.Act, act.nextAct, 'next act >>', (previousBreadcrumb != null ? false : true));
+		//if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb(actNotesBreadcrumb, RecordType.Act, act.nextAct, 'next act >>');
 
-		return (nextBreadcrumb != null ? nextBreadcrumb : actNotesBreadcrumb);
+		//return (nextBreadcrumb != null ? nextBreadcrumb : actNotesBreadcrumb);
+		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb));
 	}
 
 	private generateSceneBreadcrumb(

@@ -21,6 +21,7 @@ import {RecordType} from "../enums/RecordType";
 import {App} from "obsidian";
 import {TemplateFactoryInterface} from "../interfaces/factories/TemplateFactoryInterface";
 import {ComponentTemplateFactoryInterface} from "../interfaces/ComponentTemplateFactoryInterface";
+import {SessionTemplateFactory} from "./templates/SessionTemplateFactory";
 
 export class TemplateFactory extends AbstractFactory implements TemplateFactoryInterface{
 	private templateTypeMap: Map<string,any>;
@@ -34,6 +35,7 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		this.templateTypeMap.set('AgnosticAdventure', AdventureTemplateFactory);
 		this.templateTypeMap.set('AgnosticAct', ActTemplateFactory);
 		this.templateTypeMap.set('AgnosticScene', SceneTemplateFactory);
+		this.templateTypeMap.set('AgnosticSession', SessionTemplateFactory);
 		this.templateTypeMap.set('AgnosticCharacter', CharacterTemplateFactory);
 		this.templateTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterTemplateFactory);
 		this.templateTypeMap.set('AgnosticLocation', LocationTemplateFactory);
@@ -58,12 +60,13 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		adventureId: number|undefined,
 		actId: number|undefined,
 		sceneId: number|undefined,
+		sessionId: number|undefined,
 		additionalInformation: any|null = null,
 	): ComponentTemplateFactoryInterface {
 		let templateKey = CampaignSetting[settings] + RecordType[type];
 		if (!this.templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + RecordType[type];
 		if (!this.templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + RecordType[type] + ' cannot be found');
 
-		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, actId, sceneId, additionalInformation);
+		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, actId, sceneId, sessionId, additionalInformation);
 	}
 }

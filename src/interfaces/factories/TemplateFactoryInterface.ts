@@ -12,6 +12,7 @@ export interface TemplateFactoryInterface {
 		adventureId: number|undefined,
 		actId: number|undefined,
 		sceneId: number|undefined,
+		sessionId: number|undefined,
 		additionalInformation?: any|null,
 	): ComponentTemplateFactoryInterface;
 }

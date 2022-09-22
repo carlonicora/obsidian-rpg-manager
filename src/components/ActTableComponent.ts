@@ -19,8 +19,6 @@ export class ActTableComponent extends AbstractComponent {
 			this.factories.contents.create('#', ContentType.String, true),
 			this.factories.contents.create('Act', ContentType.String),
 			this.factories.contents.create('Synopsis', ContentType.String),
-			this.factories.contents.create('Date', ContentType.String),
-			this.factories.contents.create('Play Date', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const act: ActInterface|undefined = relationship.component as ActInterface;
@@ -30,8 +28,6 @@ export class ActTableComponent extends AbstractComponent {
 					this.factories.contents.create(act.actId, ContentType.Number, true),
 					this.factories.contents.create(act.link, ContentType.Link),
 					this.factories.contents.create(act.synopsis, ContentType.Markdown),
-					this.factories.contents.create(act.date?.toDateString(), ContentType.String, true),
-					this.factories.contents.create(act.irl?.toDateString(), ContentType.String, true),
 				])
 			}
 		});

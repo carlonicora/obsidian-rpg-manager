@@ -18,6 +18,7 @@ import {TimelineModal} from "../modals/components/TimelineModal";
 import {MusicModal} from "../modals/components/MusicModal";
 import {App} from "obsidian";
 import {ModalFactoryInterface} from "../interfaces/factories/ModalFactoryInterface";
+import {SessionModal} from "../modals/components/SessionModal";
 
 export class ModalFactory extends AbstractFactory implements ModalFactoryInterface{
 	private modalTypeMap: Map<string,any>;
@@ -40,6 +41,7 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 		this.modalTypeMap.set('AgnosticNote', NoteModal);
 		this.modalTypeMap.set('AgnosticTimeline', TimelineModal);
 		this.modalTypeMap.set('AgnosticMusic', MusicModal);
+		this.modalTypeMap.set('AgnosticSession', SessionModal);
 
 	}
 	public create(

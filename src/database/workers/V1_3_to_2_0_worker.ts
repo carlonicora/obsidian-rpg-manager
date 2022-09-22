@@ -2,7 +2,6 @@ import {DatabaseUpdateWorkerInterface} from "../../interfaces/DatabaseUpdateWork
 import {AbstractDatabaseWorker} from "../../abstracts/AbstractDatabaseWorker";
 import {TAbstractFile, TFile, TFolder} from "obsidian";
 import {LogMessageType, WarningLog} from "../../helpers/Logger";
-import {base} from "w3c-keyname";
 
 export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(

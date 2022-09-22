@@ -12,6 +12,7 @@ export interface ModalInterface {
 	adventureId: IdInterface|undefined;
 	actId: IdInterface|undefined;
 	sceneId: IdInterface|undefined;
+	sessionId: IdInterface|undefined;
 	campaignSetting: CampaignSetting;
 
 	additionalInformationEl: HTMLDivElement;
@@ -20,6 +21,7 @@ export interface ModalInterface {
 	adventureModal: ModalComponentInterface;
 	actModal: ModalComponentInterface;
 	sceneModal: ModalComponentInterface;
+	sessionModal: ModalComponentInterface;
 	elementModal: ModalComponentInterface;
 
 	enableButton(): void;

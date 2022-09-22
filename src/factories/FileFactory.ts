@@ -19,6 +19,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		adventureId: IdInterface|undefined=undefined,
 		actId: IdInterface|undefined=undefined,
 		sceneId: IdInterface|undefined=undefined,
+		sessionId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
 		let folder = path.sep;
@@ -40,6 +41,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			adventureId?.id,
 			actId?.id,
 			sceneId?.id,
+			sessionId?.id,
 			additionalInformation,
 		);
 
@@ -89,6 +91,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		adventureId: number|undefined=undefined,
 		actId: number|undefined=undefined,
 		sceneId: number|undefined=undefined,
+		sessionId: number|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 	): Promise<void> {
 		let folder = '';
@@ -119,6 +122,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			adventureId,
 			actId,
 			sceneId,
+			sessionId,
 			additionalInformation,
 		);
 

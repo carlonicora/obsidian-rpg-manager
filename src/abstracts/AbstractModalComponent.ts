@@ -43,6 +43,7 @@ export abstract class AbstractModalComponent extends AbstractRpgManager implemen
 		adventureId: IdInterface|undefined=undefined,
 		actId: IdInterface|undefined=undefined,
 		sceneId: IdInterface|undefined=undefined,
+		sessionId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
 		this.factories.files.create(
@@ -55,6 +56,7 @@ export abstract class AbstractModalComponent extends AbstractRpgManager implemen
 			adventureId,
 			actId,
 			sceneId,
+			sessionId,
 			additionalInformation,
 		);
 	}

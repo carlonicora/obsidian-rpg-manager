@@ -21,12 +21,14 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 	public adventureId: IdInterface|undefined;
 	public actId: IdInterface|undefined;
 	public sceneId: IdInterface|undefined;
+	public sessionId: IdInterface|undefined;
 	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalComponentInterface;
 	public adventureModal: ModalComponentInterface;
 	public actModal: ModalComponentInterface;
 	public sceneModal: ModalComponentInterface;
+	public sessionModal: ModalComponentInterface;
 	public elementModal: ModalComponentInterface;
 
 	public availableSpecificTemplates: Array<TFile> = [];
@@ -57,7 +59,6 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 				}
 			}
 		}
-
 
 		this.app.vault.getFiles()
 			.filter((file: TFile) =>
@@ -198,6 +199,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		if (this.adventureModal != null && !this.adventureModal.validate()) return;
 		if (this.actModal != null && !this.actModal.validate()) return;
 		if (this.sceneModal != null && !this.sceneModal.validate()) return;
+		if (this.sessionModal != null && !this.sessionModal.validate()) return;
 		if (this.elementModal != null && !this.elementModal.validate()) return;
 
 		this.saver.save(
@@ -210,6 +212,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			this.adventureId,
 			this.actId,
 			this.sceneId,
+			this.sessionId,
 			this.saver.prepareAdditionalInformation(),
 		)
 		this.close();

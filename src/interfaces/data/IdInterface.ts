@@ -28,6 +28,9 @@ export interface IdInterface {
 	get sceneId(
 	): number|undefined;
 
+	get sessionId(
+	): number|undefined;
+
 	get isValid(
 	): boolean;
 

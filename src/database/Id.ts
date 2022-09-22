@@ -16,6 +16,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		adventureId: string|undefined,
 		actId: string|undefined,
 		sceneId: string|undefined,
+		sessionId: string|undefined,
 		private existingTag: string|undefined,
 	) {
 		super(app);
@@ -26,6 +27,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		this.generateTagValue(RecordType.Adventure, adventureId);
 		this.generateTagValue(RecordType.Act, actId);
 		this.generateTagValue(RecordType.Scene, sceneId);
+		this.generateTagValue(RecordType.Session, sessionId);
 	}
 
 	public get id(
@@ -65,7 +67,8 @@ export class Id extends AbstractRpgManager implements IdInterface{
 				id = this.tagMap.get(RecordType.Act)?.value;
 				if (id !== undefined) ids = '/' + id + ids;
 			case RecordType.Adventure:
-				id = this.tagMap.get(RecordType.Adventure)?.value;
+			case RecordType.Session:
+				id = this.tagMap.get(this.type === RecordType.Session ? RecordType.Session : RecordType.Adventure)?.value;
 				if (id !== undefined) ids = '/' + id + ids;
 			default:
 				id = this.tagMap.get(RecordType.Campaign)?.value;
@@ -100,6 +103,11 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		return this.getTypeValue(RecordType.Scene);
 	}
 
+	get sessionId(
+	): number|undefined {
+		return this.getTypeValue(RecordType.Session);
+	}
+
 	private generateTagValue(
 		type: RecordType,
 		value: string|undefined,
@@ -118,6 +126,9 @@ export class Id extends AbstractRpgManager implements IdInterface{
 					if (type === RecordType.Act) isRequired = true;
 				case RecordType.Adventure:
 					if (type === RecordType.Adventure) isRequired = true;
+					break;
+				case RecordType.Session:
+					if (type === RecordType.Session) isRequired = true;
 			}
 
 			status = isRequired ? TagStatus.Missing : TagStatus.NotRequired;

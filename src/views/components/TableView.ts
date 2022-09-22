@@ -58,6 +58,7 @@ export class TableView extends AbstractComponentView {
 											data.adventureId,
 											nextActId,
 											undefined,
+											undefined,
 											{
 												synopsis: content.content,
 											}

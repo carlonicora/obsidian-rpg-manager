@@ -11,6 +11,7 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		adventureId: string|number|undefined=undefined,
 		actId: string|number|undefined=undefined,
 		sceneId: string|number|undefined=undefined,
+		sessionId: string|number|undefined=undefined,
 		existingTag: string|undefined=undefined,
 	): IdInterface {
 		return new Id(
@@ -20,6 +21,7 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 			this.convertIdElement(adventureId),
 			this.convertIdElement(actId),
 			this.convertIdElement(sceneId),
+			this.convertIdElement(sessionId),
 			existingTag,
 		);
 	}
@@ -34,8 +36,9 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		const adventureId: string|undefined = this.tagHelper.getId(RecordType.Adventure, tag);
 		const actId: string|undefined = this.tagHelper.getId(RecordType.Act, tag);
 		const sceneId: string|undefined = this.tagHelper.getId(RecordType.Scene, tag);
+		const sessionId: string|undefined = this.tagHelper.getId(RecordType.Session, tag);
 
-		return this.create(type, campaignId, adventureId, actId, sceneId, tag);
+		return this.create(type, campaignId, adventureId, actId, sceneId, sessionId, tag);
 	}
 
 	public createFromTags(

@@ -16,6 +16,7 @@ import {InfoLog, LogMessageType} from "../helpers/Logger";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerComponent";
 import {IdInterface} from "../interfaces/data/IdInterface";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public recordset: Array<RecordInterface> = [];
@@ -157,6 +158,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		let adventureId:number|undefined=id?.adventureId;
 		let actId:number|undefined=id?.actId;
 		let sceneId:number|undefined=id?.sceneId;
+		let sessionId:number|undefined=id?.sessionId;
 
 		switch(type) {
 			case RecordType.Campaign:
@@ -171,6 +173,13 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 					(type & data.id.type) === data.id.type &&
 					data.id.campaignId === campaignId &&
 					(isList ? true : data.id.adventureId === adventureId);
+				break;
+			case RecordType.Session:
+				if (overloadId !== undefined) sessionId = overloadId;
+				return (data: SessionInterface) =>
+					(type & data.id.type) === data.id.type &&
+					data.id.campaignId === campaignId &&
+					(isList ? true : data.id.sessionId === sessionId);
 				break;
 			case RecordType.Act:
 				if (overloadId !== undefined) actId = overloadId;

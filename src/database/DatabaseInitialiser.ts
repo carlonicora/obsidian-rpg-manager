@@ -234,6 +234,9 @@ export class DatabaseInitialiser {
 
 		switch (dataType) {
 			case RecordType.Campaign:
+				return await this.addHierarchy(temporaryDatabase, RecordType.Session);
+				break;
+			case RecordType.Session:
 				return await this.addHierarchy(temporaryDatabase, RecordType.Adventure);
 				break;
 			case RecordType.Adventure:

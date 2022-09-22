@@ -17,6 +17,7 @@ export interface ModalComponentInterface {
 		adventureId: IdInterface|undefined,
 		actId: IdInterface|undefined,
 		sceneId: IdInterface|undefined,
+		sessionId: IdInterface|undefined,
 		additionalInformation: any|null,
 	): void;
 

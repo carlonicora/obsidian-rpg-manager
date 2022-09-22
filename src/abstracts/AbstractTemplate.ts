@@ -15,11 +15,12 @@ export abstract class AbstractTemplate extends AbstractRpgManager implements Tem
 		protected adventureId: number|undefined,
 		protected actId: number|undefined,
 		protected sceneId: number|undefined,
+		protected sessionId: number|undefined,
 		protected additionalInformation: any|undefined,
 	) {
 		super(app);
 
-		if (campaignId !== undefined) this.id = this.factories.id.create(this.type, campaignId, adventureId, actId, sceneId);
+		if (campaignId !== undefined) this.id = this.factories.id.create(this.type, campaignId, adventureId, actId, sceneId, sessionId);
 	}
 	
 	abstract getContent(): string;
