@@ -5,7 +5,7 @@ import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 
-export abstract class AbstractRpgManager implements RpgManagerHelperInterface{
+export abstract class AbstractRpgManager implements RpgManagerHelperInterface {
 	constructor(
 		public app: App,
 	) {

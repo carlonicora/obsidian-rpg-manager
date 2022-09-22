@@ -16,7 +16,6 @@ export class SessionModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-
 		const scenes = this.database.read<SceneInterface>(
 			(scene: SceneInterface) =>
 				scene.id.type === RecordType.Scene &&

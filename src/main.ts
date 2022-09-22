@@ -24,8 +24,7 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO (*****) Associate session to scene -> in the header, add a button to select a list of scenes
-	 * 		@TODO (****) Add scenes to session -> in the header, add a dropdown to select the session
+	 * 		@TODO (****) Associate session to scene -> in the header, add a button to select a list of scenes
 	 * 		@TODO (****) Add scene Story Circle stage selector -> in the header add a dropdown to select the stage of he scene in the Act Story Circle -> save it in the frontmatter
 	 * 		@TODO (**) Add Story Circle Stage stage in the Scene List (ideally a circle icon with a 1/8 black and rotate it
 	 *

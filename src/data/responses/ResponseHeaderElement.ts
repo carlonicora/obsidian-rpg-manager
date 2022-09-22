@@ -13,6 +13,7 @@ export class ResponseHeaderElement extends AbstractResponse implements HeaderRes
 		public title: string,
 		content: string,
 		public type: HeaderResponseType,
+		public additionalInformation: any|undefined=undefined,
 	) {
 		super(app);
 		this.value = this.factories.contents.create(content, ContentType.Markdown);

@@ -4,6 +4,7 @@ import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {RecordType} from "../enums/RecordType";
 
 export class SceneTableComponent extends AbstractComponent {
 	public async generateData(
@@ -17,25 +18,35 @@ export class SceneTableComponent extends AbstractComponent {
 
 		response.addTitle(title ? title : 'Scenes');
 
-		response.addHeaders([
+		const headers = [
 			this.factories.contents.create('#', ContentType.String, true),
 			this.factories.contents.create('Scene', ContentType.String),
 			this.factories.contents.create('Synopsis', ContentType.String),
-			this.factories.contents.create('Start', ContentType.String),
-			this.factories.contents.create('End', ContentType.String),
-			this.factories.contents.create('Duration', ContentType.String),
-		]);
+		];
+
+		if (additionalInformation?.parentType === RecordType.Session ){
+			headers.push(this.factories.contents.create('Start', ContentType.String));
+			headers.push(this.factories.contents.create('End', ContentType.String));
+			headers.push(this.factories.contents.create('Duration', ContentType.String))
+		}
+
+		response.addHeaders(headers);
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const scene: SceneInterface|undefined = relationship.component as SceneInterface;
 			if (scene !== undefined) {
-				response.addContent([
+				const row = [
 					this.factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
 					this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
 					this.factories.contents.create(scene.synopsis, ContentType.Markdown),
-					this.factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true),
-					this.factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true),
-					this.factories.contents.create(scene.duration, ContentType.String, true),
-				])
+				];
+
+				if (additionalInformation?.parentType === RecordType.Session ){
+					row.push(this.factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true));
+					row.push(this.factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true));
+					row.push(this.factories.contents.create(scene.duration, ContentType.String, true));
+				}
+
+				response.addContent(row);
 			}
 		});
 		return response;

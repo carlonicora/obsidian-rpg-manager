@@ -92,7 +92,7 @@ export class HeaderComponent extends AbstractComponent{
 				} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
-				response.addElement(new ResponseHeaderElement(this.app, 'Session', (data.sessionId === undefined ? '' : data.sessionId.toString()), HeaderResponseType.SessionSelection));
+				response.addElement(new ResponseHeaderElement(this.app, 'Session', (data.sessionId === undefined ? '' : data.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: data.id, file: data.file}));
 			} else if (data instanceof Music){
 				if (data.image === undefined) {
 					response.imgSrc = await data.getThumbnail();

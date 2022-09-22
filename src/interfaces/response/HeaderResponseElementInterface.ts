@@ -5,4 +5,5 @@ export interface HeaderResponseElementInterface {
 	title: string;
 	value: ContentInterface;
 	type:HeaderResponseType;
+	additionalInformation?: any|undefined,
 }
