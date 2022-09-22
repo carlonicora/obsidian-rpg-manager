@@ -27,7 +27,7 @@ hook**".
 The adventure should focus on moving the player characters in a journey of need, search, challenges and success, hence
 why I generally suggest to split each adventure in four acts.
 
-### Session (Act)
+### Act (Act)
 
 
 

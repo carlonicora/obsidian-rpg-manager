@@ -11,7 +11,7 @@ export interface FileFactoryInterface {
 		name: string,
 		campaignId: IdInterface,
 		adventureId?: IdInterface|undefined,
-		sessionId?: IdInterface|undefined,
+		actId?: IdInterface|undefined,
 		sceneId?: IdInterface|undefined,
 		additionalInformation?: any|null,
 	): Promise<void>;
@@ -21,7 +21,7 @@ export interface FileFactoryInterface {
 		name: string,
 		campaignId: number,
 		adventureId?: number|undefined,
-		sessionId?: number|undefined,
+		actId?: number|undefined,
 		sceneId?: number|undefined,
 		additionalInformation?: any|undefined,
 	): Promise<void>;

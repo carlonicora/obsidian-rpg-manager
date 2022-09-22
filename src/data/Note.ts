@@ -7,7 +7,7 @@ import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 
 export class Note extends AbstractOutlineRecord implements NoteInterface {
 	public adventure: AdventureInterface;
-	public sessionId: number;
+	public actId: number;
 
 	public async loadHierarchy(
 		database: DatabaseInterface,
@@ -15,9 +15,9 @@ export class Note extends AbstractOutlineRecord implements NoteInterface {
 		super.loadHierarchy(database);
 
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
-		const sessionId = this.id.sessionId;
-		if (sessionId === undefined) throw new TagMisconfiguredError(this.app, this.id);
+		const actId = this.id.actId;
+		if (actId === undefined) throw new TagMisconfiguredError(this.app, this.id);
 
-		this.sessionId = sessionId;
+		this.actId = actId;
 	}
 }

@@ -12,7 +12,7 @@ export class TimelineTemplateFactory extends AbstractComponentTemplateFactory {
 		return this.generateRpgManagerCodeBlock(
 			'timeline',
 			{
-				sessions: true,
+				acts: true,
 				events: true,
 				births: false,
 				deaths: true,

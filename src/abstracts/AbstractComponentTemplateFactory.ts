@@ -24,7 +24,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		protected name: string,
 		protected campaignId: number|undefined,
 		protected adventureId: number|undefined,
-		protected sessionId: number|undefined,
+		protected actId: number|undefined,
 		protected sceneId: number|undefined,
 		protected additionalInformation: any|null,
 	) {
@@ -40,40 +40,40 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 			if (this.templateName.startsWith('internal')){
 				switch (RecordType[this.templateName.substring(8) as keyof typeof RecordType]){
 					case RecordType.Campaign:
-						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Adventure:
-						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
-					case RecordType.Session:
-						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+					case RecordType.Act:
+						this.internalTemplate = new CampaignTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Scene:
-						this.internalTemplate = new AdventureTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new AdventureTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Character:
-						this.internalTemplate = new CharacterTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new CharacterTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.NonPlayerCharacter:
-						this.internalTemplate = new NonPlayerCharacterTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new NonPlayerCharacterTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Clue:
-						this.internalTemplate = new ClueTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new ClueTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Location:
-						this.internalTemplate = new LocationTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new LocationTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Faction:
-						this.internalTemplate = new FactionTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new FactionTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Event:
-						this.internalTemplate = new EventTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new EventTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Note:
-						this.internalTemplate = new NoteTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new NoteTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 					case RecordType.Timeline:
-						this.internalTemplate = new TimelineTemplate(this.app, this.name, this.campaignId, this.adventureId, this.sessionId, this.sceneId, this.additionalInformation);
+						this.internalTemplate = new TimelineTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.additionalInformation);
 						break;
 
 				}

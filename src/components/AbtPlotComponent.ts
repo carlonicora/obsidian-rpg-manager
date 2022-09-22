@@ -4,7 +4,7 @@ import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
 import {Adventure} from "../data/Adventure";
 import {RecordType} from "../enums/RecordType";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class AbtPlotComponent extends AbstractComponent {
@@ -37,7 +37,7 @@ export class AbtPlotComponent extends AbstractComponent {
 
 		if (
 			data instanceof Adventure &&
-			this.database.readList<SessionInterface>(RecordType.Session, data.id).length === 0 &&
+			this.database.readList<ActInterface>(RecordType.Act, data.id).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&

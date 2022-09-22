@@ -40,6 +40,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		this.map.set(SettingType.Campaign, {title: 'Campaign Outline Tag', value: this.plugin.settings.campaignTag, placeholder: 'rpgm/outline/campaign'});
 		this.map.set(SettingType.Adventure, {title: 'Adventure Outline Tag', value: this.plugin.settings.adventureTag, placeholder: 'rpgm/outline/adventure'});
+		this.map.set(SettingType.Act, {title: 'Act Outline Tag', value: this.plugin.settings.actTag, placeholder: 'rpgm/outline/act'});
 		this.map.set(SettingType.Session, {title: 'Session Outline Tag', value: this.plugin.settings.sessionTag, placeholder: 'rpgm/outline/session'});
 		this.map.set(SettingType.Scene, {title: 'Scene Outline Tag', value: this.plugin.settings.sceneTag, placeholder: 'rpgm/outline/scene'});
 
@@ -97,15 +98,21 @@ export class RpgManagerSettings extends PluginSettingTab {
 			doUpdate = true;
 		}
 
-		if (this.plugin.settings.sessionTag !== this.map.get(SettingType.Session)?.value) {
-			settingsToUpdate.sessionTag = this.map.get(SettingType.Session)?.value;
-			updatedTags.set(this.plugin.settings.sessionTag, this.map.get(SettingType.Session)?.value);
+		if (this.plugin.settings.actTag !== this.map.get(SettingType.Act)?.value) {
+			settingsToUpdate.actTag = this.map.get(SettingType.Act)?.value;
+			updatedTags.set(this.plugin.settings.actTag, this.map.get(SettingType.Act)?.value);
 			doUpdate = true;
 		}
 
 		if (this.plugin.settings.sceneTag !== this.map.get(SettingType.Scene)?.value) {
 			settingsToUpdate.sceneTag = this.map.get(SettingType.Scene)?.value;
 			updatedTags.set(this.plugin.settings.sceneTag, this.map.get(SettingType.Scene)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.sessionTag !== this.map.get(SettingType.Session)?.value) {
+			settingsToUpdate.sessionTag = this.map.get(SettingType.Session)?.value;
+			updatedTags.set(this.plugin.settings.sessionTag, this.map.get(SettingType.Session)?.value);
 			doUpdate = true;
 		}
 
@@ -224,7 +231,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 	private loadOutlineSettings(
 	): void {this.settingsFactory.createHeader('Outlines', 3, `Outlines are the plot part of RPG Manager.
-		They are hierarchically organised in campaigns > adventures > sessions > scenes
+		They are hierarchically organised in campaigns > adventures > acts > scenes
 		Each tag that identifies an outline should contain the ids of the parent outlines and end with a unique identifier`);
 		this.settingsFactory.createWarning(`Warning: These settings will be saved only after pressing the button below
 		All the tags will be updates in your notes.`);
@@ -242,20 +249,26 @@ export class RpgManagerSettings extends PluginSettingTab {
 		);
 
 		this.settingsFactory.createTextSetting(
-			SettingType.Session,
-			`The tag identifying the sessions
-			Required ids: /{campaignId}/{adventureId}/{sessionId}`,
+			SettingType.Act,
+			`The tag identifying the acts
+			Required ids: /{campaignId}/{adventureId}/{actId}`,
 		);
 
 		this.settingsFactory.createTextSetting(
 			SettingType.Scene,
 			`The tag identifying the scenes
-			Required ids: /{campaignId}/{adventureId}/{sessionId}/{sceneId}`,
+			Required ids: /{campaignId}/{adventureId}/{actId}/{sceneId}`,
 		);
 
 		this.settingsFactory.createTextSetting(
 			SettingType.Note,
 			`The tag identifying the notes
+			Required ids: /{campaignId}/{adventureId}/{actId}`,
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Session,
+			`The tag identifying the sessions
 			Required ids: /{campaignId}/{adventureId}/{sessionId}`,
 		);
 	}

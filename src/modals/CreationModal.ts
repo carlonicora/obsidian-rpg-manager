@@ -19,13 +19,13 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 	public campaignId: IdInterface;
 	public adventureId: IdInterface|undefined;
-	public sessionId: IdInterface|undefined;
+	public actId: IdInterface|undefined;
 	public sceneId: IdInterface|undefined;
 	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalComponentInterface;
 	public adventureModal: ModalComponentInterface;
-	public sessionModal: ModalComponentInterface;
+	public actModal: ModalComponentInterface;
 	public sceneModal: ModalComponentInterface;
 	public elementModal: ModalComponentInterface;
 
@@ -41,7 +41,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		private name: string|null = null,
 		campaignId: number|null = null,
 		adventureId: number|null = null,
-		sessionId: number|null = null,
+		actId: number|null = null,
 	) {
 		super(app);
 
@@ -53,7 +53,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 				if (adventureId != null) {
 					this.adventureId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId);
 
-					if (sessionId != null) this.sessionId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId, sessionId);
+					if (actId != null) this.actId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId, actId);
 				}
 			}
 		}
@@ -196,7 +196,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		}
 		if (!this.campaignModal.validate()) return;
 		if (this.adventureModal != null && !this.adventureModal.validate()) return;
-		if (this.sessionModal != null && !this.sessionModal.validate()) return;
+		if (this.actModal != null && !this.actModal.validate()) return;
 		if (this.sceneModal != null && !this.sceneModal.validate()) return;
 		if (this.elementModal != null && !this.elementModal.validate()) return;
 
@@ -208,7 +208,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			this.title.value,
 			this.campaignId,
 			this.adventureId,
-			this.sessionId,
+			this.actId,
 			this.sceneId,
 			this.saver.prepareAdditionalInformation(),
 		)

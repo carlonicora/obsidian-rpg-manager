@@ -22,7 +22,7 @@ export interface IdInterface {
 	get adventureId(
 	): number|undefined;
 
-	get sessionId(
+	get actId(
 	): number|undefined;
 
 	get sceneId(

@@ -12,9 +12,9 @@ export class TagMisconfiguredError extends AbstractRpgManagerError {
 		switch (this.id.type){
 			case RecordType.Scene:
 				requiredId = '/{sceneId}' + requiredId;
-			case RecordType.Session:
+			case RecordType.Act:
 			case RecordType.Note:
-				requiredId = '/{sessionId}' + requiredId;
+				requiredId = '/{actId}' + requiredId;
 			case RecordType.Adventure:
 				requiredId = '/{adventureId}' + requiredId;
 			default:

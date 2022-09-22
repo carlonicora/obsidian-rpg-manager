@@ -1,5 +1,5 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
@@ -8,24 +8,24 @@ import {FrontMatterCache} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 
-export class Session extends AbstractOutlineRecord implements SessionInterface {
-	public sessionId: number;
+export class Act extends AbstractOutlineRecord implements ActInterface {
+	public actId: number;
 	public date: Date|null;
 	public irl: Date|null;
 
 	public adventure: AdventureInterface;
-	public previousSession: SessionInterface|null=null;
-	public nextSession: SessionInterface|null=null;
+	public previousAct: ActInterface|null=null;
+	public nextAct: ActInterface|null=null;
 	public note: NoteInterface|null=null;
 
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
 	): void {
-		const sessionId = this.id.sessionId;
-		if (sessionId === undefined) throw new TagMisconfiguredError(this.app, this.id);
+		const actId = this.id.actId;
+		if (actId === undefined) throw new TagMisconfiguredError(this.app, this.id);
 
-		this.sessionId = sessionId;
-		this.date = this.initialiseDate(frontmatter?.dates?.session);
+		this.actId = actId;
+		this.date = this.initialiseDate(frontmatter?.dates?.act);
 		this.irl = this.initialiseDate(frontmatter?.dates?.irl);
 
 		super.initialiseData(frontmatter);
@@ -39,25 +39,25 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
 
 		try {
-			const query = database.read<SessionInterface>((record: RecordInterface) =>
-				record.id.type === RecordType.Session &&
+			const query = database.read<ActInterface>((record: RecordInterface) =>
+				record.id.type === RecordType.Act &&
 				record.id.campaignId === this.id.campaignId &&
-				record.id.sessionId === this.sessionId - 1);
+				record.id.actId === this.actId - 1);
 			if (query.length === 1) {
-				this.previousSession = query[0];
-				this.previousSession.nextSession = this;
+				this.previousAct = query[0];
+				this.previousAct.nextAct = this;
 			}
 		} catch (e) {
 			//ignore. It can be non existing
 		}
 
-		try {const query = database.read<SessionInterface>((record: RecordInterface) =>
-			record.id.type === RecordType.Session &&
+		try {const query = database.read<ActInterface>((record: RecordInterface) =>
+			record.id.type === RecordType.Act &&
 			record.id.campaignId === this.id.campaignId &&
-			record.id.sessionId === this.sessionId + 1);
+			record.id.actId === this.actId + 1);
 			if (query.length === 1) {
-				this.nextSession = query[0];
-				this.nextSession.previousSession = this;
+				this.nextAct = query[0];
+				this.nextAct.previousAct = this;
 			}
 		} catch (e) {
 			//ignore. It can be non existing

@@ -1,6 +1,6 @@
 import {CampaignTemplateFactory} from "./templates/CampaignTemplateFactory";
 import {AdventureTemplateFactory} from "./templates/AdventureTemplateFactory";
-import {SessionTemplateFactory} from "./templates/SessionTemplateFactory";
+import {ActTemplateFactory} from "./templates/ActTemplateFactory";
 import {SceneTemplateFactory} from "./templates/SceneTemplateFactory";
 import {CharacterTemplateFactory} from "./templates/CharacterTemplateFactory";
 import {NonPlayerCharacterTemplateFactory} from "./templates/NonPlayerCharacterTemplateFactory";
@@ -32,7 +32,7 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		this.templateTypeMap = new Map();
 		this.templateTypeMap.set('AgnosticCampaign', CampaignTemplateFactory);
 		this.templateTypeMap.set('AgnosticAdventure', AdventureTemplateFactory);
-		this.templateTypeMap.set('AgnosticSession', SessionTemplateFactory);
+		this.templateTypeMap.set('AgnosticAct', ActTemplateFactory);
 		this.templateTypeMap.set('AgnosticScene', SceneTemplateFactory);
 		this.templateTypeMap.set('AgnosticCharacter', CharacterTemplateFactory);
 		this.templateTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterTemplateFactory);
@@ -56,7 +56,7 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		name: string,
 		campaignId: number|undefined,
 		adventureId: number|undefined,
-		sessionId: number|undefined,
+		actId: number|undefined,
 		sceneId: number|undefined,
 		additionalInformation: any|null = null,
 	): ComponentTemplateFactoryInterface {
@@ -64,6 +64,6 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		if (!this.templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + RecordType[type];
 		if (!this.templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + RecordType[type] + ' cannot be found');
 
-		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, sessionId, sceneId, additionalInformation);
+		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, actId, sceneId, additionalInformation);
 	}
 }

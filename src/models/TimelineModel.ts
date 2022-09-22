@@ -7,7 +7,7 @@ import {RecordType} from "../enums/RecordType";
 import {EventInterface} from "../interfaces/data/EventInterface";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {BannerComponent} from "../components/BannerComponent";
 
@@ -36,8 +36,8 @@ export class TimelineModel extends AbstractModel {
 			this.addDeaths(timeline);
 		}
 
-		if (this.sourceMeta.sessions === true){
-			this.addSessions(timeline);
+		if (this.sourceMeta.acts === true){
+			this.addActs(timeline);
 		}
 
 		timeline.sort();
@@ -141,23 +141,23 @@ export class TimelineModel extends AbstractModel {
 		});
 	}
 
-	private addSessions(
+	private addActs(
 		timeline: TimelineResponseInterface,
 	): void {
-		const sessions = this.database.readList<SessionInterface>(
-			RecordType.Session,
+		const acts = this.database.readList<ActInterface>(
+			RecordType.Act,
 			this.currentElement.id,
 		);
-		sessions.filter((data: SessionInterface) => data.date != null).forEach((session: SessionInterface) => {
-			if (session.date != null) {
+		acts.filter((data: ActInterface) => data.date != null).forEach((act: ActInterface) => {
+			if (act.date != null) {
 				timeline.elements.push(
 					new TimelineElementResponse(
-						session.date,
-						(<Date>session.date).toDateString(),
+						act.date,
+						(<Date>act.date).toDateString(),
 						'00:00',
-						'session',
-						session.synopsis ?? '',
-						session.link,
+						'act',
+						act.synopsis ?? '',
+						act.link,
 					)
 				)
 			}

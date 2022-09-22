@@ -24,17 +24,19 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO Rename Session to Act
+	 * 		@TODO Rename Act to Act
 	 * 		@TODO Tag update based on versioning and Automatic update of settings
-	 * 		@TODO Create new Session
+	 * 			- tag names
+	 * 			- model codeblocks
+	 * 		@TODO Create new Act
 	 *
 	 * 		@TODO Add view to create new elements
 	 * 		@TODO Move timeline to Obsidian side view
 	 * 		@TODO Remove date from Act
 	 * 		@TODO Remove irl from Act
 	 * 		@TODO Add Scene Notes
-	 * 		@TODO Add irl to New Session
-	 * 		@TODO Rename Notes to Session Notes
+	 * 		@TODO Add irl to New Act
+	 * 		@TODO Rename Notes to Act Notes
 	 *
 	 * ## Version 2.1
 	 * 		@TODO Add Database Status View

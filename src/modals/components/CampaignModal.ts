@@ -56,7 +56,7 @@ export class CampaignModal extends AbstractModalComponent {
 	public async loadChild(
 		containerEl: HTMLElement
 	): Promise<void> {
-		if (this.modal.type !== RecordType.Adventure && this.modal.type !== RecordType.Session && this.modal.type !== RecordType.Scene && this.modal.type !== RecordType.Note) {
+		if (this.modal.type !== RecordType.Adventure && this.modal.type !== RecordType.Act && this.modal.type !== RecordType.Scene && this.modal.type !== RecordType.Note) {
 			this.modal.elementModal = this.factories.modals.create(
 				this.modal.campaignSetting,
 				this.modal.type,

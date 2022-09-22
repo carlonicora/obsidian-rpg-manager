@@ -9,7 +9,7 @@ export interface TableResponseInterface extends ResponseElementInterface {
 	create: RecordType|undefined;
 	campaignId: number|undefined;
 	adventureId: number|undefined;
-	sessionId: number|undefined;
+	actId: number|undefined;
 
 	addHeaders(
 		headers: Array<ContentInterface>,

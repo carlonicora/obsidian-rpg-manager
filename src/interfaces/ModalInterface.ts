@@ -10,7 +10,7 @@ export interface ModalInterface {
 
 	campaignId: IdInterface;
 	adventureId: IdInterface|undefined;
-	sessionId: IdInterface|undefined;
+	actId: IdInterface|undefined;
 	sceneId: IdInterface|undefined;
 	campaignSetting: CampaignSetting;
 
@@ -18,7 +18,7 @@ export interface ModalInterface {
 
 	campaignModal: ModalComponentInterface;
 	adventureModal: ModalComponentInterface;
-	sessionModal: ModalComponentInterface;
+	actModal: ModalComponentInterface;
 	sceneModal: ModalComponentInterface;
 	elementModal: ModalComponentInterface;
 

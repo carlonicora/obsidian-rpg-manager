@@ -12,11 +12,11 @@ export class SceneModal extends AbstractModalComponent {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
-		this.modal.sceneId = this.factories.id.create(RecordType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.sessionId?.id);
+		this.modal.sceneId = this.factories.id.create(RecordType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
 		this.modal.sceneId.id = 1;
 
-		if (this.modal.adventureId != null && this.modal.sessionId != null) {
-			this.scenes = this.database.readList<SceneInterface>(RecordType.Scene, this.modal.sessionId);
+		if (this.modal.adventureId != null && this.modal.actId != null) {
+			this.scenes = this.database.readList<SceneInterface>(RecordType.Scene, this.modal.actId);
 		} else {
 			this.scenes = [];
 		}

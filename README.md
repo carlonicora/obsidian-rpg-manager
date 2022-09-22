@@ -45,7 +45,7 @@ keeping track of campaigns. The structure is as follow:
 |-------------------|----------------------------------------------------------------------------|
 | **Campaign**      | The overarching plot of the story                                          |
 | **Adventure**     | A self contained story arc focusing on the player characters               |
-| **Session (Act)** | The part of the story that is centred on a specific moment of an adventure |
+| **Act (Act)** | The part of the story that is centred on a specific moment of an adventure |
 | **Scene**         | A short encounter, or a location, that the player characters plays         |
 
 Every element MUST refer to a campaign they belong to

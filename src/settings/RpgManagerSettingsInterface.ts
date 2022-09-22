@@ -1,8 +1,9 @@
 export interface RpgManagerSettingsInterface {
 	campaignTag: string;
 	adventureTag: string;
-	sessionTag: string;
+	actTag: string;
 	sceneTag: string;
+	sessionTag: string,
 	npcTag: string;
 	pcTag: string;
 	locationTag: string;
@@ -21,6 +22,7 @@ export interface RpgManagerSettingsInterface {
 export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	campaignTag: 'rpgm/outline/campaign',
 	adventureTag: 'rpgm/outline/adventure',
+	actTag: 'rpgm/outline/act',
 	sessionTag: 'rpgm/outline/session',
 	sceneTag: 'rpgm/outline/scene',
 	npcTag: 'rpgm/element/character/npc',

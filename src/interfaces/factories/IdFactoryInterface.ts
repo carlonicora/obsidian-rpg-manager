@@ -6,7 +6,7 @@ export interface IdFactoryInterface {
 		type: RecordType,
 		campaignId: string|number,
 		adventureId?: string|number|undefined,
-		sessionId?: string|number|undefined,
+		actId?: string|number|undefined,
 		sceneId?: string|number|undefined,
 		existingTag?: string|undefined,
 	): IdInterface;

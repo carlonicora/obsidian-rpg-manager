@@ -5,7 +5,7 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.settings.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId + '/' + this.sceneId);
+		frontmatter.tags.push(this.settings.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId);
 		frontmatter.times = {
 			start: {},
 			end: {},

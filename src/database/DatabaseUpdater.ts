@@ -52,7 +52,7 @@ export class DatabaseUpdater {
 			updater = this.versionsHistory.get(updater.nextVersion);
 		}
 
-		await this.rpgManager.updateSettings({previousVersion: currentVersion});
+		//await this.rpgManager.updateSettings({previousVersion: currentVersion});
 
 		return response;
 	}

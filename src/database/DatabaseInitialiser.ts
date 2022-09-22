@@ -65,7 +65,7 @@ export class DatabaseInitialiser {
 						record ? RecordType[record.id.type] : 'No type',
 						record?.id.campaignId,
 						record?.id.adventureId,
-						record?.id.sessionId,
+						record?.id.actId,
 						record?.id.sceneId,
 						record,
 					]);
@@ -241,9 +241,9 @@ export class DatabaseInitialiser {
 				return await this.addHierarchy(temporaryDatabase, RecordType.Note);
 				break;
 			case RecordType.Note:
-				return await this.addHierarchy(temporaryDatabase, RecordType.Session);
+				return await this.addHierarchy(temporaryDatabase, RecordType.Act);
 				break;
-			case RecordType.Session:
+			case RecordType.Act:
 				return await this.addHierarchy(temporaryDatabase, RecordType.Scene);
 				break;
 			case RecordType.Scene:

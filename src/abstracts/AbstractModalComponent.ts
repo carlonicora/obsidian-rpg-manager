@@ -41,7 +41,7 @@ export abstract class AbstractModalComponent extends AbstractRpgManager implemen
 		name: string,
 		campaignId: IdInterface,
 		adventureId: IdInterface|undefined=undefined,
-		sessionId: IdInterface|undefined=undefined,
+		actId: IdInterface|undefined=undefined,
 		sceneId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
@@ -53,7 +53,7 @@ export abstract class AbstractModalComponent extends AbstractRpgManager implemen
 			name,
 			campaignId,
 			adventureId,
-			sessionId,
+			actId,
 			sceneId,
 			additionalInformation,
 		);

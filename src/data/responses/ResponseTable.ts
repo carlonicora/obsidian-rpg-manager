@@ -12,7 +12,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 	public create: RecordType|undefined;
 	public campaignId: number|undefined;
 	public adventureId: number|undefined;
-	public sessionId: number|undefined;
+	public actId: number|undefined;
 
 	constructor(
 		app: App,

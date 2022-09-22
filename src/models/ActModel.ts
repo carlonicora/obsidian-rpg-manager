@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {RecordType} from "../enums/RecordType";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {SceneTableComponent} from "../components/SceneTableComponent";
@@ -10,8 +10,8 @@ import {FactionTableComponent} from "../components/FactionTableComponent";
 import {ClueTableComponent} from "../components/ClueTableComponent";
 import {EventTableComponent} from "../components/EventTableComponent";
 
-export class SessionModel extends AbstractModel {
-	protected currentElement: SessionInterface;
+export class ActModel extends AbstractModel {
+	protected currentElement: ActInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

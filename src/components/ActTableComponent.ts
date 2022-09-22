@@ -2,10 +2,10 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
-export class SessionTableComponent extends AbstractComponent {
+export class ActTableComponent extends AbstractComponent {
 	public async generateData(
 		relationships: RelationshipInterface[],
 		title:string|undefined,
@@ -14,24 +14,24 @@ export class SessionTableComponent extends AbstractComponent {
 		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app);
-		response.addTitle(title ? title : 'Sessions');
+		response.addTitle(title ? title : 'Acts');
 		response.addHeaders([
 			this.factories.contents.create('#', ContentType.String, true),
-			this.factories.contents.create('Session', ContentType.String),
+			this.factories.contents.create('Act', ContentType.String),
 			this.factories.contents.create('Synopsis', ContentType.String),
 			this.factories.contents.create('Date', ContentType.String),
 			this.factories.contents.create('Play Date', ContentType.String),
 		]);
 		relationships.forEach((relationship: RelationshipInterface) => {
-			const session: SessionInterface|undefined = relationship.component as SessionInterface;
+			const act: ActInterface|undefined = relationship.component as ActInterface;
 
-			if (session !== undefined) {
+			if (act !== undefined) {
 				response.addContent([
-					this.factories.contents.create(session.sessionId, ContentType.Number, true),
-					this.factories.contents.create(session.link, ContentType.Link),
-					this.factories.contents.create(session.synopsis, ContentType.Markdown),
-					this.factories.contents.create(session.date?.toDateString(), ContentType.String, true),
-					this.factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
+					this.factories.contents.create(act.actId, ContentType.Number, true),
+					this.factories.contents.create(act.link, ContentType.Link),
+					this.factories.contents.create(act.synopsis, ContentType.Markdown),
+					this.factories.contents.create(act.date?.toDateString(), ContentType.String, true),
+					this.factories.contents.create(act.irl?.toDateString(), ContentType.String, true),
 				])
 			}
 		});

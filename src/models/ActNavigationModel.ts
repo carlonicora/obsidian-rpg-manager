@@ -1,12 +1,12 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
 import {AbtPlotComponent} from "../components/AbtPlotComponent";
 import {StoryCirclePlotComponent} from "../components/StoryCirclePlotComponent";
 
-export class SessionNavigationModel extends AbstractModel {
-	protected currentElement: SessionInterface;
+export class ActNavigationModel extends AbstractModel {
+	protected currentElement: ActInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

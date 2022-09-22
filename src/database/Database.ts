@@ -9,7 +9,7 @@ import {ElementNotFoundError} from "../errors/ElementNotFoundError";
 import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
@@ -155,7 +155,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	): any {
 		let campaignId:number|undefined=id?.campaignId;
 		let adventureId:number|undefined=id?.adventureId;
-		let sessionId:number|undefined=id?.sessionId;
+		let actId:number|undefined=id?.actId;
 		let sceneId:number|undefined=id?.sceneId;
 
 		switch(type) {
@@ -172,20 +172,20 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 					data.id.campaignId === campaignId &&
 					(isList ? true : data.id.adventureId === adventureId);
 				break;
-			case RecordType.Session:
-				if (overloadId !== undefined) sessionId = overloadId;
-				return (data: SessionInterface) =>
+			case RecordType.Act:
+				if (overloadId !== undefined) actId = overloadId;
+				return (data: ActInterface) =>
 					(type & data.id.type) === data.id.type &&
 					data.id.campaignId === campaignId &&
 					(adventureId !== undefined ? data.id.adventureId === adventureId : true) &&
-					(isList ? true : data.id.sessionId === sessionId);
+					(isList ? true : data.id.actId === actId);
 				break;
 			case RecordType.Note:
 				return (note: NoteInterface) =>
 					type === note.id.type &&
 					note.id.campaignId === campaignId &&
 					(adventureId !== undefined ? note.id.adventureId === adventureId : true) &&
-					note.id.sessionId === sessionId;
+					note.id.actId === actId;
 				break;
 			case RecordType.Scene:
 				if (overloadId !== undefined) sceneId = overloadId;
@@ -193,7 +193,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 					(type & data.id.type) === data.id.type &&
 					data.id.campaignId === campaignId &&
 					(adventureId !== undefined ? data.id.adventureId === adventureId : true) &&
-					data.id.sessionId === sessionId &&
+					data.id.actId === actId &&
 					(isList ? true : data.id.sceneId === sceneId);
 				break;
 			default:

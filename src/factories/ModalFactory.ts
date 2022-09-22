@@ -5,7 +5,7 @@ import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {CampaignModal} from "../modals/components/CampaignModal";
 import {AdventureModal} from "../modals/components/AdventureModal";
-import {SessionModal} from "../modals/components/SessionModal";
+import {ActModal} from "../modals/components/ActModal";
 import {SceneModal} from "../modals/components/SceneModal";
 import {CharacterModal} from "../modals/components/CharacterModal";
 import {ClueModal} from "../modals/components/ClueModal";
@@ -29,7 +29,7 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 		this.modalTypeMap = new Map();
 		this.modalTypeMap.set('AgnosticCampaign', CampaignModal);
 		this.modalTypeMap.set('AgnosticAdventure', AdventureModal);
-		this.modalTypeMap.set('AgnosticSession', SessionModal);
+		this.modalTypeMap.set('AgnosticAct', ActModal);
 		this.modalTypeMap.set('AgnosticScene', SceneModal);
 		this.modalTypeMap.set('AgnosticCharacter', CharacterModal);
 		this.modalTypeMap.set('AgnosticClue', ClueModal);

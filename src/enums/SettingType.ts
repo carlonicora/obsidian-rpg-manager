@@ -10,9 +10,10 @@ export enum SettingType {
 	Note,
 	Campaign,
 	Adventure,
-	Session,
+	Act,
 	Scene,
 	automaticMove,
 	YouTubeApiKey,
 	templateFolder,
+	Session,
 }

@@ -1,6 +1,6 @@
 import {RecordInterface} from "../database/RecordInterface";
 import {AdventureInterface} from "./AdventureInterface";
-import {SessionInterface} from "./SessionInterface";
+import {ActInterface} from "./ActInterface";
 
 export interface SceneInterface extends RecordInterface {
 	sceneId: number;
@@ -9,7 +9,7 @@ export interface SceneInterface extends RecordInterface {
 	endTime: Date|null;
 
 	adventure: AdventureInterface;
-	session: SessionInterface;
+	act: ActInterface;
 	previousScene: SceneInterface|null;
 	nextScene: SceneInterface|null;
 

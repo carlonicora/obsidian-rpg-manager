@@ -2,7 +2,7 @@ import {App, TFile} from "obsidian";
 import {RecordType} from "../enums/RecordType";
 import {Campaign} from "../data/Campaign";
 import {Adventure} from "../data/Adventure";
-import {Session} from "../data/Session";
+import {Act} from "../data/Act";
 import {Scene} from "../data/Scene";
 import {Character} from "../data/Character";
 import {Faction} from "../data/Faction";
@@ -31,7 +31,7 @@ export class DataFactory extends AbstractFactory implements DataFactoryInterface
 		this.recordTypeMap = new Map([
 			['AgnosticCampaign', Campaign],
 			['AgnosticAdventure', Adventure],
-			['AgnosticSession', Session],
+			['AgnosticAct', Act],
 			['AgnosticScene', Scene],
 			['AgnosticCharacter', Character],
 			['AgnosticNonPlayerCharacter', Character],

@@ -2,11 +2,11 @@ import {RecordInterface} from "../database/RecordInterface";
 import {AdventureInterface} from "./AdventureInterface";
 import {NoteInterface} from "./NoteInterface";
 
-export interface SessionInterface extends RecordInterface {
-	sessionId: number;
+export interface ActInterface extends RecordInterface {
+	actId: number;
 	adventure: AdventureInterface;
-	previousSession: SessionInterface|null;
-	nextSession: SessionInterface|null;
+	previousAct: ActInterface|null;
+	nextAct: ActInterface|null;
 	note: NoteInterface|null;
 	date: Date|null;
 	irl: Date|null;

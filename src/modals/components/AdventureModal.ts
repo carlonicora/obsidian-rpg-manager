@@ -55,13 +55,13 @@ export class AdventureModal extends AbstractModalComponent {
 	public async loadChild(
 		containerEl: HTMLElement,
 	): Promise<void> {
-		this.modal.sessionModal = this.factories.modals.create(
+		this.modal.actModal = this.factories.modals.create(
 			this.modal.campaignSetting,
-			RecordType.Session,
+			RecordType.Act,
 			this.modal,
 		);
 
-		this.modal.sessionModal.addElement(
+		this.modal.actModal.addElement(
 			containerEl,
 		)
 	}

@@ -10,7 +10,7 @@ export interface TemplateFactoryInterface {
 		name: string,
 		campaignId: number|undefined,
 		adventureId: number|undefined,
-		sessionId: number|undefined,
+		actId: number|undefined,
 		sceneId: number|undefined,
 		additionalInformation?: any|null,
 	): ComponentTemplateFactoryInterface;

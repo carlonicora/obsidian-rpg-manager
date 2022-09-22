@@ -1,11 +1,11 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 
-export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
+export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		super.addFrontmatterData(frontmatter);
-		frontmatter.tags.push(this.settings.sessionTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.sessionId);
+		frontmatter.tags.push(this.settings.actTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId);
 
 		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
 
@@ -17,7 +17,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 
 		frontmatter.synopsis = synopsis;
 		frontmatter.dates = {
-			session: {},
+			act: {},
 			irl: {},
 		}
 	}
@@ -25,7 +25,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public generateInitialCodeBlock(
 	): string|undefined {
 		return this.generateRpgManagerCodeBlock(
-			'sessionNavigation',
+			'actNavigation',
 			{
 				abt: {
 					need: "",
@@ -50,7 +50,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public generateLastCodeBlock(
 	): string|undefined {
 		return this.generateRpgManagerCodeBlock(
-			'session',
+			'act',
 		);
 	}
 }

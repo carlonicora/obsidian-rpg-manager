@@ -2,7 +2,7 @@ import {TableResponseInterface} from "../../interfaces/response/TableResponseInt
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {AbstractComponentView} from "../../abstracts/AbstractComponentView";
 import {RecordType} from "../../enums/RecordType";
-import {SessionInterface} from "../../interfaces/data/SessionInterface";
+import {ActInterface} from "../../interfaces/data/ActInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 import {IdInterface} from "../../interfaces/data/IdInterface";
 
@@ -24,7 +24,7 @@ export class TableView extends AbstractComponentView {
 
 			switch(data.create){
 				case RecordType.Adventure:
-					createButtonEl.textContent = 'Create session from Adventure Plot';
+					createButtonEl.textContent = 'Create act from Adventure Plot';
 					createButtonEl.addEventListener("click", () => {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
 							id = this.factories.id.create(RecordType.Adventure, data.campaignId, data.adventureId);
@@ -35,16 +35,16 @@ export class TableView extends AbstractComponentView {
 									data.adventureId - 1,
 								);
 
-								let nextSessionId = 1;
+								let nextActId = 1;
 								if (previousAdventure != null){
-									const previousAdventureSessions = this.database.readList<SessionInterface>(
-										RecordType.Session,
+									const previousAdventureActs = this.database.readList<ActInterface>(
+										RecordType.Act,
 										id,
 										undefined,
 										previousAdventure.adventureId,
 									);
-									previousAdventureSessions.forEach((session: SessionInterface) => {
-										if (nextSessionId <= session.sessionId) nextSessionId = session.sessionId + 1;
+									previousAdventureActs.forEach((act: ActInterface) => {
+										if (nextActId <= act.actId) nextActId = act.actId + 1;
 									});
 								}
 
@@ -52,18 +52,18 @@ export class TableView extends AbstractComponentView {
 									const content = element[1];
 									if (data.campaignId != null) {
 										this.factories.files.silentCreate(
-											RecordType.Session,
-											'Session ' + nextSessionId,
+											RecordType.Act,
+											'Act ' + nextActId,
 											data.campaignId,
 											data.adventureId,
-											nextSessionId,
+											nextActId,
 											undefined,
 											{
 												synopsis: content.content,
 											}
 										);
 									}
-									nextSessionId++;
+									nextActId++;
 								});
 							}
 

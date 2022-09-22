@@ -17,7 +17,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		name: string,
 		campaignId: IdInterface,
 		adventureId: IdInterface|undefined=undefined,
-		sessionId: IdInterface|undefined=undefined,
+		actId: IdInterface|undefined=undefined,
 		sceneId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
@@ -38,7 +38,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			name,
 			campaignId.id,
 			adventureId?.id,
-			sessionId?.id,
+			actId?.id,
 			sceneId?.id,
 			additionalInformation,
 		);
@@ -87,7 +87,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		name: string,
 		campaignId: number,
 		adventureId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
+		actId: number|undefined=undefined,
 		sceneId: number|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 	): Promise<void> {
@@ -117,7 +117,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			name,
 			campaignId,
 			adventureId,
-			sessionId,
+			actId,
 			sceneId,
 			additionalInformation,
 		);

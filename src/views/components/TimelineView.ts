@@ -30,7 +30,7 @@ export class TimelineView extends AbstractComponentView {
 					type.addClass('red');
 					bullet.addClass('red');
 					break;
-				case "session":
+				case "act":
 					type.addClass('blue');
 					bullet.addClass('blue');
 					break;

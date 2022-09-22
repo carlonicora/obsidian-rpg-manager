@@ -1,7 +1,7 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ActInterface} from "../interfaces/data/ActInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
@@ -14,7 +14,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public endTime: Date | null;
 
 	public adventure: AdventureInterface;
-	public session: SessionInterface;
+	public act: ActInterface;
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
 
@@ -38,7 +38,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		super.loadHierarchy(database);
 
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
-		this.session = database.readSingle<SessionInterface>(RecordType.Session, this.id);
+		this.act = database.readSingle<ActInterface>(RecordType.Act, this.id);
 
 		try {
 			this.previousScene = database.readSingle<SceneInterface>(RecordType.Scene, this.id, this.sceneId - 1);

@@ -1,7 +1,7 @@
 export enum RecordType {
 	Campaign=0b1,
 	Adventure=0b10,
-	Session=0b100,
+	Act=0b100,
 	Scene=0b1000,
 	Character=0b10000,
 	NonPlayerCharacter=0b100000,
