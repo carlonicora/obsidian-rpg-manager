@@ -24,8 +24,6 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO BUG: when I update the synopsis, the reverse relationships disappear
-	 *
 	 * 		@TODO Add view to create new elements
 	 * 		@TODO Move timeline to Obsidian side view
 	 * 		@TODO Remove date from Act

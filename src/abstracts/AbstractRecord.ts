@@ -136,7 +136,7 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 	protected async initialiseRelationships(
 	): Promise<void> {
 		this.relationships = await new Map();
-		this.reverseRelationships = await new Map();
+		if (this.reverseRelationships === undefined) this.reverseRelationships = await new Map();
 		await this.factories.relationships.read(this.file, this.relationships);
 	}
 
