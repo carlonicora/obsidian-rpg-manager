@@ -149,7 +149,6 @@ export class DatabaseInitialiser {
 	/**
 	 * PRIVATE METHODS
 	 */
-
 	private static loadCampaignSettings(
 	): void {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {

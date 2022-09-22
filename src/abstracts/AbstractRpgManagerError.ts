@@ -35,6 +35,12 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 		return this.app.plugins.getPlugin('rpg-manager').tagHelper;
 	}
 
+	public updateSettings(
+		settings: Partial<RpgManagerSettingsInterface>,
+	): Promise<void> {
+		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings);
+	}
+
 	public getErrorTitle(
 	): string|undefined {
 		return undefined;

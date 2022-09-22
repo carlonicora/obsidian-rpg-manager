@@ -37,14 +37,4 @@ export class MusicTableComponent extends AbstractComponent {
 
 		return response;
 	}
-
-	/*
-	public copyToClipboard(data: string): void {
-		const listener = (e: ClipboardEvent) => {
-			if (e.clipboardData != null) {
-				e.clipboardData.setData('text/plain', data);
-			}
-		};
-	}
-	*/
 }

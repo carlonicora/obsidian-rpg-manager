@@ -9,4 +9,6 @@ export interface RpgManagerHelperInterface {
 	set database(database: DatabaseInterface);
 	get factories(): FactoriesInterface;
 	get tagHelper(): TagHelper;
+
+	updateSettings(settings: Partial<RpgManagerSettingsInterface>): Promise<void>;
 }

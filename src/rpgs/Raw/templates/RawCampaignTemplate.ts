@@ -15,13 +15,4 @@ export class RawCampaignTemplate extends CampaignTemplateFactory {
 	): string|undefined {
 		return undefined;
 	}
-
-/*
-protected generateFrontmatterAdditionalInformation(
-): string {
-	return 'rpgs: Raw\n' +
-		'apiCampaignKey: \n';
-}
-
- */
 }

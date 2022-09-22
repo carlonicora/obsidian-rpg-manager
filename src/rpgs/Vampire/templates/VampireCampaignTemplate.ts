@@ -15,12 +15,4 @@ export class VampireCampaignTemplate extends CampaignTemplateFactory {
 	): string|undefined {
 		return undefined;
 	}
-
-/*
-protected generateFrontmatterAdditionalInformation(
-): string {
-	return 'rpgs: Vampire\n';
-}
-
- */
 }

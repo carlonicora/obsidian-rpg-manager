@@ -73,42 +73,6 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 			this.factories.contents.create((additionalInformation.change ? additionalInformation.change : ''), ContentType.Markdown),
 		]);
 
-		/*
-		const response = new ResponseStoryCirclePlot(this.app);
-		response.you = this.templates.contents.create(
-			'**YOU:** ' + (additionalInformation.you ? additionalInformation.you : ''),
-			ContentType.Markdown,
-		);
-		response.need = this.templates.contents.create(
-			'**NEED:** ' + (additionalInformation.need ? additionalInformation.need : ''),
-			ContentType.Markdown,
-		);
-		response.go = this.templates.contents.create(
-			'**GO:** ' + (additionalInformation.go ? additionalInformation.go : ''),
-			ContentType.Markdown,
-		);
-		response.search = this.templates.contents.create(
-			'**SEARCH >** ' + (additionalInformation.search ? additionalInformation.search : ''),
-			ContentType.Markdown,
-		);
-		response.find = this.templates.contents.create(
-			'**FIND >** ' + (additionalInformation.find ? additionalInformation.find : ''),
-			ContentType.Markdown,
-		);
-		response.take = this.templates.contents.create(
-			'**TAKE >** ' + (additionalInformation.take ? additionalInformation.take : ''),
-			ContentType.Markdown,
-		);
-		response.change = this.templates.contents.create(
-			'**RETURN >** ' + (additionalInformation.return ? additionalInformation.return : ''),
-			ContentType.Markdown,
-		);
-		response.return = this.templates.contents.create(
-			'**CHANGE >** ' + (additionalInformation.change ? additionalInformation.change : ''),
-			ContentType.Markdown,
-		);
-		*/
-
 		return response;
 	}
 }

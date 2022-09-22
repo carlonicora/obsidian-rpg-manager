@@ -54,7 +54,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	async onload() {
 		console.log('Loading RpgManager ' + this.manifest.version);
-		await Logger.initialise(this.manifest.version, LogType.Error | LogType.Warning | LogType.Info);
+		await Logger.initialise(this.manifest.version, LogType.Error | LogType.Warning);
 
 		await this.loadSettings();
 		this.addSettingTab(new RpgManagerSettings(this.app));
@@ -66,15 +66,15 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.registerView(ViewType.Errors.toString(), (leaf) => new ErrorView(leaf));
 		this.registerView(ViewType.ReleaseNote.toString(), (leaf) => new ReleaseNoteView(leaf));
 
+		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
+	}
+
+	async onLayoutReady(){
 		if (this.settings.previousVersion !== this.manifest.version){
 			const databaseUpdater = await new DatabaseUpdater(this.app, this);
 			this.isVersionUpdated = await databaseUpdater.update(this.settings.previousVersion, this.manifest.version);
 		}
 
-		app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
-	}
-
-	async onLayoutReady(){
 		const reloadStart = Date.now();
 
 		this.registerCodeBlock();
@@ -137,7 +137,9 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.settings = Object.assign({}, RpgManagerDefaultSettings, await this.loadData());
 	}
 
-	async updateSettings(settings: Partial<RpgManagerSettingsInterface>) {
+	public async updateSettings(
+		settings: Partial<RpgManagerSettingsInterface>,
+	): Promise<void> {
 		Object.assign(this.settings, settings);
 		await this.saveData(this.settings);
 	}

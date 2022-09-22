@@ -1,22 +1,14 @@
 import {DatabaseUpdateWorkerInterface} from "../../interfaces/DatabaseUpdateWorkerInterface";
 import {AbstractDatabaseWorker} from "../../abstracts/AbstractDatabaseWorker";
-import {TFile} from "obsidian";
+import {TAbstractFile, TFile, TFolder} from "obsidian";
+import {LogMessageType, WarningLog} from "../../helpers/Logger";
 
 export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(
 	): Promise<void> {
-		console.error('Updating RPG Manager from v1.3 to v2.0');
-		/**
-		 * update session tags to act tags
-		 * 	read previous session tag
-		 * 	replace the word 'session' with the word 'act' (both uppercase and lowercase)
-		 * 	update all the files
-		 * 	read all the campaigns (HEY, I DON'T HAVE THEM HERE - READ FROM METADATA PLEASE)
-		 * 	rename the subfolders of campaign roots from 'Sessions' folders to 'Acts'
-		 */
+		new WarningLog(LogMessageType.Updater, 'Updating RPG Manager from v1.3 to v2.0');
 
-		let sessionTag: string = this.settings.sessionTag;
-		let actTag = sessionTag
+		const actTag = this.settings.sessionTag
 			.replaceAll('session', 'act')
 			.replaceAll('Session', 'Act')
 			.replaceAll('SESSION', 'ACT');
@@ -24,15 +16,16 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 		const campaigns:Array<TFile> = [];
 
 		const files: TFile[] = await this.app.vault.getMarkdownFiles();
+
 		for (let index=0; index<files.length; index++){
-			//load file content
 			const content = await this.app.vault.read(files[index]);
 
-			let newFileContent = content.replaceAll(this.settings.sessionTag, this.settings.actTag);
+			const newFileContent = await content
+				.replaceAll(this.settings.sessionTag, this.settings.actTag)
+				.replaceAll('```RpgManager\nsession', '```RpgManager\nact');
 
 			if (newFileContent !== content) {
-				console.log('File Changed: ' + files[index].name);
-				//await this.app.vault.modify(files[index], newFileContent);
+				await this.app.vault.modify(files[index], newFileContent);
 			}
 
 			if (content.contains(this.settings.campaignTag)){
@@ -40,12 +33,21 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 			}
 		}
 
+		await this.updateSettings({actTag: actTag});
 
-		//await this.settings.updateSettings({actTag: actTag});
+		const changedPaths: Map<string, boolean> = new Map<string, boolean>();
 
 		for (let index=0; index<campaigns.length; index++){
 			const file: TFile = campaigns[index];
-			console.log(file.path);
+			await file.parent.children.forEach((fileOrFolder: TAbstractFile) => {
+				if (fileOrFolder instanceof TFolder && fileOrFolder.name === 'Sessions'){
+					if (changedPaths.get(fileOrFolder.path) === undefined) {
+						changedPaths.set(fileOrFolder.path + '', true);
+						const newPath = fileOrFolder.path.replaceAll('Sessions', 'Acts');
+						this.app.vault.rename(fileOrFolder, newPath);
+					}
+				}
+			});
 		}
 
 		return;

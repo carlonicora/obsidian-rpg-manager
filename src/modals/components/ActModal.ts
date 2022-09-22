@@ -18,7 +18,6 @@ export class ActModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		console.log(RecordType[this.modal.type]);
 		this.modal.actId = this.factories.id.create(RecordType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
 		this.modal.actId.id = 1;
 

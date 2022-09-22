@@ -36,4 +36,10 @@ export abstract class AbstractRpgManager implements RpgManagerHelperInterface{
 	): TagHelper {
 		return this.app.plugins.getPlugin('rpg-manager').tagHelper;
 	}
+
+	public updateSettings(
+		settings: Partial<RpgManagerSettingsInterface>,
+	): Promise<void> {
+		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings);
+	}
 }

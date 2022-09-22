@@ -31,4 +31,10 @@ export abstract class AbstractRpgManagerComponent extends Component implements R
 	): TagHelper {
 		return this.app.plugins.getPlugin('rpg-manager').tagHelper;
 	}
+
+	public updateSettings(
+		settings: Partial<RpgManagerSettingsInterface>,
+	): Promise<void> {
+		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings);
+	}
 }

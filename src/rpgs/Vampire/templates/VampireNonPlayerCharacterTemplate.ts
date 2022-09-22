@@ -15,15 +15,4 @@ export class VampireNonPlayerCharacterTemplate extends NonPlayerCharacterTemplat
 	): string|undefined {
 		return undefined;
 	}
-
-/*
-protected generateFrontmatterAdditionalInformation(
-): string {
-	let response = super.generateFrontmatterAdditionalInformation();
-	response += 'generation: \n';
-
-	return response;
-}
-
- */
 }
