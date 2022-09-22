@@ -6,6 +6,7 @@ import {SessionInterface} from "../../interfaces/data/SessionInterface";
 
 export class SessionModal extends AbstractModalComponent {
 	private sessions: SessionInterface[];
+	private allSession:SessionInterface[];
 
 	private sessionEl: HTMLSelectElement;
 	private sessionErrorEl: HTMLParagraphElement;
@@ -16,12 +17,22 @@ export class SessionModal extends AbstractModalComponent {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
+
+		console.log(RecordType[this.modal.type]);
 		this.modal.sessionId = this.factories.id.create(RecordType.Session, this.modal.campaignId.id, this.modal.adventureId?.id);
 		this.modal.sessionId.id = 1;
 
-		this.sessions = this.database.readList<SessionInterface>(
-			RecordType.Session,
-			this.modal.adventureId,
+		this.allSession = this.database.read<SessionInterface>(
+			(record: SessionInterface) =>
+				record.id.type === RecordType.Session &&
+				record.id.campaignId === this.modal.campaignId.id
+		);
+
+		this.sessions = this.database.read<SessionInterface>(
+			(record: SessionInterface) =>
+				record.id.type === RecordType.Session &&
+				record.id.campaignId === this.modal.campaignId.id &&
+				record.id.adventureId === this.modal.adventureId?.id
 		);
 	}
 
@@ -75,7 +86,7 @@ export class SessionModal extends AbstractModalComponent {
 	private addNewSessionElements(
 		containerEl: HTMLElement,
 	): void {
-		this.sessions.forEach((data: SessionInterface) => {
+		this.allSession.forEach((data: SessionInterface) => {
 			if (this.modal.sessionId !== undefined && data.sessionId >= (this.modal.sessionId.id ?? 0)) {
 				this.modal.sessionId.id = (data.sessionId + 1);
 			}
