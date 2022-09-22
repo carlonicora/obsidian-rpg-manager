@@ -11,6 +11,7 @@ import {ResponseHeaderElement} from "../data/responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {Music} from "../data/Music";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {Session} from "../data/Session";
 
 export class HeaderComponent extends AbstractComponent{
 	public async generateData(
@@ -91,6 +92,7 @@ export class HeaderComponent extends AbstractComponent{
 				} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
+				response.addElement(new ResponseHeaderElement(this.app, 'Session', (data.sessionId === undefined ? '' : data.sessionId.toString()), HeaderResponseType.SessionSelection));
 			} else if (data instanceof Music){
 				if (data.image === undefined) {
 					response.imgSrc = await data.getThumbnail();
@@ -99,6 +101,8 @@ export class HeaderComponent extends AbstractComponent{
 				}
 
 				if (data.url !== undefined) response.addElement(new ResponseHeaderElement(this.app, 'link', data.url, HeaderResponseType.Long));
+			} else if (data instanceof Session) {
+				response.addElement(new ResponseHeaderElement(this.app, 'Scenes', '', HeaderResponseType.ScenesSelection));
 			}
 		}
 

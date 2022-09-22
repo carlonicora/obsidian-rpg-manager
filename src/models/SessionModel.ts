@@ -4,7 +4,6 @@ import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordType} from "../enums/RecordType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {RelationshipType} from "../enums/RelationshipType";
 import {EventTableComponent} from "../components/EventTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
 import {ClueTableComponent} from "../components/ClueTableComponent";

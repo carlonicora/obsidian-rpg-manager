@@ -34,9 +34,16 @@ export class HeaderView extends AbstractComponentView {
 
 			crsContainer.createDiv({cls: prefix+ 'Title', text: element.title});
 			const contentEl = crsContainer.createDiv({cls: prefix+ 'Text'});
-			element.value.fillContent(contentEl, this.sourcePath);
 
-			if (element.type === HeaderResponseType.Short){
+			if (element.type === HeaderResponseType.ScenesSelection){
+				contentEl.createEl('span', {text: 'button to add scenes'});
+			} else if (element.type === HeaderResponseType.SessionSelection){
+				contentEl.createEl('span', {text: 'session dropdown'});
+			} else {
+				element.value.fillContent(contentEl, this.sourcePath);
+			}
+
+			if (element.type !== HeaderResponseType.Long){
 				crsContainer.createDiv({cls: 'reset'});
 			}
 		});
