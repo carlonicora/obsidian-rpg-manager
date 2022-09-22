@@ -3,9 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {LocationInterface} from "../interfaces/data/LocationInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {EventTableComponent} from "../components/EventTableComponent";
-import {ClueTableComponent} from "../components/ClueTableComponent";
 import {LocationTableComponent} from "../components/LocationTableComponent";
 import {RelationshipType} from "../enums/RelationshipType";
 
@@ -18,32 +15,11 @@ export class LocationModel extends AbstractModel {
 
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 
-		await this.response.addComponent(
-			CharacterTableComponent,
-			this.currentElement.getRelationships(RecordType.Character | RecordType.NonPlayerCharacter),
-		);
-
-		await this.response.addComponent(
-			EventTableComponent,
-			this.currentElement.getRelationships(RecordType.Event, RelationshipType.Reverse),
-		);
-
-		await this.response.addComponent(
-			ClueTableComponent,
-			this.currentElement.getRelationships(RecordType.Clue),
-		);
-
-		await this.response.addComponent(
-			LocationTableComponent,
-			this.currentElement.getRelationships(RecordType.Location, RelationshipType.DirectInFrontmatter),
-			'Location contained',
-		);
-
-		await this.response.addComponent(
-			LocationTableComponent,
-			this.currentElement.getRelationships(RecordType.Location, RelationshipType.ReverseInFrontmatter),
-			'Part of locations',
-		);
+		await this.addRelationships(RecordType.Character);
+		await this.addRelationships(RecordType.Event, RelationshipType.Reverse);
+		await this.addRelationships(RecordType.Clue);
+		await this.addRelationships(RecordType.Location, RelationshipType.DirectInFrontmatter, 'Contains');
+		await this.addRelationships(RecordType.Location, RelationshipType.ReverseInFrontmatter, 'Inside');
 
 		return this.response;
 	}

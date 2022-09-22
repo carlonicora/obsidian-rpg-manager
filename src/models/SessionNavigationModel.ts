@@ -17,8 +17,8 @@ export class SessionNavigationModel extends AbstractModel {
 				scene.id.campaignId === this.currentElement.campaign.campaignId &&
 				scene.sessionId === this.currentElement.id.sessionId,
 			(function (leftData: SceneInterface, rightData: SceneInterface) {
-				if (leftData.sceneId > rightData.sceneId) return +1;
-				if (leftData.sceneId < rightData.sceneId) return -1;
+				if (leftData.sceneId > rightData.sceneId) return - 1;
+				if (leftData.sceneId < rightData.sceneId) return + 1;
 				return 0;
 			}),
 		);

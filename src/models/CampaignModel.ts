@@ -4,9 +4,6 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {ActInterface} from "../interfaces/data/ActInterface";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {RecordType} from "../enums/RecordType";
-import {ActTableComponent} from "../components/ActTableComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {AdventureTableComponent} from "../components/AdventureTableComponent";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 
 export class CampaignModel extends AbstractModel {
@@ -14,8 +11,8 @@ export class CampaignModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		await this.response.addComponent(
-			AdventureTableComponent,
+		await this.addList(
+			RecordType.Adventure,
 			this.database.readList<AdventureInterface>(RecordType.Adventure, this.currentElement.id)
 				.sort(function (leftData: AdventureInterface, rightData: AdventureInterface) {
 					if (leftData.adventureId > rightData.adventureId) return -1;
@@ -24,8 +21,8 @@ export class CampaignModel extends AbstractModel {
 				}),
 		);
 
-		await this.response.addComponent(
-			ActTableComponent,
+		await this.addList(
+			RecordType.Act,
 			this.database.readList<ActInterface>(RecordType.Act, this.currentElement.id)
 				.sort(function (leftData: ActInterface, rightData: ActInterface) {
 					if (leftData.actId > rightData.actId) return -1;
@@ -34,8 +31,8 @@ export class CampaignModel extends AbstractModel {
 				}),
 		);
 
-		await this.response.addComponent(
-			CharacterTableComponent,
+		await this.addList(
+			RecordType.Character,
 			this.database.readList<CharacterInterface>(RecordType.Character | RecordType.NonPlayerCharacter, this.currentElement.id)
 				.sort(function (leftData: CharacterInterface, rightData: CharacterInterface) {
 					if (leftData.name > rightData.name) return 1;
@@ -43,6 +40,7 @@ export class CampaignModel extends AbstractModel {
 					return 0;
 				}),
 		);
+
 
 		return this.response;
 	}
