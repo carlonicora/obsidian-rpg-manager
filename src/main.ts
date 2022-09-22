@@ -26,7 +26,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	 * ## Version 2.0
 	 * 		@TODO BUG: show the status of a character (deceased or not) in the characters list
 	 * 		@TODO BUG: when I update the synopsis, the reverse relationships disappear
-	 * 		@TODO BUG: the navigation of scenes does not work if the previous scene is in another adventure
 	 *
 	 * 		@TODO Add view to create new elements
 	 * 		@TODO Move timeline to Obsidian side view
