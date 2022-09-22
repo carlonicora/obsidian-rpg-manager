@@ -2,6 +2,7 @@ import {DatabaseUpdateWorkerInterface} from "../../interfaces/DatabaseUpdateWork
 import {AbstractDatabaseWorker} from "../../abstracts/AbstractDatabaseWorker";
 import {TAbstractFile, TFile, TFolder} from "obsidian";
 import {LogMessageType, WarningLog} from "../../helpers/Logger";
+import {base} from "w3c-keyname";
 
 export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(
@@ -14,6 +15,7 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 			.replaceAll('SESSION', 'ACT');
 
 		const campaigns:Array<TFile> = [];
+		const sessions:Array<TFile> = [];
 
 		const files: TFile[] = await this.app.vault.getMarkdownFiles();
 
@@ -25,6 +27,8 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 				.replaceAll('```RpgManager\nsession', '```RpgManager\nact');
 
 			if (newFileContent !== content) {
+				if (files[index].basename.toLowerCase().indexOf('session') !== -1) sessions.push(files[index]);
+
 				await this.app.vault.modify(files[index], newFileContent);
 			}
 
@@ -34,6 +38,17 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 		}
 
 		await this.updateSettings({actTag: actTag});
+
+		for(let sessionIndex=0; sessionIndex<sessions.length; sessionIndex++){
+			const path = sessions[sessionIndex].path;
+			const basename = sessions[sessionIndex].basename;
+			const newBaseName = basename
+				.replaceAll('session', 'act')
+				.replaceAll('Session', 'Act')
+				.replaceAll('SESSION', 'ACT');
+			const newPath = path.replaceAll(basename, newBaseName);
+			await this.app.vault.rename(sessions[sessionIndex], newPath);
+		}
 
 		const changedPaths: Map<string, boolean> = new Map<string, boolean>();
 
