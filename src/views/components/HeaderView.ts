@@ -5,7 +5,9 @@ import {HeaderResponseType} from "../../enums/HeaderResponseType";
 import {SessionInterface} from "../../interfaces/data/SessionInterface";
 import {RecordType} from "../../enums/RecordType";
 import {IdInterface} from "../../interfaces/data/IdInterface";
-import {CachedMetadata, TFile} from "obsidian";
+import {TFile} from "obsidian";
+import {SceneSelectionModal} from "../../modals/SceneSelectionModal";
+import {SorterComparisonElement} from "../../database/SorterComparisonElement";
 
 export class HeaderView extends AbstractComponentView {
 	private sessionSelectorEl: HTMLSelectElement;
@@ -42,7 +44,7 @@ export class HeaderView extends AbstractComponentView {
 			const contentEl = crsContainer.createDiv({cls: prefix+ 'Text'});
 
 			if (element.type === HeaderResponseType.ScenesSelection){
-				contentEl.createEl('span', {text: 'button to add scenes'});
+				this.addScenesSelection(contentEl, element);
 			} else if (element.type === HeaderResponseType.SessionSelection){
 				this.addSessionSelector(contentEl, element);
 			} else {
@@ -72,15 +74,8 @@ export class HeaderView extends AbstractComponentView {
 		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
 		
 		if (sceneId !== undefined) {
-			const sessions: Array<SessionInterface> = this.database.read<SessionInterface>(
-				(session: SessionInterface) =>
-					session.id.type === RecordType.Session &&
-					session.id.campaignId === sceneId.campaignId
-			).sort(function(leftData:SessionInterface, rightData:SessionInterface) {
-				if (leftData.sessionId > rightData.sessionId) return -1;
-				if (leftData.sessionId < rightData.sessionId) return 1;
-				return 0;
-			});
+			const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === RecordType.Session && session.id.campaignId === sceneId.campaignId)
+					.sort(this.factories.sorter.create<SessionInterface>([new SorterComparisonElement((session: SessionInterface) => session.sessionId)]));
 
 			this.sessionSelectorEl = contentEl.createEl("select");
 			if (sessions.length > 1) {
@@ -104,48 +99,25 @@ export class HeaderView extends AbstractComponentView {
 		}
 	}
 
-	public async selectSession(
+	private addScenesSelection(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): void {
+		const sceneSelectionButtonEl = contentEl.createEl('button', {text: 'Select session scenes'});
+		sceneSelectionButtonEl.addEventListener("click", () => {
+			new SceneSelectionModal(this.app, data.additionalInformation.session).open();
+		});
+	}
+
+	private async selectSession(
 		data: HeaderResponseElementInterface,
 	): Promise<void> {
 		const file: TFile|undefined = data.additionalInformation.file;
 
 		if (file !== undefined){
-			this.app.vault.read(file)
-				.then((fileContent: string) => {
-					return {content: fileContent, fileContent: fileContent.split('\n')};
-				})
-				.then((val: {content: string, fileContent: string[]}) => {
-					const newfileContentArray: Array<string> = [];
-
-					let hasFrontMatterStarted = false;
-					let hasFrontMatterEnded = false;
-					let hasSessionBeenAdded = false;
-					for (let index=0; index<val.fileContent.length; index++){
-						if (!hasFrontMatterEnded) {
-							if (val.fileContent[index] === '---') {
-								if (!hasFrontMatterStarted) {
-									hasFrontMatterStarted = true;
-								} else {
-									hasFrontMatterEnded = true;
-
-									if (!hasSessionBeenAdded) newfileContentArray.push('session: ' + this.sessionSelectorEl.value);
-								}
-							} else if (val.fileContent[index].trimStart().toLowerCase().startsWith('session:')) {
-								console.log('found');
-								val.fileContent[index] = 'session: ' + this.sessionSelectorEl.value;
-								hasSessionBeenAdded = true;
-							}
-						}
-
-						newfileContentArray.push(val.fileContent[index]);
-					}
-
-					const newFileContent = newfileContentArray.join('\n');
-
-					if (newFileContent !== val.content){
-						this.app.vault.modify(file, newFileContent);
-					}
-				});
+			const map: Map<string,string> = new Map<string, string>();
+			map.set('session', this.sessionSelectorEl.value);
+			this.factories.frontmatter.update(file, map);
 		}
 	}
 }
