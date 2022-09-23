@@ -68,9 +68,9 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		const newSceneId = scene.sceneId + 1;
 		fileFactory.silentCreate(
 			RecordType.Scene,
-			's' +
+			'a' +
 			(scene.act.actId < 10 ? '0' + scene.act.actId.toString(): scene.act.actId.toString()) +
-			'e' +
+			's' +
 			(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()),
 			scene.campaign.campaignId,
 			scene.adventure.adventureId,
