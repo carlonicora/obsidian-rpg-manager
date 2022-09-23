@@ -17,6 +17,7 @@ import {CharacterTableComponent} from "../components/CharacterTableComponent";
 import {AdventureTableComponent} from "../components/AdventureTableComponent";
 import {ActTableComponent} from "../components/ActTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
+import {SessionTableComponent} from "../components/SessionTableComponent";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected componentFactory: ComponentFactory;
@@ -40,7 +41,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		this.componentMap.set(RecordType.Character, CharacterTableComponent);
 		this.componentMap.set(RecordType.Music, MusicTableComponent);
 		this.componentMap.set(RecordType.Adventure, AdventureTableComponent);
-		//this.componentMap.set(RecordType.Session, SessionT);
+		this.componentMap.set(RecordType.Session, SessionTableComponent);
 		this.componentMap.set(RecordType.Act, ActTableComponent);
 		this.componentMap.set(RecordType.Scene, SceneTableComponent);
 	}

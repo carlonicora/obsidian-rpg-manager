@@ -24,7 +24,6 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO (***) feat: Sessions list in campaign model
 	 * 		@TODO (**) fix: scene navigation should allow to navigate to the next scene even if it is in a different act
 	 * 		@TODO (*) feat: Remove Notes
 	 *
