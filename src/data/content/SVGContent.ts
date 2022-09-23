@@ -1,5 +1,5 @@
 import {AbstractContent} from "../../abstracts/AbstractContent";
-import {getIcon, setIcon} from "obsidian";
+import {setIcon} from "obsidian";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";
 
 export class SVGContent extends AbstractContent {
@@ -10,7 +10,6 @@ export class SVGContent extends AbstractContent {
 		sourcePath: string,
 	): void {
 		if (this.content != null){
-			let rotation: number;
 			if (this.additionalInfo.storyCircleStage !== undefined) {
 				const storyCircleStage: StoryCircleStage = this.additionalInfo.storyCircleStage;
 

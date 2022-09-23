@@ -5,7 +5,6 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordType} from "../enums/RecordType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {SorterType} from "../enums/SorterType";
 
 export class SessionModel extends AbstractModel {
 	protected currentElement: SessionInterface;

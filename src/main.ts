@@ -24,12 +24,12 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
+	 * 		@TODO fix: Correct counter in lists
+	 *
 	 * ## Version 2.1
 	 *
 	 * 		@TODO (*) Add view to create new elements
-	 * 		@TODO (*) Move timeline to Obsidian side view
-	 * 		@TODO (*) feat: Add Database Status View
-	 * 		@TODO (*) feat: Add Creation View
+	 * 		@TODO (*) Move timeline to Obsidian View
 	 *
 	 **/
 	private isVersionUpdated=false;
