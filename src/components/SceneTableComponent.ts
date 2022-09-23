@@ -20,6 +20,7 @@ export class SceneTableComponent extends AbstractComponent {
 
 		const headers = [
 			this.factories.contents.create('#', ContentType.String, true),
+			this.factories.contents.create('', ContentType.String, true),
 			this.factories.contents.create('Scene', ContentType.String),
 			this.factories.contents.create('Synopsis', ContentType.String),
 		];
@@ -36,6 +37,7 @@ export class SceneTableComponent extends AbstractComponent {
 			if (scene !== undefined) {
 				const row = [
 					this.factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
+					this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage}),
 					this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
 					this.factories.contents.create(scene.synopsis, ContentType.Markdown),
 				];

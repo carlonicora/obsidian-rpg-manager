@@ -17,10 +17,11 @@ export class SessionNavigationModel extends AbstractModel {
 				scene.id.type === RecordType.Scene &&
 				scene.id.campaignId === this.currentElement.campaign.campaignId &&
 				scene.sessionId === this.currentElement.id.sessionId,
-		).sort(
-			this.factories.sorter.create<SceneInterface>([
-				new SorterComparisonElement((scene: SceneInterface) => scene.sceneId)
-			]));
+		).sort(this.factories.sorter.create<SceneInterface>([
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+		]));
 
 		this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 

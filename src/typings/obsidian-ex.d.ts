@@ -2,6 +2,8 @@ import "obsidian";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 
 declare module "obsidian" {
+	function getIcon(iconId: string, size?: number): SVGSVGElement|null;
+
 	interface MetadataCache {
 		trigger(...args: Parameters<MetadataCache["on"]>): void;
 		trigger(name: string, ...data: any[]): void;
