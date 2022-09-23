@@ -2,6 +2,7 @@ import {RecordInterface} from "../database/RecordInterface";
 import {AdventureInterface} from "./AdventureInterface";
 import {ActInterface} from "./ActInterface";
 import {SessionInterface} from "./SessionInterface";
+import {StoryCircleStage} from "../../enums/StoryCircleStage";
 
 export interface SceneInterface extends RecordInterface {
 	sceneId: number;
@@ -9,6 +10,7 @@ export interface SceneInterface extends RecordInterface {
 	action: string|null;
 	startTime: Date|null;
 	endTime: Date|null;
+	storycircleStage: StoryCircleStage|undefined;
 
 	adventure: AdventureInterface;
 	session: SessionInterface|undefined;

@@ -3,4 +3,5 @@ export enum HeaderResponseType {
 	Long,
 	ScenesSelection,
 	SessionSelection,
+	SceneStoryCircle,
 }

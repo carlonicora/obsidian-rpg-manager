@@ -8,9 +8,11 @@ import {IdInterface} from "../../interfaces/data/IdInterface";
 import {TFile} from "obsidian";
 import {SceneSelectionModal} from "../../modals/SceneSelectionModal";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
+import {StoryCircleStage} from "../../enums/StoryCircleStage";
 
 export class HeaderView extends AbstractComponentView {
 	private sessionSelectorEl: HTMLSelectElement;
+	private storyCircleSelectorEl: HTMLSelectElement;
 
 	render(
 		container: HTMLElement,
@@ -45,8 +47,10 @@ export class HeaderView extends AbstractComponentView {
 
 			if (element.type === HeaderResponseType.ScenesSelection){
 				this.addScenesSelection(contentEl, element);
-			} else if (element.type === HeaderResponseType.SessionSelection){
+			} else if (element.type === HeaderResponseType.SessionSelection) {
 				this.addSessionSelector(contentEl, element);
+			} else if (element.type === HeaderResponseType.SceneStoryCircle) {
+				this.addStoryCircleStageSelector(contentEl, element);
 			} else {
 				element.value.fillContent(contentEl, this.sourcePath);
 			}
@@ -67,12 +71,47 @@ export class HeaderView extends AbstractComponentView {
 		crsContainer.createDiv({cls: 'reset'});
 	}
 
-	private addSessionSelector(
+	private addStoryCircleStageSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
 		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
 		
+		if (sceneId !== undefined) {
+
+			this.storyCircleSelectorEl = contentEl.createEl("select");
+			this.storyCircleSelectorEl.createEl("option", {
+				text: "",
+				value: ""
+			}).selected = true;
+
+			Object.keys(StoryCircleStage).filter((v) => isNaN(Number(v))).forEach((type, index) => {
+				const storyCircleOptionEl = this.storyCircleSelectorEl.createEl("option", {
+					text: type,
+					value: type,
+				});
+
+				if (data.value.content.toString() === type) storyCircleOptionEl.selected = true;
+			});
+
+			this.storyCircleSelectorEl.addEventListener("change", (e) => {
+				const file: TFile|undefined = data.additionalInformation.file;
+
+				if (file !== undefined){
+					const map: Map<string,string> = new Map<string, string>();
+					map.set('storycircle', this.storyCircleSelectorEl.value);
+					this.factories.frontmatter.update(file, map);
+				}
+			});
+		}
+	}
+
+	private addSessionSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): void {
+		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
+
 		if (sceneId !== undefined) {
 			const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === RecordType.Session && session.id.campaignId === sceneId.campaignId)
 					.sort(this.factories.sorter.create<SessionInterface>([new SorterComparisonElement((session: SessionInterface) => session.sessionId)]));

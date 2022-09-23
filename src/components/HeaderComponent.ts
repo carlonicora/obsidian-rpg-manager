@@ -12,6 +12,7 @@ import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {Music} from "../data/Music";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {Session} from "../data/Session";
+import {StoryCircleStage} from "../enums/StoryCircleStage";
 
 export class HeaderComponent extends AbstractComponent{
 	public async generateData(
@@ -93,6 +94,8 @@ export class HeaderComponent extends AbstractComponent{
 					response.addElement(new ResponseHeaderElement(this.app, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
 				response.addElement(new ResponseHeaderElement(this.app, 'Session', (data.sessionId === undefined ? '' : data.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: data.id, file: data.file}));
+				response.addElement(new ResponseHeaderElement(this.app, 'Story Circle Stage', (data.storycircleStage !== undefined ? StoryCircleStage[data.storycircleStage] : ''), HeaderResponseType.SceneStoryCircle, {sceneId: data.id, file: data.file}));
+
 			} else if (data instanceof Music){
 				if (data.image === undefined) {
 					response.imgSrc = await data.getThumbnail();

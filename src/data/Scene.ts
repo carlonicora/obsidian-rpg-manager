@@ -7,6 +7,7 @@ import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {StoryCircleStage} from "../enums/StoryCircleStage";
 
 export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public sceneId: number;
@@ -20,6 +21,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public act: ActInterface;
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
+	public storycircleStage: StoryCircleStage|undefined=undefined;
 
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
@@ -36,6 +38,10 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		this.startTime = this.initialiseDate(frontmatter?.times?.start ?? frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;
+
+		if (frontmatter?.storycircle !== undefined){
+			this.storycircleStage = StoryCircleStage[frontmatter.storycircle as keyof typeof StoryCircleStage];
+		}
 
 		super.initialiseData(frontmatter);
 	}
