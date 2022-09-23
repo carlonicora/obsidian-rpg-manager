@@ -17,8 +17,10 @@ export class AdventureModal extends AbstractModalComponent {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
-		this.modal.adventureId = this.factories.id.create(RecordType.Adventure, this.modal.campaignId.id);
-		this.modal.adventureId.id = 1;
+		if (this.modal.adventureId === undefined) {
+			this.modal.adventureId = this.factories.id.create(RecordType.Adventure, this.modal.campaignId.id);
+			this.modal.adventureId.id = 1;
+		}
 
 		this.adventures = this.database.readList<AdventureInterface>(RecordType.Adventure, this.modal.campaignId);
 	}
@@ -104,7 +106,7 @@ export class AdventureModal extends AbstractModalComponent {
 				value: adventure.adventureId.toString(),
 			});
 
-			if (this.adventures.length === 1){
+			if (this.adventures.length === 1 || this.modal.adventureId?.id === adventure.adventureId){
 				adventureOptionEl.selected = true;
 				this.selectAdventure();
 			}

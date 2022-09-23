@@ -41,21 +41,21 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		public type: RecordType,
 		private create: boolean = true,
 		private name: string|null = null,
-		campaignId: number|null = null,
-		adventureId: number|null = null,
-		actId: number|null = null,
+		campaignId: number|undefined = undefined,
+		adventureId: number|undefined = undefined,
+		actId: number|undefined = undefined,
 	) {
 		super(app);
 
-		if (campaignId != null) {
+		if (campaignId !== undefined) {
 			const campaign:IdInterface|undefined = this.factories.id.create(RecordType.Campaign, campaignId);
 			if (campaign !== undefined) {
 				this.campaignId = campaign;
 
-				if (adventureId != null) {
+				if (adventureId !== undefined) {
 					this.adventureId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId);
 
-					if (actId != null) this.actId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId, actId);
+					if (actId !== undefined) this.actId = this.factories.id.create(RecordType.Act, campaignId, adventureId, actId);
 				}
 			}
 		}

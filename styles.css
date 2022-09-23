@@ -478,3 +478,7 @@
 .rpgm-raw-character-record-shet-container table tr > td.untrained {
   color: var(--text-muted);
 }
+
+.rpgm-right-view {
+  padding: 10px;
+}

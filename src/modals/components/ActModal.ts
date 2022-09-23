@@ -18,8 +18,10 @@ export class ActModal extends AbstractModalComponent {
 	) {
 		super(app, modal);
 
-		this.modal.actId = this.factories.id.create(RecordType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
-		this.modal.actId.id = 1;
+		if (this.modal.actId === undefined) {
+			this.modal.actId = this.factories.id.create(RecordType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
+			this.modal.actId.id = 1;
+		}
 
 		this.allAct = this.database.read<ActInterface>(
 			(record: ActInterface) =>
@@ -116,7 +118,7 @@ export class ActModal extends AbstractModalComponent {
 				value: act.actId.toString(),
 			});
 
-			if (this.acts.length === 1){
+			if (this.acts.length === 1 || this.modal.actId?.id === act.actId){
 				actOptionEl.selected = true;
 				this.selectAct();
 			}

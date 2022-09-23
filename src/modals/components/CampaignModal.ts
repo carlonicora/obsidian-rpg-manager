@@ -66,7 +66,7 @@ export class CampaignModal extends AbstractModalComponent {
 				containerEl,
 			)
 		} else {
-			if (this.modal.type === RecordType.Adventure) {
+			if (this.modal.type === RecordType.Adventure || this.modal.type === RecordType.Act || this.modal.type === RecordType.Scene) {
 				this.modal.adventureModal = this.factories.modals.create(
 					this.modal.campaignSetting,
 					RecordType.Adventure,

@@ -1,9 +1,9 @@
-import {AbstractView} from "../abstracts/AbstractView";
 import {ViewType} from "../enums/ViewType";
 import {Component, MarkdownRenderer} from "obsidian";
 import {releaseNotes} from "../ReleaseNotes";
+import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 
-export class ReleaseNoteView extends AbstractView {
+export class ReleaseNoteView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.ReleaseNote.toString();
 	protected displayText = 'RPG Manager Release Notes';
 	public icon = 'd20';

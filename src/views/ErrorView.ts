@@ -1,9 +1,9 @@
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
-import {AbstractView} from "../abstracts/AbstractView";
 import {ViewType} from "../enums/ViewType";
+import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 
-export class ErrorView extends AbstractView {
+export class ErrorView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Errors.toString();
 	protected displayText = 'RPG Manager Errors';
 	public icon = 'd20';

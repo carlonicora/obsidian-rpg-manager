@@ -13,11 +13,11 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
 import {RawCharacterRecordSheetView} from "../rpgs/Raw/views/RawCharacterRecordSheetView";
 import {ViewType} from "../enums/ViewType";
-import {AbstractView} from "../abstracts/AbstractView";
 import {App, WorkspaceLeaf} from "obsidian";
 import {ViewFactoryInterface} from "../interfaces/factories/ViewFactoryInterface";
 import {ViewInterface} from "../interfaces/ViewInterface";
 import {RecordType} from "../enums/RecordType";
+import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 
 export class ViewFactory extends AbstractFactory implements ViewFactoryInterface{
 	private viewTypeMap: Map<string,any>;
@@ -64,10 +64,11 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 
 		const leaf: WorkspaceLeaf = this.app.workspace.getLeavesOfType(viewType.toString())[0];
 
-		const view: AbstractView = leaf.view as AbstractView;
-		view.initialise(params);
-		view.render();
+		const view: AbstractRpgManagerView = leaf.view as AbstractRpgManagerView;
 
 		this.app.workspace.revealLeaf(leaf);
+
+		view.initialise(params);
+		view.render();
 	}
 }
