@@ -15,6 +15,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 	public action: string|null;
 	public startTime: Date|null;
 	public endTime: Date|null;
+	public date: Date|null;
 
 	public adventure: AdventureInterface;
 	public session: SessionInterface|undefined=undefined;
@@ -35,6 +36,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		} else {
 			this.sessionId = undefined;
 		}
+		this.date = frontmatter?.date !== undefined ? this.initialiseDate(frontmatter.date) : null;
 		this.startTime = this.initialiseDate(frontmatter?.times?.start ?? frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;

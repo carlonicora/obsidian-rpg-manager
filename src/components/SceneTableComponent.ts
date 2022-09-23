@@ -23,6 +23,7 @@ export class SceneTableComponent extends AbstractComponent {
 			this.factories.contents.create('', ContentType.String, true),
 			this.factories.contents.create('Scene', ContentType.String),
 			this.factories.contents.create('Synopsis', ContentType.String),
+			this.factories.contents.create('Date', ContentType.String),
 		];
 
 		if (additionalInformation?.parentType === RecordType.Session ){
@@ -40,6 +41,7 @@ export class SceneTableComponent extends AbstractComponent {
 					this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage}),
 					this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
 					this.factories.contents.create(scene.synopsis, ContentType.Markdown),
+					this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.String, true),
 				];
 
 				if (additionalInformation?.parentType === RecordType.Session ){

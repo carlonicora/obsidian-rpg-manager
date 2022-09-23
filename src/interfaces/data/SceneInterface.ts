@@ -11,6 +11,7 @@ export interface SceneInterface extends RecordInterface {
 	startTime: Date|null;
 	endTime: Date|null;
 	storycircleStage: StoryCircleStage|undefined;
+	date: Date|null;
 
 	adventure: AdventureInterface;
 	session: SessionInterface|undefined;
