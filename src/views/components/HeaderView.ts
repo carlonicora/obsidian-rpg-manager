@@ -5,7 +5,7 @@ import {HeaderResponseType} from "../../enums/HeaderResponseType";
 import {SessionInterface} from "../../interfaces/data/SessionInterface";
 import {RecordType} from "../../enums/RecordType";
 import {IdInterface} from "../../interfaces/data/IdInterface";
-import {TFile} from "obsidian";
+import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {SceneSelectionModal} from "../../modals/SceneSelectionModal";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";
@@ -115,6 +115,18 @@ export class HeaderView extends AbstractComponentView {
 		if (sceneId !== undefined) {
 			const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === RecordType.Session && session.id.campaignId === sceneId.campaignId)
 					.sort(this.factories.sorter.create<SessionInterface>([new SorterComparisonElement((session: SessionInterface) => session.sessionId)]));
+
+			sessions.forEach((session: SessionInterface) => {
+				if (data.value.content.toString() === session.sessionId.toString()) {
+					const sessionLinkEl = contentEl.createEl('span');
+					MarkdownRenderer.renderMarkdown(
+						session.link,
+						sessionLinkEl,
+						'',
+						null as unknown as Component,
+					);
+				}
+			});
 
 			this.sessionSelectorEl = contentEl.createEl("select");
 			if (sessions.length > 1) {

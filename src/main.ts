@@ -24,8 +24,6 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO Add session in scene navigation
-	 *
 	 * ## Version 2.1
 	 *
 	 * 		@TODO (*) Add view to create new elements
