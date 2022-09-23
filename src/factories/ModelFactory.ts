@@ -4,7 +4,6 @@ import {ClueModel} from "../models/ClueModel";
 import {EventModel} from "../models/EventModel";
 import {FactionModel} from "../models/FactionModel";
 import {LocationModel} from "../models/LocationModel";
-import {NoteModel} from "../models/NoteModel";
 import {NpcModel} from "../models/NpcModel";
 import {PcModel} from "../models/PcModel";
 import {SceneModel} from "../models/SceneModel";
@@ -42,7 +41,6 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		this.modelTypeMap.set('AgnosticEvent', EventModel);
 		this.modelTypeMap.set('AgnosticFaction', FactionModel);
 		this.modelTypeMap.set('AgnosticLocation', LocationModel);
-		this.modelTypeMap.set('AgnosticNote', NoteModel);
 		this.modelTypeMap.set('AgnosticNpc', NpcModel);
 		this.modelTypeMap.set('AgnosticPc', PcModel);
 		this.modelTypeMap.set('AgnosticScene', SceneModel);

@@ -11,7 +11,6 @@ export interface RpgManagerSettingsInterface {
 	eventTag: string;
 	clueTag: string;
 	timelineTag: string;
-	noteTag: string;
 	automaticMove: boolean;
 	templateFolder: string;
 	musicTag: string;
@@ -32,7 +31,6 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	eventTag: 'rpgm/element/event',
 	clueTag: 'rpgm/element/clue',
 	timelineTag: 'rpgm/element/timeline',
-	noteTag: 'rpgm/outline/note',
 	automaticMove: true,
 	templateFolder: '',
 	musicTag: 'rpgm/element/music',

@@ -62,7 +62,6 @@ export class Id extends AbstractRpgManager implements IdInterface{
 			case RecordType.Scene:
 				id = this.tagMap.get(RecordType.Scene)?.value;
 				if (id !== undefined) ids = '/' + id + ids;
-			case RecordType.Note:
 			case RecordType.Act:
 				id = this.tagMap.get(RecordType.Act)?.value;
 				if (id !== undefined) ids = '/' + id + ids;
@@ -121,7 +120,6 @@ export class Id extends AbstractRpgManager implements IdInterface{
 			switch (this.type) {
 				case RecordType.Scene:
 					if (type === RecordType.Scene) isRequired = true;
-				case RecordType.Note:
 				case RecordType.Act:
 					if (type === RecordType.Act) isRequired = true;
 				case RecordType.Adventure:

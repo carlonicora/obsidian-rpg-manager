@@ -10,7 +10,6 @@ import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {ActInterface} from "../interfaces/data/ActInterface";
-import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
@@ -173,13 +172,6 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 					data.id.campaignId === campaignId &&
 					(adventureId !== undefined ? data.id.adventureId === adventureId : true) &&
 					(isList ? true : data.id.actId === actId);
-				break;
-			case RecordType.Note:
-				return (note: NoteInterface) =>
-					type === note.id.type &&
-					note.id.campaignId === campaignId &&
-					(adventureId !== undefined ? note.id.adventureId === adventureId : true) &&
-					note.id.actId === actId;
 				break;
 			case RecordType.Scene:
 				if (overloadId !== undefined) sceneId = overloadId;

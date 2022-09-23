@@ -57,13 +57,5 @@ export class Session extends AbstractOutlineRecord implements SessionInterface {
 		} catch (e) {
 			//ignore. It can be non existing
 		}
-
-		/*
-		try {
-			this.note = database.readSingle<NoteInterface>(RecordType.Note, this.id);
-		} catch (e) {
-			//ignore. It can be non existing
-		}
-		*/
 	}
 }

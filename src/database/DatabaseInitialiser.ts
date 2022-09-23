@@ -240,9 +240,6 @@ export class DatabaseInitialiser {
 				return await this.addHierarchy(temporaryDatabase, RecordType.Adventure);
 				break;
 			case RecordType.Adventure:
-				return await this.addHierarchy(temporaryDatabase, RecordType.Note);
-				break;
-			case RecordType.Note:
 				return await this.addHierarchy(temporaryDatabase, RecordType.Act);
 				break;
 			case RecordType.Act:

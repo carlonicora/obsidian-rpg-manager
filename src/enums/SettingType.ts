@@ -7,7 +7,6 @@ export enum SettingType {
 	Event,
 	Music,
 	Timeline,
-	Note,
 	Campaign,
 	Adventure,
 	Act,

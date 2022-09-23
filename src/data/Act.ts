@@ -1,7 +1,6 @@
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
 import {ActInterface} from "../interfaces/data/ActInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordType} from "../enums/RecordType";
 import {FrontMatterCache} from "obsidian";
@@ -14,7 +13,6 @@ export class Act extends AbstractOutlineRecord implements ActInterface {
 	public adventure: AdventureInterface;
 	public previousAct: ActInterface|null=null;
 	public nextAct: ActInterface|null=null;
-	public note: NoteInterface|null=null;
 
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
@@ -55,12 +53,6 @@ export class Act extends AbstractOutlineRecord implements ActInterface {
 				this.nextAct = query[0];
 				this.nextAct.previousAct = this;
 			}
-		} catch (e) {
-			//ignore. It can be non existing
-		}
-
-		try {
-			this.note = database.readSingle<NoteInterface>(RecordType.Note, this.id);
 		} catch (e) {
 			//ignore. It can be non existing
 		}

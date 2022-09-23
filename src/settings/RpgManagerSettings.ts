@@ -35,7 +35,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.Clue, {title: 'Clue Tag', value: this.plugin.settings.eventTag, placeholder: 'rpgm/element/event'});
 		this.map.set(SettingType.Event, {title: 'Event Tag', value: this.plugin.settings.clueTag, placeholder: 'rpgm/element/clue'});
 		this.map.set(SettingType.Timeline, {title: 'Timeline Tag', value: this.plugin.settings.timelineTag, placeholder: 'rpgm/element/timeline'});
-		this.map.set(SettingType.Note, {title: 'Note Tag', value: this.plugin.settings.noteTag, placeholder: 'rpgm/element/note'});
 		this.map.set(SettingType.Music, {title: 'Music Tag', value: this.plugin.settings.musicTag, placeholder: 'rpgm/element/music'});
 
 		this.map.set(SettingType.Campaign, {title: 'Campaign Outline Tag', value: this.plugin.settings.campaignTag, placeholder: 'rpgm/outline/campaign'});
@@ -113,12 +112,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 		if (this.plugin.settings.sessionTag !== this.map.get(SettingType.Session)?.value) {
 			settingsToUpdate.sessionTag = this.map.get(SettingType.Session)?.value;
 			updatedTags.set(this.plugin.settings.sessionTag, this.map.get(SettingType.Session)?.value);
-			doUpdate = true;
-		}
-
-		if (this.plugin.settings.noteTag !== this.map.get(SettingType.Note)?.value) {
-			settingsToUpdate.noteTag = this.map.get(SettingType.Note)?.value;
-			updatedTags.set(this.plugin.settings.noteTag, this.map.get(SettingType.Note)?.value);
 			doUpdate = true;
 		}
 
@@ -258,12 +251,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 			SettingType.Scene,
 			`The tag identifying the scenes
 			Required ids: /{campaignId}/{adventureId}/{actId}/{sceneId}`,
-		);
-
-		this.settingsFactory.createTextSetting(
-			SettingType.Note,
-			`The tag identifying the notes
-			Required ids: /{campaignId}/{adventureId}/{actId}`,
 		);
 
 		this.settingsFactory.createTextSetting(

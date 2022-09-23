@@ -10,7 +10,6 @@ export enum RecordType {
 	Event=0b100000000,
 	Clue=0b1000000000,
 	Faction=0b10000000000,
-	Note=0b100000000000,
-	Timeline=0b1000000000000,
-	Music=0b10000000000000,
+	Timeline=0b100000000000,
+	Music=0b1000000000000,
 }

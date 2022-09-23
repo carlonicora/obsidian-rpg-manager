@@ -9,7 +9,6 @@ import {ActInterface} from "../interfaces/data/ActInterface";
 import {FileFactory} from "./FileFactory";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFactoryInterface {
@@ -33,9 +32,6 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 					break;
 				case RecordType.Scene:
 					this.generateSceneBreadcrumb(response, record as SceneInterface);
-					break;
-				case RecordType.Note:
-					this.generatNoteBreadcrumb(response, record as NoteInterface);
 					break;
 				default:
 					this.generateElementBreadcrumb(response, record.id.type, record);
@@ -63,19 +59,6 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (parent != null) parent.nextBreadcrumb = response;
 
 		return response;
-	}
-
-	noteCreator = function(
-		act: ActInterface,
-		fileFactory: FileFactory,
-	){
-		fileFactory.silentCreate(
-			RecordType.Note,
-			'Note - ' + act.name,
-			act.campaign.campaignId,
-			act.adventure.adventureId,
-			act.actId
-		);
 	}
 
 	sceneCreator = function(
@@ -202,30 +185,9 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		let previousBreadcrumb: ResponseBreadcrumb|null = null;
 		if (act.previousAct != null) previousBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, RecordType.Act, act.previousAct, '<< prev act', true);
 
-		/*
-		let actNotesBreadcrumb: ResponseBreadcrumb;
-		if (act.note != null) {
-			actNotesBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), RecordType.Note, act.note, 'notes');
-		} else {
-			actNotesBreadcrumb = new ResponseBreadcrumb(this.app);
-			actNotesBreadcrumb.link = '';
-			actNotesBreadcrumb.linkText = 'create act notes';
-			actNotesBreadcrumb.functionParameters = [act, this.factories.files]
-			actNotesBreadcrumb.function = this.noteCreator;
-			if (previousBreadcrumb != null) {
-				previousBreadcrumb.nextBreadcrumb = actNotesBreadcrumb;
-			} else {
-				actNotesBreadcrumb.isInNewLine = true;
-				actBreadcrumb.nextBreadcrumb = actNotesBreadcrumb;
-			}
-		}
-		*/
-
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
 		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), RecordType.Act, act.nextAct, 'next act >>', (previousBreadcrumb != null ? false : true));
-		//if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb(actNotesBreadcrumb, RecordType.Act, act.nextAct, 'next act >>');
 
-		//return (nextBreadcrumb != null ? nextBreadcrumb : actNotesBreadcrumb);
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb));
 	}
 
@@ -258,21 +220,5 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		}
 
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb));
-	}
-
-	private generatNoteBreadcrumb(
-		parent: ResponseBreadcrumb,
-		note: NoteInterface,
-	): ResponseBreadcrumb {
-		if (note.adventure === undefined) return parent;
-		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, RecordType.Adventure, note.adventure);
-
-		const act = this.database.readSingle<ActInterface>(RecordType.Act, note.id);
-		if (act === undefined) return adventureBreadcrumb;
-
-		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, RecordType.Act, act);
-		const noteBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, RecordType.Note, note);
-
-		return noteBreadcrumb;
 	}
 }
