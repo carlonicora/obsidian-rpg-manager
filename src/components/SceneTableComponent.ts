@@ -33,11 +33,13 @@ export class SceneTableComponent extends AbstractComponent {
 		}
 
 		response.addHeaders(headers);
+		let counter = 0;
 		relationships.forEach((relationship: RelationshipInterface) => {
+			counter++;
 			const scene: SceneInterface|undefined = relationship.component as SceneInterface;
 			if (scene !== undefined) {
 				const row = [
-					this.factories.contents.create(scene.completed ? scene.sceneId.toString() : '**' + scene.sceneId + '**', ContentType.Markdown, true),
+					this.factories.contents.create(scene.completed ? counter.toString() : '**' + counter.toString() + '**', ContentType.Markdown, true),
 					this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage}),
 					this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
 					this.factories.contents.create(scene.synopsis, ContentType.Markdown),

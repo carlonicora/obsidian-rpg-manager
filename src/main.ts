@@ -25,10 +25,6 @@ import {CreatorView} from "./views/CreatorView";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO fix: Correct counter in lists
-	 *
-	 * ## Version 2.1
-	 *
 	 * 		@TODO (*) Move timeline to Obsidian View
 	 *
 	 **/
