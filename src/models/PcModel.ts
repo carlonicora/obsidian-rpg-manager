@@ -3,9 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {FactionTableComponent} from "../components/FactionTableComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
 
 export class PcModel extends AbstractModel {
 	protected currentElement: CharacterInterface;

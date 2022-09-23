@@ -3,8 +3,6 @@ import {MusicInterface} from "../interfaces/data/MusicInterface";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {RecordType} from "../enums/RecordType";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {MusicTableComponent} from "../components/MusicTableComponent";
-import {SceneTableComponent} from "../components/SceneTableComponent";
 import {RelationshipType} from "../enums/RelationshipType";
 
 export class MusicModel extends AbstractModel {

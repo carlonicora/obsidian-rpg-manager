@@ -3,9 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {CharacterInterface} from "../interfaces/data/CharacterInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {EventTableComponent} from "../components/EventTableComponent";
-import {ClueTableComponent} from "../components/ClueTableComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
 import {RelationshipType} from "../enums/RelationshipType";
 
 export class NpcModel extends AbstractModel {

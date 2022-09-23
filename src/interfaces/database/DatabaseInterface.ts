@@ -1,6 +1,7 @@
 import {RecordInterface} from "./RecordInterface";
 import {IdInterface} from "../data/IdInterface";
 import {RecordType} from "../../enums/RecordType";
+import {TFile} from "obsidian";
 
 export interface DatabaseInterface {
 	recordset: RecordInterface[];
@@ -13,8 +14,7 @@ export interface DatabaseInterface {
 	): void;
 
 	read<T>(
-		query?: any,
-		comparison?: any,
+		query: any,
 	): Array<T>;
 
 	update(
@@ -38,7 +38,10 @@ export interface DatabaseInterface {
 	readList<T extends RecordInterface>(
 		type: RecordType,
 		id: IdInterface|undefined,
-		comparison?: any|undefined,
 		overloadId?: number|undefined,
 	): Array<T>;
+
+	onSave(
+		file: TFile,
+	): Promise<void>;
 }

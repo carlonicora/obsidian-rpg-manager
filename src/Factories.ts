@@ -28,6 +28,10 @@ import {IdFactoryInterface} from "./interfaces/factories/IdFactoryInterface";
 import {IdFactory} from "./factories/IdFactory";
 import {BreadcrumbFactoryInterface} from "./interfaces/factories/BreadcrumbFactoryInterface";
 import {BreadcrumbFactory} from "./factories/BreadcrumbFactory";
+import {FrontmatterFactoryInterface} from "./interfaces/factories/FrontmatterFactoryInterface";
+import {FrontmatterFactory} from "./factories/FrontmatterFactory";
+import {SorterFactoryInterface} from "./interfaces/factories/SorterFactoryInterface";
+import {SorterFactory} from "./factories/SorterFactory";
 
 export class Factories implements FactoriesInterface{
 	public components: ComponentFactoryInterface;
@@ -44,6 +48,8 @@ export class Factories implements FactoriesInterface{
 	public database: DatabaseFactoryInterface;
 	public id: IdFactoryInterface;
 	public breadcrumb: BreadcrumbFactoryInterface;
+	public frontmatter: FrontmatterFactoryInterface;
+	public sorter: SorterFactoryInterface;
 
 	constructor(
 		private app: App,
@@ -62,5 +68,7 @@ export class Factories implements FactoriesInterface{
 		this.database = new DatabaseFactory(this.app);
 		this.id = new IdFactory(this.app);
 		this.breadcrumb = new BreadcrumbFactory(this.app);
+		this.frontmatter = new FrontmatterFactory(this.app);
+		this.sorter = new SorterFactory(this.app);
 	}
 }

@@ -3,9 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {EventInterface} from "../interfaces/data/EventInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {ClueTableComponent} from "../components/ClueTableComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
 
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;

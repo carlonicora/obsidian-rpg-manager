@@ -12,6 +12,8 @@ import {RelationshipFactoryInterface} from "./factories/RelationshipFactoryInter
 import {DatabaseFactoryInterface} from "./factories/DatabaseFactoryInterface";
 import {IdFactoryInterface} from "./factories/IdFactoryInterface";
 import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface";
+import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterface";
+import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
 
 export interface FactoriesInterface {
 	components: ComponentFactoryInterface;
@@ -28,4 +30,6 @@ export interface FactoriesInterface {
 	database: DatabaseFactoryInterface;
 	id: IdFactoryInterface;
 	breadcrumb: BreadcrumbFactoryInterface;
+	frontmatter: FrontmatterFactoryInterface;
+	sorter: SorterFactoryInterface;
 }

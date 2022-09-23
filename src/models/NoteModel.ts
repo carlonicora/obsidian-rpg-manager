@@ -4,6 +4,7 @@ import {NoteInterface} from "../interfaces/data/NoteInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordType} from "../enums/RecordType";
 import {SceneTableComponent} from "../components/SceneTableComponent";
+import {SorterComparisonElement} from "../database/SorterComparisonElement";
 
 export class NoteModel extends AbstractModel {
 	protected currentElement: NoteInterface;
@@ -14,14 +15,8 @@ export class NoteModel extends AbstractModel {
 
 		await this.response.addComponent(
 			SceneTableComponent,
-			this.database.readList<SceneInterface>(
-				RecordType.Scene,
-				this.currentElement.id,
-			).sort(function (leftData: SceneInterface, rightData: SceneInterface) {
-				if (leftData.sceneId > rightData.sceneId) return +1;
-				if (leftData.sceneId < rightData.sceneId) return -1;
-				return 0;
-			}),
+			this.database.readList<SceneInterface>(RecordType.Scene, this.currentElement.id,)
+				.sort(this.factories.sorter.create<SceneInterface>([new SorterComparisonElement((scene: SceneInterface) => scene.sceneId)])),
 		);
 
 		return this.response;

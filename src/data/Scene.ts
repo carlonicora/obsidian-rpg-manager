@@ -28,7 +28,11 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		if (sceneId === undefined) throw new TagMisconfiguredError(this.app, this.id);
 
 		this.sceneId = sceneId;
-		this.sessionId = frontmatter?.session;
+		if (frontmatter?.session !== undefined && frontmatter.session !== null) {
+			this.sessionId = frontmatter.session;
+		} else {
+			this.sessionId = undefined;
+		}
 		this.startTime = this.initialiseDate(frontmatter?.times?.start ?? frontmatter?.time?.start);
 		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;
@@ -44,7 +48,7 @@ export class Scene extends AbstractOutlineRecord implements SceneInterface {
 		this.adventure = database.readSingle<AdventureInterface>(RecordType.Adventure, this.id);
 		this.act = database.readSingle<ActInterface>(RecordType.Act, this.id);
 
-		if (this.sessionId !== undefined) {
+		if (this.sessionId !== undefined && this.sessionId !== null) {
 			const sessions = await database.read<SessionInterface>(
 				(data: SessionInterface) =>
 					data.id.type === RecordType.Session &&

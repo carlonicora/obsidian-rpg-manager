@@ -40,7 +40,6 @@ export class TableView extends AbstractComponentView {
 									const previousAdventureActs = this.database.readList<ActInterface>(
 										RecordType.Act,
 										id,
-										undefined,
 										previousAdventure.adventureId,
 									);
 									previousAdventureActs.forEach((act: ActInterface) => {

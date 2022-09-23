@@ -3,10 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
-import {EventTableComponent} from "../components/EventTableComponent";
-import {ClueTableComponent} from "../components/ClueTableComponent";
 
 export class ClueModel extends AbstractModel {
 	protected currentElement: ClueInterface;

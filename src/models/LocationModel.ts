@@ -3,7 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {LocationInterface} from "../interfaces/data/LocationInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
 import {RelationshipType} from "../enums/RelationshipType";
 
 export class LocationModel extends AbstractModel {

@@ -2,35 +2,23 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ActInterface} from "../interfaces/data/ActInterface";
 import {RecordType} from "../enums/RecordType";
+import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {SorterComparisonElement} from "../database/SorterComparisonElement";
 
 export class ActModel extends AbstractModel {
 	protected currentElement: ActInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		/*
-		if (!this.isExcluded(RecordType.Scene)) {
-			await this.response.addComponent(
-				SceneTableComponent,
-				this.database.readList<SceneInterface>(
-					RecordType.Scene,
-					this.currentElement.id,
-					undefined,
-				).sort(function (leftData: SceneInterface, rightData: SceneInterface) {
-					if (leftData.sceneId > rightData.sceneId) return +1;
-					if (leftData.sceneId < rightData.sceneId) return -1;
-					return 0;
-				}),
+		const data = this.database.readList<SceneInterface>(
+				RecordType.Scene,
+				this.currentElement.id,
+				undefined,
+			).sort(
+				this.factories.sorter.create<SceneInterface>([new SorterComparisonElement((scene: SceneInterface) => scene.sceneId)])
 			);
-		}
-		*/
 
-		await this.addRelationships(
-			RecordType.Scene,
-			undefined,
-
-		)
-
+		await this.addList(RecordType.Scene, data);
 		await this.addRelationships(RecordType.Character);
 		await this.addRelationships(RecordType.Clue);
 		await this.addRelationships(RecordType.Location);

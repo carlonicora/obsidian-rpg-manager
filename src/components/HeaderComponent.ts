@@ -102,7 +102,7 @@ export class HeaderComponent extends AbstractComponent{
 
 				if (data.url !== undefined) response.addElement(new ResponseHeaderElement(this.app, 'link', data.url, HeaderResponseType.Long));
 			} else if (data instanceof Session) {
-				response.addElement(new ResponseHeaderElement(this.app, 'Scenes', '', HeaderResponseType.ScenesSelection));
+				response.addElement(new ResponseHeaderElement(this.app, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: data}));
 			}
 		}
 

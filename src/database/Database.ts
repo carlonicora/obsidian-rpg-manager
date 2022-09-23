@@ -67,16 +67,9 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public read<T>(
-		query: any|undefined = undefined,
-		comparison: any|undefined = undefined,
+		query: any,
 	): Array<T> {
-		const response = this.recordset.filter((query !== null ? query : true));
-
-		if (comparison !== undefined){
-			this.internalSort(response, comparison);
-		}
-
-		return (<unknown>response) as Array<T>;
+		return (<unknown>this.recordset.filter((query !== null ? query : true))) as Array<T>;
 	}
 
 	public update(
@@ -106,12 +99,6 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		return index !== undefined;
 	}
 
-	private internalSort(
-		data: Array<RecordInterface>,
-		comparison: any,
-	): void {
-	}
-
 	public readByPath<T extends RecordInterface>(
 		path: string,
 	): T|undefined {
@@ -139,12 +126,10 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public readList<T extends RecordInterface>(
 		type: RecordType,
 		id: IdInterface|undefined,
-		comparison: any|undefined = undefined,
 		overloadId: number|undefined = undefined,
 	): Array<T> {
 		return <Array<T>>this.read(
 			this.generateQuery(type, id, true, overloadId),
-			comparison,
 		);
 	}
 
@@ -304,7 +289,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		}
 	}
 
-	private async onSave(
+	public async onSave(
 		file: TFile,
 	): Promise<void> {
 		let component:RecordInterface|undefined = this.readByPath(file.path);

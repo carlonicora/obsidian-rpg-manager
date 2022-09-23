@@ -4,12 +4,7 @@ import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordType} from "../enums/RecordType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {EventTableComponent} from "../components/EventTableComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
-import {ClueTableComponent} from "../components/ClueTableComponent";
-import {FactionTableComponent} from "../components/FactionTableComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {MusicTableComponent} from "../components/MusicTableComponent";
+import {SorterComparisonElement} from "../database/SorterComparisonElement";
 
 export class SessionModel extends AbstractModel {
 	protected currentElement: SessionInterface;
@@ -20,8 +15,12 @@ export class SessionModel extends AbstractModel {
 			(scene: SceneInterface) =>
 				scene.id.type === RecordType.Scene &&
 				scene.id.campaignId === this.currentElement.campaign.campaignId &&
-				scene.sessionId === this.currentElement.id.sessionId
-		);
+				scene.sessionId === this.currentElement.id.sessionId,
+		).sort(this.factories.sorter.create<SceneInterface>([
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+		]))
 
 		for (let sceneIndex=0; sceneIndex<scenes.length; sceneIndex++){
 			await scenes[sceneIndex].relationships.forEach((relationship: RelationshipInterface, name: string) => {

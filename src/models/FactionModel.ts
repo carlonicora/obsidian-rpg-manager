@@ -3,8 +3,6 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {LocationTableComponent} from "../components/LocationTableComponent";
 import {RelationshipType} from "../enums/RelationshipType";
 
 export class FactionModel extends AbstractModel {

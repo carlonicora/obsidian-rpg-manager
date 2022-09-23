@@ -24,18 +24,18 @@ import {TagHelper} from "./helpers/TagHelper";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO (****) Associate session to scene -> in the header, add a button to select a list of scenes
-	 * 		@TODO (****) Add scene Story Circle stage selector -> in the header add a dropdown to select the stage of he scene in the Act Story Circle -> save it in the frontmatter
-	 * 		@TODO (**) Add Story Circle Stage stage in the Scene List (ideally a circle icon with a 1/8 black and rotate it
-	 *
-	 * 		@TODO (*) Add view to create new elements
-	 * 		@TODO (*) Move timeline to Obsidian side view
-	 * 		@TODO (?) Rename Notes to Act Notes
+	 * 		@TODO (****) fix: Sorting function
+	 * 		@TODO (***) feat: Sessions list in campaign model
+	 * 		@TODO (**) fix: scene navigation should allow to navigate to the next scene even if it is in a different act
+	 * 		@TODO (*) feat: Remove Notes
 	 *
 	 * ## Version 2.1
-	 * 		@TODO Add Database Status View
-	 * 		@TODO Add Creation View
-	 * 		@TODO Add notes creation in right split
+	 * 		@TODO (**) feat: Add scene Story Circle stage selector -> in the header add a dropdown to select the stage of he scene in the Act Story Circle -> save it in the frontmatter
+	 * 		@TODO (**) feat: Add Story Circle Stage stage in the Scene List (ideally a circle icon with a 1/8 black and rotate it
+	 * 		@TODO (*) Add view to create new elements
+	 * 		@TODO (*) Move timeline to Obsidian side view
+	 * 		@TODO (*) feat: Add Database Status View
+	 * 		@TODO (*) feat: Add Creation View
 	 *
 	 **/
 	private isVersionUpdated=false;
