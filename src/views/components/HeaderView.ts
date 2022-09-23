@@ -65,7 +65,14 @@ export class HeaderView extends AbstractComponentView {
 			const image = new Image(data.imgWidth, data.imgHeight);
 			image.src = data.imgSrc;
 			image.style.objectFit = 'cover';
-			crsImage.append(image);
+
+			if (image.src.startsWith('http')) {
+				const crsImageLink = crsImage.createEl('a', {href: image.src});
+				crsImageLink.append(image);
+			} else {
+				crsImage.append(image);
+			}
+
 		}
 
 		crsContainer.createDiv({cls: 'reset'});
