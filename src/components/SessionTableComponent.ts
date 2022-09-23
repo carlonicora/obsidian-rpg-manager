@@ -2,9 +2,7 @@ import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
 import {ContentType} from "../enums/ContentType";
-import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {RecordType} from "../enums/RecordType";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 
 export class SessionTableComponent extends AbstractComponent {
