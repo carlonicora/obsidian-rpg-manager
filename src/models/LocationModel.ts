@@ -14,7 +14,7 @@ export class LocationModel extends AbstractModel {
 
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 
-		await this.addRelationships(RecordType.Character);
+		await this.addRelationships(RecordType.Character, RelationshipType.Direct | RelationshipType.DirectInFrontmatter | RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.Event, RelationshipType.Reverse);
 		await this.addRelationships(RecordType.Clue);
 		await this.addRelationships(RecordType.Location, RelationshipType.DirectInFrontmatter, 'Contains');
