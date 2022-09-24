@@ -39,6 +39,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		this.componentMap.set(RecordType.Clue, ClueTableComponent);
 		this.componentMap.set(RecordType.Event, EventTableComponent);
 		this.componentMap.set(RecordType.Character, CharacterTableComponent);
+		this.componentMap.set(RecordType.NonPlayerCharacter, CharacterTableComponent);
 		this.componentMap.set(RecordType.Music, MusicTableComponent);
 		this.componentMap.set(RecordType.Adventure, AdventureTableComponent);
 		this.componentMap.set(RecordType.Session, SessionTableComponent);
@@ -74,7 +75,9 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		if (!this.isExcluded(type)){
 			const component = this.componentMap.get(type);
 
-			if (type === RecordType.Character) type = RecordType.Character|RecordType.NonPlayerCharacter;
+			if (title === undefined && type === RecordType.Character) title='Player Characters';
+			if (title === undefined && type === RecordType.NonPlayerCharacter) title='Non Player Characters';
+
 			if (data === undefined) data = this.currentElement.getRelationships(type, requiredRelationshipType);
 
 			if (component !== undefined) {

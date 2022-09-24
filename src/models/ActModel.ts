@@ -20,6 +20,7 @@ export class ActModel extends AbstractModel {
 
 		await this.addList(RecordType.Scene, data);
 		await this.addRelationships(RecordType.Character);
+		await this.addRelationships(RecordType.NonPlayerCharacter);
 		await this.addRelationships(RecordType.Clue);
 		await this.addRelationships(RecordType.Location);
 		await this.addRelationships(RecordType.Faction);

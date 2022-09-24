@@ -14,6 +14,7 @@ export class EventModel extends AbstractModel {
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 
 		await this.addRelationships(RecordType.Character);
+		await this.addRelationships(RecordType.NonPlayerCharacter);
 		await this.addRelationships(RecordType.Clue);
 		await this.addRelationships(RecordType.Location);
 

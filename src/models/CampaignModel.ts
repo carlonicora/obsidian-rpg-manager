@@ -42,7 +42,13 @@ export class CampaignModel extends AbstractModel {
 
 		await this.addList(
 			RecordType.Character,
-			this.database.readList<CharacterInterface>(RecordType.Character | RecordType.NonPlayerCharacter, this.currentElement.id)
+			this.database.readList<CharacterInterface>(RecordType.Character, this.currentElement.id)
+				.sort(this.factories.sorter.create<CharacterInterface>([new SorterComparisonElement((character: CharacterInterface) => character.name)])),
+		);
+
+		await this.addList(
+			RecordType.Character,
+			this.database.readList<CharacterInterface>(RecordType.NonPlayerCharacter, this.currentElement.id)
 				.sort(this.factories.sorter.create<CharacterInterface>([new SorterComparisonElement((character: CharacterInterface) => character.name)])),
 		);
 

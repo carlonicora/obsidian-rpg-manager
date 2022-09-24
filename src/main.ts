@@ -27,6 +27,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
 	 *
+	 * ## Version 2.1
+	 * 		@TODO feat: Subplots
 	 **/
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
