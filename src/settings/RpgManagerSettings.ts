@@ -34,7 +34,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.Faction, {title: 'Faction Tag', value: this.plugin.settings.factionTag, placeholder: 'rpgm/element/faction'});
 		this.map.set(SettingType.Clue, {title: 'Clue Tag', value: this.plugin.settings.eventTag, placeholder: 'rpgm/element/event'});
 		this.map.set(SettingType.Event, {title: 'Event Tag', value: this.plugin.settings.clueTag, placeholder: 'rpgm/element/clue'});
-		this.map.set(SettingType.Timeline, {title: 'Timeline Tag', value: this.plugin.settings.timelineTag, placeholder: 'rpgm/element/timeline'});
 		this.map.set(SettingType.Music, {title: 'Music Tag', value: this.plugin.settings.musicTag, placeholder: 'rpgm/element/music'});
 
 		this.map.set(SettingType.Campaign, {title: 'Campaign Outline Tag', value: this.plugin.settings.campaignTag, placeholder: 'rpgm/outline/campaign'});
@@ -157,12 +156,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 			doUpdate = true;
 		}
 
-		if (this.plugin.settings.timelineTag !== this.map.get(SettingType.Timeline)?.value) {
-			settingsToUpdate.timelineTag = this.map.get(SettingType.Timeline)?.value;
-			updatedTags.set(this.plugin.settings.timelineTag, this.map.get(SettingType.Timeline)?.value);
-			doUpdate = true;
-		}
-
 		if (doUpdate){
 			await this.plugin.updateSettings(settingsToUpdate);
 			await this.settingsUpdater.updateTags(updatedTags);
@@ -209,11 +202,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.settingsFactory.createTextSetting(
 			SettingType.Clue,
 			'This tag identifies the Clues',
-		);
-
-		this.settingsFactory.createTextSetting(
-			SettingType.Timeline,
-			'This tag identifies the Timelines',
 		);
 
 		this.settingsFactory.createTextSetting(

@@ -3,7 +3,6 @@ import {TableView} from "../views/components/TableView";
 import {BannerView} from "../views/components/BannerView";
 import {BoxView} from "../views/components/BoxView";
 import {BreadcrumbView} from "../views/components/BreadcrumbView";
-import {TimelineView} from "../views/components/TimelineView";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageView} from "../views/components/ImageView";
 import {HeaderView} from "../views/components/HeaderView";
@@ -33,7 +32,6 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		this.viewTypeMap.set('AgnosticBanner', BannerView);
 		this.viewTypeMap.set('AgnosticBox', BoxView);
 		this.viewTypeMap.set('AgnosticBreadcrumb', BreadcrumbView);
-		this.viewTypeMap.set('AgnosticTimeline', TimelineView);
 		this.viewTypeMap.set('AgnosticImage', ImageView);
 		this.viewTypeMap.set('AgnosticHeader', HeaderView);
 		this.viewTypeMap.set('AgnosticAbtPlot', AbtPlotView);

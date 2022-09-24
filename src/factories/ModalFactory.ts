@@ -13,7 +13,6 @@ import {EventModal} from "../modals/components/EventModal";
 import {FactionModal} from "../modals/components/FactionModal";
 import {LocationModal} from "../modals/components/LocationModal";
 import {NonPlayerCharacterModal} from "../modals/components/NonPlayerCharacterModal";
-import {TimelineModal} from "../modals/components/TimelineModal";
 import {MusicModal} from "../modals/components/MusicModal";
 import {App} from "obsidian";
 import {ModalFactoryInterface} from "../interfaces/factories/ModalFactoryInterface";
@@ -37,7 +36,6 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 		this.modalTypeMap.set('AgnosticFaction', FactionModal);
 		this.modalTypeMap.set('AgnosticLocation', LocationModal);
 		this.modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModal);
-		this.modalTypeMap.set('AgnosticTimeline', TimelineModal);
 		this.modalTypeMap.set('AgnosticMusic', MusicModal);
 		this.modalTypeMap.set('AgnosticSession', SessionModal);
 

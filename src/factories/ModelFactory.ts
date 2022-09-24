@@ -9,7 +9,6 @@ import {PcModel} from "../models/PcModel";
 import {SceneModel} from "../models/SceneModel";
 import {ActModel} from "../models/ActModel";
 import {ActNavigationModel} from "../models/ActNavigationModel";
-import {TimelineModel} from "../models/TimelineModel";
 import {AdventureNavigationModel} from "../models/AdventureNavigationModel";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
@@ -49,7 +48,6 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		this.modelTypeMap.set('AgnosticSessionNavigation', SessionNavigationModel);
 		this.modelTypeMap.set('AgnosticAct', ActModel);
 		this.modelTypeMap.set('AgnosticActNavigation', ActNavigationModel);
-		this.modelTypeMap.set('AgnosticTimeline', TimelineModel);
 		this.modelTypeMap.set('RawNpc', RawNpcModel);
 		this.modelTypeMap.set('AgnosticMusic', MusicModel);
 	}

@@ -10,7 +10,6 @@ export interface RpgManagerSettingsInterface {
 	factionTag: string;
 	eventTag: string;
 	clueTag: string;
-	timelineTag: string;
 	automaticMove: boolean;
 	templateFolder: string;
 	musicTag: string;
@@ -30,7 +29,6 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	factionTag: 'rpgm/element/faction',
 	eventTag: 'rpgm/element/event',
 	clueTag: 'rpgm/element/clue',
-	timelineTag: 'rpgm/element/timeline',
 	automaticMove: true,
 	templateFolder: '',
 	musicTag: 'rpgm/element/music',

@@ -1,9 +1,8 @@
 import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseBanner} from "../data/responses/ResponseBanner";
-import {Campaign} from "../data/Campaign";
-import {Timeline} from "../data/Timeline";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 
 export class BannerComponent extends AbstractComponent{
 	public async generateData(
@@ -12,20 +11,13 @@ export class BannerComponent extends AbstractComponent{
 		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
 		if (relationship.component === undefined) return null;
-		const data = relationship.component;
+		const data = relationship.component as CampaignInterface;
 
 		const response = new ResponseBanner(this.app);
 
-		if (data instanceof Campaign) {
-			response.image = data.image;
-			response.title = data.name;
-			response.date = data.currentDate ? data.currentDate.toDateString() : '';
-		} else if (data instanceof Timeline) {
-			response.image = data.campaign.image;
-			response.title = 'Timeline';
-			response.date = data.campaign.currentDate ? data.campaign.currentDate.toDateString() : '';
-			response.subtitle = data.campaign.name;
-		}
+		response.image = data.image;
+		response.title = data.name;
+		response.date = data.currentDate ? data.currentDate.toDateString() : '';
 
 		return response;
 	}

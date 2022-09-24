@@ -9,7 +9,6 @@ import {Faction} from "../data/Faction";
 import {Clue} from "../data/Clue";
 import {Location} from "../data/Location";
 import {Event} from "../data/Event";
-import {Timeline} from "../data/Timeline";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {VampireCharacter} from "../rpgs/Vampire/data/VampireCharacter";
@@ -40,7 +39,6 @@ export class DataFactory extends AbstractFactory implements DataFactoryInterface
 			['AgnosticClue', Clue],
 			['AgnosticLocation', Location],
 			['AgnosticEvent', Event],
-			['AgnosticTimeline', Timeline],
 			['VampireCharacter', VampireCharacter],
 			['VampireNonPlayerCharacter', VampireCharacter],
 			['RawCampaign', RawCampaign],

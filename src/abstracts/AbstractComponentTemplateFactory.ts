@@ -11,7 +11,6 @@ import {ClueTemplate} from "../templates/ClueTemplate";
 import {LocationTemplate} from "../templates/LocationTemplate";
 import {FactionTemplate} from "../templates/FactionTemplate";
 import {EventTemplate} from "../templates/EventTemplate";
-import {TimelineTemplate} from "../templates/TimelineTemplate";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {ActTemplate} from "../templates/ActTemplate";
 import {SceneTemplate} from "../templates/SceneTemplate";
@@ -74,9 +73,6 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 						break;
 					case RecordType.Event:
 						this.internalTemplate = new EventTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
-						break;
-					case RecordType.Timeline:
-						this.internalTemplate = new TimelineTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
 						break;
 
 				}

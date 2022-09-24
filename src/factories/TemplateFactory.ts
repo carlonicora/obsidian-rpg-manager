@@ -8,7 +8,6 @@ import {LocationTemplateFactory} from "./templates/LocationTemplateFactory";
 import {EventTemplateFactory} from "./templates/EventTemplateFactory";
 import {ClueTemplateFactory} from "./templates/ClueTemplateFactory";
 import {FactionTemplateFactory} from "./templates/FactionTemplateFactory";
-import {TimelineTemplateFactory} from "./templates/TimelineTemplateFactory";
 import {VampireCharacterTemplate} from "../rpgs/Vampire/templates/VampireCharacterTemplate";
 import {VampireNonPlayerCharacterTemplate} from "../rpgs/Vampire/templates/VampireNonPlayerCharacterTemplate";
 import {RawCampaignTemplate} from "../rpgs/Raw/templates/RawCampaignTemplate";
@@ -41,7 +40,6 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		this.templateTypeMap.set('AgnosticEvent', EventTemplateFactory);
 		this.templateTypeMap.set('AgnosticClue', ClueTemplateFactory);
 		this.templateTypeMap.set('AgnosticFaction', FactionTemplateFactory);
-		this.templateTypeMap.set('AgnosticTimeline', TimelineTemplateFactory);
 		this.templateTypeMap.set('VampireCharacter', VampireCharacterTemplate);
 		this.templateTypeMap.set('VampireNonPlayerCharacter', VampireNonPlayerCharacterTemplate);
 		this.templateTypeMap.set('RawCampaign', RawCampaignTemplate);
