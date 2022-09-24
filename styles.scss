@@ -656,7 +656,7 @@
 			color:var(--text-error);
 		}
 
-		span.act {
+		span.session {
 			color:var(--background-modifier-success);
 		}
 
@@ -668,7 +668,7 @@
 			background-color:var(--text-error);
 		}
 
-		li.act::before {
+		li.session::before {
 			background-color:var(--background-modifier-success);
 		}
 

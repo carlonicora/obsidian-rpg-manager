@@ -85,7 +85,6 @@ export class CreatorView extends AbstractRpgManagerView {
 		}
 
 		if (!modalOpened){
-			console.log('I don\'t have anything!')
 			new CreationModal(this.app, type).open();
 		}
 	}

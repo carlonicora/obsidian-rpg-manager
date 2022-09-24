@@ -536,7 +536,7 @@
 .rpgm-new-timeline ul span.death {
   color: var(--text-error);
 }
-.rpgm-new-timeline ul span.act {
+.rpgm-new-timeline ul span.session {
   color: var(--background-modifier-success);
 }
 .rpgm-new-timeline ul span.event {
@@ -545,7 +545,7 @@
 .rpgm-new-timeline ul li.death::before {
   background-color: var(--text-error);
 }
-.rpgm-new-timeline ul li.act::before {
+.rpgm-new-timeline ul li.session::before {
   background-color: var(--background-modifier-success);
 }
 .rpgm-new-timeline ul li.event::before {

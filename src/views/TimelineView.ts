@@ -10,6 +10,8 @@ import {Component, MarkdownRenderer, TAbstractFile, TFile} from "obsidian";
 import {TimelineElementResponse} from "../data/responses/TimelineElementResponse";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
+import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {SceneInterface} from "../interfaces/data/SceneInterface";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();
@@ -93,10 +95,43 @@ export class TimelineView extends AbstractRpgManagerView {
 			}
 		});
 
-		this.elements.sort(
-			this.factories.sorter.create<TimelineElementResponseInterface>([
-				new SorterComparisonElement((data: TimelineElementResponseInterface) => {data.date})
-			]));
+		const sessions = this.database.read<SessionInterface>(
+			(session: SessionInterface) =>
+				RecordType.Session === session.id.type &&
+				session.id.campaignId === this.campaignId.id
+		);
+
+		sessions.forEach((session: SessionInterface) => {
+			const scenes = this.database.read<SceneInterface>(
+				(scene: SceneInterface) =>
+					scene.id.type === RecordType.Scene &&
+					scene.id.campaignId === this.campaignId.id &&
+					scene.sessionId === session.sessionId &&
+					scene.date != null
+			).sort(
+				this.factories.sorter.create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.date)
+				])
+			);
+
+			const sessionDate = scenes[0]?.date;
+			if (sessionDate != null){
+				this.elements.push(
+					new TimelineElementResponse(
+						sessionDate,
+						(<Date>sessionDate).toDateString(),
+						'00:00',
+						'session',
+						session.synopsis ?? '',
+						session.path,
+					)
+				)
+			}
+		});
+
+		this.elements.sort(this.factories.sorter.create<TimelineElementResponseInterface>([
+			new SorterComparisonElement((data: TimelineElementResponseInterface) => data.fullDate)
+		]));
 	}
 
 	public async render(
@@ -126,7 +161,7 @@ export class TimelineView extends AbstractRpgManagerView {
 			const contentEl = itemEl.createDiv({cls: 'content'})
 
 			/** DATE **/
-			const dateEl = contentEl.createEl('span', {cls: timeline.type, text: timeline.type.toString() + ': ' + timeline.date + (timeline.time !== '00:00' ? ' @ ' + timeline.time : '')});
+			contentEl.createEl('span', {cls: timeline.type, text: timeline.type.toString() + ': ' + timeline.date + (timeline.time !== '00:00' ? ' @ ' + timeline.time : '')});
 
 			/** TITLE **/
 			const titleEl = contentEl.createEl('h3');
