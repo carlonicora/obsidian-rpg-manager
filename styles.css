@@ -82,7 +82,10 @@
   position: absolute;
   top: 0;
   left: 133px;
-  z-index: -1;
+  z-index: 1;
+}
+.rpgm-timeline li {
+  margin-bottom: 10px;
 }
 .rpgm-timeline li div {
   display: inline-block;
@@ -95,10 +98,10 @@
   box-sizing: border-box;
   border-radius: 50%;
   background: var(--text-muted);
-  z-index: 1;
+  z-index: 2;
   margin-right: 10px;
   border: 1px solid var(--text-muted);
-  margin-top: 20px;
+  margin-top: 0px;
 }
 .rpgm-timeline .bullet.red {
   border: 1px solid var(--text-error);
@@ -118,7 +121,7 @@
 }
 .rpgm-timeline .event-time-container {
   width: 115px;
-  margin-top: 18px;
+  margin-top: -7px;
   margin-right: 10px;
   text-align: right;
 }
@@ -147,7 +150,7 @@
   color: var(--interactive-accent);
 }
 .rpgm-timeline .event-details {
-  margin-top: 0px;
+  margin-top: -4px;
   width: calc(100% - 151px);
 }
 .rpgm-timeline .event-details h3 {
@@ -485,4 +488,64 @@
 
 .rpgm-right-view {
   padding: 10px;
+}
+
+.rpgm-new-timeline {
+  padding: 30px 20px;
+}
+.rpgm-new-timeline ul {
+  list-style-type: none;
+  border-left: 1px solid var(--background-modifier-border);
+  padding: 10px 5px;
+}
+.rpgm-new-timeline ul li {
+  padding-top: 22px;
+  padding-left: 15px;
+  position: relative;
+}
+.rpgm-new-timeline ul li .content span {
+  display: inline-block;
+  text-align: left;
+  font-weight: 300;
+  font-size: 0.9em;
+  font-variant: all-small-caps;
+}
+.rpgm-new-timeline ul li .content h3 {
+  color: #34ace0;
+  margin-top: 0px;
+}
+.rpgm-new-timeline ul li .content p {
+  padding-bottom: 10px;
+}
+.rpgm-new-timeline ul li:before {
+  position: absolute;
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color: var(--interactive-success);
+  border-radius: 50%;
+  left: -13px;
+  top: 28px;
+  transition: 0.5s;
+}
+.rpgm-new-timeline ul span.clue {
+  color: var(--interactive-success);
+}
+.rpgm-new-timeline ul span.death {
+  color: var(--text-error);
+}
+.rpgm-new-timeline ul span.act {
+  color: var(--background-modifier-success);
+}
+.rpgm-new-timeline ul span.event {
+  color: var(--interactive-accent);
+}
+.rpgm-new-timeline ul li.death::before {
+  background-color: var(--text-error);
+}
+.rpgm-new-timeline ul li.act::before {
+  background-color: var(--background-modifier-success);
+}
+.rpgm-new-timeline ul li.event::before {
+  background-color: var(--interactive-accent);
 }

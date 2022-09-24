@@ -98,59 +98,35 @@ export class TimelineView extends AbstractRpgManagerView {
 
 	public async render(
 	): Promise<void> {
-		const timeline = this.rpgmContentEl.createDiv({cls: 'rpgm-timeline'});
-
-		const ul = timeline.createEl('ul');
+		const timelineEl = this.rpgmContentEl.createDiv({cls: 'rpgm-new-timeline'});
+		const listEl = timelineEl.createEl('ul');
 
 		this.elements.forEach((timeline: TimelineElementResponseInterface) => {
-			const li = ul.createEl('li');
+			const itemEl = listEl.createEl('li', {cls: timeline.type});
+			const contentEl = itemEl.createDiv({cls: 'content'})
 
-			const timeContainer = li.createDiv({cls: 'event-time-container'});
-			timeContainer.createDiv({cls: 'event-time', text: timeline.date + (timeline.time !== '00:00' ? '\n' + timeline.time : '')});
+			/** DATE **/
+			const dateEl = contentEl.createEl('span', {cls: timeline.type, text: timeline.type.toString() + ': ' + timeline.date + (timeline.time !== '00:00' ? ' @ ' + timeline.time : '')});
 
-			const type = timeContainer.createDiv({cls: 'event-type', text: timeline.type});
-			const bullet = li.createDiv({cls: 'bullet'});
-
-			switch (timeline.type){
-				case "birth":
-					type.addClass('green');
-					bullet.addClass('green');
-					break;
-				case "death":
-					type.addClass('red');
-					bullet.addClass('red');
-					break;
-				case "act":
-					type.addClass('blue');
-					bullet.addClass('blue');
-					break;
-				case "clue":
-					type.addClass('purple');
-					bullet.addClass('purple');
-					break;
-			}
-
-			const details = li.createDiv({cls: 'event-details'});
-
-			const fileLink = details.createEl('h3');
-
+			/** TITLE **/
+			const titleEl = contentEl.createEl('h3');
 			const file: TAbstractFile|null = this.app.vault.getAbstractFileByPath(timeline.link);
 			if (file !== null && file instanceof TFile) {
-				fileLink.createEl('a', {text: file.basename, href: '#'})
+				titleEl.createEl('a', {text: file.basename, href: '#'})
 					.addEventListener("click", () => {
 						this.app.workspace.getLeaf(false).openFile(file);
 					});
 			}
-			const synopsis = details.createSpan();
 
+			/** DESCRIPTION **/
+			const descriptionEl = contentEl.createDiv();
 			MarkdownRenderer.renderMarkdown(
 				timeline.synopsis,
-				synopsis,
+				descriptionEl,
 				'',
 				null as unknown as Component,
 			);
-
-			this.updateInternalLinks(synopsis);
+			this.updateInternalLinks(descriptionEl);
 		});
 
 		return;
