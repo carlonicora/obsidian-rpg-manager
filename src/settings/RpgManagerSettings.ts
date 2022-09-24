@@ -273,7 +273,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 	private loadTemplatesSettings(
 	): void {
-		this.settingsFactory.createHeader('Templates', 3, 'Select the folder you use to store your templates.');
+		this.settingsFactory.createHeader('Templates', 3, 'Select the folder you use to store your frontmatter.');
 
 		this.settingsFactory.createDropdownSetting(
 			SettingType.templateFolder,

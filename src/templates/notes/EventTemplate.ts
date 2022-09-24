@@ -1,5 +1,5 @@
-import {TemplateInterface} from "../interfaces/TemplateInterface";
-import {AbstractTemplate} from "../abstracts/AbstractTemplate";
+import {TemplateInterface} from "../../interfaces/TemplateInterface";
+import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 
 export class EventTemplate extends AbstractTemplate implements TemplateInterface {
 	public getContent(): string {

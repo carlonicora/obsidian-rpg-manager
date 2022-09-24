@@ -131,7 +131,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		if (this.availableSpecificTemplates.length > 0) {
 			const templateOptionEl = this.templateEl.createEl('option', {
-				text: RecordType[this.type] + '-specific templates',
+				text: RecordType[this.type] + '-specific frontmatter',
 			});
 			templateOptionEl.disabled = true;
 			this.availableSpecificTemplates.forEach((file: TFile) => {
@@ -148,7 +148,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		if (this.availableGenericTemplates.length > 0){
 
 			const templateOptionEl = this.templateEl.createEl('option', {
-				text: 'Generic templates',
+				text: 'Generic frontmatter',
 			});
 			templateOptionEl.disabled = true;
 			this.availableGenericTemplates.forEach((file: TFile) => {

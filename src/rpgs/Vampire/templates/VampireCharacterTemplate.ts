@@ -1,4 +1,4 @@
-import {CharacterTemplateFactory} from "../../../factories/templates/CharacterTemplateFactory";
+import {CharacterTemplateFactory} from "../../../templates/frontmatter/CharacterTemplateFactory";
 
 export class VampireCharacterTemplate extends CharacterTemplateFactory {
 	public addFrontmatterData(

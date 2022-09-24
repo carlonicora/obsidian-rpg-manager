@@ -1,4 +1,4 @@
-import {CampaignTemplateFactory} from "../../../factories/templates/CampaignTemplateFactory";
+import {CampaignTemplateFactory} from "../../../templates/frontmatter/CampaignTemplateFactory";
 
 export class RawCampaignTemplate extends CampaignTemplateFactory {
 	public addFrontmatterData(

@@ -1,7 +1,7 @@
-import {TemplateInterface} from "../interfaces/TemplateInterface";
-import {AbstractTemplate} from "../abstracts/AbstractTemplate";
-import {CharacterInterface} from "../interfaces/data/CharacterInterface";
-import {RecordType} from "../enums/RecordType";
+import {TemplateInterface} from "../../interfaces/TemplateInterface";
+import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {CharacterInterface} from "../../interfaces/data/CharacterInterface";
+import {RecordType} from "../../enums/RecordType";
 
 export class SessionTemplate extends AbstractTemplate implements TemplateInterface {
 	public getContent(): string {

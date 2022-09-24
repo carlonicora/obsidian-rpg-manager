@@ -1,4 +1,4 @@
-import {NonPlayerCharacterTemplateFactory} from "../../../factories/templates/NonPlayerCharacterTemplateFactory";
+import {NonPlayerCharacterTemplateFactory} from "../../../templates/frontmatter/NonPlayerCharacterTemplateFactory";
 
 export class VampireNonPlayerCharacterTemplate extends NonPlayerCharacterTemplateFactory {
 	public addFrontmatterData(
