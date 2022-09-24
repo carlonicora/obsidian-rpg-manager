@@ -8,6 +8,7 @@ import {RecordInterface} from "./interfaces/database/RecordInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {ErrorLog, LogMessageType} from "./helpers/Logger";
 import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
+import {CampaignInterface} from "./interfaces/data/CampaignInterface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
@@ -15,6 +16,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private model: ModelInterface;
 
 	private currentElement: RecordInterface;
+	private campaignSettings: CampaignSetting;
 
 	constructor(
 		app: App,
@@ -47,18 +49,16 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 		const sourceMeta = parseYaml(sourceLines.join('\n'));
 
-		let settings: CampaignSetting;
-		if (this.currentElement instanceof Campaign){
-			settings = this.currentElement.campaignSettings;
-		} else {
-			settings = this.currentElement.campaign.campaignSettings;
+		this.campaignSettings = CampaignSetting.Agnostic;
+		if (this.currentElement.campaign !== undefined){
+			this.campaignSettings = this.currentElement.campaign.campaignSettings;
+		} else if ((<CampaignInterface>this.currentElement).campaignSettings !== undefined) {
+			this.campaignSettings = (<CampaignInterface>this.currentElement).campaignSettings;
 		}
-
-		if (settings === undefined) settings = CampaignSetting.Agnostic;
 
 		try {
 			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
-				settings,
+				this.campaignSettings,
 				modelName,
 				this.currentElement,
 				this.source,
@@ -66,7 +66,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 				sourceMeta,
 			);
 		} catch (e) {
-			new ErrorLog(LogMessageType.Model, 'Cannot create model ' + CampaignSetting[settings] + modelName)
+			new ErrorLog(LogMessageType.Model, 'Cannot create model ' + CampaignSetting[this.campaignSettings] + modelName)
 		}
 	}
 
@@ -99,7 +99,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 			.then((data: ResponseDataInterface) => {
 				data.elements.forEach((element: ResponseElementInterface) => {
 					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
-						((this.currentElement instanceof Campaign) ? this.currentElement.campaignSettings : this.currentElement.campaign.campaignSettings),
+						this.campaignSettings,
 						element.responseType,
 						this.sourcePath,
 					);
