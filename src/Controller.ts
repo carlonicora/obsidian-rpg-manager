@@ -3,7 +3,6 @@ import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface
 import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {Campaign} from "./data/Campaign";
 import {RecordInterface} from "./interfaces/database/RecordInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {ErrorLog, LogMessageType} from "./helpers/Logger";

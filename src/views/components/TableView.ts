@@ -5,7 +5,6 @@ import {RecordType} from "../../enums/RecordType";
 import {ActInterface} from "../../interfaces/data/ActInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 import {IdInterface} from "../../interfaces/data/IdInterface";
-import {StringContent} from "../../data/content/StringContent";
 import {DateContent} from "../../data/content/DateContent";
 
 export class TableView extends AbstractComponentView {

@@ -1,7 +1,6 @@
 import {ContentInterface} from "../interfaces/ContentInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {App} from "obsidian";
-import {ContentType} from "../enums/ContentType";
 
 export abstract class AbstractContent extends AbstractRpgManager implements ContentInterface {
 	public content: any|null;
