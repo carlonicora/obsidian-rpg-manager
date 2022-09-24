@@ -73,7 +73,7 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 				active: true,
 			});
 		} else {
-			await this.app.workspace.getLeaf(false).setViewState({
+			await this.app.workspace.getLeaf(true).setViewState({
 				type: viewType.toString(),
 				active: true,
 			});

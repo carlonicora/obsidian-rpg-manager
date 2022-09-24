@@ -24,11 +24,6 @@ import {CreatorView} from "./views/CreatorView";
 import {TimelineView} from "./views/TimelineView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
-	/**
-	 * ## Version 2.0
-	 * 		@TODO (*) Move timeline to Obsidian View
-	 *
-	 **/
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
 	database: DatabaseInterface;
