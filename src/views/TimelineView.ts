@@ -9,6 +9,7 @@ import {TimelineElementResponseInterface} from "../interfaces/response/TimelineE
 import {Component, MarkdownRenderer, TAbstractFile, TFile} from "obsidian";
 import {TimelineElementResponse} from "../data/responses/TimelineElementResponse";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
+import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();
@@ -16,6 +17,7 @@ export class TimelineView extends AbstractRpgManagerView {
 	public icon = 'd20';
 
 	private campaignId: IdInterface;
+	private campaign: CampaignInterface;
 
 	private elements: Array<TimelineElementResponseInterface>;
 
@@ -23,6 +25,7 @@ export class TimelineView extends AbstractRpgManagerView {
 		params: Array<any>,
 	): void {
 		this.campaignId = params[0];
+		this.campaign = this.database.readSingle<CampaignInterface>(RecordType.Campaign, this.campaignId);
 
 		super.initialise([]);
 
@@ -98,6 +101,23 @@ export class TimelineView extends AbstractRpgManagerView {
 
 	public async render(
 	): Promise<void> {
+		this.rpgmContentEl.empty();
+
+		if (this.campaign.image !== null) {
+			const bannerContainer = this.rpgmContentEl.createDiv({cls: 'rpg-container'});
+
+			const header = bannerContainer.createDiv({cls: 'rpgm-header'});
+			header.style.backgroundImage = 'url(\'' + this.campaign.image + '\')';
+
+			const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
+			overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
+
+			overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (this.campaign.currentDate !== null ? this.campaign.currentDate.toDateString() : '')});
+		} else {
+			this.rpgmContentEl.createEl('h1', {text: this.campaign.name});
+		}
+
 		const timelineEl = this.rpgmContentEl.createDiv({cls: 'rpgm-new-timeline'});
 		const listEl = timelineEl.createEl('ul');
 

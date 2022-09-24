@@ -46,16 +46,17 @@
   padding-left: 30px;
   width: 100%;
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 .rpgm-header-overlay .rpgm-campaign-name {
   display: inline-block;
-  padding-left: 30px;
+  padding-left: 55px;
   width: 100%;
   font-size: 1.6em;
 }
 .rpgm-header-overlay .rpgm-current-date {
   display: inline-block;
-  padding-left: 30px;
+  padding-left: 55px;
   text-transform: uppercase;
   font-weight: 300;
   font-size: 0.6em;
@@ -497,6 +498,7 @@
   list-style-type: none;
   border-left: 1px solid var(--background-modifier-border);
   padding: 10px 5px;
+  margin-top: -30px;
 }
 .rpgm-new-timeline ul li {
   padding-top: 22px;

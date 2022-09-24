@@ -27,7 +27,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
 	 * 		@TODO (*) Move timeline to Obsidian View
-	 * 			Template banner
 	 *
 	 **/
 	private isVersionUpdated=false;
