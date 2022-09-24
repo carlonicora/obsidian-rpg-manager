@@ -6,4 +6,5 @@ export enum ContentType {
 	Markdown,
 	Image,
 	SVG,
+	Date,
 }

@@ -26,7 +26,6 @@ import {TimelineView} from "./views/TimelineView";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
-	 * 		@TODO feat: add events in campaign
 	 *
 	 **/
 	private isVersionUpdated=false;

@@ -9,6 +9,7 @@ import {ImageContent} from "../data/content/ImageContent";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ContentFactoryInterface} from "../interfaces/factories/ContentFactoryInterface";
 import {SVGContent} from "../data/content/SVGContent";
+import {DateContent} from "../data/content/DateContent";
 
 export class ContentFactory extends AbstractFactory implements ContentFactoryInterface{
 	public create(
@@ -20,6 +21,9 @@ export class ContentFactory extends AbstractFactory implements ContentFactoryInt
 		switch (type) {
 			case ContentType.String:
 				return new StringContent(this.app, content, isInline, additionalInformation);
+				break;
+			case ContentType.Date:
+				return new DateContent(this.app, content, isInline, additionalInformation);
 				break;
 			case ContentType.Link:
 				return new LinkContent(this.app, content, isInline, additionalInformation);

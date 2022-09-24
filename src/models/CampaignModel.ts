@@ -7,6 +7,7 @@ import {RecordType} from "../enums/RecordType";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {EventInterface} from "../interfaces/data/EventInterface";
 
 export class CampaignModel extends AbstractModel {
 	protected currentElement: CampaignInterface;
@@ -31,6 +32,12 @@ export class CampaignModel extends AbstractModel {
 			RecordType.Session,
 			this.database.readList<SessionInterface>(RecordType.Session, this.currentElement.id)
 				.sort(this.factories.sorter.create<SessionInterface>([new SorterComparisonElement((session: SessionInterface) => session.sessionId)])),
+		);
+
+		await this.addList(
+			RecordType.Event,
+			this.database.readList<EventInterface>(RecordType.Event, this.currentElement.id)
+				.sort(this.factories.sorter.create<EventInterface>([new SorterComparisonElement((event: EventInterface) => event.date)])),
 		);
 
 		await this.addList(

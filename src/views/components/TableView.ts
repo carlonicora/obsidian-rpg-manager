@@ -5,6 +5,8 @@ import {RecordType} from "../../enums/RecordType";
 import {ActInterface} from "../../interfaces/data/ActInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 import {IdInterface} from "../../interfaces/data/IdInterface";
+import {StringContent} from "../../data/content/StringContent";
+import {DateContent} from "../../data/content/DateContent";
 
 export class TableView extends AbstractComponentView {
 	public render(
@@ -97,6 +99,9 @@ export class TableView extends AbstractComponentView {
 			const row = table.createEl('tr');
 			element.forEach((content: ContentInterface) => {
 				const cell = row.createEl('td');
+				if (content instanceof DateContent) {
+					cell.style.fontSize = '0.7em';
+				}
 				content.fillContent(cell, this.sourcePath);
 
 				if (content.isInLine){
