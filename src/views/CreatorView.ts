@@ -3,7 +3,7 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {RecordType} from "../enums/RecordType";
 import {ViewType} from "../enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
-import {MarkdownView, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class CreatorView extends AbstractRpgManagerView {

@@ -385,6 +385,10 @@
   border-bottom: 1px solid var(--background-modifier-border);
   text-align: center;
 }
+.rpgm-header-info .title .subtitle {
+  font-weight: 300;
+  font-size: 0.5em;
+}
 .rpgm-header-info .title p {
   margin-top: 10px;
   margin-bottom: 10px;

@@ -9,6 +9,7 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {SceneSelectionModal} from "../../modals/SceneSelectionModal";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";
+import {ViewType} from "../../enums/ViewType";
 
 export class HeaderView extends AbstractComponentView {
 	private sessionSelectorEl: HTMLSelectElement;
@@ -21,6 +22,13 @@ export class HeaderView extends AbstractComponentView {
 		const crs = container.createDiv({cls: 'rpgm-header-info'});
 		const crsTitle = crs.createDiv({cls: 'title'});
 		data.link.fillContent(crsTitle, this.sourcePath);
+
+		if (data.type === RecordType.Campaign) {
+			crsTitle.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
+				.addEventListener("click", () => {
+					this.factories.views.showObsidianView(ViewType.Timeline, [data.metadata.campaignId]);
+				});
+		}
 
 		const crsContainer = crs.createDiv({cls: 'container'});
 

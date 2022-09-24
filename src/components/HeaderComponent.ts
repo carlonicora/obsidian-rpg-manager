@@ -13,6 +13,10 @@ import {Music} from "../data/Music";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {Session} from "../data/Session";
 import {StoryCircleStage} from "../enums/StoryCircleStage";
+import {RecordType} from "../enums/RecordType";
+import {Campaign} from "../data/Campaign";
+import {Act} from "../data/Act";
+import {Adventure} from "../data/Adventure";
 
 export class HeaderComponent extends AbstractComponent{
 	public async generateData(
@@ -32,6 +36,7 @@ export class HeaderComponent extends AbstractComponent{
 		let synopsisTitle = 'Synopsis';
 
 		if (data instanceof Character) {
+			response.type = RecordType.Character;
 			if (data.synopsis != null && data.synopsis !== '') {
 				synopsis = '';
 				synopsis += data.link.toString();
@@ -60,7 +65,11 @@ export class HeaderComponent extends AbstractComponent{
 				response.addElement(new ResponseHeaderElement(this.app, 'Age', data.age.toString(), HeaderResponseType.Short));			}
 
 		} else {
+			if (data instanceof Adventure){
+				response.type = RecordType.Adventure;
+			}
 			if (data instanceof Scene) {
+				response.type = RecordType.Scene;
 				synopsisTitle = 'Scene Goal';
 			}
 
@@ -70,20 +79,24 @@ export class HeaderComponent extends AbstractComponent{
 			response.addElement(new ResponseHeaderElement(this.app, synopsisTitle, synopsis, HeaderResponseType.Long));
 
 			if (data instanceof Clue){
+				response.type = RecordType.Clue;
 				const clueFound = data.isFound
 					? 'Clue found on ' + data.found?.toDateString()
 					: '<span class="rpgm-missing">Clue not found yet</span>';
 
 				response.addElement(new ResponseHeaderElement(this.app, 'Found', clueFound, HeaderResponseType.Short));
 			} else if (data instanceof Location){
+				response.type = RecordType.Location;
 				if (data.address != null && data.address != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Address', data.address, HeaderResponseType.Short));
 				}
 			} else if (data instanceof Event){
+				response.type = RecordType.Event;
 				if (data.date != null) {
 					response.addElement(new ResponseHeaderElement(this.app, 'Date', data.date.toDateString(), HeaderResponseType.Short));
 				}
 			} else if (data instanceof Scene){
+				response.type = RecordType.Scene;
 				if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != ''){
 					response.addElement(new ResponseHeaderElement(this.app, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
 				}
@@ -97,6 +110,7 @@ export class HeaderComponent extends AbstractComponent{
 				response.addElement(new ResponseHeaderElement(this.app, 'Story Circle Stage', (data.storycircleStage !== undefined ? StoryCircleStage[data.storycircleStage] : ''), HeaderResponseType.SceneStoryCircle, {sceneId: data.id, file: data.file}));
 
 			} else if (data instanceof Music){
+				response.type = RecordType.Music;
 				if (data.image === undefined) {
 					response.imgSrc = await data.getThumbnail();
 				} else if (data.image !== null) {
@@ -105,7 +119,13 @@ export class HeaderComponent extends AbstractComponent{
 
 				if (data.url !== undefined) response.addElement(new ResponseHeaderElement(this.app, 'link', data.url, HeaderResponseType.Long));
 			} else if (data instanceof Session) {
+				response.type = RecordType.Session;
 				response.addElement(new ResponseHeaderElement(this.app, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: data}));
+			} else if (data instanceof Campaign){
+				response.type = RecordType.Campaign;
+				response.metadata = {campaignId: data.id};
+			} else if (data instanceof Act) {
+				response.type = RecordType.Act;
 			}
 		}
 

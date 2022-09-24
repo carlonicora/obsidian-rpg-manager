@@ -21,6 +21,8 @@ import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 
 export class ViewFactory extends AbstractFactory implements ViewFactoryInterface{
 	private viewTypeMap: Map<string,any>;
+	private showInRightLeaf: Map<ViewType, boolean>;
+
 	constructor(
 		app: App,
 	) {
@@ -37,6 +39,12 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		this.viewTypeMap.set('AgnosticAbtPlot', AbtPlotView);
 		this.viewTypeMap.set('AgnosticStoryCirclePlot', StoryCirclePlotView);
 		this.viewTypeMap.set('RawRawCharacterRecordSheet', RawCharacterRecordSheetView);
+
+		this.showInRightLeaf = new Map<ViewType, boolean>();
+		this.showInRightLeaf.set(ViewType.Creator, true);
+		this.showInRightLeaf.set(ViewType.Errors, true);
+		this.showInRightLeaf.set(ViewType.ReleaseNote, false);
+		this.showInRightLeaf.set(ViewType.Timeline, false);
 	}
 	
 	public create(
@@ -57,13 +65,21 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 	): Promise<void> {
 		this.app.workspace.detachLeavesOfType(viewType.toString());
 
-		await this.app.workspace.getRightLeaf(false).setViewState({
-			type: viewType.toString(),
-			active: true,
-		});
+		const showInRightLeaf: boolean|undefined = this.showInRightLeaf.get(viewType);
+
+		if (showInRightLeaf === true || showInRightLeaf === undefined) {
+			await this.app.workspace.getRightLeaf(false).setViewState({
+				type: viewType.toString(),
+				active: true,
+			});
+		} else {
+			await this.app.workspace.getLeaf(false).setViewState({
+				type: viewType.toString(),
+				active: true,
+			});
+		}
 
 		const leaf: WorkspaceLeaf = this.app.workspace.getLeavesOfType(viewType.toString())[0];
-
 		const view: AbstractRpgManagerView = leaf.view as AbstractRpgManagerView;
 
 		this.app.workspace.revealLeaf(leaf);

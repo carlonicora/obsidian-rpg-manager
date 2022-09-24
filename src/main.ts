@@ -21,11 +21,15 @@ import {ReleaseNoteView} from "./views/ReleaseNoteView";
 import {FactoriesInterface} from "./interfaces/FactoriesInterface";
 import {TagHelper} from "./helpers/TagHelper";
 import {CreatorView} from "./views/CreatorView";
+import {TimelineView} from "./views/TimelineView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	/**
 	 * ## Version 2.0
 	 * 		@TODO (*) Move timeline to Obsidian View
+	 * 			Template links
+	 * 			Template banner
+	 * 			Template css
 	 *
 	 **/
 	private isVersionUpdated=false;
@@ -51,6 +55,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.registerView(ViewType.Errors.toString(), (leaf) => new ErrorView(this.app, leaf));
 		this.registerView(ViewType.ReleaseNote.toString(), (leaf) => new ReleaseNoteView(this.app, leaf));
 		this.registerView(ViewType.Creator.toString(), (leaf) => new CreatorView(this.app, leaf));
+		this.registerView(ViewType.Timeline.toString(), (leaf) => new TimelineView(this.app, leaf));
 
 		this.addRibbonIcon('d20', 'RPG Manager Creator', () => {
 			this.factories.views.showObsidianView(
@@ -65,6 +70,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.Creator.toString());
+		this.app.workspace.detachLeavesOfType(ViewType.Timeline.toString());
 
 		if (this.settings.previousVersion !== this.manifest.version){
 			const databaseUpdater = await new DatabaseUpdater(this.app, this);

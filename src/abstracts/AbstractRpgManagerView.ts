@@ -1,9 +1,11 @@
-import {App, ItemView, View, WorkspaceLeaf} from "obsidian";
+import {App, ItemView, TFile, View, WorkspaceLeaf} from "obsidian";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
+import {base} from "w3c-keyname";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -77,5 +79,39 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 
 	protected async onClose(
 	): Promise<void> {
+	}
+
+	protected updateInternalLinks(
+		element: Element,
+	): void {
+		if (element.children.length > 0){
+			for (let index=0; index<element.children.length; index++){
+				const elementChild = element.children.item(index);
+				if (elementChild !== null) {
+					if (elementChild instanceof HTMLAnchorElement) {
+						this.updateInternalLink(<HTMLAnchorElement>elementChild);
+					} else {
+						this.updateInternalLinks(elementChild);
+					}
+				}
+			}
+		}
+	}
+
+	protected updateInternalLink(
+		element: HTMLAnchorElement,
+	): void {
+		const basename: string|undefined = element.dataset.href;
+		if (base == undefined) return;
+
+		const record: RecordInterface|undefined = this.database.read<RecordInterface>((data: RecordInterface) => data.basename === basename)[0];
+		if (record === undefined) return;
+
+		const file: TFile = record.file;
+		element.addEventListener("click", (ev:MouseEvent) => {
+			ev.preventDefault();
+			this.app.workspace.getLeaf(true).openFile(file);
+		});
+		element.href = '#';
 	}
 }
