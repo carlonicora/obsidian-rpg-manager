@@ -18,23 +18,20 @@ export class SessionTemplate extends AbstractTemplate implements TemplateInterfa
 		});
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
 
-		let response = `## Session Notes
-		
-		---
-		
-		Recap: ` + possibleRecappers + `
-		
-		---
-		
-		## GM Notes
-		- 
-		
-		---
-		## Feedbacks
-		` + this.generateFeedback('GM');
-		(characters || []).forEach((character: CharacterInterface) => {
-			response += this.generateFeedback(character.link);
-		});
+		let response = '## Session Notes\n\n' +
+			'---\n' +
+			'Recap: ' + possibleRecappers + '\n\n' +
+			'---\n' +
+			'## GM Notes\n' +
+			'-\n\n' +
+			'---\n' +
+			'## Feedbacks\n';
+
+			response += this.generateFeedback('GM');
+
+			(characters || []).forEach((character: CharacterInterface) => {
+				response += this.generateFeedback(character.link);
+			});
 
 		return response;
 	}
