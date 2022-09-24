@@ -127,7 +127,10 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 		this.completed = metadata.frontmatter?.completed ?? true;
 
 		this.synopsis = metadata.frontmatter?.synopsis;
-		this.imageUrl = metadata.frontmatter?.image;
+
+		if (metadata.frontmatter?.image !== undefined && typeof metadata.frontmatter.image === 'string') {
+			this.imageUrl = metadata.frontmatter?.image;
+		}
 
 		await this.initialiseRelationships();
 		this.initialiseData(metadata.frontmatter);
