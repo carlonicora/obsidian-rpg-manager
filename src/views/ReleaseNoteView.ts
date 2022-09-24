@@ -15,7 +15,7 @@ export class ReleaseNoteView extends AbstractRpgManagerView {
 
 	public async render(
 	): Promise<void> {
-		const releaseNotesEl = this.contentEl.createDiv();
+		const releaseNotesEl = this.rpgmContentEl.createDiv();
 		releaseNotesEl.style.fontSize = '0.8em';
 
 		MarkdownRenderer.renderMarkdown(

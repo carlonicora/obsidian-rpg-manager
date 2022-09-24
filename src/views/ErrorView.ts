@@ -20,7 +20,7 @@ export class ErrorView extends AbstractRpgManagerView {
 	): Promise<void> {
 		if (this.errors !== undefined && this.errors.size > 0) {
 			this.errors.forEach((error: RpgErrorInterface, file: TFile) => {
-				const errorEl = this.contentEl.createEl('div');
+				const errorEl = this.rpgmContentEl.createEl('div');
 
 				const errorTitle: string|undefined = error.getErrorTitle();
 
