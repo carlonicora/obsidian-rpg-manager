@@ -43,13 +43,13 @@ export class SceneTableComponent extends AbstractComponent {
 					this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage}),
 					this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link),
 					this.factories.contents.create(scene.synopsis, ContentType.Markdown),
-					this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.String, true),
+					this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.Date, true),
 				];
 
 				if (additionalInformation?.parentType === RecordType.Session ){
-					row.push(this.factories.contents.create(this.formatTime(scene.startTime), ContentType.String, true));
-					row.push(this.factories.contents.create(this.formatTime(scene.endTime), ContentType.String, true));
-					row.push(this.factories.contents.create(scene.duration, ContentType.String, true));
+					row.push(this.factories.contents.create(this.formatTime(scene.startTime), ContentType.Date, true));
+					row.push(this.factories.contents.create(this.formatTime(scene.endTime), ContentType.Date, true));
+					row.push(this.factories.contents.create(scene.duration, ContentType.Date, true));
 				}
 
 				response.addContent(row);

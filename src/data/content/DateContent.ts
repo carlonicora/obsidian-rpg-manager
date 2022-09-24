@@ -1,4 +1,5 @@
 import {AbstractContent} from "../../abstracts/AbstractContent";
+import {Component, MarkdownRenderer} from "obsidian";
 
 export class DateContent extends AbstractContent {
 	public content: string;
@@ -7,6 +8,15 @@ export class DateContent extends AbstractContent {
 		container: HTMLElement,
 		sourcePath: string,
 	): void {
-		container.textContent = (this.content != null ? this.content : '');
+		if (this.content != null){
+			MarkdownRenderer.renderMarkdown(
+				this.content,
+				container,
+				sourcePath,
+				null as unknown as Component,
+			);
+		} else {
+			container.textContent = '';
+		}
 	}
 }

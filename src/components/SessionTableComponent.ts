@@ -29,7 +29,7 @@ export class SessionTableComponent extends AbstractComponent {
 				response.addContent([
 					this.factories.contents.create(session.sessionId.toString(), ContentType.String, true),
 					this.factories.contents.create(session.link, ContentType.Link),
-					this.factories.contents.create(session.irl?.toDateString(), ContentType.String, true),
+					this.factories.contents.create(session.irl?.toDateString(), ContentType.Date, true),
 					this.factories.contents.create(session.synopsis, ContentType.Markdown),
 				]);
 			}

@@ -28,7 +28,7 @@ export class ClueTableComponent extends AbstractComponent {
 				response.addContent([
 					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
 					this.factories.contents.create(record.link, ContentType.Link),
-					this.factories.contents.create((record.isFound ? record.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Markdown),
+					this.factories.contents.create((record.isFound ? record.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Date),
 					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				])
 			}
