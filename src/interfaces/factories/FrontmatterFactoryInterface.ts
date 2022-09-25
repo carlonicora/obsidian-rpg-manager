@@ -5,4 +5,9 @@ export interface FrontmatterFactoryInterface {
 		file: TFile,
 		keyValues: Map<string, string>,
 	): Promise<void>;
+
+	remove(
+		file: TFile,
+		keyValues: Map<string, string>,
+	): Promise<void>;
 }

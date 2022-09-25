@@ -14,7 +14,7 @@ export class SceneTableComponent extends AbstractComponent {
 	): Promise<ResponseElementInterface|null> {
 		if (relationships.length === 0) return null;
 
-		const response = new ResponseTable(this.app);
+		const response = new ResponseTable(this.app, this.currentElement);
 
 		response.addTitle(title ? title : 'Scenes');
 

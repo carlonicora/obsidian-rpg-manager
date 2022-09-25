@@ -5,6 +5,7 @@ import {ResponseType} from "../../enums/ResponseType";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {HeaderResponseElementInterface} from "../../interfaces/response/HeaderResponseElementInterface";
 import {RecordType} from "../../enums/RecordType";
+import {RecordInterface} from "../../interfaces/database/RecordInterface";
 
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public type: RecordType;
@@ -18,8 +19,9 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.Header;
 		this.elements = [];
 	}

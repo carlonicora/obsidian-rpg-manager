@@ -204,6 +204,31 @@
   background-color: var(--background-primary-alt);
 }
 
+.rpgm-modal .rpgm-elements .rpgm-elements-header {
+  margin-bottom: -2px;
+}
+.rpgm-modal .rpgm-elements .rpgm-elements-header span {
+  padding: 0px 10px;
+  border-top: solid 1px var(--background-modifier-border);
+  border-right: solid 1px var(--background-modifier-border);
+}
+.rpgm-modal .rpgm-elements .rpgm-elements-header .first {
+  border-left: solid 1px var(--background-modifier-border);
+}
+.rpgm-modal .rpgm-elements .rpgm-elements-header .last {
+  margin-right: 25px;
+}
+.rpgm-modal .rpgm-elements .rpgm-elements-header .selected {
+  border-bottom: solid 2px var(--background-secondary);
+}
+.rpgm-modal .rpgm-elements .rpgm-elements-container {
+  border: solid 1px var(--background-modifier-border);
+  min-height: 50px;
+}
+.rpgm-modal .rpgm-elements .rpgm-elements-container ul {
+  list-style: none;
+}
+
 .rpgm-modal {
   display: block;
   padding: 20px;
@@ -396,6 +421,16 @@
 .rpgm-header-info .title p {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.rpgm-header-info .title .adder {
+  position: absolute;
+  right: 10px;
+  font-size: 0.4em;
+  top: 10px;
+}
+.rpgm-header-info .title .adder span {
+  display: block;
+  text-align: right;
 }
 .rpgm-header-info .container {
   width: 100%;

@@ -12,7 +12,7 @@ export class LocationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addComponent(HeaderComponent, this.currentElement);
+		await this.response.addComponent(HeaderComponent, this.currentElement, this.currentElement);
 
 		await this.addRelationships(RecordType.Character, RelationshipType.Direct | RelationshipType.DirectInFrontmatter | RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.NonPlayerCharacter, RelationshipType.Direct | RelationshipType.DirectInFrontmatter | RelationshipType.ReverseInFrontmatter);

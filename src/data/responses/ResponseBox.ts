@@ -2,6 +2,7 @@ import {AbstractResponse} from "../../abstracts/AbstractResponse";
 import {BoxResponseInterface} from "../../interfaces/response/BoxResponseInterface";
 import {ResponseType} from "../../enums/ResponseType";
 import {App} from "obsidian";
+import {RecordInterface} from "../../interfaces/database/RecordInterface";
 
 export class ResponseBox extends AbstractResponse implements BoxResponseInterface {
 	public title: string;
@@ -10,8 +11,9 @@ export class ResponseBox extends AbstractResponse implements BoxResponseInterfac
 
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.Box;
 	}
 }

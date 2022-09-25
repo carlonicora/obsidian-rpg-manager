@@ -235,6 +235,41 @@
 }
 
 .rpgm-modal {
+	.rpgm-elements{
+		.rpgm-elements-header{
+			margin-bottom: -2px;
+
+			span {
+				padding: 0px 10px;
+				border-top: solid 1px var(--background-modifier-border);
+				border-right: solid 1px var(--background-modifier-border);
+			}
+
+			.first {
+				border-left: solid 1px var(--background-modifier-border);
+			}
+
+			.last {
+				margin-right: 25px;
+			}
+
+			.selected {
+				border-bottom: solid 2px var(--background-secondary);
+			}
+		}
+
+		.rpgm-elements-container {
+			border: solid 1px var(--background-modifier-border);
+			min-height: 50px;
+
+			ul {
+				list-style: none;
+			}
+		}
+	}
+}
+
+.rpgm-modal {
 	display: block;
 	// justify-content: center;
 	// flex-direction: column;
@@ -472,6 +507,18 @@
 		p {
 			margin-top: 10px;
 			margin-bottom: 10px;
+		}
+
+		.adder {
+			position: absolute;
+			right: 10px;
+			font-size: 0.4em;
+			top: 10px;
+
+			span{
+				display: block;
+				text-align: right;
+			}
 		}
 	}
 

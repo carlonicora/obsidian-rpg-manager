@@ -54,6 +54,10 @@ export interface RecordInterface {
 		requiredRelationshipType?: RelationshipType,
 	): Array<RelationshipInterface>;
 
+	existsInRelationships(
+		relationships:  Map<string, RelationshipInterface>,
+	): boolean;
+
 	get name(): string;
 	get path(): string;
 	get link(): string;

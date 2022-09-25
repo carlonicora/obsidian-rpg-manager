@@ -49,7 +49,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		linkText: string|null = null,
 		isNewLine = false,
 	): ResponseBreadcrumb {
-		const response = new ResponseBreadcrumb(this.app);
+		const response = new ResponseBreadcrumb(this.app, <RecordInterface>data);
 		response.link = data.link;
 		response.title = RecordType[type];
 
@@ -206,7 +206,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (scene.nextScene != null) {
 			nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), RecordType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb != null ? false : true));
 		} else {
-			const newSceneBreadcrumb = new ResponseBreadcrumb(this.app);
+			const newSceneBreadcrumb = new ResponseBreadcrumb(this.app, scene);
 			newSceneBreadcrumb.link = '';
 			newSceneBreadcrumb.linkText = '+ add scene >>';
 			newSceneBreadcrumb.functionParameters = [scene, this.factories.files];

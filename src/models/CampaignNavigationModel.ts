@@ -9,11 +9,12 @@ export class CampaignNavigationModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		await this.response.addComponent(HeaderComponent, this.currentElement);
+		await this.response.addComponent(HeaderComponent, this.currentElement, this.currentElement);
 
 		if (this.sourceMeta?.abt != null){
 			await this.response.addComponent(
 				AbtPlotComponent,
+				this.currentElement,
 				this.currentElement,
 				undefined,
 				this.sourceMeta.abt,

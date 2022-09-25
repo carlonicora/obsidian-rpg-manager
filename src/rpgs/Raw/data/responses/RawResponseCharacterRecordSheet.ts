@@ -13,6 +13,7 @@ import {
 	RawCharacterRecordSheetAbilityResponseInterface
 } from "../../interfaces/responses/RawCharacterRecordSheetAbilityResponseInterface";
 import {RawResponseCharacterRecordSheetTrait} from "./RawResponseCharacterRecordSheetTrait";
+import {RecordInterface} from "../../../../interfaces/database/RecordInterface";
 
 export class RawResponseCharacterRecordSheet extends AbstractResponse implements RawCharacterRecordSheetResponseInterface {
 	public body: RawCharacterRecordSheetTraitResponseInterface;
@@ -22,14 +23,15 @@ export class RawResponseCharacterRecordSheet extends AbstractResponse implements
 
 	constructor(
 		app:App,
+		currentElement: RecordInterface,
 		metadata: any|null,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.RawCharacterRecordSheet;
 
-		this.body = new RawResponseCharacterRecordSheetTrait(app, RawTrait.Body, metadata?.raw?.character?.body);
-		this.mind = new RawResponseCharacterRecordSheetTrait(app, RawTrait.Mind, metadata?.raw?.character?.mind);
-		this.spirit = new RawResponseCharacterRecordSheetTrait(app, RawTrait.Spirit, metadata?.raw?.character?.spirit);
+		this.body = new RawResponseCharacterRecordSheetTrait(app, this.currentElement, RawTrait.Body, metadata?.raw?.character?.body);
+		this.mind = new RawResponseCharacterRecordSheetTrait(app, this.currentElement, RawTrait.Mind, metadata?.raw?.character?.mind);
+		this.spirit = new RawResponseCharacterRecordSheetTrait(app, this.currentElement, RawTrait.Spirit, metadata?.raw?.character?.spirit);
 
 		this.damages = metadata?.raw?.character?.damages ?? 0;
 	}

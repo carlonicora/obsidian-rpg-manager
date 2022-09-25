@@ -13,6 +13,7 @@ export class SceneNavigationModel extends AbstractModel {
 		await this.response.addComponent(
 			HeaderComponent,
 			this.currentElement,
+			this.currentElement,
 			undefined,
 			this.sourceMeta,
 		);

@@ -11,13 +11,24 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 		this.maybeUpdateFile(file, fileContent, keyValues);
 	}
 
+	public async remove(
+		file: TFile,
+		keyValues: Map<string, string>,
+	): Promise<void> {
+		const fileContent: string = await this.app.vault.read(file);
+		this.maybeUpdateFile(file, fileContent, keyValues, true);
+	}
+
 	private async maybeUpdateFile(
 		file: TFile,
 		content: string,
 		keyValues: Map<string, string>,
+		remove=false,
 	): Promise<void> {
 		const fileContent:Array<string> = await content.split('\n');
 		const updatedMap: Map<string, boolean> = await new Map<string, boolean>();
+
+		console.log(remove, keyValues);
 
 		await keyValues.forEach((value: string, key: string) => {
 			updatedMap.set(key, false);
@@ -29,6 +40,7 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 		let hasFrontMatterEnded = false;
 
 		await fileContent.forEach((line: string) => {
+			let addLine = true;
 			if (!hasFrontMatterEnded) {
 				if (line === '---') {
 					if (!hasFrontMatterStarted) {
@@ -36,12 +48,14 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 					} else {
 						hasFrontMatterEnded = true;
 
-						updatedMap.forEach((hasBeenAddedOrUpdated: boolean, key: string) => {
-							if (!hasBeenAddedOrUpdated) {
-								newfileContentArray.push(key + ': ' + keyValues.get(key));
-								updatedMap.set(key, true);
-							}
-						});
+						if (!remove) {
+							updatedMap.forEach((hasBeenAddedOrUpdated: boolean, key: string) => {
+								if (!hasBeenAddedOrUpdated) {
+									newfileContentArray.push(key + ': ' + keyValues.get(key));
+									updatedMap.set(key, true);
+								}
+							});
+						}
 					}
 				} else {
 					const keySeparatorIndex = line.indexOf(':');
@@ -51,13 +65,17 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 
 						if (updatedMap.has(key) && keyValues.has(key) && updatedMap.get(key) === false) {
 							updatedMap.set(key, true);
-							if (keyValues.get(key) !== value) line = key + ': ' + keyValues.get(key);
+							if (remove){
+								addLine = false;
+							} else {
+								if (keyValues.get(key) !== value) line = key + ': ' + keyValues.get(key);
+							}
 						}
 					}
 				}
 			}
 
-			newfileContentArray.push(line);
+			if (addLine) newfileContentArray.push(line);
 		});
 
 		const newFileContent = await newfileContentArray.join('\n');

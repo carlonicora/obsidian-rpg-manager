@@ -32,8 +32,13 @@ export class Sorter implements SorterInterface {
 		for (let index=0; index<this.comparisonElements.length; index++){
 			const comparer = this.comparisonElements[index];
 
-			if (this.getObjectValue(leftData, comparer.comparisonElement) > this.getObjectValue(rightData, comparer.comparisonElement)) return comparer.sortType === SorterType.Ascending ? +1 : 11;
-			if (this.getObjectValue(leftData, comparer.comparisonElement) < this.getObjectValue(rightData, comparer.comparisonElement)) return comparer.sortType === SorterType.Ascending ? -1 : +1;
+			if (typeof comparer.comparisonElement === 'function'){
+				if (comparer.comparisonElement(leftData) > comparer.comparisonElement(rightData)) return comparer.sortType === SorterType.Ascending ? +1 : -1;
+				if (comparer.comparisonElement(leftData) < comparer.comparisonElement(rightData)) return comparer.sortType === SorterType.Ascending ? -1 : +1;
+			} else {
+				if (this.getObjectValue(leftData, comparer.comparisonElement) > this.getObjectValue(rightData, comparer.comparisonElement)) return comparer.sortType === SorterType.Ascending ? +1 : -1;
+				if (this.getObjectValue(leftData, comparer.comparisonElement) < this.getObjectValue(rightData, comparer.comparisonElement)) return comparer.sortType === SorterType.Ascending ? -1 : +1;
+			}
 		}
 
 		return 0;

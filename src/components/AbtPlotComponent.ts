@@ -33,7 +33,7 @@ export class AbtPlotComponent extends AbstractComponent {
 		if (relationship.component === undefined) return null;
 		const data = relationship.component;
 
-		const response = new ResponseTable(this.app);
+		const response = new ResponseTable(this.app, this.currentElement);
 
 		if (
 			data instanceof Adventure &&

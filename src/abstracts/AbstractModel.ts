@@ -163,6 +163,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 			if (component !== undefined) {
 				await this.response.addComponent(
 					component,
+					this.currentElement,
 					data,
 					title,
 				);

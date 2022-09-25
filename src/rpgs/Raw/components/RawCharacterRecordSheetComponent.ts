@@ -9,7 +9,7 @@ export class RawCharacterRecordSheetComponent extends AbstractComponent {
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseElementInterface|null> {
-		const response = new RawResponseCharacterRecordSheet(this.app, additionalInformation);
+		const response = new RawResponseCharacterRecordSheet(this.app, this.currentElement, additionalInformation);
 
 		return response;
 	}

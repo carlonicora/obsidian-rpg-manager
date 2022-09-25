@@ -5,10 +5,12 @@ import {
 import {App} from "obsidian";
 import {RawAbility} from "../../enums/RawAbility";
 import {RawTrait} from "../../enums/RawTrait";
+import {RecordInterface} from "../../../../interfaces/database/RecordInterface";
 
 export class RawResponseCharacterRecordSheetAbility extends AbstractResponse implements RawCharacterRecordSheetAbilityResponseInterface {
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 		public id: string|null,
 		public name: RawAbility,
 		public value: number,
@@ -16,6 +18,6 @@ export class RawResponseCharacterRecordSheetAbility extends AbstractResponse imp
 		public trait: RawTrait,
 		public traitValue: number,
 	) {
-		super(app);
+		super(app, currentElement);
 	}
 }

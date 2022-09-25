@@ -30,6 +30,7 @@ export class RawNpcModel extends NpcModel {
 			response.addComponent(
 				RawCharacterRecordSheetComponent,
 				this.currentElement,
+				this.currentElement,
 				undefined,
 				this.sourceMeta,
 				2

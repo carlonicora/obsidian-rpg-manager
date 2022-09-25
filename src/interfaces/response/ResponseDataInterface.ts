@@ -7,6 +7,7 @@ export interface ResponseDataInterface {
 
 	addComponent<T>(
 		type: T,
+		currentElement: RecordInterface,
 		data: RecordInterface[]|RecordInterface|RelationshipInterface[],
 		title?: string|undefined,
 		additionalInformation?: any|undefined,

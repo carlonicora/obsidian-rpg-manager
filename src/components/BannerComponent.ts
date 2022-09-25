@@ -13,7 +13,7 @@ export class BannerComponent extends AbstractComponent{
 		if (relationship.component === undefined) return null;
 		const data = relationship.component as CampaignInterface;
 
-		const response = new ResponseBanner(this.app);
+		const response = new ResponseBanner(this.app, this.currentElement);
 
 		response.image = data.image;
 		response.title = data.name;

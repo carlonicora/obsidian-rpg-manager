@@ -25,10 +25,11 @@ export class SessionNavigationModel extends AbstractModel {
 
 		this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addComponent(HeaderComponent, this.currentElement);
+		await this.response.addComponent(HeaderComponent, this.currentElement, this.currentElement);
 
 		await this.response.addComponent(
 			SceneTableComponent,
+			this.currentElement,
 			scenes,
 			undefined,
 			{parentType: RecordType.Session},

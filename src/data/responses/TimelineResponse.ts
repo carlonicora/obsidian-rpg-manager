@@ -3,14 +3,16 @@ import {TimelineResponseInterface} from "../../interfaces/response/TimelineRespo
 import {TimelineElementResponseInterface} from "../../interfaces/response/TimelineElementResponseInterface";
 import {ResponseType} from "../../enums/ResponseType";
 import {App} from "obsidian";
+import {RecordInterface} from "../../interfaces/database/RecordInterface";
 
 export class TimelineResponse extends AbstractResponse implements TimelineResponseInterface {
 	public elements: TimelineElementResponseInterface[];
 
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.Timeline;
 		this.elements = [];
 	}

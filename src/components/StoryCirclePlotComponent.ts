@@ -35,7 +35,7 @@ export class StoryCirclePlotComponent extends AbstractComponent {
 		) return null;
 		if (relationship.component === undefined) return null;
 
-		const response = new ResponseTable(this.app);
+		const response = new ResponseTable(this.app, this.currentElement);
 
 		response.title = 'Story Circle Plot';
 		response.class = 'rpgm-plot';

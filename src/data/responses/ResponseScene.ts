@@ -2,6 +2,7 @@ import {AbstractResponse} from "../../abstracts/AbstractResponse";
 import {SceneResponseInterface} from "../../interfaces/response/SceneResponseInterface";
 import {ResponseType} from "../../enums/ResponseType";
 import {App} from "obsidian";
+import {RecordInterface} from "../../interfaces/database/RecordInterface";
 
 export class ResponseScene extends AbstractResponse implements SceneResponseInterface {
 	public goals: string|null;
@@ -9,8 +10,9 @@ export class ResponseScene extends AbstractResponse implements SceneResponseInte
 
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.Scene;
 	}
 }

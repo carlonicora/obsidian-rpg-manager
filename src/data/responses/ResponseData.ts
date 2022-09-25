@@ -11,6 +11,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 
 	public async addComponent(
 		type: any,
+		currentElement: RecordInterface,
 		data: RecordInterface[]|RecordInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
@@ -37,6 +38,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 		}
 		const element = await this.factories.components.create(
 			type,
+			currentElement,
 			relationship ?? relationships,
 			title,
 			additionalInformation,

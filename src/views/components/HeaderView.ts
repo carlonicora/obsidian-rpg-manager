@@ -10,6 +10,7 @@ import {SceneSelectionModal} from "../../modals/SceneSelectionModal";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";
 import {ViewType} from "../../enums/ViewType";
+import {FrontmatterElementSelectionModal} from "../../modals/FrontmatterElementSelectionModal";
 
 export class HeaderView extends AbstractComponentView {
 	private sessionSelectorEl: HTMLSelectElement;
@@ -22,6 +23,13 @@ export class HeaderView extends AbstractComponentView {
 		const crs = container.createDiv({cls: 'rpgm-header-info'});
 		const crsTitle = crs.createDiv({cls: 'title'});
 		data.link.fillContent(crsTitle, this.sourcePath);
+
+		const adderEl = crsTitle.createDiv({cls: 'adder'});
+		const relationshipsAdderEl = adderEl.createEl('span', {text: '+ add relationship'});
+		relationshipsAdderEl.addEventListener("click", () => {
+			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
+		});
+		//const headerEditerEl = adderEl.createEl('span', {text: 'edit'});
 
 		if (data.type === RecordType.Campaign) {
 			crsTitle.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})

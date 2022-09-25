@@ -30,7 +30,7 @@ export class CharacterSynopsisComponent extends AbstractComponent{
 			fullSynopsis += data.synopsis;
 		}
 
-		const response = new ResponseLine(this.app);
+		const response = new ResponseLine(this.app, this.currentElement);
 		response.content =this.factories.contents.create(
 			fullSynopsis,
 			ContentType.Markdown,

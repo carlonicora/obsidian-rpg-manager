@@ -242,6 +242,18 @@ export abstract class AbstractRecord extends AbstractRpgManager implements Recor
 		return response;
 	}
 
+	public existsInRelationships(
+		relationships:  Map<string, RelationshipInterface>,
+	): boolean {
+		let response = false;
+
+		relationships.forEach((relationship: RelationshipInterface, key: string) => {
+			if (key === this.name) response = true;
+		}) ;
+
+		return response;
+	}
+
 	protected initialiseDate(
 		date: string|null,
 	): Date|null {

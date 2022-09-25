@@ -12,11 +12,12 @@ export class ActNavigationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addComponent(HeaderComponent,this.currentElement);
+		await this.response.addComponent(HeaderComponent,this.currentElement,this.currentElement);
 
 		if (this.sourceMeta?.abt != null){
 			await this.response.addComponent(
 				AbtPlotComponent,
+				this.currentElement,
 				this.currentElement,
 				undefined,
 				this.sourceMeta.abt,
@@ -26,6 +27,7 @@ export class ActNavigationModel extends AbstractModel {
 		if (this.sourceMeta?.storycircle != null){
 			await this.response.addComponent(
 				StoryCirclePlotComponent,
+				this.currentElement,
 				this.currentElement,
 				undefined,
 				this.sourceMeta.storycircle,

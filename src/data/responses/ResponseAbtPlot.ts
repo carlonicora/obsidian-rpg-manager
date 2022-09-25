@@ -3,6 +3,7 @@ import {AbtPlotResponseInterface} from "../../interfaces/response/AbtPlotRespons
 import {App} from "obsidian";
 import {ResponseType} from "../../enums/ResponseType";
 import {ContentInterface} from "../../interfaces/ContentInterface";
+import {RecordInterface} from "../../interfaces/database/RecordInterface";
 
 export class ResponseAbtPlot extends AbstractResponse implements AbtPlotResponseInterface {
 	public need: ContentInterface;
@@ -12,8 +13,9 @@ export class ResponseAbtPlot extends AbstractResponse implements AbtPlotResponse
 
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.AbtPlot;
 	}
 }

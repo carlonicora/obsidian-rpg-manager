@@ -18,7 +18,7 @@ export class VampireHeaderComponent extends HeaderComponent {
 		const response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
 		if (data.generation != null) {
-			response.addElement(new ResponseHeaderElement(this.app, 'Generation', data.generation.toString(), HeaderResponseType.Short));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Generation', data.generation.toString(), HeaderResponseType.Short));
 		}
 
 		return response;

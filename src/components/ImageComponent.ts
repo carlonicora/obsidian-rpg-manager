@@ -12,7 +12,7 @@ export class ImageComponent extends AbstractComponent{
 		if (relationship.component === undefined) return null;
 		const data = relationship.component;
 
-		const response = new ResponseImage(this.app);
+		const response = new ResponseImage(this.app, this.currentElement);
 
 		response.imgSrc = data.image;
 		response.height = 300;

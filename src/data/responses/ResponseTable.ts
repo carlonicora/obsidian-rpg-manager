@@ -4,6 +4,7 @@ import {TableResponseInterface} from "../../interfaces/response/TableResponseInt
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {App} from "obsidian";
 import {RecordType} from "../../enums/RecordType";
+import {RecordInterface} from "../../interfaces/database/RecordInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public class: string|null;
@@ -16,8 +17,9 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 
 	constructor(
 		app: App,
+		currentElement: RecordInterface,
 	) {
-		super(app);
+		super(app, currentElement);
 		this.responseType = ResponseType.Table;
 		this.class = null;
 		this.headers = [];
