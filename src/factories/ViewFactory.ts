@@ -6,8 +6,6 @@ import {BreadcrumbView} from "../views/components/BreadcrumbView";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ImageView} from "../views/components/ImageView";
 import {HeaderView} from "../views/components/HeaderView";
-import {AbtPlotView} from "../views/components/AbtPlotView";
-import {StoryCirclePlotView} from "../views/components/StoryCirclePlotView";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
 import {RawCharacterRecordSheetView} from "../rpgs/Raw/views/RawCharacterRecordSheetView";
@@ -34,8 +32,6 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		this.viewTypeMap.set('AgnosticBreadcrumb', BreadcrumbView);
 		this.viewTypeMap.set('AgnosticImage', ImageView);
 		this.viewTypeMap.set('AgnosticHeader', HeaderView);
-		this.viewTypeMap.set('AgnosticAbtPlot', AbtPlotView);
-		this.viewTypeMap.set('AgnosticStoryCirclePlot', StoryCirclePlotView);
 		this.viewTypeMap.set('RawRawCharacterRecordSheet', RawCharacterRecordSheetView);
 
 		this.showInRightLeaf = new Map<ViewType, boolean>();

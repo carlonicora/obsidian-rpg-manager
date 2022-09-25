@@ -6,6 +6,7 @@ import {ActInterface} from "../../interfaces/data/ActInterface";
 import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 import {IdInterface} from "../../interfaces/data/IdInterface";
 import {DateContent} from "../../data/content/DateContent";
+import {EditorSelector} from "../../helpers/EditorSelector";
 
 export class TableView extends AbstractComponentView {
 	public render(
@@ -14,7 +15,14 @@ export class TableView extends AbstractComponentView {
 	): void {
 		const divContainer = container.createDiv();
 		if (data.title != null) {
-			divContainer.createEl('h2', {text: data.title});
+			divContainer.createEl('h2', {cls: 'rpgm-table-header', text: data.title});
+		}
+
+		if (data.class === 'rpgm-plot'){
+			const titleEditor = divContainer.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
+			titleEditor.addEventListener('click', () => {
+				EditorSelector.select(this.app, data.currentElement);
+			})
 		}
 
 		if (data.create !== undefined){

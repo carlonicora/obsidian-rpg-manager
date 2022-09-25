@@ -586,3 +586,14 @@
 .rpgm-new-timeline ul li.event::before {
   background-color: var(--interactive-accent);
 }
+
+.rpgm-td-edit {
+  font-size: 0.75em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+
+.rpgm-table-header {
+  margin-bottom: 0px;
+  padding-top: 15px;
+}

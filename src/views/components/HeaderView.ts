@@ -11,6 +11,7 @@ import {SorterComparisonElement} from "../../database/SorterComparisonElement";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";
 import {ViewType} from "../../enums/ViewType";
 import {FrontmatterElementSelectionModal} from "../../modals/FrontmatterElementSelectionModal";
+import {EditorSelector} from "../../helpers/EditorSelector";
 
 export class HeaderView extends AbstractComponentView {
 	private sessionSelectorEl: HTMLSelectElement;
@@ -29,7 +30,12 @@ export class HeaderView extends AbstractComponentView {
 		relationshipsAdderEl.addEventListener("click", () => {
 			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
 		});
-		//const headerEditerEl = adderEl.createEl('span', {text: 'edit'});
+		const c = adderEl.createEl('span', {text: 'edit'});
+
+		console.log(data.currentElement);
+		c.addEventListener("click",() => {
+			EditorSelector.select(this.app, data.currentElement);
+		});
 
 		if (data.type === RecordType.Campaign) {
 			crsTitle.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
