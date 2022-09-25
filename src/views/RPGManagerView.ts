@@ -5,7 +5,6 @@ import {ViewType} from "../enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {releaseNotes} from "../ReleaseNotes";
 
 export class RPGManagerView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.RPGManager.toString();
