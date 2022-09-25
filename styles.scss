@@ -505,20 +505,20 @@
 		}
 
 		p {
-			margin-top: 10px;
+			margin-top: -10px;
 			margin-bottom: 10px;
 		}
+	}
 
-		.adder {
-			position: absolute;
-			right: 10px;
-			font-size: 0.4em;
-			top: 10px;
+	.adder {
+		position: relative;
+		right: 10px;
+		font-size: 0.75em;
+		top: 10px;
 
-			span{
-				display: block;
-				text-align: right;
-			}
+		span{
+			display: block;
+			text-align: right;
 		}
 	}
 

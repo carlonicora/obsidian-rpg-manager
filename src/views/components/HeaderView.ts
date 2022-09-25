@@ -22,17 +22,18 @@ export class HeaderView extends AbstractComponentView {
 		data: HeaderResponseInterface,
 	): void {
 		const crs = container.createDiv({cls: 'rpgm-header-info'});
+		const adderEl = crs.createDiv({cls: 'adder'});
 		const crsTitle = crs.createDiv({cls: 'title'});
+
 		data.link.fillContent(crsTitle, this.sourcePath);
 
-		const adderEl = crsTitle.createDiv({cls: 'adder'});
+
 		const relationshipsAdderEl = adderEl.createEl('span', {text: '+ add relationship'});
 		relationshipsAdderEl.addEventListener("click", () => {
 			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
 		});
 		const c = adderEl.createEl('span', {text: 'edit'});
 
-		console.log(data.currentElement);
 		c.addEventListener("click",() => {
 			EditorSelector.select(this.app, data.currentElement);
 		});

@@ -130,10 +130,8 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 		map.set('[[' + data.name + ']]', '""');
 
 		if (checkboxEl.checked) {
-			console.log('ADDING')
 			this.factories.frontmatter.update(this.currentElement.file, map);
 		} else {
-			console.log('REMOVE')
 			this.factories.frontmatter.remove(this.currentElement.file, map);
 		}
 	}

@@ -419,16 +419,16 @@
   font-size: 0.5em;
 }
 .rpgm-header-info .title p {
-  margin-top: 10px;
+  margin-top: -10px;
   margin-bottom: 10px;
 }
-.rpgm-header-info .title .adder {
-  position: absolute;
+.rpgm-header-info .adder {
+  position: relative;
   right: 10px;
-  font-size: 0.4em;
+  font-size: 0.75em;
   top: 10px;
 }
-.rpgm-header-info .title .adder span {
+.rpgm-header-info .adder span {
   display: block;
   text-align: right;
 }

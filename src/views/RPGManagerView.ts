@@ -101,8 +101,6 @@ export class RPGManagerView extends AbstractRpgManagerView {
 								'',
 								null as unknown as Component,
 							);
-
-							console.warn(containerEl);
 						}
 					});
 				})

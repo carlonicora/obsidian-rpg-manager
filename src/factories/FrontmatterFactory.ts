@@ -28,8 +28,6 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 		const fileContent:Array<string> = await content.split('\n');
 		const updatedMap: Map<string, boolean> = await new Map<string, boolean>();
 
-		console.log(remove, keyValues);
-
 		await keyValues.forEach((value: string, key: string) => {
 			updatedMap.set(key, false);
 		})
