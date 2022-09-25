@@ -15,6 +15,7 @@ import {AbstractRpgManager} from "./AbstractRpgManager";
 import {ActTemplate} from "../templates/notes/ActTemplate";
 import {SceneTemplate} from "../templates/notes/SceneTemplate";
 import {SessionTemplate} from "../templates/notes/SessionTemplate";
+import {SubplotTemplate} from "../templates/notes/SubplotTemplate";
 
 export abstract class AbstractComponentTemplateFactory extends AbstractRpgManager implements ComponentTemplateFactoryInterface {
 	protected internalTemplate: TemplateInterface|undefined;
@@ -73,6 +74,9 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 						break;
 					case RecordType.Event:
 						this.internalTemplate = new EventTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						break;
+					case RecordType.Subplot:
+						this.internalTemplate = new SubplotTemplate(this.app, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
 						break;
 
 				}

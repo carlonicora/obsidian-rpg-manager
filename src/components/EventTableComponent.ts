@@ -27,7 +27,7 @@ export class EventTableComponent extends AbstractComponent {
 			if (record !== undefined) {
 				response.addContent([
 					this.factories.contents.create(record.imageSrcElement, ContentType.Image, true),
-					this.factories.contents.create(record.link, ContentType.Link, true),
+					this.factories.contents.create(record.link, ContentType.Link),
 					this.factories.contents.create(record.date?.toDateString(), ContentType.Date, true),
 					this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown),
 				])

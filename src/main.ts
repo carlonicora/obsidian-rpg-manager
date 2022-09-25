@@ -20,7 +20,7 @@ import {DatabaseUpdater} from "./database/DatabaseUpdater";
 import {ReleaseNoteView} from "./views/ReleaseNoteView";
 import {FactoriesInterface} from "./interfaces/FactoriesInterface";
 import {TagHelper} from "./helpers/TagHelper";
-import {CreatorView} from "./views/CreatorView";
+import {RPGManagerView} from "./views/RPGManagerView";
 import {TimelineView} from "./views/TimelineView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
@@ -28,7 +28,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	 * ## Version 2.0
 	 *
 	 * ## Version 2.1
-	 * 		@TODO feat: Subplots
+	 *
 	 **/
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
@@ -52,12 +52,12 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		await addIcon('pieEighth', '<g transform="translate(0.000000,0.000000) scale(5)"><circle r="10" cx="10" cy="10" fill="white" /><circle r="5" cx="10" cy="10" fill="transparent" stroke="black" stroke-width="10" stroke-dasharray="calc(12.5 * 31.4 / 100) 31.4" transform="rotate(-90) translate(-20)" /></g>');
 		this.registerView(ViewType.Errors.toString(), (leaf) => new ErrorView(this.app, leaf));
 		this.registerView(ViewType.ReleaseNote.toString(), (leaf) => new ReleaseNoteView(this.app, leaf));
-		this.registerView(ViewType.Creator.toString(), (leaf) => new CreatorView(this.app, leaf));
+		this.registerView(ViewType.RPGManager.toString(), (leaf) => new RPGManagerView(this.app, leaf));
 		this.registerView(ViewType.Timeline.toString(), (leaf) => new TimelineView(this.app, leaf));
 
-		this.addRibbonIcon('d20', 'RPG Manager Creator', () => {
+		this.addRibbonIcon('d20', 'RPG Manager', () => {
 			this.factories.views.showObsidianView(
-				ViewType.Creator,
+				ViewType.RPGManager,
 			)
 		});
 
@@ -67,7 +67,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	async onLayoutReady(){
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
-		this.app.workspace.detachLeavesOfType(ViewType.Creator.toString());
+		this.app.workspace.detachLeavesOfType(ViewType.RPGManager.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.Timeline.toString());
 
 		if (this.settings.previousVersion !== this.manifest.version){
@@ -107,7 +107,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
-		this.app.workspace.detachLeavesOfType(ViewType.Creator.toString());
+		this.app.workspace.detachLeavesOfType(ViewType.RPGManager.toString());
 
 		this.app.workspace.off('resolved', this.refreshViews);
 		this.app.workspace.off('modify', this.refreshViews);

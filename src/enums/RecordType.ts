@@ -11,4 +11,5 @@ export enum RecordType {
 	Clue=0b1000000000,
 	Faction=0b10000000000,
 	Music=0b100000000000,
+	Subplot=0b1000000000000,
 }

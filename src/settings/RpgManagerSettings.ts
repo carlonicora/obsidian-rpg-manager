@@ -35,12 +35,13 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.Clue, {title: 'Clue Tag', value: this.plugin.settings.eventTag, placeholder: 'rpgm/element/event'});
 		this.map.set(SettingType.Event, {title: 'Event Tag', value: this.plugin.settings.clueTag, placeholder: 'rpgm/element/clue'});
 		this.map.set(SettingType.Music, {title: 'Music Tag', value: this.plugin.settings.musicTag, placeholder: 'rpgm/element/music'});
-
 		this.map.set(SettingType.Campaign, {title: 'Campaign Outline Tag', value: this.plugin.settings.campaignTag, placeholder: 'rpgm/outline/campaign'});
+
 		this.map.set(SettingType.Adventure, {title: 'Adventure Outline Tag', value: this.plugin.settings.adventureTag, placeholder: 'rpgm/outline/adventure'});
 		this.map.set(SettingType.Act, {title: 'Act Outline Tag', value: this.plugin.settings.actTag, placeholder: 'rpgm/outline/act'});
 		this.map.set(SettingType.Session, {title: 'Session Outline Tag', value: this.plugin.settings.sessionTag, placeholder: 'rpgm/outline/session'});
 		this.map.set(SettingType.Scene, {title: 'Scene Outline Tag', value: this.plugin.settings.sceneTag, placeholder: 'rpgm/outline/scene'});
+		this.map.set(SettingType.Subplot, {title: 'Subplot Tag', value: this.plugin.settings.subplotTag, placeholder: 'rpgm/outline/subplot'});
 
 		this.map.set(SettingType.YouTubeApiKey, {title: 'YouTube API Key', value: this.plugin.settings.YouTubeKey, placeholder: 'Your YouTube API Key'});
 		this.map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this.plugin.settings.automaticMove, placeholder: 'Organise new elements'});
@@ -111,6 +112,12 @@ export class RpgManagerSettings extends PluginSettingTab {
 		if (this.plugin.settings.sessionTag !== this.map.get(SettingType.Session)?.value) {
 			settingsToUpdate.sessionTag = this.map.get(SettingType.Session)?.value;
 			updatedTags.set(this.plugin.settings.sessionTag, this.map.get(SettingType.Session)?.value);
+			doUpdate = true;
+		}
+
+		if (this.plugin.settings.subplotTag !== this.map.get(SettingType.Subplot)?.value) {
+			settingsToUpdate.subplotTag = this.map.get(SettingType.Subplot)?.value;
+			updatedTags.set(this.plugin.settings.subplotTag, this.map.get(SettingType.Subplot)?.value);
 			doUpdate = true;
 		}
 
@@ -244,7 +251,13 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.settingsFactory.createTextSetting(
 			SettingType.Session,
 			`The tag identifying the sessions
-			Required ids: /{campaignId}/{adventureId}/{sessionId}`,
+			Required ids: /{campaignId}/sessionId}`,
+		);
+
+		this.settingsFactory.createTextSetting(
+			SettingType.Subplot,
+			`The tag identifying the subplot
+			Required ids: /{campaignId}`,
 		);
 	}
 

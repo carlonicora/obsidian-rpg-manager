@@ -17,6 +17,7 @@ export class FactionModel extends AbstractModel {
 		await this.addRelationships(RecordType.Character, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.NonPlayerCharacter, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.Location);
+		await this.addRelationships(RecordType.Subplot, RelationshipType.Reverse|RelationshipType.ReverseInFrontmatter);
 
 		return this.response;
 	}

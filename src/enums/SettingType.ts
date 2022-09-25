@@ -14,4 +14,5 @@ export enum SettingType {
 	YouTubeApiKey,
 	templateFolder,
 	Session,
+	Subplot,
 }

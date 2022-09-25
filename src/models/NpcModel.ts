@@ -14,6 +14,7 @@ export class NpcModel extends AbstractModel {
 
 		await this.response.addComponent(HeaderComponent,this.currentElement);
 
+		await this.addRelationships(RecordType.Subplot, RelationshipType.Reverse|RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.Faction);
 		await this.addRelationships(RecordType.Character);
 		await this.addRelationships(RecordType.NonPlayerCharacter);

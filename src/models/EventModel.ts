@@ -3,6 +3,7 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {EventInterface} from "../interfaces/data/EventInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;
@@ -13,6 +14,7 @@ export class EventModel extends AbstractModel {
 
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 
+		await this.addRelationships(RecordType.Subplot, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.Character);
 		await this.addRelationships(RecordType.NonPlayerCharacter);
 		await this.addRelationships(RecordType.Clue);

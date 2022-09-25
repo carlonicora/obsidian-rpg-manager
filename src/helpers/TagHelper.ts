@@ -21,6 +21,7 @@ export class TagHelper {
 		this.dataSettings.set(RecordType.Location, settings.locationTag);
 		this.dataSettings.set(RecordType.NonPlayerCharacter, settings.npcTag);
 		this.dataSettings.set(RecordType.Music, settings.musicTag);
+		this.dataSettings.set(RecordType.Subplot, settings.subplotTag);
 
 		this.requiredIds = new Map();
 		this.requiredIds.set(RecordType.Campaign, [RecordType.Campaign]);
@@ -35,6 +36,7 @@ export class TagHelper {
 		this.requiredIds.set(RecordType.Location, [RecordType.Campaign]);
 		this.requiredIds.set(RecordType.NonPlayerCharacter, [RecordType.Campaign]);
 		this.requiredIds.set(RecordType.Music, [RecordType.Music]);
+		this.requiredIds.set(RecordType.Subplot, [RecordType.Subplot]);
 	}
 
 	public sanitiseTags(
@@ -71,6 +73,7 @@ export class TagHelper {
 		if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) return RecordType.Faction;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) return RecordType.Event;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) return RecordType.Music;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Subplot) ?? '?')) return RecordType.Subplot;
 
 		return undefined;
 	}
@@ -100,6 +103,7 @@ export class TagHelper {
 		if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(RecordType.Subplot) ?? '?')) return true;
 
 		return false;
 	}
@@ -163,6 +167,7 @@ export class TagHelper {
 				if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) response = tag;
 				if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(RecordType.Subplot) ?? '?')) response = tag;
 			}
 		});
 
@@ -188,6 +193,7 @@ export class TagHelper {
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Faction].toLowerCase())) response = RecordType.Faction;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Event].toLowerCase())) response = RecordType.Event;
 			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Music].toLowerCase())) response = RecordType.Music;
+			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Subplot].toLowerCase())) response = RecordType.Subplot;
 		});
 
 		return response;

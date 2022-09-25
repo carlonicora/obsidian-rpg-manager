@@ -5,5 +5,4 @@ export class ClueTemplate extends AbstractTemplate implements TemplateInterface 
 	public getContent(): string {
 		return "## Additional Information\n\n";
 	}
-
 }

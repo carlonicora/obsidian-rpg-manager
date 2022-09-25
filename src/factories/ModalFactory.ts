@@ -17,6 +17,7 @@ import {MusicModal} from "../modals/components/MusicModal";
 import {App} from "obsidian";
 import {ModalFactoryInterface} from "../interfaces/factories/ModalFactoryInterface";
 import {SessionModal} from "../modals/components/SessionModal";
+import {SubplotModal} from "../modals/components/SubplotModal";
 
 export class ModalFactory extends AbstractFactory implements ModalFactoryInterface{
 	private modalTypeMap: Map<string,any>;
@@ -38,6 +39,7 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 		this.modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModal);
 		this.modalTypeMap.set('AgnosticMusic', MusicModal);
 		this.modalTypeMap.set('AgnosticSession', SessionModal);
+		this.modalTypeMap.set('AgnosticSubplot', SubplotModal);
 
 	}
 	public create(

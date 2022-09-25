@@ -20,6 +20,7 @@ import {App} from "obsidian";
 import {TemplateFactoryInterface} from "../interfaces/factories/TemplateFactoryInterface";
 import {ComponentTemplateFactoryInterface} from "../interfaces/ComponentTemplateFactoryInterface";
 import {SessionTemplateFactory} from "../templates/frontmatter/SessionTemplateFactory";
+import {SubplotTemplateFactory} from "../templates/frontmatter/SubplotTemplateFactory";
 
 export class TemplateFactory extends AbstractFactory implements TemplateFactoryInterface{
 	private templateTypeMap: Map<string,any>;
@@ -45,6 +46,7 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		this.templateTypeMap.set('RawCampaign', RawCampaignTemplate);
 		this.templateTypeMap.set('VampireCampaign', VampireCampaignTemplate);
 		this.templateTypeMap.set('AgnosticMusic', MusicTemplateFactory);
+		this.templateTypeMap.set('AgnosticSubplot', SubplotTemplateFactory);
 	}
 
 	public create(

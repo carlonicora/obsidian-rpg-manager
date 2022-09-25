@@ -22,6 +22,7 @@ import {CampaignNavigationModel} from "../models/CampaignNavigationModel";
 import {SessionModel} from "../models/SessionModel";
 import {SessionNavigationModel} from "../models/SessionNavigationModel";
 import {SceneNavigationModel} from "../models/SceneNavigationModel";
+import {SubplotModel} from "../models/SubplotModel";
 
 export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
 	private modelTypeMap: Map<string,any>;
@@ -50,6 +51,7 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		this.modelTypeMap.set('AgnosticActNavigation', ActNavigationModel);
 		this.modelTypeMap.set('RawNpc', RawNpcModel);
 		this.modelTypeMap.set('AgnosticMusic', MusicModel);
+		this.modelTypeMap.set('AgnosticSubplot', SubplotModel);
 	}
 
 	public create(

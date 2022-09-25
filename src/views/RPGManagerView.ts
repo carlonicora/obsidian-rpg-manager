@@ -3,12 +3,13 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {RecordType} from "../enums/RecordType";
 import {ViewType} from "../enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
-import {TFile} from "obsidian";
+import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {releaseNotes} from "../ReleaseNotes";
 
-export class CreatorView extends AbstractRpgManagerView {
-	protected viewType: string = ViewType.Creator.toString();
-	protected displayText = 'RPG Manager Creator';
+export class RPGManagerView extends AbstractRpgManagerView {
+	protected viewType: string = ViewType.RPGManager.toString();
+	protected displayText = 'RPG Manager';
 	public icon = 'd20';
 	private hasCampaigns: boolean;
 
@@ -45,6 +46,23 @@ export class CreatorView extends AbstractRpgManagerView {
 
 	render(
 	): Promise<void> {
+		this.addCreationLinks();
+		this.addToDoList();
+
+		return Promise.resolve(undefined);
+	}
+
+	private addToDoList(
+	): void {
+		this.rpgmContentEl.createEl('h3', {text: 'Things to do'});
+		const toDoEl = this.rpgmContentEl.createDiv({text: 'Loading things to do...'});
+		this.loadToDo(toDoEl);
+
+	}
+
+	private addCreationLinks(
+	): void {
+		this.rpgmContentEl.createEl('h3', {text: 'Create new Outlines and Elements'});
 		this.creationListEl = this.rpgmContentEl.createEl('ul');
 
 		this.createElementListItem(RecordType.Campaign);
@@ -57,8 +75,40 @@ export class CreatorView extends AbstractRpgManagerView {
 				}
 			});
 		}
+	}
 
-		return Promise.resolve(undefined);
+	private async loadToDo(
+		containerEl: HTMLDivElement
+	): Promise<void> {
+		const recordset: Array<RecordInterface> = this.database.read<RecordInterface>((data: RecordInterface) => true);
+
+		let firstToDoFound = false;
+
+		recordset.forEach((data: RecordInterface) => {
+			this.app.vault.read(data.file)
+				.then((content: string) => {
+					const contentArray: Array<string> = content.split('\n');
+					contentArray.forEach((line: string) => {
+						if (line.trimStart().startsWith('- [ ]')) {
+							if (!firstToDoFound){
+								firstToDoFound = true;
+								containerEl.empty();
+							}
+
+							const newToDoEl = containerEl.createEl('span');
+							MarkdownRenderer.renderMarkdown(
+								line.replaceAll('[ ]', ''),
+								newToDoEl,
+								'',
+								null as unknown as Component,
+							);
+
+							console.warn(containerEl);
+						}
+					});
+				})
+		});
+
 	}
 
 	private createElementListItem(

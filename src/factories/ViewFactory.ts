@@ -39,7 +39,7 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		this.viewTypeMap.set('RawRawCharacterRecordSheet', RawCharacterRecordSheetView);
 
 		this.showInRightLeaf = new Map<ViewType, boolean>();
-		this.showInRightLeaf.set(ViewType.Creator, true);
+		this.showInRightLeaf.set(ViewType.RPGManager, true);
 		this.showInRightLeaf.set(ViewType.Errors, true);
 		this.showInRightLeaf.set(ViewType.ReleaseNote, false);
 		this.showInRightLeaf.set(ViewType.Timeline, false);

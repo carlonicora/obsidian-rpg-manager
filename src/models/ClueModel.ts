@@ -3,6 +3,7 @@ import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterfac
 import {RecordType} from "../enums/RecordType";
 import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {HeaderComponent} from "../components/HeaderComponent";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class ClueModel extends AbstractModel {
 	protected currentElement: ClueInterface;
@@ -13,6 +14,7 @@ export class ClueModel extends AbstractModel {
 
 		await this.response.addComponent(HeaderComponent, this.currentElement);
 
+		await this.addRelationships(RecordType.Subplot, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.Character);
 		await this.addRelationships(RecordType.NonPlayerCharacter);
 		await this.addRelationships(RecordType.Location);

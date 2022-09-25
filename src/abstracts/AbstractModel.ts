@@ -18,20 +18,15 @@ import {AdventureTableComponent} from "../components/AdventureTableComponent";
 import {ActTableComponent} from "../components/ActTableComponent";
 import {SceneTableComponent} from "../components/SceneTableComponent";
 import {SessionTableComponent} from "../components/SessionTableComponent";
-import {LocationInterface} from "../interfaces/data/LocationInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SorterComparisonElementInterface} from "../interfaces/SorterComparisonElementInterface";
-import {ClueInterface} from "../interfaces/data/ClueInterface";
 import {EventInterface} from "../interfaces/data/EventInterface";
-import {FactionInterface} from "../interfaces/data/FactionInterface";
-import {CharacterInterface} from "../interfaces/data/CharacterInterface";
-import {MusicInterface} from "../interfaces/data/MusicInterface";
-import {Adventure} from "../data/Adventure";
 import {AdventureInterface} from "../interfaces/data/AdventureInterface";
 import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {ActInterface} from "../interfaces/data/ActInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {SubplotTableComponent} from "../components/SubplotTableComponent";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected componentFactory: ComponentFactory;
@@ -61,6 +56,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		this.componentMap.set(RecordType.Session, SessionTableComponent);
 		this.componentMap.set(RecordType.Act, ActTableComponent);
 		this.componentMap.set(RecordType.Scene, SceneTableComponent);
+		this.componentMap.set(RecordType.Subplot, SubplotTableComponent);
 
 		this.recordSortingMap = new Map();
 		this.recordSortingMap.set(RecordType.Event, [new SorterComparisonElement((data: EventInterface) => data.date)]);
@@ -159,8 +155,6 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 					sorter = this.recordSortingMap.get(type);
 					if (sorter === undefined) sorter = [new SorterComparisonElement((data: RecordInterface) => data.name)];
 				}
-
-				console.log(sorter)
 
 				if (sorter !== undefined) data = (<Array<any>>data).sort(this.factories.sorter.create<any>(sorter))
 			}

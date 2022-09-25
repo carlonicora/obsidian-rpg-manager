@@ -18,6 +18,7 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {DataFactoryInterface} from "../interfaces/factories/DataFactoryInterface";
 import {IdInterface} from "../interfaces/data/IdInterface";
 import {Session} from "../data/Session";
+import {Subplot} from "../data/Subplot";
 
 export class DataFactory extends AbstractFactory implements DataFactoryInterface{
 	private recordTypeMap: Map<string,any>;
@@ -43,6 +44,7 @@ export class DataFactory extends AbstractFactory implements DataFactoryInterface
 			['VampireNonPlayerCharacter', VampireCharacter],
 			['RawCampaign', RawCampaign],
 			['AgnosticMusic', Music],
+			['AgnosticSubplot', Subplot],
 		]);
 	}
 

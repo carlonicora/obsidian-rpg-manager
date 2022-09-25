@@ -15,6 +15,7 @@ export interface RpgManagerSettingsInterface {
 	musicTag: string;
 	YouTubeKey: string;
 	previousVersion: string;
+	subplotTag:string;
 }
 
 export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
@@ -34,4 +35,5 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	musicTag: 'rpgm/element/music',
 	YouTubeKey: '',
 	previousVersion: '',
+	subplotTag: 'rpgm/outline/subplot',
 }
