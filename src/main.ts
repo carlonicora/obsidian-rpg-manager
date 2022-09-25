@@ -24,6 +24,7 @@ import {RPGManagerView} from "./views/RPGManagerView";
 import {TimelineView} from "./views/TimelineView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
+
 	/**
 	 * ## Version 2.0
 	 *
