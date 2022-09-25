@@ -6,6 +6,7 @@ export class NonPlayerCharacterTemplateFactory extends AbstractComponentTemplate
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.npcTag + '/' + this.campaignId);
+		frontmatter.image = "";
 		frontmatter.goals = "",
 		frontmatter.pronoun = "";
 		frontmatter.dates = {

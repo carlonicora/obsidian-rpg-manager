@@ -6,6 +6,7 @@ export class FactionTemplateFactory extends AbstractComponentTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.factionTag + '/' + this.campaignId);
+		frontmatter.image = "";
 	}
 
 	public generateInitialCodeBlock(

@@ -6,6 +6,7 @@ export class MusicTemplateFactory extends AbstractComponentTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.musicTag + '/' + this.campaignId);
+		frontmatter.image = "";
 		frontmatter.url = this?.additionalInformation?.url ?? "";
 	}
 

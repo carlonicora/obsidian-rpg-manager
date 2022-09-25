@@ -7,6 +7,7 @@ export class CharacterTemplateFactory extends AbstractComponentTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.pcTag + '/' + this.campaignId);
 		frontmatter.pronoun = "";
+		frontmatter.image = "";
 		frontmatter.dates = {
 			dob: {},
 			death: {},

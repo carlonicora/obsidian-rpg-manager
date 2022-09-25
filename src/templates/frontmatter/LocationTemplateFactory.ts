@@ -6,6 +6,7 @@ export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.locationTag + '/' + this.campaignId);
+		frontmatter.image = "";
 		frontmatter.address = "";
 	}
 

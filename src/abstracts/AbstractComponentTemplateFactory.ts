@@ -198,7 +198,6 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		frontmatter: any,
 	): any {
 		frontmatter.synopsis = "";
-		frontmatter.image = {};
 	}
 
 	protected generateInitialCodeBlock(

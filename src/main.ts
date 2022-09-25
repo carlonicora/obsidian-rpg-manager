@@ -24,13 +24,6 @@ import {RPGManagerView} from "./views/RPGManagerView";
 import {TimelineView} from "./views/TimelineView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
-
-	/**
-	 * ## Version 2.0
-	 *
-	 * ## Version 2.1
-	 *
-	 **/
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
 	database: DatabaseInterface;

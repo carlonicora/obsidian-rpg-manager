@@ -6,6 +6,7 @@ export class ClueTemplateFactory extends AbstractComponentTemplateFactory {
 	): void {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.clueTag + '/' + this.campaignId);
+		frontmatter.image = "";
 		frontmatter.dates = {
 			found: {},
 		};

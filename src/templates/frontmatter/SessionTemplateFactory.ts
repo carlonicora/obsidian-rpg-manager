@@ -7,17 +7,9 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.sessionTag + '/' + this.campaignId + '/' + this.sessionId);
 
-		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
+		frontmatter.synopsis = (this?.additionalInformation?.synopsis === undefined ? '' : this.additionalInformation.synopsis.replaceAll('"', '\\"'));
 
-		if (synopsis === undefined) {
-			synopsis = '';
-		} else {
-			synopsis = synopsis.replaceAll('"', '\\"');
-		}
-
-		frontmatter.synopsis = synopsis;
 		frontmatter.dates = {
-			session: {},
 			irl: {},
 		}
 	}

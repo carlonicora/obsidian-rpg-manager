@@ -7,15 +7,7 @@ export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.actTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId);
 
-		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
-
-		if (synopsis === undefined) {
-			synopsis = '';
-		} else {
-			synopsis = synopsis.replaceAll('"', '\\"');
-		}
-
-		frontmatter.synopsis = synopsis;
+		frontmatter.synopsis = (this?.additionalInformation?.synopsis === undefined ? '' : this.additionalInformation.synopsis.replaceAll('"', '\\"'));
 	}
 
 	public generateInitialCodeBlock(

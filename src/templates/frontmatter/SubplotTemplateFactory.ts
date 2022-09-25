@@ -7,15 +7,7 @@ export class SubplotTemplateFactory extends AbstractComponentTemplateFactory {
 		super.addFrontmatterData(frontmatter);
 		frontmatter.tags.push(this.settings.subplotTag + '/' + this.campaignId);
 
-		let synopsis: string|undefined = this?.additionalInformation?.synopsis;
-
-		if (synopsis === undefined) {
-			synopsis = '';
-		} else {
-			synopsis = synopsis.replaceAll('"', '\\"');
-		}
-
-		frontmatter.synopsis = synopsis;
+		frontmatter.synopsis = (this?.additionalInformation?.synopsis === undefined ? '' : this.additionalInformation.synopsis.replaceAll('"', '\\"'));
 	}
 
 	public generateInitialCodeBlock(
