@@ -41,6 +41,10 @@ export interface DatabaseInterface {
 		overloadId?: number|undefined,
 	): Array<T>;
 
+	refreshRelationships(
+		element?: RecordInterface|undefined,
+	): Promise<void>;
+
 	onSave(
 		file: TFile,
 	): Promise<void>;

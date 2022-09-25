@@ -10,8 +10,9 @@ export enum LogMessageType {
 	DatabaseInitialisation=0b100,
 	RecordInitialisation=0b1000,
 	Updater=0b10000,
+	SessionSceneLink=0b100000,
 
-	Model=0b100000,
+	Model=0b1000000,
 }
 export interface LogMessageInterface {
 	type: LogType,

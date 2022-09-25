@@ -1,6 +1,6 @@
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {App, CachedMetadata, debounce, MarkdownView, TFile} from "obsidian";
+import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
 import {RecordType} from "../enums/RecordType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
@@ -27,9 +27,9 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		super(app);
 		this.basenameIndex = new Map();
 
-		this.onSave = debounce(this.onSave, 2000, true) as unknown as () => Promise<void>;
-		this.onDelete = debounce(this.onDelete, 2000, true) as unknown as () => Promise<void>;
-		this.onRename = debounce(this.onRename, 2000, true) as unknown as () => Promise<void>;
+		//this.onSave = debounce(this.onSave, 2000, true) as unknown as () => Promise<void>;
+		//this.onDelete = debounce(this.onDelete, 2000, true) as unknown as () => Promise<void>;
+		//this.onRename = debounce(this.onRename, 2000, true) as unknown as () => Promise<void>;
 	}
 
 	/**
@@ -225,7 +225,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		}
 	}
 
-	private async refreshRelationships(
+	public async refreshRelationships(
 		element: RecordInterface|undefined=undefined,
 	): Promise<void> {
 		if (element !== undefined){
