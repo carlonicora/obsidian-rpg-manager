@@ -38,13 +38,13 @@ export class TableView extends AbstractComponentView {
 					arrowIconEl.style.transform = 'rotate(0deg)';
 				}
 			});
-		}
 
-		if (data.class === 'rpgm-plot'){
-			const titleEditor = divContainer.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
-			titleEditor.addEventListener('click', () => {
-				EditorSelector.select(this.app, data.currentElement);
-			})
+			if (data.class === 'rpgm-plot'){
+				const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
+				titleEditor.addEventListener('click', () => {
+					EditorSelector.select(this.app, data.currentElement);
+				})
+			}
 		}
 
 		if (data.create !== undefined){
