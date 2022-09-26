@@ -18,13 +18,10 @@ export class SessionTemplate extends AbstractTemplate implements TemplateInterfa
 		});
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
 
-		let response = '## Session Notes\n\n' +
-			'---\n' +
+		let response = '---\n## Session Notes\n\n' +
 			'Recap: ' + possibleRecappers + '\n\n' +
-			'---\n' +
 			'## GM Notes\n' +
 			'-\n\n' +
-			'---\n' +
 			'## Feedbacks\n';
 
 			response += this.generateFeedback('GM');
@@ -33,13 +30,15 @@ export class SessionTemplate extends AbstractTemplate implements TemplateInterfa
 				response += this.generateFeedback(character.link);
 			});
 
+			response += '---\n';
+
 		return response;
 	}
 
 	private generateFeedback(
 		characterName: string,
 	): string {
-		return '**' + characterName + '**\n' +
+		return characterName + '\n' +
 			'- **Notes**: \n' +
 			'- **Wish**: \n' +
 			'- **Rose**: \n\n';
