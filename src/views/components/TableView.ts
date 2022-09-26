@@ -18,7 +18,7 @@ export class TableView extends AbstractComponentView {
 	): void {
 		const divContainer = container.createDiv();
 		if (data.title != null) {
-			const headerEl = divContainer.createEl('h2', {cls: 'rpgm-table-header'});
+			const headerEl = divContainer.createEl('h3', {cls: 'rpgm-table-header'});
 			const arrowEl: HTMLSpanElement = headerEl.createSpan();
 			arrowEl.style.marginRight = '10px';
 			setIcon(arrowEl, 'openClose');
