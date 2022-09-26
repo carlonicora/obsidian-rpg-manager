@@ -90,6 +90,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		if (this.plugin.settings.campaignTag !== this.map.get(SettingType.Campaign)?.value) {
 			settingsToUpdate.campaignTag = this.map.get(SettingType.Campaign)?.value;
 			updatedTags.set(this.plugin.settings.campaignTag, this.map.get(SettingType.Campaign)?.value);
+			doUpdate = true;
 		}
 
 		if (this.plugin.settings.adventureTag !== this.map.get(SettingType.Adventure)?.value) {
