@@ -26,7 +26,6 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
 			songId;
     }
 
-
 	public async fetchImage(
 		url: string,
 	): Promise<string|null|undefined> {

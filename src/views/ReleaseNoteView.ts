@@ -1,7 +1,8 @@
 import {ViewType} from "../enums/ViewType";
 import {Component, MarkdownRenderer} from "obsidian";
-import {releaseNotes} from "../ReleaseNotes";
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
+import {ReleaseNoteFetcher} from "../fetchers/ReleaseNoteFetcher";
+import {MarkdownFetcherInterface} from "../interfaces/fetchers/MarkdownFetcherInterface";
 
 export class ReleaseNoteView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.ReleaseNote.toString();
@@ -15,15 +16,19 @@ export class ReleaseNoteView extends AbstractRpgManagerView {
 
 	public async render(
 	): Promise<void> {
-		const releaseNotesEl = this.rpgmContentEl.createDiv();
-		releaseNotesEl.style.fontSize = '0.8em';
+		this.rpgmContentEl.empty();
 
-		MarkdownRenderer.renderMarkdown(
-			releaseNotes,
-			releaseNotesEl,
-			'',
-			null as unknown as Component,
-		);
+		const fetcher = await this.factories.fetchers.create<MarkdownFetcherInterface>(ReleaseNoteFetcher);
+		const releaseNotes: string|null|undefined = await fetcher.fetchMarkdown();
+
+		if (releaseNotes != null) {
+			MarkdownRenderer.renderMarkdown(
+				releaseNotes,
+				this.rpgmContentEl,
+				'',
+				null as unknown as Component,
+			);
+		}
 
 		const closeButtonEl = this.contentEl.createEl('button', {text: 'Close the release notes'});
 		closeButtonEl.addEventListener("click", () => {

@@ -43,12 +43,25 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		}
 	}
 
-	render(
+	public async render(
 	): Promise<void> {
 		this.addCreationLinks();
+		this.addReleaseNotes();
 		this.addToDoList();
 
 		return Promise.resolve(undefined);
+	}
+
+	private async addReleaseNotes(
+	): Promise<void> {
+		this.rpgmContentEl.createEl('h3', {text: 'Release Notes'});
+		const releaseNoteDivEl: HTMLDivElement = this.rpgmContentEl.createDiv();
+		const releaseNoteListEl: HTMLUListElement = releaseNoteDivEl.createEl('ul');
+		const releaseNoteListItemEl: HTMLLIElement = releaseNoteListEl.createEl('li');
+		const releaseNoteAnchorEl: HTMLAnchorElement = releaseNoteListItemEl.createEl('a', {text: 'Release Notes'});
+		releaseNoteAnchorEl.addEventListener('click', () => {
+			this.factories.views.showObsidianView(ViewType.ReleaseNote);
+		});
 	}
 
 	private addToDoList(
