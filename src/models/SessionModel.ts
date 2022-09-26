@@ -38,7 +38,7 @@ export class SessionModel extends AbstractModel {
 			});
 		}
 
-		await this.addRelationships(RecordType.Subplot);
+		await this.addRelationships(RecordType.Subplot, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(RecordType.Music);
 		await this.addRelationships(RecordType.Character);
 		await this.addRelationships(RecordType.NonPlayerCharacter);
@@ -55,11 +55,10 @@ export class SessionModel extends AbstractModel {
 	): void {
 		record.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
 			if (
-				relationship.type === RelationshipType.DirectInFrontmatter &&
-				relationship.component !== undefined &&
-				relationship.component.id.type === RecordType.Subplot
+				relationship.type === RelationshipType.ReverseInFrontmatter &&
+				relationship.component?.id.type === RecordType.Subplot
 			) {
-				if (!this.currentElement.reverseRelationships.has(name)) this.currentElement.relationships.set(name, relationship);
+				if (!this.currentElement.reverseRelationships.has(name)) this.currentElement.reverseRelationships.set(name, relationship);
 			}
 		});
 	}
