@@ -52,23 +52,23 @@ export interface RpgManagerAdvancedSettingsListElementInterface {
 
 
 export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
-	campaignTag: 'rpgm/outline/campaign',
-	adventureTag: 'rpgm/outline/adventure',
-	actTag: 'rpgm/outline/act',
-	sessionTag: 'rpgm/outline/session',
-	sceneTag: 'rpgm/outline/scene',
-	npcTag: 'rpgm/element/character/npc',
-	pcTag: 'rpgm/element/character/pc',
-	locationTag: 'rpgm/element/location',
-	factionTag: 'rpgm/element/faction',
-	eventTag: 'rpgm/element/event',
-	clueTag: 'rpgm/element/clue',
+	campaignTag: 'rpgm/campaign',
+	adventureTag: 'rpgm/adventure',
+	actTag: 'rpgm/act',
+	sessionTag: 'rpgm/session',
+	sceneTag: 'rpgm/scene',
+	subplotTag: 'rpgm/subplot',
+	npcTag: 'rpgm/npc',
+	pcTag: 'rpgm/pc',
+	locationTag: 'rpgm/location',
+	factionTag: 'rpgm/faction',
+	eventTag: 'rpgm/event',
+	clueTag: 'rpgm/clue',
+	musicTag: 'rpgm/music',
 	automaticMove: true,
 	templateFolder: '',
-	musicTag: 'rpgm/element/music',
 	YouTubeKey: '',
 	previousVersion: '',
-	subplotTag: 'rpgm/outline/subplot',
 	advanced: {
 		Agnostic: {
 			ActList: {

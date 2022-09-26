@@ -45,7 +45,7 @@ export class SettingsFactory {
 
 	public createTextSetting(
 		type: SettingType,
-		description: string,
+		description='',
 	): Setting {
 		const settings = this.map.get(type);
 
