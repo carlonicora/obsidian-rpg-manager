@@ -2,7 +2,7 @@ import {AbstractFetcher} from "../abstracts/AbstractFetcher";
 import {MarkdownFetcherInterface} from "../interfaces/fetchers/MarkdownFetcherInterface";
 
 export class ReleaseNoteFetcher extends AbstractFetcher implements MarkdownFetcherInterface{
-	public fetchUrl = 'https://raw.githubusercontent.com/carlonicora/obsidian-rpg-manager/ver-2.0-acts/ChangeLog.md';
+	public fetchUrl = 'https://raw.githubusercontent.com/carlonicora/obsidian-rpg-manager/master/ChangeLog.md';
 
 	public async fetchMarkdown(
 	): Promise<string | null | undefined> {

@@ -1,8 +1,8 @@
 import {ViewType} from "../enums/ViewType";
 import {Component, MarkdownRenderer} from "obsidian";
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
-import {ReleaseNoteFetcher} from "../fetchers/ReleaseNoteFetcher";
 import {MarkdownFetcherInterface} from "../interfaces/fetchers/MarkdownFetcherInterface";
+import {ReleaseNoteFetcher} from "../fetchers/ReleaseNoteFetcher";
 
 export class ReleaseNoteView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.ReleaseNote.toString();
