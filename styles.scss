@@ -423,10 +423,12 @@
 		border-top: none;
 		border-left: none;
 		border-right: none;
+		text-align: left;
 	}
 
 	tr > td {
 		border: none;
+		text-align: left;
 	}
 
 	tr > td .inline {
@@ -734,4 +736,20 @@
 .rpgm-table-header {
 	margin-bottom: 0px;
 	padding-top: 15px;
+	cursor: pointer;
+}
+
+.rpgm-advanced-settings-table {
+	border: solid 1px var(--background-modifier-border);
+	min-width: 200px;
+
+	th {
+		text-align: left;
+		font-size: 0.8em;
+	}
+
+	td {
+		text-align: left;
+		font-size: 0.8em;
+	}
 }

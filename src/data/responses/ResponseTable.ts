@@ -14,6 +14,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 	public campaignId: number|undefined;
 	public adventureId: number|undefined;
 	public actId: number|undefined;
+	public open: boolean;
 
 	constructor(
 		app: App,
@@ -24,6 +25,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 		this.class = null;
 		this.headers = [];
 		this.content = [];
+		this.open = true;
 	}
 
 	public addHeaders(

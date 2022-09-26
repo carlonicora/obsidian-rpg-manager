@@ -10,6 +10,7 @@ export interface TableResponseInterface extends ResponseElementInterface {
 	campaignId: number|undefined;
 	adventureId: number|undefined;
 	actId: number|undefined;
+	open: boolean;
 
 	addHeaders(
 		headers: Array<ContentInterface>,

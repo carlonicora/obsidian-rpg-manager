@@ -46,7 +46,7 @@ export class CampaignModel extends AbstractModel {
 		);
 
 		await this.addList(
-			RecordType.Character,
+			RecordType.NonPlayerCharacter,
 			this.database.readList<CharacterInterface>(RecordType.NonPlayerCharacter, this.currentElement.id),
 		);
 

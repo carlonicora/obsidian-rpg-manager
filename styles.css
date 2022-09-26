@@ -351,9 +351,11 @@
   border-top: none;
   border-left: none;
   border-right: none;
+  text-align: left;
 }
 .rpgm-table tr > td {
   border: none;
+  text-align: left;
 }
 .rpgm-table tr > td .inline {
   white-space: nowrap;
@@ -596,4 +598,18 @@
 .rpgm-table-header {
   margin-bottom: 0px;
   padding-top: 15px;
+  cursor: pointer;
+}
+
+.rpgm-advanced-settings-table {
+  border: solid 1px var(--background-modifier-border);
+  min-width: 200px;
+}
+.rpgm-advanced-settings-table th {
+  text-align: left;
+  font-size: 0.8em;
+}
+.rpgm-advanced-settings-table td {
+  text-align: left;
+  font-size: 0.8em;
 }
