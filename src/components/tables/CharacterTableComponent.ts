@@ -5,38 +5,39 @@ import {AbstractTableComponent} from "../../abstracts/AbstractTableComponent";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../settings/RpgManagerSettingsInterface";
+import {TableField} from "../../enums/TableField";
 
 export class CharacterTableComponent extends AbstractTableComponent {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.CharacterList;
 
 	protected generateHeaderElement(
-		fieldName: string,
+		fieldType: TableField,
 	): ContentInterface|undefined {
-		switch (fieldName.toLowerCase()) {
-			case 'age':
+		switch (fieldType) {
+			case TableField.Age:
 				return this.factories.contents.create('Age', ContentType.String);
 				break;
 		}
 
-		return super.generateHeaderElement(fieldName);
+		return super.generateHeaderElement(fieldType);
 	}
 
 	protected generateContentElement<T extends RecordInterface>(
 		index: number,
-		fieldName: string,
+		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
 		const character: CharacterInterface = <unknown>record as CharacterInterface;
-		switch (fieldName.toLowerCase()) {
-			case 'name':
+		switch (fieldType) {
+			case TableField.Name:
 				return this.factories.contents.create(record.link + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);
 				break;
-			case 'synopsis':
+			case TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown);
 				break;
 		}
 
-		return super.generateContentElement(index, fieldName, record, relationship);
+		return super.generateContentElement(index, fieldType, record, relationship);
 	}
 }

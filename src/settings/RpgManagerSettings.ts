@@ -2,10 +2,15 @@ import {App, Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian"
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {SettingsFactory} from "../factories/SettingsFactory";
-import {RpgManagerSettingsInterface} from "./RpgManagerSettingsInterface";
+import {
+	RpgManagerAdvancedSettingsInterface,
+	RpgManagerAdvancedSettingsListsInterface,
+	RpgManagerSettingsInterface
+} from "./RpgManagerSettingsInterface";
 import {SettingType} from "../enums/SettingType";
 import {SettingInterface} from "../interfaces/SettingsInterface";
 import {TagHelper} from "../helpers/TagHelper";
+import {tableFieldName} from "../enums/TableField";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private plugin: RpgManagerInterface;
@@ -14,6 +19,8 @@ export class RpgManagerSettings extends PluginSettingTab {
 	private map: Map<SettingType, SettingInterface>;
 	public containerEl: HTMLElement;
 	private templateFolderMap: Map<string, string>;
+
+	private advancedSettingsDescription: Map<string, {title: string, description: string}> = new Map<string, {title: string, description: string}>();
 
 	constructor(
 		app: App,
@@ -47,6 +54,19 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this.plugin.settings.automaticMove, placeholder: 'Organise new elements'});
 		this.map.set(SettingType.templateFolder, {title: 'Template folder', value: this.plugin.settings.templateFolder, placeholder: 'Template Folder'});
 
+		this.advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
+		this.advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
+		this.advancedSettingsDescription.set('CharacterList', {title: 'Player Character List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
+		this.advancedSettingsDescription.set('ClueList', {title: 'Clue List', description: 'Select which fields you would like to see when displaying a list of Clues'});
+		this.advancedSettingsDescription.set('EventList', {title: 'Event List', description: 'Select which fields you would like to see when displaying a list of Events'});
+		this.advancedSettingsDescription.set('FactionList', {title: 'Faction List', description: 'Select which fields you would like to see when displaying a list of Factions'});
+		this.advancedSettingsDescription.set('LocationList', {title: 'Location List', description: 'Select which fields you would like to see when displaying a list of Locations'});
+		this.advancedSettingsDescription.set('MusicList', {title: 'Music List', description: 'Select which fields you would like to see when displaying a list of Musics'});
+		this.advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player Character List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
+		this.advancedSettingsDescription.set('SceneList', {title: 'Scene List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
+		this.advancedSettingsDescription.set('SessionList', {title: 'Session List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
+		this.advancedSettingsDescription.set('SubplotList', {title: 'Subplot List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
+
 		this.settingsUpdater = new SettingsUpdater(this.app);
 		this.settingsFactory = new SettingsFactory(this.plugin, this.map, this.containerEl);
 	}
@@ -61,6 +81,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.loadTemplatesSettings();
 		this.loadExternalServicesSettings();
 		this.loadComponentSettings();
+		this.loadAdvancedSettings();
 
 		const saveButtonEl = this.containerEl.createEl('button');
 		const saved = this.containerEl.createEl('p', {text: 'Settings Saved'});
@@ -235,5 +256,72 @@ export class RpgManagerSettings extends PluginSettingTab {
 			this.templateFolderMap.set(folder.path, folder.path);
 			this.createTemplateFolderMap(folder);
 		});
+	}
+
+	private loadAdvancedSettings(
+	): void {
+		this.settingsFactory.createHeader('Lists', 3);
+
+		Object.keys(this.plugin.settings.advanced.Agnostic).forEach((name: string, index: number) => {
+			const advancedSetting = this.plugin.settings.advanced.Agnostic[name as keyof RpgManagerAdvancedSettingsInterface];
+			this.addSettingsItem(name, advancedSetting);
+		});
+	}
+
+	private addSettingsItem(
+		type: string,
+		settings: RpgManagerAdvancedSettingsListsInterface,
+	): void {
+		const settingItemEl: HTMLDivElement = this.containerEl.createDiv({cls: 'setting-item'});
+
+		const settingItemInfoEl: HTMLDivElement = settingItemEl.createDiv({cls: 'setting-item-info'});
+		settingItemInfoEl.createDiv({cls: 'setting-item-name', text: this.advancedSettingsDescription.get(type)?.title ?? ''});
+		settingItemInfoEl.createDiv({cls: 'setting-item-description', text: this.advancedSettingsDescription.get(type)?.description ?? ''}).createEl('br');
+
+		const settingItemControlEl: HTMLDivElement = settingItemEl.createDiv({cls: 'setting-item-control'});
+
+		const listSettingTableEl: HTMLTableElement = settingItemControlEl.createEl('table', {cls: 'rpgm-advanced-settings-table'});
+
+		for (let index=0; index<settings.fields.length; index++) {
+			const listSettingTableRowEl: HTMLTableRowElement = listSettingTableEl.createEl('tr');
+			listSettingTableRowEl.createEl('td', {text: tableFieldName.get(settings.fields[index].field) ?? ''});
+
+			const listSettingTableCheckboxEl: HTMLTableCellElement = listSettingTableRowEl.createEl('td');
+
+			const listSettingFieldCheckboxEl: HTMLInputElement = listSettingTableCheckboxEl.createEl('input');
+			listSettingFieldCheckboxEl.type = 'checkbox';
+			listSettingFieldCheckboxEl.dataset.id = index.toString();
+
+			if (settings.fields[index].checked) listSettingFieldCheckboxEl.checked = true;
+			if (settings.fields[index].required) listSettingFieldCheckboxEl.disabled = true;
+
+			listSettingFieldCheckboxEl.addEventListener('change', () => {
+				this.updateAdvancedListSettings(
+					index,
+					type,
+					listSettingFieldCheckboxEl.checked,
+				)
+			})
+		}
+	}
+
+	private async updateAdvancedListSettings(
+		index: number,
+		type: string,
+		checked: boolean,
+	): Promise<void> {
+		const name = type as keyof RpgManagerAdvancedSettingsInterface;
+		const partialSettings: Partial<RpgManagerSettingsInterface> = {
+			advanced: {
+				Agnostic: this.plugin.settings.advanced.Agnostic
+			}
+		};
+
+		if (partialSettings.advanced !== undefined) {
+			partialSettings.advanced.Agnostic[name].fields[index].checked = checked;
+			await this.plugin.updateSettings(partialSettings);
+		}
+
+		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 }

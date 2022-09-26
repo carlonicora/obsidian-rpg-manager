@@ -738,3 +738,18 @@
 	padding-top: 15px;
 	cursor: pointer;
 }
+
+.rpgm-advanced-settings-table {
+	border: solid 1px var(--background-modifier-border);
+	min-width: 200px;
+
+	th {
+		text-align: left;
+		font-size: 0.8em;
+	}
+
+	td {
+		text-align: left;
+		font-size: 0.8em;
+	}
+}

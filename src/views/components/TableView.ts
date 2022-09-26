@@ -31,7 +31,7 @@ export class TableView extends AbstractComponentView {
 
 			headerEl.addEventListener('click', () => {
 				if (this.tableEl.style.display === 'none'){
-					this.tableEl.style.display = 'block';
+					this.tableEl.style.display = '';
 					arrowIconEl.style.transform = 'rotate(90deg)';
 				} else {
 					this.tableEl.style.display = 'none';
@@ -109,7 +109,7 @@ export class TableView extends AbstractComponentView {
 		this.tableEl = divContainer.createEl('table');
 		this.tableEl.addClass('rpgm-table');
 
-		data.open ? this.tableEl.style.display = 'block' : this.tableEl.style.display = 'none';
+		this.tableEl.style.display = data.open ? '' : 'none';
 
 		if (data.class != null){
 			this.tableEl.addClass(data.class);

@@ -9,6 +9,7 @@ import {RecordInterface} from "../interfaces/database/RecordInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
 import {ResponseTable} from "../data/responses/ResponseTable";
+import {TableField} from "../enums/TableField";
 
 export abstract class AbstractTableComponent extends AbstractComponent {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface;
@@ -59,25 +60,25 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 	}
 
 	protected generateHeaderElement(
-		fieldName: string,
+		fieldType: TableField,
 	): ContentInterface|undefined {
-		switch (fieldName.toLowerCase()) {
-			case 'index':
+		switch (fieldType) {
+			case  TableField.Index:
 				return this.factories.contents.create('#', ContentType.String, true);
 				break;
-			case 'date':
+			case  TableField.Date:
 				return this.factories.contents.create('Date', ContentType.String, true);
 				break;
-			case 'image':
+			case  TableField.Image:
 				return this.factories.contents.create('', ContentType.String, true);
 				break;
-			case 'name':
+			case  TableField.Name:
 				return this.factories.contents.create('Name', ContentType.String);
 				break;
-			case 'synopsis':
+			case  TableField.Synopsis:
 				return this.factories.contents.create('Synopsis', ContentType.String);
 				break;
-			case 'url':
+			case  TableField.Url:
 				return this.factories.contents.create('Url', ContentType.String);
 				break;
 		}
@@ -105,18 +106,18 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 
 	protected generateContentElement<T extends RecordInterface>(
 		index: number,
-		fieldName: string,
+		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		switch (fieldName.toLowerCase()) {
-			case 'name':
+		switch (fieldType) {
+			case  TableField.Name:
 				return this.factories.contents.create(record.link, ContentType.Link);
 				break;
-			case 'image':
+			case  TableField.Image:
 				return this.factories.contents.create(record.imageSrcElement, ContentType.Image, true);
 				break;
-			case 'synopsis':
+			case  TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown);
 				break;
 		}

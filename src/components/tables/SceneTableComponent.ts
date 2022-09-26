@@ -5,63 +5,64 @@ import {AbstractTableComponent} from "../../abstracts/AbstractTableComponent";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../settings/RpgManagerSettingsInterface";
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {ContentInterface} from "../../interfaces/ContentInterface";
+import {TableField} from "../../enums/TableField";
 
 export class SceneTableComponent extends AbstractTableComponent {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;
 
 	protected generateHeaderElement(
-		fieldName: string,
+		fieldType: TableField,
 	): ContentInterface|undefined {
-		switch (fieldName.toLowerCase()) {
-			case 'starttime':
+		switch (fieldType) {
+			case TableField.StartTime:
 				return this.factories.contents.create('Start', ContentType.String, true);
 				break;
-			case 'endtime':
+			case TableField.EndTime:
 				return this.factories.contents.create('End', ContentType.String, true);
 				break;
-			case 'duration':
+			case TableField.Duration:
 				return this.factories.contents.create('Duration', ContentType.String);
 				break;
-			case 'storycircleindicator':
+			case TableField.StoryCircleIndicator:
 				return this.factories.contents.create('', ContentType.String);
 				break;
 		}
 
-		return super.generateHeaderElement(fieldName);
+		return super.generateHeaderElement(fieldType);
 	}
 
 	protected generateContentElement<T extends RecordInterface>(
 		index: number,
-		fieldName: string,
+		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
 		const scene: SceneInterface = <unknown>record as SceneInterface;
-		switch (fieldName.toLowerCase()) {
-			case 'index':
+		switch (fieldType) {
+			case TableField.Index:
 				return this.factories.contents.create(scene.completed ? index.toString() : '**' + index.toString() + '**', ContentType.Markdown, true);
 				break;
-			case 'name':
+			case TableField.Name:
 				return this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link);
 				break;
-			case 'starttime':
+			case TableField.StartTime:
 				return this.factories.contents.create(this.formatTime(scene.startTime), ContentType.Date, true);
 				break;
-			case 'date':
+			case TableField.Date:
 				return this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.Date, true);
 				break;
-			case 'endtime':
+			case TableField.EndTime:
 				return this.factories.contents.create(this.formatTime(scene.endTime), ContentType.Date, true);
 				break;
-			case 'duration':
+			case TableField.Duration:
 				return this.factories.contents.create(scene.duration, ContentType.Date, true);
 				break;
-			case 'storycircleindicator':
+			case TableField.StoryCircleIndicator:
 				return this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage});
 				break;
 		}
 
-		return super.generateContentElement(index, fieldName, record, relationship);
+		return super.generateContentElement(index, fieldType, record, relationship);
 	}
 
 	private formatTime(

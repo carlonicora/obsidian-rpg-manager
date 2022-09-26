@@ -5,35 +5,36 @@ import {AbstractTableComponent} from "../../abstracts/AbstractTableComponent";
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {RecordInterface} from "../../interfaces/database/RecordInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../settings/RpgManagerSettingsInterface";
+import {TableField} from "../../enums/TableField";
 
 export class ClueTableComponent extends AbstractTableComponent {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ClueList;
 
 	protected generateHeaderElement(
-		fieldName: string,
+		fieldType: TableField,
 	): ContentInterface|undefined {
-		switch (fieldName.toLowerCase()) {
-			case 'found':
+		switch (fieldType) {
+			case TableField.Found:
 				return this.factories.contents.create('Found', ContentType.String);
 				break;
 		}
 
-		return super.generateHeaderElement(fieldName);
+		return super.generateHeaderElement(fieldType);
 	}
 
 	protected generateContentElement<T extends RecordInterface>(
 		index: number,
-		fieldName: string,
+		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
 		const clue: ClueInterface = <unknown>record as ClueInterface;
-		switch (fieldName.toLowerCase()) {
-			case 'found':
+		switch (fieldType) {
+			case TableField.Found:
 				return this.factories.contents.create((clue.isFound ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Date);
 				break;
 		}
 
-		return super.generateContentElement(index, fieldName, record, relationship);
+		return super.generateContentElement(index, fieldType, record, relationship);
 	}
 }
