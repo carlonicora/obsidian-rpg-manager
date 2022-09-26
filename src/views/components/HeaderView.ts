@@ -12,6 +12,7 @@ import {StoryCircleStage} from "../../enums/StoryCircleStage";
 import {ViewType} from "../../enums/ViewType";
 import {FrontmatterElementSelectionModal} from "../../modals/FrontmatterElementSelectionModal";
 import {EditorSelector} from "../../helpers/EditorSelector";
+import {SorterType} from "../../enums/SorterType";
 
 export class HeaderView extends AbstractComponentView {
 	private sessionSelectorEl: HTMLSelectElement;
@@ -144,7 +145,9 @@ export class HeaderView extends AbstractComponentView {
 
 		if (sceneId !== undefined) {
 			const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === RecordType.Session && session.id.campaignId === sceneId.campaignId)
-					.sort(this.factories.sorter.create<SessionInterface>([new SorterComparisonElement((session: SessionInterface) => session.sessionId)]));
+					.sort(this.factories.sorter.create<SessionInterface>([
+						new SorterComparisonElement((session: SessionInterface) => session.sessionId, SorterType.Descending)
+					]));
 
 			sessions.forEach((session: SessionInterface) => {
 				if (data.value.content.toString() === session.sessionId.toString()) {
