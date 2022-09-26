@@ -5,6 +5,8 @@ import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordType} from "../enums/RecordType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
+import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class SessionModel extends AbstractModel {
 	protected currentElement: SessionInterface;
@@ -26,13 +28,17 @@ export class SessionModel extends AbstractModel {
 			await scenes[sceneIndex].relationships.forEach((relationship: RelationshipInterface, name: string) => {
 				relationship.description = '';
 				if (!this.currentElement.relationships.has(name)) this.currentElement.relationships.set(name, relationship);
+
+				if (relationship.component?.id.type === RecordType.Event || relationship.component?.id.type === RecordType.Clue) this.addSubplotRelationships(relationship.component);
 			});
 			await scenes[sceneIndex].reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
 				relationship.description = '';
 				if (!this.currentElement.reverseRelationships.has(name)) this.currentElement.relationships.set(name, relationship);
+				if (relationship.component?.id.type === RecordType.Event || relationship.component?.id.type === RecordType.Clue) this.addSubplotRelationships(relationship.component);
 			});
 		}
 
+		await this.addRelationships(RecordType.Subplot);
 		await this.addRelationships(RecordType.Music);
 		await this.addRelationships(RecordType.Character);
 		await this.addRelationships(RecordType.NonPlayerCharacter);
@@ -42,5 +48,19 @@ export class SessionModel extends AbstractModel {
 		await this.addRelationships(RecordType.Event);
 
 		return this.response;
+	}
+
+	private addSubplotRelationships(
+		record: RecordInterface,
+	): void {
+		record.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
+			if (
+				relationship.type === RelationshipType.DirectInFrontmatter &&
+				relationship.component !== undefined &&
+				relationship.component.id.type === RecordType.Subplot
+			) {
+				if (!this.currentElement.reverseRelationships.has(name)) this.currentElement.relationships.set(name, relationship);
+			}
+		});
 	}
 }
