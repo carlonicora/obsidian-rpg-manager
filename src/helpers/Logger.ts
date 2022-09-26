@@ -10,7 +10,8 @@ export enum LogMessageType {
 	DatabaseInitialisation=0b100,
 	RecordInitialisation=0b1000,
 	Updater=0b10000,
-	SessionSceneLink=0b100000,
+	TagUpdates=0b100000,
+	SessionSceneLink=0b1000000,
 
 	Model=0b1000000,
 }

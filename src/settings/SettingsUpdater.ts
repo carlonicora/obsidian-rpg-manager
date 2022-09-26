@@ -2,31 +2,38 @@ import {TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
+import {InfoLog, LogMessageType} from "../helpers/Logger";
 
 export class SettingsUpdater extends AbstractRpgManager {
 	public async updateTags(
 		updatedTags: Map<string,string>,
 	): Promise<void> {
-		//get all TFiles
+		new InfoLog(LogMessageType.TagUpdates, 'Collecting files');
 		const files: TFile[] = await this.app.vault.getMarkdownFiles();
 
 		for (let index=0; index<files.length; index++){
-			//load file content
 			const content = await this.app.vault.read(files[index]);
+			new InfoLog(LogMessageType.TagUpdates, 'Reading file content', files[index]);
 
 			let newFileContent = content;
 			await updatedTags.forEach((newTag: string, oldTag:string) => {
 				newFileContent = newFileContent.replaceAll(oldTag, newTag);
 			});
-			if (newFileContent !== content) await this.app.vault.modify(files[index], newFileContent);
+			new InfoLog(LogMessageType.TagUpdates, 'Tags Updated', files[index]);
+
+			if (newFileContent !== content) {
+				await this.app.vault.modify(files[index], newFileContent);
+				new InfoLog(LogMessageType.TagUpdates, 'File updated', files[index]);
+			}
 		}
 
+		new InfoLog(LogMessageType.TagUpdates, 'Re-initialising database');
 		return await DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;
+				new InfoLog(LogMessageType.TagUpdates, 'Database re-initialised');
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 				return;
 			});
-
 	}
 }
