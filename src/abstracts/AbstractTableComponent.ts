@@ -21,6 +21,8 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 		if (relationships.length === 0) return null;
 
 		const response = new ResponseTable(this.app, this.currentElement);
+		response.open = this.advancedSettings.defaultVisible;
+		console.log(response.open)
 
 		response.addTitle(title ? title : this.advancedSettings.title);
 

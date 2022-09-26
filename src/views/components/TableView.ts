@@ -7,15 +7,37 @@ import {AdventureInterface} from "../../interfaces/data/AdventureInterface";
 import {IdInterface} from "../../interfaces/data/IdInterface";
 import {DateContent} from "../../data/content/DateContent";
 import {EditorSelector} from "../../helpers/EditorSelector";
+import {setIcon} from "obsidian";
 
 export class TableView extends AbstractComponentView {
+	private tableEl: HTMLTableElement;
+
 	public render(
 		container: HTMLElement,
 		data: TableResponseInterface,
 	): void {
 		const divContainer = container.createDiv();
 		if (data.title != null) {
-			divContainer.createEl('h2', {cls: 'rpgm-table-header', text: data.title});
+			const headerEl = divContainer.createEl('h2', {cls: 'rpgm-table-header'});
+			const arrowEl: HTMLSpanElement = headerEl.createSpan();
+			arrowEl.style.marginRight = '10px';
+			setIcon(arrowEl, 'openClose');
+
+			const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
+
+			if (data.open) arrowIconEl.style.transform = 'rotate(90deg)';
+
+			headerEl.createSpan({text: data.title});
+
+			headerEl.addEventListener('click', () => {
+				if (this.tableEl.style.display === 'none'){
+					this.tableEl.style.display = 'block';
+					arrowIconEl.style.transform = 'rotate(90deg)';
+				} else {
+					this.tableEl.style.display = 'none';
+					arrowIconEl.style.transform = 'rotate(0deg)';
+				}
+			});
 		}
 
 		if (data.class === 'rpgm-plot'){
@@ -84,15 +106,17 @@ export class TableView extends AbstractComponentView {
 			}
 		}
 
-		const table = divContainer.createEl('table');
-		table.addClass('rpgm-table');
+		this.tableEl = divContainer.createEl('table');
+		this.tableEl.addClass('rpgm-table');
+
+		data.open ? this.tableEl.style.display = 'block' : this.tableEl.style.display = 'none';
 
 		if (data.class != null){
-			table.addClass(data.class);
+			this.tableEl.addClass(data.class);
 		}
 
 		if (data.headers != null && data.headers.length > 0) {
-			const header = table.createEl('tr');
+			const header = this.tableEl.createEl('tr');
 			data.headers.forEach((content: ContentInterface) => {
 				const cell = header.createEl('th');
 				content.fillContent(cell, this.sourcePath);
@@ -103,7 +127,7 @@ export class TableView extends AbstractComponentView {
 		}
 
 		data.content.forEach((element: Array<ContentInterface>) => {
-			const row = table.createEl('tr');
+			const row = this.tableEl.createEl('tr');
 			element.forEach((content: ContentInterface) => {
 				const cell = row.createEl('td');
 				if (content instanceof DateContent) {

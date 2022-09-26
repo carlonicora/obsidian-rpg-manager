@@ -40,6 +40,7 @@ export interface RpgManagerAdvancedSettingsInterface {
 
 export interface RpgManagerAdvancedSettingsListsInterface {
 	title: string;
+	defaultVisible: boolean;
 	fields: Array<RpgManagerAdvancedSettingsListElementInterface>;
 }
 
@@ -72,6 +73,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 		Agnostic: {
 			ActList: {
 				title: 'Acts',
+				defaultVisible: true,
 				fields: [
 					{field: 'index', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -80,6 +82,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			AdventureList: {
 				title: 'Adventures',
+				defaultVisible: true,
 				fields: [
 					{field: 'index', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -88,6 +91,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			CharacterList: {
 				title: 'Player Characters',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -97,6 +101,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			ClueList: {
 				title: 'Clues',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -106,6 +111,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			EventList: {
 				title: 'Events',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: false, required: false},
 					{field: 'name', checked: true, required: true},
@@ -115,6 +121,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			FactionList: {
 				title: 'Factions',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: false, required: false},
 					{field: 'name', checked: true, required: true},
@@ -123,6 +130,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			LocationList: {
 				title: 'Locations',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -131,6 +139,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			MusicList: {
 				title: 'Musics',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -140,6 +149,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			NonPlayerCharacterList: {
 				title: 'Non Player Characters',
+				defaultVisible: true,
 				fields: [
 					{field: 'image', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -149,6 +159,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			SceneList: {
 				title: 'Scenes',
+				defaultVisible: true,
 				fields: [
 					{field: 'index', checked: true, required: false},
 					{field: 'storyCircleIndicator', checked: true, required: false},
@@ -162,6 +173,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			SessionList: {
 				title: 'Sessions',
+				defaultVisible: true,
 				fields: [
 					{field: 'index', checked: true, required: false},
 					{field: 'name', checked: true, required: true},
@@ -171,6 +183,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			},
 			SubplotList: {
 				title: 'Subplots',
+				defaultVisible: false,
 				fields: [
 					{field: 'name', checked: true, required: true},
 					{field: 'synopsis', checked: true, required: false},

@@ -598,4 +598,5 @@
 .rpgm-table-header {
   margin-bottom: 0px;
   padding-top: 15px;
+  cursor: pointer;
 }
