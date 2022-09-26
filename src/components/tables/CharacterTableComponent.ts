@@ -36,6 +36,9 @@ export class CharacterTableComponent extends AbstractTableComponent {
 			case TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown);
 				break;
+			case TableField.Age:
+				return this.factories.contents.create(character.age?.toString(), ContentType.String, true);
+				break;
 		}
 
 		return super.generateContentElement(index, fieldType, record, relationship);

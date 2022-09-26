@@ -83,7 +83,7 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 				break;
 		}
 
-		return undefined;
+		return this.factories.contents.create('', ContentType.String);
 	}
 
 	protected generateContent<T extends RecordInterface>(
@@ -122,6 +122,6 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 				break;
 		}
 
-		return undefined;
+		return this.factories.contents.create('', ContentType.String);
 	}
 }
