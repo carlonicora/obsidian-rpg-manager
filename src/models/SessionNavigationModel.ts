@@ -4,7 +4,7 @@ import {HeaderComponent} from "../components/HeaderComponent";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {RecordType} from "../enums/RecordType";
-import {SceneTableComponent} from "../components/SceneTableComponent";
+import {SceneTableComponent} from "../components/tables/SceneTableComponent";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 
 export class SessionNavigationModel extends AbstractModel {

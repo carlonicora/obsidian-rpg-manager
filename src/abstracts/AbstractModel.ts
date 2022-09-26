@@ -7,17 +7,17 @@ import {ResponseData} from "../data/responses/ResponseData";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {RecordType} from "../enums/RecordType";
 import {RelationshipType} from "../enums/RelationshipType";
-import {LocationTableComponent} from "../components/LocationTableComponent";
-import {FactionTableComponent} from "../components/FactionTableComponent";
-import {ClueTableComponent} from "../components/ClueTableComponent";
-import {EventTableComponent} from "../components/EventTableComponent";
-import {MusicTableComponent} from "../components/MusicTableComponent";
+import {LocationTableComponent} from "../components/tables/LocationTableComponent";
+import {FactionTableComponent} from "../components/tables/FactionTableComponent";
+import {ClueTableComponent} from "../components/tables/ClueTableComponent";
+import {EventTableComponent} from "../components/tables/EventTableComponent";
+import {MusicTableComponent} from "../components/tables/MusicTableComponent";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {CharacterTableComponent} from "../components/CharacterTableComponent";
-import {AdventureTableComponent} from "../components/AdventureTableComponent";
-import {ActTableComponent} from "../components/ActTableComponent";
-import {SceneTableComponent} from "../components/SceneTableComponent";
-import {SessionTableComponent} from "../components/SessionTableComponent";
+import {CharacterTableComponent} from "../components/tables/CharacterTableComponent";
+import {AdventureTableComponent} from "../components/tables/AdventureTableComponent";
+import {ActTableComponent} from "../components/tables/ActTableComponent";
+import {SceneTableComponent} from "../components/tables/SceneTableComponent";
+import {SessionTableComponent} from "../components/tables/SessionTableComponent";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SorterComparisonElementInterface} from "../interfaces/SorterComparisonElementInterface";
 import {EventInterface} from "../interfaces/data/EventInterface";
@@ -26,7 +26,8 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {ActInterface} from "../interfaces/data/ActInterface";
 import {SceneInterface} from "../interfaces/data/SceneInterface";
 import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {SubplotTableComponent} from "../components/SubplotTableComponent";
+import {SubplotTableComponent} from "../components/tables/SubplotTableComponent";
+import {NonPlayerCharacterTableComponent} from "../components/tables/NonPlayerCharacterTableComponent";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected componentFactory: ComponentFactory;
@@ -50,7 +51,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		this.componentMap.set(RecordType.Clue, ClueTableComponent);
 		this.componentMap.set(RecordType.Event, EventTableComponent);
 		this.componentMap.set(RecordType.Character, CharacterTableComponent);
-		this.componentMap.set(RecordType.NonPlayerCharacter, CharacterTableComponent);
+		this.componentMap.set(RecordType.NonPlayerCharacter, NonPlayerCharacterTableComponent);
 		this.componentMap.set(RecordType.Music, MusicTableComponent);
 		this.componentMap.set(RecordType.Adventure, AdventureTableComponent);
 		this.componentMap.set(RecordType.Session, SessionTableComponent);
@@ -133,10 +134,6 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 	): Promise<void>{
 		if (!this.isExcluded(type)){
 			const component = this.componentMap.get(type);
-
-			if (title === undefined && type === RecordType.Character) title='Player Characters';
-			if (title === undefined && type === RecordType.NonPlayerCharacter) title='Non Player Characters';
-
 			if (data === undefined) data = this.currentElement.getRelationships(type, requiredRelationshipType);
 
 			let isArray = false;

@@ -351,9 +351,11 @@
   border-top: none;
   border-left: none;
   border-right: none;
+  text-align: left;
 }
 .rpgm-table tr > td {
   border: none;
+  text-align: left;
 }
 .rpgm-table tr > td .inline {
   white-space: nowrap;
