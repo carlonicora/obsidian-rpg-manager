@@ -89,7 +89,7 @@ export class Logger {
 	public static log(
 		message: LogMessageInterface,
 	): void {
-		if (this.isDebug || (message.type & this.debuggableTypes) !== message.type) {
+		if (this.isDebug || (message.type & this.debuggableTypes) === message.type) {
 
 			let messageContent = message.message;
 			let messageHeader: string | undefined;

@@ -1,7 +1,7 @@
 # RPG Manager Change Log
 
 ## Version 2.0
-_2022-29-09_
+_2022-09-27_
 
 Version 2.0 is a major upgrade to RPG Manager, filled with new functionality and changes. Please be aware that this 
 version brings changes to the structure of the plotting, renaming some of the components used in the system!
