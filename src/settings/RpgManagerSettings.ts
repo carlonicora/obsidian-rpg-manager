@@ -5,6 +5,7 @@ import {SettingsFactory} from "../factories/SettingsFactory";
 import {RpgManagerSettingsInterface} from "./RpgManagerSettingsInterface";
 import {SettingType} from "../enums/SettingType";
 import {SettingInterface} from "../interfaces/SettingsInterface";
+import {TagHelper} from "../helpers/TagHelper";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private plugin: RpgManagerInterface;
@@ -162,6 +163,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		if (doUpdate){
 			await this.plugin.updateSettings(settingsToUpdate);
+			this.plugin.tagHelper = new TagHelper(this.plugin.settings);
 			await this.settingsUpdater.updateTags(updatedTags);
 
 			response = 'Settings saved and database re-initialised';
