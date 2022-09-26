@@ -25,6 +25,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 		this.class = null;
 		this.headers = [];
 		this.content = [];
+		this.open = true;
 	}
 
 	public addHeaders(

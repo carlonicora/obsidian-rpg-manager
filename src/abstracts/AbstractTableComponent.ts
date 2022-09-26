@@ -22,7 +22,6 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 
 		const response = new ResponseTable(this.app, this.currentElement);
 		response.open = this.advancedSettings.defaultVisible;
-		console.log(response.open)
 
 		response.addTitle(title ? title : this.advancedSettings.title);
 
@@ -112,7 +111,7 @@ export abstract class AbstractTableComponent extends AbstractComponent {
 	): ContentInterface|undefined {
 		switch (fieldName.toLowerCase()) {
 			case 'name':
-				return this.factories.contents.create(record.link, ContentType.Link, true);
+				return this.factories.contents.create(record.link, ContentType.Link);
 				break;
 			case 'image':
 				return this.factories.contents.create(record.imageSrcElement, ContentType.Image, true);
