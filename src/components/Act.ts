@@ -24,8 +24,8 @@ export class Act extends AbstractComponentOutline implements ActInterface {
 
 		this.actId = actId;
 
-		if (frontmatter?.abtStage !== undefined){
-			this.abtStage = AbtStage[frontmatter.abtStage as keyof typeof AbtStage];
+		if (frontmatter?.abt !== undefined){
+			this.abtStage = AbtStage[frontmatter.abt as keyof typeof AbtStage];
 		}
 
 		super.initialiseData(frontmatter);

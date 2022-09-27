@@ -75,9 +75,9 @@ export class HeaderView extends AbstractSubModelView {
 				this.addScenesSelection(contentEl, element);
 			} else if (element.type === HeaderResponseType.SessionSelection) {
 				this.addSessionSelector(contentEl, element);
-			} else if (element.type === HeaderResponseType.SceneStoryCircle) {
+			} else if (element.type === HeaderResponseType.StoryCircleSelector) {
 				this.addStoryCircleStageSelector(contentEl, element);
-			} else if (element.type === HeaderResponseType.ActAbt) {
+			} else if (element.type === HeaderResponseType.AbtSelector) {
 				this.addAbtStageSelector(contentEl, element);
 			} else {
 				element.value.fillContent(contentEl, this.sourcePath);
@@ -145,9 +145,7 @@ export class HeaderView extends AbstractSubModelView {
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
-		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
-
-		if (sceneId !== undefined) {
+		if (data.additionalInformation?.id !== undefined) {
 
 			this.abtSelectorEl = contentEl.createEl("select");
 			this.abtSelectorEl.createEl("option", {
@@ -173,7 +171,29 @@ export class HeaderView extends AbstractSubModelView {
 					this.factories.frontmatter.update(file, map);
 				}
 			});
+
+			if (data.value.content.toString() !== ''){
+				if (data.additionalInformation.id.type === ComponentType.Act) {
+					this.calculateActBalance(data.additionalInformation.id, data.value.content);
+				} else {
+					this.calculateSessionBalance(data.additionalInformation.id, data.value.content);
+				}
+			}
 		}
+	}
+
+	private calculateActBalance(
+		actId: IdInterface,
+		stage: AbtStage,
+	): void {
+
+	}
+
+	private calculateSessionBalance(
+		sessionId: IdInterface,
+		stage: AbtStage,
+	): void {
+
 	}
 
 	private addSessionSelector(
