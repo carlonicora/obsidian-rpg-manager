@@ -180,7 +180,11 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		this.campaignModal.addElement(
 			childElement,
-		)
+		);
+
+		titleEl.addEventListener("keypress", function(event: KeyboardEvent) {
+			if (event.key === "Enter") this.button.click();
+		}.bind(this));
 	}
 
 	onClose() {
