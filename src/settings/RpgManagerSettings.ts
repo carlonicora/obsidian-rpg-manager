@@ -46,8 +46,8 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.NPC, {title: 'Non Player Character', value: this.plugin.settings.npcTag, placeholder: 'rpgm/element/character/npc'});
 		this.map.set(SettingType.Location, {title: 'Location', value: this.plugin.settings.locationTag, placeholder: 'rpgm/element/location'});
 		this.map.set(SettingType.Faction, {title: 'Faction', value: this.plugin.settings.factionTag, placeholder: 'rpgm/element/faction'});
-		this.map.set(SettingType.Clue, {title: 'Clue', value: this.plugin.settings.eventTag, placeholder: 'rpgm/element/event'});
-		this.map.set(SettingType.Event, {title: 'Event', value: this.plugin.settings.clueTag, placeholder: 'rpgm/element/clue'});
+		this.map.set(SettingType.Clue, {title: 'Clue', value: this.plugin.settings.clueTag, placeholder: 'rpgm/element/event'});
+		this.map.set(SettingType.Event, {title: 'Event', value: this.plugin.settings.eventTag, placeholder: 'rpgm/element/clue'});
 		this.map.set(SettingType.Music, {title: 'Music', value: this.plugin.settings.musicTag, placeholder: 'rpgm/element/music'});
 
 		this.map.set(SettingType.YouTubeApiKey, {title: 'YouTube API Key', value: this.plugin.settings.YouTubeKey, placeholder: 'Your YouTube API Key'});
