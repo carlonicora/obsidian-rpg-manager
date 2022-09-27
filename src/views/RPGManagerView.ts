@@ -3,7 +3,7 @@ import {CampaignInterface} from "../interfaces/data/CampaignInterface";
 import {RecordType} from "../enums/RecordType";
 import {ViewType} from "../enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
-import {Component, MarkdownRenderer, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {RecordInterface} from "../interfaces/database/RecordInterface";
 
 export class RPGManagerView extends AbstractRpgManagerView {
@@ -15,7 +15,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private currentCampaign: CampaignInterface|undefined;
 	private currentElement: RecordInterface|undefined;
 
-	private creationListEl: HTMLUListElement;
+	private verticalTabHeaderEl: HTMLDivElement;
 
 	onResize() {
 		super.onResize();
@@ -45,6 +45,14 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 	public async render(
 	): Promise<void> {
+		this.rpgmContentEl.removeClass('rpgm-view');
+		this.rpgmContentEl.addClass('rpgm-right-view');
+		this.rpgmContentEl.empty();
+
+		this.verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-header'});
+		this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title  title', text: 'RPG Manager'});
+
+
 		this.addCreationLinks();
 		this.addReleaseNotes();
 		this.addToDoList();
@@ -54,36 +62,33 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 	private async addReleaseNotes(
 	): Promise<void> {
-		this.rpgmContentEl.createEl('h3', {text: 'Release Notes'});
-		const releaseNoteDivEl: HTMLDivElement = this.rpgmContentEl.createDiv();
-		const releaseNoteListEl: HTMLUListElement = releaseNoteDivEl.createEl('ul');
-		const releaseNoteListItemEl: HTMLLIElement = releaseNoteListEl.createEl('li');
-		const releaseNoteAnchorEl: HTMLAnchorElement = releaseNoteListItemEl.createEl('a', {text: 'Release Notes'});
-		releaseNoteAnchorEl.addEventListener('click', () => {
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'Release Notes'});
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
+		const itemEl = groupItemEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Read Release Notes'});
+		itemEl.addEventListener('click', () => {
 			this.factories.views.showObsidianView(ViewType.ReleaseNote);
 		});
 	}
 
 	private addToDoList(
 	): void {
-		this.rpgmContentEl.createEl('h3', {text: 'Things to do'});
-		const toDoEl = this.rpgmContentEl.createDiv({text: 'Loading things to do...'});
-		this.loadToDo(toDoEl);
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'To Do List'});
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
+		this.loadToDo(groupItemEl);
 
 	}
 
 	private addCreationLinks(
 	): void {
-		this.rpgmContentEl.createEl('h3', {text: 'Create new Outlines and Elements'});
-		this.creationListEl = this.rpgmContentEl.createEl('ul');
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'Create New Components'});
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
 
-		this.createElementListItem(RecordType.Campaign);
-
+		this.createElementListItem(RecordType.Campaign, groupItemEl);
 		if (this.hasCampaigns) {
 			Object.keys(RecordType).filter((v) => isNaN(Number(v))).forEach((typeString:string) => {
 				const type: RecordType = RecordType[typeString as keyof typeof RecordType];
 				if (type !== RecordType.Campaign){
-					this.createElementListItem(type);
+					this.createElementListItem(type, groupItemEl);
 				}
 			});
 		}
@@ -107,13 +112,17 @@ export class RPGManagerView extends AbstractRpgManagerView {
 								containerEl.empty();
 							}
 
-							const newToDoEl = containerEl.createEl('span');
-							MarkdownRenderer.renderMarkdown(
-								line.replaceAll('[ ]', ''),
-								newToDoEl,
-								'',
-								null as unknown as Component,
-							);
+							const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text:
+								line
+									.replaceAll('- [ ]', '')
+									.replaceAll('*', '')
+									.replaceAll('[[', '')
+									.replaceAll(']]', ''),
+							});
+
+							itemEl.addEventListener('click', () => {
+								this.app.workspace.getLeaf(false).openFile(data.file);
+							});
 						}
 					});
 				})
@@ -123,12 +132,12 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 	private createElementListItem(
 		type: RecordType,
+		containerEl: HTMLDivElement,
 	): void {
-		const listElementEl = this.creationListEl.createEl('li');
-		listElementEl.createEl('a', {href: '#', text: 'Create new ' + RecordType[type]})
-			.addEventListener("click", () => {
-				this.openCreationModal(type);
-			});
+		const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Create new ' + RecordType[type]});
+		itemEl.addEventListener("click", () => {
+			this.openCreationModal(type);
+		});
 	}
 
 	private openCreationModal(

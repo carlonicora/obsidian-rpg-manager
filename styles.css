@@ -524,8 +524,39 @@
   color: var(--text-muted);
 }
 
-.rpgm-right-view {
+.rpgm-view {
   padding: 10px;
+}
+
+.rpgm-right-view {
+  background: var(--background-secondary);
+  padding-top: 5px;
+  font-size: 1em;
+  height: 100%;
+}
+.rpgm-right-view .vertical-tab-header {
+  background: var(--background-secondary);
+}
+.rpgm-right-view .vertical-tab-header .title {
+  font-size: 1.2em;
+}
+.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title {
+  margin-bottom: 10px;
+}
+.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item {
+  padding: 5px 0px;
+  margin: 0 8px 0;
+  /*
+  color: var(--text-muted);
+  font-weight: 400;
+  border: none;
+  cursor: var(--cursor);
+  border-radius: var(--radius-m);
+  */
+  font-size: 1em;
+}
+.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item:hover {
+  cursor: pointer;
 }
 
 .rpgm-new-timeline {

@@ -70,7 +70,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		const container = this.containerEl.children[1];
 		container.empty();
 
-		this.rpgmContentEl = container.createDiv({cls: 'rpgm-right-view'});
+		this.rpgmContentEl = container.createDiv({cls: 'rpgm-view'});
 		this.rpgmContentEl.createEl("h2", { text: this.displayText });
 	}
 
