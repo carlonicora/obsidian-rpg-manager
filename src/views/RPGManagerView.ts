@@ -112,13 +112,27 @@ export class RPGManagerView extends AbstractRpgManagerView {
 								containerEl.empty();
 							}
 
-							const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text:
-								line
-									.replaceAll('- [ ]', '')
-									.replaceAll('*', '')
-									.replaceAll('[[', '')
-									.replaceAll(']]', ''),
-							});
+							line = line
+								.replaceAll('- [ ]', '')
+								.replaceAll('*', '');
+
+							let finalLine = line;
+
+							while (line.indexOf('[[') !== -1){
+								line = line.substring(line.indexOf('[[') + 2);
+								const endLinkIndex = line.indexOf(']]');
+								if (endLinkIndex === -1) break;
+
+								const nameAndAlias = line.substring(0, endLinkIndex);
+								const aliasIndex = nameAndAlias.indexOf('|');
+								if (aliasIndex === -1){
+									finalLine = finalLine.replaceAll('[[' + nameAndAlias + ']]', nameAndAlias);
+								} else {
+									finalLine = finalLine.replaceAll('[[' +  nameAndAlias+ ']]', nameAndAlias.substring(0, aliasIndex));
+								}
+							}
+
+							const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text:finalLine});
 
 							itemEl.addEventListener('click', () => {
 								this.app.workspace.getLeaf(false).openFile(data.file);
