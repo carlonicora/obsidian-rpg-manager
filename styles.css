@@ -542,6 +542,7 @@
 }
 .rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title {
   margin-bottom: 10px;
+  text-transform: none;
 }
 .rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item {
   padding: 5px 0px;
