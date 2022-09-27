@@ -51,7 +51,7 @@ The Lists are also foldable for ease of scrolling.
 In terms of Exclusion, in the code block you can add the following:
 
 ```
-excluded: [type1, type2, ...]
+exclude: [type1, type2, ...]
 ```
 
 The supported types are:
