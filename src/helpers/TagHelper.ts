@@ -44,16 +44,22 @@ export class TagHelper {
 	): Array<string> {
 		if (tags == null) return [];
 
-		let response: Array<string> = [];
+		let temporaryResponse: Array<string> = [];
 
 		if (typeof tags === 'string'){
-			response = tags.split(',');
-			response.forEach((tag: string) => {
+			temporaryResponse = tags.split(',');
+			temporaryResponse.forEach((tag: string) => {
 				tag = tag.replaceAll(' ', '').replaceAll('#', '');
 			});
 		} else {
-			response = tags;
+			temporaryResponse = tags;
 		}
+
+		const response: Array<string> = [];
+
+		temporaryResponse.forEach((tag: string|null) => {
+			if (tag != null) response.push(tag);
+		})
 
 		return response;
 	}
@@ -81,7 +87,7 @@ export class TagHelper {
 	public hasRpgManagerTags(
 		tags: Array<string>,
 	): boolean {
-		for (let tagIndex=0; tagIndex<tags.length; tagIndex++){
+		for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
 			if (this.isRpgManagerTag(tags[tagIndex])) return true;
 		}
 
@@ -91,6 +97,8 @@ export class TagHelper {
 	public isRpgManagerTag(
 		tag: string,
 	): boolean {
+		if (tag == null) throw new Error('');
+
 		if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) return true;

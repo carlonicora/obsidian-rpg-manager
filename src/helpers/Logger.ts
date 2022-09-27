@@ -12,8 +12,8 @@ export enum LogMessageType {
 	Updater=0b10000,
 	TagUpdates=0b100000,
 	SessionSceneLink=0b1000000,
-
 	Model=0b1000000,
+	TagManagement=0b10000000,
 }
 export interface LogMessageInterface {
 	type: LogType,

@@ -109,7 +109,12 @@ export class DatabaseInitialiser {
 		if (metadata != null) {
 			new InfoLog(LogMessageType.RecordInitialisation, '1/5 -> Record TFile metadata read for ' + file.basename, metadata);
 
-			if (!this.tagHelper.hasRpgManagerTags(this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags))) return undefined;
+			try {
+				if (!this.tagHelper.hasRpgManagerTags(this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags))) return undefined;
+			} catch (e) {
+				new ErrorLog(LogMessageType.TagManagement, 'The note might have a misconfigured frontmatter and it has not been read by RPG Manager', file);
+				return undefined;
+			}
 
 			const id: IdInterface | undefined = this.factories.id.createFromTags(metadata?.frontmatter?.tags);
 
@@ -119,9 +124,12 @@ export class DatabaseInitialiser {
 
 			let rpgManagerTagCounter = 0;
 			const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
-			for (let tagIndex=0; tagIndex<tags.length; tagIndex++){
-				if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-				if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, id);
+
+			if (tags != null) {
+				for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
+					if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
+					if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, id);
+				}
 			}
 
 			const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
@@ -153,11 +161,13 @@ export class DatabaseInitialiser {
 	): void {
 		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
 			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-			if (
-				metadata?.frontmatter?.tags != null &&
-				this.tagHelper.hasRpgManagerTags(this.tagHelper.sanitiseTags(metadata.frontmatter.tags))
-			) {
-				const tag = this.tagHelper.getTag(this.tagHelper.sanitiseTags(metadata.frontmatter.tags));
+			if (metadata?.frontmatter?.tags != null) {
+				let tag: string|undefined;
+				try {
+					tag = this.tagHelper.getTag(this.tagHelper.sanitiseTags(metadata.frontmatter.tags));
+				} catch (e) {
+					return;
+				}
 				if (tag === undefined) return;
 
 				const type = this.tagHelper.getDataType(tag);
