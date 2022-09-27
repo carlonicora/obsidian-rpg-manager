@@ -1,15 +1,15 @@
 import {ContentType} from "../enums/ContentType";
 import {ContentInterface} from "../interfaces/ContentInterface";
-import {StringContent} from "../data/content/StringContent";
-import {LinkContent} from "../data/content/LinkContent";
-import {NumberContent} from "../data/content/NumberContent";
-import {ObjectContent} from "../data/content/ObjectContent";
-import {MarkdownContent} from "../data/content/MarkdownContent";
-import {ImageContent} from "../data/content/ImageContent";
+import {StringContent} from "../contents/StringContent";
+import {LinkContent} from "../contents/LinkContent";
+import {NumberContent} from "../contents/NumberContent";
+import {ObjectContent} from "../contents/ObjectContent";
+import {MarkdownContent} from "../contents/MarkdownContent";
+import {ImageContent} from "../contents/ImageContent";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ContentFactoryInterface} from "../interfaces/factories/ContentFactoryInterface";
-import {SVGContent} from "../data/content/SVGContent";
-import {DateContent} from "../data/content/DateContent";
+import {SVGContent} from "../contents/SVGContent";
+import {DateContent} from "../contents/DateContent";
 
 export class ContentFactory extends AbstractFactory implements ContentFactoryInterface{
 	public create(

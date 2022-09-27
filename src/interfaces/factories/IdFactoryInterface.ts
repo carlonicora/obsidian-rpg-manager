@@ -1,9 +1,9 @@
-import {RecordType} from "../../enums/RecordType";
-import {IdInterface} from "../data/IdInterface";
+import {ComponentType} from "../../enums/ComponentType";
+import {IdInterface} from "../components/IdInterface";
 
 export interface IdFactoryInterface {
 	create(
-		type: RecordType,
+		type: ComponentType,
 		campaignId: string|number,
 		adventureId?: string|number|undefined,
 		actId?: string|number|undefined,

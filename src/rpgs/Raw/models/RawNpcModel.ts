@@ -1,9 +1,9 @@
-import {NpcModel} from "../../../models/NpcModel";
+import {NpcModel} from "../../../models/components/NpcModel";
 import {ResponseDataInterface} from "../../../interfaces/response/ResponseDataInterface";
 import {RawCampaignInterface} from "../interfaces/RawCampaignInterface";
 import {RawEndpoint} from "../enums/RawEndpoint";
 import {RawApi} from "../helpers/RawApi";
-import {RawCharacterRecordSheetComponent} from "../components/RawCharacterRecordSheetComponent";
+import {RawCharacterRecordSheetSubModel} from "./subModels/RawCharacterRecordSheetSubModel";
 
 export class RawNpcModel extends NpcModel {
 	public async generateData(
@@ -27,8 +27,8 @@ export class RawNpcModel extends NpcModel {
 		response: Promise<ResponseDataInterface>,
 	): Promise<void> {
 		response.then((response: ResponseDataInterface) => {
-			response.addComponent(
-				RawCharacterRecordSheetComponent,
+			response.addSubModel(
+				RawCharacterRecordSheetSubModel,
 				this.currentElement,
 				this.currentElement,
 				undefined,

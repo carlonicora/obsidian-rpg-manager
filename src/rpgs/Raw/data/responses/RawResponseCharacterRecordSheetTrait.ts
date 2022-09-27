@@ -9,7 +9,7 @@ import {App} from "obsidian";
 import {RawTrait} from "../../enums/RawTrait";
 import {RawResponseCharacterRecordSheetAbility} from "./RawResponseCharacterRecordSheetAbility";
 import {RawAbility, RawAbilityTrait} from "../../enums/RawAbility";
-import {RecordInterface} from "../../../../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../../../../interfaces/database/ComponentInterface";
 
 export class RawResponseCharacterRecordSheetTrait extends AbstractResponse implements RawCharacterRecordSheetTraitResponseInterface {
 	public abilities: RawCharacterRecordSheetAbilityResponseInterface[];
@@ -17,7 +17,7 @@ export class RawResponseCharacterRecordSheetTrait extends AbstractResponse imple
 
 	constructor(
 		app:App,
-		currentElement: RecordInterface,
+		currentElement: ComponentInterface,
 		public trait: RawTrait,
 		metadata: any|null,
 	) {

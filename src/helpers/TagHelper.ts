@@ -1,42 +1,42 @@
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {RecordType} from "../enums/RecordType";
+import {ComponentType} from "../enums/ComponentType";
 
 export class TagHelper {
-	public dataSettings: Map<RecordType, string>;
-	private requiredIds: Map<RecordType, Array<RecordType>>;
+	public dataSettings: Map<ComponentType, string>;
+	private requiredIds: Map<ComponentType, Array<ComponentType>>;
 
 	constructor(
 		private settings: RpgManagerSettingsInterface,
 	) {
 		this.dataSettings = new Map();
-		this.dataSettings.set(RecordType.Campaign, settings.campaignTag);
-		this.dataSettings.set(RecordType.Adventure, settings.adventureTag);
-		this.dataSettings.set(RecordType.Act, settings.actTag);
-		this.dataSettings.set(RecordType.Scene, settings.sceneTag);
-		this.dataSettings.set(RecordType.Session, settings.sessionTag);
-		this.dataSettings.set(RecordType.Character, settings.pcTag);
-		this.dataSettings.set(RecordType.Clue, settings.clueTag);
-		this.dataSettings.set(RecordType.Event, settings.eventTag);
-		this.dataSettings.set(RecordType.Faction, settings.factionTag);
-		this.dataSettings.set(RecordType.Location, settings.locationTag);
-		this.dataSettings.set(RecordType.NonPlayerCharacter, settings.npcTag);
-		this.dataSettings.set(RecordType.Music, settings.musicTag);
-		this.dataSettings.set(RecordType.Subplot, settings.subplotTag);
+		this.dataSettings.set(ComponentType.Campaign, settings.campaignTag);
+		this.dataSettings.set(ComponentType.Adventure, settings.adventureTag);
+		this.dataSettings.set(ComponentType.Act, settings.actTag);
+		this.dataSettings.set(ComponentType.Scene, settings.sceneTag);
+		this.dataSettings.set(ComponentType.Session, settings.sessionTag);
+		this.dataSettings.set(ComponentType.Character, settings.pcTag);
+		this.dataSettings.set(ComponentType.Clue, settings.clueTag);
+		this.dataSettings.set(ComponentType.Event, settings.eventTag);
+		this.dataSettings.set(ComponentType.Faction, settings.factionTag);
+		this.dataSettings.set(ComponentType.Location, settings.locationTag);
+		this.dataSettings.set(ComponentType.NonPlayerCharacter, settings.npcTag);
+		this.dataSettings.set(ComponentType.Music, settings.musicTag);
+		this.dataSettings.set(ComponentType.Subplot, settings.subplotTag);
 
 		this.requiredIds = new Map();
-		this.requiredIds.set(RecordType.Campaign, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Adventure, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Act, [RecordType.Campaign, RecordType.Adventure]);
-		this.requiredIds.set(RecordType.Scene, [RecordType.Campaign, RecordType.Adventure, RecordType.Act, RecordType.Scene]);
-		this.requiredIds.set(RecordType.Session, [RecordType.Campaign, RecordType.Session]);
-		this.requiredIds.set(RecordType.Character, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Clue, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Event, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Faction, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Location, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.NonPlayerCharacter, [RecordType.Campaign]);
-		this.requiredIds.set(RecordType.Music, [RecordType.Music]);
-		this.requiredIds.set(RecordType.Subplot, [RecordType.Subplot]);
+		this.requiredIds.set(ComponentType.Campaign, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Adventure, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Act, [ComponentType.Campaign, ComponentType.Adventure]);
+		this.requiredIds.set(ComponentType.Scene, [ComponentType.Campaign, ComponentType.Adventure, ComponentType.Act, ComponentType.Scene]);
+		this.requiredIds.set(ComponentType.Session, [ComponentType.Campaign, ComponentType.Session]);
+		this.requiredIds.set(ComponentType.Character, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Clue, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Event, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Faction, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Location, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.NonPlayerCharacter, [ComponentType.Campaign]);
+		this.requiredIds.set(ComponentType.Music, [ComponentType.Music]);
+		this.requiredIds.set(ComponentType.Subplot, [ComponentType.Subplot]);
 	}
 
 	public sanitiseTags(
@@ -66,20 +66,20 @@ export class TagHelper {
 
 	public getDataType(
 		tag: string,
-	): RecordType|undefined {
-		if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) return RecordType.Campaign;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return RecordType.Adventure;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) return RecordType.Act;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) return RecordType.Scene;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) return RecordType.Session;
-		if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) return RecordType.NonPlayerCharacter;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) return RecordType.Character;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) return RecordType.Clue;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Location) ?? '?')) return RecordType.Location;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) return RecordType.Faction;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) return RecordType.Event;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) return RecordType.Music;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Subplot) ?? '?')) return RecordType.Subplot;
+	): ComponentType|undefined {
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Campaign) ?? '?')) return ComponentType.Campaign;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Adventure) ?? '?')) return ComponentType.Adventure;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Act) ?? '?')) return ComponentType.Act;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Scene) ?? '?')) return ComponentType.Scene;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Session) ?? '?')) return ComponentType.Session;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.NonPlayerCharacter) ?? '?')) return ComponentType.NonPlayerCharacter;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Character) ?? '?')) return ComponentType.Character;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Clue) ?? '?')) return ComponentType.Clue;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Location) ?? '?')) return ComponentType.Location;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Faction) ?? '?')) return ComponentType.Faction;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Event) ?? '?')) return ComponentType.Event;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Music) ?? '?')) return ComponentType.Music;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?')) return ComponentType.Subplot;
 
 		return undefined;
 	}
@@ -99,25 +99,25 @@ export class TagHelper {
 	): boolean {
 		if (tag == null) throw new Error('');
 
-		if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Location) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(RecordType.Subplot) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Campaign) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Adventure) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Act) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Scene) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Session) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.NonPlayerCharacter) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Character) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Clue) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Location) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Faction) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Event) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Music) ?? '?')) return true;
+		if (tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?')) return true;
 
 		return false;
 	}
 
 	public getId(
-		type: RecordType,
+		type: ComponentType,
 		tag: string,
 	): string|undefined {
 		let response: string|undefined=undefined;
@@ -134,19 +134,19 @@ export class TagHelper {
 		const tagIds: Array<string> = ids.split('/');
 
 		switch (type) {
-			case RecordType.Campaign:
+			case ComponentType.Campaign:
 				response = tagIds[0] ? tagIds[0] : undefined;
 				break;
-			case RecordType.Adventure:
+			case ComponentType.Adventure:
 				response = +tagIds[1] ? tagIds[1] : undefined;
 				break;
-			case RecordType.Session:
+			case ComponentType.Session:
 				response = +tagIds[1] ? tagIds[1] : undefined;
 				break;
-			case RecordType.Act:
+			case ComponentType.Act:
 				response = +tagIds[2] ? tagIds[2] : undefined;
 				break;
-			case RecordType.Scene:
+			case ComponentType.Scene:
 				response = +tagIds[3] ? tagIds[3] : undefined;
 				break;
 		}
@@ -163,19 +163,19 @@ export class TagHelper {
 
 		tags.forEach((tag: string) => {
 			if (tag !== null && typeof tag === 'string') {
-				if (tag.startsWith(this.dataSettings.get(RecordType.Campaign) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Adventure) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Act) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Scene) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Session) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.NonPlayerCharacter) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Character) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Clue) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Location) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Faction) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Event) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Music) ?? '?')) response = tag;
-				if (tag.startsWith(this.dataSettings.get(RecordType.Subplot) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Campaign) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Adventure) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Act) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Scene) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Session) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.NonPlayerCharacter) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Character) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Clue) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Location) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Faction) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Event) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Music) ?? '?')) response = tag;
+				if (tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?')) response = tag;
 			}
 		});
 
@@ -184,24 +184,24 @@ export class TagHelper {
 
 	public getTemplateDataType(
 		tags: Array<string>|null,
-	): RecordType|undefined {
+	): ComponentType|undefined {
 		if (tags == null) return undefined;
 
-		let response: RecordType|undefined;
+		let response: ComponentType|undefined;
 		tags.forEach((tag: string) => {
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Campaign].toLowerCase())) response = RecordType.Campaign;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Adventure].toLowerCase())) response = RecordType.Adventure;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Act].toLowerCase())) response = RecordType.Act;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Scene].toLowerCase())) response = RecordType.Scene;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Session].toLowerCase())) response = RecordType.Session;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.NonPlayerCharacter].toLowerCase())) response = RecordType.NonPlayerCharacter;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Character].toLowerCase())) response = RecordType.Character;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Clue].toLowerCase())) response = RecordType.Clue;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Location].toLowerCase())) response = RecordType.Location;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Faction].toLowerCase())) response = RecordType.Faction;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Event].toLowerCase())) response = RecordType.Event;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Music].toLowerCase())) response = RecordType.Music;
-			if (tag.startsWith('rpgm/template/' + RecordType[RecordType.Subplot].toLowerCase())) response = RecordType.Subplot;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Campaign].toLowerCase())) response = ComponentType.Campaign;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Adventure].toLowerCase())) response = ComponentType.Adventure;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Act].toLowerCase())) response = ComponentType.Act;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Scene].toLowerCase())) response = ComponentType.Scene;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Session].toLowerCase())) response = ComponentType.Session;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.NonPlayerCharacter].toLowerCase())) response = ComponentType.NonPlayerCharacter;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Character].toLowerCase())) response = ComponentType.Character;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Clue].toLowerCase())) response = ComponentType.Clue;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Location].toLowerCase())) response = ComponentType.Location;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Faction].toLowerCase())) response = ComponentType.Faction;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Event].toLowerCase())) response = ComponentType.Event;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Music].toLowerCase())) response = ComponentType.Music;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Subplot].toLowerCase())) response = ComponentType.Subplot;
 		});
 
 		return response;

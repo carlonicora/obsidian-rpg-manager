@@ -1,23 +1,23 @@
-import {RecordType} from "../enums/RecordType";
+import {ComponentType} from "../enums/ComponentType";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ModalInterface} from "../interfaces/ModalInterface";
-import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
+import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {CampaignModal} from "../modals/components/CampaignModal";
-import {AdventureModal} from "../modals/components/AdventureModal";
-import {ActModal} from "../modals/components/ActModal";
-import {SceneModal} from "../modals/components/SceneModal";
-import {CharacterModal} from "../modals/components/CharacterModal";
-import {ClueModal} from "../modals/components/ClueModal";
-import {EventModal} from "../modals/components/EventModal";
-import {FactionModal} from "../modals/components/FactionModal";
-import {LocationModal} from "../modals/components/LocationModal";
-import {NonPlayerCharacterModal} from "../modals/components/NonPlayerCharacterModal";
-import {MusicModal} from "../modals/components/MusicModal";
+import {CampaignModalPart} from "../modals/creationParts/CampaignModalPart";
+import {AdventureModalPart} from "../modals/creationParts/AdventureModalPart";
+import {ActModalPart} from "../modals/creationParts/ActModalPart";
+import {SceneModalPart} from "../modals/creationParts/SceneModalPart";
+import {CharacterModalPart} from "../modals/creationParts/CharacterModalPart";
+import {ClueModalPart} from "../modals/creationParts/ClueModalPart";
+import {EventModalPart} from "../modals/creationParts/EventModalPart";
+import {FactionModalPart} from "../modals/creationParts/FactionModalPart";
+import {LocationModalPart} from "../modals/creationParts/LocationModalPart";
+import {NonPlayerCharacterModalPart} from "../modals/creationParts/NonPlayerCharacterModalPart";
+import {MusicModalPart} from "../modals/creationParts/MusicModalPart";
 import {App} from "obsidian";
 import {ModalFactoryInterface} from "../interfaces/factories/ModalFactoryInterface";
-import {SessionModal} from "../modals/components/SessionModal";
-import {SubplotModal} from "../modals/components/SubplotModal";
+import {SessionModalPart} from "../modals/creationParts/SessionModalPart";
+import {SubplotModalPart} from "../modals/creationParts/SubplotModalPart";
 
 export class ModalFactory extends AbstractFactory implements ModalFactoryInterface{
 	private modalTypeMap: Map<string,any>;
@@ -27,29 +27,29 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 	) {
 		super(app);
 		this.modalTypeMap = new Map();
-		this.modalTypeMap.set('AgnosticCampaign', CampaignModal);
-		this.modalTypeMap.set('AgnosticAdventure', AdventureModal);
-		this.modalTypeMap.set('AgnosticAct', ActModal);
-		this.modalTypeMap.set('AgnosticScene', SceneModal);
-		this.modalTypeMap.set('AgnosticCharacter', CharacterModal);
-		this.modalTypeMap.set('AgnosticClue', ClueModal);
-		this.modalTypeMap.set('AgnosticEvent', EventModal);
-		this.modalTypeMap.set('AgnosticFaction', FactionModal);
-		this.modalTypeMap.set('AgnosticLocation', LocationModal);
-		this.modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModal);
-		this.modalTypeMap.set('AgnosticMusic', MusicModal);
-		this.modalTypeMap.set('AgnosticSession', SessionModal);
-		this.modalTypeMap.set('AgnosticSubplot', SubplotModal);
+		this.modalTypeMap.set('AgnosticCampaign', CampaignModalPart);
+		this.modalTypeMap.set('AgnosticAdventure', AdventureModalPart);
+		this.modalTypeMap.set('AgnosticAct', ActModalPart);
+		this.modalTypeMap.set('AgnosticScene', SceneModalPart);
+		this.modalTypeMap.set('AgnosticCharacter', CharacterModalPart);
+		this.modalTypeMap.set('AgnosticClue', ClueModalPart);
+		this.modalTypeMap.set('AgnosticEvent', EventModalPart);
+		this.modalTypeMap.set('AgnosticFaction', FactionModalPart);
+		this.modalTypeMap.set('AgnosticLocation', LocationModalPart);
+		this.modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModalPart);
+		this.modalTypeMap.set('AgnosticMusic', MusicModalPart);
+		this.modalTypeMap.set('AgnosticSession', SessionModalPart);
+		this.modalTypeMap.set('AgnosticSubplot', SubplotModalPart);
 
 	}
 	public create(
 		settings: CampaignSetting,
-		type: RecordType,
+		type: ComponentType,
 		modal: ModalInterface,
-	): ModalComponentInterface {
-		let modalKey:string = CampaignSetting[settings] + RecordType[type];
-		if (!this.modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + RecordType[type];
-		if (!this.modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + RecordType[type] + ' cannot be found');
+	): ModalPartInterface {
+		let modalKey:string = CampaignSetting[settings] + ComponentType[type];
+		if (!this.modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[type];
+		if (!this.modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
 
 		return new (this.modalTypeMap.get(modalKey))(this.app, modal);
 	}

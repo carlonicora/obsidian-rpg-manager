@@ -1,24 +1,24 @@
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
-import {RecordType} from "../enums/RecordType";
+import {ComponentType} from "../enums/ComponentType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
-import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
+import {AbstractComponentOutline} from "../abstracts/AbstractComponentOutline";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ElementNotFoundError} from "../errors/ElementNotFoundError";
-import {ElementDuplicatedError} from "../errors/ElementDuplicatedError";
-import {CampaignInterface} from "../interfaces/data/CampaignInterface";
-import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {ActInterface} from "../interfaces/data/ActInterface";
-import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {ComponentNotFoundError} from "../errors/ComponentNotFoundError";
+import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
+import {CampaignInterface} from "../interfaces/components/CampaignInterface";
+import {AdventureInterface} from "../interfaces/components/AdventureInterface";
+import {ActInterface} from "../interfaces/components/ActInterface";
+import {SceneInterface} from "../interfaces/components/SceneInterface";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerComponent";
-import {IdInterface} from "../interfaces/data/IdInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {IdInterface} from "../interfaces/components/IdInterface";
+import {SessionInterface} from "../interfaces/components/SessionInterface";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
-	public recordset: Array<RecordInterface> = [];
+	public recordset: Array<ComponentInterface> = [];
 	private basenameIndex: Map<string, string>;
 
 	constructor(
@@ -48,7 +48,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public create(
-		data: RecordInterface,
+		data: ComponentInterface,
 	): void {
 		let isNew = true;
 
@@ -72,13 +72,13 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public update(
-		data: RecordInterface,
+		data: ComponentInterface,
 	): void {
 		this.create(data);
 	}
 
 	public delete(
-		data: RecordInterface|string,
+		data: ComponentInterface|string,
 	): boolean {
 		const key = (typeof data === 'string') ? data : data.path;
 
@@ -98,32 +98,32 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		return index !== undefined;
 	}
 
-	public readByPath<T extends RecordInterface>(
+	public readByPath<T extends ComponentInterface>(
 		path: string,
 	): T|undefined {
-		const response:Array<RecordInterface> = this.recordset
-			.filter((record: RecordInterface) => record.path === path);
+		const response:Array<ComponentInterface> = this.recordset
+			.filter((record: ComponentInterface) => record.path === path);
 
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
-	public readSingle<T extends RecordInterface>(
-		type: RecordType,
+	public readSingle<T extends ComponentInterface>(
+		type: ComponentType,
 		id: IdInterface,
 		overloadId: number|undefined=undefined,
 	): T {
 		const result = this.read(this.generateQuery(type, id, false, overloadId));
 
 		if (result.length === 0) {
-			throw new ElementNotFoundError(this.app, id);
+			throw new ComponentNotFoundError(this.app, id);
 		}
-		if (result.length > 1) throw new ElementDuplicatedError(this.app, (<T>result[0]).id, <Array<T>>result);
+		if (result.length > 1) throw new ComponentDuplicatedError(this.app, (<T>result[0]).id, <Array<T>>result);
 
 		return <T>result[0];
 	}
 
-	public readList<T extends RecordInterface>(
-		type: RecordType,
+	public readList<T extends ComponentInterface>(
+		type: ComponentType,
 		id: IdInterface|undefined,
 		overloadId: number|undefined = undefined,
 	): Array<T> {
@@ -133,7 +133,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	private generateQuery(
-		type: RecordType,
+		type: ComponentType,
 		id: IdInterface|undefined,
 		isList: boolean,
 		overloadId: number|undefined=undefined,
@@ -145,27 +145,27 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		let sessionId:number|undefined=id?.sessionId;
 
 		switch(type) {
-			case RecordType.Campaign:
+			case ComponentType.Campaign:
 				if (overloadId !== undefined) campaignId = overloadId;
 				return (data: CampaignInterface) =>
 					(type & data.id.type) === data.id.type &&
 					(isList ? true : data.id.campaignId === campaignId);
 				break;
-			case RecordType.Adventure:
+			case ComponentType.Adventure:
 				if (overloadId !== undefined) adventureId = overloadId;
 				return (data: AdventureInterface) =>
 					(type & data.id.type) === data.id.type &&
 					data.id.campaignId === campaignId &&
 					(isList ? true : data.id.adventureId === adventureId);
 				break;
-			case RecordType.Session:
+			case ComponentType.Session:
 				if (overloadId !== undefined) sessionId = overloadId;
 				return (data: SessionInterface) =>
 					(type & data.id.type) === data.id.type &&
 					data.id.campaignId === campaignId &&
 					(isList ? true : data.id.sessionId === sessionId);
 				break;
-			case RecordType.Act:
+			case ComponentType.Act:
 				if (overloadId !== undefined) actId = overloadId;
 				return (data: ActInterface) =>
 					(type & data.id.type) === data.id.type &&
@@ -173,7 +173,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 					(adventureId !== undefined ? data.id.adventureId === adventureId : true) &&
 					(isList ? true : data.id.actId === actId);
 				break;
-			case RecordType.Scene:
+			case ComponentType.Scene:
 				if (overloadId !== undefined) sceneId = overloadId;
 				return (data: SceneInterface) =>
 					(type & data.id.type) === data.id.type &&
@@ -184,7 +184,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 				break;
 			default:
 				if (overloadId !== undefined) campaignId = overloadId;
-				return (data: RecordInterface) =>
+				return (data: ComponentInterface) =>
 					(type & data.id.type) === data.id.type &&
 					data.id.campaignId === campaignId
 				break;
@@ -226,7 +226,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public async refreshRelationships(
-		element: RecordInterface|undefined=undefined,
+		element: ComponentInterface|undefined=undefined,
 	): Promise<void> {
 		if (element !== undefined){
 			await element.loadRelationships(this);
@@ -261,7 +261,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		const newBaseName = file.path;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		const data: RecordInterface|undefined = this.readByPath(file.path);
+		const data: ComponentInterface|undefined = this.readByPath(file.path);
 
 		await this.basenameIndex.delete(oldPath);
 		if (data !== undefined) await this.basenameIndex.set(file.path, file.basename);
@@ -284,7 +284,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public async onSave(
 		file: TFile,
 	): Promise<void> {
-		let component:RecordInterface|undefined = this.readByPath(file.path);
+		let component:ComponentInterface|undefined = this.readByPath(file.path);
 
 		try {
 			const isNewComponent = component === undefined;
@@ -297,7 +297,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 			if (component === undefined) return;
 
-			if (isNewComponent && component instanceof AbstractOutlineRecord) {
+			if (isNewComponent && component instanceof AbstractComponentOutline) {
 				await component.checkDuplicates(this);
 			}
 

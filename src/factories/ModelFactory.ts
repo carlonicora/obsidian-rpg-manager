@@ -1,28 +1,28 @@
-import {AdventureModel} from "../models/AdventureModel";
-import {CampaignModel} from "../models/CampaignModel";
-import {ClueModel} from "../models/ClueModel";
-import {EventModel} from "../models/EventModel";
-import {FactionModel} from "../models/FactionModel";
-import {LocationModel} from "../models/LocationModel";
-import {NpcModel} from "../models/NpcModel";
-import {PcModel} from "../models/PcModel";
-import {SceneModel} from "../models/SceneModel";
-import {ActModel} from "../models/ActModel";
-import {ActNavigationModel} from "../models/ActNavigationModel";
-import {AdventureNavigationModel} from "../models/AdventureNavigationModel";
+import {AdventureModel} from "../models/components/AdventureModel";
+import {CampaignModel} from "../models/components/CampaignModel";
+import {ClueModel} from "../models/components/ClueModel";
+import {EventModel} from "../models/components/EventModel";
+import {FactionModel} from "../models/components/FactionModel";
+import {LocationModel} from "../models/components/LocationModel";
+import {NpcModel} from "../models/components/NpcModel";
+import {PcModel} from "../models/components/PcModel";
+import {SceneModel} from "../models/components/SceneModel";
+import {ActModel} from "../models/components/ActModel";
+import {ActNavigationModel} from "../models/components/ActNavigationModel";
+import {AdventureNavigationModel} from "../models/components/AdventureNavigationModel";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {RawNpcModel} from "../rpgs/Raw/models/RawNpcModel";
-import {MusicModel} from "../models/MusicModel";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {MusicModel} from "../models/components/MusicModel";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {App} from "obsidian";
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {ModelFactoryInterface} from "../interfaces/factories/ModelFactoryInterface";
-import {CampaignNavigationModel} from "../models/CampaignNavigationModel";
-import {SessionModel} from "../models/SessionModel";
-import {SessionNavigationModel} from "../models/SessionNavigationModel";
-import {SceneNavigationModel} from "../models/SceneNavigationModel";
-import {SubplotModel} from "../models/SubplotModel";
+import {CampaignNavigationModel} from "../models/components/CampaignNavigationModel";
+import {SessionModel} from "../models/components/SessionModel";
+import {SessionNavigationModel} from "../models/components/SessionNavigationModel";
+import {SceneNavigationModel} from "../models/components/SceneNavigationModel";
+import {SubplotModel} from "../models/components/SubplotModel";
 
 export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
 	private modelTypeMap: Map<string,any>;
@@ -57,14 +57,14 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 	public create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: RecordInterface,
+		currentElement: ComponentInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,
 	): ModelInterface {
 		let modelKey = CampaignSetting[settings] + modelName;
 		if (!this.modelTypeMap.has(modelKey)) modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName;
-		if (!this.modelTypeMap.has(modelKey)) throw new Error('Type of data ' + CampaignSetting[settings] + modelName + ' cannot be found');
+		if (!this.modelTypeMap.has(modelKey)) throw new Error('Type of components ' + CampaignSetting[settings] + modelName + ' cannot be found');
 
 		return new (this.modelTypeMap.get(modelKey))(this.app, currentElement, source, sourcePath, sourceMeta);
 	}

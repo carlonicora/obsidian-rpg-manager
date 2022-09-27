@@ -23,6 +23,10 @@ export class PronounFactory extends AbstractFactory implements PronounFactoryInt
 				case 'he':
 					response = Pronoun.he;
 					break;
+				case 'i':
+				case 'it':
+					response = Pronoun.it;
+					break;
 				default:
 					response = null;
 					break;
@@ -44,6 +48,9 @@ export class PronounFactory extends AbstractFactory implements PronounFactoryInt
 				break;
 			case Pronoun.he:
 				return 'He/Him';
+				break;
+			case Pronoun.it:
+				return 'It/Its';
 				break;
 		}
 	}

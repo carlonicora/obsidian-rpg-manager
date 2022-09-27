@@ -13,7 +13,7 @@ export class SettingsUpdater extends AbstractRpgManager {
 
 		for (let index=0; index<files.length; index++){
 			const content = await this.app.vault.read(files[index]);
-			new InfoLog(LogMessageType.TagUpdates, 'Reading file content', files[index]);
+			new InfoLog(LogMessageType.TagUpdates, 'Reading file contents', files[index]);
 
 			let newFileContent = content;
 			await updatedTags.forEach((newTag: string, oldTag:string) => {

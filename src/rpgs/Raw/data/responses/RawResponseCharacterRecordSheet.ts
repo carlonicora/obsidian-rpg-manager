@@ -13,7 +13,7 @@ import {
 	RawCharacterRecordSheetAbilityResponseInterface
 } from "../../interfaces/responses/RawCharacterRecordSheetAbilityResponseInterface";
 import {RawResponseCharacterRecordSheetTrait} from "./RawResponseCharacterRecordSheetTrait";
-import {RecordInterface} from "../../../../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../../../../interfaces/database/ComponentInterface";
 
 export class RawResponseCharacterRecordSheet extends AbstractResponse implements RawCharacterRecordSheetResponseInterface {
 	public body: RawCharacterRecordSheetTraitResponseInterface;
@@ -23,7 +23,7 @@ export class RawResponseCharacterRecordSheet extends AbstractResponse implements
 
 	constructor(
 		app:App,
-		currentElement: RecordInterface,
+		currentElement: ComponentInterface,
 		metadata: any|null,
 	) {
 		super(app, currentElement);

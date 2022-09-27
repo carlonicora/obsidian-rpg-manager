@@ -227,7 +227,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 	private loadTemplatesSettings(
 	): void {
-		this.settingsFactory.createHeader('Component creations', 3, 'Manage how new components are created');
+		this.settingsFactory.createHeader('Component creations', 3, 'Manage how new subModels are created');
 
 		this.settingsFactory.createDropdownSetting(
 			SettingType.templateFolder,

@@ -1,12 +1,12 @@
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {ModalComponentInterface} from "./ModalComponentInterface";
-import {RecordType} from "../enums/RecordType";
-import {IdInterface} from "./data/IdInterface";
+import {ModalPartInterface} from "./ModalPartInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {IdInterface} from "./components/IdInterface";
 
 export interface ModalInterface {
-	saver: ModalComponentInterface
+	saver: ModalPartInterface
 
-	type: RecordType;
+	type: ComponentType;
 
 	campaignId: IdInterface;
 	adventureId: IdInterface|undefined;
@@ -17,12 +17,12 @@ export interface ModalInterface {
 
 	additionalInformationEl: HTMLDivElement;
 
-	campaignModal: ModalComponentInterface;
-	adventureModal: ModalComponentInterface;
-	actModal: ModalComponentInterface;
-	sceneModal: ModalComponentInterface;
-	sessionModal: ModalComponentInterface;
-	elementModal: ModalComponentInterface;
+	campaignModal: ModalPartInterface;
+	adventureModal: ModalPartInterface;
+	actModal: ModalPartInterface;
+	sceneModal: ModalPartInterface;
+	sessionModal: ModalPartInterface;
+	elementModal: ModalPartInterface;
 
 	enableButton(): void;
 	getContentEl(): HTMLElement;

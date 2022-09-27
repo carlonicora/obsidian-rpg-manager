@@ -1,10 +1,10 @@
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
-import {CampaignInterface} from "../interfaces/data/CampaignInterface";
-import {RecordType} from "../enums/RecordType";
+import {CampaignInterface} from "../interfaces/components/CampaignInterface";
+import {ComponentType} from "../enums/ComponentType";
 import {ViewType} from "../enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
 import {TFile} from "obsidian";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 
 export class RPGManagerView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.RPGManager.toString();
@@ -13,7 +13,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private hasCampaigns: boolean;
 
 	private currentCampaign: CampaignInterface|undefined;
-	private currentElement: RecordInterface|undefined;
+	private currentElement: ComponentInterface|undefined;
 
 	private verticalTabHeaderEl: HTMLDivElement;
 
@@ -27,7 +27,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		params: Array<any>,
 	): void {
 		super.initialise([])
-		const campaigns = this.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.id.type === RecordType.Campaign);
+		const campaigns = this.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.id.type === ComponentType.Campaign);
 		this.hasCampaigns = campaigns.length > 0;
 		if (campaigns.length === 1) {
 			this.currentCampaign = campaigns[0];
@@ -83,11 +83,11 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'Create New Components'});
 		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
 
-		this.createElementListItem(RecordType.Campaign, groupItemEl);
+		this.createElementListItem(ComponentType.Campaign, groupItemEl);
 		if (this.hasCampaigns) {
-			Object.keys(RecordType).filter((v) => isNaN(Number(v))).forEach((typeString:string) => {
-				const type: RecordType = RecordType[typeString as keyof typeof RecordType];
-				if (type !== RecordType.Campaign){
+			Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((typeString:string) => {
+				const type: ComponentType = ComponentType[typeString as keyof typeof ComponentType];
+				if (type !== ComponentType.Campaign){
 					this.createElementListItem(type, groupItemEl);
 				}
 			});
@@ -97,11 +97,11 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async loadToDo(
 		containerEl: HTMLDivElement
 	): Promise<void> {
-		const recordset: Array<RecordInterface> = this.database.read<RecordInterface>((data: RecordInterface) => true);
+		const recordset: Array<ComponentInterface> = this.database.read<ComponentInterface>((data: ComponentInterface) => true);
 
 		let firstToDoFound = false;
 
-		recordset.forEach((data: RecordInterface) => {
+		recordset.forEach((data: ComponentInterface) => {
 			this.app.vault.read(data.file)
 				.then((content: string) => {
 					const contentArray: Array<string> = content.split('\n');
@@ -145,17 +145,17 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	}
 
 	private createElementListItem(
-		type: RecordType,
+		type: ComponentType,
 		containerEl: HTMLDivElement,
 	): void {
-		const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Create new ' + RecordType[type]});
+		const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Create new ' + ComponentType[type]});
 		itemEl.addEventListener("click", () => {
 			this.openCreationModal(type);
 		});
 	}
 
 	private openCreationModal(
-		type: RecordType,
+		type: ComponentType,
 	): void {
 		let modalOpened = false;
 

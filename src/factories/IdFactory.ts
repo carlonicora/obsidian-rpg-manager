@@ -1,12 +1,12 @@
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {IdFactoryInterface} from "../interfaces/factories/IdFactoryInterface";
-import {RecordType} from "../enums/RecordType";
-import {IdInterface} from "../interfaces/data/IdInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {IdInterface} from "../interfaces/components/IdInterface";
 import {Id} from "../database/Id";
 
 export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 	public create(
-		type: RecordType,
+		type: ComponentType,
 		campaignId: string|number|undefined,
 		adventureId: string|number|undefined=undefined,
 		actId: string|number|undefined=undefined,
@@ -29,14 +29,14 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 	public createFromTag(
 		tag: string,
 	): IdInterface {
-		const type: RecordType|undefined = this.tagHelper.getDataType(tag);
+		const type: ComponentType|undefined = this.tagHelper.getDataType(tag);
 		if (type === undefined) throw new Error('');
 
-		const campaignId: string|undefined = this.tagHelper.getId(RecordType.Campaign, tag);
-		const adventureId: string|undefined = this.tagHelper.getId(RecordType.Adventure, tag);
-		const actId: string|undefined = this.tagHelper.getId(RecordType.Act, tag);
-		const sceneId: string|undefined = this.tagHelper.getId(RecordType.Scene, tag);
-		const sessionId: string|undefined = this.tagHelper.getId(RecordType.Session, tag);
+		const campaignId: string|undefined = this.tagHelper.getId(ComponentType.Campaign, tag);
+		const adventureId: string|undefined = this.tagHelper.getId(ComponentType.Adventure, tag);
+		const actId: string|undefined = this.tagHelper.getId(ComponentType.Act, tag);
+		const sceneId: string|undefined = this.tagHelper.getId(ComponentType.Scene, tag);
+		const sessionId: string|undefined = this.tagHelper.getId(ComponentType.Session, tag);
 
 		return this.create(type, campaignId, adventureId, actId, sceneId, sessionId, tag);
 	}

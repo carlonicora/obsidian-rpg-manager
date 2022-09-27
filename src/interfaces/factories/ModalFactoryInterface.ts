@@ -1,12 +1,12 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {RecordType} from "../../enums/RecordType";
+import {ComponentType} from "../../enums/ComponentType";
 import {ModalInterface} from "../ModalInterface";
-import {ModalComponentInterface} from "../ModalComponentInterface";
+import {ModalPartInterface} from "../ModalPartInterface";
 
 export interface ModalFactoryInterface {
 	create(
 		settings: CampaignSetting,
-		type: RecordType,
+		type: ComponentType,
 		modal: ModalInterface,
-	): ModalComponentInterface;
+	): ModalPartInterface;
 }

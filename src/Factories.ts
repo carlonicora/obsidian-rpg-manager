@@ -1,7 +1,7 @@
 import {App} from "obsidian";
-import {ComponentFactory} from "./factories/ComponentFactory";
+import {SubModelFactory} from "./factories/SubModelFactory";
 import {ContentFactory} from "./factories/ContentFactory";
-import {DataFactory} from "./factories/DataFactory";
+import {ComponentFactory} from "./factories/ComponentFactory";
 import {FileFactory} from "./factories/FileFactory";
 import {ModalFactory} from "./factories/ModalFactory";
 import {ModelFactory} from "./factories/ModelFactory";
@@ -11,9 +11,9 @@ import {ViewFactory} from "./factories/ViewFactory";
 import {FetcherFactory} from "./factories/FetcherFactory";
 import {RelationshipFactory} from "./factories/RelationshipFactory";
 import {DatabaseFactory} from "./factories/DatabaseFactory";
-import {ComponentFactoryInterface} from "./interfaces/factories/ComponentFactoryInterface";
+import {SubModelFactoryInterface} from "./interfaces/factories/SubModelFactoryInterface";
 import {ContentFactoryInterface} from "./interfaces/factories/ContentFactoryInterface";
-import {DataFactoryInterface} from "./interfaces/factories/DataFactoryInterface";
+import {ComponentFactoryInterface} from "./interfaces/factories/ComponentFactoryInterface";
 import {FileFactoryInterface} from "./interfaces/factories/FileFactoryInterface";
 import {ModalFactoryInterface} from "./interfaces/factories/ModalFactoryInterface";
 import {ModelFactoryInterface} from "./interfaces/factories/ModelFactoryInterface";
@@ -34,9 +34,9 @@ import {SorterFactoryInterface} from "./interfaces/factories/SorterFactoryInterf
 import {SorterFactory} from "./factories/SorterFactory";
 
 export class Factories implements FactoriesInterface{
-	public components: ComponentFactoryInterface;
+	public subModels: SubModelFactoryInterface;
 	public contents: ContentFactoryInterface;
-	public data: DataFactoryInterface;
+	public data: ComponentFactoryInterface;
 	public files: FileFactoryInterface;
 	public modals: ModalFactoryInterface;
 	public models: ModelFactoryInterface;
@@ -54,9 +54,9 @@ export class Factories implements FactoriesInterface{
 	constructor(
 		private app: App,
 	) {
-		this.components = new ComponentFactory(this.app);
+		this.subModels = new SubModelFactory(this.app);
 		this.contents = new ContentFactory(this.app);
-		this.data = new DataFactory(this.app);
+		this.data = new ComponentFactory(this.app);
 		this.files = new FileFactory(this.app);
 		this.modals = new ModalFactory(this.app);
 		this.models = new ModelFactory(this.app);

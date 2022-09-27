@@ -1,17 +1,17 @@
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 import {ViewType} from "../enums/ViewType";
-import {EventInterface} from "../interfaces/data/EventInterface";
-import {RecordType} from "../enums/RecordType";
-import {IdInterface} from "../interfaces/data/IdInterface";
-import {ClueInterface} from "../interfaces/data/ClueInterface";
-import {CharacterInterface} from "../interfaces/data/CharacterInterface";
-import {TimelineElementResponseInterface} from "../interfaces/response/TimelineElementResponseInterface";
+import {EventInterface} from "../interfaces/components/EventInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {IdInterface} from "../interfaces/components/IdInterface";
+import {ClueInterface} from "../interfaces/components/ClueInterface";
+import {CharacterInterface} from "../interfaces/components/CharacterInterface";
+import {TimelineElementResponseInterface} from "../interfaces/response/subModels/TimelineElementResponseInterface";
 import {Component, MarkdownRenderer, TAbstractFile, TFile} from "obsidian";
-import {TimelineElementResponse} from "../data/responses/TimelineElementResponse";
+import {ResponseTimelineElement} from "../responses/ResponseTimelineElement";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {CampaignInterface} from "../interfaces/data/CampaignInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
-import {SceneInterface} from "../interfaces/data/SceneInterface";
+import {CampaignInterface} from "../interfaces/components/CampaignInterface";
+import {SessionInterface} from "../interfaces/components/SessionInterface";
+import {SceneInterface} from "../interfaces/components/SceneInterface";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();
@@ -27,7 +27,7 @@ export class TimelineView extends AbstractRpgManagerView {
 		params: Array<any>,
 	): void {
 		this.campaignId = params[0];
-		this.campaign = this.database.readSingle<CampaignInterface>(RecordType.Campaign, this.campaignId);
+		this.campaign = this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.campaignId);
 
 		super.initialise([]);
 
@@ -35,7 +35,7 @@ export class TimelineView extends AbstractRpgManagerView {
 
 		this.database.read<EventInterface>(
 			(event: EventInterface) =>
-				event.id.type === RecordType.Event &&
+				event.id.type === ComponentType.Event &&
 				event.id.campaignId === this.campaignId.id &&
 				event.date != null,
 		).forEach((event: EventInterface) => {
@@ -43,7 +43,7 @@ export class TimelineView extends AbstractRpgManagerView {
 				let time = (<Date>event.date).toLocaleTimeString();
 				time = time.substring(0, time.length - 3);
 				this.elements.push(
-					new TimelineElementResponse(
+					new ResponseTimelineElement(
 						event.date,
 						(<Date>event.date).toDateString(),
 						time,
@@ -57,13 +57,13 @@ export class TimelineView extends AbstractRpgManagerView {
 
 		this.database.read<ClueInterface>(
 			(clue: ClueInterface) =>
-				clue.id.type === RecordType.Clue &&
+				clue.id.type === ComponentType.Clue &&
 				clue.id.campaignId === this.campaignId.id &&
 				clue.found != null,
 		).forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
 				this.elements.push(
-					new TimelineElementResponse(
+					new ResponseTimelineElement(
 						clue.found,
 						(<Date>clue.found).toDateString(),
 						'00:00',
@@ -77,13 +77,13 @@ export class TimelineView extends AbstractRpgManagerView {
 
 		this.database.read<CharacterInterface>(
 			(character: CharacterInterface) =>
-				((RecordType.Character | RecordType.NonPlayerCharacter) & character.id.type) === character.id.type &&
+				((ComponentType.Character | ComponentType.NonPlayerCharacter) & character.id.type) === character.id.type &&
 				character.id.campaignId === this.campaignId.id &&
 				character.death != null,
 		).forEach((character: CharacterInterface) => {
 			if (character.death !== null) {
 				this.elements.push(
-					new TimelineElementResponse(
+					new ResponseTimelineElement(
 						character.death,
 						(<Date>character.death).toDateString(),
 						'00:00',
@@ -97,14 +97,14 @@ export class TimelineView extends AbstractRpgManagerView {
 
 		const sessions = this.database.read<SessionInterface>(
 			(session: SessionInterface) =>
-				RecordType.Session === session.id.type &&
+				ComponentType.Session === session.id.type &&
 				session.id.campaignId === this.campaignId.id
 		);
 
 		sessions.forEach((session: SessionInterface) => {
 			const scenes = this.database.read<SceneInterface>(
 				(scene: SceneInterface) =>
-					scene.id.type === RecordType.Scene &&
+					scene.id.type === ComponentType.Scene &&
 					scene.id.campaignId === this.campaignId.id &&
 					scene.sessionId === session.sessionId &&
 					scene.date != null
@@ -117,7 +117,7 @@ export class TimelineView extends AbstractRpgManagerView {
 			const sessionDate = scenes[0]?.date;
 			if (sessionDate != null){
 				this.elements.push(
-					new TimelineElementResponse(
+					new ResponseTimelineElement(
 						sessionDate,
 						(<Date>sessionDate).toDateString(),
 						'00:00',

@@ -1,8 +1,8 @@
-import {ResponseElementInterface} from "./response/ResponseElementInterface";
+import {ResponseDataElementInterface} from "./response/ResponseDataElementInterface";
 
 export interface ViewInterface {
 	render(
 		container: HTMLElement,
-		data: ResponseElementInterface,
+		data: ResponseDataElementInterface,
 	): void;
 }

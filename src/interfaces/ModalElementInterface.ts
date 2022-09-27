@@ -1,7 +1,7 @@
-import {RecordType} from "../enums/RecordType";
+import {ComponentType} from "../enums/ComponentType";
 
 export interface ModalElementInterface {
-	type: RecordType;
+	type: ComponentType;
 	id: number;
 	name: string;
 }

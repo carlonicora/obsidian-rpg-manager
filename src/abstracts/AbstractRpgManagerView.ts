@@ -5,7 +5,7 @@ import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {base} from "w3c-keyname";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -104,7 +104,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		const basename: string|undefined = element.dataset.href;
 		if (base == undefined) return;
 
-		const record: RecordInterface|undefined = this.database.read<RecordInterface>((data: RecordInterface) => data.basename === basename)[0];
+		const record: ComponentInterface|undefined = this.database.read<ComponentInterface>((data: ComponentInterface) => data.basename === basename)[0];
 		if (record === undefined) return;
 
 		const file: TFile = record.file;

@@ -1,8 +1,8 @@
-import {RecordInterface} from "../database/RecordInterface";
-import {BreadcrumbResponseInterface} from "../response/BreadcrumbResponseInterface";
+import {ComponentInterface} from "../database/ComponentInterface";
+import {BreadcrumbResponseInterface} from "../response/subModels/BreadcrumbResponseInterface";
 
 export interface BreadcrumbFactoryInterface {
 	create(
-		record: RecordInterface,
+		record: ComponentInterface,
 	): BreadcrumbResponseInterface;
 }

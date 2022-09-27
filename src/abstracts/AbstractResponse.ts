@@ -1,16 +1,16 @@
 import {ResponseType} from "../enums/ResponseType";
-import {ResponseElementInterface} from "../interfaces/response/ResponseElementInterface";
+import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {App} from "obsidian";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 
-export abstract class AbstractResponse extends AbstractRpgManager implements ResponseElementInterface {
+export abstract class AbstractResponse extends AbstractRpgManager implements ResponseDataElementInterface {
 	public responseType: ResponseType;
 	public title: string|null;
 
 	constructor(
 		app: App,
-		public currentElement: RecordInterface,
+		public currentElement: ComponentInterface,
 	) {
 		super(app);
 	}

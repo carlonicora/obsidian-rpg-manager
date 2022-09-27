@@ -1,15 +1,12 @@
-import {App} from "obsidian";
-import {RelationshipInterface} from "../RelationshipInterface";
-import {ResponseElementInterface} from "../response/ResponseElementInterface";
-import {ComponentInterface} from "../ComponentInterface";
-import {RecordInterface} from "../database/RecordInterface";
+import {CampaignSetting} from "../../enums/CampaignSetting";
+import {TFile} from "obsidian";
+import {ComponentInterface} from "../database/ComponentInterface";
+import {IdInterface} from "../components/IdInterface";
 
-export interface ComponentFactoryInterface  {
-	create<T extends ComponentInterface>(
-		componentType: (new (app: App) => T),
-		currentElement: RecordInterface,
-		data: RelationshipInterface|RelationshipInterface[],
-		title?: string|undefined,
-		additionalInformation?: any|undefined,
-	): Promise<ResponseElementInterface|null>;
+export interface ComponentFactoryInterface {
+	create(
+		settings: CampaignSetting,
+		file: TFile,
+		id: IdInterface,
+	): ComponentInterface;
 }

@@ -1,8 +1,8 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
-import {RecordType} from "../enums/RecordType";
-import {SceneInterface} from "../interfaces/data/SceneInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {SceneInterface} from "../interfaces/components/SceneInterface";
+import {SessionInterface} from "../interfaces/components/SessionInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
 
@@ -20,7 +20,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 
 		this.availableScenes = this.database.read<SceneInterface>(
 			(scene: SceneInterface) =>
-				scene.id.type === RecordType.Scene &&
+				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === session.id.campaignId &&
 				(scene.sessionId === undefined || scene.sessionId === session.sessionId),
 		).sort(this.factories.sorter.create<SceneInterface>([

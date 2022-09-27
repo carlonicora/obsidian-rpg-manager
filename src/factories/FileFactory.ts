@@ -1,17 +1,17 @@
 import {MarkdownView} from "obsidian";
-import {RecordType} from "../enums/RecordType";
+import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {CampaignInterface} from "../interfaces/data/CampaignInterface";
+import {CampaignInterface} from "../interfaces/components/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {FileFactoryInterface} from "../interfaces/factories/FileFactoryInterface";
-import {IdInterface} from "../interfaces/data/IdInterface";
+import {IdInterface} from "../interfaces/components/IdInterface";
 
 const path = require('path');
 
 export class FileFactory extends AbstractFactory implements FileFactoryInterface{
 	public async create(
 		settings: CampaignSetting,
-		type: RecordType,
+		type: ComponentType,
 		create: boolean,
 		templateName: string,
 		name: string,
@@ -25,7 +25,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let folder = path.sep;
 
 		try {
-			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(RecordType.Campaign, campaignId);
+			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
 			settings = campaign.campaignSettings;
 			folder = campaign.folder;
 		} catch (e) {
@@ -85,7 +85,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 	}
 
 	public async silentCreate(
-		type: RecordType,
+		type: ComponentType,
 		name: string,
 		campaignId: number,
 		adventureId: number|undefined=undefined,
@@ -98,11 +98,11 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let settings = CampaignSetting.Agnostic;
 
 		let campaign: CampaignInterface|undefined;
-		const id = this.factories.id.create(RecordType.Campaign, campaignId);
+		const id = this.factories.id.create(ComponentType.Campaign, campaignId);
 
 		if (id !== undefined){
 			try {
-				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(RecordType.Campaign, id);
+				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}
@@ -116,7 +116,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
-			'internal' + RecordType[type],
+			'internal' + ComponentType[type],
 			name,
 			campaignId,
 			adventureId,
@@ -135,7 +135,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 	}
 
 	private async generateFilePath(
-		type: RecordType,
+		type: ComponentType,
 		folder: string,
 		name: string,
 	): Promise<string> {
@@ -145,8 +145,8 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 
 		if (this.settings.automaticMove){
 			let fullPath: string;
-			if (type !== RecordType.Campaign) {
-				fullPath = folder + path.sep + RecordType[type] + 's';
+			if (type !== ComponentType.Campaign) {
+				fullPath = folder + path.sep + ComponentType[type] + 's';
 
 				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(path.sep.length);
 

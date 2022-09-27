@@ -1,4 +1,4 @@
-import {Campaign} from "../../../data/Campaign";
+import {Campaign} from "../../../components/Campaign";
 import {RawCampaignInterface} from "../interfaces/RawCampaignInterface";
 import {FrontMatterCache} from "obsidian";
 

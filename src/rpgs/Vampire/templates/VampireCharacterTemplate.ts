@@ -1,6 +1,6 @@
-import {CharacterTemplateFactory} from "../../../templates/frontmatter/CharacterTemplateFactory";
+import {CharacterFrontmatterTemplateFactory} from "../../../factories/templates/frontmatter/CharacterFrontmatterTemplateFactory";
 
-export class VampireCharacterTemplate extends CharacterTemplateFactory {
+export class VampireCharacterTemplate extends CharacterFrontmatterTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {

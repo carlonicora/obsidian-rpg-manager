@@ -5,7 +5,7 @@ import {
 	Plugin,
 } from 'obsidian';
 import {Controller} from "./Controller";
-import {RecordType} from "./enums/RecordType";
+import {ComponentType} from "./enums/ComponentType";
 import {Factories} from "./Factories";
 import {CreationModal} from "./modals/CreationModal";
 import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
@@ -157,14 +157,14 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	private registerCommands(
 	): void {
-		Object.keys(RecordType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
+		Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 			this.addCommand({
 				id: "rpg-manager-create-" + type.toLowerCase(),
 				name: "Create a new " + type,
 				callback: () => {
 					new CreationModal(
 						this.app,
-						RecordType[type as keyof typeof RecordType],
+						ComponentType[type as keyof typeof ComponentType],
 					).open();
 				},
 			});
@@ -179,7 +179,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 					}
 					new CreationModal(
 						this.app,
-						RecordType[type as keyof typeof RecordType],
+						ComponentType[type as keyof typeof ComponentType],
 						false,
 						name,
 					).open();

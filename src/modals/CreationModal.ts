@@ -1,14 +1,14 @@
 import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
-import {RecordType} from "../enums/RecordType";
-import {ModalComponentInterface} from "../interfaces/ModalComponentInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalInterface} from "../interfaces/ModalInterface";
-import {TemplateInterface} from "../interfaces/TemplateInterface";
+import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/ComponentNotesTemplateFactoryInterface";
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
-import {IdInterface} from "../interfaces/data/IdInterface";
+import {IdInterface} from "../interfaces/components/IdInterface";
 
 export class CreationModal extends AbstractRpgManagerModal implements ModalInterface {
-	public saver: ModalComponentInterface;
+	public saver: ModalPartInterface;
 
 	public button: HTMLButtonElement;
 	public title: HTMLInputElement;
@@ -24,21 +24,21 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 	public sessionId: IdInterface|undefined;
 	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
-	public campaignModal: ModalComponentInterface;
-	public adventureModal: ModalComponentInterface;
-	public actModal: ModalComponentInterface;
-	public sceneModal: ModalComponentInterface;
-	public sessionModal: ModalComponentInterface;
-	public elementModal: ModalComponentInterface;
+	public campaignModal: ModalPartInterface;
+	public adventureModal: ModalPartInterface;
+	public actModal: ModalPartInterface;
+	public sceneModal: ModalPartInterface;
+	public sessionModal: ModalPartInterface;
+	public elementModal: ModalPartInterface;
 
 	public availableSpecificTemplates: Array<TFile> = [];
 	public availableGenericTemplates: Array<TFile> = [];
 
-	private internalTemplates: Map<RecordType, TemplateInterface>;
+	private internalTemplates: Map<ComponentType, ComponentNotesTemplateFactoryInterface>;
 
 	constructor(
 		public app: App,
-		public type: RecordType,
+		public type: ComponentType,
 		private create: boolean = true,
 		private name: string|null = null,
 		campaignId: number|undefined = undefined,
@@ -48,14 +48,14 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		super(app);
 
 		if (campaignId !== undefined) {
-			const campaign:IdInterface|undefined = this.factories.id.create(RecordType.Campaign, campaignId);
+			const campaign:IdInterface|undefined = this.factories.id.create(ComponentType.Campaign, campaignId);
 			if (campaign !== undefined) {
 				this.campaignId = campaign;
 
 				if (adventureId !== undefined) {
-					this.adventureId = this.factories.id.create(RecordType.Adventure, campaignId, adventureId);
+					this.adventureId = this.factories.id.create(ComponentType.Adventure, campaignId, adventureId);
 
-					if (actId !== undefined) this.actId = this.factories.id.create(RecordType.Act, campaignId, adventureId, actId);
+					if (actId !== undefined) this.actId = this.factories.id.create(ComponentType.Act, campaignId, adventureId, actId);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 			return;
 		}
 		//Modal Title
-		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + RecordType[this.type]});
+		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + ComponentType[this.type]});
 
 		//Navigation & Additional Info
 		const gridEl = contentEl.createDiv({cls: 'rpgm-grid'})
@@ -103,7 +103,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		//Title Input
 		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
-		titleEl.createEl('label', {text: 'Title of your new ' + RecordType[this.type]});
+		titleEl.createEl('label', {text: 'Title of your new ' + ComponentType[this.type]});
 		this.title = titleEl.createEl('input', {type: 'text'});
 		if (this.name !== null) {
 			this.title.value = this.name;
@@ -120,8 +120,8 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		});
 
 		this.templateEl.createEl('option', {
-			text: 'RpgManager default ' + RecordType[this.type] + ' template',
-			value: 'internal' + RecordType[this.type],
+			text: 'RpgManager default ' + ComponentType[this.type] + ' template',
+			value: 'internal' + ComponentType[this.type],
 		}).selected = true;
 
 		this.templateEl.createEl('option', {
@@ -131,7 +131,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		if (this.availableSpecificTemplates.length > 0) {
 			const templateOptionEl = this.templateEl.createEl('option', {
-				text: RecordType[this.type] + '-specific frontmatter',
+				text: ComponentType[this.type] + '-specific frontmatter',
 			});
 			templateOptionEl.disabled = true;
 			this.availableSpecificTemplates.forEach((file: TFile) => {
@@ -161,7 +161,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 
 		this.campaignModal = this.factories.modals.create(
 			this.campaignSetting,
-			RecordType.Campaign,
+			ComponentType.Campaign,
 			this,
 		)
 
@@ -170,7 +170,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		//Create Button
 		this.button = contentEl.createEl('button', {cls: 'mod-cta', text: 'Create'});
 
-		if (this.type !== RecordType.Campaign){
+		if (this.type !== ComponentType.Campaign){
 			this.button.disabled = true;
 		}
 

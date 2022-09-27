@@ -1,13 +1,13 @@
-import {RecordInterface} from "./RecordInterface";
-import {IdInterface} from "../data/IdInterface";
-import {RecordType} from "../../enums/RecordType";
+import {ComponentInterface} from "./ComponentInterface";
+import {IdInterface} from "../components/IdInterface";
+import {ComponentType} from "../../enums/ComponentType";
 import {TFile} from "obsidian";
 
 export interface DatabaseInterface {
-	recordset: RecordInterface[];
+	recordset: ComponentInterface[];
 
 	create(
-		data: RecordInterface,
+		data: ComponentInterface,
 	): void;
 
 	ready(
@@ -18,31 +18,31 @@ export interface DatabaseInterface {
 	): Array<T>;
 
 	update(
-		data: RecordInterface,
+		data: ComponentInterface,
 	): void;
 
 	delete(
-		data: RecordInterface|string,
+		data: ComponentInterface|string,
 	): boolean;
 
-	readByPath<T extends RecordInterface>(
+	readByPath<T extends ComponentInterface>(
 		name: string,
 	): T|undefined;
 
-	readSingle<T extends RecordInterface>(
-		type: RecordType,
+	readSingle<T extends ComponentInterface>(
+		type: ComponentType,
 		id: IdInterface,
 		overloadId?: number|undefined,
 	): T;
 
-	readList<T extends RecordInterface>(
-		type: RecordType,
+	readList<T extends ComponentInterface>(
+		type: ComponentType,
 		id: IdInterface|undefined,
 		overloadId?: number|undefined,
 	): Array<T>;
 
 	refreshRelationships(
-		element?: RecordInterface|undefined,
+		element?: ComponentInterface|undefined,
 	): Promise<void>;
 
 	onSave(

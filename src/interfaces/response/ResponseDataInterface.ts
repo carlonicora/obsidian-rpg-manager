@@ -1,21 +1,21 @@
-import {ResponseElementInterface} from "./ResponseElementInterface";
-import {RecordInterface} from "../database/RecordInterface";
+import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
+import {ComponentInterface} from "../database/ComponentInterface";
 import {RelationshipInterface} from "../RelationshipInterface";
 
 export interface ResponseDataInterface {
-	elements: ResponseElementInterface[];
+	elements: ResponseDataElementInterface[];
 
-	addComponent<T>(
+	addSubModel<T>(
 		type: T,
-		currentElement: RecordInterface,
-		data: RecordInterface[]|RecordInterface|RelationshipInterface[],
+		currentElement: ComponentInterface,
+		data: ComponentInterface[]|ComponentInterface|RelationshipInterface[],
 		title?: string|undefined,
 		additionalInformation?: any|undefined,
 		position?: number|undefined,
 	): Promise<void>;
 
 	addElement(
-		element: ResponseElementInterface|null,
+		element: ResponseDataElementInterface|null,
 		position?: number|null,
 	): void;
 }

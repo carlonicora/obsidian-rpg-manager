@@ -1,4 +1,4 @@
-import {Character} from "../../../data/Character";
+import {Character} from "../../../components/Character";
 import {FrontMatterCache} from "obsidian";
 
 export class VampireCharacter extends Character {

@@ -1,6 +1,6 @@
-import {ComponentFactoryInterface} from "./factories/ComponentFactoryInterface";
+import {SubModelFactoryInterface} from "./factories/SubModelFactoryInterface";
 import {ContentFactoryInterface} from "./factories/ContentFactoryInterface";
-import {DataFactoryInterface} from "./factories/DataFactoryInterface";
+import {ComponentFactoryInterface} from "./factories/ComponentFactoryInterface";
 import {FileFactoryInterface} from "./factories/FileFactoryInterface";
 import {ModalFactoryInterface} from "./factories/ModalFactoryInterface";
 import {ModelFactoryInterface} from "./factories/ModelFactoryInterface";
@@ -16,9 +16,9 @@ import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterfa
 import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
 
 export interface FactoriesInterface {
-	components: ComponentFactoryInterface;
+	subModels: SubModelFactoryInterface;
 	contents: ContentFactoryInterface;
-	data: DataFactoryInterface;
+	data: ComponentFactoryInterface;
 	files: FileFactoryInterface;
 	modals: ModalFactoryInterface;
 	models: ModelFactoryInterface;

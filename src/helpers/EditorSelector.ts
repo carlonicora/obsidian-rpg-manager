@@ -1,10 +1,10 @@
 import {App, CachedMetadata, MarkdownView} from "obsidian";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 
 export class EditorSelector {
 	public static select(
 		app: App,
-		currentElement: RecordInterface,
+		currentElement: ComponentInterface,
 		specificYamlKey: string|undefined=undefined,
 	): void {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);

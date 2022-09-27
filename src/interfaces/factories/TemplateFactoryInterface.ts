@@ -1,11 +1,11 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {RecordType} from "../../enums/RecordType";
-import {ComponentTemplateFactoryInterface} from "../ComponentTemplateFactoryInterface";
+import {ComponentType} from "../../enums/ComponentType";
+import {ComponentFrontmatterTemplateFactoryInterface} from "./ComponentFrontmatterTemplateFactoryInterface";
 
 export interface TemplateFactoryInterface {
 	create(
 		settings: CampaignSetting,
-		type: RecordType,
+		type: ComponentType,
 		templateName: string,
 		name: string,
 		campaignId: number|undefined,
@@ -14,5 +14,5 @@ export interface TemplateFactoryInterface {
 		sceneId: number|undefined,
 		sessionId: number|undefined,
 		additionalInformation?: any|null,
-	): ComponentTemplateFactoryInterface;
+	): ComponentFrontmatterTemplateFactoryInterface;
 }

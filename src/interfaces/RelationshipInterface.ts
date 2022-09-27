@@ -1,8 +1,8 @@
-import {RecordInterface} from "./database/RecordInterface";
+import {ComponentInterface} from "./database/ComponentInterface";
 import {RelationshipType} from "../enums/RelationshipType";
 
 export interface RelationshipInterface {
-	component?: RecordInterface|undefined,
+	component?: ComponentInterface|undefined,
 	description: string,
 	type: RelationshipType,
 }

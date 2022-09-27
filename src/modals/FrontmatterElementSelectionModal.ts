@@ -1,7 +1,7 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App} from "obsidian";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {RecordType} from "../enums/RecordType";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentType} from "../enums/ComponentType";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SorterType} from "../enums/SorterType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
@@ -13,7 +13,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 	constructor(
 		app: App,
-		private currentElement: RecordInterface,
+		private currentElement: ComponentInterface,
 	) {
 		super(app);
 	}
@@ -35,25 +35,25 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 		this.addNavigators(
 			[
-				RecordType.Subplot,
-				RecordType.Event,
-				RecordType.NonPlayerCharacter,
-				RecordType.Character,
-				RecordType.Faction,
-				RecordType.Music,
-				RecordType.Location,
-				RecordType.Clue,
+				ComponentType.Subplot,
+				ComponentType.Event,
+				ComponentType.NonPlayerCharacter,
+				ComponentType.Character,
+				ComponentType.Faction,
+				ComponentType.Music,
+				ComponentType.Location,
+				ComponentType.Clue,
 			],
 			elementsHeaderEl,
 		);
 	}
 
 	private addNavigators(
-		recortTypes: Array<RecordType>,
+		recortTypes: Array<ComponentType>,
 		elementHeaderEl: HTMLDivElement,
 	): void {
 		for (let index=0; index<recortTypes.length; index++){
-			const headerEl = elementHeaderEl.createEl('span', {text: RecordType[recortTypes[index]] + 's'});
+			const headerEl = elementHeaderEl.createEl('span', {text: ComponentType[recortTypes[index]] + 's'});
 
 			if (index === 0){
 				headerEl.addClasses(['first', 'selected']);
@@ -71,7 +71,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 	}
 
 	private addElementsToList(
-		type: RecordType,
+		type: ComponentType,
 		headerEl: HTMLSpanElement,
 	): void {
 		if (headerEl === this.currentElementEl) return;
@@ -83,16 +83,16 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 		this.listEl.empty();
 
-		const records: Array<RecordInterface> = this.database.readList<RecordInterface>(type, this.currentElement.id);
+		const records: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentElement.id);
 
 		records.sort(
-			this.factories.sorter.create<RecordInterface>([
-				new SorterComparisonElement((data: RecordInterface) => data.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
-				new SorterComparisonElement((data: RecordInterface) => data.file.stat.mtime, SorterType.Descending),
+			this.factories.sorter.create<ComponentInterface>([
+				new SorterComparisonElement((data: ComponentInterface) => data.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
+				new SorterComparisonElement((data: ComponentInterface) => data.file.stat.mtime, SorterType.Descending),
 			])
 		)
 
-		records.forEach((data: RecordInterface) => {
+		records.forEach((data: ComponentInterface) => {
 			if (data.id !== this.currentElement.id) {
 				const itemEl = this.listEl.createEl('li');
 
@@ -124,7 +124,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 	private addOrRemoveElementRelationship(
 		checkboxEl: HTMLInputElement,
-		data: RecordInterface,
+		data: ComponentInterface,
 	): void {
 		const map: Map<string, string> = new Map<string, string>();
 		map.set('[[' + data.name + ']]', '""');

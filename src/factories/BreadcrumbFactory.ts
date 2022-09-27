@@ -1,36 +1,36 @@
 import {BreadcrumbFactoryInterface} from "../interfaces/factories/BreadcrumbFactoryInterface";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
-import {BreadcrumbResponseInterface} from "../interfaces/response/BreadcrumbResponseInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {BreadcrumbResponseInterface} from "../interfaces/response/subModels/BreadcrumbResponseInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
-import {ResponseBreadcrumb} from "../data/responses/ResponseBreadcrumb";
-import {RecordType} from "../enums/RecordType";
-import {BaseCampaignInterface} from "../interfaces/data/BaseCampaignInterface";
-import {ActInterface} from "../interfaces/data/ActInterface";
+import {ResponseBreadcrumb} from "../responses/ResponseBreadcrumb";
+import {ComponentType} from "../enums/ComponentType";
+import {BaseCampaignInterface} from "../interfaces/components/BaseCampaignInterface";
+import {ActInterface} from "../interfaces/components/ActInterface";
 import {FileFactory} from "./FileFactory";
-import {SceneInterface} from "../interfaces/data/SceneInterface";
-import {AdventureInterface} from "../interfaces/data/AdventureInterface";
-import {SessionInterface} from "../interfaces/data/SessionInterface";
+import {SceneInterface} from "../interfaces/components/SceneInterface";
+import {AdventureInterface} from "../interfaces/components/AdventureInterface";
+import {SessionInterface} from "../interfaces/components/SessionInterface";
 
 export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFactoryInterface {
 	public create(
-		record: RecordInterface,
+		record: ComponentInterface,
 	): BreadcrumbResponseInterface {
-		const response = this.generateElementBreadcrumb(null, RecordType.Campaign, record.campaign);
+		const response = this.generateElementBreadcrumb(null, ComponentType.Campaign, record.campaign);
 
-		if (record.id.type !== RecordType.Campaign){
-			response.mainTitle = RecordType[record.id.type];
+		if (record.id.type !== ComponentType.Campaign){
+			response.mainTitle = ComponentType[record.id.type];
 
 			switch (record.id.type) {
-				case RecordType.Adventure:
+				case ComponentType.Adventure:
 					this.generateAventureBreadcrumb(response, record as AdventureInterface);
 					break;
-				case RecordType.Session:
+				case ComponentType.Session:
 					this.generateSessionBreadcrumb(response, record as SessionInterface);
 					break;
-				case RecordType.Act:
+				case ComponentType.Act:
 					this.generateActBreadcrumb(response, record as ActInterface);
 					break;
-				case RecordType.Scene:
+				case ComponentType.Scene:
 					this.generateSceneBreadcrumb(response, record as SceneInterface);
 					break;
 				default:
@@ -44,14 +44,14 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 
 	private generateElementBreadcrumb(
 		parent: ResponseBreadcrumb|null,
-		type: RecordType,
-		data: RecordInterface|BaseCampaignInterface,
+		type: ComponentType,
+		data: ComponentInterface|BaseCampaignInterface,
 		linkText: string|null = null,
 		isNewLine = false,
 	): ResponseBreadcrumb {
-		const response = new ResponseBreadcrumb(this.app, <RecordInterface>data);
+		const response = new ResponseBreadcrumb(this.app, <ComponentInterface>data);
 		response.link = data.link;
-		response.title = RecordType[type];
+		response.title = ComponentType[type];
 
 		if (linkText != null) response.linkText = linkText;
 		if (isNewLine) response.isInNewLine = isNewLine;
@@ -67,7 +67,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 	){
 		const newSceneId = scene.sceneId + 1;
 		fileFactory.silentCreate(
-			RecordType.Scene,
+			ComponentType.Scene,
 			'a' +
 			(scene.act.actId < 10 ? '0' + scene.act.actId.toString(): scene.act.actId.toString()) +
 			's' +
@@ -83,17 +83,17 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		parent: ResponseBreadcrumb,
 		adventure: AdventureInterface
 	): ResponseBreadcrumb {
-		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, RecordType.Adventure, adventure);
+		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Adventure, adventure);
 
 		let previousAdventure: AdventureInterface|undefined;
 		let nextAdventure: AdventureInterface|undefined;
 		try {
-			previousAdventure = this.database.readSingle<AdventureInterface>(RecordType.Adventure, adventure.id, adventure.adventureId - 1);
+			previousAdventure = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.id, adventure.adventureId - 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextAdventure = this.database.readSingle<AdventureInterface>(RecordType.Adventure, adventure.id, adventure.adventureId + 1);
+			nextAdventure = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.id, adventure.adventureId + 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -103,7 +103,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (previousAdventure !== undefined) {
 			previousBreadcrumb = this.generateElementBreadcrumb(
 				adventureBreadcrumb,
-				RecordType.Adventure,
+				ComponentType.Adventure,
 				previousAdventure,
 				'<< prev adventure',
 				true,
@@ -112,7 +112,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (nextAdventure !== undefined) {
 			nextBreadcrumb = this.generateElementBreadcrumb(
 				(previousBreadcrumb ?? adventureBreadcrumb),
-				RecordType.Adventure,
+				ComponentType.Adventure,
 				nextAdventure,
 				'next adventure >>',
 				(previousAdventure !== undefined ? false : true),
@@ -131,17 +131,17 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		parent: ResponseBreadcrumb,
 		session: SessionInterface
 	): ResponseBreadcrumb {
-		const sessionBreadcrumb = this.generateElementBreadcrumb(parent, RecordType.Session, session);
+		const sessionBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Session, session);
 
 		let previousSession: SessionInterface|undefined;
 		let nextSession: SessionInterface|undefined;
 		try {
-			previousSession = this.database.readSingle<SessionInterface>(RecordType.Session, session.id, session.sessionId - 1);
+			previousSession = this.database.readSingle<SessionInterface>(ComponentType.Session, session.id, session.sessionId - 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextSession = this.database.readSingle<SessionInterface>(RecordType.Session, session.id, session.sessionId + 1);
+			nextSession = this.database.readSingle<SessionInterface>(ComponentType.Session, session.id, session.sessionId + 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -151,7 +151,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (previousSession !== undefined) {
 			previousBreadcrumb = this.generateElementBreadcrumb(
 				sessionBreadcrumb,
-				RecordType.Session,
+				ComponentType.Session,
 				previousSession,
 				'<< prev session',
 				true,
@@ -160,7 +160,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (nextSession !== undefined) {
 			nextBreadcrumb = this.generateElementBreadcrumb(
 				(previousBreadcrumb ?? sessionBreadcrumb),
-				RecordType.Session,
+				ComponentType.Session,
 				nextSession,
 				'next session >>',
 				(previousSession !== undefined ? false : true),
@@ -179,14 +179,14 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		parent: ResponseBreadcrumb,
 		act: ActInterface
 	): ResponseBreadcrumb {
-		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, RecordType.Adventure, act.adventure);
-		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, RecordType.Act, act);
+		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Adventure, act.adventure);
+		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, act);
 
 		let previousBreadcrumb: ResponseBreadcrumb|null = null;
-		if (act.previousAct != null) previousBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, RecordType.Act, act.previousAct, '<< prev act', true);
+		if (act.previousAct != null) previousBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, ComponentType.Act, act.previousAct, '<< prev act', true);
 
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
-		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), RecordType.Act, act.nextAct, 'next act >>', (previousBreadcrumb != null ? false : true));
+		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), ComponentType.Act, act.nextAct, 'next act >>', (previousBreadcrumb != null ? false : true));
 
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb));
 	}
@@ -195,16 +195,16 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		parent: ResponseBreadcrumb,
 		scene: SceneInterface
 	): ResponseBreadcrumb {
-		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, RecordType.Adventure, scene.adventure);
-		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, RecordType.Act, scene.act);
-		const sceneBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, RecordType.Scene, scene)
+		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Adventure, scene.adventure);
+		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, scene.act);
+		const sceneBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, ComponentType.Scene, scene)
 
 		let previousBreadcrumb: ResponseBreadcrumb|null = null;
-		if (scene.previousScene != null) previousBreadcrumb = this.generateElementBreadcrumb(sceneBreadcrumb, RecordType.Scene, scene.previousScene, '<< prev scene', true);
+		if (scene.previousScene != null) previousBreadcrumb = this.generateElementBreadcrumb(sceneBreadcrumb, ComponentType.Scene, scene.previousScene, '<< prev scene', true);
 
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
 		if (scene.nextScene != null) {
-			nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), RecordType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb != null ? false : true));
+			nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), ComponentType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb != null ? false : true));
 		} else {
 			const newSceneBreadcrumb = new ResponseBreadcrumb(this.app, scene);
 			newSceneBreadcrumb.link = '';

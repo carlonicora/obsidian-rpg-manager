@@ -1,16 +1,16 @@
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {RecordInterface} from "../interfaces/database/RecordInterface";
+import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App, CachedMetadata, TFile} from "obsidian";
 import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {ErrorLog, InfoLog, LogMessageType} from "../helpers/Logger";
-import {AbstractOutlineRecord} from "../abstracts/AbstractOutlineRecord";
+import {AbstractComponentOutline} from "../abstracts/AbstractComponentOutline";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {RecordType} from "../enums/RecordType";
-import {IdInterface} from "../interfaces/data/IdInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {IdInterface} from "../interfaces/components/IdInterface";
 import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
-import {MultipleRpgManagerTagsError} from "../errors/MultipleRpgManagerTagsError";
+import {MultipleTagsError} from "../errors/MultipleTagsError";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {TagHelper} from "../helpers/TagHelper";
 
@@ -42,7 +42,7 @@ export class DatabaseInitialiser {
 
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 		for (let index=0; index<markdownFiles.length; index++){
-			let record: RecordInterface|undefined;
+			let record: ComponentInterface|undefined;
 			try {
 				new InfoLog(LogMessageType.DatabaseInitialisation, '\x1b[48;2;220;220;220mLog ---START OF ' + markdownFiles[index].basename + ' ---\x1b[0m');
 
@@ -51,7 +51,7 @@ export class DatabaseInitialiser {
 				if (record !== undefined) {
 					new InfoLog(LogMessageType.DatabaseInitialisation, 'tag', record.id.tag);
 
-					if (record instanceof AbstractOutlineRecord) await record.checkDuplicates(temporaryDatabase);
+					if (record instanceof AbstractComponentOutline) await record.checkDuplicates(temporaryDatabase);
 
 					new InfoLog(LogMessageType.DatabaseInitialisation, 'No duplicates in the temporary database', record.id.tag);
 
@@ -62,7 +62,7 @@ export class DatabaseInitialiser {
 			} catch (e) {
 				if (e instanceof AbstractRpgManagerError) {
 					new ErrorLog(LogMessageType.DatabaseInitialisation, 'Error in generating the record', [
-						record ? RecordType[record.id.type] : 'No type',
+						record ? ComponentType[record.id.type] : 'No type',
 						record?.id.campaignId,
 						record?.id.adventureId,
 						record?.id.actId,
@@ -101,8 +101,8 @@ export class DatabaseInitialiser {
 	 */
 	public static async createRecord(
 		file: TFile,
-	): Promise<RecordInterface|undefined> {
-		let response: RecordInterface|undefined;
+	): Promise<ComponentInterface|undefined> {
+		let response: ComponentInterface|undefined;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 
@@ -128,7 +128,7 @@ export class DatabaseInitialiser {
 			if (tags != null) {
 				for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
 					if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-					if (rpgManagerTagCounter > 1) throw new MultipleRpgManagerTagsError(this.app, id);
+					if (rpgManagerTagCounter > 1) throw new MultipleTagsError(this.app, id);
 				}
 			}
 
@@ -173,7 +173,7 @@ export class DatabaseInitialiser {
 				const type = this.tagHelper.getDataType(tag);
 				if (type === undefined) return;
 
-				if (type === RecordType.Campaign){
+				if (type === ComponentType.Campaign){
 					const id = this.factories.id.createFromTag(tag);
 					try {
 						const settings = metadata?.frontmatter?.settings != undefined ?
@@ -197,7 +197,7 @@ export class DatabaseInitialiser {
 		temporaryDatabase: DatabaseInterface,
 	): Promise<void> {
 		new InfoLog(LogMessageType.DatabaseInitialisation, 'Building Hierarchy', temporaryDatabase);
-		return await this.addHierarchy(temporaryDatabase, RecordType.Campaign)
+		return await this.addHierarchy(temporaryDatabase, ComponentType.Campaign)
 			.then(() => {
 				new InfoLog(LogMessageType.DatabaseInitialisation, 'Hierarchy built', temporaryDatabase);
 				return this.buildRelationships(temporaryDatabase)
@@ -210,19 +210,19 @@ export class DatabaseInitialiser {
 
 	/**
 	 * Adds the hierarchical structure to the outline Records from the temporary database and adds the valid Records to the final database
-	 * Calling `addHierarchy(RecordType.Campaign)` creates a cascade that adds the hierarchy to all the elements in the database
+	 * Calling `addHierarchy(ComponentType.Campaign)` creates a cascade that adds the hierarchy to all the elements in the database
 	 *
 	 * @param dataType
 	 * @private
 	 */
 	private static async addHierarchy(
 		temporaryDatabase: DatabaseInterface,
-		dataType: RecordType|undefined,
+		dataType: ComponentType|undefined,
 	): Promise<void> {
-		new InfoLog(LogMessageType.DatabaseInitialisation, 'Loading hierarchy', (dataType !== undefined ? RecordType[dataType] : 'Elements'));
+		new InfoLog(LogMessageType.DatabaseInitialisation, 'Loading hierarchy', (dataType !== undefined ? ComponentType[dataType] : 'Elements'));
 
-		const record: RecordInterface[] = temporaryDatabase.read(
-			(data: RecordInterface) => (dataType !== undefined ? (dataType & data.id.type) === data.id.type : data.isOutline === false),
+		const record: ComponentInterface[] = temporaryDatabase.read(
+			(data: ComponentInterface) => (dataType !== undefined ? (dataType & data.id.type) === data.id.type : data.isOutline === false),
 		);
 
 		for (let index=0; index<record.length; index++){
@@ -243,19 +243,19 @@ export class DatabaseInitialiser {
 		if (dataType === undefined) return;
 
 		switch (dataType) {
-			case RecordType.Campaign:
-				return await this.addHierarchy(temporaryDatabase, RecordType.Session);
+			case ComponentType.Campaign:
+				return await this.addHierarchy(temporaryDatabase, ComponentType.Session);
 				break;
-			case RecordType.Session:
-				return await this.addHierarchy(temporaryDatabase, RecordType.Adventure);
+			case ComponentType.Session:
+				return await this.addHierarchy(temporaryDatabase, ComponentType.Adventure);
 				break;
-			case RecordType.Adventure:
-				return await this.addHierarchy(temporaryDatabase, RecordType.Act);
+			case ComponentType.Adventure:
+				return await this.addHierarchy(temporaryDatabase, ComponentType.Act);
 				break;
-			case RecordType.Act:
-				return await this.addHierarchy(temporaryDatabase, RecordType.Scene);
+			case ComponentType.Act:
+				return await this.addHierarchy(temporaryDatabase, ComponentType.Scene);
 				break;
-			case RecordType.Scene:
+			case ComponentType.Scene:
 				return await this.addHierarchy(temporaryDatabase, undefined);
 				break;
 			default:

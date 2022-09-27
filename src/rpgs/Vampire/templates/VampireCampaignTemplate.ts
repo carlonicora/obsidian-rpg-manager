@@ -1,6 +1,6 @@
-import {CampaignTemplateFactory} from "../../../templates/frontmatter/CampaignTemplateFactory";
+import {CampaignFrontmatterTemplateFactory} from "../../../factories/templates/frontmatter/CampaignFrontmatterTemplateFactory";
 
-export class VampireCampaignTemplate extends CampaignTemplateFactory {
+export class VampireCampaignTemplate extends CampaignFrontmatterTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {

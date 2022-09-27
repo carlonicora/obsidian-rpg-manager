@@ -1,20 +1,20 @@
 import {App, Component, debounce, MarkdownPostProcessorContext, parseYaml, TFile} from "obsidian";
 import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
-import {ResponseElementInterface} from "./interfaces/response/ResponseElementInterface";
+import {ResponseDataElementInterface} from "./interfaces/response/ResponseDataElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {RecordInterface} from "./interfaces/database/RecordInterface";
+import {ComponentInterface} from "./interfaces/database/ComponentInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {ErrorLog, LogMessageType} from "./helpers/Logger";
 import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
-import {CampaignInterface} from "./interfaces/data/CampaignInterface";
+import {CampaignInterface} from "./interfaces/components/CampaignInterface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
 
-	private currentElement: RecordInterface;
+	private currentElement: ComponentInterface;
 	private campaignSettings: CampaignSetting;
 
 	constructor(
@@ -71,7 +71,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	private initialise(
 	): void {
-		const currentElement:RecordInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<RecordInterface>(this.sourcePath);
+		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
 		if (currentElement === undefined) return;
 
 		this.render = debounce(this.render, 250, true) as unknown as () => Promise<void>;
@@ -96,7 +96,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 		this.model.generateData()
 			.then((data: ResponseDataInterface) => {
-				data.elements.forEach((element: ResponseElementInterface) => {
+				data.elements.forEach((element: ResponseDataElementInterface) => {
 					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
 						this.campaignSettings,
 						element.responseType,

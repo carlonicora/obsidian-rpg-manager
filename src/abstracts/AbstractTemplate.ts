@@ -1,11 +1,11 @@
-import {TemplateInterface} from "../interfaces/TemplateInterface";
+import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/ComponentNotesTemplateFactoryInterface";
 import {App} from "obsidian";
 import {AbstractRpgManager} from "./AbstractRpgManager";
-import {RecordType} from "../enums/RecordType";
-import {IdInterface} from "../interfaces/data/IdInterface";
+import {ComponentType} from "../enums/ComponentType";
+import {IdInterface} from "../interfaces/components/IdInterface";
 
-export abstract class AbstractTemplate extends AbstractRpgManager implements TemplateInterface {
-	protected type: RecordType;
+export abstract class AbstractTemplate extends AbstractRpgManager implements ComponentNotesTemplateFactoryInterface {
+	protected type: ComponentType;
 	protected id: IdInterface|undefined;
 
 	constructor(
