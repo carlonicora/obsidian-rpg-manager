@@ -109,9 +109,20 @@ export class HeaderSubModel extends AbstractSubModel{
 					response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Action', additionalInformation.action, HeaderResponseType.Long));
 				}
 				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (data.sessionId === undefined ? '' : data.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: data.id, file: data.file}));
-				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (data.storycircleStage !== undefined ? StoryCircleStage[data.storycircleStage] : ''), HeaderResponseType.StoryCircleSelector, {sceneId: data.id, file: data.file}));
-				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session Type', (data.sceneType !== undefined ? SceneType[data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {sceneId: data.id, file: data.file}));
-				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'External actions on the player characters?', data.isSceneExciting, HeaderResponseType.SceneExcitment, {sceneId: data.id, file: data.file}));
+				if (this.settings.usePlotStructures) {
+					response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (data.storycircleStage !== undefined ? StoryCircleStage[data.storycircleStage] : ''), HeaderResponseType.StoryCircleSelector, {
+						sceneId: data.id,
+						file: data.file
+					}));
+					response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session Type', (data.sceneType !== undefined ? SceneType[data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {
+						sceneId: data.id,
+						file: data.file
+					}));
+					response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'External actions on the player characters?', data.isSceneExciting, HeaderResponseType.SceneExcitment, {
+						sceneId: data.id,
+						file: data.file
+					}));
+				}
 
 			} else if (data instanceof Music){
 				response.type = ComponentType.Music;
@@ -125,13 +136,23 @@ export class HeaderSubModel extends AbstractSubModel{
 			} else if (data instanceof Session) {
 				response.type = ComponentType.Session;
 				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: data}));
-				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (data.abtStage !== undefined ? AbtStage[data.abtStage] : ''), HeaderResponseType.AbtSelector, {id: data.id, file: data.file}));
+				if (this.settings.usePlotStructures) {
+					response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (data.abtStage !== undefined ? AbtStage[data.abtStage] : ''), HeaderResponseType.AbtSelector, {
+						id: data.id,
+						file: data.file
+					}));
+				}
 			} else if (data instanceof Campaign){
 				response.type = ComponentType.Campaign;
 				response.metadata = {campaignId: data.id};
 			} else if (data instanceof Act) {
 				response.type = ComponentType.Act;
-				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (data.abtStage !== undefined ? AbtStage[data.abtStage] : ''), HeaderResponseType.AbtSelector, {id: data.id, file: data.file}));
+				if (this.settings.usePlotStructures) {
+					response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (data.abtStage !== undefined ? AbtStage[data.abtStage] : ''), HeaderResponseType.AbtSelector, {
+						id: data.id,
+						file: data.file
+					}));
+				}
 			}
 		}
 

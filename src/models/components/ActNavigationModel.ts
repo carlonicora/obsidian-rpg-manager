@@ -14,24 +14,26 @@ export class ActNavigationModel extends AbstractModel {
 
 		await this.response.addSubModel(HeaderSubModel,this.currentElement,this.currentElement);
 
-		if (this.sourceMeta?.abt != null){
-			await this.response.addSubModel(
-				AbtPlotSubModel,
-				this.currentElement,
-				this.currentElement,
-				undefined,
-				this.sourceMeta.abt,
-			);
-		}
+		if (this.settings.usePlotStructures) {
+			if (this.sourceMeta?.abt != null) {
+				await this.response.addSubModel(
+					AbtPlotSubModel,
+					this.currentElement,
+					this.currentElement,
+					undefined,
+					this.sourceMeta.abt,
+				);
+			}
 
-		if (this.sourceMeta?.storycircle != null){
-			await this.response.addSubModel(
-				StoryCirclePlotSubModel,
-				this.currentElement,
-				this.currentElement,
-				undefined,
-				this.sourceMeta.storycircle,
-			);
+			if (this.sourceMeta?.storycircle != null) {
+				await this.response.addSubModel(
+					StoryCirclePlotSubModel,
+					this.currentElement,
+					this.currentElement,
+					undefined,
+					this.sourceMeta.storycircle,
+				);
+			}
 		}
 
 		return this.response;

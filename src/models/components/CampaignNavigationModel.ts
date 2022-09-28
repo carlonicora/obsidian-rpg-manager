@@ -11,14 +11,16 @@ export class CampaignNavigationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
 
-		if (this.sourceMeta?.abt != null){
-			await this.response.addSubModel(
-				AbtPlotSubModel,
-				this.currentElement,
-				this.currentElement,
-				undefined,
-				this.sourceMeta.abt,
-			)
+		if (this.settings.usePlotStructures) {
+			if (this.sourceMeta?.abt != null) {
+				await this.response.addSubModel(
+					AbtPlotSubModel,
+					this.currentElement,
+					this.currentElement,
+					undefined,
+					this.sourceMeta.abt,
+				)
+			}
 		}
 
 		return this.response;

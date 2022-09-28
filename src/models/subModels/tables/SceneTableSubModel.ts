@@ -24,6 +24,8 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create('Duration', ContentType.String);
 				break;
 			case TableField.StoryCircleIndicator:
+				if (!this.settings.usePlotStructures) return undefined;
+
 				return this.factories.contents.create('', ContentType.String);
 				break;
 		}
@@ -58,6 +60,8 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(scene.duration, ContentType.Date, true);
 				break;
 			case TableField.StoryCircleIndicator:
+				if (!this.settings.usePlotStructures) return undefined;
+
 				return this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage});
 				break;
 		}
