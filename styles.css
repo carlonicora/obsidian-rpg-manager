@@ -753,3 +753,10 @@
 .rpgm-plot-container table tr > td .inline {
   white-space: nowrap;
 }
+
+.rpgm-edit-icon {
+  font-weight: 100;
+  font-size: 1em;
+  cursor: pointer;
+  color: var(--text-accent);
+}

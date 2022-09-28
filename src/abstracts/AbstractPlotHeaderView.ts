@@ -12,6 +12,13 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 	protected addAbtPlot(
 		plot: any,
 	): void {
+		if (
+			(plot.need == null || plot.need === '') &&
+			(plot.and == null || plot.and === '') &&
+			(plot.but == null || plot.but === '') &&
+			(plot.therefore == null || plot.therefore === '')
+		) return;
+
 		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-plot-container'});
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
@@ -41,6 +48,17 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 	protected addStoryCirclePlot(
 		plot: any,
 	): void {
+		if (
+			(plot.you == null || plot.you === '') &&
+			(plot.need == null || plot.need === '') &&
+			(plot.go == null || plot.go === '') &&
+			(plot.search == null || plot.search === '') &&
+			(plot.find == null || plot.find === '') &&
+			(plot.take == null || plot.take === '') &&
+			(plot.return == null || plot.return === '') &&
+			(plot.change == null || plot.change === '')
+		) return;
+
 		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-plot-container'});
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});

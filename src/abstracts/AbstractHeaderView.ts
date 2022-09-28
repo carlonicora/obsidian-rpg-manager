@@ -45,13 +45,13 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		data.link.fillContent(this.headerTitleEl, this.sourcePath);
 
 		//relationship button
-		const relationshipsAdderEl = adderEl.createEl('span', {text: '+ add relationship'});
+		const relationshipsAdderEl = adderEl.createEl('span', {cls: 'rpgm-edit-icon', text: '+ add relationship'});
 		relationshipsAdderEl.addEventListener("click", () => {
 			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
 		});
 
 		//edit button
-		const c = adderEl.createEl('span', {text: 'edit'});
+		const c = adderEl.createEl('span', {cls: 'rpgm-edit-icon', text: '</>'});
 
 		c.addEventListener("click",() => {
 			EditorSelector.select(this.app, data.currentElement);
