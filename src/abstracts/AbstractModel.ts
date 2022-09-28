@@ -28,6 +28,8 @@ import {SceneInterface} from "../interfaces/components/SceneInterface";
 import {SessionInterface} from "../interfaces/components/SessionInterface";
 import {SubplotTableSubModel} from "../models/subModels/tables/SubplotTableSubModel";
 import {NonPlayerCharacterTableSubModel} from "../models/subModels/tables/NonPlayerCharacterTableSubModel";
+import {ArrayHelper} from "../helpers/ArrayHelper";
+import {SorterType} from "../enums/SorterType";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected subModelFactory: SubModelFactory;
@@ -113,9 +115,12 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 	protected async addList(
 		type: ComponentType,
 		data: ComponentInterface[],
-		title: string|undefined=undefined,
+		sortByLatestUsage = false,
 	): Promise<void> {
-		return await this.add(type, undefined, data, title);
+		if (sortByLatestUsage){
+			data
+		}
+		return await this.add(type, undefined, data, undefined, sortByLatestUsage);
 	}
 
 	protected async addRelationships(
@@ -123,7 +128,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		requiredRelationshipType: RelationshipType = RelationshipType.Direct | RelationshipType.DirectInFrontmatter,
 		title: string|undefined=undefined,
 	): Promise<void> {
-		return await this.add(type, requiredRelationshipType, undefined, title);
+		return await this.add(type, requiredRelationshipType, undefined, title, false);
 	}
 
 	private async add(
@@ -131,26 +136,33 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		requiredRelationshipType: RelationshipType|undefined = RelationshipType.Direct | RelationshipType.DirectInFrontmatter,
 		data: ComponentInterface[]|ComponentInterface|RelationshipInterface[]|undefined=undefined,
 		title: string|undefined=undefined,
+		sortByLatestUsage: boolean,
 	): Promise<void>{
 		if (!this.isExcluded(type)){
 			const subModel = this.subModelsMap.get(type);
 			if (data === undefined) data = this.currentElement.getRelationships(type, requiredRelationshipType);
 
-			let isArray = false;
-			Object.entries(data).forEach(([index, value]: [string, any]) => {
-				if (!isNaN(+index)){
-					isArray = true;
-				}
-			});
+			if (ArrayHelper.isArray(data)) {
+				let sorter: Array<any> | undefined = undefined;
 
-			if (isArray) {
-				let sorter: Array<any>|undefined = undefined;
 				if ((<Array<any>>data)[0]?.component !== undefined) {
-					sorter = this.relationshipSortingMap.get(type);
-					if (sorter === undefined) sorter = [new SorterComparisonElement((data: RelationshipInterface) => (<ComponentInterface>data.component).name)];
+					if (sortByLatestUsage){
+						sorter = [
+							new SorterComparisonElement((data: RelationshipInterface) => (<ComponentInterface>data.component).file.stat.mtime, SorterType.Descending)
+						];
+					} else {
+						sorter = this.relationshipSortingMap.get(type);
+						if (sorter === undefined) sorter = [new SorterComparisonElement((data: RelationshipInterface) => (<ComponentInterface>data.component).name)];
+					}
 				} else {
-					sorter = this.recordSortingMap.get(type);
-					if (sorter === undefined) sorter = [new SorterComparisonElement((data: ComponentInterface) => data.name)];
+					if (sortByLatestUsage){
+						sorter = [
+							new SorterComparisonElement((data: ComponentInterface) => data.file.stat.mtime, SorterType.Descending)
+						];
+					} else {
+						sorter = this.recordSortingMap.get(type);
+						if (sorter === undefined) sorter = [new SorterComparisonElement((data: ComponentInterface) => data.name)];
+					}
 				}
 
 				if (sorter !== undefined) data = (<Array<any>>data).sort(this.factories.sorter.create<any>(sorter))
