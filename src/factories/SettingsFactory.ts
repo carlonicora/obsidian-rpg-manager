@@ -110,6 +110,10 @@ export class SettingsFactory {
 								await this.plugin.updateSettings({ automaticMove: value })
 								settings.value = value;
 								break;
+							case SettingType.usePlotStructures:
+								await this.plugin.updateSettings({ usePlotStructures: value })
+								settings.value = value;
+								break;
 						}
 					})
 			);
