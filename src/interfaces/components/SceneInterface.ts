@@ -3,6 +3,7 @@ import {AdventureInterface} from "./AdventureInterface";
 import {ActInterface} from "./ActInterface";
 import {SessionInterface} from "./SessionInterface";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";
+import {SceneType} from "../../enums/SceneType";
 
 export interface SceneInterface extends ComponentInterface {
 	sceneId: number;
@@ -10,8 +11,12 @@ export interface SceneInterface extends ComponentInterface {
 	action: string|null;
 	startTime: Date|null;
 	endTime: Date|null;
-	storycircleStage: StoryCircleStage|undefined;
 	date: Date|null;
+
+	storycircleStage: StoryCircleStage|undefined;
+	sceneType: SceneType|undefined;
+	isExciting: boolean|undefined;
+
 
 	adventure: AdventureInterface;
 	session: SessionInterface|undefined;
@@ -20,4 +25,8 @@ export interface SceneInterface extends ComponentInterface {
 	nextScene: SceneInterface|null;
 
 	get duration(): string;
+
+	get isSceneActive(): boolean;
+	getSceneTime(): number;
+	get isSceneExciting(): boolean
 }

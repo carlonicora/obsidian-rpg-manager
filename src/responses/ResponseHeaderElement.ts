@@ -13,7 +13,7 @@ export class ResponseHeaderElement extends AbstractResponse implements HeaderRes
 		app: App,
 		currentElement: ComponentInterface,
 		public title: string,
-		content: string,
+		content: any,
 		public type: HeaderResponseType,
 		public additionalInformation: any|undefined=undefined,
 	) {

@@ -18,6 +18,7 @@ import {Campaign} from "../../components/Campaign";
 import {Act} from "../../components/Act";
 import {Adventure} from "../../components/Adventure";
 import {AbtStage} from "../../enums/AbtStage";
+import {SceneType} from "../../enums/SceneType";
 
 export class HeaderSubModel extends AbstractSubModel{
 	public async generateData(
@@ -109,6 +110,8 @@ export class HeaderSubModel extends AbstractSubModel{
 				}
 				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (data.sessionId === undefined ? '' : data.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: data.id, file: data.file}));
 				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (data.storycircleStage !== undefined ? StoryCircleStage[data.storycircleStage] : ''), HeaderResponseType.StoryCircleSelector, {sceneId: data.id, file: data.file}));
+				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session Type', (data.sceneType !== undefined ? SceneType[data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {sceneId: data.id, file: data.file}));
+				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'External actions on the player characters?', data.isSceneExciting, HeaderResponseType.SceneExcitment, {sceneId: data.id, file: data.file}));
 
 			} else if (data instanceof Music){
 				response.type = ComponentType.Music;

@@ -5,7 +5,7 @@ import {TFile} from "obsidian";
 export class FrontmatterFactory extends AbstractFactory implements FrontmatterFactoryInterface {
 	public async update(
 		file: TFile,
-		keyValues: Map<string, string>,
+		keyValues: Map<string, any>,
 	): Promise<void> {
 		const fileContent: string = await this.app.vault.read(file);
 		this.maybeUpdateFile(file, fileContent, keyValues);
@@ -13,7 +13,7 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 
 	public async remove(
 		file: TFile,
-		keyValues: Map<string, string>,
+		keyValues: Map<string, any>,
 	): Promise<void> {
 		const fileContent: string = await this.app.vault.read(file);
 		this.maybeUpdateFile(file, fileContent, keyValues, true);
@@ -22,7 +22,7 @@ export class FrontmatterFactory extends AbstractFactory implements FrontmatterFa
 	private async maybeUpdateFile(
 		file: TFile,
 		content: string,
-		keyValues: Map<string, string>,
+		keyValues: Map<string, any>,
 		remove=false,
 	): Promise<void> {
 		const fileContent:Array<string> = await content.split('\n');

@@ -8,6 +8,7 @@ import {FrontMatterCache} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {SessionInterface} from "../interfaces/components/SessionInterface";
 import {StoryCircleStage} from "../enums/StoryCircleStage";
+import {SceneType} from "../enums/SceneType";
 
 export class Scene extends AbstractComponentOutline implements SceneInterface {
 	public sceneId: number;
@@ -22,7 +23,34 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 	public act: ActInterface;
 	public previousScene: SceneInterface | null = null;
 	public nextScene: SceneInterface | null = null;
+
 	public storycircleStage: StoryCircleStage|undefined=undefined;
+	public sceneType: SceneType|undefined=undefined;
+	public isExciting: boolean|undefined=undefined;
+
+	private activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
+		[SceneType.Combat, true],
+		[SceneType.Decision, false],
+		[SceneType.Encounter, true],
+		[SceneType.Exposition, false],
+		[SceneType.Planning, false],
+		[SceneType.Preparation, true],
+		[SceneType.Recap, false],
+		[SceneType.Investigation, true],
+		[SceneType.Execution, true],
+	]);
+
+	private sceneTypesDuration: Map<SceneType, number> = new Map<SceneType, number>([
+		[SceneType.Combat, 15],
+		[SceneType.Decision, 5],
+		[SceneType.Encounter, 15],
+		[SceneType.Exposition, 5],
+		[SceneType.Planning, 10],
+		[SceneType.Preparation, 10],
+		[SceneType.Recap, 5],
+		[SceneType.Investigation, 15],
+		[SceneType.Execution, 15],
+	]);
 
 	protected initialiseData(
 		frontmatter: FrontMatterCache|undefined,
@@ -41,9 +69,9 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		this.endTime = this.initialiseDate(frontmatter?.times?.end ?? frontmatter?.time?.end);
 		this.action = frontmatter?.action;
 
-		if (frontmatter?.storycircle !== undefined){
-			this.storycircleStage = StoryCircleStage[frontmatter.storycircle as keyof typeof StoryCircleStage];
-		}
+		if (frontmatter?.storycircle !== undefined) this.storycircleStage = StoryCircleStage[frontmatter.storycircle as keyof typeof StoryCircleStage];
+		if (frontmatter?.sceneType !== undefined) this.sceneType = SceneType[frontmatter.sceneType as keyof typeof SceneType];
+		if (frontmatter?.isExciting !== undefined) this.isExciting = frontmatter.isExciting;
 
 		super.initialiseData(frontmatter);
 	}
@@ -93,5 +121,26 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		}
 
 		return response;
+	}
+
+	public get isSceneActive(
+	): boolean {
+		if (this.sceneType === undefined) return false;
+
+		return this.activeSceneTypes.get(this.sceneType) ?? false;
+	}
+
+	public getSceneTime(
+	): number {
+		if (this.sceneType === undefined) return 0;
+
+		return this.sceneTypesDuration.get(this.sceneType) ?? 0;
+	}
+
+	public get isSceneExciting(
+	): boolean {
+		if (this.isExciting === undefined) return false;
+
+		return this.isExciting;
 	}
 }
