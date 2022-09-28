@@ -34,6 +34,9 @@ export interface IdInterface {
 	get isValid(
 	): boolean;
 
+	get stringValue(
+	): string;
+
 	isTypeValid(
 		type: ComponentType,
 	): boolean;

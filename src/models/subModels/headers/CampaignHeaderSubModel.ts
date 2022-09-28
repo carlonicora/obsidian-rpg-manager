@@ -24,7 +24,7 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Campaign;
 		response.responseType = ResponseType.CampaignHeader;
 
-		response.metadata = {campaignId: this.data.id};
+		response.metadata = {campaignId: this.data.id, sourceMeta: additionalInformation};
 
 		return this.completeData(response);
 	}
