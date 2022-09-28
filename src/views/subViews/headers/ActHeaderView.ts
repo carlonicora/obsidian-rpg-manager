@@ -38,5 +38,13 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 		if (analyser !== undefined){
 			this.addActBalance(analyser);
 		}
+
+		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.abt !== undefined){
+			this.addAbtPlot(data?.metadata?.sourceMeta?.abt);
+		}
+
+		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.storycircle !== undefined){
+			this.addStoryCirclePlot(data?.metadata?.sourceMeta?.storycircle);
+		}
 	}
 }

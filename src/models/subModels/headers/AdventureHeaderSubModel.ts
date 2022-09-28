@@ -2,13 +2,13 @@ import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel"
 import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {ActInterface} from "../../../interfaces/components/ActInterface";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
+import {AdventureInterface} from "../../../interfaces/components/AdventureInterface";
 
 export class AdventureHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: ActInterface;
+	protected data: AdventureInterface;
 
 	public async generateData(
 		relationship: RelationshipInterface,
@@ -23,6 +23,8 @@ export class AdventureHeaderSubModel extends AbstractHeaderSubModel {
 
 		response.type = ComponentType.Adventure;
 		response.responseType = ResponseType.AdventureHeader;
+
+		response.metadata = {adventureId: this.data.id, sourceMeta: additionalInformation};
 
 		return this.completeData(response);
 	}

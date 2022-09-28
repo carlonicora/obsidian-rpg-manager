@@ -1,4 +1,3 @@
-import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {CampaignInterface} from "../../../interfaces/components/CampaignInterface";
 import {ViewType} from "../../../enums/ViewType";
@@ -8,8 +7,9 @@ import {HeaderResponseElementInterface} from "../../../interfaces/response/subMo
 import {ActInterface} from "../../../interfaces/components/ActInterface";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
+import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 
-export class CampaignHeaderView extends AbstractHeaderView {
+export class CampaignHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: CampaignInterface;
 
 	public render(
@@ -70,6 +70,14 @@ export class CampaignHeaderView extends AbstractHeaderView {
 					data.metadata?.sourceMeta?.sessions,
 				),
 			);
+		}
+
+		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.abt !== undefined){
+			this.addAbtPlot(data?.metadata?.sourceMeta?.abt);
+		}
+
+		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.storycircle !== undefined){
+			this.addStoryCirclePlot(data?.metadata?.sourceMeta?.storycircle);
 		}
 	}
 

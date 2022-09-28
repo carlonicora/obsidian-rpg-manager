@@ -1,7 +1,6 @@
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {CampaignInterface} from "../../interfaces/components/CampaignInterface";
-import {AbtPlotSubModel} from "../subModels/AbtPlotSubModel";
 import {CampaignHeaderSubModel} from "../subModels/headers/CampaignHeaderSubModel";
 import {AdventureInterface} from "../../interfaces/components/AdventureInterface";
 import {ComponentType} from "../../enums/ComponentType";
@@ -30,18 +29,6 @@ export class CampaignNavigationModel extends AbstractModel {
 			]));
 
 		await this.response.addSubModel(CampaignHeaderSubModel, this.currentElement, this.currentElement, undefined, this.sourceMeta);
-
-		if (this.settings.usePlotStructures) {
-			if (this.sourceMeta?.abt != null) {
-				await this.response.addSubModel(
-					AbtPlotSubModel,
-					this.currentElement,
-					this.currentElement,
-					undefined,
-					this.sourceMeta.abt,
-				)
-			}
-		}
 
 		return this.response;
 	}

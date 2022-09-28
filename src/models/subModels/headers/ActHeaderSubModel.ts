@@ -41,6 +41,8 @@ export class ActHeaderSubModel extends AbstractHeaderSubModel {
 			}));
 		}
 
+		response.metadata = {actId: this.data.id, sourceMeta: additionalInformation};
+
 		return this.completeData(response);
 	}
 }

@@ -4,8 +4,68 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSelectorView";
 import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
 import {AbtStage} from "../enums/AbtStage";
+import {EditorSelector} from "../helpers/EditorSelector";
 
 export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSelectorView {
+
+
+	protected addAbtPlot(
+		plot: any,
+	): void {
+		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'abt'});
+
+		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-headers'});
+		headerEl.createSpan({text: 'ABT Plot'});
+		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
+		titleEditor.addEventListener('click', () => {
+			EditorSelector.select(this.app, this.currentElement);
+		})
+
+		const tableEl = plotEl.createEl('table');
+		tableEl.addClass('rpgm-table');
+
+		Object.entries(plot).forEach(([name, value]: [string, string]) => {
+			const row = tableEl.createEl('tr');
+			row.createEl('td', {text: name});
+			const valueRowEl = row.createEl('td');
+
+			MarkdownRenderer.renderMarkdown(
+				value,
+				valueRowEl,
+				this.sourcePath,
+				null as unknown as Component,
+			);
+		});
+	}
+
+	protected addStoryCirclePlot(
+		plot: any,
+	): void {
+		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'storycircle'});
+
+		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-headers'});
+		headerEl.createSpan({text: 'Story Circle Plot'});
+		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
+		titleEditor.addEventListener('click', () => {
+			EditorSelector.select(this.app, this.currentElement);
+		})
+
+		const tableEl = plotEl.createEl('table');
+		tableEl.addClass('rpgm-table');
+
+		Object.entries(plot).forEach(([name, value]: [string, string]) => {
+			const row = tableEl.createEl('tr');
+			row.createEl('td', {text: name});
+			const valueRowEl = row.createEl('td');
+
+			MarkdownRenderer.renderMarkdown(
+				value,
+				valueRowEl,
+				this.sourcePath,
+				null as unknown as Component,
+			);
+		});
+	}
 
 	protected addActBalance(
 		analyser: SceneAnalyser,
