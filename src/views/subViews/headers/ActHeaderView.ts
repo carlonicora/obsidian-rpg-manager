@@ -26,11 +26,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 				case HeaderResponseType.AbtSelector:
 					this.addElement(containerEl, element, this.addAbtStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					if (this.currentElement.abtStage !== undefined) {
-						analyser = new SceneAnalyser(
-							this.app,
-							this.currentElement.abtStage,
-							element.currentElement.id
-						);
+						analyser = element.additionalInformation.sceneAnalyser;
 					}
 					break;
 				default:

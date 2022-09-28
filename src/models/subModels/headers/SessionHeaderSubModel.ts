@@ -9,6 +9,7 @@ import {HeaderResponseInterface} from "../../../interfaces/response/subModels/He
 import {ComponentType} from "../../../enums/ComponentType";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {ResponseType} from "../../../enums/ResponseType";
+import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 
 export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SessionInterface;
@@ -28,10 +29,16 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 		response.responseType = ResponseType.SessionHeader;
 
 		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: this.data}));
-		if (this.settings.usePlotStructures) {
+		if (this.settings.usePlotStructures && this.data.abtStage !== undefined) {
+			const analyser = new SceneAnalyser(
+				this.app,
+				this.data.abtStage,
+				this.data.id
+			);
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
 				id: this.data.id,
-				file: this.data.file
+				file: this.data.file,
+				sceneAnalyser: analyser,
 			}));
 		}
 

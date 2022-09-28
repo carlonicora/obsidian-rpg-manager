@@ -7,7 +7,6 @@ import {AbtStage} from "../enums/AbtStage";
 
 export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSelectorView {
 
-	//@TODO Move the calculation of the act or session balance outside the View and into the Model
 	protected addActBalance(
 		analyser: SceneAnalyser,
 	): void {

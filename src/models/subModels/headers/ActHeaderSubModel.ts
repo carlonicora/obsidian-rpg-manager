@@ -9,6 +9,7 @@ import {ActInterface} from "../../../interfaces/components/ActInterface";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
+import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 
 export class ActHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: ActInterface;
@@ -27,10 +28,16 @@ export class ActHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Act;
 		response.responseType = ResponseType.ActHeader;
 
-		if (this.settings.usePlotStructures) {
+		if (this.settings.usePlotStructures && this.data.abtStage !== undefined) {
+			const analyser = new SceneAnalyser(
+				this.app,
+				this.data.abtStage,
+				this.data.id
+			);
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
 				id: this.data.id,
-				file: this.data.file
+				file: this.data.file,
+				sceneAnalyser: analyser,
 			}));
 		}
 
