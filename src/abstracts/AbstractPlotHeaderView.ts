@@ -16,7 +16,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
 		headerEl.createSpan({text: 'ABT Plot'});
-		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
+		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: '</>'});
 		titleEditor.addEventListener('click', () => {
 			EditorSelector.select(this.app, this.currentElement);
 		})

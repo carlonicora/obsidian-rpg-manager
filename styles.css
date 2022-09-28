@@ -17,14 +17,6 @@
   height: 350px;
 }
 
-.rpgm-plot-container {
-  width: 100%;
-  border-top: solid 1px var(--background-modifier-border);
-  padding: 30px;
-  margin-bottom: 20px;
-  color: var(--text-muted);
-}
-
 .rpgm-plot {
   margin: 30px;
   color: var(--text-muted);
@@ -714,4 +706,50 @@
   padding: 0px;
   margin: 0px;
   margin-left: 12px;
+}
+
+.rpgm-plot-container {
+  width: 100%;
+  border-top: solid 1px var(--background-modifier-border);
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  color: var(--text-muted);
+}
+.rpgm-plot-container h3 {
+  margin: 0px;
+  float: left;
+  width: 100%;
+}
+.rpgm-plot-container h3 .rpgm-td-edit {
+  font-weight: 100;
+  padding-left: 20px;
+  font-size: 0.7em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+.rpgm-plot-container table {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 10px;
+}
+.rpgm-plot-container table .inline {
+  white-space: nowrap;
+}
+.rpgm-plot-container table tr > td {
+  border: none;
+  text-align: left;
+}
+.rpgm-plot-container table tr > td p {
+  margin: 0px;
+}
+.rpgm-plot-container table tr > td.header {
+  font-variant: small-caps;
+  font-size: 0.8em;
+  text-align: right;
+  font-weight: normal;
+  width: 100px;
+}
+.rpgm-plot-container table tr > td .inline {
+  white-space: nowrap;
 }

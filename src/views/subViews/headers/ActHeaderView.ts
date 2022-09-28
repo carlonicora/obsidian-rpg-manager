@@ -24,11 +24,9 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 			switch (element.type){
 				case HeaderResponseType.StoryCircleSelector:
 					headlessTable.addRow(element, this.addStoryCircleStageSelector.bind(this));
-					//this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.AbtSelector:
 					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
-					//this.addElement(containerEl, element, this.addAbtStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					if (this.currentElement.abtStage !== undefined) {
 						analyser = element.additionalInformation.sceneAnalyser;
 					}
