@@ -13,8 +13,6 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected headerInfoEl: HTMLDivElement;
 	protected headerContainerEl: HTMLDivElement;
 
-	private sessionSelectorEl: HTMLSelectElement;
-
 	private isInternalRender = false;
 
 	public internalRender(
@@ -98,11 +96,24 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		let prefix = 'short';
 		let crsContainer: HTMLDivElement;
 
-		if (responseType === HeaderResponseType.Long) {
-			prefix = 'long';
-			crsContainer = this.headerInfoEl;
-		} else {
-			crsContainer = this.headerInfoEl.createDiv({cls: 'short'});
+		switch (responseType){
+			case HeaderResponseType.Long:
+				prefix = 'long';
+				crsContainer = this.headerInfoEl;
+				break;
+			case HeaderResponseType.Half:
+			case HeaderResponseType.StoryCircleSelector:
+			case HeaderResponseType.AbtSelector:
+			case HeaderResponseType.SceneExcitment:
+			case HeaderResponseType.SceneTypeSelector:
+			case HeaderResponseType.SessionSelection:
+			case HeaderResponseType.ScenesSelection:
+				prefix = 'half';
+				crsContainer = this.headerInfoEl.createDiv({cls: 'half'});
+				break;
+			default:
+				crsContainer = this.headerInfoEl.createDiv({cls: 'short'});
+				break;
 		}
 
 		crsContainer.createDiv({cls: prefix+ 'Title', text: title});
@@ -119,14 +130,15 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		switch (element.type){
 			case HeaderResponseType.Long:
 			case HeaderResponseType.Short:
+			case HeaderResponseType.Half:
 				element.value.fillContent(containerEl.children[1] as HTMLDivElement, this.sourcePath);
 				break;
 			default:
 				fn;
 		}
 
-		if (element.type !== HeaderResponseType.Long){
+		//if (element.type !== HeaderResponseType.Long){
 			containerEl.createDiv({cls: 'reset'});
-		}
+		//}
 	}
 }

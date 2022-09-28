@@ -19,7 +19,7 @@
 
 .rpgm-plot-container {
 	width: 100%;
-	border-left: solid 1px var(--background-modifier-border);
+	border-top: solid 1px var(--background-modifier-border);
 	padding: 30px;
 	margin-bottom: 20px;
 	color: var(--text-muted);
@@ -431,6 +431,11 @@
 		text-align: left;
 	}
 
+	tr > td.header {
+		font-size: 1.1em;
+		font-weight: bold;
+	}
+
 	tr > td .inline {
 		white-space: nowrap;
 	}
@@ -567,10 +572,42 @@
 						margin: 0px;
 					}
 				}
+			}
 
-				.reset {
-					clear: both;
+			.half {
+				.halfTitle{
+					width: 50%;
+					font-variant: small-caps;
+					font-size: 0.8em;
+					color: var(--text-muted);
+					float:left;
 				}
+
+				.halfText {
+					width: 50%;
+					float:left;
+
+					p {
+						margin: 0px;
+					}
+				}
+			}
+
+			.reset {
+				clear: both;
+			}
+
+			select {
+				border-bottom: solid 1px var(--background-modifier-border);
+				border-radius: 0;
+				width: 100%;
+				box-shadow: none;
+			}
+
+			select:hover {
+				box-shadow: none;
+				background-color: var(--interactive-hover);
+				cursor: pointer;
 			}
 		}
 

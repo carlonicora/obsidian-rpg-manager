@@ -1,4 +1,3 @@
-import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {SceneInterface} from "../../../interfaces/components/SceneInterface";
 import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
@@ -10,8 +9,9 @@ import {SessionInterface} from "../../../interfaces/components/SessionInterface"
 import {ComponentType} from "../../../enums/ComponentType";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
 import {SorterType} from "../../../enums/SorterType";
+import {AbstractStoryCircleStageSelectorView} from "../../../abstracts/AbstractStoryCircleStageSelectorView";
 
-export class SceneHeaderView extends AbstractHeaderView {
+export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 	protected currentElement: SceneInterface;
 
 	public render(
@@ -24,6 +24,9 @@ export class SceneHeaderView extends AbstractHeaderView {
 			const containerEl = this.createContainerEl(element.type, element.title);
 
 			switch (element.type){
+				case HeaderResponseType.StoryCircleSelector:
+					this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
+					break;
 				case HeaderResponseType.SessionSelection:
 					this.addElement(containerEl, element, this.addSessionSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;

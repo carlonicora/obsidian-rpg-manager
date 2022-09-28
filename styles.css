@@ -19,7 +19,7 @@
 
 .rpgm-plot-container {
   width: 100%;
-  border-left: solid 1px var(--background-modifier-border);
+  border-top: solid 1px var(--background-modifier-border);
   padding: 30px;
   margin-bottom: 20px;
   color: var(--text-muted);
@@ -357,6 +357,10 @@
   border: none;
   text-align: left;
 }
+.rpgm-table tr > td.header {
+  font-size: 1.1em;
+  font-weight: bold;
+}
 .rpgm-table tr > td .inline {
   white-space: nowrap;
 }
@@ -467,8 +471,33 @@
 .rpgm-header-info .container .info .short .shortText p {
   margin: 0px;
 }
-.rpgm-header-info .container .info .short .reset {
+.rpgm-header-info .container .info .half .halfTitle {
+  width: 50%;
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: var(--text-muted);
+  float: left;
+}
+.rpgm-header-info .container .info .half .halfText {
+  width: 50%;
+  float: left;
+}
+.rpgm-header-info .container .info .half .halfText p {
+  margin: 0px;
+}
+.rpgm-header-info .container .info .reset {
   clear: both;
+}
+.rpgm-header-info .container .info select {
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0;
+  width: 100%;
+  box-shadow: none;
+}
+.rpgm-header-info .container .info select:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
 }
 .rpgm-header-info .container .info-large {
   width: 100%;

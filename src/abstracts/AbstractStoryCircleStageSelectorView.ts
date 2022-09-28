@@ -9,6 +9,7 @@ export abstract class AbstractStoryCircleStageSelectorView extends AbstractHeade
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
+		console.log('HEY')
 		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
 
 		if (sceneId !== undefined) {

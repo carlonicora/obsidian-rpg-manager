@@ -16,7 +16,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
-		super.internalRender(container, data);
+		super.render(container, data);
 
 		if (this.currentElement.currentDate !== undefined) {
 			this.headerTitleEl.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
@@ -30,11 +30,11 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			currentElement: this.currentElement,
 			title: '',
 			value: {isInLine: true, content: null, fillContent(container: HTMLElement, sourcePath: string) {}},
-			type: HeaderResponseType.Short,
+			type: HeaderResponseType.Half,
 		}
 
 		if (data.metadata?.sourceMeta?.adventures !== undefined){
-			containerEl = this.createContainerEl(HeaderResponseType.Short, 'Current Adventure');
+			containerEl = this.createContainerEl(HeaderResponseType.Half, 'Current Adventure');
 			this.addElement(
 				containerEl,
 				element,
@@ -47,7 +47,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 
 		if (data.metadata?.sourceMeta?.acts !== undefined){
-			containerEl = this.createContainerEl(HeaderResponseType.Short, 'Current Act');
+			containerEl = this.createContainerEl(HeaderResponseType.Half, 'Current Act');
 			this.addElement(
 				containerEl,
 				element,
@@ -60,7 +60,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 
 		if (data.metadata?.sourceMeta?.sessions !== undefined){
-			containerEl = this.createContainerEl(HeaderResponseType.Short, 'Current Session');
+			containerEl = this.createContainerEl(HeaderResponseType.Half, 'Current Session');
 			this.addElement(
 				containerEl,
 				element,

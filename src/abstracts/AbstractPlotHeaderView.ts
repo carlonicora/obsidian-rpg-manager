@@ -12,9 +12,9 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 	protected addAbtPlot(
 		plot: any,
 	): void {
-		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'abt'});
+		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-plot-container'});
 
-		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-headers'});
+		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
 		headerEl.createSpan({text: 'ABT Plot'});
 		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
 		titleEditor.addEventListener('click', () => {
@@ -26,7 +26,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 		Object.entries(plot).forEach(([name, value]: [string, string]) => {
 			const row = tableEl.createEl('tr');
-			row.createEl('td', {text: name});
+			row.createEl('td', {cls: 'header', text: name});
 			const valueRowEl = row.createEl('td');
 
 			MarkdownRenderer.renderMarkdown(
@@ -41,9 +41,9 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 	protected addStoryCirclePlot(
 		plot: any,
 	): void {
-		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'storycircle'});
+		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-plot-container'});
 
-		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-headers'});
+		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
 		headerEl.createSpan({text: 'Story Circle Plot'});
 		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
 		titleEditor.addEventListener('click', () => {
@@ -55,7 +55,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 		Object.entries(plot).forEach(([name, value]: [string, string]) => {
 			const row = tableEl.createEl('tr');
-			row.createEl('td', {text: name});
+			row.createEl('td', {cls: 'header', text: name});
 			const valueRowEl = row.createEl('td');
 
 			MarkdownRenderer.renderMarkdown(

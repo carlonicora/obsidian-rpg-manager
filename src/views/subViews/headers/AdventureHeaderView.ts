@@ -9,7 +9,7 @@ export class AdventureHeaderView extends AbstractPlotHeaderView {
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
-		super.internalRender(container, data);
+		super.render(container, data);
 
 		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.abt !== undefined){
 			this.addAbtPlot(data?.metadata?.sourceMeta?.abt);
