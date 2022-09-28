@@ -1,8 +1,8 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {AdventureInterface} from "../../interfaces/components/AdventureInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {AbtPlotSubModel} from "../subModels/AbtPlotSubModel";
+import {AdventureHeaderSubModel} from "../subModels/headers/AdventureHeaderSubModel";
 
 export class AdventureNavigationModel extends AbstractModel {
 	protected currentElement: AdventureInterface;
@@ -11,7 +11,7 @@ export class AdventureNavigationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
+		await this.response.addSubModel(AdventureHeaderSubModel, this.currentElement, this.currentElement);
 
 		if (this.settings.usePlotStructures) {
 			if (this.sourceMeta?.abt != null) {

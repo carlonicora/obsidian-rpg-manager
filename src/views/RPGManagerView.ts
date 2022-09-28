@@ -49,8 +49,8 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		this.rpgmContentEl.addClass('rpgm-right-view');
 		this.rpgmContentEl.empty();
 
-		this.verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-header'});
-		this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title  title', text: 'RPG Manager'});
+		this.verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-headers'});
+		this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title  title', text: 'RPG Manager'});
 
 
 		this.addCreationLinks();
@@ -62,8 +62,8 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 	private async addReleaseNotes(
 	): Promise<void> {
-		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'Release Notes'});
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title', text: 'Release Notes'});
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
 		const itemEl = groupItemEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Read Release Notes'});
 		itemEl.addEventListener('click', () => {
 			this.factories.views.showObsidianView(ViewType.ReleaseNote);
@@ -72,16 +72,16 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 	private addToDoList(
 	): void {
-		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'To Do List'});
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title', text: 'To Do List'});
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
 		this.loadToDo(groupItemEl);
 
 	}
 
 	private addCreationLinks(
 	): void {
-		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-header-group-title', text: 'Create New Components'});
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-header-group-items'});
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title', text: 'Create New Components'});
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
 
 		this.createElementListItem(ComponentType.Campaign, groupItemEl);
 		if (this.hasCampaigns) {

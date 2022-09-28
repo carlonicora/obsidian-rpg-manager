@@ -1,7 +1,6 @@
 import {TableView} from "../views/subViews/TableView";
 import {BreadcrumbView} from "../views/subViews/BreadcrumbView";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
-import {HeaderView} from "../views/subViews/HeaderView";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
 import {RawCharacterRecordSheetView} from "../rpgs/Raw/views/RawCharacterRecordSheetView";
@@ -11,6 +10,18 @@ import {ViewFactoryInterface} from "../interfaces/factories/ViewFactoryInterface
 import {ViewInterface} from "../interfaces/ViewInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
+import {ActHeaderView} from "../views/subViews/headers/ActHeaderView";
+import {AdventureHeaderView} from "../views/subViews/headers/AdventureHeaderView";
+import {CampaignHeaderView} from "../views/subViews/headers/CampaignHeaderView";
+import {CharacterHeaderView} from "../views/subViews/headers/CharacterHeaderView";
+import {ClueHeaderView} from "../views/subViews/headers/ClueHeaderView";
+import {EventHeaderView} from "../views/subViews/headers/EventHeaderView";
+import {FactionHeaderView} from "../views/subViews/headers/FactionHeaderView";
+import {LocationHeaderView} from "../views/subViews/headers/LocationHeaderView";
+import {MusicHeaderView} from "../views/subViews/headers/MusicHeaderView";
+import {SceneHeaderView} from "../views/subViews/headers/SceneHeaderView";
+import {SessionHeaderView} from "../views/subViews/headers/SessionHeaderView";
+import {SubplotHeaderView} from "../views/subViews/headers/SubplotHeaderView";
 
 export class ViewFactory extends AbstractFactory implements ViewFactoryInterface{
 	private viewTypeMap: Map<string,any>;
@@ -23,7 +34,21 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		this.viewTypeMap = new Map();
 		this.viewTypeMap.set('AgnosticTable', TableView);
 		this.viewTypeMap.set('AgnosticBreadcrumb', BreadcrumbView);
-		this.viewTypeMap.set('AgnosticHeader', HeaderView);
+
+		this.viewTypeMap.set('AgnosticActHeader', ActHeaderView);
+		this.viewTypeMap.set('AgnosticAdventureHeader', AdventureHeaderView);
+		this.viewTypeMap.set('AgnosticCampaignHeader', CampaignHeaderView);
+		this.viewTypeMap.set('AgnosticCharacterHeader', CharacterHeaderView);
+		this.viewTypeMap.set('AgnosticClueHeader', ClueHeaderView);
+		this.viewTypeMap.set('AgnosticEventHeader', EventHeaderView);
+		this.viewTypeMap.set('AgnosticFactionHeader', FactionHeaderView);
+		this.viewTypeMap.set('AgnosticLocationHeader', LocationHeaderView);
+		this.viewTypeMap.set('AgnosticMusicHeader', MusicHeaderView);
+		this.viewTypeMap.set('AgnosticSceneHeader', SceneHeaderView);
+		this.viewTypeMap.set('AgnosticSessionHeader', SessionHeaderView);
+		this.viewTypeMap.set('AgnosticSubplotHeader', SubplotHeaderView);
+
+
 		this.viewTypeMap.set('RawRawCharacterRecordSheet', RawCharacterRecordSheetView);
 
 		this.showInRightLeaf = new Map<ViewType, boolean>();

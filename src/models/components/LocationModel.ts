@@ -2,8 +2,8 @@ import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {LocationInterface} from "../../interfaces/components/LocationInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {LocationHeaderSubModel} from "../subModels/headers/LocationHeaderSubModel";
 
 export class LocationModel extends AbstractModel {
 	protected currentElement: LocationInterface;
@@ -12,7 +12,7 @@ export class LocationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
+		await this.response.addSubModel(LocationHeaderSubModel, this.currentElement, this.currentElement);
 
 		await this.addRelationships(ComponentType.Character, RelationshipType.Direct | RelationshipType.DirectInFrontmatter | RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(ComponentType.NonPlayerCharacter, RelationshipType.Direct | RelationshipType.DirectInFrontmatter | RelationshipType.ReverseInFrontmatter);

@@ -2,8 +2,8 @@ import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {EventInterface} from "../../interfaces/components/EventInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {EventHeaderSubModel} from "../subModels/headers/EventHeaderSubModel";
 
 export class EventModel extends AbstractModel {
 	protected currentElement: EventInterface;
@@ -12,7 +12,7 @@ export class EventModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
+		await this.response.addSubModel(EventHeaderSubModel, this.currentElement, this.currentElement);
 
 		await this.addRelationships(ComponentType.Subplot, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(ComponentType.Character);

@@ -1,11 +1,11 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {SessionInterface} from "../../interfaces/components/SessionInterface";
 import {SceneInterface} from "../../interfaces/components/SceneInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {SceneTableSubModel} from "../subModels/tables/SceneTableSubModel";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
+import {SessionHeaderSubModel} from "../subModels/headers/SessionHeaderSubModel";
 
 export class SessionNavigationModel extends AbstractModel {
 	protected currentElement: SessionInterface;
@@ -25,7 +25,7 @@ export class SessionNavigationModel extends AbstractModel {
 
 		this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
+		await this.response.addSubModel(SessionHeaderSubModel, this.currentElement, this.currentElement);
 
 		await this.response.addSubModel(
 			SceneTableSubModel,

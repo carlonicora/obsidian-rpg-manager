@@ -1,9 +1,9 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ActInterface} from "../../interfaces/components/ActInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {AbtPlotSubModel} from "../subModels/AbtPlotSubModel";
 import {StoryCirclePlotSubModel} from "../subModels/StoryCirclePlotSubModel";
+import {ActHeaderSubModel} from "../subModels/headers/ActHeaderSubModel";
 
 export class ActNavigationModel extends AbstractModel {
 	protected currentElement: ActInterface;
@@ -12,7 +12,7 @@ export class ActNavigationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel,this.currentElement,this.currentElement);
+		await this.response.addSubModel(ActHeaderSubModel,this.currentElement,this.currentElement);
 
 		if (this.settings.usePlotStructures) {
 			if (this.sourceMeta?.abt != null) {

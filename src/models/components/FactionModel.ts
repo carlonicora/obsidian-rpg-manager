@@ -2,8 +2,8 @@ import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {ComponentInterface} from "../../interfaces/database/ComponentInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {FactionHeaderSubModel} from "../subModels/headers/FactionHeaderSubModel";
 
 export class FactionModel extends AbstractModel {
 	protected currentElement: ComponentInterface;
@@ -12,7 +12,7 @@ export class FactionModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
+		await this.response.addSubModel(FactionHeaderSubModel, this.currentElement, this.currentElement);
 
 		await this.addRelationships(ComponentType.Character, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(ComponentType.NonPlayerCharacter, RelationshipType.ReverseInFrontmatter);

@@ -141,11 +141,11 @@ export class TimelineView extends AbstractRpgManagerView {
 		if (this.campaign.image !== null) {
 			const bannerContainer = this.rpgmContentEl.createDiv({cls: 'rpg-container'});
 
-			const header = bannerContainer.createDiv({cls: 'rpgm-header'});
+			const header = bannerContainer.createDiv({cls: 'rpgm-headers'});
 			header.style.backgroundImage = 'url(\'' + this.campaign.image + '\')';
 
-			const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
-			overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
+			const overlay = header.createDiv({cls: 'rpgm-headers-overlay'});
+			overlay.createDiv({cls: 'rpgm-headers-title', text: 'Timeline'});
 
 			overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
 			overlay.createDiv({cls: 'rpgm-current-date', text: (this.campaign.currentDate !== null ? this.campaign.currentDate.toDateString() : '')});

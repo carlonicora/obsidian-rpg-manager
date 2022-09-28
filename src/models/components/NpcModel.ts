@@ -2,8 +2,8 @@ import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {CharacterInterface} from "../../interfaces/components/CharacterInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {CharacterHeaderSubModel} from "../subModels/headers/CharacterHeaderSubModel";
 
 export class NpcModel extends AbstractModel {
 	protected currentElement: CharacterInterface;
@@ -12,7 +12,7 @@ export class NpcModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel,this.currentElement, this.currentElement);
+		await this.response.addSubModel(CharacterHeaderSubModel,this.currentElement, this.currentElement);
 
 		await this.addRelationships(ComponentType.Subplot, RelationshipType.Reverse|RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(ComponentType.Faction);

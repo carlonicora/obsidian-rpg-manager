@@ -2,8 +2,8 @@ import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {ClueInterface} from "../../interfaces/components/ClueInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {ClueHeaderSubModel} from "../subModels/headers/ClueHeaderSubModel";
 
 export class ClueModel extends AbstractModel {
 	protected currentElement: ClueInterface;
@@ -12,7 +12,7 @@ export class ClueModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
-		await this.response.addSubModel(HeaderSubModel, this.currentElement, this.currentElement);
+		await this.response.addSubModel(ClueHeaderSubModel, this.currentElement, this.currentElement);
 
 		await this.addRelationships(ComponentType.Subplot, RelationshipType.ReverseInFrontmatter);
 		await this.addRelationships(ComponentType.Character);

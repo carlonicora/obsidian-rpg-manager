@@ -56,7 +56,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		}
 
 		try {
-			this.model = this.app.plugins.getPlugin('rpg-manager').factories.models.create(
+			this.model = this.factories.models.create(
 				this.campaignSettings,
 				modelName,
 				this.currentElement,
@@ -87,7 +87,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	private async render(
 	): Promise<void> {
-		if (this.app.plugins.getPlugin('rpg-manager')?.database === undefined) return;
+		if (this.database === undefined) return;
 
 		this.initialise();
 		if (this.currentElement === undefined) return;
@@ -97,7 +97,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		this.model.generateData()
 			.then((data: ResponseDataInterface) => {
 				data.elements.forEach((element: ResponseDataElementInterface) => {
-					const view: ViewInterface = this.app.plugins.getPlugin('rpg-manager').factories.views.create(
+					const view: ViewInterface = this.factories.views.create(
 						this.campaignSettings,
 						element.responseType,
 						this.sourcePath,

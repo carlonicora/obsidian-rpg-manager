@@ -1,4 +1,4 @@
-import {HeaderSubModel} from "../../../../models/subModels/HeaderSubModel";
+import {AbstractHeaderSubModel} from "../../../../abstracts/AbstractHeaderSubModel";
 import {ResponseDataElementInterface} from "../../../../interfaces/response/ResponseDataElementInterface";
 import {HeaderResponseInterface} from "../../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ResponseHeaderElement} from "../../../../responses/ResponseHeaderElement";
@@ -6,7 +6,7 @@ import {HeaderResponseType} from "../../../../enums/HeaderResponseType";
 import {VampireCharacterInterface} from "../../interfaces/VampireCharacterInterface";
 import {RelationshipInterface} from "../../../../interfaces/RelationshipInterface";
 
-export class VampireHeaderSubModel extends HeaderSubModel {
+export class VampireHeaderSubModel extends AbstractHeaderSubModel {
 	public async generateData(
 		relationship: RelationshipInterface,
 		title:string|undefined,

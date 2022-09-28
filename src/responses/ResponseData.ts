@@ -36,6 +36,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 				}
 			}
 		}
+
 		const element = await this.factories.subModels.create(
 			type,
 			currentElement,

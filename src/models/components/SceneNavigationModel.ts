@@ -1,7 +1,7 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {SceneInterface} from "../../interfaces/components/SceneInterface";
-import {HeaderSubModel} from "../subModels/HeaderSubModel";
+import {SceneHeaderSubModel} from "../subModels/headers/SceneHeaderSubModel";
 
 export class SceneNavigationModel extends AbstractModel {
 	protected currentElement: SceneInterface;
@@ -11,7 +11,7 @@ export class SceneNavigationModel extends AbstractModel {
 		await this.response.addElement(this.factories.breadcrumb.create(this.currentElement));
 
 		await this.response.addSubModel(
-			HeaderSubModel,
+			SceneHeaderSubModel,
 			this.currentElement,
 			this.currentElement,
 			undefined,

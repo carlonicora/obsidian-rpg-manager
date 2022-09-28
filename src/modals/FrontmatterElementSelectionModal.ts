@@ -28,7 +28,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 		contentEl.createEl('h2', {text: 'Scene Selector'});
 
 		const elementsEl = contentEl.createDiv({cls:'rpgm-elements'});
-		const elementsHeaderEl = elementsEl.createDiv({cls: 'rpgm-elements-header'});
+		const elementsHeaderEl = elementsEl.createDiv({cls: 'rpgm-elements-headers'});
 
 		const elementsContainerEl = elementsEl.createDiv({cls: 'rpgm-elements-container'});
 		this.listEl = elementsContainerEl.createEl('ul');
