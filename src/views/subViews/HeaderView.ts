@@ -17,6 +17,7 @@ import {AbtStage} from "../../enums/AbtStage";
 import {SceneType} from "../../enums/SceneType";
 import {SceneAnalyser, ThresholdResult} from "../../helpers/SceneAnalyser";
 import {ActInterface} from "../../interfaces/components/ActInterface";
+import {CampaignInterface} from "../../interfaces/components/CampaignInterface";
 
 export class HeaderView extends AbstractSubModelView {
 	private sessionSelectorEl: HTMLSelectElement;
@@ -47,7 +48,7 @@ export class HeaderView extends AbstractSubModelView {
 			EditorSelector.select(this.app, data.currentElement);
 		});
 
-		if (data.type === ComponentType.Campaign) {
+		if (data.type === ComponentType.Campaign && (<CampaignInterface>data.currentElement).currentDate !== undefined) {
 			crsTitle.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
 				.addEventListener("click", () => {
 					this.factories.views.showObsidianView(ViewType.Timeline, [data.metadata.campaignId]);
