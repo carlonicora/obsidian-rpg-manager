@@ -15,4 +15,5 @@ export enum SettingType {
 	templateFolder,
 	Session,
 	Subplot,
+	usePlotStructures,
 }
