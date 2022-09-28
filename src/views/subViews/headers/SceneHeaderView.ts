@@ -6,10 +6,9 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {SceneType} from "../../../enums/SceneType";
 import {IdInterface} from "../../../interfaces/components/IdInterface";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
-import {ComponentType} from "../../../enums/ComponentType";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
-import {SorterType} from "../../../enums/SorterType";
 import {AbstractStoryCircleStageSelectorView} from "../../../abstracts/AbstractStoryCircleStageSelectorView";
+import {HeadlessTableView} from "../../HeadlessTableView";
+import {ContentInterface} from "../../../interfaces/ContentInterface";
 
 export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 	protected currentElement: SceneInterface;
@@ -20,33 +19,42 @@ export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 	): void {
 		super.internalRender(container, data);
 
-		data.elements.forEach((element: HeaderResponseElementInterface) => {
-			const containerEl = this.createContainerEl(element.type, element.title);
+		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
+		data.elements.forEach((element: HeaderResponseElementInterface) => {
 			switch (element.type){
 				case HeaderResponseType.StoryCircleSelector:
-					this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
+					headlessTable.addRow(element, this.addStoryCircleStageSelector.bind(this));
+					//this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SessionSelection:
-					this.addElement(containerEl, element, this.addSessionSelector(containerEl.children[1] as HTMLDivElement, element));
+					headlessTable.addRow(element, this.addSessionSelector.bind(this));
+					//this.addElement(containerEl, element, this.addSessionSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SceneTypeSelector:
-					this.addElement(containerEl, element, this.addSceneTypeSelector(containerEl.children[1] as HTMLDivElement, element));
+					headlessTable.addRow(element, this.addSceneTypeSelector.bind(this));
+					//this.addElement(containerEl, element, this.addSceneTypeSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SceneExcitment:
-					this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
+					headlessTable.addRow(element, this.addSceneExcitmentSelector.bind(this));
+					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				default:
-					element.value.fillContent(containerEl, this.sourcePath);
+					element.value.fillContent(
+						this.createContainerEl(element.type, element.title),
+						this.sourcePath,
+					);
 					break;
 			}
 		});
+
+		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 	}
 
 	protected addSceneExcitmentSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
-	): void {
+	): any|ContentInterface|undefined {
 		if (data.additionalInformation?.sceneId !== undefined) {
 
 			const sceneExcitementSelectorEl = contentEl.createEl('input');
@@ -64,12 +72,14 @@ export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 				}
 			});
 		}
+
+		return undefined;
 	}
 
 	private addSceneTypeSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
-	): void {
+	): any|ContentInterface|undefined {
 		if (data.additionalInformation?.sceneId !== undefined) {
 
 			const sceneTypeSelectorEl = contentEl.createEl("select");
@@ -97,33 +107,39 @@ export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 				}
 			});
 		}
+
+		return undefined;
 	}
 
-
-
-	private addSessionSelector(
+	private addCurrentSessionLink(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
 		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
 
 		if (sceneId !== undefined) {
-			const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === ComponentType.Session && session.id.campaignId === sceneId.campaignId)
-				.sort(this.factories.sorter.create<SessionInterface>([
-					new SorterComparisonElement((session: SessionInterface) => session.sessionId, SorterType.Descending)
-				]));
-
+			const sessions = data.additionalInformation.sessions;
 			sessions.forEach((session: SessionInterface) => {
 				if (data.value.content.toString() === session.sessionId.toString()) {
-					const sessionLinkEl = contentEl.createEl('span');
 					MarkdownRenderer.renderMarkdown(
 						session.link,
-						sessionLinkEl,
+						contentEl,
 						'',
 						null as unknown as Component,
 					);
 				}
 			});
+		}
+	}
+
+	private addSessionSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): any|ContentInterface|undefined {
+		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
+
+		if (sceneId !== undefined) {
+			const sessions = data.additionalInformation.sessions;
 
 			const sessionSelectorEl = contentEl.createEl("select");
 			if (sessions.length > 1) {
@@ -145,6 +161,25 @@ export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 				this.selectSession(data, sessionSelectorEl.value);
 			});
 		}
+
+		return ((contentEl: HTMLDivElement,data: HeaderResponseElementInterface) => {
+			const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
+
+			if (sceneId !== undefined) {
+				const sessions = data.additionalInformation.sessions;
+				sessions.forEach((session: SessionInterface) => {
+					if (data.value.content.toString() === session.sessionId.toString()) {
+						MarkdownRenderer.renderMarkdown(
+							session.link,
+							contentEl,
+							'',
+							null as unknown as Component,
+						);
+					}
+				});
+			}
+		}
+		);
 	}
 
 	protected async selectSession(

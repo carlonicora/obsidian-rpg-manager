@@ -115,12 +115,12 @@ export class Id extends AbstractRpgManager implements IdInterface{
 			case ComponentType.Scene:
 				response = '/' + (this.tagMap.get(ComponentType.Scene)?.value ?? '');
 			case ComponentType.Act:
-				response = '/' + (this.tagMap.get(ComponentType.Act)?.value ?? '');
+				response = '/' + (this.tagMap.get(ComponentType.Act)?.value ?? '') + response;
 			case ComponentType.Adventure:
-				response = '/' + (this.tagMap.get(ComponentType.Adventure)?.value ?? '');
+				response = '/' + (this.tagMap.get(ComponentType.Adventure)?.value ?? '') + response;
 				break;
 			case ComponentType.Session:
-				response = '/' + (this.tagMap.get(ComponentType.Session)?.value ?? '');
+				response = '/' + (this.tagMap.get(ComponentType.Session)?.value ?? '') + response;
 				break;
 		}
 

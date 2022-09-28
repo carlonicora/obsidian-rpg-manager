@@ -62,11 +62,12 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		this.headerInfoEl = this.headerContainerEl.createDiv({cls: 'info'});
 
 		//image
-		const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
+		//const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
 		if (data.imgSrc == null) {
-			crsImage.addClass('invisible');
+			//crsImage.addClass('invisible');
 			this.headerInfoEl.addClass('info-large');
 		} else {
+			const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
 			const image = new Image(data.imgWidth, data.imgHeight);
 			image.src = data.imgSrc;
 			image.style.objectFit = 'cover';

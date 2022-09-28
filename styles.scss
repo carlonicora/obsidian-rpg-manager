@@ -834,3 +834,50 @@
 		font-size: 0.8em;
 	}
 }
+
+.rpgm-headless-table {
+	border: none;
+
+	td {
+		border: none;
+
+		select {
+			border-bottom: solid 1px var(--background-modifier-border);
+			border-radius: 0;
+			width: 150px;
+			box-shadow: none;
+		}
+
+		input {
+			margin-left: 10px;
+		}
+
+		select:hover {
+			box-shadow: none;
+			background-color: var(--interactive-hover);
+			cursor: pointer;
+		}
+	}
+
+	td.header {
+		font-variant: small-caps;
+		font-size: 0.8em;
+		color: var(--text-muted);
+		text-align: right;
+		width: 165px;
+	}
+
+	td.content, td.subcontent {
+		width: calc(100% - 165px);
+	}
+
+	td.subcontent{
+		font-size: 0.7em;
+
+		p {
+			padding: 0px;
+			margin: 0px;
+			margin-left: 12px;
+		}
+	}
+}

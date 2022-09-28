@@ -1,13 +1,14 @@
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {CampaignInterface} from "../../../interfaces/components/CampaignInterface";
 import {ViewType} from "../../../enums/ViewType";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {AdventureInterface} from "../../../interfaces/components/AdventureInterface";
-import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
 import {ActInterface} from "../../../interfaces/components/ActInterface";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {HeadlessTableView} from "../../HeadlessTableView";
+import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {ComponentInterface} from "../../../interfaces/database/ComponentInterface";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: CampaignInterface;
@@ -25,52 +26,33 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 				});
 		}
 
-		let containerEl: HTMLDivElement;
-		const element:HeaderResponseElementInterface = {
-			currentElement: this.currentElement,
-			title: '',
-			value: {isInLine: true, content: null, fillContent(container: HTMLElement, sourcePath: string) {}},
-			type: HeaderResponseType.Half,
-		}
+		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
 		if (data.metadata?.sourceMeta?.adventures !== undefined){
-			containerEl = this.createContainerEl(HeaderResponseType.Half, 'Current Adventure');
-			this.addElement(
-				containerEl,
-				element,
-				this.addCurrentAdventureSelector(
-					containerEl.children[1] as HTMLDivElement,
-					data.metadata?.sourceMeta?.current?.adventure,
-					data.metadata?.sourceMeta?.adventures,
-				),
+			headlessTable.addRow(
+				'Current Adventure',
+				this.addCurrentComponentSelector.bind(this),
+				['adventure', data.metadata?.sourceMeta?.current?.adventure, data.metadata?.sourceMeta?.adventures]
 			);
 		}
 
 		if (data.metadata?.sourceMeta?.acts !== undefined){
-			containerEl = this.createContainerEl(HeaderResponseType.Half, 'Current Act');
-			this.addElement(
-				containerEl,
-				element,
-				this.addCurrentActSelector(
-					containerEl.children[1] as HTMLDivElement,
-					data.metadata?.sourceMeta?.current?.act,
-					data.metadata?.sourceMeta?.acts,
-				),
+			headlessTable.addRow(
+				'Current Act',
+				this.addCurrentComponentSelector.bind(this),
+				['act', data.metadata?.sourceMeta?.current?.act, data.metadata?.sourceMeta?.acts]
 			);
 		}
 
 		if (data.metadata?.sourceMeta?.sessions !== undefined){
-			containerEl = this.createContainerEl(HeaderResponseType.Half, 'Current Session');
-			this.addElement(
-				containerEl,
-				element,
-				this.addCurrentSessionSelector(
-					containerEl.children[1] as HTMLDivElement,
-					data.metadata?.sourceMeta?.current?.session,
-					data.metadata?.sourceMeta?.sessions,
-				),
+			headlessTable.addRow(
+				'Current Session',
+				this.addCurrentComponentSelector.bind(this),
+				['session', data.metadata?.sourceMeta?.current?.session, data.metadata?.sourceMeta?.sessions]
 			);
 		}
+
+		this.headerInfoEl.appendChild(headlessTable.tableEl as Node);
 
 		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.abt !== undefined){
 			this.addAbtPlot(data?.metadata?.sourceMeta?.abt);
@@ -81,13 +63,80 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 	}
 
+
+
+
+
+	private addCurrentComponentSelector(
+		contentEl: HTMLDivElement,
+		type: string,
+		currentComponent: string|undefined,
+		components: Array<ComponentInterface>,
+	): any|ContentInterface|undefined {
+		const componentSelectorEl = contentEl.createEl("select");
+		componentSelectorEl.id = type;
+		componentSelectorEl.style.width = '100%';
+		componentSelectorEl.createEl("option", {
+			text: "",
+			value: ""
+		}).selected = true;
+
+		components.forEach((component: ComponentInterface) => {
+			const componentOptionEl = componentSelectorEl.createEl("option", {
+				text: component.name,
+				value: component.id.stringValue,
+			});
+
+			if (currentComponent === component.id.stringValue) {
+				componentOptionEl.selected = true;
+			}
+		});
+
+		componentSelectorEl.addEventListener("change", (e) => {
+			const file: TFile|undefined = this.currentElement.file;
+
+			if (file !== undefined){
+				this.factories.codeblock.update('campaignNavigation', 'current.' + type, componentSelectorEl.value)
+			}
+		});
+
+		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentInterface>) => {
+			let link: string|undefined = undefined;
+			components.forEach((component: ComponentInterface) => {
+				if (currentComponent === component.id.stringValue) link = component.link;
+			});
+
+			if (link !== undefined) {
+				MarkdownRenderer.renderMarkdown(
+					link,
+					contentEl,
+					'',
+					null as unknown as Component,
+				);
+			} else {
+				contentEl.textContent = '';
+			}
+		});
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	private addCurrentAdventureSelector(
 		contentEl: HTMLDivElement,
 		currentAdventure: string|undefined,
 		adventures: Array<AdventureInterface>,
-	): void {
-		let selectedAdventure: AdventureInterface|undefined;
-
+	): any|ContentInterface|undefined {
 		const adventureSelectorEl = contentEl.createEl("select");
 		adventureSelectorEl.style.width = '100%';
 		adventureSelectorEl.createEl("option", {
@@ -102,7 +151,6 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			});
 
 			if (currentAdventure === adventure.id.stringValue) {
-				selectedAdventure = adventure;
 				adventureOptionEl.selected = true;
 			}
 		});
@@ -115,15 +163,23 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			}
 		});
 
-		if (selectedAdventure !== undefined){
-			const adventureLinkEl = contentEl.createSpan();
-			MarkdownRenderer.renderMarkdown(
-				selectedAdventure.link,
-				adventureLinkEl,
-				this.sourcePath,
-				null as unknown as Component,
-			);
-		}
+		return ((contentEl: HTMLDivElement, currentAdventure: string|undefined, adventures: Array<AdventureInterface>) => {
+			let link: string|undefined = undefined;
+			adventures.forEach((adventure: AdventureInterface) => {
+				if (currentAdventure === adventure.id.stringValue) link = adventure.link;
+			});
+
+			if (link !== undefined) {
+				MarkdownRenderer.renderMarkdown(
+					link,
+					contentEl,
+					'',
+					null as unknown as Component,
+				);
+			} else {
+				contentEl.textContent = '';
+			}
+		});
 	}
 
 	private addCurrentActSelector(

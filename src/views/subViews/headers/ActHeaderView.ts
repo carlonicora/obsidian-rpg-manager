@@ -4,6 +4,7 @@ import {HeaderResponseElementInterface} from "../../../interfaces/response/subMo
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {HeadlessTableView} from "../../HeadlessTableView";
 
 export class ActHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: ActInterface;
@@ -16,24 +17,32 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 
 		let analyser: SceneAnalyser|undefined = undefined;
 
+		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
+
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
-			const containerEl = this.createContainerEl(element.type, element.title);
 
 			switch (element.type){
 				case HeaderResponseType.StoryCircleSelector:
-					this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
+					headlessTable.addRow(element, this.addStoryCircleStageSelector.bind(this));
+					//this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.AbtSelector:
-					this.addElement(containerEl, element, this.addAbtStageSelector(containerEl.children[1] as HTMLDivElement, element));
+					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
+					//this.addElement(containerEl, element, this.addAbtStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					if (this.currentElement.abtStage !== undefined) {
 						analyser = element.additionalInformation.sceneAnalyser;
 					}
 					break;
 				default:
-					element.value.fillContent(containerEl, this.sourcePath);
+					element.value.fillContent(
+						this.createContainerEl(element.type, element.title),
+						this.sourcePath,
+					);
 					break;
 			}
 		});
+
+		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
 		if (analyser !== undefined){
 			this.addActBalance(analyser);
