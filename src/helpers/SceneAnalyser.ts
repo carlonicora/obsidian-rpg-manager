@@ -6,21 +6,22 @@ import {IdInterface} from "../interfaces/components/IdInterface";
 import {AbtStage} from "../enums/AbtStage";
 
 export enum ThresholdResult {
-	Lower,
-	Correct,
-	Higher,
-	CriticallyLow,
 	NotAnalysable,
+	CriticallyHigh,
+	High,
+	Correct,
+	Low,
+	CriticallyLow,
 }
 
 export class SceneAnalyser extends AbstractRpgManager {
 	private excitmentPercentage: number|undefined = undefined;
 	private activityPercentage: number|undefined = undefined;
-	private excitingScenes=0;
 	private activeScenes=0;
 	public parentType: ComponentType;
 	public expectedRunningTime=0;
 	public isSingleScene=false;
+	private expectedExcitementDuration=0;
 
 	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
 		[AbtStage.Need, 25],
@@ -49,13 +50,15 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (scenes.length > 0) {
 			scenes.forEach((scene: SceneInterface) => {
-				if (scene.isExciting) this.excitingScenes++;
+				console.warn(scene.isExciting, scene.expectedDuration);
+				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
 
 				this.expectedRunningTime += scene.expectedDuration;
 			});
 
-			this.excitmentPercentage = this.excitingScenes * 100 / scenes.length;
+			console.log(this.expectedExcitementDuration, this.expectedRunningTime)
+			this.excitmentPercentage = this.expectedExcitementDuration * 100 / this.expectedRunningTime;
 			this.activityPercentage = this.activeScenes * 100 / scenes.length;
 		}
 	}
@@ -83,8 +86,10 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (expectedThreshold === undefined || this.excitmentPercentage === undefined) return ThresholdResult.NotAnalysable;
 
-		if (this.excitmentPercentage > expectedThreshold + 10) return ThresholdResult.Higher;
-		if (this.excitmentPercentage < expectedThreshold - 10) return ThresholdResult.Lower;
+		if (this.excitmentPercentage > expectedThreshold + 30) return ThresholdResult.CriticallyHigh;
+		if (this.excitmentPercentage > expectedThreshold + 10) return ThresholdResult.High;
+		if (this.excitmentPercentage < expectedThreshold - 30) return ThresholdResult.CriticallyLow;
+		if (this.excitmentPercentage < expectedThreshold - 10) return ThresholdResult.Low;
 
 		return ThresholdResult.Correct;
 	}
@@ -95,9 +100,10 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (expectedThreshold === undefined || this.activityPercentage === undefined) return ThresholdResult.NotAnalysable;
 
-		if (this.activityPercentage > expectedThreshold + 10) return ThresholdResult.Higher;
-		if (this.activityPercentage < expectedThreshold - 40) return ThresholdResult.CriticallyLow;
-		if (this.activityPercentage < expectedThreshold - 10) return ThresholdResult.Lower;
+		if (this.activityPercentage > expectedThreshold + 30) return ThresholdResult.CriticallyHigh;
+		if (this.activityPercentage > expectedThreshold + 10) return ThresholdResult.High;
+		if (this.activityPercentage < expectedThreshold - 30) return ThresholdResult.CriticallyLow;
+		if (this.activityPercentage < expectedThreshold - 10) return ThresholdResult.Low;
 
 		return ThresholdResult.Correct;
 	}

@@ -118,17 +118,21 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 					case ThresholdResult.Correct:
 						analyserActivityElementEl.textContent = 'The amount of active scenes is balanced';
 						break;
-					case ThresholdResult.Higher:
+					case ThresholdResult.CriticallyHigh:
+						analyserActivityElementEl.textContent = 'Too many active scenes: ';
+						analyserActivityDescriptionEl.textContent = '(';
+						break;
+					case ThresholdResult.High:
 						analyserActivityElementEl.textContent = 'Maybe too many active scenes: ';
 						analyserActivityDescriptionEl.textContent = '(';
+						break;
+					case ThresholdResult.Low:
+						analyserActivityElementEl.textContent = 'Maybe not enough active scenes: ';
+						analyserActivityDescriptionEl.textContent = '(only ';
 						break;
 					case ThresholdResult.CriticallyLow:
 						analyserActivityElementEl.textContent = 'Not enough active scenes: ';
 						analyserActivityDescriptionEl.textContent = '(only ';
-						break;
-					case ThresholdResult.Lower:
-						analyserActivityElementEl.textContent = 'Maybe not enough active scenes: ';
-						analyserActivityDescriptionEl.textContent = '(';
 						break;
 				}
 
@@ -139,25 +143,29 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 				switch (analyser.excitementLevel) {
 					case ThresholdResult.Correct:
-						analyserExcitementElementEl.textContent = 'The amount of exciting scenes is balanced';
+						analyserExcitementElementEl.textContent = 'The amount of exciting time is balanced';
 						break;
-					case ThresholdResult.Higher:
-						analyserExcitementElementEl.textContent = 'Maybe too many exciting scenes: ';
+					case ThresholdResult.CriticallyHigh:
+						analyserExcitementElementEl.textContent = 'Too much excitement: ';
 						analyserExcitementDescriptionEl.textContent = '(';
 						break;
-					case ThresholdResult.CriticallyLow:
-						analyserExcitementElementEl.textContent = 'Not enough exciting scenes: ';
+					case ThresholdResult.High:
+						analyserExcitementElementEl.textContent = 'Maybe too much excitement: ';
+						analyserExcitementDescriptionEl.textContent = '(';
+						break;
+					case ThresholdResult.Low:
+						analyserExcitementElementEl.textContent = 'Maybe not enough excitement: ';
 						analyserExcitementDescriptionEl.textContent = '(only ';
 						break;
-					case ThresholdResult.Lower:
-						analyserExcitementElementEl.textContent = 'Maybe not enough exciting scenes: ';
-						analyserExcitementDescriptionEl.textContent = '(';
+					case ThresholdResult.CriticallyLow:
+						analyserExcitementElementEl.textContent = 'Not enough excitement: ';
+						analyserExcitementDescriptionEl.textContent = '(only ';
 						break;
 				}
 
 				if (analyser.excitementLevel !== ThresholdResult.Correct) {
 					analyserExcitementElementEl.appendChild(analyserExcitementDescriptionEl as Node);
-					analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% out of ' + analyser.targetExcitingScenePercentage + '% are exciting)'
+					analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% of the running time out of ' + analyser.targetExcitingScenePercentage + '% is exciting)'
 				}
 			}
 		}
