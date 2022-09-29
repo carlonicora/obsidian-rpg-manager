@@ -4,6 +4,7 @@ import {SceneInterface} from "../interfaces/components/SceneInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../interfaces/components/IdInterface";
 import {AbtStage} from "../enums/AbtStage";
+import {SceneType} from "../enums/SceneType";
 
 export enum ThresholdResult {
 	NotAnalysable,
@@ -22,16 +23,17 @@ export class SceneAnalyser extends AbstractRpgManager {
 	public expectedRunningTime=0;
 	public isSingleScene=false;
 	private expectedExcitementDuration=0;
+	private sceneTypesUsed: Map<SceneType, number> = new Map<SceneType, number>();
 
 	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
-		[AbtStage.Need, 25],
-		[AbtStage.And, 25],
+		[AbtStage.Need, 35],
+		[AbtStage.And, 35],
 		[AbtStage.But, 75],
 		[AbtStage.Therefore, 50],
 	]);
 
 	private abtStageActivityThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
-		[AbtStage.Need, 25],
+		[AbtStage.Need, 35],
 		[AbtStage.And, 75],
 		[AbtStage.But, 50],
 		[AbtStage.Therefore, 75],
@@ -52,6 +54,10 @@ export class SceneAnalyser extends AbstractRpgManager {
 			scenes.forEach((scene: SceneInterface) => {
 				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
+
+				if (scene.sceneType !== undefined){
+					this.sceneTypesUsed.set(scene.sceneType, (this.sceneTypesUsed.get(scene.sceneType) ?? 0) + 1);
+				}
 
 				this.expectedRunningTime += scene.expectedDuration;
 			});
@@ -84,10 +90,10 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (expectedThreshold === undefined || this.excitmentPercentage === undefined) return ThresholdResult.NotAnalysable;
 
-		if (this.excitmentPercentage > expectedThreshold + 30) return ThresholdResult.CriticallyHigh;
-		if (this.excitmentPercentage > expectedThreshold + 10) return ThresholdResult.High;
-		if (this.excitmentPercentage < expectedThreshold - 30) return ThresholdResult.CriticallyLow;
-		if (this.excitmentPercentage < expectedThreshold - 10) return ThresholdResult.Low;
+		if (this.excitmentPercentage > (expectedThreshold + 25)) return ThresholdResult.CriticallyHigh;
+		if (this.excitmentPercentage > (expectedThreshold + 10)) return ThresholdResult.High;
+		if (this.excitmentPercentage < (expectedThreshold - 25)) return ThresholdResult.CriticallyLow;
+		if (this.excitmentPercentage < (expectedThreshold - 10)) return ThresholdResult.Low;
 
 		return ThresholdResult.Correct;
 	}
@@ -98,9 +104,9 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (expectedThreshold === undefined || this.activityPercentage === undefined) return ThresholdResult.NotAnalysable;
 
-		if (this.activityPercentage > expectedThreshold + 30) return ThresholdResult.CriticallyHigh;
+		if (this.activityPercentage > expectedThreshold + 25) return ThresholdResult.CriticallyHigh;
 		if (this.activityPercentage > expectedThreshold + 10) return ThresholdResult.High;
-		if (this.activityPercentage < expectedThreshold - 30) return ThresholdResult.CriticallyLow;
+		if (this.activityPercentage < expectedThreshold - 25) return ThresholdResult.CriticallyLow;
 		if (this.activityPercentage < expectedThreshold - 10) return ThresholdResult.Low;
 
 		return ThresholdResult.Correct;
@@ -132,5 +138,17 @@ export class SceneAnalyser extends AbstractRpgManager {
 		const response = this.abtStageActivityThreshold.get(this.abtStage);
 
 		return response ?? 0;
+	}
+
+	public get varietyLevel(
+	): ThresholdResult {
+		if (this.sceneTypesUsed.size < 3) return ThresholdResult.CriticallyLow;
+		if (this.sceneTypesUsed.size < 5) return ThresholdResult.Low;
+		return ThresholdResult.Correct;
+	}
+
+	public get varietyCount(
+	): number {
+		return this.sceneTypesUsed.size;
 	}
 }

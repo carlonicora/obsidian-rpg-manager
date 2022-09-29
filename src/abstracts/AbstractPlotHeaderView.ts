@@ -5,6 +5,7 @@ import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSe
 import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
 import {AbtStage} from "../enums/AbtStage";
 import {EditorSelector} from "../helpers/EditorSelector";
+import {SceneType} from "../enums/SceneType";
 
 export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSelectorView {
 
@@ -103,7 +104,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		if (!analyser.isSingleScene) {
 			const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
 
-			if (analyser.excitementLevel === ThresholdResult.Correct && analyser.activityLevel === ThresholdResult.Correct) {
+			if (analyser.excitementLevel === ThresholdResult.Correct && analyser.activityLevel === ThresholdResult.Correct && analyser.varietyLevel === ThresholdResult.Correct) {
 				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced!';
 			} else {
 				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
@@ -113,6 +114,8 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 				const analyserActivityDescriptionEl: HTMLSpanElement = analyserActivityElementEl.createSpan({cls: 'description'});
 				const analyserExcitementElementEl: HTMLLIElement = analyserListEl.createEl('li');
 				const analyserExcitementDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
+				const analyserVarietyElementEl: HTMLLIElement = analyserListEl.createEl('li');
+				const analyserVarietyDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
 
 				switch (analyser.activityLevel) {
 					case ThresholdResult.Correct:
@@ -132,7 +135,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 						break;
 					case ThresholdResult.CriticallyLow:
 						analyserActivityElementEl.textContent = 'Not enough active scenes: ';
-						analyserActivityDescriptionEl.textContent = '(only ';
+						analyserActivityDescriptionEl.textContent = '(just ';
 						break;
 				}
 
@@ -159,13 +162,32 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 						break;
 					case ThresholdResult.CriticallyLow:
 						analyserExcitementElementEl.textContent = 'Not enough excitement: ';
-						analyserExcitementDescriptionEl.textContent = '(only ';
+						analyserExcitementDescriptionEl.textContent = '(just ';
 						break;
 				}
 
 				if (analyser.excitementLevel !== ThresholdResult.Correct) {
 					analyserExcitementElementEl.appendChild(analyserExcitementDescriptionEl as Node);
 					analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% of the running time out of ' + analyser.targetExcitingScenePercentage + '% is exciting)'
+				}
+
+				switch (analyser.varietyLevel) {
+					case ThresholdResult.Correct:
+						analyserVarietyElementEl.textContent = 'The variety of scene types is balanced';
+						break;
+					case ThresholdResult.Low:
+						analyserVarietyElementEl.textContent = 'Maybe not enough variety: ';
+						analyserVarietyDescriptionEl.textContent = '(only ';
+						break;
+					case ThresholdResult.CriticallyLow:
+						analyserVarietyElementEl.textContent = 'Not enough variety: ';
+						analyserVarietyDescriptionEl.textContent = '(just ';
+						break;
+				}
+
+				if (analyser.varietyLevel !== ThresholdResult.Correct) {
+					analyserVarietyElementEl.appendChild(analyserVarietyDescriptionEl as Node);
+					analyserVarietyDescriptionEl.textContent += analyser.varietyCount + '  out of ' + Object.keys(SceneType).length / 2. + ' available types are used)'
 				}
 			}
 		}
