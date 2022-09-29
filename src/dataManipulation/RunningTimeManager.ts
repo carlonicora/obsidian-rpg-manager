@@ -1,18 +1,34 @@
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {RunningTimeManagerInterface} from "../interfaces/dataManipulation/RunningTimeManagerInterface";
 import {SceneInterface} from "../interfaces/components/SceneInterface";
+import {SceneType} from "../enums/SceneType";
+import {ComponentType} from "../enums/ComponentType";
+import {CampaignInterface} from "../interfaces/components/CampaignInterface";
 
 export class RunningTimeManager extends AbstractRpgManager implements RunningTimeManagerInterface {
 	public currentlyRunningScene: SceneInterface|undefined = undefined;
+	public medianDefaultTimes: Map<SceneType, Array<number>> = new Map<SceneType, Array<number>>([
+		[SceneType.Action, [15*60]],
+		[SceneType.Combat, [15*60]],
+		[SceneType.Decision, [5*60]],
+		[SceneType.Encounter, [15*60]],
+		[SceneType.Exposition, [5*60]],
+		[SceneType.Investigation, [15*60]],
+		[SceneType.Planning, [10*60]],
+		[SceneType.Preparation, [10*60]],
+		[SceneType.Recap, [5*60]],
+	]);
+
+	public medianTimes: Map<number, Map<SceneType, Array<number>>> = new Map<number, Map<SceneType, Array<number>>>([
+		[
+			0,
+			this.medianDefaultTimes,
+		]
+	]);
 
 	public get isTimerRunning(
 	): boolean {
 		return this.currentlyRunningScene !== undefined;
-	}
-
-	public async evaluateLeafChange(
-	): Promise<void> {
-		return Promise.resolve(undefined);
 	}
 
 	public isCurrentlyRunningScene(
@@ -39,5 +55,30 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 
 		this.factories.codeblock.stopCurrentDuration(this.currentlyRunningScene.file)
 		this.currentlyRunningScene = undefined;
+	}
+
+	public async updateMedianTimes(
+	): Promise<void> {
+		const campaigns: Array<CampaignInterface> = this.database.read<CampaignInterface>((campaign: CampaignInterface) =>
+			campaign.id.type === ComponentType.Campaign
+		);
+
+		for (let index=0; index<campaigns.length; index++){
+			this.medianTimes.set(campaigns[index].id.campaignId, structuredClone(this.medianDefaultTimes));
+		}
+
+		const scenes: Array<SceneInterface> = this.database.read<SceneInterface>((scene: SceneInterface) =>
+			scene.id.type === ComponentType.Scene
+		);
+
+		await scenes.forEach((scene: SceneInterface) => {
+			if (scene.sceneType !== undefined && scene.currentDuration !== undefined && scene.currentDuration !== 0) {
+				const campaignMedians: Map<SceneType, Array<number>> | undefined = this.medianTimes.get(scene.id.campaignId);
+				if (campaignMedians !== undefined) {
+					const sessionTypeTimes: Array<number>|undefined = campaignMedians.get(scene.sceneType);
+					if (sessionTypeTimes !== undefined) sessionTypeTimes.push(scene.currentDuration);
+				}
+			}
+		});
 	}
 }

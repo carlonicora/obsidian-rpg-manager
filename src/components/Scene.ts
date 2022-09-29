@@ -40,19 +40,7 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		[SceneType.Preparation, true],
 		[SceneType.Recap, false],
 		[SceneType.Investigation, true],
-		[SceneType.Execution, true],
-	]);
-
-	private sceneTypesDuration: Map<SceneType, number> = new Map<SceneType, number>([
-		[SceneType.Combat, 15*60],
-		[SceneType.Decision, 5*60],
-		[SceneType.Encounter, 15*60],
-		[SceneType.Exposition, 5*60],
-		[SceneType.Planning, 10*60],
-		[SceneType.Preparation, 10*60],
-		[SceneType.Recap, 5*60],
-		[SceneType.Investigation, 15*60],
-		[SceneType.Execution, 15*60],
+		[SceneType.Action, true],
 	]);
 
 	protected initialiseData(
@@ -148,7 +136,23 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 	): number {
 		if (this.sceneType === undefined) return 0;
 
-		return this.sceneTypesDuration.get(this.sceneType) ?? 0;
+		const previousDurations: Array<number> = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
+		previousDurations.sort((left: number, right: number) => {
+			if (left > right) return +1;
+			if (left < right) return -1;
+			return 0;
+		});
+
+		if (previousDurations.length === 0) return 0;
+		if (previousDurations.length === 1) return previousDurations[0];
+
+		if (previousDurations.length % 2 === 0){
+			const previous = previousDurations[previousDurations.length/2];
+			const next = previousDurations[(previousDurations.length/2)-1];
+			return Math.floor((previous+next)/2);
+		} else {
+			return previousDurations[(previousDurations.length-1)/2];
+		}
 	}
 
 	public get isExciting(

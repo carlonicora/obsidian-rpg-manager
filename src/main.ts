@@ -76,6 +76,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		return DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;
+				this.factories.runningTimeManager.updateMedianTimes();
+
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 

@@ -1,8 +1,8 @@
 export enum SceneType {
+	Action,
 	Combat,
 	Decision,
 	Encounter,
-	Execution,
 	Exposition,
 	Investigation,
 	Planning,

@@ -1,7 +1,9 @@
 import {SceneInterface} from "../components/SceneInterface";
+import {SceneType} from "../../enums/SceneType";
 
 export interface RunningTimeManagerInterface{
 	currentlyRunningScene: SceneInterface|undefined;
+	medianTimes: Map<number, Map<SceneType, Array<number>>>;
 
 	get isTimerRunning(): boolean;
 
@@ -17,6 +19,6 @@ export interface RunningTimeManagerInterface{
 		scene: SceneInterface,
 	): Promise<void>;
 
-	evaluateLeafChange(
+	updateMedianTimes(
 	): Promise<void>;
 }

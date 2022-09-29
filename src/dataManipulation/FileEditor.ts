@@ -109,7 +109,10 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 		const newContent: string = newArrayContent.join('\n');
 		if (newContent !== this.fileContent){
 			await this.app.vault.modify(this.file, newContent);
-			this.database.onSave(this.file);
+			this.database.onSave(this.file)
+				.then(() => {
+					this.factories.runningTimeManager.updateMedianTimes();
+				});
 		}
 	}
 
