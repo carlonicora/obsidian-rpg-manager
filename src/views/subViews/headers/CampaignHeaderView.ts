@@ -19,6 +19,21 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 	): void {
 		super.render(container, data);
 
+		if (this.currentElement.image != null){
+			this.headerTitleEl.empty();
+			this.headerTitleEl.addClass('rpgm-header');
+			this.headerInfoEl.addClass('info-large');
+			this.headerContainerEl.removeChild(this.imageContainterEl);
+
+			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentElement.image + '\')';
+
+			const overlay = this.headerTitleEl.createDiv({cls: 'rpgm-header-overlay'});
+			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentElement.name});
+
+			//overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (this.currentElement.currentDate !== null ? this.currentElement.currentDate.toDateString() : '')});
+		}
+
 		if (this.currentElement.currentDate !== undefined) {
 			this.headerTitleEl.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
 				.addEventListener("click", () => {

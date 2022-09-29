@@ -508,11 +508,26 @@
 		}
 	}
 
+	.rpgm-header {
+		margin-top: -40px;
+		font-size: 1em;
+
+		.adder {
+			color: var(--background-primary);
+		}
+
+		.subtitle {
+			color: var(--background-primary);
+			font-size: 1em;
+		}
+	}
+
 	.adder {
 		position: relative;
 		right: 10px;
 		font-size: 0.75em;
 		top: 10px;
+		z-index: 1;
 
 		span{
 			display: block;

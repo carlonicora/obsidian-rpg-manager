@@ -12,6 +12,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected headerTitleEl: HTMLDivElement;
 	protected headerInfoEl: HTMLDivElement;
 	protected headerContainerEl: HTMLDivElement;
+	protected imageContainterEl: HTMLDivElement;
 
 	private isInternalRender = false;
 
@@ -67,16 +68,16 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			//crsImage.addClass('invisible');
 			this.headerInfoEl.addClass('info-large');
 		} else {
-			const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
+			this.imageContainterEl = this.headerContainerEl.createDiv({cls: 'image'});
 			const image = new Image(data.imgWidth, data.imgHeight);
 			image.src = data.imgSrc;
 			image.style.objectFit = 'cover';
 
 			if (image.src.startsWith('http')) {
-				const crsImageLink = crsImage.createEl('a', {href: image.src});
+				const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
 				crsImageLink.append(image);
 			} else {
-				crsImage.append(image);
+				this.imageContainterEl.append(image);
 			}
 		}
 

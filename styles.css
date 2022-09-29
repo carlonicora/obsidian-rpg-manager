@@ -420,11 +420,23 @@
   margin-top: -10px;
   margin-bottom: 10px;
 }
+.rpgm-header-info .rpgm-header {
+  margin-top: -40px;
+  font-size: 1em;
+}
+.rpgm-header-info .rpgm-header .adder {
+  color: var(--background-primary);
+}
+.rpgm-header-info .rpgm-header .subtitle {
+  color: var(--background-primary);
+  font-size: 1em;
+}
 .rpgm-header-info .adder {
   position: relative;
   right: 10px;
   font-size: 0.75em;
   top: 10px;
+  z-index: 1;
 }
 .rpgm-header-info .adder span {
   display: block;
