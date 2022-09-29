@@ -6,6 +6,7 @@ import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgMan
 import {ComponentInterface} from "../../../interfaces/database/ComponentInterface";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {TableField} from "../../../enums/TableField";
+import {SceneType} from "../../../enums/SceneType";
 
 export class SceneTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;
@@ -58,6 +59,12 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				break;
 			case TableField.Duration:
 				return this.factories.contents.create((scene.duration === '00:00' ? undefined : scene.duration), ContentType.Date, true);
+				break;
+			case TableField.SceneType:
+				return this.factories.contents.create((scene.sceneType === undefined ? undefined : SceneType[scene.sceneType]), ContentType.String, true);
+				break;
+			case TableField.SceneExciting:
+				return this.factories.contents.create((scene.isExciting ? 'yes' : ''), ContentType.String, true);
 				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;
