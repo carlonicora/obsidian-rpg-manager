@@ -111,18 +111,15 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		}
 	}
 
-	public get duration(): string {
-		let response = '';
+	public get duration(
+	): string {
+		if (this.currentDuration === 0) return '00:00';
 
-		if (this.startTime && this.endTime) {
-			const duration = this.endTime.getTime() - this.startTime.getTime();
-			const hours = Math.floor(duration / (1000 * 60 * 60));
-			const minutes = Math.floor(duration / (1000 * 60)) % 60;
-
-			response = (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes);
-		}
-
-		return response;
+		const hours: number = Math.floor(this.currentDuration / (60 * 60));
+		const minutes: number = Math.floor((this.currentDuration - (hours * 60 * 60))/60);
+		return (hours < 10 ? '0' + hours.toString() : hours.toString()) +
+			':' +
+			(minutes < 10 ? '0' + minutes.toString() : minutes.toString());
 	}
 
 	public get isActive(

@@ -57,7 +57,7 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(this.formatTime(scene.endTime), ContentType.Date, true);
 				break;
 			case TableField.Duration:
-				return this.factories.contents.create(scene.duration, ContentType.Date, true);
+				return this.factories.contents.create((scene.duration === '00:00' ? undefined : scene.duration), ContentType.Date, true);
 				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;
