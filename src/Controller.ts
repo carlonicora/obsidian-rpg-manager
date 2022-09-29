@@ -17,6 +17,8 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private currentElement: ComponentInterface;
 	private campaignSettings: CampaignSetting;
 
+	private componentVersion: number|undefined = undefined;
+
 	constructor(
 		app: App,
 		container: HTMLElement,
@@ -73,6 +75,10 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	): void {
 		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
 		if (currentElement === undefined) return;
+
+		if (currentElement.version === this.componentVersion) return;
+
+		this.componentVersion = currentElement.version;
 
 		this.render = debounce(this.render, 250, true) as unknown as () => Promise<void>;
 		this.currentElement = currentElement;

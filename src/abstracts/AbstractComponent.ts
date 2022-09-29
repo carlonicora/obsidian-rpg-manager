@@ -38,6 +38,8 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 	public reverseRelationships: Map<string, RelationshipInterface>;
 	protected metadata: any = {};
 
+	protected dataVersion = 0;
+
 	constructor(
 		app: App,
 		public file: TFile,
@@ -175,6 +177,7 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 	public async loadRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
+		this.dataVersion++;
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
 			const dataList = database.read<ComponentInterface>(
 				(data: ComponentInterface) => data.name === name,
@@ -266,5 +269,10 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 
 		const response = new Date(date);
 		return response;
+	}
+
+	public get version(
+	): number {
+		return this.dataVersion;
 	}
 }
