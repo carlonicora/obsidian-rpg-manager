@@ -36,6 +36,7 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 
 	public relationships: Map<string, RelationshipInterface>;
 	public reverseRelationships: Map<string, RelationshipInterface>;
+	protected metadata: any = {};
 
 	constructor(
 		app: App,
@@ -125,7 +126,6 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 		this.tags = await this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
 
 		this.completed = metadata.frontmatter?.completed ?? true;
-
 		this.synopsis = metadata.frontmatter?.synopsis;
 
 		if (metadata.frontmatter?.image !== undefined && typeof metadata.frontmatter.image === 'string') {
@@ -140,7 +140,12 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 	): Promise<void> {
 		this.relationships = await new Map();
 		if (this.reverseRelationships === undefined) this.reverseRelationships = await new Map();
-		await this.factories.relationships.read(this.file, this.relationships);
+		this.metadata = await this.factories.relationships.readMetadata(this.file, this.relationships, this.metadata);
+		this.analyseMetadata();
+	}
+
+	protected analyseMetadata(
+	): void {
 	}
 
 	protected initialiseData(

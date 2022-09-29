@@ -28,6 +28,9 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 	public sceneType: SceneType|undefined=undefined;
 	public isActedUpon: boolean|undefined=undefined;
 
+	public currentDuration = 0;
+	private durationStints: Array<string> = [];
+
 	private activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
 		[SceneType.Combat, true],
 		[SceneType.Decision, false],
@@ -41,15 +44,15 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 	]);
 
 	private sceneTypesDuration: Map<SceneType, number> = new Map<SceneType, number>([
-		[SceneType.Combat, 15],
-		[SceneType.Decision, 5],
-		[SceneType.Encounter, 15],
-		[SceneType.Exposition, 5],
-		[SceneType.Planning, 10],
-		[SceneType.Preparation, 10],
-		[SceneType.Recap, 5],
-		[SceneType.Investigation, 15],
-		[SceneType.Execution, 15],
+		[SceneType.Combat, 15*60],
+		[SceneType.Decision, 5*60],
+		[SceneType.Encounter, 15*60],
+		[SceneType.Exposition, 5*60],
+		[SceneType.Planning, 10*60],
+		[SceneType.Preparation, 10*60],
+		[SceneType.Recap, 5*60],
+		[SceneType.Investigation, 15*60],
+		[SceneType.Execution, 15*60],
 	]);
 
 	protected initialiseData(
@@ -73,7 +76,18 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		if (frontmatter?.sceneType !== undefined) this.sceneType = SceneType[frontmatter.sceneType as keyof typeof SceneType];
 		if (frontmatter?.isActedUpon !== undefined) this.isActedUpon = frontmatter.isActedUpon;
 
+		this.additionalInformation
+
 		super.initialiseData(frontmatter);
+	}
+
+	protected analyseMetadata(
+	): void {
+		super.analyseMetadata();
+
+		if (this.metadata.duration !== undefined) this.currentDuration = this.metadata.duration;
+
+		if (this.metadata.durations !== undefined) this.durationStints = this.metadata.durations;
 	}
 
 	public async loadHierarchy(
@@ -142,5 +156,25 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		if (this.isActedUpon === undefined) return false;
 
 		return this.isActedUpon;
+	}
+
+	public get isCurrentlyRunning(
+	): boolean {
+		for (let index=0; index<this.durationStints.length; index++) {
+			if (this.durationStints[index].indexOf('-') === -1) return true;
+		}
+
+		return false;
+	}
+
+	public get lastStart(
+	): number {
+		if (!this.isCurrentlyRunning) return 0;
+
+		for (let index=0; index<this.durationStints.length; index++) {
+			if (this.durationStints[index].indexOf('-') === -1) return +this.durationStints[index];
+		}
+
+		return 0;
 	}
 }

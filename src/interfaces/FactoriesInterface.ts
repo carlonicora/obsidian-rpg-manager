@@ -15,6 +15,7 @@ import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface
 import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterface";
 import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
 import {CodeBlockEditorFactoryInterface} from "./factories/CodeBlockEditorFactoryInterface";
+import {RunningTimeManagerInterface} from "./dataManipulation/RunningTimeManagerInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -34,4 +35,5 @@ export interface FactoriesInterface {
 	frontmatter: FrontmatterFactoryInterface;
 	sorter: SorterFactoryInterface;
 	codeblock: CodeBlockEditorFactoryInterface;
+	runningTimeManager: RunningTimeManagerInterface;
 }

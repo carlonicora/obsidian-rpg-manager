@@ -50,14 +50,12 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (scenes.length > 0) {
 			scenes.forEach((scene: SceneInterface) => {
-				console.warn(scene.isExciting, scene.expectedDuration);
 				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
 
 				this.expectedRunningTime += scene.expectedDuration;
 			});
 
-			console.log(this.expectedExcitementDuration, this.expectedRunningTime)
 			this.excitmentPercentage = this.expectedExcitementDuration * 100 / this.expectedRunningTime;
 			this.activityPercentage = this.activeScenes * 100 / scenes.length;
 		}

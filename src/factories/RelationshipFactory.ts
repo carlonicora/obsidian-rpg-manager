@@ -3,14 +3,15 @@ import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
 import {RelationshipFactoryInterface} from "../interfaces/factories/RelationshipFactoryInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {FileEditor} from "../dataManipulation/FileEditor";
 
+//@TODO refactor to MetadataReader and move it to dataManipulation
 export class RelationshipFactory extends AbstractFactory implements RelationshipFactoryInterface {
-	public async read(
+	public async readMetadata(
 		file: TFile,
 		relationship: Map<string, RelationshipInterface>,
-	): Promise<void> {
-
-		return this.app.vault.read(file)
+	): Promise<any> {
+		const fileContent = await this.app.vault.read(file)
 			.then((fileContent: string) => {
 				return fileContent.split('\n');
 			})
@@ -38,8 +39,32 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 					this.app.vault.modify(file, newContent);
 				}
 
-				return;
+				return fileContent;
 			});
+
+		return await this.retrieveMetadata(file, fileContent)
+			.then((metadata: any) => {
+				return metadata;
+			});
+	}
+
+	private async retrieveMetadata(
+		file: TFile,
+		content: Array<string>,
+	): Promise<any> {
+		let response: any = {};
+		const fileEditor = new FileEditor(this.app, file, content.join('\n'));
+		if (!await fileEditor.read()) return {};
+
+		const metadataList:Array<any> = await fileEditor.getCodeBloksMetadata();
+
+		if (metadataList.length > 0) {
+			await metadataList.forEach((singleMetadata: any) => {
+				response = {...response, ...singleMetadata};
+			});
+		}
+
+		return response;
 	}
 
 	private readRelationships(

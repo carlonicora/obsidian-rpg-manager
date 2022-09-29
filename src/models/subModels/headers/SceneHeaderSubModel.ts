@@ -63,6 +63,8 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Run', this.data.isCurrentlyRunning, HeaderResponseType.SceneRun));
+			if (this.data.isCurrentlyRunning || this.data.currentDuration > 0) response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Duration', '', HeaderResponseType.SceneRunTime));
 		}
 
 		if (this.settings.usePlotStructures && this.data.sceneType !== undefined && this.data.storycircleStage !== undefined) {

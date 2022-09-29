@@ -8,4 +8,6 @@ export enum HeaderResponseType {
 	AbtSelector,
 	SceneTypeSelector,
 	SceneExcitment,
+	SceneRun,
+	SceneRunTime,
 }

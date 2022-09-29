@@ -91,8 +91,8 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		const analyserEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-analyser'});
 
 		if (analyser.expectedRunningTime !== 0) {
-			const expectedHoursDuration: number = Math.floor(analyser.expectedRunningTime / 60);
-			const expectedMinutesDuration: number = (analyser.expectedRunningTime - (expectedHoursDuration * 60));
+			const expectedHoursDuration: number = Math.floor(analyser.expectedRunningTime / (60 * 60));
+			const expectedMinutesDuration: number = Math.floor((analyser.expectedRunningTime - (expectedHoursDuration * (60 * 60)))/60);
 			const expectedDuration: string = (expectedHoursDuration < 10 ? '0' + expectedHoursDuration.toString() : expectedHoursDuration.toString()) +
 				':' +
 				(expectedMinutesDuration < 10 ? '0' + expectedMinutesDuration.toString() : expectedMinutesDuration.toString());

@@ -2,9 +2,10 @@ import {TFile} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
 
 export interface RelationshipFactoryInterface {
-	read(
+	readMetadata(
 		file: TFile,
 		relationship: Map<string, RelationshipInterface>,
+		metadata: any,
 	): Promise<void>;
 
 

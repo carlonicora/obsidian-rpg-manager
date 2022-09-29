@@ -39,6 +39,14 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					headlessTable.addRow(element, this.addSceneExcitmentSelector.bind(this));
 					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
+				case HeaderResponseType.SceneRun:
+					headlessTable.addRow(element, this.runScene.bind(this));
+					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
+					break;
+				case HeaderResponseType.SceneRunTime:
+					headlessTable.addRow(element, this.sceneRunTime.bind(this));
+					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
+					break;
 				default:
 					element.value.fillContent(
 						this.createContainerEl(element.type, element.title),
@@ -53,6 +61,48 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		if (data.metadata?.sourceMeta?.analyser !== undefined){
 			this.addActBalance(data.metadata.sourceMeta.analyser);
 		}
+	}
+
+	private sceneRunTime(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): any|ContentInterface|undefined {
+		const durationEl = contentEl.createSpan({text: this.countOngoingDuration()});
+		if (this.currentElement.isCurrentlyRunning) {
+			setInterval(() => {
+				durationEl.textContent = this.countOngoingDuration();
+			}, 1000);
+		}
+	}
+
+	private countOngoingDuration(
+	): string {
+		let duration: number = this.currentElement.currentDuration ?? 0;
+		if (this.currentElement.lastStart !== undefined && this.currentElement.lastStart !== 0){
+			duration += (Math.floor(Date.now()/1000) - this.currentElement.lastStart);
+		}
+
+		const expectedHoursDuration: number = Math.floor(duration / 60);
+		const expectedMinutesDuration: number = Math.floor(duration - (expectedHoursDuration * 60));
+		return (expectedHoursDuration < 10 ? '0' + expectedHoursDuration.toString() : expectedHoursDuration.toString()) +
+			':' +
+			(expectedMinutesDuration < 10 ? '0' + expectedMinutesDuration.toString() : expectedMinutesDuration.toString());
+	}
+
+	private runScene(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): any|ContentInterface|undefined {
+		const startStopEl = contentEl.createEl('a', {href: '#', text: (this.currentElement.isCurrentlyRunning ? 'stop' : 'start')});
+		startStopEl.addEventListener('click', (e) => {
+			e.preventDefault();
+
+			if (this.currentElement.isCurrentlyRunning){
+				this.factories.runningTimeManager.stopScene(this.currentElement);
+			} else {
+				this.factories.runningTimeManager.startScene(this.currentElement);
+			}
+		})
 	}
 
 	protected addSceneExcitmentSelector(

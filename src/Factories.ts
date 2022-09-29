@@ -33,7 +33,9 @@ import {FrontmatterFactory} from "./factories/FrontmatterFactory";
 import {SorterFactoryInterface} from "./interfaces/factories/SorterFactoryInterface";
 import {SorterFactory} from "./factories/SorterFactory";
 import {CodeBlockEditorFactoryInterface} from "./interfaces/factories/CodeBlockEditorFactoryInterface";
-import {CodeBlockFactory} from "./factories/CodeBlockFactory";
+import {CodeBlockEditorFactory} from "./factories/CodeBlockEditorFactory";
+import {RunningTimeManagerInterface} from "./interfaces/dataManipulation/RunningTimeManagerInterface";
+import {RunningTimeManager} from "./dataManipulation/RunningTimeManager";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -53,6 +55,7 @@ export class Factories implements FactoriesInterface{
 	public frontmatter: FrontmatterFactoryInterface;
 	public sorter: SorterFactoryInterface;
 	public codeblock: CodeBlockEditorFactoryInterface;
+	public runningTimeManager: RunningTimeManagerInterface;
 
 	constructor(
 		private app: App,
@@ -73,6 +76,7 @@ export class Factories implements FactoriesInterface{
 		this.breadcrumb = new BreadcrumbFactory(this.app);
 		this.frontmatter = new FrontmatterFactory(this.app);
 		this.sorter = new SorterFactory(this.app);
-		this.codeblock = new CodeBlockFactory(this.app);
+		this.codeblock = new CodeBlockEditorFactory(this.app);
+		this.runningTimeManager = new RunningTimeManager(this.app);
 	}
 }

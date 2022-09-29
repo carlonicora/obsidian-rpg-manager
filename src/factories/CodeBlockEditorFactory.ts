@@ -1,8 +1,68 @@
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CodeBlockEditorFactoryInterface} from "../interfaces/factories/CodeBlockEditorFactoryInterface";
-import {MarkdownView, parseYaml, stringifyYaml} from "obsidian";
+import {MarkdownView, parseYaml, stringifyYaml, TFile} from "obsidian";
+import {FileEditor} from "../dataManipulation/FileEditor";
 
-export class CodeBlockFactory extends AbstractFactory implements CodeBlockEditorFactoryInterface {
+export class CodeBlockEditorFactory extends AbstractFactory implements CodeBlockEditorFactoryInterface {
+	public async stopCurrentDuration(
+		file: TFile,
+	): Promise<void> {
+		const fileEditor = new FileEditor(this.app, file);
+		if (!await fileEditor.read()) return;
+
+		const metadata = await fileEditor.getCodeBlockMetadata('sceneNavigation');
+		if (metadata === undefined || metadata.durations === undefined) return;
+
+		const durations: Array<string> = metadata.durations;
+		let endDurationAdded=false;
+
+		for (let index=0; index<durations.length; index++){
+			if (durations[index].indexOf('-') === -1){
+				endDurationAdded = true;
+				const end:number = Math.floor(Date.now()/1000);
+				const start:number = +durations[index];
+
+				durations[index] = durations[index] + '-' + end.toString();
+
+				if (metadata.duration === undefined){
+					metadata.duration = 0;
+				}
+
+				metadata.duration += (end - start);
+
+				break;
+			}
+		}
+
+		if (endDurationAdded) {
+			fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
+		}
+	}
+
+	public async startNewDuration(
+		file: TFile,
+	): Promise<void> {
+		const fileEditor = new FileEditor(this.app, file);
+		if (!await fileEditor.read()) return;
+
+		let metadata = await fileEditor.getCodeBlockMetadata('sceneNavigation');
+		if (metadata === undefined) {
+			metadata = {};
+		}
+
+		if (metadata.durations === undefined) metadata.durations = [];
+		const durations: Array<string> = metadata.durations;
+
+		for (let index = 0; index < durations.length; index++) {
+			if (durations[index].indexOf('-') === -1) {
+				return;
+			}
+		}
+
+		durations.push(Math.floor(Date.now()/1000).toString());
+		fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
+	}
+
 	public async update(
 		codeBlockName: string,
 		identifier: string,

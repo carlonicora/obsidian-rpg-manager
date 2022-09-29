@@ -1,9 +1,4 @@
-import {
-	addIcon,
-	Component,
-	MarkdownPostProcessorContext,
-	Plugin,
-} from 'obsidian';
+import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, WorkspaceLeaf,} from 'obsidian';
 import {Controller} from "./Controller";
 import {ComponentType} from "./enums/ComponentType";
 import {Factories} from "./Factories";
@@ -22,6 +17,8 @@ import {FactoriesInterface} from "./interfaces/FactoriesInterface";
 import {TagHelper} from "./helpers/TagHelper";
 import {RPGManagerView} from "./views/RPGManagerView";
 import {TimelineView} from "./views/TimelineView";
+import {ComponentInterface} from "./interfaces/database/ComponentInterface";
+import {SceneInterface} from "./interfaces/components/SceneInterface";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
@@ -81,6 +78,32 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 				this.database = database;
 				this.registerEvents();
 				this.app.workspace.trigger("rpgmanager:refresh-views");
+
+				this.app.workspace.on('active-leaf-change', (leaf: WorkspaceLeaf) => {
+					if (this.factories.runningTimeManager.isTimerRunning) {
+						let isCurrentlyRunningSceneOpen = false;
+						this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
+							if (leaf.view instanceof MarkdownView) {
+								const file = leaf.view?.file;
+								if (file !== undefined) {
+									const component: ComponentInterface|undefined = this.database.readByPath(file.path);
+									if (
+										component !== undefined &&
+										component.id.type === ComponentType.Scene &&
+										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneInterface>component)
+									) {
+										isCurrentlyRunningSceneOpen = true;
+									}
+								}
+							}
+						});
+
+						if (!isCurrentlyRunningSceneOpen && this.factories.runningTimeManager.currentlyRunningScene !== undefined){
+							this.factories.runningTimeManager.stopScene(this.factories.runningTimeManager.currentlyRunningScene);
+						}
+
+					}
+				});
 
 				console.log(
 					`RPG Manager: ${this.database.recordset.length} outlines and elements have been indexed in ${
