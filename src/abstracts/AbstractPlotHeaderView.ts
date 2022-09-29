@@ -90,63 +90,75 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 	): void {
 		const analyserEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-analyser'});
 
-		const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
+		if (analyser.expectedRunningTime !== 0) {
+			const expectedHoursDuration: number = Math.floor(analyser.expectedRunningTime / 60);
+			const expectedMinutesDuration: number = (analyser.expectedRunningTime - (expectedHoursDuration * 60));
+			const expectedDuration: string = (expectedHoursDuration < 10 ? '0' + expectedHoursDuration.toString() : expectedHoursDuration.toString()) +
+				':' +
+				(expectedMinutesDuration < 10 ? '0' + expectedMinutesDuration.toString() : expectedMinutesDuration.toString());
 
-		if (analyser.excitementLevel === ThresholdResult.Correct && analyser.activityLevel === ThresholdResult.Correct){
-			analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced!';
-		} else {
-			analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
-			analyserHeadlineEl.addClass('warning');
-			const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
-			const analyserActivityElementEl: HTMLLIElement = analyserListEl.createEl('li');
-			const analyserActivityDescriptionEl: HTMLSpanElement = analyserActivityElementEl.createSpan({cls: 'description'});
-			const analyserExcitementElementEl: HTMLLIElement = analyserListEl.createEl('li');
-			const analyserExcitementDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
+			analyserEl.createDiv().createSpan({cls: 'header', text: 'Expected ' + ComponentType[analyser.parentType] + ' duration: ' + expectedDuration})
+		}
 
-			switch (analyser.activityLevel) {
-				case ThresholdResult.Correct:
-					analyserActivityElementEl.textContent = 'The amount of active scenes is balanced';
-					break;
-				case ThresholdResult.Higher:
-					analyserActivityElementEl.textContent = 'Maybe too many active scenes: ';
-					analyserActivityDescriptionEl.textContent = '(';
-					break;
-				case ThresholdResult.CriticallyLow:
-					analyserActivityElementEl.textContent = 'Not enough active scenes: ';
-					analyserActivityDescriptionEl.textContent = '(only ';
-					break;
-				case ThresholdResult.Lower:
-					analyserActivityElementEl.textContent = 'Maybe not enough active scenes: ';
-					analyserActivityDescriptionEl.textContent = '(';
-					break;
-			}
+		if (!analyser.isSingleScene) {
+			const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
 
-			if (analyser.activityLevel !== ThresholdResult.Correct) {
-				analyserActivityElementEl.appendChild(analyserActivityDescriptionEl as Node);
-				analyserActivityDescriptionEl.textContent += analyser.activeScenePercentage + '% out of ' + analyser.targetActiveScenePercentage + '% are active)'
-			}
+			if (analyser.excitementLevel === ThresholdResult.Correct && analyser.activityLevel === ThresholdResult.Correct) {
+				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced!';
+			} else {
+				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
+				analyserHeadlineEl.addClass('warning');
+				const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
+				const analyserActivityElementEl: HTMLLIElement = analyserListEl.createEl('li');
+				const analyserActivityDescriptionEl: HTMLSpanElement = analyserActivityElementEl.createSpan({cls: 'description'});
+				const analyserExcitementElementEl: HTMLLIElement = analyserListEl.createEl('li');
+				const analyserExcitementDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
 
-			switch (analyser.excitementLevel) {
-				case ThresholdResult.Correct:
-					analyserExcitementElementEl.textContent = 'The amount of exciting scenes is balanced';
-					break;
-				case ThresholdResult.Higher:
-					analyserExcitementElementEl.textContent = 'Maybe too many exciting scenes: ';
-					analyserExcitementDescriptionEl.textContent = '(';
-					break;
-				case ThresholdResult.CriticallyLow:
-					analyserExcitementElementEl.textContent = 'Not enough exciting scenes: ';
-					analyserExcitementDescriptionEl.textContent = '(only ';
-					break;
-				case ThresholdResult.Lower:
-					analyserExcitementElementEl.textContent = 'Maybe not enough exciting scenes: ';
-					analyserExcitementDescriptionEl.textContent = '(';
-					break;
-			}
+				switch (analyser.activityLevel) {
+					case ThresholdResult.Correct:
+						analyserActivityElementEl.textContent = 'The amount of active scenes is balanced';
+						break;
+					case ThresholdResult.Higher:
+						analyserActivityElementEl.textContent = 'Maybe too many active scenes: ';
+						analyserActivityDescriptionEl.textContent = '(';
+						break;
+					case ThresholdResult.CriticallyLow:
+						analyserActivityElementEl.textContent = 'Not enough active scenes: ';
+						analyserActivityDescriptionEl.textContent = '(only ';
+						break;
+					case ThresholdResult.Lower:
+						analyserActivityElementEl.textContent = 'Maybe not enough active scenes: ';
+						analyserActivityDescriptionEl.textContent = '(';
+						break;
+				}
 
-			if (analyser.excitementLevel !== ThresholdResult.Correct) {
-				analyserExcitementElementEl.appendChild(analyserExcitementDescriptionEl as Node);
-				analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% out of ' + analyser.targetExcitingScenePercentage + '% are exciting)'
+				if (analyser.activityLevel !== ThresholdResult.Correct) {
+					analyserActivityElementEl.appendChild(analyserActivityDescriptionEl as Node);
+					analyserActivityDescriptionEl.textContent += analyser.activeScenePercentage + '% out of ' + analyser.targetActiveScenePercentage + '% are active)'
+				}
+
+				switch (analyser.excitementLevel) {
+					case ThresholdResult.Correct:
+						analyserExcitementElementEl.textContent = 'The amount of exciting scenes is balanced';
+						break;
+					case ThresholdResult.Higher:
+						analyserExcitementElementEl.textContent = 'Maybe too many exciting scenes: ';
+						analyserExcitementDescriptionEl.textContent = '(';
+						break;
+					case ThresholdResult.CriticallyLow:
+						analyserExcitementElementEl.textContent = 'Not enough exciting scenes: ';
+						analyserExcitementDescriptionEl.textContent = '(only ';
+						break;
+					case ThresholdResult.Lower:
+						analyserExcitementElementEl.textContent = 'Maybe not enough exciting scenes: ';
+						analyserExcitementDescriptionEl.textContent = '(';
+						break;
+				}
+
+				if (analyser.excitementLevel !== ThresholdResult.Correct) {
+					analyserExcitementElementEl.appendChild(analyserExcitementDescriptionEl as Node);
+					analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% out of ' + analyser.targetExcitingScenePercentage + '% are exciting)'
+				}
 			}
 		}
 	}

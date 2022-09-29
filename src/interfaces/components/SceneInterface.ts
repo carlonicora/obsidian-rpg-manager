@@ -15,7 +15,7 @@ export interface SceneInterface extends ComponentInterface {
 
 	storycircleStage: StoryCircleStage|undefined;
 	sceneType: SceneType|undefined;
-	isExciting: boolean|undefined;
+	isActedUpon: boolean|undefined;
 
 
 	adventure: AdventureInterface;
@@ -26,7 +26,7 @@ export interface SceneInterface extends ComponentInterface {
 
 	get duration(): string;
 
-	get isSceneActive(): boolean;
-	getSceneTime(): number;
-	get isSceneExciting(): boolean
+	get isActive(): boolean;
+	get expectedDuration(): number;
+	get isExciting(): boolean
 }

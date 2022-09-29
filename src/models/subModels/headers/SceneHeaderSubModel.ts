@@ -13,6 +13,8 @@ import {ResponseType} from "../../../enums/ResponseType";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
 import {SorterType} from "../../../enums/SorterType";
+import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
+import {AbtStage} from "../../../enums/AbtStage";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SceneInterface;
@@ -57,11 +59,44 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'External actions?', this.data.isSceneExciting, HeaderResponseType.SceneExcitment, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'External actions?', this.data.isExciting, HeaderResponseType.SceneExcitment, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
 		}
+
+		if (this.settings.usePlotStructures && this.data.sceneType !== undefined && this.data.storycircleStage !== undefined) {
+			let stage: AbtStage|undefined=undefined;
+
+			switch (this.data.storycircleStage){
+				case StoryCircleStage.You:
+				case StoryCircleStage.Need:
+					stage = AbtStage.Need;
+					break;
+				case StoryCircleStage.Go:
+				case StoryCircleStage.Search:
+					stage = AbtStage.And;
+					break;
+				case StoryCircleStage.Find:
+				case StoryCircleStage.Take:
+					stage = AbtStage.But;
+					break;
+				case StoryCircleStage.Return:
+				case StoryCircleStage.Change:
+					stage = AbtStage.Therefore;
+					break;
+			}
+
+			if (stage !== undefined) {
+				additionalInformation.analyser =  new SceneAnalyser(
+					this.app,
+					stage,
+					this.data.id
+				);
+			}
+		}
+
+		response.metadata = {actId: this.data.id, sourceMeta: additionalInformation};
 
 		return this.completeData(response);
 	}

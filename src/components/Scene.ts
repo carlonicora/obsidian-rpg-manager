@@ -26,7 +26,7 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 
 	public storycircleStage: StoryCircleStage|undefined=undefined;
 	public sceneType: SceneType|undefined=undefined;
-	public isExciting: boolean|undefined=undefined;
+	public isActedUpon: boolean|undefined=undefined;
 
 	private activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
 		[SceneType.Combat, true],
@@ -71,7 +71,7 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 
 		if (frontmatter?.storycircle !== undefined) this.storycircleStage = StoryCircleStage[frontmatter.storycircle as keyof typeof StoryCircleStage];
 		if (frontmatter?.sceneType !== undefined) this.sceneType = SceneType[frontmatter.sceneType as keyof typeof SceneType];
-		if (frontmatter?.isExciting !== undefined) this.isExciting = frontmatter.isExciting;
+		if (frontmatter?.isActedUpon !== undefined) this.isActedUpon = frontmatter.isActedUpon;
 
 		super.initialiseData(frontmatter);
 	}
@@ -123,24 +123,24 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 		return response;
 	}
 
-	public get isSceneActive(
+	public get isActive(
 	): boolean {
 		if (this.sceneType === undefined) return false;
 
 		return this.activeSceneTypes.get(this.sceneType) ?? false;
 	}
 
-	public getSceneTime(
+	public get expectedDuration(
 	): number {
 		if (this.sceneType === undefined) return 0;
 
 		return this.sceneTypesDuration.get(this.sceneType) ?? 0;
 	}
 
-	public get isSceneExciting(
+	public get isExciting(
 	): boolean {
-		if (this.isExciting === undefined) return false;
+		if (this.isActedUpon === undefined) return false;
 
-		return this.isExciting;
+		return this.isActedUpon;
 	}
 }

@@ -13,12 +13,14 @@ export enum ThresholdResult {
 	NotAnalysable,
 }
 
-export class SceneAnalyser extends AbstractRpgManager{
+export class SceneAnalyser extends AbstractRpgManager {
 	private excitmentPercentage: number|undefined = undefined;
 	private activityPercentage: number|undefined = undefined;
 	private excitingScenes=0;
 	private activeScenes=0;
 	public parentType: ComponentType;
+	public expectedRunningTime=0;
+	public isSingleScene=false;
 
 	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
 		[AbtStage.Need, 25],
@@ -47,8 +49,10 @@ export class SceneAnalyser extends AbstractRpgManager{
 
 		if (scenes.length > 0) {
 			scenes.forEach((scene: SceneInterface) => {
-				if (scene.isSceneExciting) this.excitingScenes++;
-				if (scene.isSceneActive) this.activeScenes++;
+				if (scene.isExciting) this.excitingScenes++;
+				if (scene.isActive) this.activeScenes++;
+
+				this.expectedRunningTime += scene.expectedDuration;
 			});
 
 			this.excitmentPercentage = this.excitingScenes * 100 / scenes.length;
@@ -58,16 +62,19 @@ export class SceneAnalyser extends AbstractRpgManager{
 
 	private get scenes(
 	): Array<SceneInterface> {
-		if (this.parentId.type === ComponentType.Act) {
-			return this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId);
-		} else {
-			return this.database.read<SceneInterface>(
-				(scene: SceneInterface) =>
-					scene.id.type === ComponentType.Scene &&
-					scene.id.campaignId === this.parentId.campaignId &&
-					scene.sessionId === this.parentId.sessionId,
-			);
+		if (this.parentId.type === ComponentType.Session) return this.database.read<SceneInterface>(
+			(scene: SceneInterface) =>
+				scene.id.type === ComponentType.Scene &&
+				scene.id.campaignId === this.parentId.campaignId &&
+				scene.sessionId === this.parentId.sessionId,
+		);
+
+		if (this.parentId.type === ComponentType.Scene) {
+			this.isSingleScene = true;
+			return [this.database.readSingle<SceneInterface>(ComponentType.Scene, this.parentId)]
 		}
+
+		return this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId);
 	}
 
 	public get excitementLevel(

@@ -6,11 +6,11 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {SceneType} from "../../../enums/SceneType";
 import {IdInterface} from "../../../interfaces/components/IdInterface";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
-import {AbstractStoryCircleStageSelectorView} from "../../../abstracts/AbstractStoryCircleStageSelectorView";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 
-export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
+export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: SceneInterface;
 
 	public render(
@@ -49,6 +49,10 @@ export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 		});
 
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
+
+		if (data.metadata?.sourceMeta?.analyser !== undefined){
+			this.addActBalance(data.metadata.sourceMeta.analyser);
+		}
 	}
 
 	protected addSceneExcitmentSelector(
@@ -67,7 +71,7 @@ export class SceneHeaderView extends AbstractStoryCircleStageSelectorView {
 
 				if (file !== undefined){
 					const map: Map<string,any> = new Map<string, any>();
-					map.set('isExciting', sceneExcitementSelectorEl.checked);
+					map.set('isActedUpon', sceneExcitementSelectorEl.checked);
 					this.factories.frontmatter.update(file, map);
 				}
 			});
