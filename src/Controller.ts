@@ -72,11 +72,11 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	}
 
 	private initialise(
-	): void {
+	): boolean {
 		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
-		if (currentElement === undefined) return;
+		if (currentElement === undefined) return false;
 
-		if (currentElement.version === this.componentVersion) return;
+		if (currentElement.version === this.componentVersion) return false;
 
 		this.componentVersion = currentElement.version;
 
@@ -84,6 +84,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		this.currentElement = currentElement;
 		this.generateModel();
 
+		return true;
 	}
 
 	onload() {
@@ -95,21 +96,21 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	): Promise<void> {
 		if (this.database === undefined) return;
 
-		this.initialise();
-		if (this.currentElement === undefined) return;
+		if (await this.initialise()) {
 
-		this.container.empty();
+			this.container.empty();
 
-		this.model.generateData()
-			.then((data: ResponseDataInterface) => {
-				data.elements.forEach((element: ResponseDataElementInterface) => {
-					const view: ViewInterface = this.factories.views.create(
-						this.campaignSettings,
-						element.responseType,
-						this.sourcePath,
-					);
-					view.render(this.container, element);
+			this.model.generateData()
+				.then((data: ResponseDataInterface) => {
+					data.elements.forEach((element: ResponseDataElementInterface) => {
+						const view: ViewInterface = this.factories.views.create(
+							this.campaignSettings,
+							element.responseType,
+							this.sourcePath,
+						);
+						view.render(this.container, element);
+					});
 				});
-			});
+		}
 	}
 }
