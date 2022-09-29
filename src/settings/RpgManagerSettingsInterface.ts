@@ -173,6 +173,8 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 					{field:  TableField.StartTime, checked: false, required: false},
 					{field:  TableField.EndTime, checked: false, required: false},
 					{field:  TableField.Duration, checked: false, required: false},
+					{field:  TableField.SceneType, checked: false, required: false},
+					{field:  TableField.SceneExciting, checked: false, required: false},
 				]
 			},
 			SessionList: {

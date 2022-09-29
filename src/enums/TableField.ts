@@ -1,16 +1,23 @@
 export enum TableField {
-	Index,
-	Image,
-	Name,
-	Age,
-	Synopsis,
-	Found,
-	Date,
-	Url,
-	StoryCircleIndicator,
-	StartTime,
-	EndTime,
-	Duration,
+	/**
+	 * DO NOT CHANGE OR REUSE THE IDS
+	 * They are used in the configuration.
+	 * If need to remove, do NOT reuse the same id
+	 */
+	Index=0,
+	Image=1,
+	Name=2,
+	Age=3,
+	Synopsis=4,
+	Found=5,
+	Date=6,
+	Url=7,
+	StoryCircleIndicator=8,
+	StartTime=9,
+	EndTime=10,
+	Duration=11,
+	SceneType=12,
+	SceneExciting=13
 }
 
 export const tableFieldName: Map<TableField, string> = new Map<TableField, string>([
@@ -26,4 +33,6 @@ export const tableFieldName: Map<TableField, string> = new Map<TableField, strin
 	[TableField.StartTime, 'Start'],
 	[TableField.EndTime, 'End'],
 	[TableField.Duration, 'Duration'],
+	[TableField.SceneType, 'Type'],
+	[TableField.SceneExciting, 'Exciting?'],
 ]);

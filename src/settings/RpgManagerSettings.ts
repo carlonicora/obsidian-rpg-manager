@@ -4,7 +4,7 @@ import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {SettingsFactory} from "../factories/SettingsFactory";
 import {
 	RpgManagerAdvancedSettingsInterface,
-	RpgManagerAdvancedSettingsListsInterface,
+	RpgManagerAdvancedSettingsListsInterface, RpgManagerDefaultSettings,
 	RpgManagerSettingsInterface
 } from "./RpgManagerSettingsInterface";
 import {SettingType} from "../enums/SettingType";
@@ -288,9 +288,11 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		const listSettingTableEl: HTMLTableElement = settingItemControlEl.createEl('table', {cls: 'rpgm-advanced-settings-table'});
 
-		for (let index=0; index<settings.fields.length; index++) {
+		const defaultSettings = RpgManagerDefaultSettings.advanced.Agnostic[type as keyof RpgManagerAdvancedSettingsInterface];
+
+		for (let index=0; index<defaultSettings.fields.length; index++) {
 			const listSettingTableRowEl: HTMLTableRowElement = listSettingTableEl.createEl('tr');
-			listSettingTableRowEl.createEl('td', {text: tableFieldName.get(settings.fields[index].field) ?? ''});
+			listSettingTableRowEl.createEl('td', {text: tableFieldName.get(defaultSettings.fields[index].field) ?? ''});
 
 			const listSettingTableCheckboxEl: HTMLTableCellElement = listSettingTableRowEl.createEl('td');
 
@@ -298,8 +300,16 @@ export class RpgManagerSettings extends PluginSettingTab {
 			listSettingFieldCheckboxEl.type = 'checkbox';
 			listSettingFieldCheckboxEl.dataset.id = index.toString();
 
-			if (settings.fields[index].checked) listSettingFieldCheckboxEl.checked = true;
-			if (settings.fields[index].required) listSettingFieldCheckboxEl.disabled = true;
+			let isChecked = defaultSettings.fields[index].checked;
+			for (let actualSettingsIndex=0; actualSettingsIndex<settings.fields.length; actualSettingsIndex++){
+				if (settings.fields[actualSettingsIndex].field === defaultSettings.fields[index].field) {
+					isChecked = settings.fields[actualSettingsIndex].checked;
+					break;
+				}
+			}
+
+			if (isChecked) listSettingFieldCheckboxEl.checked = true;
+			if (defaultSettings.fields[index].required) listSettingFieldCheckboxEl.disabled = true;
 
 			listSettingFieldCheckboxEl.addEventListener('change', () => {
 				this.updateAdvancedListSettings(
