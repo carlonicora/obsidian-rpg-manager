@@ -5,6 +5,7 @@ import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../interfaces/components/IdInterface";
 import {AbtStage} from "../enums/AbtStage";
 import {SceneType} from "../enums/SceneType";
+import {SorterComparisonElement} from "../database/SorterComparisonElement";
 
 export enum ThresholdResult {
 	NotAnalysable,
@@ -24,6 +25,8 @@ export class SceneAnalyser extends AbstractRpgManager {
 	public isSingleScene=false;
 	private expectedExcitementDuration=0;
 	private sceneTypesUsed: Map<SceneType, number> = new Map<SceneType, number>();
+	private repetitiveScenes = 0;
+	private scenesCount = 0;
 
 	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
 		[AbtStage.Need, 35],
@@ -50,13 +53,34 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		const scenes = this.scenes;
 
+		this.scenesCount = scenes.length;
+
 		if (scenes.length > 0) {
+			let previousType: SceneType|undefined = undefined;
 			scenes.forEach((scene: SceneInterface) => {
 				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
 
+				if (previousType === scene.sceneType) {
+					console.warn(
+						'previous: ' + (previousType === undefined ? '' : SceneType[previousType]) + '\n' +
+						'current: ' + (scene.sceneType === undefined ? '' : SceneType[scene.sceneType]) + '\n' +
+						'BORING!'
+					)
+				} else {
+					console.log(
+						'previous: ' + (previousType === undefined ? '' : SceneType[previousType]) + '\n' +
+						'current: ' + (scene.sceneType === undefined ? '' : SceneType[scene.sceneType])
+					)
+				}
+
 				if (scene.sceneType !== undefined){
 					this.sceneTypesUsed.set(scene.sceneType, (this.sceneTypesUsed.get(scene.sceneType) ?? 0) + 1);
+					if (previousType === scene.sceneType) {
+						this.repetitiveScenes++;
+					} else {
+						previousType = scene.sceneType;
+					}
 				}
 
 				this.expectedRunningTime += scene.expectedDuration;
@@ -74,14 +98,27 @@ export class SceneAnalyser extends AbstractRpgManager {
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === this.parentId.campaignId &&
 				scene.sessionId === this.parentId.sessionId,
-		);
+			).sort(
+			this.factories.sorter.create<SceneInterface>([
+				new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
+				new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+				new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+				new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+			]));
 
 		if (this.parentId.type === ComponentType.Scene) {
 			this.isSingleScene = true;
 			return [this.database.readSingle<SceneInterface>(ComponentType.Scene, this.parentId)]
 		}
 
-		return this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId);
+		return this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId)
+			.sort(
+				this.factories.sorter.create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+				]));
 	}
 
 	public get excitementLevel(
@@ -142,13 +179,31 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 	public get varietyLevel(
 	): ThresholdResult {
-		if (this.sceneTypesUsed.size < 3) return ThresholdResult.CriticallyLow;
-		if (this.sceneTypesUsed.size < 5) return ThresholdResult.Low;
+		if (this.sceneTypesUsed.size < 4) return ThresholdResult.CriticallyLow;
+		if (this.sceneTypesUsed.size < 6) return ThresholdResult.Low;
 		return ThresholdResult.Correct;
 	}
 
 	public get varietyCount(
 	): number {
 		return this.sceneTypesUsed.size;
+	}
+
+	public get boredomLevel(
+	): ThresholdResult {
+		if (this.repetitiveScenes >= (this.scenesCount / 2)) return ThresholdResult.CriticallyHigh;
+		if (this.repetitiveScenes >= (this.scenesCount / 3)) return ThresholdResult.High;
+
+		return ThresholdResult.Correct;
+	}
+
+	public get boredomAmount(
+	): number {
+		return this.repetitiveScenes;
+	}
+
+	public get boredomReference(
+	): number {
+		return this.scenesCount;
 	}
 }

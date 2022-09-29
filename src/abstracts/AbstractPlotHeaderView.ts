@@ -104,8 +104,13 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		if (!analyser.isSingleScene) {
 			const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
 
-			if (analyser.excitementLevel === ThresholdResult.Correct && analyser.activityLevel === ThresholdResult.Correct && analyser.varietyLevel === ThresholdResult.Correct) {
-				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced!';
+			if (
+				analyser.excitementLevel === ThresholdResult.Correct &&
+				analyser.activityLevel === ThresholdResult.Correct &&
+				analyser.varietyLevel === ThresholdResult.Correct &&
+				analyser.boredomLevel === ThresholdResult.Correct
+			) {
+				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced! Analysis Score: 100%';
 			} else {
 				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
 				analyserHeadlineEl.addClass('warning');
@@ -116,24 +121,33 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 				const analyserExcitementDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
 				const analyserVarietyElementEl: HTMLLIElement = analyserListEl.createEl('li');
 				const analyserVarietyDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
+				const analyserBoredomElementEl: HTMLLIElement = analyserListEl.createEl('li');
+				const analyserBoredomDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
+
+				let score=0;
 
 				switch (analyser.activityLevel) {
 					case ThresholdResult.Correct:
+						score += 25;
 						analyserActivityElementEl.textContent = 'The amount of active scenes is balanced';
 						break;
 					case ThresholdResult.CriticallyHigh:
+						score += 5;
 						analyserActivityElementEl.textContent = 'Too many active scenes: ';
 						analyserActivityDescriptionEl.textContent = '(';
 						break;
 					case ThresholdResult.High:
+						score += 15;
 						analyserActivityElementEl.textContent = 'Maybe too many active scenes: ';
 						analyserActivityDescriptionEl.textContent = '(';
 						break;
 					case ThresholdResult.Low:
+						score += 15;
 						analyserActivityElementEl.textContent = 'Maybe not enough active scenes: ';
 						analyserActivityDescriptionEl.textContent = '(only ';
 						break;
 					case ThresholdResult.CriticallyLow:
+						score += 5;
 						analyserActivityElementEl.textContent = 'Not enough active scenes: ';
 						analyserActivityDescriptionEl.textContent = '(just ';
 						break;
@@ -141,26 +155,32 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 				if (analyser.activityLevel !== ThresholdResult.Correct) {
 					analyserActivityElementEl.appendChild(analyserActivityDescriptionEl as Node);
+					analyserActivityElementEl.addClass('warning');
 					analyserActivityDescriptionEl.textContent += analyser.activeScenePercentage + '% out of ' + analyser.targetActiveScenePercentage + '% are active)'
 				}
 
 				switch (analyser.excitementLevel) {
 					case ThresholdResult.Correct:
+						score += 15;
 						analyserExcitementElementEl.textContent = 'The amount of exciting time is balanced';
 						break;
 					case ThresholdResult.CriticallyHigh:
+						score += 5;
 						analyserExcitementElementEl.textContent = 'Too much excitement: ';
 						analyserExcitementDescriptionEl.textContent = '(';
 						break;
 					case ThresholdResult.High:
+						score += 15;
 						analyserExcitementElementEl.textContent = 'Maybe too much excitement: ';
 						analyserExcitementDescriptionEl.textContent = '(';
 						break;
 					case ThresholdResult.Low:
+						score += 15;
 						analyserExcitementElementEl.textContent = 'Maybe not enough excitement: ';
 						analyserExcitementDescriptionEl.textContent = '(only ';
 						break;
 					case ThresholdResult.CriticallyLow:
+						score += 5;
 						analyserExcitementElementEl.textContent = 'Not enough excitement: ';
 						analyserExcitementDescriptionEl.textContent = '(just ';
 						break;
@@ -168,18 +188,22 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 				if (analyser.excitementLevel !== ThresholdResult.Correct) {
 					analyserExcitementElementEl.appendChild(analyserExcitementDescriptionEl as Node);
+					analyserExcitementElementEl.addClass('warning');
 					analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% of the running time out of ' + analyser.targetExcitingScenePercentage + '% is exciting)'
 				}
 
 				switch (analyser.varietyLevel) {
 					case ThresholdResult.Correct:
+						score += 25;
 						analyserVarietyElementEl.textContent = 'The variety of scene types is balanced';
 						break;
 					case ThresholdResult.Low:
+						score += 15;
 						analyserVarietyElementEl.textContent = 'Maybe not enough variety: ';
 						analyserVarietyDescriptionEl.textContent = '(only ';
 						break;
 					case ThresholdResult.CriticallyLow:
+						score += 5;
 						analyserVarietyElementEl.textContent = 'Not enough variety: ';
 						analyserVarietyDescriptionEl.textContent = '(just ';
 						break;
@@ -187,8 +211,34 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 				if (analyser.varietyLevel !== ThresholdResult.Correct) {
 					analyserVarietyElementEl.appendChild(analyserVarietyDescriptionEl as Node);
-					analyserVarietyDescriptionEl.textContent += analyser.varietyCount + '  out of ' + Object.keys(SceneType).length / 2. + ' available types are used)'
+					analyserVarietyElementEl.addClass('warning');
+					analyserVarietyDescriptionEl.textContent += analyser.varietyCount + '  out of ' + (Object.keys(SceneType).length / 2) + ' available types are used)'
 				}
+
+				switch (analyser.boredomLevel) {
+					case ThresholdResult.Correct:
+						score += 25;
+						analyserBoredomElementEl.textContent = 'The scenes are not repetitive';
+						break;
+					case ThresholdResult.High:
+						score += 15;
+						analyserBoredomElementEl.textContent = 'Maybe a bit repetitive: ';
+						analyserBoredomDescriptionEl.textContent = '(';
+						break;
+					case ThresholdResult.CriticallyHigh:
+						score += 5;
+						analyserBoredomElementEl.textContent = 'Not enough variety: ';
+						analyserBoredomDescriptionEl.textContent = '(really, ';
+						break;
+				}
+
+				if (analyser.boredomLevel !== ThresholdResult.Correct) {
+					analyserBoredomElementEl.appendChild(analyserBoredomDescriptionEl as Node);
+					analyserBoredomElementEl.addClass('warning');
+					analyserBoredomDescriptionEl.textContent += analyser.boredomAmount + ' scene types repeated  in ' + analyser.boredomReference + ' scenes)'
+				}
+
+				analyserHeadlineEl.textContent += ' Analysis Score: ' + score + '%';
 			}
 		}
 	}
