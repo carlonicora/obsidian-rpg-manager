@@ -760,3 +760,26 @@
   cursor: pointer;
   color: var(--text-accent);
 }
+
+.rpgm-analyser {
+  padding: 20px;
+  color: var(--text-muted);
+  border-top: solid 1px var(--background-modifier-border);
+}
+.rpgm-analyser span.header {
+  font-weight: 300;
+  font-size: 0.9em;
+}
+.rpgm-analyser span.header.warning {
+  color: var(--text-error);
+}
+.rpgm-analyser ul {
+  margin: 0px;
+}
+.rpgm-analyser ul li {
+  font-size: 0.8em;
+}
+.rpgm-analyser ul li span.description {
+  font-size: 0.9em;
+  font-style: italic;
+}

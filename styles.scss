@@ -933,3 +933,31 @@
 	cursor: pointer;
 	color: var(--text-accent);
 }
+
+.rpgm-analyser {
+	padding: 20px;
+	color: var(--text-muted);
+	border-top: solid 1px var(--background-modifier-border);
+
+	span.header {
+		font-weight: 300;
+		font-size: 0.9em;
+
+		&.warning {
+			color: var(--text-error);
+		}
+	}
+
+	ul {
+		margin: 0px;
+
+		li {
+			font-size: 0.8em;
+
+			span.description {
+				font-size: 0.9em;
+				font-style: italic;
+			}
+		}
+	}
+}

@@ -88,50 +88,66 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 	protected addActBalance(
 		analyser: SceneAnalyser,
 	): void {
-		const analyserEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'analyser'});
-		const analyserTextEl  = analyserEl.createSpan();
+		const analyserEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-analyser'});
+
+		const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
 
 		if (analyser.excitementLevel === ThresholdResult.Correct && analyser.activityLevel === ThresholdResult.Correct){
-			analyserTextEl.textContent = 'The' + ComponentType[analyser.parentType] + ' is balanced!';
+			analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced!';
 		} else {
-			let text = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!\n';
+			analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
+			analyserHeadlineEl.addClass('warning');
+			const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
+			const analyserActivityElementEl: HTMLLIElement = analyserListEl.createEl('li');
+			const analyserActivityDescriptionEl: HTMLSpanElement = analyserActivityElementEl.createSpan({cls: 'description'});
+			const analyserExcitementElementEl: HTMLLIElement = analyserListEl.createEl('li');
+			const analyserExcitementDescriptionEl: HTMLSpanElement = analyserExcitementElementEl.createSpan({cls: 'description'});
 
 			switch (analyser.activityLevel) {
 				case ThresholdResult.Correct:
-					text += 'The amount of active scenes is balanced\n';
+					analyserActivityElementEl.textContent = 'The amount of active scenes is balanced';
 					break;
 				case ThresholdResult.Higher:
-					text += 'There are maybe a bit too many active scenes (_' + analyser.activeScenePercentage + '% of the scenes are active, while you should have around ' + analyser.targetActiveScenePercentage + '%_)\n';
+					analyserActivityElementEl.textContent = 'Maybe too many active scenes: ';
+					analyserActivityDescriptionEl.textContent = '(';
 					break;
 				case ThresholdResult.CriticallyLow:
-					text += '**You don\'t have enough active scenes** (_only ' + analyser.activeScenePercentage + '% of the scenes are active, while you should have around ' + analyser.targetActiveScenePercentage + '%_)\n';
+					analyserActivityElementEl.textContent = 'Not enough active scenes: ';
+					analyserActivityDescriptionEl.textContent = '(only ';
 					break;
 				case ThresholdResult.Lower:
-					text += 'There are maybe not enough active scenes (_' + analyser.activeScenePercentage + '% of the scenes are active, while you should have around ' + analyser.targetActiveScenePercentage + '%_)\n';
+					analyserActivityElementEl.textContent = 'Maybe not enough active scenes: ';
+					analyserActivityDescriptionEl.textContent = '(';
 					break;
+			}
+
+			if (analyser.activityLevel !== ThresholdResult.Correct) {
+				analyserActivityElementEl.appendChild(analyserActivityDescriptionEl as Node);
+				analyserActivityDescriptionEl.textContent += analyser.activeScenePercentage + '% out of ' + analyser.targetActiveScenePercentage + '% are active)'
 			}
 
 			switch (analyser.excitementLevel) {
 				case ThresholdResult.Correct:
-					text += 'The number of exciting scenes is balanced\n';
+					analyserExcitementElementEl.textContent = 'The amount of exciting scenes is balanced';
 					break;
 				case ThresholdResult.Higher:
-					text += 'There are maybe a bit too many exciting scenes (_' + analyser.excitingScenePercentage + '% of the scenes are active, while you should have around ' + analyser.targetExcitingScenePercentage + '%_)\n';
+					analyserExcitementElementEl.textContent = 'Maybe too many exciting scenes: ';
+					analyserExcitementDescriptionEl.textContent = '(';
 					break;
 				case ThresholdResult.CriticallyLow:
-					text += '**You don\'t have enough exciting scenes** (_only ' + analyser.excitingScenePercentage + '% of the scenes are active, while you should have around ' + analyser.targetExcitingScenePercentage + '%_)\n';
+					analyserExcitementElementEl.textContent = 'Not enough exciting scenes: ';
+					analyserExcitementDescriptionEl.textContent = '(only ';
 					break;
 				case ThresholdResult.Lower:
-					text += 'There are maybe not enough exciting scenes (_' + analyser.excitingScenePercentage + '% of the scenes are active, while you should have around ' + analyser.targetExcitingScenePercentage + '%_)\n';
+					analyserExcitementElementEl.textContent = 'Maybe not enough exciting scenes: ';
+					analyserExcitementDescriptionEl.textContent = '(';
 					break;
 			}
 
-			MarkdownRenderer.renderMarkdown(
-				text,
-				analyserTextEl,
-				this.sourcePath,
-				null as unknown as Component,
-			);
+			if (analyser.excitementLevel !== ThresholdResult.Correct) {
+				analyserExcitementElementEl.appendChild(analyserExcitementDescriptionEl as Node);
+				analyserExcitementDescriptionEl.textContent += analyser.excitingScenePercentage + '% out of ' + analyser.targetExcitingScenePercentage + '% are exciting)'
+			}
 		}
 	}
 
