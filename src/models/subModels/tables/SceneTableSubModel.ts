@@ -24,6 +24,14 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 			case TableField.Duration:
 				return this.factories.contents.create('Duration', ContentType.String);
 				break;
+			case TableField.SceneType:
+				if (!this.settings.usePlotStructures) return undefined;
+				return this.factories.contents.create('Type', ContentType.String);
+				break;
+			case TableField.SceneExciting:
+				if (!this.settings.usePlotStructures) return undefined;
+				return this.factories.contents.create('Exciting', ContentType.String);
+				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;
 
@@ -61,10 +69,12 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create((scene.duration === '00:00' ? undefined : scene.duration), ContentType.Date, true);
 				break;
 			case TableField.SceneType:
-				return this.factories.contents.create((scene.sceneType === undefined ? undefined : SceneType[scene.sceneType]), ContentType.String, true);
+				if (!this.settings.usePlotStructures) return undefined;
+				return this.factories.contents.create((scene.sceneType === undefined ? '' : SceneType[scene.sceneType]) + (scene.isActive ? ' *' : ''), ContentType.Date, true);
 				break;
 			case TableField.SceneExciting:
-				return this.factories.contents.create((scene.isExciting ? 'yes' : ''), ContentType.String, true);
+				if (!this.settings.usePlotStructures) return undefined;
+				return this.factories.contents.create((scene.isExciting ? 'yes' : ''), ContentType.Date, true);
 				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;

@@ -974,7 +974,12 @@
 				font-style: italic;
 			}
 
+			&.error {
+				color: var(--text-error);
+			}
+
 			&.warning {
+				font-weight: 300;
 				color: var(--text-error);
 			}
 		}

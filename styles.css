@@ -795,6 +795,10 @@
   font-size: 0.9em;
   font-style: italic;
 }
+.rpgm-analyser ul li.error {
+  color: var(--text-error);
+}
 .rpgm-analyser ul li.warning {
+  font-weight: 300;
   color: var(--text-error);
 }
