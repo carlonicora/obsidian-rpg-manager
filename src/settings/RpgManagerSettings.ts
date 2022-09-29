@@ -334,6 +334,12 @@ export class RpgManagerSettings extends PluginSettingTab {
 		};
 
 		if (partialSettings.advanced !== undefined) {
+			for (let defaultIndex=0; defaultIndex<RpgManagerDefaultSettings.advanced.Agnostic[name].fields.length; defaultIndex++){
+				if (partialSettings.advanced.Agnostic[name].fields[defaultIndex] === undefined) {
+					partialSettings.advanced.Agnostic[name].fields.push(RpgManagerDefaultSettings.advanced.Agnostic[name].fields[defaultIndex]);
+				}
+			}
+
 			partialSettings.advanced.Agnostic[name].fields[index].checked = checked;
 			await this.plugin.updateSettings(partialSettings);
 		}
