@@ -39,6 +39,7 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 	protected metadata: any = {};
 
 	protected dataVersion = 0;
+	protected parent: ComponentInterface;
 
 	constructor(
 		app: App,
@@ -47,6 +48,13 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 	) {
 		super(app);
 		AbstractComponent.initialiseRoots(this.app);
+	}
+
+	public touch(
+	): void {
+		this.dataVersion++;
+
+		if (this.parent !== undefined) this.parent.touch();
 	}
 
 	public get name(
@@ -157,6 +165,7 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 
 	public async reload(
 	): Promise<void> {
+		this.touch();
 		const metadata: CachedMetadata|null = await this.app.metadataCache.getFileCache(this.file);
 		if (metadata === null || metadata.frontmatter === undefined) return;
 
@@ -170,14 +179,16 @@ export abstract class AbstractComponent extends AbstractRpgManager implements Co
 	public async loadHierarchy(
 		database: DatabaseInterface,
 	): Promise<void> {
-		if (this.id.type !== ComponentType.Campaign) this.campaign =
-			await database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
+		if (this.id.type !== ComponentType.Campaign) {
+			this.campaign = await database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
+			this.parent = <unknown>this.campaign as ComponentInterface;
+		}
 	}
 
 	public async loadRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		this.dataVersion++;
+		this.touch();
 		this.relationships.forEach((relationship: RelationshipInterface, name: string) => {
 			const dataList = database.read<ComponentInterface>(
 				(data: ComponentInterface) => data.name === name,

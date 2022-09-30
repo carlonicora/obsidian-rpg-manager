@@ -65,4 +65,6 @@ export interface ComponentInterface {
 	get imageSrcElement(): HTMLElement|null;
 	get folder(): string;
 	get version(): number;
+
+	touch(): void;
 }

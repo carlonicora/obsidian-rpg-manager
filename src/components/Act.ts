@@ -37,6 +37,7 @@ export class Act extends AbstractComponentOutline implements ActInterface {
 		super.loadHierarchy(database);
 
 		this.adventure = database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
+		this.parent = this.adventure;
 
 		try {
 			const query = database.read<ActInterface>((record: ComponentInterface) =>

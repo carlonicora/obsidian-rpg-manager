@@ -8,4 +8,5 @@ export interface BaseCampaignInterface {
 
 	get name(): string;
 	get image(): string|null;
+	touch(): void;
 }

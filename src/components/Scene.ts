@@ -85,6 +85,7 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 
 		this.adventure = database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
 		this.act = database.readSingle<ActInterface>(ComponentType.Act, this.id);
+		this.parent = this.act;
 
 		if (this.sessionId !== undefined && this.sessionId !== null) {
 			const sessions = await database.read<SessionInterface>(
