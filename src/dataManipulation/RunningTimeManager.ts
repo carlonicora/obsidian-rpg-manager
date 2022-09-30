@@ -72,6 +72,10 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 		);
 
 		await scenes.forEach((scene: SceneInterface) => {
+			if (scene.isCurrentlyRunning) {
+				this.currentlyRunningScene = scene;
+				this.stopScene(scene);
+			}
 			if (scene.sceneType !== undefined && scene.currentDuration !== undefined && scene.currentDuration !== 0) {
 				const campaignMedians: Map<SceneType, Array<number>> | undefined = this.medianTimes.get(scene.id.campaignId);
 				if (campaignMedians !== undefined) {
