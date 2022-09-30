@@ -1,9 +1,6 @@
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {CampaignInterface} from "../../../interfaces/components/CampaignInterface";
 import {ViewType} from "../../../enums/ViewType";
-import {AdventureInterface} from "../../../interfaces/components/AdventureInterface";
-import {ActInterface} from "../../../interfaces/components/ActInterface";
-import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
@@ -78,10 +75,6 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 	}
 
-
-
-
-
 	private addCurrentComponentSelector(
 		contentEl: HTMLDivElement,
 		type: string,
@@ -132,158 +125,5 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 				contentEl.textContent = '';
 			}
 		});
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	private addCurrentAdventureSelector(
-		contentEl: HTMLDivElement,
-		currentAdventure: string|undefined,
-		adventures: Array<AdventureInterface>,
-	): any|ContentInterface|undefined {
-		const adventureSelectorEl = contentEl.createEl("select");
-		adventureSelectorEl.style.width = '100%';
-		adventureSelectorEl.createEl("option", {
-			text: "",
-			value: ""
-		}).selected = true;
-
-		adventures.forEach((adventure: AdventureInterface) => {
-			const adventureOptionEl = adventureSelectorEl.createEl("option", {
-				text: adventure.name,
-				value: adventure.id.stringValue,
-			});
-
-			if (currentAdventure === adventure.id.stringValue) {
-				adventureOptionEl.selected = true;
-			}
-		});
-
-		adventureSelectorEl.addEventListener("change", (e) => {
-			const file: TFile|undefined = this.currentElement.file;
-
-			if (file !== undefined){
-				this.factories.codeblock.update('campaignNavigation', 'current.adventure', adventureSelectorEl.value)
-			}
-		});
-
-		return ((contentEl: HTMLDivElement, currentAdventure: string|undefined, adventures: Array<AdventureInterface>) => {
-			let link: string|undefined = undefined;
-			adventures.forEach((adventure: AdventureInterface) => {
-				if (currentAdventure === adventure.id.stringValue) link = adventure.link;
-			});
-
-			if (link !== undefined) {
-				MarkdownRenderer.renderMarkdown(
-					link,
-					contentEl,
-					'',
-					null as unknown as Component,
-				);
-			} else {
-				contentEl.textContent = '';
-			}
-		});
-	}
-
-	private addCurrentActSelector(
-		contentEl: HTMLDivElement,
-		currentAct: string|undefined,
-		acts: Array<ActInterface>,
-	): void {
-		let selectedAct: ActInterface|undefined;
-
-		const actSelectorEl = contentEl.createEl("select");
-		actSelectorEl.style.width = '100%';
-		actSelectorEl.createEl("option", {
-			text: "",
-			value: ""
-		}).selected = true;
-
-		acts.forEach((act: ActInterface) => {
-			const actOptionEl = actSelectorEl.createEl("option", {
-				text: act.name,
-				value: act.id.stringValue,
-			});
-
-			if (currentAct === act.id.stringValue) {
-				selectedAct = act;
-				actOptionEl.selected = true;
-			}
-		});
-
-		actSelectorEl.addEventListener("change", (e) => {
-			const file: TFile|undefined = this.currentElement.file;
-
-			if (file !== undefined){
-				this.factories.codeblock.update('campaignNavigation', 'current.act', actSelectorEl.value)
-			}
-		});
-
-		if (selectedAct !== undefined){
-			const actLinkEl = contentEl.createSpan();
-			MarkdownRenderer.renderMarkdown(
-				selectedAct.link,
-				actLinkEl,
-				this.sourcePath,
-				null as unknown as Component,
-			);
-		}
-	}
-
-	private addCurrentSessionSelector(
-		contentEl: HTMLDivElement,
-		currentSession: string|undefined,
-		sessions: Array<SessionInterface>,
-	): void {
-		let selectedSession: SessionInterface|undefined;
-
-		const sessionSelectorEl = contentEl.createEl("select");
-		sessionSelectorEl.style.width = '100%';
-		sessionSelectorEl.createEl("option", {
-			text: "",
-			value: ""
-		}).selected = true;
-
-		sessions.forEach((session: SessionInterface) => {
-			const sessionOptionEl = sessionSelectorEl.createEl("option", {
-				text: session.name,
-				value: session.id.stringValue,
-			});
-
-			if (currentSession === session.id.stringValue) {
-				selectedSession = session;
-				sessionOptionEl.selected = true;
-			}
-		});
-
-		sessionSelectorEl.addEventListener("change", (e) => {
-			const file: TFile|undefined = this.currentElement.file;
-
-			if (file !== undefined){
-				this.factories.codeblock.update('campaignNavigation', 'current.session', sessionSelectorEl.value)
-			}
-		});
-
-		if (selectedSession !== undefined){
-			const sessionLinkEl = contentEl.createSpan();
-			MarkdownRenderer.renderMarkdown(
-				selectedSession.link,
-				sessionLinkEl,
-				this.sourcePath,
-				null as unknown as Component,
-			);
-		}
 	}
 }

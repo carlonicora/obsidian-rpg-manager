@@ -39,7 +39,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 
 		if (this.data.goals != null) response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Goals', this.data.goals.toString(), HeaderResponseType.Long));
 
-		if (this.data.pronoun != null) response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Pronoun', this.factories.pronouns.readPronoun(this.data.pronoun), HeaderResponseType.Short));
+		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Pronoun', this.data.pronoun, HeaderResponseType.Pronoun));
 		if (this.data.age != null || this.data.death != null) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Status', this.data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
 		}

@@ -11,4 +11,5 @@ export enum HeaderResponseType {
 	SceneRun,
 	SceneRunTime,
 	SceneAnalyser,
+	Pronoun,
 }
