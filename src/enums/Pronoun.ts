@@ -3,4 +3,10 @@ export enum Pronoun {
 	she,
 	he,
 	it,
+	ae,
+	e,
+	per,
+	ve,
+	xe,
+	ze,
 }

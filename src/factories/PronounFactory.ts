@@ -27,6 +27,21 @@ export class PronounFactory extends AbstractFactory implements PronounFactoryInt
 				case 'it':
 					response = Pronoun.it;
 					break;
+				case 'ae':
+					response = Pronoun.ae;
+					break;
+				case 'e':
+					response = Pronoun.e;
+					break;
+				case 'per':
+					response = Pronoun.per;
+					break;
+				case 've':
+					response = Pronoun.ve;
+					break;
+				case 'ze':
+					response = Pronoun.ze;
+					break;
 				default:
 					response = null;
 					break;
@@ -41,16 +56,34 @@ export class PronounFactory extends AbstractFactory implements PronounFactoryInt
 	): string {
 		switch (pronoun) {
 			case Pronoun.they:
-				return 'They/Them';
+				return 'They / Them / Themself';
 				break;
 			case Pronoun.she:
-				return 'She/Her';
+				return 'She / Her / Herself';
 				break;
 			case Pronoun.he:
-				return 'He/Him';
+				return 'He / Him / Himself';
 				break;
 			case Pronoun.it:
-				return 'It/Its';
+				return 'It / Its / Itself';
+				break;
+			case Pronoun.ae:
+				return '(f)Ae / (f)Aer / (f)Aerself';
+				break;
+			case Pronoun.e:
+				return 'E(Ey) / Em / Eirelf';
+				break;
+			case Pronoun.per:
+				return 'Per / Per / Perself';
+				break;
+			case Pronoun.ve:
+				return 'Ve / Ver / Verself';
+				break;
+			case Pronoun.xe:
+				return 'Xe / Xem / Xemself';
+				break;
+			case Pronoun.ze:
+				return 'Ze(Zie) / Hir / Hirself';
 				break;
 		}
 	}
