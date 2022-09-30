@@ -45,8 +45,6 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 		if (this.currentlyRunningScene !== undefined) await this.stopScene(this.currentlyRunningScene);
 		this.currentlyRunningScene = scene;
 
-		console.warn('starting ' + this.currentlyRunningScene.basename)
-
 		await this.factories.codeblock.startNewDuration(this.currentlyRunningScene.file);
 	}
 
@@ -55,8 +53,6 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	): Promise<void> {
 		if (this.currentlyRunningScene === undefined) return;
 
-		console.warn('stopping ' + this.currentlyRunningScene.basename)
-
 		this.factories.codeblock.stopCurrentDuration(this.currentlyRunningScene.file)
 		this.currentlyRunningScene = undefined;
 	}
@@ -64,7 +60,6 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	public async updateMedianTimes(
 		isStartup=false,
 	): Promise<void> {
-		console.error('updating median times');
 		const campaigns: Array<CampaignInterface> = this.database.read<CampaignInterface>((campaign: CampaignInterface) =>
 			campaign.id.type === ComponentType.Campaign
 		);
