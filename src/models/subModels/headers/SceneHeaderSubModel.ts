@@ -57,7 +57,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 			}));
 		}
 		if (this.settings.useSceneAnalyser) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session Type', (this.data.sceneType !== undefined ? SceneType[this.data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Type', (this.data.sceneType !== undefined ? SceneType[this.data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));

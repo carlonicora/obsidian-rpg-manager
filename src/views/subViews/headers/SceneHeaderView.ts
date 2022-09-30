@@ -3,7 +3,7 @@ import {SceneInterface} from "../../../interfaces/components/SceneInterface";
 import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
-import {SceneType} from "../../../enums/SceneType";
+import {SceneType, sceneTypeDescription} from "../../../enums/SceneType";
 import {IdInterface} from "../../../interfaces/components/IdInterface";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
@@ -138,7 +138,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 			Object.keys(SceneType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 				const sceneTypeOptionEl = sceneTypeSelectorEl.createEl("option", {
-					text: type,
+					text: sceneTypeDescription.get(SceneType[type as keyof typeof SceneType]) ?? type,
 					value: type,
 				});
 

@@ -683,6 +683,7 @@
 
 .rpgm-headless-table {
   border: none;
+  width: 100%;
 }
 .rpgm-headless-table td {
   border: none;
@@ -690,7 +691,9 @@
 .rpgm-headless-table td select {
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;
-  width: 150px;
+  min-width: 150px;
+  max-width: 500px;
+  width: calc(100% - 170px);
   box-shadow: none;
 }
 .rpgm-headless-table td input {
