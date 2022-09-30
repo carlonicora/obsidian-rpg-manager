@@ -35,7 +35,7 @@ export class CodeBlockEditorFactory extends AbstractFactory implements CodeBlock
 		}
 
 		if (endDurationAdded) {
-			fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
+			await fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
 		}
 	}
 
@@ -60,7 +60,7 @@ export class CodeBlockEditorFactory extends AbstractFactory implements CodeBlock
 		}
 
 		durations.push(Math.floor(Date.now()/1000).toString());
-		fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
+		await fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
 	}
 
 	public async update(

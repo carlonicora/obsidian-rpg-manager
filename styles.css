@@ -693,7 +693,7 @@
   border-radius: 0;
   min-width: 150px;
   max-width: 500px;
-  width: calc(100% - 170px);
+  width: 100%;
   box-shadow: none;
 }
 .rpgm-headless-table td input {

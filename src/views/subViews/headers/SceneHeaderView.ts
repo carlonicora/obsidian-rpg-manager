@@ -2,7 +2,7 @@ import {HeaderResponseInterface} from "../../../interfaces/response/subModels/He
 import {SceneInterface} from "../../../interfaces/components/SceneInterface";
 import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
-import {Component, MarkdownRenderer, TFile} from "obsidian";
+import {Component, Editor, MarkdownRenderer, MarkdownView, TFile, WorkspaceLeaf} from "obsidian";
 import {SceneType, sceneTypeDescription} from "../../../enums/SceneType";
 import {IdInterface} from "../../../interfaces/components/IdInterface";
 import {SessionInterface} from "../../../interfaces/components/SessionInterface";
@@ -89,14 +89,49 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 	): any|ContentInterface|undefined {
 		const startStopEl = contentEl.createEl('a', {href: '#', text: (this.currentElement.isCurrentlyRunning ? 'stop' : 'start')});
 		startStopEl.addEventListener('click', (e) => {
+			const editorPositions: Map<Editor, number> = new Map<Editor, number>();
+			/*
+
+
+			const editor: Editor|undefined = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
+			const top: number|undefined = editor?.getScrollInfo().top;
+
+			if (editor !== undefined && top !== undefined){
+				editorPositions.set(editor, top);
+			}
+			*/
+
+			this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
+				if (leaf.view instanceof MarkdownView) {
+					const editor = leaf.view.editor;
+					editorPositions.set(editor, editor.getScrollInfo().top);
+				}
+			});
+
 			e.preventDefault();
 
 			if (this.currentElement.isCurrentlyRunning){
-				this.factories.runningTimeManager.stopScene(this.currentElement);
+				this.factories.runningTimeManager.stopScene(this.currentElement)
+					.then(() => {
+						setTimeout(() => {this.refreshEditorsPosition(editorPositions)},0);
+					});
 			} else {
-				this.factories.runningTimeManager.startScene(this.currentElement);
+				this.factories.runningTimeManager.startScene(this.currentElement)
+					.then(() => {
+						setTimeout(() => {this.refreshEditorsPosition(editorPositions)},0);
+					});
 			}
 		})
+	}
+
+	private async refreshEditorsPosition(
+		editorsPosition: Map<Editor, number>,
+	): Promise<void> {
+		editorsPosition.forEach((position: number, editor: Editor) => {
+			if (editor.getScrollInfo().top !== position){
+				editor.scrollTo(0, position);
+			}
+		});
 	}
 
 	protected addSceneExcitmentSelector(
