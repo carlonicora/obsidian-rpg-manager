@@ -20,5 +20,6 @@ export interface RunningTimeManagerInterface{
 	): Promise<void>;
 
 	updateMedianTimes(
+		isStartup?: boolean,
 	): Promise<void>;
 }

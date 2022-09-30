@@ -25,27 +25,21 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			switch (element.type){
 				case HeaderResponseType.StoryCircleSelector:
 					headlessTable.addRow(element, this.addStoryCircleStageSelector.bind(this));
-					//this.addElement(containerEl, element, this.addStoryCircleStageSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SessionSelection:
 					headlessTable.addRow(element, this.addSessionSelector.bind(this));
-					//this.addElement(containerEl, element, this.addSessionSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SceneTypeSelector:
 					headlessTable.addRow(element, this.addSceneTypeSelector.bind(this));
-					//this.addElement(containerEl, element, this.addSceneTypeSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SceneExcitment:
 					headlessTable.addRow(element, this.addSceneExcitmentSelector.bind(this));
-					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SceneRun:
 					headlessTable.addRow(element, this.runScene.bind(this));
-					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				case HeaderResponseType.SceneRunTime:
 					headlessTable.addRow(element, this.sceneRunTime.bind(this));
-					//this.addElement(containerEl, element, this.addSceneExcitmentSelector(containerEl.children[1] as HTMLDivElement, element));
 					break;
 				default:
 					element.value.fillContent(
