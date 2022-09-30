@@ -54,6 +54,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this.plugin.settings.automaticMove, placeholder: 'Organise new elements'});
 		this.map.set(SettingType.templateFolder, {title: 'Template folder', value: this.plugin.settings.templateFolder, placeholder: 'Template Folder'});
 		this.map.set(SettingType.usePlotStructures, {title: 'Abt/Story Circle plot structure', value: this.plugin.settings.usePlotStructures, placeholder: ''});
+		this.map.set(SettingType.useSceneAnalyser, {title: 'Scene Analyser', value: this.plugin.settings.useSceneAnalyser, placeholder: ''});
 
 		this.advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
 		this.advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
@@ -69,7 +70,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.advancedSettingsDescription.set('SubplotList', {title: 'Subplot List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
 
 		this.settingsUpdater = new SettingsUpdater(this.app);
-		this.settingsFactory = new SettingsFactory(this.plugin, this.map, this.containerEl);
+		this.settingsFactory = new SettingsFactory(this.app, this.plugin, this.map, this.containerEl);
 	}
 
 	display(): void {
@@ -244,6 +245,11 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.settingsFactory.createToggleSetting(
 			SettingType.usePlotStructures,
 			`Use ABT/Story Circle plot structures`,
+		);
+
+		this.settingsFactory.createToggleSetting(
+			SettingType.useSceneAnalyser,
+			`Analyses the scenes inside acts or sessions to provide running time estimations and act or session balance`,
 		);
 	}
 

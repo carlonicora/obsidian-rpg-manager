@@ -25,6 +25,7 @@ declare module "obsidian" {
 
 	interface Workspace {
 		on(name: "rpgmanager:refresh-views", callback: () => void, ctx?: any): EventRef;
+		on(name: "rpgmanager:force-refresh-views", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:index-complete", callback: () => void, ctx?: any): EventRef;
 	}
 }

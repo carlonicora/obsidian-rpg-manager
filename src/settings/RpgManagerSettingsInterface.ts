@@ -19,6 +19,7 @@ export interface RpgManagerSettingsInterface {
 	previousVersion: string;
 	subplotTag:string;
 	usePlotStructures: boolean;
+	useSceneAnalyser: boolean;
 	advanced: RpgManagerAdvanceSettingsSettingListInterface;
 }
 
@@ -73,6 +74,7 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	YouTubeKey: '',
 	previousVersion: '',
 	usePlotStructures: false,
+	useSceneAnalyser: false,
 	advanced: {
 		Agnostic: {
 			ActList: {

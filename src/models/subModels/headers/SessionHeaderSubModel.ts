@@ -30,12 +30,19 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 
 		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: this.data}));
 		if (this.settings.usePlotStructures && this.data.abtStage !== undefined) {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
+				id: this.data.id,
+				file: this.data.file,
+			}));
+		}
+
+		if (this.settings.useSceneAnalyser){
 			const analyser = new SceneAnalyser(
 				this.app,
 				this.data.abtStage,
 				this.data.id
 			);
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
 				id: this.data.id,
 				file: this.data.file,
 				sceneAnalyser: analyser,

@@ -16,4 +16,5 @@ export enum SettingType {
 	Session,
 	Subplot,
 	usePlotStructures,
+	useSceneAnalyser
 }

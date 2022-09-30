@@ -44,7 +44,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 	constructor(
 		app: App,
-		private abtStage: AbtStage,
+		private abtStage: AbtStage|undefined,
 		private parentId: IdInterface,
 	) {
 		super(app);
@@ -60,19 +60,6 @@ export class SceneAnalyser extends AbstractRpgManager {
 			scenes.forEach((scene: SceneInterface) => {
 				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
-
-				if (previousType === scene.sceneType) {
-					console.warn(
-						'previous: ' + (previousType === undefined ? '' : SceneType[previousType]) + '\n' +
-						'current: ' + (scene.sceneType === undefined ? '' : SceneType[scene.sceneType]) + '\n' +
-						'BORING!'
-					)
-				} else {
-					console.log(
-						'previous: ' + (previousType === undefined ? '' : SceneType[previousType]) + '\n' +
-						'current: ' + (scene.sceneType === undefined ? '' : SceneType[scene.sceneType])
-					)
-				}
 
 				if (scene.sceneType !== undefined){
 					this.sceneTypesUsed.set(scene.sceneType, (this.sceneTypesUsed.get(scene.sceneType) ?? 0) + 1);
@@ -123,7 +110,12 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 	public get excitementLevel(
 	):ThresholdResult {
-		const expectedThreshold = this.abtStageExcitementThreshold.get(this.abtStage);
+		let expectedThreshold: number|undefined = undefined;
+		if (this.abtStage === undefined){
+			expectedThreshold = 50;
+		} else {
+			expectedThreshold = this.abtStageExcitementThreshold.get(this.abtStage);
+		}
 
 		if (expectedThreshold === undefined || this.excitmentPercentage === undefined) return ThresholdResult.NotAnalysable;
 
@@ -137,7 +129,12 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 	public get activityLevel(
 	):ThresholdResult {
-		const expectedThreshold = this.abtStageActivityThreshold.get(this.abtStage);
+		let expectedThreshold: number|undefined = undefined;
+		if (this.abtStage === undefined){
+			expectedThreshold = 50;
+		} else {
+			expectedThreshold = this.abtStageActivityThreshold.get(this.abtStage);
+		}
 
 		if (expectedThreshold === undefined || this.activityPercentage === undefined) return ThresholdResult.NotAnalysable;
 
@@ -165,14 +162,24 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 	public get targetExcitingScenePercentage(
 	): number {
-		const response = this.abtStageExcitementThreshold.get(this.abtStage);
+		let response: number|undefined = undefined;
+		if (this.abtStage === undefined){
+			response = 50;
+		} else {
+			response = this.abtStageExcitementThreshold.get(this.abtStage);
+		}
 
 		return response ?? 0;
 	}
 
 	public get targetActiveScenePercentage(
 	): number {
-		const response = this.abtStageActivityThreshold.get(this.abtStage);
+		let response: number|undefined = undefined;
+		if (this.abtStage === undefined){
+			response = 50;
+		} else {
+			response = this.abtStageActivityThreshold.get(this.abtStage);
+		}
 
 		return response ?? 0;
 	}

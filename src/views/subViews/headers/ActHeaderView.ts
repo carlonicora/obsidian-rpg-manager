@@ -31,6 +31,9 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 						analyser = element.additionalInformation.sceneAnalyser;
 					}
 					break;
+				case HeaderResponseType.SceneAnalyser:
+					analyser = element.additionalInformation.sceneAnalyser;
+					break;
 				default:
 					element.value.fillContent(
 						this.createContainerEl(element.type, element.title),

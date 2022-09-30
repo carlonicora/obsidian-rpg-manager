@@ -76,7 +76,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
 		if (currentElement === undefined) return false;
 
-		if (currentElement.version === this.componentVersion) return false;
+		if (this.componentVersion !== undefined && currentElement.version === this.componentVersion) return false;
 
 		this.componentVersion = currentElement.version;
 
@@ -89,12 +89,18 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	onload() {
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
+		this.registerEvent(this.app.workspace.on("rpgmanager:force-refresh-views", (() => {
+			this.render(true);
+		}).bind(this)));
 		this.render();
 	}
 
 	private async render(
+		forceRefresh=false,
 	): Promise<void> {
 		if (this.database === undefined) return;
+
+		if (forceRefresh) this.componentVersion = undefined;
 
 		if (await this.initialise()) {
 

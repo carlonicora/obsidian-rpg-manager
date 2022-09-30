@@ -1,10 +1,11 @@
-import {Setting} from "obsidian";
+import {App, Setting} from "obsidian";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {SettingType} from "../enums/SettingType";
 import {SettingInterface} from "../interfaces/SettingsInterface";
 
 export class SettingsFactory {
 	constructor(
+		private app: App,
 		private plugin: RpgManagerInterface,
 		private map: Map<SettingType, SettingInterface>,
 		private containerEl: HTMLElement,
@@ -114,7 +115,12 @@ export class SettingsFactory {
 								await this.plugin.updateSettings({ usePlotStructures: value })
 								settings.value = value;
 								break;
+							case SettingType.useSceneAnalyser:
+								await this.plugin.updateSettings({ useSceneAnalyser: value })
+								settings.value = value;
+								break;
 						}
+						this.app.workspace.trigger("rpgmanager:force-refresh-views");
 					})
 			);
 	}

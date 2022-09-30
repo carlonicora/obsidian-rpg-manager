@@ -10,4 +10,5 @@ export enum HeaderResponseType {
 	SceneExcitment,
 	SceneRun,
 	SceneRunTime,
+	SceneAnalyser,
 }

@@ -241,7 +241,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 					case ThresholdResult.CriticallyHigh:
 						score += 5;
 						warningErrorClass = 'error';
-						analyserBoredomElementEl.textContent = 'Not enough variety: ';
+						analyserBoredomElementEl.textContent = 'Repetitive: ';
 						analyserBoredomDescriptionEl.textContent = '(really, ';
 						break;
 				}
