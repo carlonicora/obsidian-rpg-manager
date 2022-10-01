@@ -90,16 +90,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		const startStopEl = contentEl.createEl('a', {href: '#', text: (this.currentElement.isCurrentlyRunning ? 'stop' : 'start')});
 		startStopEl.addEventListener('click', (e) => {
 			const editorPositions: Map<Editor, number> = new Map<Editor, number>();
-			/*
-
-
-			const editor: Editor|undefined = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
-			const top: number|undefined = editor?.getScrollInfo().top;
-
-			if (editor !== undefined && top !== undefined){
-				editorPositions.set(editor, top);
-			}
-			*/
 
 			this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
 				if (leaf.view instanceof MarkdownView) {

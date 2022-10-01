@@ -46,6 +46,8 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		protected sourceMeta: any,
 	) {
 		super(app);
+		this.currentElement.file.stat.mtime = Date.now();
+
 		this.response = new ResponseData(this.app);
 
 		this.subModelsMap.set(ComponentType.Location, LocationTableSubModel);

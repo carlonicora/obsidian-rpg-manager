@@ -225,7 +225,56 @@
 	}
 }
 
-.rpgm-modal {
+.modal-content {
+	.rpgm-modal-relationships {
+		select {
+			border-bottom: solid 1px var(--background-modifier-border);
+			border-radius: 0;
+			min-width: 150px;
+			max-width: 500px;
+			width: 100%;
+			box-shadow: none;
+
+			&:hover {
+				box-shadow: none;
+				background-color: var(--interactive-hover);
+				cursor: pointer;
+			}
+		}
+
+		.relationships {
+			margin-top: 20px;
+			min-height: 400px;
+
+			table > tbody > tr {
+
+				&:nth-child(odd) {
+					background-color: var(--background-primary-alt);
+				}
+				td {
+					height: 30px;
+
+					input {
+						margin: 0px 15px;
+					}
+
+					&.label {
+						padding: 0px 10px;
+					}
+
+					&.description {
+						max-width: 50%;
+
+						p {
+							font-size: 0.8em;
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 	.rpgm-elements{
 		.rpgm-elements-header{
 			margin-bottom: -2px;

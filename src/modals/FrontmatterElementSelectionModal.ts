@@ -1,15 +1,24 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
-import {App} from "obsidian";
+import {App, Component, MarkdownRenderer} from "obsidian";
 import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {ComponentType} from "../enums/ComponentType";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SorterType} from "../enums/SorterType";
-import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 
 export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
-	private listEl: HTMLUListElement;
-	private currentElementEl: HTMLSpanElement;
+	private relationshipsEl: HTMLDivElement;
 
+	private availableRelationships: Array<ComponentType> = [
+		ComponentType.Subplot,
+		ComponentType.Event,
+		ComponentType.NonPlayerCharacter,
+		ComponentType.Character,
+		ComponentType.Faction,
+		ComponentType.Music,
+		ComponentType.Location,
+		ComponentType.Clue,
+	];
 
 	constructor(
 		app: App,
@@ -23,101 +32,100 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.addClass('rpgm-modal');
 
-		contentEl.createEl('h2', {text: 'Scene Selector'});
+		const relationshipsModalEl = contentEl.createDiv({cls: 'rpgm-modal-relationships'})
 
-		const elementsEl = contentEl.createDiv({cls:'rpgm-elements'});
-		const elementsHeaderEl = elementsEl.createDiv({cls: 'rpgm-elements-headers'});
+		relationshipsModalEl.createEl('h2', {text: 'Relationship Selector'});
+		relationshipsModalEl.createDiv({text: 'Select the type of component'});
 
-		const elementsContainerEl = elementsEl.createDiv({cls: 'rpgm-elements-container'});
-		this.listEl = elementsContainerEl.createEl('ul');
-
-		this.addNavigators(
-			[
-				ComponentType.Subplot,
-				ComponentType.Event,
-				ComponentType.NonPlayerCharacter,
-				ComponentType.Character,
-				ComponentType.Faction,
-				ComponentType.Music,
-				ComponentType.Location,
-				ComponentType.Clue,
-			],
-			elementsHeaderEl,
-		);
+		this.addRelationshipTypeSelector(relationshipsModalEl);
+		this.relationshipsEl = relationshipsModalEl.createDiv({cls:'relationships', text: ''});
 	}
 
-	private addNavigators(
-		recortTypes: Array<ComponentType>,
-		elementHeaderEl: HTMLDivElement,
+	private addRelationshipTypeSelector(
+		contentEl: HTMLElement,
 	): void {
-		for (let index=0; index<recortTypes.length; index++){
-			const headerEl = elementHeaderEl.createEl('span', {text: ComponentType[recortTypes[index]] + 's'});
-
-			if (index === 0){
-				headerEl.addClasses(['first', 'selected']);
-				this.addElementsToList(recortTypes[index], headerEl);
-			}
-
-			if (index === recortTypes.length -1){
-				headerEl.addClass('last');
-			}
-
-			headerEl.addEventListener('click', () => {
-				this.addElementsToList(recortTypes[index], headerEl);
+		const relationshipTypeSelectorEl: HTMLSelectElement = contentEl.createEl('select');
+		relationshipTypeSelectorEl.createEl("option", {
+			text: '',
+			value: '',
+		});
+		this.availableRelationships.forEach((type: ComponentType) => {
+			relationshipTypeSelectorEl.createEl("option", {
+				text: ComponentType[type] + 's',
+				value: type.toString(),
 			});
-		}
+		});
+		relationshipTypeSelectorEl.addEventListener('change', () => {
+			this.relationshipsEl.empty();
+			if (relationshipTypeSelectorEl.value !== ''){
+				this.addElementsToList(+relationshipTypeSelectorEl.value);
+			}
+
+		});
 	}
 
 	private addElementsToList(
 		type: ComponentType,
-		headerEl: HTMLSpanElement,
 	): void {
-		if (headerEl === this.currentElementEl) return;
+		const relationshipsTableEl: HTMLTableSectionElement = this.relationshipsEl.createEl('table').createTBody();
 
-		if (this.currentElementEl !== undefined) this.currentElementEl.removeClass('selected');
+		const records: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentElement.id)
+			.sort(
+				this.factories.sorter.create<ComponentInterface>([
+					new SorterComparisonElement((data: ComponentInterface) => data.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
+					new SorterComparisonElement((data: ComponentInterface) => data.file.stat.mtime, SorterType.Descending),
+				])
+			);
 
-		this.currentElementEl = headerEl;
-		this.currentElementEl.addClass('selected');
+		records.forEach((component: ComponentInterface) => {
+			if (component.id !== this.currentElement.id) {
+				const rowEl: HTMLTableRowElement = relationshipsTableEl.insertRow();
 
-		this.listEl.empty();
-
-		const records: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentElement.id);
-
-		records.sort(
-			this.factories.sorter.create<ComponentInterface>([
-				new SorterComparisonElement((data: ComponentInterface) => data.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
-				new SorterComparisonElement((data: ComponentInterface) => data.file.stat.mtime, SorterType.Descending),
-			])
-		)
-
-		records.forEach((data: ComponentInterface) => {
-			if (data.id !== this.currentElement.id) {
-				const itemEl = this.listEl.createEl('li');
-
-				const checkboxDiv = itemEl.createDiv();
-				const checkbox = checkboxDiv.createEl('input');
+				const checkbox = rowEl.insertCell().createEl('input');
 				checkbox.type = 'checkbox';
-				checkbox.value = data.path;
-				checkbox.id = data.name;
+				checkbox.value = component.path;
+				checkbox.id = component.name;
 
 				checkbox.addEventListener('change', () => {
-					this.addOrRemoveElementRelationship(checkbox, data);
+					this.addOrRemoveElementRelationship(checkbox, component);
 				});
 
-				let description: string = data.name;
-				if (data.existsInRelationships(this.currentElement.relationships)) {
+				let description: string = component.name;
+				if (component.existsInRelationships(this.currentElement.relationships)) {
 					checkbox.checked = true;
 
-					const relationship: RelationshipInterface | undefined = this.currentElement.relationships.get(data.name);
+					const relationship: RelationshipInterface | undefined = this.currentElement.relationships.get(component.name);
 					if (relationship !== undefined && relationship.description !== '') {
 						description += ' (WARNING: removing this relationship will delete its description)';
 					}
 				}
 
-				const checkboxLabel = checkboxDiv.createEl('label', {text: description});
-				checkboxLabel.htmlFor = data.name;
+				/** IMAGE */
+				if (component.image != null){
+					const img = new Image(40, 40);
+					img.src = component.image;
+					img.style.objectFit = 'cover';
+					rowEl.insertCell().append(img as Node);
+				} else {
+					rowEl.insertCell();
+				}
+
+				/** TITLE */
+				const titleCell = rowEl.insertCell();
+				titleCell.addClass('label');
+				const checkboxLabel = titleCell.createEl('label', {text: description});
+				checkboxLabel.htmlFor = component.name;
+
+				/** DESCRIPTION */
+				const synopsisEl = rowEl.insertCell();
+				synopsisEl.addClass('description')
+					MarkdownRenderer.renderMarkdown(
+						component.synopsis ?? '',
+						synopsisEl,
+						'',
+						null as unknown as Component,
+					)
 			}
 		});
 	}

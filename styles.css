@@ -196,28 +196,63 @@
   background-color: var(--background-primary-alt);
 }
 
-.rpgm-modal .rpgm-elements .rpgm-elements-header {
+.modal-content .rpgm-modal-relationships select {
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0;
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: none;
+}
+.modal-content .rpgm-modal-relationships select:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
+}
+.modal-content .rpgm-modal-relationships .relationships {
+  margin-top: 20px;
+  min-height: 400px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr:nth-child(odd) {
+  background-color: var(--background-primary-alt);
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td {
+  height: 30px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input {
+  margin: 0px 15px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label {
+  padding: 0px 10px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description {
+  max-width: 50%;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description p {
+  font-size: 0.8em;
+}
+.modal-content .rpgm-elements .rpgm-elements-header {
   margin-bottom: -2px;
 }
-.rpgm-modal .rpgm-elements .rpgm-elements-header span {
+.modal-content .rpgm-elements .rpgm-elements-header span {
   padding: 0px 10px;
   border-top: solid 1px var(--background-modifier-border);
   border-right: solid 1px var(--background-modifier-border);
 }
-.rpgm-modal .rpgm-elements .rpgm-elements-header .first {
+.modal-content .rpgm-elements .rpgm-elements-header .first {
   border-left: solid 1px var(--background-modifier-border);
 }
-.rpgm-modal .rpgm-elements .rpgm-elements-header .last {
+.modal-content .rpgm-elements .rpgm-elements-header .last {
   margin-right: 25px;
 }
-.rpgm-modal .rpgm-elements .rpgm-elements-header .selected {
+.modal-content .rpgm-elements .rpgm-elements-header .selected {
   border-bottom: solid 2px var(--background-secondary);
 }
-.rpgm-modal .rpgm-elements .rpgm-elements-container {
+.modal-content .rpgm-elements .rpgm-elements-container {
   border: solid 1px var(--background-modifier-border);
   min-height: 50px;
 }
-.rpgm-modal .rpgm-elements .rpgm-elements-container ul {
+.modal-content .rpgm-elements .rpgm-elements-container ul {
   list-style: none;
 }
 

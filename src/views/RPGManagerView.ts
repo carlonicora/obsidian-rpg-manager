@@ -49,7 +49,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		this.rpgmContentEl.addClass('rpgm-right-view');
 		this.rpgmContentEl.empty();
 
-		this.verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-headers'});
+		this.verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-header'});
 		this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title  title', text: 'RPG Manager'});
 
 
