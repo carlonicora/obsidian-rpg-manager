@@ -16,6 +16,9 @@ import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterfa
 import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
 import {CodeBlockEditorFactoryInterface} from "./factories/CodeBlockEditorFactoryInterface";
 import {RunningTimeManagerInterface} from "./dataManipulation/RunningTimeManagerInterface";
+import {MetadataReaderInterface} from "./dataManipulation/MetadataReaderInterface";
+import {DatabaseV2FactoryInterface} from "../_dbV2/factories/interfaces/DatabaseV2FactoryInterface";
+import {ComponentV2FactoryInterface} from "../_dbV2/factories/interfaces/ComponentV2FactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -36,4 +39,8 @@ export interface FactoriesInterface {
 	sorter: SorterFactoryInterface;
 	codeblock: CodeBlockEditorFactoryInterface;
 	runningTimeManager: RunningTimeManagerInterface;
+	metadataReader: MetadataReaderInterface;
+
+	componentV2: ComponentV2FactoryInterface;
+	databaseV2: DatabaseV2FactoryInterface;
 }

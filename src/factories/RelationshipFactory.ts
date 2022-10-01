@@ -33,6 +33,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 					false,
 				);
 
+
 				const content = fileContent.join('\n');
 				const newContent = (frontmatter.length > 0 ? '---\n' + frontmatter.join('\n') + '\n---\n' : '') + body.join('\n');
 				if (content !== newContent){

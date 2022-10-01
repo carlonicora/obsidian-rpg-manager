@@ -6,6 +6,8 @@ import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {base} from "w3c-keyname";
 import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
+import {DatabaseV2Interface} from "../_dbV2/interfaces/DatabaseV2Interface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -30,9 +32,25 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		return this.app.plugins.getPlugin('rpg-manager').database;
 	}
 
+	public get databaseV2(
+	): DatabaseV2Interface {
+		return this.app.plugins.getPlugin('rpg-manager').databaseV2;
+	}
+
+	public set databaseV2(
+		database: DatabaseV2Interface,
+	) {
+		this.app.plugins.getPlugin('rpg-manager').databaseV2 = database;
+	}
+
 	public get factories(
 	): FactoriesInterface {
 		return this.app.plugins.getPlugin('rpg-manager').factories;
+	}
+
+	public get dataManipulators(
+	): DataManipulatorsInterface {
+		return this.app.plugins.getPlugin('rpg-manager').dataManipulators;
 	}
 
 	public get tagHelper(

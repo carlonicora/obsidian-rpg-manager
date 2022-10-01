@@ -36,6 +36,12 @@ import {CodeBlockEditorFactoryInterface} from "./interfaces/factories/CodeBlockE
 import {CodeBlockEditorFactory} from "./factories/CodeBlockEditorFactory";
 import {RunningTimeManagerInterface} from "./interfaces/dataManipulation/RunningTimeManagerInterface";
 import {RunningTimeManager} from "./dataManipulation/RunningTimeManager";
+import {DatabaseV2FactoryInterface} from "./_dbV2/factories/interfaces/DatabaseV2FactoryInterface";
+import {DatabaseV2Factory} from "./_dbV2/factories/DatabaseV2Factory";
+import {MetadataReaderInterface} from "./interfaces/dataManipulation/MetadataReaderInterface";
+import {MetadataReader} from "./dataManipulation/MetadataReader";
+import {ComponentV2FactoryInterface} from "./_dbV2/factories/interfaces/ComponentV2FactoryInterface";
+import {ComponentV2Factory} from "./_dbV2/factories/ComponentV2Factory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -56,6 +62,10 @@ export class Factories implements FactoriesInterface{
 	public sorter: SorterFactoryInterface;
 	public codeblock: CodeBlockEditorFactoryInterface;
 	public runningTimeManager: RunningTimeManagerInterface;
+	public metadataReader: MetadataReaderInterface;
+
+	public componentV2: ComponentV2FactoryInterface;
+	public databaseV2: DatabaseV2FactoryInterface;
 
 	constructor(
 		private app: App,
@@ -78,5 +88,9 @@ export class Factories implements FactoriesInterface{
 		this.sorter = new SorterFactory(this.app);
 		this.codeblock = new CodeBlockEditorFactory(this.app);
 		this.runningTimeManager = new RunningTimeManager(this.app);
+		this.metadataReader = new MetadataReader(this.app);
+
+		this.componentV2 = new ComponentV2Factory(this.app);
+		this.databaseV2 = new DatabaseV2Factory(this.app);
 	}
 }
