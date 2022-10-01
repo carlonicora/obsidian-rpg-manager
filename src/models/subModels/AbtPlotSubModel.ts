@@ -2,10 +2,10 @@ import {AbstractSubModel} from "../../abstracts/AbstractSubModel";
 import {ResponseDataElementInterface} from "../../interfaces/response/ResponseDataElementInterface";
 import {ResponseTable} from "../../responses/ResponseTable";
 import {ContentType} from "../../enums/ContentType";
-import {Adventure} from "../../components/Adventure";
 import {ComponentType} from "../../enums/ComponentType";
-import {ActInterface} from "../../interfaces/components/ActInterface";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
+import {AdventureV2} from "../../_dbV2/components/AdventureV2";
+import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
 
 export class AbtPlotSubModel extends AbstractSubModel {
 
@@ -36,16 +36,16 @@ export class AbtPlotSubModel extends AbstractSubModel {
 		const response = new ResponseTable(this.app, this.currentElement);
 
 		if (
-			data instanceof Adventure &&
-			this.database.readList<ActInterface>(ComponentType.Act, data.id).length === 0 &&
+			data instanceof AdventureV2 &&
+			this.database.readList<ActV2Interface>(ComponentType.Act, data.id).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&
 			additionalInformation.therefore !== ''
 		) {
 			response.create = ComponentType.Adventure;
-			response.campaignId = data.campaign.campaignId;
-			response.adventureId = data.adventureId;
+			response.campaignId = data.campaign.id.campaignId;
+			response.adventureId = data.id.adventureId;
 		}
 
 		response.title = 'ABT Plot';

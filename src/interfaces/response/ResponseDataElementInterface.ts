@@ -1,8 +1,8 @@
 import {ResponseType} from "../../enums/ResponseType";
-import {ComponentInterface} from "../database/ComponentInterface";
+import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
 
 export interface ResponseDataElementInterface {
-	currentElement: ComponentInterface;
+	currentElement: ComponentV2Interface;
 	responseType: ResponseType;
 	title: string|null;
 

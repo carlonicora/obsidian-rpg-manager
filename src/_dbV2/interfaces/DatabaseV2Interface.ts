@@ -1,5 +1,5 @@
 import {ComponentType} from "../../enums/ComponentType";
-import {IdInterface} from "../../interfaces/components/IdInterface";
+import {IdInterface} from "../../interfaces/IdInterface";
 import {ComponentV2Interface} from "./ComponentV2Interface";
 
 export interface DatabaseV2Interface {

@@ -1,14 +1,14 @@
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {SceneSelectionModal} from "../../../modals/SceneSelectionModal";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {HeadlessTableView} from "../../HeadlessTableView";
+import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: SessionInterface;
+	protected currentElement: SessionV2Interface;
 
 	public render(
 		container: HTMLElement,

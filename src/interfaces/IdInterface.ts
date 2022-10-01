@@ -1,6 +1,6 @@
-import {ComponentType} from "../../enums/ComponentType";
-import {TagValueInterface} from "../TagValueInterface";
-import {TagStatus} from "../../enums/TagStatus";
+import {ComponentType} from "../enums/ComponentType";
+import {TagValueInterface} from "./TagValueInterface";
+import {TagStatus} from "../enums/TagStatus";
 
 export interface IdInterface {
 	type: ComponentType;

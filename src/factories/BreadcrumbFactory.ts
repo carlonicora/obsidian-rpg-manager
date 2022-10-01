@@ -1,19 +1,19 @@
 import {BreadcrumbFactoryInterface} from "../interfaces/factories/BreadcrumbFactoryInterface";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {BreadcrumbResponseInterface} from "../interfaces/response/subModels/BreadcrumbResponseInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {ResponseBreadcrumb} from "../responses/ResponseBreadcrumb";
 import {ComponentType} from "../enums/ComponentType";
-import {BaseCampaignInterface} from "../interfaces/components/BaseCampaignInterface";
-import {ActInterface} from "../interfaces/components/ActInterface";
 import {FileFactory} from "./FileFactory";
-import {SceneInterface} from "../interfaces/components/SceneInterface";
-import {AdventureInterface} from "../interfaces/components/AdventureInterface";
-import {SessionInterface} from "../interfaces/components/SessionInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {AdventureV2Interface} from "../_dbV2/components/interfaces/AdventureV2Interface";
+import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interface";
+import {ActV2Interface} from "../_dbV2/components/interfaces/ActV2Interface";
+import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
+import {BaseCampaignV2Interface} from "../_dbV2/components/interfaces/BaseCampaignV2Interface";
 
 export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFactoryInterface {
 	public create(
-		record: ComponentInterface,
+		record: ComponentV2Interface,
 	): BreadcrumbResponseInterface {
 		const response = this.generateElementBreadcrumb(null, ComponentType.Campaign, record.campaign);
 
@@ -22,16 +22,16 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 
 			switch (record.id.type) {
 				case ComponentType.Adventure:
-					this.generateAventureBreadcrumb(response, record as AdventureInterface);
+					this.generateAventureBreadcrumb(response, record as AdventureV2Interface);
 					break;
 				case ComponentType.Session:
-					this.generateSessionBreadcrumb(response, record as SessionInterface);
+					this.generateSessionBreadcrumb(response, record as SessionV2Interface);
 					break;
 				case ComponentType.Act:
-					this.generateActBreadcrumb(response, record as ActInterface);
+					this.generateActBreadcrumb(response, record as ActV2Interface);
 					break;
 				case ComponentType.Scene:
-					this.generateSceneBreadcrumb(response, record as SceneInterface);
+					this.generateSceneBreadcrumb(response, record as SceneV2Interface);
 					break;
 				default:
 					this.generateElementBreadcrumb(response, record.id.type, record);
@@ -45,12 +45,12 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 	private generateElementBreadcrumb(
 		parent: ResponseBreadcrumb|null,
 		type: ComponentType,
-		data: ComponentInterface|BaseCampaignInterface,
+		data: ComponentV2Interface|BaseCampaignV2Interface,
 		linkText: string|null = null,
 		isNewLine = false,
 	): ResponseBreadcrumb {
-		const response = new ResponseBreadcrumb(this.app, <ComponentInterface>data);
-		response.link = data.link;
+		const response = new ResponseBreadcrumb(this.app, <ComponentV2Interface>data);
+		response.link = data.file.basename;
 		response.title = ComponentType[type];
 
 		if (linkText != null) response.linkText = linkText;
@@ -62,38 +62,38 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 	}
 
 	sceneCreator = function(
-		scene: SceneInterface,
+		scene: SceneV2Interface,
 		fileFactory: FileFactory,
 	){
-		const newSceneId = scene.sceneId + 1;
+		const newSceneId = (scene.id.sceneId ?? 0) + 1;
 		fileFactory.silentCreate(
 			ComponentType.Scene,
 			'a' +
-			(scene.act.actId < 10 ? '0' + scene.act.actId.toString(): scene.act.actId.toString()) +
+			((scene.act.id.actId ?? 0) < 10 ? '0' + scene.act.id.actId?.toString(): scene.act.id.actId?.toString()) +
 			's' +
 			(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()),
-			scene.campaign.campaignId,
-			scene.adventure.adventureId,
-			scene.act.actId,
+			scene.campaign.id.campaignId,
+			scene.adventure.id.adventureId,
+			scene.act.id.actId,
 			newSceneId,
 		);
 	}
 
 	private generateAventureBreadcrumb(
 		parent: ResponseBreadcrumb,
-		adventure: AdventureInterface
+		adventure: AdventureV2Interface
 	): ResponseBreadcrumb {
 		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Adventure, adventure);
 
-		let previousAdventure: AdventureInterface|undefined;
-		let nextAdventure: AdventureInterface|undefined;
+		let previousAdventure: AdventureV2Interface|undefined;
+		let nextAdventure: AdventureV2Interface|undefined;
 		try {
-			previousAdventure = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.id, adventure.adventureId - 1);
+			previousAdventure = this.database.readSingle<AdventureV2Interface>(ComponentType.Adventure, adventure.id, (adventure.id.adventureId ?? 0) - 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextAdventure = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.id, adventure.adventureId + 1);
+			nextAdventure = this.database.readSingle<AdventureV2Interface>(ComponentType.Adventure, adventure.id, (adventure.id.adventureId ?? 0) + 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -129,19 +129,19 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 
 	private generateSessionBreadcrumb(
 		parent: ResponseBreadcrumb,
-		session: SessionInterface
+		session: SessionV2Interface
 	): ResponseBreadcrumb {
 		const sessionBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Session, session);
 
-		let previousSession: SessionInterface|undefined;
-		let nextSession: SessionInterface|undefined;
+		let previousSession: SessionV2Interface|undefined;
+		let nextSession: SessionV2Interface|undefined;
 		try {
-			previousSession = this.database.readSingle<SessionInterface>(ComponentType.Session, session.id, session.sessionId - 1);
+			previousSession = this.database.readSingle<SessionV2Interface>(ComponentType.Session, session.id, (session.id.sessionId ?? 0) - 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextSession = this.database.readSingle<SessionInterface>(ComponentType.Session, session.id, session.sessionId + 1);
+			nextSession = this.database.readSingle<SessionV2Interface>(ComponentType.Session, session.id, (session.id.sessionId ?? 0) + 1);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -177,7 +177,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 
 	private generateActBreadcrumb(
 		parent: ResponseBreadcrumb,
-		act: ActInterface
+		act: ActV2Interface
 	): ResponseBreadcrumb {
 		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Adventure, act.adventure);
 		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, act);
@@ -193,7 +193,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 
 	private generateSceneBreadcrumb(
 		parent: ResponseBreadcrumb,
-		scene: SceneInterface
+		scene: SceneV2Interface
 	): ResponseBreadcrumb {
 		const adventureBreadcrumb = this.generateElementBreadcrumb(parent, ComponentType.Adventure, scene.adventure);
 		const actBreadcrumb = this.generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, scene.act);

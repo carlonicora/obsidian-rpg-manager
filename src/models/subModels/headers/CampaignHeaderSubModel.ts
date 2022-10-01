@@ -4,11 +4,11 @@ import {ResponseDataElementInterface} from "../../../interfaces/response/Respons
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {CampaignInterface} from "../../../interfaces/components/CampaignInterface";
 import {ResponseType} from "../../../enums/ResponseType";
+import {CampaignV2Interface} from "../../../_dbV2/components/interfaces/CampaignV2Interface";
 
 export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: CampaignInterface;
+	protected data: CampaignV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

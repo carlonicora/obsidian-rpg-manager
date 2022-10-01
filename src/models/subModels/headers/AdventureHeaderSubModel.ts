@@ -5,10 +5,10 @@ import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
-import {AdventureInterface} from "../../../interfaces/components/AdventureInterface";
+import {AdventureV2Interface} from "../../../_dbV2/components/interfaces/AdventureV2Interface";
 
 export class AdventureHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: AdventureInterface;
+	protected data: AdventureV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

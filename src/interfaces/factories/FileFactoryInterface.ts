@@ -1,6 +1,6 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
 import {ComponentType} from "../../enums/ComponentType";
-import {IdInterface} from "../components/IdInterface";
+import {IdInterface} from "../IdInterface";
 
 export interface FileFactoryInterface {
 	create(

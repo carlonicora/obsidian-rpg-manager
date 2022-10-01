@@ -4,20 +4,20 @@ import {ResponseDataElementInterface} from "../../../interfaces/response/Respons
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {SceneInterface} from "../../../interfaces/components/SceneInterface";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {StoryCircleStage} from "../../../enums/StoryCircleStage";
 import {SceneType} from "../../../enums/SceneType";
 import {ResponseType} from "../../../enums/ResponseType";
-import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
 import {SorterType} from "../../../enums/SorterType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {AbtStage} from "../../../enums/AbtStage";
+import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
+import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: SceneInterface;
+	protected data: SceneV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,
@@ -28,9 +28,9 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 
 		this.synopsisTitle = 'Scene Goal';
 
-		const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
-			.sort(this.factories.sorter.create<SessionInterface>([
-				new SorterComparisonElement((session: SessionInterface) => session.sessionId, SorterType.Descending)
+		const sessions: Array<SessionV2Interface> = this.database.read<SessionV2Interface>((session: SessionV2Interface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
+			.sort(this.factories.sorter.create<SessionV2Interface>([
+				new SorterComparisonElement((session: SessionV2Interface) => session.id.sessionId, SorterType.Descending)
 			]));
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
@@ -49,7 +49,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Action', additionalInformation.action, HeaderResponseType.Long));
 		}
-		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.sessionId === undefined ? '' : this.data.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: this.data.id, file: this.data.file, sessions: sessions}));
+		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.id.sessionId === undefined ? '' : this.data.id.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: this.data.id, file: this.data.file, sessions: sessions}));
 		if (this.settings.usePlotStructures) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (this.data.storycircleStage !== undefined ? StoryCircleStage[this.data.storycircleStage] : ''), HeaderResponseType.StoryCircleSelector, {
 				sceneId: this.data.id,

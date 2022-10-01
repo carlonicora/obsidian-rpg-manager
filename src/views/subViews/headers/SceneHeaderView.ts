@@ -1,18 +1,18 @@
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {SceneInterface} from "../../../interfaces/components/SceneInterface";
 import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {Component, Editor, MarkdownRenderer, MarkdownView, TFile, WorkspaceLeaf} from "obsidian";
 import {SceneType, sceneTypeDescription} from "../../../enums/SceneType";
-import {IdInterface} from "../../../interfaces/components/IdInterface";
-import {SessionInterface} from "../../../interfaces/components/SessionInterface";
+import {IdInterface} from "../../../interfaces/IdInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {SceneTypeDescriptionModal} from "../../../modals/SceneTypeDescriptionModal";
+import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
+import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: SceneInterface;
+	protected currentElement: SceneV2Interface;
 
 	public render(
 		container: HTMLElement,
@@ -197,10 +197,10 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 		if (sceneId !== undefined) {
 			const sessions = data.additionalInformation.sessions;
-			sessions.forEach((session: SessionInterface) => {
-				if (data.value.content.toString() === session.sessionId.toString()) {
+			sessions.forEach((session: SessionV2Interface) => {
+				if (data.value.content.toString() === session.id.sessionId?.toString()) {
 					MarkdownRenderer.renderMarkdown(
-						session.link,
+						session.file.path,
 						contentEl,
 						'',
 						null as unknown as Component,
@@ -226,13 +226,13 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					value: ""
 				}).selected = true;
 			}
-			sessions.forEach((session: SessionInterface) => {
+			sessions.forEach((session: SessionV2Interface) => {
 				const sessionOptionEl = sessionSelectorEl.createEl("option", {
-					text: session.name,
-					value: session.sessionId.toString(),
+					text: session.file.basename,
+					value: session.id.sessionId?.toString(),
 				});
 
-				if (data.value.content.toString() === session.sessionId.toString()) sessionOptionEl.selected = true;
+				if (data.value.content.toString() === session.id.sessionId?.toString()) sessionOptionEl.selected = true;
 			});
 
 			sessionSelectorEl.addEventListener("change", (e) => {
@@ -245,10 +245,10 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 			if (sceneId !== undefined) {
 				const sessions = data.additionalInformation.sessions;
-				sessions.forEach((session: SessionInterface) => {
-					if (data.value.content.toString() === session.sessionId.toString()) {
+				sessions.forEach((session: SessionV2Interface) => {
+					if (data.value.content.toString() === session.id.sessionId?.toString()) {
 						MarkdownRenderer.renderMarkdown(
-							session.link,
+							session.file.path,
 							contentEl,
 							'',
 							null as unknown as Component,

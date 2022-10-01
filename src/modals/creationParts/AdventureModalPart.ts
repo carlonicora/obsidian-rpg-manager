@@ -2,10 +2,10 @@ import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {ComponentType} from "../../enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
-import {AdventureInterface} from "../../interfaces/components/AdventureInterface";
+import {AdventureV2Interface} from "../../_dbV2/components/interfaces/AdventureV2Interface";
 
 export class AdventureModalPart extends AbstractModalPart {
-	private adventures: AdventureInterface[];
+	private adventures: AdventureV2Interface[];
 
 	private adventureEl: HTMLSelectElement;
 	private adventureErrorEl: HTMLParagraphElement;
@@ -22,7 +22,7 @@ export class AdventureModalPart extends AbstractModalPart {
 			this.modal.adventureId.id = 1;
 		}
 
-		this.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
+		this.adventures = this.database.readList<AdventureV2Interface>(ComponentType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -76,9 +76,9 @@ export class AdventureModalPart extends AbstractModalPart {
 	private addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		this.adventures.forEach((adventure: AdventureInterface) => {
-			if (this.modal.adventureId !== undefined && adventure.adventureId >= (this.modal.adventureId.id ?? 0)) {
-				this.modal.adventureId.id = (adventure.adventureId + 1);
+		this.adventures.forEach((adventure: AdventureV2Interface) => {
+			if (this.modal.adventureId !== undefined && (adventure.id.adventureId ?? 0) >= (this.modal.adventureId.id ?? 0)) {
+				this.modal.adventureId.id = ((adventure.id.adventureId ?? 0) + 1);
 			}
 		});
 	}
@@ -100,13 +100,13 @@ export class AdventureModalPart extends AbstractModalPart {
 			}).selected = true;
 		}
 
-		this.adventures.forEach((adventure: AdventureInterface) => {
+		this.adventures.forEach((adventure: AdventureV2Interface) => {
 			const adventureOptionEl = this.adventureEl.createEl('option', {
-				text: adventure.name,
-				value: adventure.adventureId.toString(),
+				text: adventure.file.basename,
+				value: adventure.id.adventureId?.toString(),
 			});
 
-			if (this.adventures.length === 1 || this.modal.adventureId?.id === adventure.adventureId){
+			if (this.adventures.length === 1 || this.modal.adventureId?.id === adventure.id.adventureId){
 				adventureOptionEl.selected = true;
 				this.selectAdventure();
 			}

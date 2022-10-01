@@ -4,13 +4,13 @@ import {ResponseDataElementInterface} from "../../../interfaces/response/Respons
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {MusicInterface} from "../../../interfaces/components/MusicInterface";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseType} from "../../../enums/ResponseType";
+import {MusicV2Interface} from "../../../_dbV2/components/interfaces/MusicV2Interface";
 
 export class MusicHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: MusicInterface;
+	protected data: MusicV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

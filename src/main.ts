@@ -3,7 +3,6 @@ import {Controller} from "./Controller";
 import {ComponentType} from "./enums/ComponentType";
 import {Factories} from "./Factories";
 import {CreationModal} from "./modals/CreationModal";
-import {DatabaseInterface} from "./interfaces/database/DatabaseInterface";
 import {Logger, LogType} from "./helpers/Logger";
 import {RpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
@@ -24,8 +23,7 @@ import {DatabaseV2Initialiser} from "./_dbV2/DatabaseV2Initialiser";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
-	database: DatabaseInterface;
-	databaseV2: DatabaseV2Interface;
+	database: DatabaseV2Interface;
 	factories: FactoriesInterface;
 	dataManipulators: DataManipulatorsInterface;
 	tagHelper: TagHelper;
@@ -79,13 +77,13 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 		DatabaseV2Initialiser.initialise(this.app)
 			.then((database: DatabaseV2Interface) => {
-				this.databaseV2 = database;
+				this.database = database;
 				console.log(
-					`RPG Manager: ${this.databaseV2.recordset.length} outlines and elements have been indexed in ${
+					`RPG Manager: ${this.database.recordset.length} outlines and elements have been indexed in ${
 						(Date.now() - reloadStart) / 1000.0
 					}s.`
 				);
-				console.warn(this.databaseV2);
+				console.warn(this.database);
 			});
 
 
@@ -105,11 +103,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							if (leaf.view instanceof MarkdownView) {
 								const file = leaf.view?.file;
 								if (file !== undefined) {
-									const component: ComponentInterface|undefined = this.database.readByPath(file.path);
+									const component: ComponentV2Interface|undefined = this.database.readByPath(file.path);
 									if (
 										component !== undefined &&
 										component.id.type === ComponentType.Scene &&
-										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneInterface>component)
+										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneV2Interface>component)
 									) {
 										isCurrentlyRunningSceneOpen = true;
 									}

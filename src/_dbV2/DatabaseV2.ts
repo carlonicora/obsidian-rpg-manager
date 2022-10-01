@@ -1,7 +1,7 @@
 import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerComponent";
 import {App, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 import {ComponentNotFoundError} from "../errors/ComponentNotFoundError";
 import {DatabaseV2Interface} from "./interfaces/DatabaseV2Interface";
 import {ComponentV2Interface} from "./interfaces/ComponentV2Interface";

@@ -1,13 +1,13 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {SubplotInterface} from "../../interfaces/components/SubplotInterface";
+import {SubplotV2Interface} from "../../interfaces/components/SubplotV2Interface";
 import {AbtPlotSubModel} from "../subModels/AbtPlotSubModel";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {SubplotHeaderSubModel} from "../subModels/headers/SubplotHeaderSubModel";
 
 export class SubplotModel extends AbstractModel {
-	protected currentElement: SubplotInterface;
+	protected currentElement: SubplotV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

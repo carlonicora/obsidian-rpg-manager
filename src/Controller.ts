@@ -3,18 +3,18 @@ import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface
 import {ResponseDataElementInterface} from "./interfaces/response/ResponseDataElementInterface";
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {ComponentInterface} from "./interfaces/database/ComponentInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
 import {ErrorLog, LogMessageType} from "./helpers/Logger";
 import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
-import {CampaignInterface} from "./interfaces/components/CampaignInterface";
+import {ComponentV2Interface} from "./_dbV2/interfaces/ComponentV2Interface";
+import {CampaignV2Interface} from "./_dbV2/components/interfaces/CampaignV2Interface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
 	private data: ResponseDataInterface;
 	private model: ModelInterface;
 
-	private currentElement: ComponentInterface;
+	private currentElement: ComponentV2Interface;
 	private campaignSettings: CampaignSetting;
 
 	private componentVersion: number|undefined = undefined;
@@ -53,8 +53,8 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		this.campaignSettings = CampaignSetting.Agnostic;
 		if (this.currentElement.campaign !== undefined){
 			this.campaignSettings = this.currentElement.campaign.campaignSettings;
-		} else if ((<CampaignInterface>this.currentElement).campaignSettings !== undefined) {
-			this.campaignSettings = (<CampaignInterface>this.currentElement).campaignSettings;
+		} else if ((<CampaignV2Interface>this.currentElement).campaignSettings !== undefined) {
+			this.campaignSettings = (<CampaignV2Interface>this.currentElement).campaignSettings;
 		}
 
 		try {
@@ -73,7 +73,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	private initialise(
 	): boolean {
-		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
+		const currentElement:ComponentV2Interface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentV2Interface>(this.sourcePath);
 		if (currentElement === undefined) return false;
 
 		if (this.componentVersion !== undefined && currentElement.version === this.componentVersion) return false;

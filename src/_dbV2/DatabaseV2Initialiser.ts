@@ -5,7 +5,7 @@ import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {ComponentType} from "../enums/ComponentType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {MultipleTagsError} from "../errors/MultipleTagsError";
 import {ComponentV2Interface} from "./interfaces/ComponentV2Interface";
@@ -28,7 +28,7 @@ export class DatabaseV2Initialiser {
 		this.factories = this.app.plugins.getPlugin('rpg-manager').factories;
 		this.tagHelper = this.app.plugins.getPlugin('rpg-manager').tagHelper;
 
-		const response: DatabaseV2Interface = await this.factories.databaseV2.create();
+		const response: DatabaseV2Interface = await this.factories.database.create();
 
 		await this._loadCampaignSettings();
 
@@ -90,7 +90,7 @@ export class DatabaseV2Initialiser {
 
 		const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
 
-		const response = await this.factories.componentV2.create(
+		const response = await this.factories.component.create(
 			settings,
 			file,
 			id,

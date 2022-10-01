@@ -5,7 +5,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/ComponentNotesTemplateFactoryInterface";
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 
 export class CreationModal extends AbstractRpgManagerModal implements ModalInterface {
 	public saver: ModalPartInterface;

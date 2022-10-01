@@ -31,7 +31,7 @@ export class SessionV2 extends AbstractComponentV2 implements SessionV2Interface
 		const sessionId = this.id.sessionId;
 		if (sessionId === undefined) return null;
 
-		const response = this.databaseV2.read<SessionV2Interface>((session: SessionV2Interface) =>
+		const response = this.database.read<SessionV2Interface>((session: SessionV2Interface) =>
 			session.id.type === ComponentType.Session &&
 			session.id.campaignId === this.id.campaignId &&
 			session.id.sessionId === (next ? sessionId + 1 : sessionId -1)

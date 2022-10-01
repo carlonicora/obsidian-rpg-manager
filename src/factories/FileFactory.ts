@@ -1,10 +1,10 @@
 import {MarkdownView} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {CampaignInterface} from "../interfaces/components/CampaignInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {FileFactoryInterface} from "../interfaces/factories/FileFactoryInterface";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
+import {CampaignV2Interface} from "../_dbV2/components/interfaces/CampaignV2Interface";
 
 const path = require('path');
 
@@ -25,7 +25,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let folder = path.sep;
 
 		try {
-			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
+			const campaign: CampaignV2Interface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignV2Interface>(ComponentType.Campaign, campaignId);
 			settings = campaign.campaignSettings;
 			folder = campaign.folder;
 		} catch (e) {
@@ -97,12 +97,12 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let folder = '';
 		let settings = CampaignSetting.Agnostic;
 
-		let campaign: CampaignInterface|undefined;
+		let campaign: CampaignV2Interface|undefined;
 		const id = this.factories.id.create(ComponentType.Campaign, campaignId);
 
 		if (id !== undefined){
 			try {
-				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
+				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignV2Interface>(ComponentType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}

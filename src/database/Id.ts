@@ -3,7 +3,7 @@ import {TagValueInterface} from "../interfaces/TagValueInterface";
 import {TagStatus} from "../enums/TagStatus";
 import {App} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 
 export class Id extends AbstractRpgManager implements IdInterface{

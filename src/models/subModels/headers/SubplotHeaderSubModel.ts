@@ -4,11 +4,11 @@ import {ResponseDataElementInterface} from "../../../interfaces/response/Respons
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {SubplotInterface} from "../../../interfaces/components/SubplotInterface";
+import {SubplotV2Interface} from "../../../interfaces/components/SubplotV2Interface";
 import {ResponseType} from "../../../enums/ResponseType";
 
 export class SubplotHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: SubplotInterface;
+	protected data: SubplotV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

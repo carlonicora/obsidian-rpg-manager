@@ -1,11 +1,11 @@
 import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
-import {SceneInterface} from "../../interfaces/components/SceneInterface";
 import {ComponentType} from "../../enums/ComponentType";
+import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
 
 export class SceneModalPart extends AbstractModalPart {
-	private scenes: SceneInterface[];
+	private scenes: SceneV2Interface[];
 
 	constructor(
 		app: App,
@@ -16,7 +16,7 @@ export class SceneModalPart extends AbstractModalPart {
 		this.modal.sceneId.id = 1;
 
 		if (this.modal.adventureId != null && this.modal.actId != null) {
-			this.scenes = this.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
+			this.scenes = this.database.readList<SceneV2Interface>(ComponentType.Scene, this.modal.actId);
 		} else {
 			this.scenes = [];
 		}
@@ -27,9 +27,9 @@ export class SceneModalPart extends AbstractModalPart {
 	): Promise<void> {
 		contentEl.createDiv({cls: 'sceneContainer'});
 
-		this.scenes.forEach((scene: SceneInterface) => {
-			if (this.modal.sceneId !== undefined && scene.sceneId >= (this.modal.sceneId.id ?? 0)) {
-				this.modal.sceneId.id = (scene.sceneId + 1);
+		this.scenes.forEach((scene: SceneV2Interface) => {
+			if (this.modal.sceneId !== undefined && (scene.id.sceneId ?? 0) >= (this.modal.sceneId.id ?? 0)) {
+				this.modal.sceneId.id = ((scene.id.sceneId ?? 0) + 1);
 			}
 		});
 

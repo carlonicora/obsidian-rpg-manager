@@ -3,7 +3,6 @@ import {BreadcrumbView} from "../views/subViews/BreadcrumbView";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ResponseType} from "../enums/ResponseType";
-import {RawCharacterRecordSheetView} from "../rpgs/Raw/views/RawCharacterRecordSheetView";
 import {ViewType} from "../enums/ViewType";
 import {App, WorkspaceLeaf} from "obsidian";
 import {ViewFactoryInterface} from "../interfaces/factories/ViewFactoryInterface";
@@ -48,8 +47,6 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		this.viewTypeMap.set('AgnosticSessionHeader', SessionHeaderView);
 		this.viewTypeMap.set('AgnosticSubplotHeader', SubplotHeaderView);
 
-
-		this.viewTypeMap.set('RawRawCharacterRecordSheet', RawCharacterRecordSheetView);
 
 		this.showInRightLeaf = new Map<ViewType, boolean>();
 		this.showInRightLeaf.set(ViewType.RPGManager, true);

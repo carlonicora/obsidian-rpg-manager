@@ -4,13 +4,13 @@ import {ResponseDataElementInterface} from "../../../interfaces/response/Respons
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {LocationInterface} from "../../../interfaces/components/LocationInterface";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseType} from "../../../enums/ResponseType";
+import {LocationV2Interface} from "../../../_dbV2/components/interfaces/LocationV2Interface";
 
 export class LocationHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: LocationInterface;
+	protected data: LocationV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

@@ -1,12 +1,12 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {ComponentInterface} from "../database/ComponentInterface";
 import {ModelInterface} from "../ModelInterface";
+import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
 
 export interface ModelFactoryInterface {
 	create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: ComponentInterface,
+		currentElement: ComponentV2Interface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,

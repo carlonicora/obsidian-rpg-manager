@@ -1,14 +1,14 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {App} from "obsidian";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(
 		app: App,
 		idMap: IdInterface,
-		private duplication: Array<ComponentInterface>,
-		private duplicated: ComponentInterface|undefined=undefined,
+		private duplication: Array<ComponentV2Interface>,
+		private duplicated: ComponentV2Interface|undefined=undefined,
 	) {
 		super(app, idMap);
 	}
@@ -23,12 +23,12 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		let response = this.id.tag + '\n';
 
 		if (this.duplication.length > 1) {
-			this.duplication.forEach((record: ComponentInterface) => {
-				response += ' - ' + record.basename + '\n';
+			this.duplication.forEach((record: ComponentV2Interface) => {
+				response += ' - ' + record.file.basename + '\n';
 			})
 		} else if (this.duplicated !== undefined) {
-			response += ' - ' + this.duplication[0].basename + '\n' +
-				' - ' + this.duplicated?.basename + '\n';
+			response += ' - ' + this.duplication[0].file.basename + '\n' +
+				' - ' + this.duplicated?.file.basename + '\n';
 		}
 
 		return response;
@@ -46,12 +46,12 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		const response: Array<string> = [];
 
 		if (this.duplication.length > 1) {
-			this.duplication.forEach((record: ComponentInterface) => {
-				response.push(record.path);
+			this.duplication.forEach((record: ComponentV2Interface) => {
+				response.push(record.file.path);
 			})
 		} else if (this.duplicated !== undefined) {
-			response.push(this.duplication[0].path);
-			response.push(this.duplicated?.path);
+			response.push(this.duplication[0].file.path);
+			response.push(this.duplicated?.file.path);
 		}
 
 		return response;

@@ -1,10 +1,10 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SorterType} from "../enums/SorterType";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 	private relationshipsEl: HTMLDivElement;
@@ -22,7 +22,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 	constructor(
 		app: App,
-		private currentElement: ComponentInterface,
+		private currentElement: ComponentV2Interface,
 	) {
 		super(app);
 	}
@@ -70,32 +70,32 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this.relationshipsEl.createEl('table').createTBody();
 
-		const records: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentElement.id)
+		const records: Array<ComponentV2Interface> = this.database.readList<ComponentV2Interface>(type, this.currentElement.id)
 			.sort(
-				this.factories.sorter.create<ComponentInterface>([
-					new SorterComparisonElement((data: ComponentInterface) => data.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
-					new SorterComparisonElement((data: ComponentInterface) => data.file.stat.mtime, SorterType.Descending),
+				this.factories.sorter.create<ComponentV2Interface>([
+					new SorterComparisonElement((data: ComponentV2Interface) => data.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
+					new SorterComparisonElement((data: ComponentV2Interface) => data.file.stat.mtime, SorterType.Descending),
 				])
 			);
 
-		records.forEach((component: ComponentInterface) => {
+		records.forEach((component: ComponentV2Interface) => {
 			if (component.id !== this.currentElement.id) {
 				const rowEl: HTMLTableRowElement = relationshipsTableEl.insertRow();
 
 				const checkbox = rowEl.insertCell().createEl('input');
 				checkbox.type = 'checkbox';
-				checkbox.value = component.path;
-				checkbox.id = component.name;
+				checkbox.value = component.file.path;
+				checkbox.id = component.file.basename;
 
 				checkbox.addEventListener('change', () => {
 					this.addOrRemoveElementRelationship(checkbox, component);
 				});
 
-				let description: string = component.name;
+				let description: string = component.file.basename;
 				if (component.existsInRelationships(this.currentElement.relationships)) {
 					checkbox.checked = true;
 
-					const relationship: RelationshipInterface | undefined = this.currentElement.relationships.get(component.name);
+					const relationship: RelationshipInterface | undefined = this.currentElement.relationships.get(component.file.basename);
 					if (relationship !== undefined && relationship.description !== '') {
 						description += ' (WARNING: removing this relationship will delete its description)';
 					}
@@ -115,7 +115,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 				const titleCell = rowEl.insertCell();
 				titleCell.addClass('label');
 				const checkboxLabel = titleCell.createEl('label', {text: description});
-				checkboxLabel.htmlFor = component.name;
+				checkboxLabel.htmlFor = component.file.basename;
 
 				/** DESCRIPTION */
 				const synopsisEl = rowEl.insertCell();
@@ -132,10 +132,10 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 	private addOrRemoveElementRelationship(
 		checkboxEl: HTMLInputElement,
-		data: ComponentInterface,
+		data: ComponentV2Interface,
 	): void {
 		const map: Map<string, string> = new Map<string, string>();
-		map.set('[[' + data.name + ']]', '""');
+		map.set('[[' + data.file.basename + ']]', '""');
 
 		if (checkboxEl.checked) {
 			this.factories.frontmatter.update(this.currentElement.file, map);

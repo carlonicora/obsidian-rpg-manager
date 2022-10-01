@@ -1,10 +1,10 @@
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
-import {CampaignInterface} from "../interfaces/components/CampaignInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {ViewType} from "../enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
 import {TFile} from "obsidian";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {CampaignV2Interface} from "../_dbV2/components/interfaces/CampaignV2Interface";
 
 export class RPGManagerView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.RPGManager.toString();
@@ -12,8 +12,8 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	public icon = 'd20';
 	private hasCampaigns: boolean;
 
-	private currentCampaign: CampaignInterface|undefined;
-	private currentElement: ComponentInterface|undefined;
+	private currentCampaign: CampaignV2Interface|undefined;
+	private currentElement: ComponentV2Interface|undefined;
 
 	private verticalTabHeaderEl: HTMLDivElement;
 
@@ -27,7 +27,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		params: Array<any>,
 	): void {
 		super.initialise([])
-		const campaigns = this.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.id.type === ComponentType.Campaign);
+		const campaigns = this.database.read<CampaignV2Interface>((campaign: CampaignV2Interface) => campaign.id.type === ComponentType.Campaign);
 		this.hasCampaigns = campaigns.length > 0;
 		if (campaigns.length === 1) {
 			this.currentCampaign = campaigns[0];
@@ -97,11 +97,11 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async loadToDo(
 		containerEl: HTMLDivElement
 	): Promise<void> {
-		const recordset: Array<ComponentInterface> = this.database.read<ComponentInterface>((data: ComponentInterface) => true);
+		const recordset: Array<ComponentV2Interface> = this.database.read<ComponentV2Interface>((data: ComponentV2Interface) => true);
 
 		let firstToDoFound = false;
 
-		recordset.forEach((data: ComponentInterface) => {
+		recordset.forEach((data: ComponentV2Interface) => {
 			this.app.vault.read(data.file)
 				.then((content: string) => {
 					const contentArray: Array<string> = content.split('\n');

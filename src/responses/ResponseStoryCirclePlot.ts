@@ -3,7 +3,7 @@ import {App} from "obsidian";
 import {ResponseType} from "../enums/ResponseType";
 import {ContentInterface} from "../interfaces/ContentInterface";
 import {StoryCirclePlotResponseInterface} from "../interfaces/response/subModels/StoryCirclePlotResponseInterface";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class ResponseStoryCirclePlot extends AbstractResponse implements StoryCirclePlotResponseInterface {
 	public you: ContentInterface;
@@ -17,7 +17,7 @@ export class ResponseStoryCirclePlot extends AbstractResponse implements StoryCi
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentElement: ComponentV2Interface,
 	) {
 		super(app, currentElement);
 		this.responseType = ResponseType.StoryCirclePlot;

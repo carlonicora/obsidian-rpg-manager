@@ -1,5 +1,4 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {CharacterInterface} from "../../../interfaces/components/CharacterInterface";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
@@ -7,9 +6,10 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {TFile} from "obsidian";
 import {Pronoun} from "../../../enums/Pronoun";
+import {CharacterV2Interface} from "../../../_dbV2/components/interfaces/CharacterV2Interface";
 
 export class CharacterHeaderView extends AbstractHeaderView {
-	protected currentElement:CharacterInterface;
+	protected currentElement:CharacterV2Interface;
 
 
 	public render(

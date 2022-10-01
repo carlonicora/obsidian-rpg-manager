@@ -1,6 +1,5 @@
 import {SubModelFactoryInterface} from "./factories/SubModelFactoryInterface";
 import {ContentFactoryInterface} from "./factories/ContentFactoryInterface";
-import {ComponentFactoryInterface} from "./factories/ComponentFactoryInterface";
 import {FileFactoryInterface} from "./factories/FileFactoryInterface";
 import {ModalFactoryInterface} from "./factories/ModalFactoryInterface";
 import {ModelFactoryInterface} from "./factories/ModelFactoryInterface";
@@ -9,7 +8,6 @@ import {TemplateFactoryInterface} from "./factories/TemplateFactoryInterface";
 import {ViewFactoryInterface} from "./factories/ViewFactoryInterface";
 import {FetcherFactoryInterface} from "./factories/FetcherFactoryInterface";
 import {RelationshipFactoryInterface} from "./factories/RelationshipFactoryInterface";
-import {DatabaseFactoryInterface} from "./factories/DatabaseFactoryInterface";
 import {IdFactoryInterface} from "./factories/IdFactoryInterface";
 import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface";
 import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterface";
@@ -23,7 +21,7 @@ import {ComponentV2FactoryInterface} from "../_dbV2/factories/interfaces/Compone
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
 	contents: ContentFactoryInterface;
-	data: ComponentFactoryInterface;
+	component: ComponentV2FactoryInterface;
 	files: FileFactoryInterface;
 	modals: ModalFactoryInterface;
 	models: ModelFactoryInterface;
@@ -32,7 +30,7 @@ export interface FactoriesInterface {
 	views: ViewFactoryInterface;
 	fetchers: FetcherFactoryInterface;
 	relationships: RelationshipFactoryInterface;
-	database: DatabaseFactoryInterface;
+	database: DatabaseV2FactoryInterface;
 	id: IdFactoryInterface;
 	breadcrumb: BreadcrumbFactoryInterface;
 	frontmatter: FrontmatterFactoryInterface;
@@ -40,7 +38,4 @@ export interface FactoriesInterface {
 	codeblock: CodeBlockEditorFactoryInterface;
 	runningTimeManager: RunningTimeManagerInterface;
 	metadataReader: MetadataReaderInterface;
-
-	componentV2: ComponentV2FactoryInterface;
-	databaseV2: DatabaseV2FactoryInterface;
 }

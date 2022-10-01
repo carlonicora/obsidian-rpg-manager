@@ -1,7 +1,6 @@
 import {App} from "obsidian";
 import {SubModelFactory} from "./factories/SubModelFactory";
 import {ContentFactory} from "./factories/ContentFactory";
-import {ComponentFactory} from "./factories/ComponentFactory";
 import {FileFactory} from "./factories/FileFactory";
 import {ModalFactory} from "./factories/ModalFactory";
 import {ModelFactory} from "./factories/ModelFactory";
@@ -10,10 +9,8 @@ import {TemplateFactory} from "./factories/TemplateFactory";
 import {ViewFactory} from "./factories/ViewFactory";
 import {FetcherFactory} from "./factories/FetcherFactory";
 import {RelationshipFactory} from "./factories/RelationshipFactory";
-import {DatabaseFactory} from "./factories/DatabaseFactory";
 import {SubModelFactoryInterface} from "./interfaces/factories/SubModelFactoryInterface";
 import {ContentFactoryInterface} from "./interfaces/factories/ContentFactoryInterface";
-import {ComponentFactoryInterface} from "./interfaces/factories/ComponentFactoryInterface";
 import {FileFactoryInterface} from "./interfaces/factories/FileFactoryInterface";
 import {ModalFactoryInterface} from "./interfaces/factories/ModalFactoryInterface";
 import {ModelFactoryInterface} from "./interfaces/factories/ModelFactoryInterface";
@@ -23,7 +20,6 @@ import {ViewFactoryInterface} from "./interfaces/factories/ViewFactoryInterface"
 import {FetcherFactoryInterface} from "./interfaces/factories/FetcherFactoryInterface";
 import {FactoriesInterface} from "./interfaces/FactoriesInterface";
 import {RelationshipFactoryInterface} from "./interfaces/factories/RelationshipFactoryInterface";
-import {DatabaseFactoryInterface} from "./interfaces/factories/DatabaseFactoryInterface";
 import {IdFactoryInterface} from "./interfaces/factories/IdFactoryInterface";
 import {IdFactory} from "./factories/IdFactory";
 import {BreadcrumbFactoryInterface} from "./interfaces/factories/BreadcrumbFactoryInterface";
@@ -46,7 +42,7 @@ import {ComponentV2Factory} from "./_dbV2/factories/ComponentV2Factory";
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
 	public contents: ContentFactoryInterface;
-	public data: ComponentFactoryInterface;
+	public component: ComponentV2FactoryInterface;
 	public files: FileFactoryInterface;
 	public modals: ModalFactoryInterface;
 	public models: ModelFactoryInterface;
@@ -55,7 +51,7 @@ export class Factories implements FactoriesInterface{
 	public views: ViewFactoryInterface;
 	public fetchers: FetcherFactoryInterface;
 	public relationships: RelationshipFactoryInterface;
-	public database: DatabaseFactoryInterface;
+	public database: DatabaseV2FactoryInterface;
 	public id: IdFactoryInterface;
 	public breadcrumb: BreadcrumbFactoryInterface;
 	public frontmatter: FrontmatterFactoryInterface;
@@ -64,15 +60,12 @@ export class Factories implements FactoriesInterface{
 	public runningTimeManager: RunningTimeManagerInterface;
 	public metadataReader: MetadataReaderInterface;
 
-	public componentV2: ComponentV2FactoryInterface;
-	public databaseV2: DatabaseV2FactoryInterface;
-
 	constructor(
 		private app: App,
 	) {
 		this.subModels = new SubModelFactory(this.app);
 		this.contents = new ContentFactory(this.app);
-		this.data = new ComponentFactory(this.app);
+		this.component = new ComponentV2Factory(this.app);
 		this.files = new FileFactory(this.app);
 		this.modals = new ModalFactory(this.app);
 		this.models = new ModelFactory(this.app);
@@ -81,7 +74,7 @@ export class Factories implements FactoriesInterface{
 		this.views = new ViewFactory(this.app);
 		this.fetchers = new FetcherFactory(this.app);
 		this.relationships = new RelationshipFactory(this.app);
-		this.database = new DatabaseFactory(this.app);
+		this.database = new DatabaseV2Factory(this.app);
 		this.id = new IdFactory(this.app);
 		this.breadcrumb = new BreadcrumbFactory(this.app);
 		this.frontmatter = new FrontmatterFactory(this.app);
@@ -89,8 +82,5 @@ export class Factories implements FactoriesInterface{
 		this.codeblock = new CodeBlockEditorFactory(this.app);
 		this.runningTimeManager = new RunningTimeManager(this.app);
 		this.metadataReader = new MetadataReader(this.app);
-
-		this.componentV2 = new ComponentV2Factory(this.app);
-		this.databaseV2 = new DatabaseV2Factory(this.app);
 	}
 }

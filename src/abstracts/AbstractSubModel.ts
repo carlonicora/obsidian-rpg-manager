@@ -3,12 +3,12 @@ import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataE
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {App} from "obsidian";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export abstract class AbstractSubModel extends AbstractRpgManager implements SubModelInterface {
 	constructor(
 		app: App,
-		protected currentElement: ComponentInterface,
+		protected currentElement: ComponentV2Interface,
 	) {
 		super(app);
 	}

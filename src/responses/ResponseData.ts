@@ -1,18 +1,18 @@
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {AbstractComponent} from "../abstracts/AbstractComponent";
 import {RelationshipType} from "../enums/RelationshipType";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {AbstractComponentV2} from "../_dbV2/abstracts/AbstractComponentV2";
 
 export class ResponseData extends AbstractRpgManager implements ResponseDataInterface {
 	public elements: ResponseDataElementInterface[] = [];
 
 	public async addSubModel(
 		type: any,
-		currentElement: ComponentInterface,
-		data: ComponentInterface[]|ComponentInterface|RelationshipInterface[],
+		currentElement: ComponentV2Interface,
+		data: ComponentV2Interface[]|ComponentV2Interface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 		position: number|undefined=undefined,
@@ -20,12 +20,12 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 		let relationships: RelationshipInterface[] = [];
 		let relationship: RelationshipInterface|undefined;
 
-		if (data instanceof AbstractComponent){
+		if (data instanceof AbstractComponentV2){
 			relationship = {component: data, description: '', type: RelationshipType.Direct} as RelationshipInterface;
 		} else if (data instanceof Array){
 			relationships = [];
 			if (data.length > 0){
-				if (data[0] instanceof AbstractComponent){
+				if (data[0] instanceof AbstractComponentV2){
 					data.forEach((record: any) => {
 						relationships.push({component: record, description: ''} as RelationshipInterface);
 					})

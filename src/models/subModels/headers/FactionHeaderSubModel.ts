@@ -4,11 +4,11 @@ import {ResponseDataElementInterface} from "../../../interfaces/response/Respons
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {FactionInterface} from "../../../interfaces/components/FactionInterface";
 import {ResponseType} from "../../../enums/ResponseType";
+import {FactionV2Interface} from "../../../_dbV2/components/interfaces/FactionV2Interface";
 
 export class FactionHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: FactionInterface;
+	protected data: FactionV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

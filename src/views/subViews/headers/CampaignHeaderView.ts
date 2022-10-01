@@ -1,14 +1,14 @@
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {CampaignInterface} from "../../../interfaces/components/CampaignInterface";
 import {ViewType} from "../../../enums/ViewType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {ComponentInterface} from "../../../interfaces/database/ComponentInterface";
+import {CampaignV2Interface} from "../../../_dbV2/components/interfaces/CampaignV2Interface";
+import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: CampaignInterface;
+	protected currentElement: CampaignV2Interface;
 
 	public render(
 		container: HTMLElement,
@@ -25,13 +25,13 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentElement.image + '\')';
 
 			const overlay = this.headerTitleEl.createDiv({cls: 'rpgm-header-overlay'});
-			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentElement.name});
+			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentElement.file.basename});
 
 			//overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (this.currentElement.currentDate !== null ? this.currentElement.currentDate.toDateString() : '')});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (this.currentElement.date !== null ? this.currentElement.date?.toDateString() : '')});
 		}
 
-		if (this.currentElement.currentDate !== undefined) {
+		if (this.currentElement.date !== undefined) {
 			this.headerTitleEl.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
 				.addEventListener("click", () => {
 					this.factories.views.showObsidianView(ViewType.Timeline, [data.metadata.campaignId]);
@@ -79,7 +79,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		contentEl: HTMLDivElement,
 		type: string,
 		currentComponent: string|undefined,
-		components: Array<ComponentInterface>,
+		components: Array<ComponentV2Interface>,
 	): any|ContentInterface|undefined {
 		const componentSelectorEl = contentEl.createEl("select");
 		componentSelectorEl.id = type;
@@ -89,9 +89,9 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			value: ""
 		}).selected = true;
 
-		components.forEach((component: ComponentInterface) => {
+		components.forEach((component: ComponentV2Interface) => {
 			const componentOptionEl = componentSelectorEl.createEl("option", {
-				text: component.name,
+				text: component.file.basename,
 				value: component.id.stringValue,
 			});
 
@@ -108,10 +108,10 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			}
 		});
 
-		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentInterface>) => {
+		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentV2Interface>) => {
 			let link: string|undefined = undefined;
-			components.forEach((component: ComponentInterface) => {
-				if (currentComponent === component.id.stringValue) link = component.link;
+			components.forEach((component: ComponentV2Interface) => {
+				if (currentComponent === component.id.stringValue) link = component.file.path;
 			});
 
 			if (link !== undefined) {

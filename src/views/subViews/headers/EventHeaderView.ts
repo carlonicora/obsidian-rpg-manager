@@ -1,6 +1,6 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {EventInterface} from "../../../interfaces/components/EventInterface";
+import {EventV2Interface} from "../../../_dbV2/components/interfaces/EventV2Interface";
 
 export class EventHeaderView extends AbstractHeaderView {
-	protected currentElement: EventInterface;
+	protected currentElement: EventV2Interface;
 }

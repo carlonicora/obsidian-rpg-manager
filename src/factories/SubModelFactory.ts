@@ -4,12 +4,12 @@ import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {App} from "obsidian";
 import {SubModelFactoryInterface} from "../interfaces/factories/SubModelFactoryInterface";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class SubModelFactory extends AbstractFactory implements SubModelFactoryInterface{
 	public async create<T extends SubModelInterface>(
-		subModelType: (new (app: App, currentElement: ComponentInterface) => T),
-		currentElement: ComponentInterface,
+		subModelType: (new (app: App, currentElement: ComponentV2Interface) => T),
+		currentElement: ComponentV2Interface,
 		data: RelationshipInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,

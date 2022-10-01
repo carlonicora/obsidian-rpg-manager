@@ -1,12 +1,12 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
-import {MusicInterface} from "../../interfaces/components/MusicInterface";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {MusicHeaderSubModel} from "../subModels/headers/MusicHeaderSubModel";
+import {MusicV2Interface} from "../../_dbV2/components/interfaces/MusicV2Interface";
 
 export class MusicModel extends AbstractModel {
-	protected currentElement: MusicInterface;
+	protected currentElement: MusicV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

@@ -1,12 +1,12 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {EventInterface} from "../../interfaces/components/EventInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {EventHeaderSubModel} from "../subModels/headers/EventHeaderSubModel";
+import {EventV2Interface} from "../../_dbV2/components/interfaces/EventV2Interface";
 
 export class EventModel extends AbstractModel {
-	protected currentElement: EventInterface;
+	protected currentElement: EventV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

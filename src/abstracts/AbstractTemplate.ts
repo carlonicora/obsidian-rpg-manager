@@ -2,7 +2,7 @@ import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/Co
 import {App} from "obsidian";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 
 export abstract class AbstractTemplate extends AbstractRpgManager implements ComponentNotesTemplateFactoryInterface {
 	protected type: ComponentType;

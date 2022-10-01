@@ -13,7 +13,13 @@ export class CampaignV2 extends AbstractComponentV2 implements CampaignV2Interfa
 		return (this.metadata.current ? new Date(this.metadata.current) : undefined);
 	}
 
-	get abtPlot(): AbtPlotInterface {
+	public get abtPlot(): AbtPlotInterface {
 		return new AbtPlot(this.metadata.abt);
+	}
+
+	public get folder(
+	): string {
+		const lastSlashPosition = this.file.path.lastIndexOf('/');
+		return (lastSlashPosition !== -1 ? this.file.path.substring(0, lastSlashPosition + 1) : '/');
 	}
 }

@@ -1,9 +1,9 @@
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ContentInterface} from "../../ContentInterface";
-import {ComponentInterface} from "../../database/ComponentInterface";
+import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
 
 export interface HeaderResponseElementInterface {
-	currentElement: ComponentInterface;
+	currentElement: ComponentV2Interface;
 	title: string;
 	value: ContentInterface;
 	type:HeaderResponseType;

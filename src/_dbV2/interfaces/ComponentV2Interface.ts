@@ -1,4 +1,4 @@
-import {IdInterface} from "../../interfaces/components/IdInterface";
+import {IdInterface} from "../../interfaces/IdInterface";
 import {TFile} from "obsidian";
 import {CampaignSetting} from "../../enums/CampaignSetting";
 import {ComponentStage} from "../components/enums/ComponentStage";
@@ -14,14 +14,19 @@ export interface ComponentV2Interface {
 	stage: ComponentStage;
 	baseCampaign: BaseCampaignV2Interface;
 
+	version: number|undefined;
+
 	readMetadata(): Promise<void>;
 
 	loadHierarchy(
 		database: DatabaseV2Interface,
 	): Promise<void>;
 
+	touch(): void;
+
 	get campaign(): CampaignV2Interface;
 	get synopsis(): string | undefined;
 	get image(): string | undefined;
 	get relationships(): Array<RelationshipV2Interface>;
+	get isComplete(): boolean;
 }

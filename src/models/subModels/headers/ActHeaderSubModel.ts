@@ -5,14 +5,14 @@ import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {AbtStage} from "../../../enums/AbtStage";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {ActInterface} from "../../../interfaces/components/ActInterface";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
+import {ActV2Interface} from "../../../_dbV2/components/interfaces/ActV2Interface";
 
 export class ActHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: ActInterface;
+	protected data: ActV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

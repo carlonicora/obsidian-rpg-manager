@@ -1,22 +1,22 @@
 import {ContentType} from "../../../enums/ContentType";
-import {EventInterface} from "../../../interfaces/components/EventInterface";
 import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {ComponentInterface} from "../../../interfaces/database/ComponentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../enums/TableField";
+import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
+import {EventV2Interface} from "../../../_dbV2/components/interfaces/EventV2Interface";
 
 export class EventTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.EventList;
 
-	protected generateContentElement<T extends ComponentInterface>(
+	protected generateContentElement<T extends ComponentV2Interface>(
 		index: number,
 		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const event: EventInterface = <unknown>record as EventInterface;
+		const event: EventV2Interface = <unknown>record as EventV2Interface;
 		switch (fieldType) {
 			case TableField.Date:
 				return this.factories.contents.create(event.date?.toDateString(), ContentType.Date, true);

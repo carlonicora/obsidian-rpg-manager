@@ -2,12 +2,12 @@ import {App} from "obsidian";
 import {RelationshipInterface} from "../RelationshipInterface";
 import {ResponseDataElementInterface} from "../response/ResponseDataElementInterface";
 import {SubModelInterface} from "../SubModelInterface";
-import {ComponentInterface} from "../database/ComponentInterface";
+import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
 
 export interface SubModelFactoryInterface {
 	create<T extends SubModelInterface>(
 		subModelType: (new (app: App) => T),
-		currentElement: ComponentInterface,
+		currentElement: ComponentV2Interface,
 		data: RelationshipInterface|RelationshipInterface[],
 		title?: string|undefined,
 		additionalInformation?: any|undefined,

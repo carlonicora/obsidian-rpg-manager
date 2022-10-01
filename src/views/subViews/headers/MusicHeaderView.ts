@@ -1,6 +1,6 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {MusicInterface} from "../../../interfaces/components/MusicInterface";
+import {MusicV2Interface} from "../../../_dbV2/components/interfaces/MusicV2Interface";
 
 export class MusicHeaderView extends AbstractHeaderView {
-	protected currentElement: MusicInterface;
+	protected currentElement: MusicV2Interface;
 }

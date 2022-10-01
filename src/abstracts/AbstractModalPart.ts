@@ -4,7 +4,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../enums/ComponentType";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 
 export abstract class AbstractModalPart extends AbstractRpgManager implements ModalPartInterface {
 	constructor(

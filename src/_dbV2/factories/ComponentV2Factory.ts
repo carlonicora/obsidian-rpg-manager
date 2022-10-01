@@ -1,7 +1,7 @@
 import {AbstractFactory} from "../../abstracts/AbstractFactory";
 import {App, TFile} from "obsidian";
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {IdInterface} from "../../interfaces/components/IdInterface";
+import {IdInterface} from "../../interfaces/IdInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {CampaignV2} from "../components/CampaignV2";
 import {ComponentV2FactoryInterface} from "./interfaces/ComponentV2FactoryInterface";

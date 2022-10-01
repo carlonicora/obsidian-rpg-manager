@@ -2,7 +2,7 @@ import {ResponseType} from "../enums/ResponseType";
 import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {App} from "obsidian";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export abstract class AbstractResponse extends AbstractRpgManager implements ResponseDataElementInterface {
 	public responseType: ResponseType;
@@ -10,7 +10,7 @@ export abstract class AbstractResponse extends AbstractRpgManager implements Res
 
 	constructor(
 		app: App,
-		public currentElement: ComponentInterface,
+		public currentElement: ComponentV2Interface,
 	) {
 		super(app);
 	}

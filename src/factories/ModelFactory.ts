@@ -12,9 +12,7 @@ import {ActNavigationModel} from "../models/components/ActNavigationModel";
 import {AdventureNavigationModel} from "../models/components/AdventureNavigationModel";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
-import {RawNpcModel} from "../rpgs/Raw/models/RawNpcModel";
 import {MusicModel} from "../models/components/MusicModel";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {App} from "obsidian";
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {ModelFactoryInterface} from "../interfaces/factories/ModelFactoryInterface";
@@ -23,6 +21,7 @@ import {SessionModel} from "../models/components/SessionModel";
 import {SessionNavigationModel} from "../models/components/SessionNavigationModel";
 import {SceneNavigationModel} from "../models/components/SceneNavigationModel";
 import {SubplotModel} from "../models/components/SubplotModel";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
 	private modelTypeMap: Map<string,any>;
@@ -49,7 +48,6 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		this.modelTypeMap.set('AgnosticSessionNavigation', SessionNavigationModel);
 		this.modelTypeMap.set('AgnosticAct', ActModel);
 		this.modelTypeMap.set('AgnosticActNavigation', ActNavigationModel);
-		this.modelTypeMap.set('RawNpc', RawNpcModel);
 		this.modelTypeMap.set('AgnosticMusic', MusicModel);
 		this.modelTypeMap.set('AgnosticSubplot', SubplotModel);
 	}
@@ -57,7 +55,7 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 	public create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: ComponentInterface,
+		currentElement: ComponentV2Interface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,

@@ -1,11 +1,11 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {CharacterInterface} from "../../interfaces/components/CharacterInterface";
 import {CharacterHeaderSubModel} from "../subModels/headers/CharacterHeaderSubModel";
+import {CharacterV2Interface} from "../../_dbV2/components/interfaces/CharacterV2Interface";
 
 export class PcModel extends AbstractModel {
-	protected currentElement: CharacterInterface;
+	protected currentElement: CharacterV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

@@ -2,12 +2,12 @@ import {AbstractSubModelView} from "./AbstractSubModelView";
 import {HeaderResponseInterface} from "../interfaces/response/subModels/HeaderResponseInterface";
 import {FrontmatterElementSelectionModal} from "../modals/FrontmatterElementSelectionModal";
 import {EditorSelector} from "../helpers/EditorSelector";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
-	protected currentElement: ComponentInterface;
+	protected currentElement: ComponentV2Interface;
 
 	protected headerTitleEl: HTMLDivElement;
 	protected headerInfoEl: HTMLDivElement;

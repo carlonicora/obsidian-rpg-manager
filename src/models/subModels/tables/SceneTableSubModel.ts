@@ -1,12 +1,12 @@
 import {ContentType} from "../../../enums/ContentType";
-import {SceneInterface} from "../../../interfaces/components/SceneInterface";
 import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {ComponentInterface} from "../../../interfaces/database/ComponentInterface";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {TableField} from "../../../enums/TableField";
 import {SceneType} from "../../../enums/SceneType";
+import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
+import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
 
 export class SceneTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;
@@ -15,12 +15,6 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 		fieldType: TableField,
 	): ContentInterface|undefined {
 		switch (fieldType) {
-			case TableField.StartTime:
-				return this.factories.contents.create('Start', ContentType.String, true);
-				break;
-			case TableField.EndTime:
-				return this.factories.contents.create('End', ContentType.String, true);
-				break;
 			case TableField.Duration:
 				return this.factories.contents.create('Duration', ContentType.String);
 				break;
@@ -42,28 +36,22 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 		return super.generateHeaderElement(fieldType);
 	}
 
-	protected generateContentElement<T extends ComponentInterface>(
+	protected generateContentElement<T extends ComponentV2Interface>(
 		index: number,
 		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const scene: SceneInterface = <unknown>record as SceneInterface;
+		const scene: SceneV2Interface = <unknown>record as SceneV2Interface;
 		switch (fieldType) {
 			case TableField.Index:
-				return this.factories.contents.create(scene.completed ? index.toString() : '**' + index.toString() + '**', ContentType.Markdown, true);
+				return this.factories.contents.create(scene.isComplete ? index.toString() : '**' + index.toString() + '**', ContentType.Markdown, true);
 				break;
 			case TableField.Name:
-				return this.factories.contents.create(scene.link + (scene.completed ? '' : ' _(incomplete)_'), ContentType.Link);
-				break;
-			case TableField.StartTime:
-				return this.factories.contents.create(this.formatTime(scene.startTime), ContentType.Date, true);
+				return this.factories.contents.create(scene.file.path + (scene.isComplete ? '' : ' _(incomplete)_'), ContentType.Link);
 				break;
 			case TableField.Date:
 				return this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.Date, true);
-				break;
-			case TableField.EndTime:
-				return this.factories.contents.create(this.formatTime(scene.endTime), ContentType.Date, true);
 				break;
 			case TableField.Duration:
 				return this.factories.contents.create((scene.duration === '00:00' ? undefined : scene.duration), ContentType.Date, true);

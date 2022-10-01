@@ -7,12 +7,12 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {SessionInterface} from "../../../interfaces/components/SessionInterface";
 import {ResponseType} from "../../../enums/ResponseType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
+import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
 
 export class SessionHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: SessionInterface;
+	protected data: SessionV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

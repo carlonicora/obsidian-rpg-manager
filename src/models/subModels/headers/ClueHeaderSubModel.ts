@@ -6,11 +6,11 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {ClueInterface} from "../../../interfaces/components/ClueInterface";
 import {ResponseType} from "../../../enums/ResponseType";
+import {ClueV2Interface} from "../../../_dbV2/components/interfaces/ClueV2Interface";
 
 export class ClueHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: ClueInterface;
+	protected data: ClueV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,
@@ -26,7 +26,7 @@ export class ClueHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Clue;
 		response.responseType = ResponseType.ClueHeader;
 
-		const clueFound = this.data.isFound
+		const clueFound = this.data.found !== undefined
 			? 'Clue found on ' + this.data.found?.toDateString()
 			: '<span class="rpgm-missing">Clue not found yet</span>';
 

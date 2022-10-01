@@ -5,10 +5,10 @@ import {ContentType} from "../enums/ContentType";
 import {ResponseHeaderElement} from "../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export abstract class AbstractHeaderSubModel extends AbstractSubModel {
-	protected data: ComponentInterface;
+	protected data: ComponentV2Interface;
 	protected synopsis: string;
 	protected synopsisTitle: string;
 
@@ -30,8 +30,8 @@ export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	): Promise<ResponseDataElementInterface|null> {
 		const response = new ResponseHeader(this.app, this.currentElement);
 
-		response.link = this.factories.contents.create(this.data.link, ContentType.Link);
-		response.name = this.data.name;
+		response.link = this.factories.contents.create(this.data.file.path, ContentType.Link);
+		response.name = this.data.file.basename;
 
 		if (this.data.synopsis != null && this.data.synopsis != '') {
 			this.synopsis = this.data.synopsis;

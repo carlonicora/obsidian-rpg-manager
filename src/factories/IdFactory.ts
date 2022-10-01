@@ -1,7 +1,7 @@
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {IdFactoryInterface} from "../interfaces/factories/IdFactoryInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 import {Id} from "../database/Id";
 
 export class IdFactory extends AbstractFactory implements IdFactoryInterface {

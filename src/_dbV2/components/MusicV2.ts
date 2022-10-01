@@ -24,7 +24,11 @@ export class MusicV2 extends AbstractComponentV2 implements MusicV2Interface {
 		return (this.dynamicImage != null ? this.dynamicImage : undefined);
 	}
 
-	public async getDynamicUrl(): Promise<string | undefined> {
+	public get url(): string | undefined {
+		return this.metadata.url;
+	}
+
+	public async getThumbnail(): Promise<string | undefined> {
 		if (this.dynamicImage != null) return this.dynamicImage;
 
 		if (this.metadata.url === undefined) return undefined;

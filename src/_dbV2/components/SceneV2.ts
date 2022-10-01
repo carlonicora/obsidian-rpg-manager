@@ -14,7 +14,7 @@ export class SceneV2 extends AbstractComponentV2 implements SceneV2Interface {
 	public stage: ComponentStage = ComponentStage.Plot;
 
 	get act(): ActV2Interface {
-		const response = this.databaseV2.readSingle<ActV2Interface>(ComponentType.Act, this.id);
+		const response = this.database.readSingle<ActV2Interface>(ComponentType.Act, this.id);
 		if (response === undefined) throw new Error('');
 
 		return response;
@@ -25,7 +25,7 @@ export class SceneV2 extends AbstractComponentV2 implements SceneV2Interface {
 	}
 
 	get adventure(): AdventureV2Interface {
-		const response = this.databaseV2.readSingle<AdventureV2Interface>(ComponentType.Adventure, this.id);
+		const response = this.database.readSingle<AdventureV2Interface>(ComponentType.Adventure, this.id);
 		if (response === undefined) throw new Error('');
 
 		return response;
@@ -82,7 +82,7 @@ export class SceneV2 extends AbstractComponentV2 implements SceneV2Interface {
 	get session(): SessionV2Interface | null {
 		if (this.metadata.sessionId === undefined) return null;
 
-		const response = this.databaseV2.read<SessionV2Interface>((session: SessionV2Interface) =>
+		const response = this.database.read<SessionV2Interface>((session: SessionV2Interface) =>
 			session.id.type === ComponentType.Session &&
 			session.id.sessionId === this.metadata.sessionId
 		);
@@ -101,7 +101,7 @@ export class SceneV2 extends AbstractComponentV2 implements SceneV2Interface {
 		if (sceneId === undefined) return null;
 
 		try {
-			return this.databaseV2.readSingle<SceneV2Interface>(ComponentType.Scene, this.id, (next ? sceneId + 1 : sceneId - 1));
+			return this.database.readSingle<SceneV2Interface>(ComponentType.Scene, this.id, (next ? sceneId + 1 : sceneId - 1));
 		} catch (e) {
 			return null
 		}

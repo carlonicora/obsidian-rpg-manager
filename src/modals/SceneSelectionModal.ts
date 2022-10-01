@@ -1,32 +1,32 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
-import {SceneInterface} from "../interfaces/components/SceneInterface";
-import {SessionInterface} from "../interfaces/components/SessionInterface";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {InfoLog, LogMessageType} from "../helpers/Logger";
+import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
+import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interface";
 
 export class SceneSelectionModal extends AbstractRpgManagerModal {
-	private availableScenes:Array<SceneInterface>;
+	private availableScenes:Array<SceneV2Interface>;
 	private scenesEls: Array<HTMLInputElement>;
 
 	constructor(
 		app: App,
-		private session: SessionInterface,
+		private session: SessionV2Interface,
 	) {
 		super(app);
 
 		this.scenesEls = [];
 
-		this.availableScenes = this.database.read<SceneInterface>(
-			(scene: SceneInterface) =>
+		this.availableScenes = this.database.read<SceneV2Interface>(
+			(scene: SceneV2Interface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === session.id.campaignId &&
-				(scene.sessionId === undefined || scene.sessionId === session.sessionId),
-		).sort(this.factories.sorter.create<SceneInterface>([
-			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+				(scene.id.sessionId === undefined || scene.id.sessionId === session.id.sessionId),
+		).sort(this.factories.sorter.create<SceneV2Interface>([
+			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
+			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
+			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.sceneId),
 		]));
 	}
 
@@ -38,25 +38,25 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 		contentEl.addClass('rpgm-modal');
 
 		contentEl.createEl('h2', {text: 'Scene Selector'});
-		contentEl.createEl('p', {text: 'Select the scenes to add to the session "' + this.session.name + '"'});
+		contentEl.createEl('p', {text: 'Select the scenes to add to the session "' + this.session.file.basename + '"'});
 		const sessionContainerEl = contentEl.createDiv();
 
-		this.availableScenes.forEach((scene: SceneInterface) => {
+		this.availableScenes.forEach((scene: SceneV2Interface) => {
 			const checkboxDiv = sessionContainerEl.createDiv();
 			const checkbox = checkboxDiv.createEl('input');
 			checkbox.type = 'checkbox';
-			checkbox.value = scene.path;
-			checkbox.id = scene.name;
+			checkbox.value = scene.file.path;
+			checkbox.id = scene.file.basename;
 
-			if (scene.sessionId === this.session.sessionId) checkbox.checked = true;
+			if (scene.id.sessionId === this.session.id.sessionId) checkbox.checked = true;
 
 			this.scenesEls.push(checkbox);
 
-			const checkboxLabel = checkboxDiv.createEl('label', {text: scene.name});
-			checkboxLabel.htmlFor = scene.name;
+			const checkboxLabel = checkboxDiv.createEl('label', {text: scene.file.basename});
+			checkboxLabel.htmlFor = scene.file.basename;
 		});
 
-		const scenesSelectionButtonEl = contentEl.createEl('button', {text: 'Add selected scenes to session "' + this.session.name + '"'});
+		const scenesSelectionButtonEl = contentEl.createEl('button', {text: 'Add selected scenes to session "' + this.session.file.basename + '"'});
 		scenesSelectionButtonEl.addEventListener("click", () => {
 			new InfoLog(LogMessageType.SessionSceneLink, 'Initialising scene update from session');
 			return this.addScenes()
@@ -100,7 +100,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			if (file != null && file instanceof TFile){
 				new InfoLog(LogMessageType.SessionSceneLink, 'Scene file found', file);
 				const map: Map<string, string> = new Map<string, string>();
-				map.set('session', this.scenesEls[index].checked === true ? this.session.sessionId.toString() : '');
+				map.set('session', this.scenesEls[index].checked === true ? (this.session.id.sessionId?.toString() ?? '') : '');
 
 				new InfoLog(LogMessageType.SessionSceneLink, 'Updating scene session frontmatter', file);
 				await this.factories.frontmatter.update(file, map);

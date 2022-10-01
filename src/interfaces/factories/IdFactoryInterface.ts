@@ -1,5 +1,5 @@
 import {ComponentType} from "../../enums/ComponentType";
-import {IdInterface} from "../components/IdInterface";
+import {IdInterface} from "../IdInterface";
 
 export interface IdFactoryInterface {
 	create(

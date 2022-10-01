@@ -172,8 +172,6 @@ export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 					{field:  TableField.Name, checked: true, required: true},
 					{field:  TableField.Synopsis, checked: true, required: false},
 					{field:  TableField.Date, checked: true, required: false},
-					{field:  TableField.StartTime, checked: false, required: false},
-					{field:  TableField.EndTime, checked: false, required: false},
 					{field:  TableField.Duration, checked: false, required: false},
 					{field:  TableField.SceneType, checked: false, required: false},
 					{field:  TableField.SceneExciting, checked: false, required: false},

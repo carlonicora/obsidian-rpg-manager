@@ -1,12 +1,12 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {ClueInterface} from "../../interfaces/components/ClueInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {ClueHeaderSubModel} from "../subModels/headers/ClueHeaderSubModel";
+import {ClueV2Interface} from "../../_dbV2/components/interfaces/ClueV2Interface";
 
 export class ClueModel extends AbstractModel {
-	protected currentElement: ClueInterface;
+	protected currentElement: ClueV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

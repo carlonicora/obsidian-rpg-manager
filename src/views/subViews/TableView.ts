@@ -2,9 +2,9 @@ import {TableResponseInterface} from "../../interfaces/response/subModels/TableR
 import {ContentInterface} from "../../interfaces/ContentInterface";
 import {AbstractSubModelView} from "../../abstracts/AbstractSubModelView";
 import {ComponentType} from "../../enums/ComponentType";
-import {ActInterface} from "../../interfaces/components/ActInterface";
-import {AdventureInterface} from "../../interfaces/components/AdventureInterface";
-import {IdInterface} from "../../interfaces/components/IdInterface";
+import {ActV2Interface} from "../../interfaces/components/ActV2Interface";
+import {AdventureV2Interface} from "../../interfaces/components/AdventureV2Interface";
+import {IdInterface} from "../../interfaces/IdInterface";
 import {DateContent} from "../../contents/DateContent";
 import {EditorSelector} from "../../helpers/EditorSelector";
 import {setIcon} from "obsidian";
@@ -60,7 +60,7 @@ export class TableView extends AbstractSubModelView {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
 							id = this.factories.id.create(ComponentType.Adventure, data.campaignId, data.adventureId);
 							if (id !== undefined) {
-								const previousAdventure = this.database.readSingle<AdventureInterface>(
+								const previousAdventure = this.database.readSingle<AdventureV2Interface>(
 									ComponentType.Adventure,
 									id,
 									data.adventureId - 1,
@@ -68,12 +68,12 @@ export class TableView extends AbstractSubModelView {
 
 								let nextActId = 1;
 								if (previousAdventure != null){
-									const previousAdventureActs = this.database.readList<ActInterface>(
+									const previousAdventureActs = this.database.readList<ActV2Interface>(
 										ComponentType.Act,
 										id,
 										previousAdventure.adventureId,
 									);
-									previousAdventureActs.forEach((act: ActInterface) => {
+									previousAdventureActs.forEach((act: ActV2Interface) => {
 										if (nextActId <= act.actId) nextActId = act.actId + 1;
 									});
 								}

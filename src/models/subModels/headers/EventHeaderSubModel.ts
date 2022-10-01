@@ -6,11 +6,11 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {EventInterface} from "../../../interfaces/components/EventInterface";
 import {ResponseType} from "../../../enums/ResponseType";
+import {EventV2Interface} from "../../../_dbV2/components/interfaces/EventV2Interface";
 
 export class EventHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: EventInterface;
+	protected data: EventV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,

@@ -1,9 +1,9 @@
-import {AdventureInterface} from "../../../interfaces/components/AdventureInterface";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
+import {AdventureV2Interface} from "../../../_dbV2/components/interfaces/AdventureV2Interface";
 
 export class AdventureHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: AdventureInterface;
+	protected currentElement: AdventureV2Interface;
 
 	public render(
 		container: HTMLElement,

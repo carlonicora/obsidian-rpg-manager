@@ -1,10 +1,10 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
-import {ActInterface} from "../../interfaces/components/ActInterface";
 import {ActHeaderSubModel} from "../subModels/headers/ActHeaderSubModel";
+import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
 
 export class ActNavigationModel extends AbstractModel {
-	protected currentElement: ActInterface;
+	protected currentElement: ActV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

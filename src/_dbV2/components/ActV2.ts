@@ -11,7 +11,7 @@ export class ActV2 extends AbstractComponentV2 implements ActV2Interface {
 	public stage: ComponentStage = ComponentStage.Plot;
 
 	public get adventure(): AdventureV2Interface {
-		const response = this.databaseV2.readSingle<AdventureV2Interface>(ComponentType.Adventure, this.id);
+		const response = this.database.readSingle<AdventureV2Interface>(ComponentType.Adventure, this.id);
 		if (response === undefined) throw new Error('');
 
 		return response;
@@ -39,7 +39,7 @@ export class ActV2 extends AbstractComponentV2 implements ActV2Interface {
 		const actId = this.id.actId;
 		if (actId === undefined) return null;
 
-		const response = this.databaseV2.read<ActV2Interface>((act: ActV2Interface) =>
+		const response = this.database.read<ActV2Interface>((act: ActV2Interface) =>
 			act.id.type === ComponentType.Act &&
 			act.id.campaignId === this.id.campaignId &&
 			act.id.actId === (next ? actId + 1 : actId -1)

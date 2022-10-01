@@ -2,11 +2,11 @@ import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {ComponentType} from "../../enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
-import {ActInterface} from "../../interfaces/components/ActInterface";
+import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
 
 export class ActModalPart extends AbstractModalPart {
-	private acts: ActInterface[];
-	private allAct:ActInterface[];
+	private acts: ActV2Interface[];
+	private allAct:ActV2Interface[];
 
 	private actEl: HTMLSelectElement;
 	private actErrorEl: HTMLParagraphElement;
@@ -23,14 +23,14 @@ export class ActModalPart extends AbstractModalPart {
 			this.modal.actId.id = 1;
 		}
 
-		this.allAct = this.database.read<ActInterface>(
-			(record: ActInterface) =>
+		this.allAct = this.database.read<ActV2Interface>(
+			(record: ActV2Interface) =>
 				record.id.type === ComponentType.Act &&
 				record.id.campaignId === this.modal.campaignId.id
 		);
 
-		this.acts = this.database.read<ActInterface>(
-			(record: ActInterface) =>
+		this.acts = this.database.read<ActV2Interface>(
+			(record: ActV2Interface) =>
 				record.id.type === ComponentType.Act &&
 				record.id.campaignId === this.modal.campaignId.id &&
 				record.id.adventureId === this.modal.adventureId?.id
@@ -87,9 +87,9 @@ export class ActModalPart extends AbstractModalPart {
 	private addNewActElements(
 		containerEl: HTMLElement,
 	): void {
-		this.allAct.forEach((data: ActInterface) => {
-			if (this.modal.actId !== undefined && data.actId >= (this.modal.actId.id ?? 0)) {
-				this.modal.actId.id = (data.actId + 1);
+		this.allAct.forEach((data: ActV2Interface) => {
+			if (this.modal.actId !== undefined && (data.id.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
+				this.modal.actId.id = ((data.id.actId ?? 0) + 1);
 			}
 		});
 	}
@@ -112,13 +112,13 @@ export class ActModalPart extends AbstractModalPart {
 			}).selected = true;
 		}
 
-		this.acts.forEach((act: ActInterface) => {
+		this.acts.forEach((act: ActV2Interface) => {
 			const actOptionEl = this.actEl.createEl('option', {
-				text: act.name,
-				value: act.actId.toString(),
+				text: act.file.basename,
+				value: act.id.actId?.toString(),
 			});
 
-			if (this.acts.length === 1 || this.modal.actId?.id === act.actId){
+			if (this.acts.length === 1 || this.modal.actId?.id === act.id.actId){
 				actOptionEl.selected = true;
 				this.selectAct();
 			}

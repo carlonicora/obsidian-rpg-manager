@@ -1,13 +1,12 @@
 import {App, ItemView, TFile, View, WorkspaceLeaf} from "obsidian";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {base} from "w3c-keyname";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
 import {DatabaseV2Interface} from "../_dbV2/interfaces/DatabaseV2Interface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -28,19 +27,8 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 	}
 
 	public get database(
-	): DatabaseInterface {
-		return this.app.plugins.getPlugin('rpg-manager').database;
-	}
-
-	public get databaseV2(
 	): DatabaseV2Interface {
-		return this.app.plugins.getPlugin('rpg-manager').databaseV2;
-	}
-
-	public set databaseV2(
-		database: DatabaseV2Interface,
-	) {
-		this.app.plugins.getPlugin('rpg-manager').databaseV2 = database;
+		return this.app.plugins.getPlugin('rpg-manager').database;
 	}
 
 	public get factories(
@@ -122,7 +110,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		const basename: string|undefined = element.dataset.href;
 		if (base == undefined) return;
 
-		const record: ComponentInterface|undefined = this.database.read<ComponentInterface>((data: ComponentInterface) => data.basename === basename)[0];
+		const record: ComponentV2Interface|undefined = this.database.read<ComponentV2Interface>((data: ComponentV2Interface) => data.file.basename === basename)[0];
 		if (record === undefined) return;
 
 		const file: TFile = record.file;

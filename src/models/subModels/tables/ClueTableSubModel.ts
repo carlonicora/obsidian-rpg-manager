@@ -1,11 +1,11 @@
 import {ContentType} from "../../../enums/ContentType";
-import {ClueInterface} from "../../../interfaces/components/ClueInterface";
 import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {ComponentInterface} from "../../../interfaces/database/ComponentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../enums/TableField";
+import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
+import {ClueV2Interface} from "../../../_dbV2/components/interfaces/ClueV2Interface";
 
 export class ClueTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ClueList;
@@ -22,16 +22,16 @@ export class ClueTableSubModel extends AbstractTableSubModel {
 		return super.generateHeaderElement(fieldType);
 	}
 
-	protected generateContentElement<T extends ComponentInterface>(
+	protected generateContentElement<T extends ComponentV2Interface>(
 		index: number,
 		fieldType: TableField,
 		record: T,
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const clue: ClueInterface = <unknown>record as ClueInterface;
+		const clue: ClueV2Interface = <unknown>record as ClueV2Interface;
 		switch (fieldType) {
 			case TableField.Found:
-				return this.factories.contents.create((clue.isFound ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Date);
+				return this.factories.contents.create((clue.found !== undefined ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Date);
 				break;
 		}
 

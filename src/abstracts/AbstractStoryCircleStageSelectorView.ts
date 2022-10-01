@@ -1,6 +1,6 @@
 import {AbstractHeaderView} from "./AbstractHeaderView";
 import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 import {StoryCircleStage} from "../enums/StoryCircleStage";
 import {TFile} from "obsidian";
 

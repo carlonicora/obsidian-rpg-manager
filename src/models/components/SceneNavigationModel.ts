@@ -1,10 +1,10 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
-import {SceneInterface} from "../../interfaces/components/SceneInterface";
 import {SceneHeaderSubModel} from "../subModels/headers/SceneHeaderSubModel";
+import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
 
 export class SceneNavigationModel extends AbstractModel {
-	protected currentElement: SceneInterface;
+	protected currentElement: SceneV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

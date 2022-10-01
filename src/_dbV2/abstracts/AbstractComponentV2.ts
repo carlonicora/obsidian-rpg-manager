@@ -1,6 +1,6 @@
 import {ComponentV2Interface} from "../interfaces/ComponentV2Interface";
 import {CampaignSetting} from "../../enums/CampaignSetting";
-import {IdInterface} from "../../interfaces/components/IdInterface";
+import {IdInterface} from "../../interfaces/IdInterface";
 import {App, TFile} from "obsidian";
 import {ComponentStage} from "../components/enums/ComponentStage";
 import {DatabaseV2Interface} from "../interfaces/DatabaseV2Interface";
@@ -14,6 +14,8 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 	public stage: ComponentStage = ComponentStage.Element;
 	public baseCampaign: BaseCampaignV2Interface;
 	protected metadata: any;
+
+	public version: number|undefined;
 
 	constructor(
 		app: App,
@@ -38,6 +40,12 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 		if (this.id.type !== ComponentType.Campaign) this.baseCampaign = <unknown>database.readSingle<CampaignV2Interface>(ComponentType.Campaign, this.id) as BaseCampaignV2Interface;
 	}
 
+	public touch(
+	): void {
+		if (this.version === undefined) this.version = 0;
+		this.version++;
+	}
+
 	public get campaign(): CampaignV2Interface {
 		if (this.baseCampaign !== undefined) return <unknown>this.baseCampaign as CampaignV2Interface;
 		if (this.id.type === ComponentType.Campaign) return <unknown>this as CampaignV2Interface;
@@ -56,5 +64,9 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 
 	public get relationships(): Array<RelationshipV2Interface> {
 		return this.metadata.relationships;
+	}
+
+	public get isComplete(): boolean {
+		return this.metadata.complete !== false;
 	}
 }

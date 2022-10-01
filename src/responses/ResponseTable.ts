@@ -4,7 +4,7 @@ import {TableResponseInterface} from "../interfaces/response/subModels/TableResp
 import {ContentInterface} from "../interfaces/ContentInterface";
 import {App} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public class: string|null;
@@ -18,7 +18,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentElement: ComponentV2Interface,
 	) {
 		super(app, currentElement);
 		this.responseType = ResponseType.Table;

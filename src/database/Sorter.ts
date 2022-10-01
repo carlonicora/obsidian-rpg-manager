@@ -1,7 +1,7 @@
 import {SorterComparisonElementInterface} from "../interfaces/SorterComparisonElementInterface";
 import {SorterType} from "../enums/SorterType";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {SorterInterface} from "../interfaces/database/SorterInterface";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export class Sorter implements SorterInterface {
 	public comparisonElements: Array<SorterComparisonElementInterface>;
@@ -26,8 +26,8 @@ export class Sorter implements SorterInterface {
 	}
 
 	public getSortingFunction(
-		leftData: ComponentInterface,
-		rightData: ComponentInterface,
+		leftData: ComponentV2Interface,
+		rightData: ComponentV2Interface,
 	): number {
 		for (let index=0; index<this.comparisonElements.length; index++){
 			const comparer = this.comparisonElements[index];

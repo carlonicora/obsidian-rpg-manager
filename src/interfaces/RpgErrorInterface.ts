@@ -1,4 +1,4 @@
-import {IdInterface} from "./components/IdInterface";
+import {IdInterface} from "./IdInterface";
 
 export interface RpgErrorInterface {
 	id: IdInterface;

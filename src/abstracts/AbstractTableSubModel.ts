@@ -5,11 +5,11 @@ import {
 } from "../settings/RpgManagerSettingsInterface";
 import {ContentType} from "../enums/ContentType";
 import {ContentInterface} from "../interfaces/ContentInterface";
-import {ComponentInterface} from "../interfaces/database/ComponentInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
 import {ResponseTable} from "../responses/ResponseTable";
 import {TableField} from "../enums/TableField";
+import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
 
 export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface;
@@ -32,11 +32,11 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 
 		let index=0;
 		relationships.forEach((relationship: RelationshipInterface) => {
-			const record: ComponentInterface|undefined = relationship.component;
+			const record: ComponentV2Interface|undefined = relationship.component;
 			if (record !== undefined) {
 				index++;
 				response.addContent(
-					this.generateContent<ComponentInterface>(index, this.advancedSettings.fields, record, relationship),
+					this.generateContent<ComponentV2Interface>(index, this.advancedSettings.fields, record, relationship),
 				);
 			}
 		});
@@ -86,7 +86,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		return this.factories.contents.create('', ContentType.String);
 	}
 
-	protected generateContent<T extends ComponentInterface>(
+	protected generateContent<T extends ComponentV2Interface>(
 		index: number,
 		fields: Array<RpgManagerAdvancedSettingsListElementInterface>,
 		record: T,
@@ -104,7 +104,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		return response;
 	}
 
-	protected generateContentElement<T extends ComponentInterface>(
+	protected generateContentElement<T extends ComponentV2Interface>(
 		index: number,
 		fieldType: TableField,
 		record: T,
@@ -112,10 +112,10 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 	): ContentInterface|undefined {
 		switch (fieldType) {
 			case  TableField.Name:
-				return this.factories.contents.create(record.link, ContentType.Link);
+				return this.factories.contents.create(record.file.path, ContentType.Link);
 				break;
 			case  TableField.Image:
-				return this.factories.contents.create(record.imageSrcElement, ContentType.Image, true);
+				return this.factories.contents.create(record.image, ContentType.Image, true);
 				break;
 			case  TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown);

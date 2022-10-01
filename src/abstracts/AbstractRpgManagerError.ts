@@ -1,8 +1,7 @@
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
 import {App} from "obsidian";
-import {IdInterface} from "../interfaces/components/IdInterface";
+import {IdInterface} from "../interfaces/IdInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {DatabaseInterface} from "../interfaces/database/DatabaseInterface";
 import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
@@ -23,19 +22,8 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 	}
 
 	public get database(
-	): DatabaseInterface {
-		return this.app.plugins.getPlugin('rpg-manager').database;
-	}
-
-	public get databaseV2(
 	): DatabaseV2Interface {
-		return this.app.plugins.getPlugin('rpg-manager').databaseV2;
-	}
-
-	public set databaseV2(
-		database: DatabaseV2Interface,
-	) {
-		this.app.plugins.getPlugin('rpg-manager').databaseV2 = database;
+		return this.app.plugins.getPlugin('rpg-manager').database;
 	}
 
 	public get factories(

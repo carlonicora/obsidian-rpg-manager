@@ -1,12 +1,12 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {ComponentInterface} from "../../interfaces/database/ComponentInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {FactionHeaderSubModel} from "../subModels/headers/FactionHeaderSubModel";
+import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
 
 export class FactionModel extends AbstractModel {
-	protected currentElement: ComponentInterface;
+	protected currentElement: ComponentV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

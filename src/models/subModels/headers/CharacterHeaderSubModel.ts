@@ -6,11 +6,11 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
-import {CharacterInterface} from "../../../interfaces/components/CharacterInterface";
 import {ResponseType} from "../../../enums/ResponseType";
+import {CharacterV2Interface} from "../../../_dbV2/components/interfaces/CharacterV2Interface";
 
 export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: CharacterInterface;
+	protected data: CharacterV2Interface;
 
 	public async generateData(
 		relationship: RelationshipInterface,
@@ -21,7 +21,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 
 		if (this.data.synopsis != null && this.data.synopsis !== '') {
 			this.synopsis = '';
-			this.synopsis += this.data.link.toString();
+			this.synopsis += this.data.file.path.toString();
 			const pronoun = this.data.pronoun;
 			if (pronoun != null) {
 				this.synopsis += this.factories.pronouns.readPronoun(pronoun);

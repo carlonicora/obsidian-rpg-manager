@@ -1,27 +1,27 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
-import {SessionInterface} from "../../interfaces/components/SessionInterface";
-import {SceneInterface} from "../../interfaces/components/SceneInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
-import {ComponentInterface} from "../../interfaces/database/ComponentInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
+import {SessionV2Interface} from "../../_dbV2/components/interfaces/SessionV2Interface";
+import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
+import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
 
 export class SessionModel extends AbstractModel {
-	protected currentElement: SessionInterface;
+	protected currentElement: SessionV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const scenes = await this.database.read<SceneInterface>(
-			(scene: SceneInterface) =>
+		const scenes = await this.database.read<SceneV2Interface>(
+			(scene: SceneV2Interface) =>
 				scene.id.type === ComponentType.Scene &&
-				scene.id.campaignId === this.currentElement.campaign.campaignId &&
-				scene.sessionId === this.currentElement.id.sessionId,
-			).sort(this.factories.sorter.create<SceneInterface>([
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+				scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
+				scene.id.sessionId === this.currentElement.id.sessionId,
+			).sort(this.factories.sorter.create<SceneV2Interface>([
+				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
+				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
+				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.sceneId),
 			]));
 
 		for (let sceneIndex=0; sceneIndex<scenes.length; sceneIndex++){
@@ -51,7 +51,7 @@ export class SessionModel extends AbstractModel {
 	}
 
 	private addSubplotRelationships(
-		record: ComponentInterface,
+		record: ComponentV2Interface,
 	): void {
 		record.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
 			if (

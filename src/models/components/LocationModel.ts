@@ -1,12 +1,12 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {LocationInterface} from "../../interfaces/components/LocationInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {LocationHeaderSubModel} from "../subModels/headers/LocationHeaderSubModel";
+import {LocationV2Interface} from "../../_dbV2/components/interfaces/LocationV2Interface";
 
 export class LocationModel extends AbstractModel {
-	protected currentElement: LocationInterface;
+	protected currentElement: LocationV2Interface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

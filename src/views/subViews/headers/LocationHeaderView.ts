@@ -1,6 +1,6 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {LocationInterface} from "../../../interfaces/components/LocationInterface";
+import {LocationV2Interface} from "../../../_dbV2/components/interfaces/LocationV2Interface";
 
 export class LocationHeaderView extends AbstractHeaderView {
-	protected currentElement: LocationInterface;
+	protected currentElement: LocationV2Interface;
 }
