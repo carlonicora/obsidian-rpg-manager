@@ -9,6 +9,7 @@ import {SessionInterface} from "../../../interfaces/components/SessionInterface"
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {SceneTypeDescriptionModal} from "../../../modals/SceneTypeDescriptionModal";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: SceneInterface;
@@ -178,6 +179,10 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					map.set('sceneType', sceneTypeSelectorEl.value);
 					this.factories.frontmatter.update(file, map);
 				}
+			});
+
+			contentEl.createSpan({text: '?'}).addEventListener('click', () => {
+				new SceneTypeDescriptionModal(this.app).open();
 			});
 		}
 

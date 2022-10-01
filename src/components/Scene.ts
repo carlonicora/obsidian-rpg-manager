@@ -32,15 +32,15 @@ export class Scene extends AbstractComponentOutline implements SceneInterface {
 	private durationStints: Array<string> = [];
 
 	private activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
+		[SceneType.Action, true],
 		[SceneType.Combat, true],
-		[SceneType.Decision, false],
 		[SceneType.Encounter, true],
 		[SceneType.Exposition, false],
+		[SceneType.Investigation, true],
 		[SceneType.Planning, false],
 		[SceneType.Preparation, true],
 		[SceneType.Recap, false],
-		[SceneType.Investigation, true],
-		[SceneType.Action, true],
+		[SceneType.SocialCombat, true],
 	]);
 
 	protected initialiseData(

@@ -40,6 +40,7 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 		this.modalTypeMap.set('AgnosticMusic', MusicModalPart);
 		this.modalTypeMap.set('AgnosticSession', SessionModalPart);
 		this.modalTypeMap.set('AgnosticSubplot', SubplotModalPart);
+		this.modalTypeMap.set('AgnosticSceneTypeDescription', SubplotModalPart);
 
 	}
 	public create(

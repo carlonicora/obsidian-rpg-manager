@@ -196,6 +196,17 @@
   background-color: var(--background-primary-alt);
 }
 
+.modal-content .rpgm-modal-scene-descriptions .description-container {
+  margin-top: 20px;
+  border-top: solid 1px var(--background-modifier-border);
+}
+.modal-content .rpgm-modal-scene-descriptions .description-container div, .modal-content .rpgm-modal-scene-descriptions .description-container span {
+  margin-left: 20px;
+}
+.modal-content .rpgm-modal-scene-descriptions .description-container span {
+  font-style: italic;
+  font-size: 0.9em;
+}
 .modal-content .rpgm-modal-relationships select {
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;

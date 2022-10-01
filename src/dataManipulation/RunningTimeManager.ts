@@ -10,13 +10,13 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	public medianDefaultTimes: Map<SceneType, Array<number>> = new Map<SceneType, Array<number>>([
 		[SceneType.Action, [15*60]],
 		[SceneType.Combat, [15*60]],
-		[SceneType.Decision, [5*60]],
 		[SceneType.Encounter, [15*60]],
 		[SceneType.Exposition, [5*60]],
 		[SceneType.Investigation, [15*60]],
 		[SceneType.Planning, [10*60]],
 		[SceneType.Preparation, [10*60]],
 		[SceneType.Recap, [5*60]],
+		[SceneType.SocialCombat, [15*60]],
 	]);
 
 	public medianTimes: Map<number, Map<SceneType, Array<number>>> = new Map<number, Map<SceneType, Array<number>>>([
