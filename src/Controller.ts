@@ -76,6 +76,10 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		const currentElement:ComponentV2Interface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentV2Interface>(this.sourcePath);
 		if (currentElement === undefined) return false;
 
+		if (currentElement.version === undefined) {
+			setTimeout(this.render, 100);
+		}
+
 		if (this.componentVersion !== undefined && currentElement.version === this.componentVersion) return false;
 
 		this.componentVersion = currentElement.version;

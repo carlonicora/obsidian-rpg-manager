@@ -23,8 +23,8 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		let response = this.id.tag + '\n';
 
 		if (this.duplication.length > 1) {
-			this.duplication.forEach((record: ComponentV2Interface) => {
-				response += ' - ' + record.file.basename + '\n';
+			this.duplication.forEach((component: ComponentV2Interface) => {
+				response += ' - ' + component.file.basename + '\n';
 			})
 		} else if (this.duplicated !== undefined) {
 			response += ' - ' + this.duplication[0].file.basename + '\n' +
@@ -46,8 +46,8 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		const response: Array<string> = [];
 
 		if (this.duplication.length > 1) {
-			this.duplication.forEach((record: ComponentV2Interface) => {
-				response.push(record.file.path);
+			this.duplication.forEach((component: ComponentV2Interface) => {
+				response.push(component.file.path);
 			})
 		} else if (this.duplicated !== undefined) {
 			response.push(this.duplication[0].file.path);

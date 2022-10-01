@@ -1,5 +1,5 @@
 import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerComponent";
-import {App, TFile} from "obsidian";
+import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../interfaces/IdInterface";
 import {ComponentNotFoundError} from "../errors/ComponentNotFoundError";
@@ -10,6 +10,11 @@ import {AdventureV2Interface} from "./components/interfaces/AdventureV2Interface
 import {SessionV2Interface} from "./components/interfaces/SessionV2Interface";
 import {ActV2Interface} from "./components/interfaces/ActV2Interface";
 import {SceneV2Interface} from "./components/interfaces/SceneV2Interface";
+import {DatabaseV2Initialiser} from "./DatabaseV2Initialiser";
+import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
+import {ComponentStage} from "./components/enums/ComponentStage";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 
 export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV2Interface {
 	public recordset: Array<ComponentV2Interface> = [];
@@ -27,11 +32,9 @@ export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV
 	 */
 	public async ready(
 	): Promise<void> {
-		/*
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.onDelete(file)));
-		*/
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
@@ -199,7 +202,6 @@ export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV
 	/**
 	 * EVENTS
 	 */
-	/*
 	private async onDelete(
 		file: TFile,
 	): Promise<void> {
@@ -223,7 +225,7 @@ export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV
 
 		if (oldBaseName !== undefined && component !== undefined && metadata != null) {
 			await this.replaceFileContent(file, oldBaseName, newBaseName);
-			await component.reload();
+			await component.readMetadata();
 
 
 			if (this.app.workspace.getActiveFile()?.path === file.path){
@@ -243,15 +245,20 @@ export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV
 			const isNewComponent = component === undefined;
 
 			if (component !== undefined) {
-				await component.reload();
+				await component.readMetadata();
 			} else {
 				component = await DatabaseV2Initialiser.createComponent(file);
 			}
 
 			if (component === undefined) return;
 
-			if (isNewComponent && component instanceof AbstractComponentOutline) {
-				await component.checkDuplicates(this);
+			if (isNewComponent && (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot)) {
+				try {
+					const duplicate = this.readSingle(component.id.type, component.id);
+					throw new ComponentDuplicatedError(this.app, component.id, [duplicate], component);
+				} catch (e) {
+					//no need to trap an error here
+				}
 			}
 
 			await this.create(component);
@@ -266,6 +273,4 @@ export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV
 			return;
 		}
 	}
-
-	 */
 }

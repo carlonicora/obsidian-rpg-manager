@@ -1,10 +1,10 @@
 import {DiceType} from "../enums/DiceType";
-import {RawRollResult} from "../rpgs/Raw/enums/RawRollResult";
+import {RollResult} from "../enums/RollResult";
 
 export class DiceResult {
 	public type: DiceType;
 	public result: number;
-	public rollResult: RawRollResult;
+	public rollResult: RollResult;
 
 	constructor(
 		type: DiceType|null,
@@ -16,13 +16,13 @@ export class DiceResult {
 
 			switch (this.result){
 				case 1:
-					this.rollResult = RawRollResult.CriticalFailure;
+					this.rollResult = RollResult.CriticalFailure;
 					break;
 				case this.type:
-					this.rollResult = RawRollResult.CriticalSuccess;
+					this.rollResult = RollResult.CriticalSuccess;
 					break;
 				default:
-					this.rollResult = RawRollResult.Standard;
+					this.rollResult = RollResult.Standard;
 					break;
 			}
 		}

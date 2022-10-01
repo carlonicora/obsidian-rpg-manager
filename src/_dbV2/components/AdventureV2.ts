@@ -4,7 +4,7 @@ import {ComponentStage} from "./enums/ComponentStage";
 import {AbtPlotInterface} from "../../_plots/interfaces/AbtPlotInterface";
 import {StoryCirclePlotInterface} from "../../_plots/interfaces/StoryCirclePlotInterface";
 import {AbtPlot} from "../../_plots/AbtPlot";
-import {AdventureMetadataInterface} from "../metadatas/interfaces/AdventureMetadataInterface";
+import {AdventureMetadataInterface} from "../interfaces/metadatas/AdventureMetadataInterface";
 import {StoryCirclePlot} from "../../_plots/StoryCirclePlot";
 
 export class AdventureV2 extends AbstractComponentV2 implements AdventureV2Interface {

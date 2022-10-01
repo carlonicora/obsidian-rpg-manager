@@ -1,6 +1,6 @@
 import {AbstractComponentV2} from "../abstracts/AbstractComponentV2";
 import {MusicV2Interface} from "./interfaces/MusicV2Interface";
-import {MusicMetadataInterface} from "../metadatas/interfaces/MusicMetadataInterface";
+import {MusicMetadataInterface} from "../interfaces/metadatas/MusicMetadataInterface";
 import {YouTubeImageFetcherInterface} from "../../interfaces/fetchers/images/YouTubeImageFetcherInterface";
 import {YouTubeImageFetcher} from "../../fetchers/YouTubeImageFetcher";
 

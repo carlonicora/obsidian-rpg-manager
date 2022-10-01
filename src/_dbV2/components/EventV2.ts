@@ -1,5 +1,5 @@
 import {AbstractComponentV2} from "../abstracts/AbstractComponentV2";
-import {EventMetadataInterface} from "../metadatas/interfaces/EventMetadataInterface";
+import {EventMetadataInterface} from "../interfaces/metadatas/EventMetadataInterface";
 import {EventV2Interface} from "./interfaces/EventV2Interface";
 
 export class EventV2 extends AbstractComponentV2 implements EventV2Interface {

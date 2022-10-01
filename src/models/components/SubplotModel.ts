@@ -1,10 +1,10 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {SubplotV2Interface} from "../../interfaces/components/SubplotV2Interface";
 import {AbtPlotSubModel} from "../subModels/AbtPlotSubModel";
-import {RelationshipType} from "../../enums/RelationshipType";
 import {SubplotHeaderSubModel} from "../subModels/headers/SubplotHeaderSubModel";
+import {SubplotV2Interface} from "../../_dbV2/components/interfaces/SubplotV2Interface";
+import {RelationshipV2Type} from "../../_dbV2/relationships/enums/RelationshipV2Type";
 
 export class SubplotModel extends AbstractModel {
 	protected currentElement: SubplotV2Interface;
@@ -27,8 +27,8 @@ export class SubplotModel extends AbstractModel {
 
 		await this.addRelationships(ComponentType.Event);
 		await this.addRelationships(ComponentType.Clue);
-		await this.addRelationships(ComponentType.Faction, RelationshipType.Direct|RelationshipType.DirectInFrontmatter);
-		await this.addRelationships(ComponentType.NonPlayerCharacter, RelationshipType.Direct|RelationshipType.DirectInFrontmatter);
+		await this.addRelationships(ComponentType.Faction, RelationshipV2Type.Univocal);
+		await this.addRelationships(ComponentType.NonPlayerCharacter, RelationshipV2Type.Univocal);
 
 		return this.response;
 	}

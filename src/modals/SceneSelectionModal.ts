@@ -2,9 +2,9 @@ import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {InfoLog, LogMessageType} from "../helpers/Logger";
 import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
 import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interface";
+import {DatabaseV2Initialiser} from "../_dbV2/DatabaseV2Initialiser";
 
 export class SceneSelectionModal extends AbstractRpgManagerModal {
 	private availableScenes:Array<SceneV2Interface>;
@@ -58,26 +58,15 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 
 		const scenesSelectionButtonEl = contentEl.createEl('button', {text: 'Add selected scenes to session "' + this.session.file.basename + '"'});
 		scenesSelectionButtonEl.addEventListener("click", () => {
-			new InfoLog(LogMessageType.SessionSceneLink, 'Initialising scene update from session');
 			return this.addScenes()
 				.then(() => {
-					new InfoLog(LogMessageType.SessionSceneLink, 'Scenes Updated');
-					this.session.reload();
-					new InfoLog(LogMessageType.SessionSceneLink, 'Session reloaded', this.session);
-					this.session.loadHierarchy(this.database)
+					this.session.readMetadata()
 						.then(() => {
-							new InfoLog(LogMessageType.SessionSceneLink, 'Session hierarchy reloaded', this.session);
-							this.database.refreshRelationships(this.session)
-								.then(() => {
-									new InfoLog(LogMessageType.SessionSceneLink, 'Database relastionships refreshed', this.session);
-									return;
-								});
-							return;
+							DatabaseV2Initialiser.reinitialiseRelationships(this.database);
 						});
 					return;
 				})
 				.then(() => {
-					new InfoLog(LogMessageType.SessionSceneLink, 'Scene/Session association complete', this.session);
 					this.app.workspace.trigger("rpgmanager:refresh-views");
 					this.close();
 					return;
@@ -98,14 +87,10 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			const file: TAbstractFile|null = this.app.vault.getAbstractFileByPath(this.scenesEls[index].value);
 
 			if (file != null && file instanceof TFile){
-				new InfoLog(LogMessageType.SessionSceneLink, 'Scene file found', file);
 				const map: Map<string, string> = new Map<string, string>();
 				map.set('session', this.scenesEls[index].checked === true ? (this.session.id.sessionId?.toString() ?? '') : '');
 
-				new InfoLog(LogMessageType.SessionSceneLink, 'Updating scene session frontmatter', file);
 				await this.factories.frontmatter.update(file, map);
-
-				new InfoLog(LogMessageType.SessionSceneLink, 'Scene session frontmatter updated', file);
 			}
 		}
 

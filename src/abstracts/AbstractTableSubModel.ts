@@ -5,17 +5,17 @@ import {
 } from "../settings/RpgManagerSettingsInterface";
 import {ContentType} from "../enums/ContentType";
 import {ContentInterface} from "../interfaces/ContentInterface";
-import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
 import {ResponseTable} from "../responses/ResponseTable";
 import {TableField} from "../enums/TableField";
 import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {RelationshipV2Interface} from "../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface;
 
 	public async generateData(
-		relationships: RelationshipInterface[],
+		relationships: RelationshipV2Interface[],
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {
@@ -31,12 +31,12 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		);
 
 		let index=0;
-		relationships.forEach((relationship: RelationshipInterface) => {
-			const record: ComponentV2Interface|undefined = relationship.component;
-			if (record !== undefined) {
+		relationships.forEach((relationship: RelationshipV2Interface) => {
+			const component: ComponentV2Interface|undefined = relationship.component;
+			if (component !== undefined) {
 				index++;
 				response.addContent(
-					this.generateContent<ComponentV2Interface>(index, this.advancedSettings.fields, record, relationship),
+					this.generateContent<ComponentV2Interface>(index, this.advancedSettings.fields, component, relationship),
 				);
 			}
 		});
@@ -89,14 +89,14 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected generateContent<T extends ComponentV2Interface>(
 		index: number,
 		fields: Array<RpgManagerAdvancedSettingsListElementInterface>,
-		record: T,
-		relationship: RelationshipInterface,
+		component: T,
+		relationship: RelationshipV2Interface,
 	): Array<ContentInterface> {
 		const response: Array<ContentInterface> = []
 
 		fields.forEach((listElement: RpgManagerAdvancedSettingsListElementInterface) => {
 			if (listElement.checked) {
-				const content: ContentInterface | undefined = this.generateContentElement<T>(index, listElement.field, record, relationship);
+				const content: ContentInterface | undefined = this.generateContentElement<T>(index, listElement.field, component, relationship);
 				if (content !== undefined) response.push(content);
 			}
 		});
@@ -107,18 +107,18 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected generateContentElement<T extends ComponentV2Interface>(
 		index: number,
 		fieldType: TableField,
-		record: T,
-		relationship: RelationshipInterface,
+		component: T,
+		relationship: RelationshipV2Interface,
 	): ContentInterface|undefined {
 		switch (fieldType) {
 			case  TableField.Name:
-				return this.factories.contents.create(record.file.path, ContentType.Link);
+				return this.factories.contents.create(component.file.path, ContentType.Link);
 				break;
 			case  TableField.Image:
-				return this.factories.contents.create(record.image, ContentType.Image, true);
+				return this.factories.contents.create(component.image, ContentType.Image, true);
 				break;
 			case  TableField.Synopsis:
-				return this.factories.contents.create(relationship.description !== '' ? relationship.description : record.synopsis, ContentType.Markdown);
+				return this.factories.contents.create(relationship.description !== '' ? relationship.description : component.synopsis, ContentType.Markdown);
 				break;
 		}
 

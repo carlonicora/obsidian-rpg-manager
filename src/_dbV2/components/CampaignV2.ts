@@ -3,7 +3,7 @@ import {CampaignV2Interface} from "./interfaces/CampaignV2Interface";
 import {ComponentStage} from "./enums/ComponentStage";
 import {AbtPlotInterface} from "../../_plots/interfaces/AbtPlotInterface";
 import {AbtPlot} from "../../_plots/AbtPlot";
-import {CampaignMetadataInterface} from "../metadatas/interfaces/CampaignMetadataInterface";
+import {CampaignMetadataInterface} from "../interfaces/metadatas/CampaignMetadataInterface";
 
 export class CampaignV2 extends AbstractComponentV2 implements CampaignV2Interface {
 	protected metadata: CampaignMetadataInterface;

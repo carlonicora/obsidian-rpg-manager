@@ -24,16 +24,16 @@ export class ActModalPart extends AbstractModalPart {
 		}
 
 		this.allAct = this.database.read<ActV2Interface>(
-			(record: ActV2Interface) =>
-				record.id.type === ComponentType.Act &&
-				record.id.campaignId === this.modal.campaignId.id
+			(component: ActV2Interface) =>
+				component.id.type === ComponentType.Act &&
+				component.id.campaignId === this.modal.campaignId.id
 		);
 
 		this.acts = this.database.read<ActV2Interface>(
-			(record: ActV2Interface) =>
-				record.id.type === ComponentType.Act &&
-				record.id.campaignId === this.modal.campaignId.id &&
-				record.id.adventureId === this.modal.adventureId?.id
+			(component: ActV2Interface) =>
+				component.id.type === ComponentType.Act &&
+				component.id.campaignId === this.modal.campaignId.id &&
+				component.id.adventureId === this.modal.adventureId?.id
 		);
 	}
 
@@ -87,9 +87,9 @@ export class ActModalPart extends AbstractModalPart {
 	private addNewActElements(
 		containerEl: HTMLElement,
 	): void {
-		this.allAct.forEach((data: ActV2Interface) => {
-			if (this.modal.actId !== undefined && (data.id.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
-				this.modal.actId.id = ((data.id.actId ?? 0) + 1);
+		this.allAct.forEach((component: ActV2Interface) => {
+			if (this.modal.actId !== undefined && (component.id.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
+				this.modal.actId.id = ((component.id.actId ?? 0) + 1);
 			}
 		});
 	}

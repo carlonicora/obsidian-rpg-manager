@@ -168,7 +168,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 	): boolean {
 		let response = true;
 
-		this.tagMap.forEach((tagValue: TagValueInterface, recordType:ComponentType) => {
+		this.tagMap.forEach((tagValue: TagValueInterface, componentType:ComponentType) => {
 			if (tagValue.status === TagStatus.Invalid || tagValue.status === TagStatus.Missing) response = false;
 		});
 

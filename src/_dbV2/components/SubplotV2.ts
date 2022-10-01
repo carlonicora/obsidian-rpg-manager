@@ -5,7 +5,7 @@ import {StoryCirclePlotInterface} from "../../_plots/interfaces/StoryCirclePlotI
 import {AbtPlot} from "../../_plots/AbtPlot";
 import {StoryCirclePlot} from "../../_plots/StoryCirclePlot";
 import {SubplotV2Interface} from "./interfaces/SubplotV2Interface";
-import {SubplotMetadataInterface} from "../metadatas/interfaces/SubplotMetadataInterface";
+import {SubplotMetadataInterface} from "../interfaces/metadatas/SubplotMetadataInterface";
 
 export class SubplotV2 extends AbstractComponentV2 implements SubplotV2Interface {
 	protected metadata: SubplotMetadataInterface;

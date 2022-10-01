@@ -10,6 +10,11 @@ import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {MultipleTagsError} from "../errors/MultipleTagsError";
 import {ComponentV2Interface} from "./interfaces/ComponentV2Interface";
 import {DatabaseV2Interface} from "./interfaces/DatabaseV2Interface";
+import {RelationshipV2Interface} from "./relationships/interfaces/RelationshipV2Interface";
+import {RelationshipV2} from "./relationships/RelationshipV2";
+import {RelationshipV2Type} from "./relationships/enums/RelationshipV2Type";
+import {ComponentStage} from "./components/enums/ComponentStage";
+import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
 
 export class DatabaseV2Initialiser {
 	private static campaignSettings: Map<number, CampaignSetting> = new Map();
@@ -39,12 +44,14 @@ export class DatabaseV2Initialiser {
 				.then((component: ComponentV2Interface|undefined) => {
 					if (component === undefined) return undefined;
 
-					/*
 					if (component.stage == ComponentStage.Plot || component.stage === ComponentStage.Run){
-						const duplicate = temporaryDatabase.readSingle(component.id.type, component.id);
-						throw new ComponentDuplicatedError(this.app, component.id, [duplicate], component);
+						try {
+							const duplicate = response.readSingle(component.id.type, component.id);
+							throw new ComponentDuplicatedError(this.app, component.id, [duplicate], component);
+						} catch (e) {
+							//No need to trap any additional errors here
+						}
 					}
-					*/
 
 					response.create(component);
 					components.push(component);
@@ -52,6 +59,8 @@ export class DatabaseV2Initialiser {
 		}
 
 		await Promise.all(components);
+
+		this._initialiseRelationships(response);
 
 		if (this.misconfiguredTags.size > 0){
 			new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
@@ -63,7 +72,7 @@ export class DatabaseV2Initialiser {
 	}
 
 	/**
-	 * Creates a Record from an Obsidian TFile
+	 * Creates a Component from an Obsidian TFile
 	 *
 	 * @param file
 	 * @private
@@ -131,5 +140,25 @@ export class DatabaseV2Initialiser {
 				}
 			}
 		});
+	}
+
+	private static async _initialiseRelationships(
+		database: DatabaseV2Interface,
+	): Promise<void> {
+		database.recordset.forEach((component: ComponentV2Interface) => {
+			component.relationships.forEach((relationship: RelationshipV2Interface) => {
+				const relatedComponent: ComponentV2Interface|undefined = database.readByPath(relationship.path);
+				if (relatedComponent !== undefined){
+					const reverseRelationship: RelationshipV2Interface = new RelationshipV2(RelationshipV2Type.Reversed, component.file.path, undefined, component);
+					relatedComponent.addRelationship(reverseRelationship);
+				}
+			});
+		});
+	}
+
+	public static async reinitialiseRelationships(
+		database: DatabaseV2Interface,
+	): Promise<void> {
+		return this._initialiseRelationships(database);
 	}
 }

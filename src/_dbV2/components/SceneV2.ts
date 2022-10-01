@@ -1,6 +1,6 @@
 import {AbstractComponentV2} from "../abstracts/AbstractComponentV2";
 import {SceneV2Interface} from "./interfaces/SceneV2Interface";
-import {SceneMetadataInterface} from "../metadatas/interfaces/SceneMetadataInterface";
+import {SceneMetadataInterface} from "../interfaces/metadatas/SceneMetadataInterface";
 import {ComponentStage} from "./enums/ComponentStage";
 import {ActV2Interface} from "./interfaces/ActV2Interface";
 import {StoryCircleStage} from "../../enums/StoryCircleStage";

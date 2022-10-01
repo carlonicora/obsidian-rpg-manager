@@ -97,12 +97,12 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async loadToDo(
 		containerEl: HTMLDivElement
 	): Promise<void> {
-		const recordset: Array<ComponentV2Interface> = this.database.read<ComponentV2Interface>((data: ComponentV2Interface) => true);
+		const components: Array<ComponentV2Interface> = this.database.read<ComponentV2Interface>((component: ComponentV2Interface) => true);
 
 		let firstToDoFound = false;
 
-		recordset.forEach((data: ComponentV2Interface) => {
-			this.app.vault.read(data.file)
+		components.forEach((component: ComponentV2Interface) => {
+			this.app.vault.read(component.file)
 				.then((content: string) => {
 					const contentArray: Array<string> = content.split('\n');
 					contentArray.forEach((line: string) => {
@@ -135,7 +135,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 							const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text:finalLine});
 
 							itemEl.addEventListener('click', () => {
-								this.app.workspace.getLeaf(false).openFile(data.file);
+								this.app.workspace.getLeaf(false).openFile(component.file);
 							});
 						}
 					});

@@ -1,6 +1,6 @@
 import {AbstractComponentV2} from "../abstracts/AbstractComponentV2";
 import {CharacterV2Interface} from "./interfaces/CharacterV2Interface";
-import {CharacterMetadataInterface} from "../metadatas/interfaces/CharacterMetadataInterface";
+import {CharacterMetadataInterface} from "../interfaces/metadatas/CharacterMetadataInterface";
 import {Pronoun} from "../../enums/Pronoun";
 
 export class CharacterV2 extends AbstractComponentV2 implements CharacterV2Interface {

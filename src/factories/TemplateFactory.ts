@@ -8,10 +8,6 @@ import {LocationFrontmatterTemplateFactory} from "./templates/frontmatter/Locati
 import {EventFrontmatterTemplateFactory} from "./templates/frontmatter/EventFrontmatterTemplateFactory";
 import {ClueFrontmatterTemplateFactory} from "./templates/frontmatter/ClueFrontmatterTemplateFactory";
 import {FactionFrontmatterTemplateFactory} from "./templates/frontmatter/FactionFrontmatterTemplateFactory";
-import {VampireCharacterTemplate} from "../rpgs/Vampire/templates/VampireCharacterTemplate";
-import {VampireNonPlayerCharacterTemplate} from "../rpgs/Vampire/templates/VampireNonPlayerCharacterTemplate";
-import {RawCampaignTemplate} from "../rpgs/Raw/templates/RawCampaignTemplate";
-import {VampireCampaignTemplate} from "../rpgs/Vampire/templates/VampireCampaignTemplate";
 import {MusicFrontmatterTemplateFactory} from "./templates/frontmatter/MusicFrontmatterTemplateFactory";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
@@ -41,10 +37,6 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		this.templateTypeMap.set('AgnosticEvent', EventFrontmatterTemplateFactory);
 		this.templateTypeMap.set('AgnosticClue', ClueFrontmatterTemplateFactory);
 		this.templateTypeMap.set('AgnosticFaction', FactionFrontmatterTemplateFactory);
-		this.templateTypeMap.set('VampireCharacter', VampireCharacterTemplate);
-		this.templateTypeMap.set('VampireNonPlayerCharacter', VampireNonPlayerCharacterTemplate);
-		this.templateTypeMap.set('RawCampaign', RawCampaignTemplate);
-		this.templateTypeMap.set('VampireCampaign', VampireCampaignTemplate);
 		this.templateTypeMap.set('AgnosticMusic', MusicFrontmatterTemplateFactory);
 		this.templateTypeMap.set('AgnosticSubplot', SubplotFrontmatterTemplateFactory);
 	}

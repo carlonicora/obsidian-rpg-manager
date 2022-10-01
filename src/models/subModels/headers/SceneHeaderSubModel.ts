@@ -1,5 +1,4 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
@@ -15,12 +14,13 @@ import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {AbtStage} from "../../../enums/AbtStage";
 import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
 import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
+import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SceneV2Interface;
 
 	public async generateData(
-		relationship: RelationshipInterface,
+		relationship: RelationshipV2Interface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

@@ -1,5 +1,7 @@
 export enum RelationshipV2Type {
 	Univocal,
 	Biunivocal,
-	ParentChild,
+	Parent,
+	Child,
+	Reversed,
 }

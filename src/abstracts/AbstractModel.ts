@@ -5,13 +5,11 @@ import {SubModelFactory} from "../factories/SubModelFactory";
 import {ResponseData} from "../responses/ResponseData";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {ComponentType} from "../enums/ComponentType";
-import {RelationshipType} from "../enums/RelationshipType";
 import {LocationTableSubModel} from "../models/subModels/tables/LocationTableSubModel";
 import {FactionTableSubModel} from "../models/subModels/tables/FactionTableSubModel";
 import {ClueTableSubModel} from "../models/subModels/tables/ClueTableSubModel";
 import {EventTableSubModel} from "../models/subModels/tables/EventTableSubModel";
 import {MusicTableSubModel} from "../models/subModels/tables/MusicTableSubModel";
-import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {CharacterTableSubModel} from "../models/subModels/tables/CharacterTableSubModel";
 import {AdventureTableSubModel} from "../models/subModels/tables/AdventureTableSubModel";
 import {ActTableSubModel} from "../models/subModels/tables/ActTableSubModel";
@@ -30,12 +28,14 @@ import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interf
 import {AdventureV2Interface} from "../_dbV2/components/interfaces/AdventureV2Interface";
 import {ActV2Interface} from "../_dbV2/components/interfaces/ActV2Interface";
 import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
+import {RelationshipV2Interface} from "../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {RelationshipV2Type} from "../_dbV2/relationships/enums/RelationshipV2Type";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected subModelFactory: SubModelFactory;
 	protected response:ResponseDataInterface;
 	protected subModelsMap: Map<ComponentType, any> = new Map<ComponentType, any>();
-	protected recordSortingMap: Map<ComponentType, Array<SorterComparisonElementInterface>> = new Map<ComponentType, Array<SorterComparisonElementInterface>>();
+	protected componentSortingMap: Map<ComponentType, Array<SorterComparisonElementInterface>> = new Map<ComponentType, Array<SorterComparisonElementInterface>>();
 	protected relationshipSortingMap: Map<ComponentType, Array<SorterComparisonElementInterface>> = new Map<ComponentType, Array<SorterComparisonElementInterface>>();
 
 	constructor(
@@ -63,51 +63,51 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		this.subModelsMap.set(ComponentType.Scene, SceneTableSubModel);
 		this.subModelsMap.set(ComponentType.Subplot, SubplotTableSubModel);
 
-		this.recordSortingMap = new Map();
-		this.recordSortingMap.set(ComponentType.Event, [new SorterComparisonElement((data: EventV2Interface) => data.date)]);
-		this.recordSortingMap.set(ComponentType.Campaign, [new SorterComparisonElement((data: CampaignV2Interface) => data.id.campaignId)]);
-		this.recordSortingMap.set(ComponentType.Session, [
-			new SorterComparisonElement((data: SessionV2Interface) => data.id.campaignId),
-			new SorterComparisonElement((data: SessionV2Interface) => data.id.adventureId),
+		this.componentSortingMap = new Map();
+		this.componentSortingMap.set(ComponentType.Event, [new SorterComparisonElement((component: EventV2Interface) => component.date)]);
+		this.componentSortingMap.set(ComponentType.Campaign, [new SorterComparisonElement((component: CampaignV2Interface) => component.id.campaignId)]);
+		this.componentSortingMap.set(ComponentType.Session, [
+			new SorterComparisonElement((component: SessionV2Interface) => component.id.campaignId),
+			new SorterComparisonElement((component: SessionV2Interface) => component.id.adventureId),
 		]);
-		this.recordSortingMap.set(ComponentType.Adventure, [
-			new SorterComparisonElement((data: AdventureV2Interface) => data.id.campaignId),
-			new SorterComparisonElement((data: AdventureV2Interface) => data.id.adventureId),
+		this.componentSortingMap.set(ComponentType.Adventure, [
+			new SorterComparisonElement((component: AdventureV2Interface) => component.id.campaignId),
+			new SorterComparisonElement((component: AdventureV2Interface) => component.id.adventureId),
 		]);
-		this.recordSortingMap.set(ComponentType.Act, [
-			new SorterComparisonElement((data: ActV2Interface) => data.id.campaignId),
-			new SorterComparisonElement((data: ActV2Interface) => data.id.adventureId),
-			new SorterComparisonElement((data: ActV2Interface) => data.id.actId),
+		this.componentSortingMap.set(ComponentType.Act, [
+			new SorterComparisonElement((component: ActV2Interface) => component.id.campaignId),
+			new SorterComparisonElement((component: ActV2Interface) => component.id.adventureId),
+			new SorterComparisonElement((component: ActV2Interface) => component.id.actId),
 		]);
-		this.recordSortingMap.set(ComponentType.Scene, [
-			new SorterComparisonElement((data: SceneV2Interface) => data.id.campaignId),
-			new SorterComparisonElement((data: SceneV2Interface) => data.id.adventureId),
-			new SorterComparisonElement((data: SceneV2Interface) => data.id.actId),
-			new SorterComparisonElement((data: SceneV2Interface) => data.id.sceneId),
+		this.componentSortingMap.set(ComponentType.Scene, [
+			new SorterComparisonElement((component: SceneV2Interface) => component.id.campaignId),
+			new SorterComparisonElement((component: SceneV2Interface) => component.id.adventureId),
+			new SorterComparisonElement((component: SceneV2Interface) => component.id.actId),
+			new SorterComparisonElement((component: SceneV2Interface) => component.id.sceneId),
 		]);
 
 
 		this.relationshipSortingMap = new Map();
-		this.relationshipSortingMap.set(ComponentType.Event, [new SorterComparisonElement((data: RelationshipInterface) => (<EventV2Interface>data.component).date)]);
-		this.relationshipSortingMap.set(ComponentType.Campaign, [new SorterComparisonElement((data: RelationshipInterface) => (<CampaignV2Interface>data.component).id.campaignId)]);
+		this.relationshipSortingMap.set(ComponentType.Event, [new SorterComparisonElement((component: RelationshipV2Interface) => (<EventV2Interface>component.component).date)]);
+		this.relationshipSortingMap.set(ComponentType.Campaign, [new SorterComparisonElement((component: RelationshipV2Interface) => (<CampaignV2Interface>component.component).id.campaignId)]);
 		this.relationshipSortingMap.set(ComponentType.Session, [
-			new SorterComparisonElement((data: RelationshipInterface) => (<SessionV2Interface>data.component).id.campaignId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<SessionV2Interface>data.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<SessionV2Interface>component.component).id.campaignId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<SessionV2Interface>component.component).id.adventureId),
 		]);
 		this.relationshipSortingMap.set(ComponentType.Adventure, [
-			new SorterComparisonElement((data: RelationshipInterface) => (<AdventureV2Interface>data.component).id.campaignId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<AdventureV2Interface>data.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<AdventureV2Interface>component.component).id.campaignId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<AdventureV2Interface>component.component).id.adventureId),
 		]);
 		this.relationshipSortingMap.set(ComponentType.Act, [
-			new SorterComparisonElement((data: RelationshipInterface) => (<ActV2Interface>data.component).id.campaignId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<ActV2Interface>data.component).id.adventureId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<ActV2Interface>data.component).id.actId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<ActV2Interface>component.component).id.campaignId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<ActV2Interface>component.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<ActV2Interface>component.component).id.actId),
 		]);
 		this.relationshipSortingMap.set(ComponentType.Scene, [
-			new SorterComparisonElement((data: RelationshipInterface) => (<SceneV2Interface>data.component).id.campaignId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<SceneV2Interface>data.component).id.adventureId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<SceneV2Interface>data.component).id.actId),
-			new SorterComparisonElement((data: RelationshipInterface) => (<SceneV2Interface>data.component).id.sceneId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<SceneV2Interface>component.component).id.campaignId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<SceneV2Interface>component.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<SceneV2Interface>component.component).id.actId),
+			new SorterComparisonElement((component: RelationshipV2Interface) => (<SceneV2Interface>component.component).id.sceneId),
 		]);
 	}
 
@@ -127,47 +127,50 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	protected async addRelationships(
 		type: ComponentType,
-		requiredRelationshipType: RelationshipType = RelationshipType.Direct | RelationshipType.DirectInFrontmatter,
+		requiredRelationshipV2Type: RelationshipV2Type|undefined = RelationshipV2Type.Biunivocal,
 		title: string|undefined=undefined,
 	): Promise<void> {
-		return await this.add(type, requiredRelationshipType, undefined, title, false);
+		return await this.add(type, requiredRelationshipV2Type, undefined, title, false);
 	}
 
 	private async add(
 		type: ComponentType,
-		requiredRelationshipType: RelationshipType|undefined = RelationshipType.Direct | RelationshipType.DirectInFrontmatter,
-		data: ComponentV2Interface[]|ComponentV2Interface|RelationshipInterface[]|undefined=undefined,
+		requiredRelationshipV2Type: RelationshipV2Type|undefined = RelationshipV2Type.Biunivocal,
+		component: ComponentV2Interface[]|ComponentV2Interface|RelationshipV2Interface[]|undefined=undefined,
 		title: string|undefined=undefined,
 		sortByLatestUsage: boolean,
 	): Promise<void>{
 		if (!this.isExcluded(type)){
 			const subModel = this.subModelsMap.get(type);
-			if (data === undefined) data = this.currentElement.getRelationships(type, requiredRelationshipType);
+			if (component === undefined) component = this.currentElement.relationships.filter((relationships: RelationshipV2Interface) =>
+				relationships.component !== undefined &&
+				(requiredRelationshipV2Type & relationships.component.id.type) === relationships.component.id.type
+			);
 
-			if (ArrayHelper.isArray(data)) {
+			if (ArrayHelper.isArray(component)) {
 				let sorter: Array<any> | undefined = undefined;
 
-				if ((<Array<any>>data)[0]?.component !== undefined) {
+				if ((<Array<any>>component)[0]?.component !== undefined) {
 					if (sortByLatestUsage){
 						sorter = [
-							new SorterComparisonElement((data: RelationshipInterface) => (<ComponentV2Interface>data.component).file.stat.mtime, SorterType.Descending)
+							new SorterComparisonElement((relationship: RelationshipV2Interface) => (<ComponentV2Interface>relationship.component).file.stat.mtime, SorterType.Descending)
 						];
 					} else {
 						sorter = this.relationshipSortingMap.get(type);
-						if (sorter === undefined) sorter = [new SorterComparisonElement((data: RelationshipInterface) => (<ComponentV2Interface>data.component).file.basename)];
+						if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipV2Interface) => (<ComponentV2Interface>relationship.component).file.basename)];
 					}
 				} else {
 					if (sortByLatestUsage){
 						sorter = [
-							new SorterComparisonElement((data: ComponentV2Interface) => data.file.stat.mtime, SorterType.Descending)
+							new SorterComparisonElement((component: ComponentV2Interface) => component.file.stat.mtime, SorterType.Descending)
 						];
 					} else {
-						sorter = this.recordSortingMap.get(type);
-						if (sorter === undefined) sorter = [new SorterComparisonElement((data: ComponentV2Interface) => data.file.basename)];
+						sorter = this.componentSortingMap.get(type);
+						if (sorter === undefined) sorter = [new SorterComparisonElement((component: ComponentV2Interface) => component.file.basename)];
 					}
 				}
 
-				if (sorter !== undefined) data = (<Array<any>>data).sort(this.factories.sorter.create<any>(sorter))
+				if (sorter !== undefined) component = (<Array<any>>component).sort(this.factories.sorter.create<any>(sorter))
 			}
 
 
@@ -175,7 +178,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 				await this.response.addSubModel(
 					subModel,
 					this.currentElement,
-					data,
+					component,
 					title,
 				);
 			}

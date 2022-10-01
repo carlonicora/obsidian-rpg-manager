@@ -17,15 +17,15 @@ export class CampaignNavigationModel extends AbstractModel {
 	): Promise<ResponseDataInterface> {
 		this.sourceMeta.adventures = this.database.readList<AdventureV2Interface>(ComponentType.Adventure, this.currentElement.id)
 			.sort(this.factories.sorter.create<ComponentV2Interface>([
-				new SorterComparisonElement((data: ComponentV2Interface) => data.file.stat.mtime, SorterType.Descending),
+				new SorterComparisonElement((component: ComponentV2Interface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 		this.sourceMeta.acts = this.database.readList<ActV2Interface>(ComponentType.Act, this.currentElement.id)
 			.sort(this.factories.sorter.create<ComponentV2Interface>([
-				new SorterComparisonElement((data: ComponentV2Interface) => data.file.stat.mtime, SorterType.Descending),
+				new SorterComparisonElement((component: ComponentV2Interface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 		this.sourceMeta.sessions = this.database.readList<SessionV2Interface>(ComponentType.Session, this.currentElement.id)
 			.sort(this.factories.sorter.create<ComponentV2Interface>([
-				new SorterComparisonElement((data: ComponentV2Interface) => data.file.stat.mtime, SorterType.Descending),
+				new SorterComparisonElement((component: ComponentV2Interface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
 		await this.response.addSubModel(CampaignHeaderSubModel, this.currentElement, this.currentElement, undefined, this.sourceMeta);

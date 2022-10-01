@@ -6,8 +6,10 @@ import {AbtPlot} from "../../_plots/AbtPlot";
 import {AdventureV2Interface} from "./interfaces/AdventureV2Interface";
 import {AbtPlotInterface} from "../../_plots/interfaces/AbtPlotInterface";
 import {ComponentType} from "../../enums/ComponentType";
+import {ActMetadataInterface} from "../interfaces/metadatas/ActMetadataInterface";
 
 export class ActV2 extends AbstractComponentV2 implements ActV2Interface {
+	protected metadata: ActMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
 
 	public get adventure(): AdventureV2Interface {

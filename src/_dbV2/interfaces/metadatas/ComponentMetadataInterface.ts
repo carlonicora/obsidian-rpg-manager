@@ -4,4 +4,5 @@ export interface ComponentMetadataInterface {
 	synopsis?: string | undefined;
 	image?: string | undefined;
 	relationships?: Array<RelationshipV2Interface> | undefined;
+	complete?: boolean | undefined;
 }

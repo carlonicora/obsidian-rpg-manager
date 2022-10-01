@@ -1,5 +1,4 @@
 import {ContentType} from "../../../enums/ContentType";
-import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
@@ -7,6 +6,7 @@ import {TableField} from "../../../enums/TableField";
 import {SceneType} from "../../../enums/SceneType";
 import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
 import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
+import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export class SceneTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;
@@ -39,10 +39,10 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 	protected generateContentElement<T extends ComponentV2Interface>(
 		index: number,
 		fieldType: TableField,
-		record: T,
-		relationship: RelationshipInterface,
+		component: T,
+		relationship: RelationshipV2Interface,
 	): ContentInterface|undefined {
-		const scene: SceneV2Interface = <unknown>record as SceneV2Interface;
+		const scene: SceneV2Interface = <unknown>component as SceneV2Interface;
 		switch (fieldType) {
 			case TableField.Index:
 				return this.factories.contents.create(scene.isComplete ? index.toString() : '**' + index.toString() + '**', ContentType.Markdown, true);
@@ -71,7 +71,7 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				break;
 		}
 
-		return super.generateContentElement(index, fieldType, record, relationship);
+		return super.generateContentElement(index, fieldType, component, relationship);
 	}
 
 	private formatTime(

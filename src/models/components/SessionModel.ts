@@ -1,12 +1,13 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
-import {RelationshipType} from "../../enums/RelationshipType";
 import {SessionV2Interface} from "../../_dbV2/components/interfaces/SessionV2Interface";
 import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
 import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
+import {RelationshipV2Interface} from "../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {RelationshipV2Type} from "../../_dbV2/relationships/enums/RelationshipV2Type";
+import {RelationshipV2} from "../../_dbV2/relationships/RelationshipV2";
 
 export class SessionModel extends AbstractModel {
 	protected currentElement: SessionV2Interface;
@@ -17,7 +18,7 @@ export class SessionModel extends AbstractModel {
 			(scene: SceneV2Interface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
-				scene.id.sessionId === this.currentElement.id.sessionId,
+				scene.session?.id.sessionId === this.currentElement.id.sessionId,
 			).sort(this.factories.sorter.create<SceneV2Interface>([
 				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
 				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
@@ -25,20 +26,15 @@ export class SessionModel extends AbstractModel {
 			]));
 
 		for (let sceneIndex=0; sceneIndex<scenes.length; sceneIndex++){
-			await scenes[sceneIndex].relationships.forEach((relationship: RelationshipInterface, name: string) => {
-				relationship.description = '';
-				if (!this.currentElement.relationships.has(name)) this.currentElement.relationships.set(name, relationship);
-
-				if (relationship.component?.id.type === ComponentType.Event || relationship.component?.id.type === ComponentType.Clue) this.addSubplotRelationships(relationship.component);
-			});
-			await scenes[sceneIndex].reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
-				relationship.description = '';
-				if (!this.currentElement.reverseRelationships.has(name)) this.currentElement.relationships.set(name, relationship);
-				if (relationship.component?.id.type === ComponentType.Event || relationship.component?.id.type === ComponentType.Clue) this.addSubplotRelationships(relationship.component);
+			await scenes[sceneIndex].relationships.forEach((relationship: RelationshipV2Interface) => {
+				if (this.currentElement.relationships.filter((internalRelationship: RelationshipV2Interface) => internalRelationship.path === relationship.path).length === 0)
+					this.currentElement.addRelationship(
+						new RelationshipV2(RelationshipV2Type.Reversed, relationship.path, undefined, relationship.component)
+					);
 			});
 		}
 
-		await this.addRelationships(ComponentType.Subplot, RelationshipType.ReverseInFrontmatter);
+		await this.addRelationships(ComponentType.Subplot, RelationshipV2Type.Reversed);
 		await this.addRelationships(ComponentType.Music);
 		await this.addRelationships(ComponentType.Character);
 		await this.addRelationships(ComponentType.NonPlayerCharacter);
@@ -51,15 +47,16 @@ export class SessionModel extends AbstractModel {
 	}
 
 	private addSubplotRelationships(
-		record: ComponentV2Interface,
+		component: ComponentV2Interface,
 	): void {
-		record.reverseRelationships.forEach((relationship: RelationshipInterface, name: string) => {
-			if (
-				relationship.type === RelationshipType.ReverseInFrontmatter &&
-				relationship.component?.id.type === ComponentType.Subplot
-			) {
-				if (!this.currentElement.reverseRelationships.has(name)) this.currentElement.reverseRelationships.set(name, relationship);
-			}
+		component.relationships.filter((relationship: RelationshipV2Interface) =>
+			relationship.component?.id.type === ComponentType.Subplot &&
+			relationship.type === RelationshipV2Type.Reversed
+		).forEach((relationship: RelationshipV2Interface) => {
+			if (this.currentElement.relationships.filter((internalRelationship: RelationshipV2Interface) => internalRelationship.path === relationship.path).length === 0)
+				this.currentElement.addRelationship(
+					new RelationshipV2(RelationshipV2Type.Reversed, relationship.path, undefined, relationship.component)
+				);
 		});
 	}
 }

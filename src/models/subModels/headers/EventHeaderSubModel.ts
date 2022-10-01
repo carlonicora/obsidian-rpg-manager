@@ -1,5 +1,4 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {RelationshipInterface} from "../../../interfaces/RelationshipInterface";
 import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
@@ -8,12 +7,13 @@ import {HeaderResponseInterface} from "../../../interfaces/response/subModels/He
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
 import {EventV2Interface} from "../../../_dbV2/components/interfaces/EventV2Interface";
+import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export class EventHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: EventV2Interface;
 
 	public async generateData(
-		relationship: RelationshipInterface,
+		relationship: RelationshipV2Interface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

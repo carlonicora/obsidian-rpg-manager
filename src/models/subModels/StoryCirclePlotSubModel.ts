@@ -2,11 +2,11 @@ import {AbstractSubModel} from "../../abstracts/AbstractSubModel";
 import {ResponseDataElementInterface} from "../../interfaces/response/ResponseDataElementInterface";
 import {ContentType} from "../../enums/ContentType";
 import {ResponseTable} from "../../responses/ResponseTable";
-import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
+import {RelationshipV2Interface} from "../../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export class StoryCirclePlotSubModel extends AbstractSubModel {
 	public async generateData(
-		relationship: RelationshipInterface,
+		relationship: RelationshipV2Interface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

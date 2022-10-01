@@ -1,6 +1,6 @@
 import {AbstractComponentV2} from "../abstracts/AbstractComponentV2";
 import {ClueV2Interface} from "./interfaces/ClueV2Interface";
-import {ClueMetadataInterface} from "../metadatas/interfaces/ClueMetadataInterface";
+import {ClueMetadataInterface} from "../interfaces/metadatas/ClueMetadataInterface";
 
 export class ClueV2 extends AbstractComponentV2 implements ClueV2Interface {
 	protected metadata: ClueMetadataInterface;

@@ -3,14 +3,14 @@ import {ResponseDataElementInterface} from "../../interfaces/response/ResponseDa
 import {ResponseTable} from "../../responses/ResponseTable";
 import {ContentType} from "../../enums/ContentType";
 import {ComponentType} from "../../enums/ComponentType";
-import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
 import {AdventureV2} from "../../_dbV2/components/AdventureV2";
 import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
+import {RelationshipV2Interface} from "../../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export class AbtPlotSubModel extends AbstractSubModel {
 
 	public async generateData(
-		relationship: RelationshipInterface,
+		relationship: RelationshipV2Interface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

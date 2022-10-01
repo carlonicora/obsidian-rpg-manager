@@ -7,7 +7,6 @@ import {PronounFactoryInterface} from "./factories/PronounFactoryInterface";
 import {TemplateFactoryInterface} from "./factories/TemplateFactoryInterface";
 import {ViewFactoryInterface} from "./factories/ViewFactoryInterface";
 import {FetcherFactoryInterface} from "./factories/FetcherFactoryInterface";
-import {RelationshipFactoryInterface} from "./factories/RelationshipFactoryInterface";
 import {IdFactoryInterface} from "./factories/IdFactoryInterface";
 import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface";
 import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterface";
@@ -29,7 +28,6 @@ export interface FactoriesInterface {
 	templates: TemplateFactoryInterface;
 	views: ViewFactoryInterface;
 	fetchers: FetcherFactoryInterface;
-	relationships: RelationshipFactoryInterface;
 	database: DatabaseV2FactoryInterface;
 	id: IdFactoryInterface;
 	breadcrumb: BreadcrumbFactoryInterface;

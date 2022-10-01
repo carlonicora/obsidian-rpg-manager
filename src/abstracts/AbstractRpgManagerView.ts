@@ -110,10 +110,10 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		const basename: string|undefined = element.dataset.href;
 		if (base == undefined) return;
 
-		const record: ComponentV2Interface|undefined = this.database.read<ComponentV2Interface>((data: ComponentV2Interface) => data.file.basename === basename)[0];
-		if (record === undefined) return;
+		const component: ComponentV2Interface|undefined = this.database.read<ComponentV2Interface>((data: ComponentV2Interface) => data.file.basename === basename)[0];
+		if (component === undefined) return;
 
-		const file: TFile = record.file;
+		const file: TFile = component.file;
 		element.addEventListener("click", (ev:MouseEvent) => {
 			ev.preventDefault();
 			this.app.workspace.getLeaf(true).openFile(file);

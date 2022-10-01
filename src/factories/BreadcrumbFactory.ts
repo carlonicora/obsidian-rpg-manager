@@ -9,32 +9,31 @@ import {AdventureV2Interface} from "../_dbV2/components/interfaces/AdventureV2In
 import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interface";
 import {ActV2Interface} from "../_dbV2/components/interfaces/ActV2Interface";
 import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
-import {BaseCampaignV2Interface} from "../_dbV2/components/interfaces/BaseCampaignV2Interface";
 
 export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFactoryInterface {
 	public create(
-		record: ComponentV2Interface,
+		component: ComponentV2Interface,
 	): BreadcrumbResponseInterface {
-		const response = this.generateElementBreadcrumb(null, ComponentType.Campaign, record.campaign);
+		const response = this.generateElementBreadcrumb(null, ComponentType.Campaign, component.campaign);
 
-		if (record.id.type !== ComponentType.Campaign){
-			response.mainTitle = ComponentType[record.id.type];
+		if (component.id.type !== ComponentType.Campaign){
+			response.mainTitle = ComponentType[component.id.type];
 
-			switch (record.id.type) {
+			switch (component.id.type) {
 				case ComponentType.Adventure:
-					this.generateAventureBreadcrumb(response, record as AdventureV2Interface);
+					this.generateAventureBreadcrumb(response, component as AdventureV2Interface);
 					break;
 				case ComponentType.Session:
-					this.generateSessionBreadcrumb(response, record as SessionV2Interface);
+					this.generateSessionBreadcrumb(response, component as SessionV2Interface);
 					break;
 				case ComponentType.Act:
-					this.generateActBreadcrumb(response, record as ActV2Interface);
+					this.generateActBreadcrumb(response, component as ActV2Interface);
 					break;
 				case ComponentType.Scene:
-					this.generateSceneBreadcrumb(response, record as SceneV2Interface);
+					this.generateSceneBreadcrumb(response, component as SceneV2Interface);
 					break;
 				default:
-					this.generateElementBreadcrumb(response, record.id.type, record);
+					this.generateElementBreadcrumb(response, component.id.type, component);
 					break;
 			}
 		}
@@ -45,7 +44,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 	private generateElementBreadcrumb(
 		parent: ResponseBreadcrumb|null,
 		type: ComponentType,
-		data: ComponentV2Interface|BaseCampaignV2Interface,
+		data: ComponentV2Interface,
 		linkText: string|null = null,
 		isNewLine = false,
 	): ResponseBreadcrumb {

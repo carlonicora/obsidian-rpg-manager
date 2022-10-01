@@ -8,7 +8,7 @@ export enum LogMessageType {
 	System=0b1,
 	Database=0b10,
 	DatabaseInitialisation=0b100,
-	RecordInitialisation=0b1000,
+	ComponentInitialisation=0b1000,
 	Updater=0b10000,
 	TagUpdates=0b100000,
 	SessionSceneLink=0b1000000,

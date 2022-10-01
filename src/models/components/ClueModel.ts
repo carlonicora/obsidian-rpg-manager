@@ -1,9 +1,9 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {RelationshipType} from "../../enums/RelationshipType";
 import {ClueHeaderSubModel} from "../subModels/headers/ClueHeaderSubModel";
 import {ClueV2Interface} from "../../_dbV2/components/interfaces/ClueV2Interface";
+import {RelationshipV2Type} from "../../_dbV2/relationships/enums/RelationshipV2Type";
 
 export class ClueModel extends AbstractModel {
 	protected currentElement: ClueV2Interface;
@@ -14,7 +14,7 @@ export class ClueModel extends AbstractModel {
 
 		await this.response.addSubModel(ClueHeaderSubModel, this.currentElement, this.currentElement);
 
-		await this.addRelationships(ComponentType.Subplot, RelationshipType.ReverseInFrontmatter);
+		await this.addRelationships(ComponentType.Subplot, RelationshipV2Type.Reversed);
 		await this.addRelationships(ComponentType.Character);
 		await this.addRelationships(ComponentType.NonPlayerCharacter);
 		await this.addRelationships(ComponentType.Location);

@@ -4,8 +4,8 @@ import {ResponseHeader} from "../responses/ResponseHeader";
 import {ContentType} from "../enums/ContentType";
 import {ResponseHeaderElement} from "../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
-import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {RelationshipV2Interface} from "../_dbV2/relationships/interfaces/RelationshipV2Interface";
 
 export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	protected data: ComponentV2Interface;
@@ -13,7 +13,7 @@ export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	protected synopsisTitle: string;
 
 	protected initialiseData(
-		relationship: RelationshipInterface,
+		relationship: RelationshipV2Interface,
 	): boolean {
 		if (relationship.component === undefined) return false;
 		this.data = relationship.component;
@@ -24,7 +24,7 @@ export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	}
 
 	public async generateData(
-		relationship: RelationshipInterface,
+		relationship: RelationshipV2Interface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

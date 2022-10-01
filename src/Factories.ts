@@ -8,7 +8,6 @@ import {PronounFactory} from "./factories/PronounFactory";
 import {TemplateFactory} from "./factories/TemplateFactory";
 import {ViewFactory} from "./factories/ViewFactory";
 import {FetcherFactory} from "./factories/FetcherFactory";
-import {RelationshipFactory} from "./factories/RelationshipFactory";
 import {SubModelFactoryInterface} from "./interfaces/factories/SubModelFactoryInterface";
 import {ContentFactoryInterface} from "./interfaces/factories/ContentFactoryInterface";
 import {FileFactoryInterface} from "./interfaces/factories/FileFactoryInterface";
@@ -19,7 +18,6 @@ import {TemplateFactoryInterface} from "./interfaces/factories/TemplateFactoryIn
 import {ViewFactoryInterface} from "./interfaces/factories/ViewFactoryInterface";
 import {FetcherFactoryInterface} from "./interfaces/factories/FetcherFactoryInterface";
 import {FactoriesInterface} from "./interfaces/FactoriesInterface";
-import {RelationshipFactoryInterface} from "./interfaces/factories/RelationshipFactoryInterface";
 import {IdFactoryInterface} from "./interfaces/factories/IdFactoryInterface";
 import {IdFactory} from "./factories/IdFactory";
 import {BreadcrumbFactoryInterface} from "./interfaces/factories/BreadcrumbFactoryInterface";
@@ -50,7 +48,6 @@ export class Factories implements FactoriesInterface{
 	public templates: TemplateFactoryInterface;
 	public views: ViewFactoryInterface;
 	public fetchers: FetcherFactoryInterface;
-	public relationships: RelationshipFactoryInterface;
 	public database: DatabaseV2FactoryInterface;
 	public id: IdFactoryInterface;
 	public breadcrumb: BreadcrumbFactoryInterface;
@@ -73,7 +70,6 @@ export class Factories implements FactoriesInterface{
 		this.templates = new TemplateFactory(this.app);
 		this.views = new ViewFactory(this.app);
 		this.fetchers = new FetcherFactory(this.app);
-		this.relationships = new RelationshipFactory(this.app);
 		this.database = new DatabaseV2Factory(this.app);
 		this.id = new IdFactory(this.app);
 		this.breadcrumb = new BreadcrumbFactory(this.app);

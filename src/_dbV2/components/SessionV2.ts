@@ -2,7 +2,7 @@ import {AbstractComponentV2} from "../abstracts/AbstractComponentV2";
 import {SessionV2Interface} from "./interfaces/SessionV2Interface";
 import {ComponentType} from "../../enums/ComponentType";
 import {AbtStage} from "../../enums/AbtStage";
-import {SessionMetadataInterface} from "../metadatas/interfaces/SessionMetadataInterface";
+import {SessionMetadataInterface} from "../interfaces/metadatas/SessionMetadataInterface";
 import {ComponentStage} from "./enums/ComponentStage";
 
 export class SessionV2 extends AbstractComponentV2 implements SessionV2Interface {

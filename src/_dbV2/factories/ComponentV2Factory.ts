@@ -19,27 +19,27 @@ import {MusicV2} from "../components/MusicV2";
 import {SubplotV2} from "../components/SubplotV2";
 
 export class ComponentV2Factory extends AbstractFactory implements ComponentV2FactoryInterface{
-	private recordTypeMap: Map<string,any>;
+	private componentTypeMap: Map<string,any>;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
 
-		this.recordTypeMap = new Map<string, any>();
-		this.recordTypeMap.set('AgnosticCampaign', CampaignV2);
-		this.recordTypeMap.set('AgnosticAdventure', AdventureV2);
-		this.recordTypeMap.set('AgnosticAct', ActV2);
-		this.recordTypeMap.set('AgnosticScene', SceneV2);
-		this.recordTypeMap.set('AgnosticSession', SessionV2);
-		this.recordTypeMap.set('AgnosticCharacter', CharacterV2);
-		this.recordTypeMap.set('AgnosticNonPlayerCharacter', CharacterV2);
-		this.recordTypeMap.set('AgnosticFaction', FactionV2);
-		this.recordTypeMap.set('AgnosticClue', ClueV2);
-		this.recordTypeMap.set('AgnosticLocation', LocationV2);
-		this.recordTypeMap.set('AgnosticEvent', EventV2);
-		this.recordTypeMap.set('AgnosticMusic', MusicV2);
-		this.recordTypeMap.set('AgnosticSubplot', SubplotV2);
+		this.componentTypeMap = new Map<string, any>();
+		this.componentTypeMap.set('AgnosticCampaign', CampaignV2);
+		this.componentTypeMap.set('AgnosticAdventure', AdventureV2);
+		this.componentTypeMap.set('AgnosticAct', ActV2);
+		this.componentTypeMap.set('AgnosticScene', SceneV2);
+		this.componentTypeMap.set('AgnosticSession', SessionV2);
+		this.componentTypeMap.set('AgnosticCharacter', CharacterV2);
+		this.componentTypeMap.set('AgnosticNonPlayerCharacter', CharacterV2);
+		this.componentTypeMap.set('AgnosticFaction', FactionV2);
+		this.componentTypeMap.set('AgnosticClue', ClueV2);
+		this.componentTypeMap.set('AgnosticLocation', LocationV2);
+		this.componentTypeMap.set('AgnosticEvent', EventV2);
+		this.componentTypeMap.set('AgnosticMusic', MusicV2);
+		this.componentTypeMap.set('AgnosticSubplot', SubplotV2);
 	}
 
 	public create(
@@ -48,9 +48,9 @@ export class ComponentV2Factory extends AbstractFactory implements ComponentV2Fa
 		id: IdInterface,
 	): ComponentV2Interface {
 		let dataKey = CampaignSetting[settings] + ComponentType[id.type];
-		if (!this.recordTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[id.type];
-		if (!this.recordTypeMap.has(dataKey)) throw new Error('Type of components ' + CampaignSetting[settings] + ComponentType[id.type] + ' cannot be found');
+		if (!this.componentTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[id.type];
+		if (!this.componentTypeMap.has(dataKey)) throw new Error('Type of components ' + CampaignSetting[settings] + ComponentType[id.type] + ' cannot be found');
 
-		return new (this.recordTypeMap.get(dataKey))(this.app, settings, id, file);
+		return new (this.componentTypeMap.get(dataKey))(this.app, settings, id, file);
 	}
 }

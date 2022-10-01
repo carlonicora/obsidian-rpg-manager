@@ -1,6 +1,7 @@
 import {ComponentType} from "../../enums/ComponentType";
 import {IdInterface} from "../../interfaces/IdInterface";
 import {ComponentV2Interface} from "./ComponentV2Interface";
+import {TFile} from "obsidian";
 
 export interface DatabaseV2Interface {
 	recordset: ComponentV2Interface[];
@@ -40,9 +41,7 @@ export interface DatabaseV2Interface {
 		overloadId?: number|undefined,
 	): Array<T>;
 
-	/*
 	onSave(
 		file: TFile,
 	): Promise<void>;
-	*/
 }
