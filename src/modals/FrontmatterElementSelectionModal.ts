@@ -73,7 +73,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 		const components: Array<ComponentV2Interface> = this.database.readList<ComponentV2Interface>(type, this.currentElement.id)
 			.sort(
 				this.factories.sorter.create<ComponentV2Interface>([
-					new SorterComparisonElement((component: ComponentV2Interface) => component.existsInRelationships(this.currentElement.relationships), SorterType.Descending),
+					new SorterComparisonElement((component: ComponentV2Interface) => component.existsInRelationships(this.currentElement.getRelationships()), SorterType.Descending),
 					new SorterComparisonElement((component: ComponentV2Interface) => component.file.stat.mtime, SorterType.Descending),
 				])
 			);
@@ -92,10 +92,10 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 				});
 
 				let description: string = component.file.basename;
-				if (component.existsInRelationships(this.currentElement.relationships)) {
+				if (component.existsInRelationships(this.currentElement.getRelationships())) {
 					checkbox.checked = true;
 
-					const relationships: Array<RelationshipV2Interface> = this.currentElement.relationships
+					const relationships: Array<RelationshipV2Interface> = this.currentElement.getRelationships()
 						.filter((relationship: RelationshipV2Interface) =>
 							relationship.component?.file.basename === component.file.basename
 						);

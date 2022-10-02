@@ -1,19 +1,19 @@
 import {AbstractContent} from "../abstracts/AbstractContent";
 
 export class ImageContent extends AbstractContent {
-	public content: HTMLElement;
+	public content: string;
 
 	public fillContent(
 		container: HTMLElement,
 		sourcePath: string,
 	): void {
 		if (this.content != null){
-			this.content.style.width = '75px';
-			this.content.style.height = '75px';
-			this.content.style.objectFit = 'cover';
+			const image = new Image(75, 75);
+			image.src = this.content;
+			image.style.objectFit = 'cover';
 
-			container.append(this.content);
-			container.style.width = this.content.style.width;
+			container.append(image);
+			container.style.width = image.style.width;
 		} else {
 			container.textContent = '';
 		}

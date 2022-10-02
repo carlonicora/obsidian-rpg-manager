@@ -31,7 +31,7 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		const character: CharacterV2Interface = <unknown>component as CharacterV2Interface;
 		switch (fieldType) {
 			case TableField.Name:
-				return this.factories.contents.create(component.file.path + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);
+				return this.factories.contents.create(component.link + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);
 				break;
 			case TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : component.synopsis, ContentType.Markdown);

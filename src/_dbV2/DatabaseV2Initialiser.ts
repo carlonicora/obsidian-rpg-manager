@@ -40,7 +40,7 @@ export class DatabaseV2Initialiser {
 		const components: Array<ComponentV2Interface> = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 		for (let index=0; index<markdownFiles.length; index++){
-			this.createComponent(markdownFiles[index])
+			await this.createComponent(markdownFiles[index])
 				.then((component: ComponentV2Interface|undefined) => {
 					if (component === undefined) return undefined;
 
@@ -60,13 +60,19 @@ export class DatabaseV2Initialiser {
 
 		await Promise.all(components);
 
-		this._initialiseRelationships(response);
+		const metadata: Array<Promise<void>> = [];
+		await components.forEach((component: ComponentV2Interface) => {
+			metadata.push(component.readMetadata());
+		})
+
+		Promise.all(metadata)
+			.then(() => {
+				this._initialiseRelationships(response);
+			})
 
 		if (this.misconfiguredTags.size > 0){
 			new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
 		}
-
-		response.ready();
 
 		return response;
 	}
@@ -104,8 +110,6 @@ export class DatabaseV2Initialiser {
 			file,
 			id,
 		);
-
-		response.readMetadata();
 
 		return response;
 	}
@@ -145,14 +149,19 @@ export class DatabaseV2Initialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseV2Interface,
 	): Promise<void> {
-		database.recordset.forEach((component: ComponentV2Interface) => {
-			component.relationships.forEach((relationship: RelationshipV2Interface) => {
-				const relatedComponent: ComponentV2Interface|undefined = database.readByPath(relationship.path);
+		await database.recordset.forEach((component: ComponentV2Interface) => {
+			component.getRelationships(database).forEach((relationship: RelationshipV2Interface) => {
+				const relatedComponent: ComponentV2Interface|undefined = database.readByBaseName(relationship.path);
 				if (relatedComponent !== undefined){
-					const reverseRelationship: RelationshipV2Interface = new RelationshipV2(RelationshipV2Type.Reversed, component.file.path, undefined, component);
-					relatedComponent.addRelationship(reverseRelationship);
+					relationship.component = relatedComponent;
+					const reverseRelationship: RelationshipV2Interface = new RelationshipV2(RelationshipV2Type.Reversed, component.file.basename, undefined, component);
+					relatedComponent.addRelationship(reverseRelationship, database);
 				}
 			});
+		});
+
+		await database.recordset.forEach((component: ComponentV2Interface) => {
+			component.touch();
 		});
 	}
 

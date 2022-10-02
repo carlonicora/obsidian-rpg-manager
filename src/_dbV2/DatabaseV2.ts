@@ -100,6 +100,15 @@ export class DatabaseV2 extends AbstractRpgManagerComponent implements DatabaseV
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
+	public readByBaseName<T extends ComponentV2Interface>(
+		basename: string,
+	): T|undefined {
+		const response:Array<ComponentV2Interface> = this.recordset
+			.filter((component: ComponentV2Interface) => component.file.basename === basename);
+
+		return ((response.length) === 1 ? <T>response[0] : undefined);
+	}
+
 	public readSingle<T extends ComponentV2Interface>(
 		type: ComponentType,
 		id: IdInterface,

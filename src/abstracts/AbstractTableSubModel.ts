@@ -112,7 +112,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 	): ContentInterface|undefined {
 		switch (fieldType) {
 			case  TableField.Name:
-				return this.factories.contents.create(component.file.path, ContentType.Link);
+				return this.factories.contents.create(component.link, ContentType.Link);
 				break;
 			case  TableField.Image:
 				return this.factories.contents.create(component.image, ContentType.Image, true);

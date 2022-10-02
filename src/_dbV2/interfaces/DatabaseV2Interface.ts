@@ -29,6 +29,10 @@ export interface DatabaseV2Interface {
 		name: string,
 	): T|undefined;
 
+	readByBaseName<T extends ComponentV2Interface>(
+		basename: string,
+	): T|undefined;
+
 	readSingle<T extends ComponentV2Interface>(
 		type: ComponentType,
 		id: IdInterface,

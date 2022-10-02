@@ -7,6 +7,7 @@ import {ComponentType} from "../../enums/ComponentType";
 import {CampaignV2Interface} from "../components/interfaces/CampaignV2Interface";
 import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {RelationshipV2Interface} from "../relationships/interfaces/RelationshipV2Interface";
+import {DatabaseV2Interface} from "../interfaces/DatabaseV2Interface";
 
 export abstract class AbstractComponentV2 extends AbstractRpgManager implements ComponentV2Interface {
 	private static root: string|undefined;
@@ -21,7 +22,7 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 	}
 
 	public stage: ComponentStage = ComponentStage.Element;
-	protected metadata: any;
+	protected metadata: any = {};
 
 	public version: number|undefined=undefined;
 
@@ -38,10 +39,10 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 
 	public async readMetadata(
 	): Promise<void> {
-		this.dataManipulators.metadata.read(this.file)
+		return this.dataManipulators.metadata.read(this.file)
 			.then((metadata: any) => {
 				this.metadata = metadata;
-				this.touch();
+				return;
 			});
 	}
 
@@ -49,6 +50,10 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 	): void {
 		if (this.version === undefined) this.version = 0;
 		this.version++;
+	}
+
+	public get link(): string {
+		return '[[' + this.file.basename + ']]'
 	}
 
 	public get campaign(): CampaignV2Interface {
@@ -81,11 +86,13 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 		return undefined;
 	}
 
-	public get relationships(): Array<RelationshipV2Interface> {
+	public getRelationships(
+		database: DatabaseV2Interface|undefined = undefined,
+	): Array<RelationshipV2Interface> {
 		if (this.metadata.relationships === undefined) return [];
 
 		this.metadata.relationships.forEach((relationship: RelationshipV2Interface) => {
-			if (relationship.component === undefined) relationship.component = this.database.readByPath(relationship.path);
+			if (relationship.component === undefined) relationship.component = (database ?? this.database).readByPath(relationship.path);
 		});
 
 		return this.metadata.relationships;
@@ -97,8 +104,9 @@ export abstract class AbstractComponentV2 extends AbstractRpgManager implements 
 
 	public addRelationship(
 		relationship: RelationshipV2Interface,
+		database: DatabaseV2Interface|undefined=undefined,
 	): void {
-		this.relationships.push(relationship);
+		this.getRelationships(database).push(relationship);
 	}
 
 	public existsInRelationships(

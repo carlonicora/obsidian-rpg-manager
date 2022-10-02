@@ -1,4 +1,11 @@
-import {addIcon, Component, MarkdownPostProcessorContext, Plugin} from 'obsidian';
+import {
+	addIcon,
+	Component,
+	MarkdownPostProcessorContext,
+	MarkdownView,
+	Plugin,
+	WorkspaceLeaf
+} from 'obsidian';
 import {Controller} from "./Controller";
 import {ComponentType} from "./enums/ComponentType";
 import {Factories} from "./Factories";
@@ -19,6 +26,8 @@ import {DataManipulatorsInterface} from "./interfaces/DataManipulatorsInterface"
 import {DataManipulators} from "./DataManipulators";
 import {DatabaseV2Interface} from "./_dbV2/interfaces/DatabaseV2Interface";
 import {DatabaseV2Initialiser} from "./_dbV2/DatabaseV2Initialiser";
+import {SceneV2Interface} from "./_dbV2/components/interfaces/SceneV2Interface";
+import {ComponentV2Interface} from "./_dbV2/interfaces/ComponentV2Interface";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
@@ -78,12 +87,52 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		DatabaseV2Initialiser.initialise(this.app)
 			.then((database: DatabaseV2Interface) => {
 				this.database = database;
+				this.factories.runningTimeManager.updateMedianTimes(true);
+
+				this.registerEvents();
+
+				this.app.workspace.trigger("rpgmanager:refresh-views");
+
+				this.app.workspace.on('active-leaf-change', (leaf: WorkspaceLeaf) => {
+					if (this.factories.runningTimeManager.isTimerRunning) {
+						let isCurrentlyRunningSceneOpen = false;
+						this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
+							if (leaf.view instanceof MarkdownView) {
+								const file = leaf.view?.file;
+								if (file !== undefined) {
+									const component: ComponentV2Interface|undefined = this.database.readByPath(file.path);
+									if (
+										component !== undefined &&
+										component.id.type === ComponentType.Scene &&
+										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneV2Interface>component)
+									) {
+										isCurrentlyRunningSceneOpen = true;
+									}
+								}
+							}
+						});
+
+						if (!isCurrentlyRunningSceneOpen && this.factories.runningTimeManager.currentlyRunningScene !== undefined){
+							this.factories.runningTimeManager.stopScene(this.factories.runningTimeManager.currentlyRunningScene);
+						}
+
+					}
+				});
+
+
 				console.log(
 					`RPG Manager: ${this.database.recordset.length} outlines and elements have been indexed in ${
 						(Date.now() - reloadStart) / 1000.0
 					}s.`
 				);
-				console.warn(this.database);
+
+				if (this.isVersionUpdated) {
+					this.factories.views.showObsidianView(ViewType.ReleaseNote);
+				} else {
+					this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
+				}
+
+				return;
 			});
 
 

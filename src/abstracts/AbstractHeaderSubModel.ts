@@ -30,7 +30,7 @@ export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	): Promise<ResponseDataElementInterface|null> {
 		const response = new ResponseHeader(this.app, this.currentElement);
 
-		response.link = this.factories.contents.create(this.data.file.path, ContentType.Link);
+		response.link = this.factories.contents.create(this.data.link, ContentType.Link);
 		response.name = this.data.file.basename;
 
 		if (this.data.synopsis != null && this.data.synopsis != '') {

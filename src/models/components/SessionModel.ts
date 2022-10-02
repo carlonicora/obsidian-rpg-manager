@@ -26,8 +26,8 @@ export class SessionModel extends AbstractModel {
 			]));
 
 		for (let sceneIndex=0; sceneIndex<scenes.length; sceneIndex++){
-			await scenes[sceneIndex].relationships.forEach((relationship: RelationshipV2Interface) => {
-				if (this.currentElement.relationships.filter((internalRelationship: RelationshipV2Interface) => internalRelationship.path === relationship.path).length === 0)
+			await scenes[sceneIndex].getRelationships().forEach((relationship: RelationshipV2Interface) => {
+				if (this.currentElement.getRelationships().filter((internalRelationship: RelationshipV2Interface) => internalRelationship.path === relationship.path).length === 0)
 					this.currentElement.addRelationship(
 						new RelationshipV2(RelationshipV2Type.Reversed, relationship.path, undefined, relationship.component)
 					);
@@ -49,11 +49,11 @@ export class SessionModel extends AbstractModel {
 	private addSubplotRelationships(
 		component: ComponentV2Interface,
 	): void {
-		component.relationships.filter((relationship: RelationshipV2Interface) =>
+		component.getRelationships().filter((relationship: RelationshipV2Interface) =>
 			relationship.component?.id.type === ComponentType.Subplot &&
 			relationship.type === RelationshipV2Type.Reversed
 		).forEach((relationship: RelationshipV2Interface) => {
-			if (this.currentElement.relationships.filter((internalRelationship: RelationshipV2Interface) => internalRelationship.path === relationship.path).length === 0)
+			if (this.currentElement.getRelationships().filter((internalRelationship: RelationshipV2Interface) => internalRelationship.path === relationship.path).length === 0)
 				this.currentElement.addRelationship(
 					new RelationshipV2(RelationshipV2Type.Reversed, relationship.path, undefined, relationship.component)
 				);

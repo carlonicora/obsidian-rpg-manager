@@ -48,7 +48,7 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(scene.isComplete ? index.toString() : '**' + index.toString() + '**', ContentType.Markdown, true);
 				break;
 			case TableField.Name:
-				return this.factories.contents.create(scene.file.path + (scene.isComplete ? '' : ' _(incomplete)_'), ContentType.Link);
+				return this.factories.contents.create(scene.link + (scene.isComplete ? '' : ' _(incomplete)_'), ContentType.Link);
 				break;
 			case TableField.Date:
 				return this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.Date, true);

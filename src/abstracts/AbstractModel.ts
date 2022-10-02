@@ -135,17 +135,20 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	private async add(
 		type: ComponentType,
-		requiredRelationshipV2Type: RelationshipV2Type|undefined = RelationshipV2Type.Biunivocal,
+		requiredRelationshipV2Type: RelationshipV2Type|undefined = undefined,
 		component: ComponentV2Interface[]|ComponentV2Interface|RelationshipV2Interface[]|undefined=undefined,
 		title: string|undefined=undefined,
 		sortByLatestUsage: boolean,
 	): Promise<void>{
 		if (!this.isExcluded(type)){
 			const subModel = this.subModelsMap.get(type);
-			if (component === undefined) component = this.currentElement.relationships.filter((relationships: RelationshipV2Interface) =>
-				relationships.component !== undefined &&
-				(requiredRelationshipV2Type & relationships.component.id.type) === relationships.component.id.type
-			);
+			if (component === undefined) {
+				component = this.currentElement.getRelationships().filter((relationship: RelationshipV2Interface) =>
+					relationship.component !== undefined &&
+					relationship.component.id.type === type &&
+					(requiredRelationshipV2Type === undefined || (requiredRelationshipV2Type & relationship.type) === relationship.type)
+				);
+			}
 
 			if (ArrayHelper.isArray(component)) {
 				let sorter: Array<any> | undefined = undefined;

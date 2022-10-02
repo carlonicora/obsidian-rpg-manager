@@ -77,7 +77,8 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		if (currentElement === undefined) return false;
 
 		if (currentElement.version === undefined) {
-			setTimeout(this.render, 100);
+			setTimeout(this.render.bind(this), 100);
+			return false;
 		}
 
 		if (this.componentVersion !== undefined && currentElement.version === this.componentVersion) return false;
