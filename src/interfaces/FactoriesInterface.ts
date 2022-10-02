@@ -16,6 +16,8 @@ import {RunningTimeManagerInterface} from "./dataManipulation/RunningTimeManager
 import {MetadataReaderInterface} from "./dataManipulation/MetadataReaderInterface";
 import {DatabaseV2FactoryInterface} from "../_dbV2/factories/interfaces/DatabaseV2FactoryInterface";
 import {ComponentV2FactoryInterface} from "../_dbV2/factories/interfaces/ComponentV2FactoryInterface";
+import {ComponentTypeFactoryInterface} from "./factories/ComponentTypeFactoryInterface";
+import {RelationshipTypeFactoryInterface} from "./factories/RelationshipTypeFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -36,4 +38,6 @@ export interface FactoriesInterface {
 	codeblock: CodeBlockEditorFactoryInterface;
 	runningTimeManager: RunningTimeManagerInterface;
 	metadataReader: MetadataReaderInterface;
+	componentType: ComponentTypeFactoryInterface;
+	relationshipType: RelationshipTypeFactoryInterface;
 }

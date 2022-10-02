@@ -36,6 +36,10 @@ import {MetadataReaderInterface} from "./interfaces/dataManipulation/MetadataRea
 import {MetadataReader} from "./dataManipulation/MetadataReader";
 import {ComponentV2FactoryInterface} from "./_dbV2/factories/interfaces/ComponentV2FactoryInterface";
 import {ComponentV2Factory} from "./_dbV2/factories/ComponentV2Factory";
+import {ComponentTypeFactoryInterface} from "./interfaces/factories/ComponentTypeFactoryInterface";
+import {ComponentTypeFactory} from "./factories/ComponentTypeFactory";
+import {RelationshipTypeFactoryInterface} from "./interfaces/factories/RelationshipTypeFactoryInterface";
+import {RelationshipTypeFactory} from "./factories/RelationshipTypeFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -56,6 +60,8 @@ export class Factories implements FactoriesInterface{
 	public codeblock: CodeBlockEditorFactoryInterface;
 	public runningTimeManager: RunningTimeManagerInterface;
 	public metadataReader: MetadataReaderInterface;
+	public componentType: ComponentTypeFactoryInterface;
+	public relationshipType: RelationshipTypeFactoryInterface;
 
 	constructor(
 		private app: App,
@@ -78,5 +84,7 @@ export class Factories implements FactoriesInterface{
 		this.codeblock = new CodeBlockEditorFactory(this.app);
 		this.runningTimeManager = new RunningTimeManager(this.app);
 		this.metadataReader = new MetadataReader(this.app);
+		this.componentType = new ComponentTypeFactory(this.app);
+		this.relationshipType = new RelationshipTypeFactory(this.app);
 	}
 }
