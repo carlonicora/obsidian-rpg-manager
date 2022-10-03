@@ -5,8 +5,8 @@ import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {base} from "w3c-keyname";
 import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
-import {DatabaseV2Interface} from "../_dbV2/interfaces/DatabaseV2Interface";
-import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
+import {ComponentInterface} from "../database/interfaces/ComponentInterface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -27,7 +27,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 	}
 
 	public get database(
-	): DatabaseV2Interface {
+	): DatabaseInterface {
 		return this.app.plugins.getPlugin('rpg-manager').database;
 	}
 
@@ -110,7 +110,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		const basename: string|undefined = element.dataset.href;
 		if (base == undefined) return;
 
-		const component: ComponentV2Interface|undefined = this.database.read<ComponentV2Interface>((data: ComponentV2Interface) => data.file.basename === basename)[0];
+		const component: ComponentInterface|undefined = this.database.read<ComponentInterface>((data: ComponentInterface) => data.file.basename === basename)[0];
 		if (component === undefined) return;
 
 		const file: TFile = component.file;

@@ -3,20 +3,20 @@ import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../enums/TableField";
-import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
-import {AdventureV2Interface} from "../../../_dbV2/components/interfaces/AdventureV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
+import {AdventureInterface} from "../../../database/components/interfaces/AdventureInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class AdventureTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.AdventureList;
 
-	protected generateContentElement<T extends ComponentV2Interface>(
+	protected generateContentElement<T extends ComponentInterface>(
 		index: number,
 		fieldType:  TableField,
 		component: T,
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const adventure: AdventureV2Interface = <unknown>component as AdventureV2Interface;
+		const adventure: AdventureInterface = <unknown>component as AdventureInterface;
 		switch (fieldType) {
 			case  TableField.Index:
 				return this.factories.contents.create(adventure.id.adventureId, ContentType.Number, true);

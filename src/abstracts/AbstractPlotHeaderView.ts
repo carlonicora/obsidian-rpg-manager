@@ -6,20 +6,30 @@ import {HeaderResponseElementInterface} from "../interfaces/response/subModels/H
 import {AbtStage} from "../enums/AbtStage";
 import {EditorSelector} from "../helpers/EditorSelector";
 import {SceneType} from "../enums/SceneType";
+import {AbtInterface} from "../database/plots/interfaces/AbtInterface";
+import {StoryCircleInterface} from "../database/plots/interfaces/StoryCircleInterface";
 
 export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSelectorView {
+	private _addPlotElement(
+		name: string,
+		value: string,
+		tableEl: HTMLTableElement,
+	): void {
+		const row = tableEl.createEl('tr');
+		row.createEl('td', {cls: 'header', text: name});
+		const valueRowEl = row.createEl('td');
 
+		MarkdownRenderer.renderMarkdown(
+			value,
+			valueRowEl,
+			this.sourcePath,
+			null as unknown as Component,
+		);
+	}
 
 	protected addAbtPlot(
-		plot: any,
+		plot: AbtInterface,
 	): void {
-		if (
-			(plot.need == null || plot.need === '') &&
-			(plot.and == null || plot.and === '') &&
-			(plot.but == null || plot.but === '') &&
-			(plot.therefore == null || plot.therefore === '')
-		) return;
-
 		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-plot-container'});
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
@@ -32,34 +42,15 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		const tableEl = plotEl.createEl('table');
 		tableEl.addClass('rpgm-table');
 
-		Object.entries(plot).forEach(([name, value]: [string, string]) => {
-			const row = tableEl.createEl('tr');
-			row.createEl('td', {cls: 'header', text: name});
-			const valueRowEl = row.createEl('td');
-
-			MarkdownRenderer.renderMarkdown(
-				value,
-				valueRowEl,
-				this.sourcePath,
-				null as unknown as Component,
-			);
-		});
+		this._addPlotElement('need', plot.need, tableEl);
+		this._addPlotElement('and', plot.and, tableEl);
+		this._addPlotElement('but', plot.but, tableEl);
+		this._addPlotElement('therefore', plot.therefore, tableEl);
 	}
 
 	protected addStoryCirclePlot(
-		plot: any,
+		plot: StoryCircleInterface,
 	): void {
-		if (
-			(plot.you == null || plot.you === '') &&
-			(plot.need == null || plot.need === '') &&
-			(plot.go == null || plot.go === '') &&
-			(plot.search == null || plot.search === '') &&
-			(plot.find == null || plot.find === '') &&
-			(plot.take == null || plot.take === '') &&
-			(plot.return == null || plot.return === '') &&
-			(plot.change == null || plot.change === '')
-		) return;
-
 		const plotEl: HTMLDivElement = this.headerContainerEl.createDiv({cls: 'rpgm-plot-container'});
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
@@ -72,18 +63,14 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		const tableEl = plotEl.createEl('table');
 		tableEl.addClass('rpgm-table');
 
-		Object.entries(plot).forEach(([name, value]: [string, string]) => {
-			const row = tableEl.createEl('tr');
-			row.createEl('td', {cls: 'header', text: name});
-			const valueRowEl = row.createEl('td');
-
-			MarkdownRenderer.renderMarkdown(
-				value,
-				valueRowEl,
-				this.sourcePath,
-				null as unknown as Component,
-			);
-		});
+		this._addPlotElement('you', plot.you, tableEl);
+		this._addPlotElement('need', plot.need, tableEl);
+		this._addPlotElement('go', plot.go, tableEl);
+		this._addPlotElement('search', plot.search, tableEl);
+		this._addPlotElement('find', plot.find, tableEl);
+		this._addPlotElement('take', plot.take, tableEl);
+		this._addPlotElement('return', plot.return, tableEl);
+		this._addPlotElement('change', plot.change, tableEl);
 	}
 
 	protected addActBalance(

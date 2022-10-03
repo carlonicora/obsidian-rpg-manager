@@ -24,15 +24,15 @@ import {RPGManagerView} from "./views/RPGManagerView";
 import {TimelineView} from "./views/TimelineView";
 import {DataManipulatorsInterface} from "./interfaces/DataManipulatorsInterface";
 import {DataManipulators} from "./DataManipulators";
-import {DatabaseV2Interface} from "./_dbV2/interfaces/DatabaseV2Interface";
-import {DatabaseV2Initialiser} from "./_dbV2/DatabaseV2Initialiser";
-import {SceneV2Interface} from "./_dbV2/components/interfaces/SceneV2Interface";
-import {ComponentV2Interface} from "./_dbV2/interfaces/ComponentV2Interface";
+import {DatabaseInterface} from "./database/interfaces/DatabaseInterface";
+import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
+import {SceneInterface} from "./database/components/interfaces/SceneInterface";
+import {ComponentInterface} from "./database/interfaces/ComponentInterface";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
-	database: DatabaseV2Interface;
+	database: DatabaseInterface;
 	factories: FactoriesInterface;
 	dataManipulators: DataManipulatorsInterface;
 	tagHelper: TagHelper;
@@ -84,9 +84,10 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.registerCodeBlock();
 		this.registerCommands();
 
-		DatabaseV2Initialiser.initialise(this.app)
-			.then((database: DatabaseV2Interface) => {
+		DatabaseInitialiser.initialise(this.app)
+			.then((database: DatabaseInterface) => {
 				this.database = database;
+				console.log(database)
 				this.factories.runningTimeManager.updateMedianTimes(true);
 
 				this.registerEvents();
@@ -100,11 +101,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							if (leaf.view instanceof MarkdownView) {
 								const file = leaf.view?.file;
 								if (file !== undefined) {
-									const component: ComponentV2Interface|undefined = this.database.readByPath(file.path);
+									const component: ComponentInterface|undefined = this.database.readByPath(file.path);
 									if (
 										component !== undefined &&
 										component.id.type === ComponentType.Scene &&
-										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneV2Interface>component)
+										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneInterface>component)
 									) {
 										isCurrentlyRunningSceneOpen = true;
 									}
@@ -152,11 +153,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							if (leaf.view instanceof MarkdownView) {
 								const file = leaf.view?.file;
 								if (file !== undefined) {
-									const component: ComponentV2Interface|undefined = this.database.readByPath(file.path);
+									const component: ComponentInterface|undefined = this.database.readByPath(file.path);
 									if (
 										component !== undefined &&
 										component.id.type === ComponentType.Scene &&
-										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneV2Interface>component)
+										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneInterface>component)
 									) {
 										isCurrentlyRunningSceneOpen = true;
 									}

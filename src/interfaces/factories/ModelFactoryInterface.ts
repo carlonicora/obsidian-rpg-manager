@@ -1,14 +1,21 @@
 import {CampaignSetting} from "../../enums/CampaignSetting";
 import {ModelInterface} from "../ModelInterface";
-import {ComponentV2Interface} from "../../_dbV2/interfaces/ComponentV2Interface";
+import {ComponentInterface} from "../../database/interfaces/ComponentInterface";
+import {ComponentType} from "../../enums/ComponentType";
 
 export interface ModelFactoryInterface {
 	create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: ComponentV2Interface,
+		currentElement: ComponentInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,
 	): ModelInterface;
+
+	createSubModel(
+		settings: CampaignSetting|undefined,
+		type: ComponentType|undefined,
+		subModelName: string,
+	): any;
 }

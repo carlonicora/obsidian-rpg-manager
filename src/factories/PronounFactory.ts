@@ -3,52 +3,17 @@ import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {PronounFactoryInterface} from "../interfaces/factories/PronounFactoryInterface";
 
 export class PronounFactory extends AbstractFactory implements PronounFactoryInterface{
-	public create(
-		pronoun: string|null,
-	): Pronoun|null {
+	public createPronoun(
+		readablePronoun: string,
+	): Pronoun {
+		readablePronoun = readablePronoun.toLowerCase();
+		return Pronoun[readablePronoun as keyof typeof Pronoun];
+	}
 
-		let response: Pronoun|null = null;
-
-		if (pronoun != null) {
-			switch(pronoun.toLowerCase()) {
-				case 't':
-				case 'they':
-					response = Pronoun.they;
-					break;
-				case 's':
-				case 'she':
-					response = Pronoun.she;
-					break;
-				case 'h':
-				case 'he':
-					response = Pronoun.he;
-					break;
-				case 'i':
-				case 'it':
-					response = Pronoun.it;
-					break;
-				case 'ae':
-					response = Pronoun.ae;
-					break;
-				case 'e':
-					response = Pronoun.e;
-					break;
-				case 'per':
-					response = Pronoun.per;
-					break;
-				case 've':
-					response = Pronoun.ve;
-					break;
-				case 'ze':
-					response = Pronoun.ze;
-					break;
-				default:
-					response = null;
-					break;
-			}
-		}
-
-		return response;
+	createReadablePronoun(
+		pronoun: Pronoun,
+	): string {
+		return Pronoun[pronoun].toString().toLowerCase();
 	}
 
 	public readPronoun(

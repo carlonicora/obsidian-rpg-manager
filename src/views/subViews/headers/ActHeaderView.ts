@@ -4,10 +4,10 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {ActV2Interface} from "../../../_dbV2/components/interfaces/ActV2Interface";
+import {ActInterface} from "../../../database/components/interfaces/ActInterface";
 
 export class ActHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: ActV2Interface;
+	protected currentElement: ActInterface;
 
 	public render(
 		container: HTMLElement,
@@ -49,12 +49,11 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 			this.addActBalance(analyser);
 		}
 
-		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.abt !== undefined){
-			this.addAbtPlot(data?.metadata?.sourceMeta?.abt);
+		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot){
+			this.addAbtPlot(data.currentElement.abt);
 		}
-
-		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.storycircle !== undefined){
-			this.addStoryCirclePlot(data?.metadata?.sourceMeta?.storycircle);
+		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot){
+			this.addStoryCirclePlot(data.currentElement.storyCircle);
 		}
 	}
 }

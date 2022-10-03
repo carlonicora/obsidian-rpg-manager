@@ -1,19 +1,19 @@
 import {ComponentNotesTemplateFactoryInterface} from "../../../interfaces/factories/ComponentNotesTemplateFactoryInterface";
 import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
 import {ComponentType} from "../../../enums/ComponentType";
-import {CharacterV2Interface} from "../../../_dbV2/components/interfaces/CharacterV2Interface";
+import {CharacterInterface} from "../../../database/components/interfaces/CharacterInterface";
 
 export class SessionNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
 
-		const characters = this.database.read<CharacterV2Interface>(
-			(character: CharacterV2Interface) =>
+		const characters = this.database.read<CharacterInterface>(
+			(character: CharacterInterface) =>
 			character.id.type === ComponentType.Character &&
 			character.id.campaignId === this.campaignId
 		);
 
 		let possibleRecappers = '';
-		(characters || []).forEach((character: CharacterV2Interface) => {
+		(characters || []).forEach((character: CharacterInterface) => {
 			possibleRecappers += character.file.path + '/';
 		});
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
@@ -26,7 +26,7 @@ export class SessionNotesTemplateFactory extends AbstractTemplate implements Com
 
 			response += this.generateFeedback('GM');
 
-			(characters || []).forEach((character: CharacterV2Interface) => {
+			(characters || []).forEach((character: CharacterInterface) => {
 				response += this.generateFeedback(character.file.path);
 			});
 

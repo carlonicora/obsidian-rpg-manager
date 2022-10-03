@@ -1,22 +1,22 @@
 import {SceneType} from "../../enums/SceneType";
-import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
+import {SceneInterface} from "../../database/components/interfaces/SceneInterface";
 
 export interface RunningTimeManagerInterface{
-	currentlyRunningScene: SceneV2Interface|undefined;
+	currentlyRunningScene: SceneInterface|undefined;
 	medianTimes: Map<number, Map<SceneType, Array<number>>>;
 
 	get isTimerRunning(): boolean;
 
 	isCurrentlyRunningScene(
-		scene: SceneV2Interface,
+		scene: SceneInterface,
 	): boolean;
 
 	startScene(
-		scene: SceneV2Interface,
+		scene: SceneInterface,
 	): Promise<void>;
 
 	stopScene(
-		scene: SceneV2Interface,
+		scene: SceneInterface,
 	): Promise<void>;
 
 	updateMedianTimes(

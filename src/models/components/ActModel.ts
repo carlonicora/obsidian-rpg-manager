@@ -1,15 +1,15 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
-import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
+import {ActInterface} from "../../database/components/interfaces/ActInterface";
+import {SceneInterface} from "../../database/components/interfaces/SceneInterface";
 
 export class ActModel extends AbstractModel {
-	protected currentElement: ActV2Interface;
+	protected currentElement: ActInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const data = this.database.readList<SceneV2Interface>(ComponentType.Scene, this.currentElement.id);
+		const data = this.database.readList<SceneInterface>(ComponentType.Scene, this.currentElement.id);
 
 		await this.addList(ComponentType.Scene, data);
 		await this.addRelationships(ComponentType.Character);

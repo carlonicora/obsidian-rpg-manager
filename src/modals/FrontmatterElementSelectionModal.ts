@@ -3,8 +3,8 @@ import {App, Component, MarkdownRenderer} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
 import {SorterType} from "../enums/SorterType";
-import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
-import {RelationshipV2Interface} from "../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
 
 export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 	private relationshipsEl: HTMLDivElement;
@@ -22,7 +22,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 	constructor(
 		app: App,
-		private currentElement: ComponentV2Interface,
+		private currentElement: ComponentInterface,
 	) {
 		super(app);
 	}
@@ -38,28 +38,28 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 		relationshipsModalEl.createEl('h2', {text: 'Relationship Selector'});
 		relationshipsModalEl.createDiv({text: 'Select the type of component'});
 
-		this.addRelationshipV2TypeSelector(relationshipsModalEl);
+		this.requiredRelationshipType(relationshipsModalEl);
 		this.relationshipsEl = relationshipsModalEl.createDiv({cls:'relationships', text: ''});
 	}
 
-	private addRelationshipV2TypeSelector(
+	private requiredRelationshipType(
 		contentEl: HTMLElement,
 	): void {
-		const RelationshipV2TypeSelectorEl: HTMLSelectElement = contentEl.createEl('select');
-		RelationshipV2TypeSelectorEl.createEl("option", {
+		const relationshipTypeSelectorEl: HTMLSelectElement = contentEl.createEl('select');
+		relationshipTypeSelectorEl.createEl("option", {
 			text: '',
 			value: '',
 		});
 		this.availableRelationships.forEach((type: ComponentType) => {
-			RelationshipV2TypeSelectorEl.createEl("option", {
+			relationshipTypeSelectorEl.createEl("option", {
 				text: ComponentType[type] + 's',
 				value: type.toString(),
 			});
 		});
-		RelationshipV2TypeSelectorEl.addEventListener('change', () => {
+		relationshipTypeSelectorEl.addEventListener('change', () => {
 			this.relationshipsEl.empty();
-			if (RelationshipV2TypeSelectorEl.value !== ''){
-				this.addElementsToList(+RelationshipV2TypeSelectorEl.value);
+			if (relationshipTypeSelectorEl.value !== ''){
+				this.addElementsToList(+relationshipTypeSelectorEl.value);
 			}
 
 		});
@@ -70,15 +70,15 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this.relationshipsEl.createEl('table').createTBody();
 
-		const components: Array<ComponentV2Interface> = this.database.readList<ComponentV2Interface>(type, this.currentElement.id)
+		const components: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentElement.id)
 			.sort(
-				this.factories.sorter.create<ComponentV2Interface>([
-					new SorterComparisonElement((component: ComponentV2Interface) => component.existsInRelationships(this.currentElement.getRelationships()), SorterType.Descending),
-					new SorterComparisonElement((component: ComponentV2Interface) => component.file.stat.mtime, SorterType.Descending),
+				this.factories.sorter.create<ComponentInterface>([
+					new SorterComparisonElement((component: ComponentInterface) => component.existsInRelationships(this.currentElement.getRelationships()), SorterType.Descending),
+					new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 				])
 			);
 
-		components.forEach((component: ComponentV2Interface) => {
+		components.forEach((component: ComponentInterface) => {
 			if (component.id !== this.currentElement.id) {
 				const rowEl: HTMLTableRowElement = relationshipsTableEl.insertRow();
 
@@ -95,8 +95,8 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 				if (component.existsInRelationships(this.currentElement.getRelationships())) {
 					checkbox.checked = true;
 
-					const relationships: Array<RelationshipV2Interface> = this.currentElement.getRelationships()
-						.filter((relationship: RelationshipV2Interface) =>
+					const relationships: Array<RelationshipInterface> = this.currentElement.getRelationships()
+						.filter((relationship: RelationshipInterface) =>
 							relationship.component?.file.basename === component.file.basename
 						);
 
@@ -138,7 +138,7 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 
 	private addOrRemoveElementRelationship(
 		checkboxEl: HTMLInputElement,
-		data: ComponentV2Interface,
+		data: ComponentInterface,
 	): void {
 		const map: Map<string, string> = new Map<string, string>();
 		map.set('[[' + data.file.basename + ']]', '""');

@@ -4,10 +4,10 @@ import {ComponentType} from "../../enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
 import {IdInterface} from "../../interfaces/IdInterface";
-import {CampaignV2Interface} from "../../_dbV2/components/interfaces/CampaignV2Interface";
+import {CampaignInterface} from "../../database/components/interfaces/CampaignInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
-	private campaigns: CampaignV2Interface[];
+	private campaigns: CampaignInterface[];
 
 	private campaignSettingsEl: HTMLSelectElement;
 	private campaignEl: HTMLSelectElement;
@@ -22,7 +22,7 @@ export class CampaignModalPart extends AbstractModalPart {
 	) {
 		super(app, modal);
 
-		this.campaigns = this.database.readList<CampaignV2Interface>(ComponentType.Campaign, undefined);
+		this.campaigns = this.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
 	}
 
 	public async addElement(
@@ -102,7 +102,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			this.modal.campaignId = this.factories.id.create(ComponentType.Campaign, 1);
 		}
 
-		this.campaigns.forEach((campaign: CampaignV2Interface) => {
+		this.campaigns.forEach((campaign: CampaignInterface) => {
 			if (this.modal.campaignId !== undefined && campaign.id.campaignId >= this.modal.campaignId.id) {
 				this.modal.campaignId.id = (campaign.id.campaignId + 1);
 			}
@@ -146,7 +146,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			}).selected = true;
 		}
 
-		this.campaigns.forEach((campaign: CampaignV2Interface) => {
+		this.campaigns.forEach((campaign: CampaignInterface) => {
 			const campaignOptionEl = this.campaignEl.createEl('option', {
 				text: campaign.file.basename,
 				value: campaign.id.campaignId.toString(),

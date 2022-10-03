@@ -8,11 +8,11 @@ import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {SceneTypeDescriptionModal} from "../../../modals/SceneTypeDescriptionModal";
-import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
-import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
+import {SceneInterface} from "../../../database/components/interfaces/SceneInterface";
+import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: SceneV2Interface;
+	protected currentElement: SceneInterface;
 
 	public render(
 		container: HTMLElement,
@@ -197,7 +197,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 		if (sceneId !== undefined) {
 			const sessions = data.additionalInformation.sessions;
-			sessions.forEach((session: SessionV2Interface) => {
+			sessions.forEach((session: SessionInterface) => {
 				if (data.value.content.toString() === session.id.sessionId?.toString()) {
 					MarkdownRenderer.renderMarkdown(
 						session.file.path,
@@ -220,13 +220,11 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			const sessions = data.additionalInformation.sessions;
 
 			const sessionSelectorEl = contentEl.createEl("select");
-			if (sessions.length > 1) {
-				sessionSelectorEl.createEl("option", {
-					text: "",
-					value: ""
-				}).selected = true;
-			}
-			sessions.forEach((session: SessionV2Interface) => {
+			sessionSelectorEl.createEl("option", {
+				text: "",
+				value: ""
+			}).selected = true;
+			sessions.forEach((session: SessionInterface) => {
 				const sessionOptionEl = sessionSelectorEl.createEl("option", {
 					text: session.file.basename,
 					value: session.id.sessionId?.toString(),
@@ -245,7 +243,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 			if (sceneId !== undefined) {
 				const sessions = data.additionalInformation.sessions;
-				sessions.forEach((session: SessionV2Interface) => {
+				sessions.forEach((session: SessionInterface) => {
 					if (data.value.content.toString() === session.id.sessionId?.toString()) {
 						MarkdownRenderer.renderMarkdown(
 							session.file.path,

@@ -36,7 +36,10 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		const adventureId: string|undefined = this.tagHelper.getId(ComponentType.Adventure, tag);
 		const actId: string|undefined = this.tagHelper.getId(ComponentType.Act, tag);
 		const sceneId: string|undefined = this.tagHelper.getId(ComponentType.Scene, tag);
-		const sessionId: string|undefined = this.tagHelper.getId(ComponentType.Session, tag);
+		let sessionId: string | undefined = undefined;
+		if (type === ComponentType.Session) {
+			sessionId = this.tagHelper.getId(ComponentType.Session, tag);
+		}
 
 		return this.create(type, campaignId, adventureId, actId, sceneId, sessionId, tag);
 	}

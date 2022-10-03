@@ -1,10 +1,10 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {ComponentType} from "../../enums/ComponentType";
-import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
+import {SceneInterface} from "../../database/components/interfaces/SceneInterface";
 
 export class SceneModel extends AbstractModel {
-	protected currentElement: SceneV2Interface;
+	protected currentElement: SceneInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {

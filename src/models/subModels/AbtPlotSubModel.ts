@@ -2,42 +2,29 @@ import {AbstractSubModel} from "../../abstracts/AbstractSubModel";
 import {ResponseDataElementInterface} from "../../interfaces/response/ResponseDataElementInterface";
 import {ResponseTable} from "../../responses/ResponseTable";
 import {ContentType} from "../../enums/ContentType";
-import {ComponentType} from "../../enums/ComponentType";
-import {AdventureV2} from "../../_dbV2/components/AdventureV2";
-import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
-import {RelationshipV2Interface} from "../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {RelationshipInterface} from "../../database/relationships/interfaces/RelationshipInterface";
+import {AbtInterface} from "../../database/plots/interfaces/AbtInterface";
+import {PlotsInterface} from "../../database/plots/interfaces/PlotsInterface";
 
 export class AbtPlotSubModel extends AbstractSubModel {
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {
-		if (
-			additionalInformation == null ||
-			(
-				additionalInformation.need == null ||
-				additionalInformation.and == null ||
-				additionalInformation.but == null ||
-				additionalInformation.therefore == null
-			) ||
-			(
-				additionalInformation.need === '' &&
-				additionalInformation.and === '' &&
-				additionalInformation.but === '' &&
-				additionalInformation.therefore === ''
-			)
-		) return null;
+		if (!this.currentElement.hasAbtPlot || (<PlotsInterface>this.currentElement).abt.isEmpty) return null;
 
+		const abt: AbtInterface = (<PlotsInterface>this.currentElement).abt;
+		const response = new ResponseTable(this.app, this.currentElement);
+
+		/*
 		if (relationship.component === undefined) return null;
 		const data = relationship.component;
 
-		const response = new ResponseTable(this.app, this.currentElement);
-
 		if (
-			data instanceof AdventureV2 &&
-			this.database.readList<ActV2Interface>(ComponentType.Act, data.id).length === 0 &&
+			data instanceof Adventure &&
+			this.database.readList<ActInterface>(ComponentType.Act, data.id).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&
@@ -48,24 +35,26 @@ export class AbtPlotSubModel extends AbstractSubModel {
 			response.adventureId = data.id.adventureId;
 		}
 
+		 */
+
 		response.title = 'ABT Plot';
 		response.class = 'rpgm-plot';
 
 		response.addContent([
 			this.factories.contents.create('**NEED** ', ContentType.Markdown, true),
-			this.factories.contents.create((additionalInformation.need ? additionalInformation.need : ''), ContentType.Markdown),
+			this.factories.contents.create(abt.need, ContentType.Markdown),
 		]);
 		response.addContent([
 			this.factories.contents.create('**AND** ', ContentType.Markdown, true),
-			this.factories.contents.create((additionalInformation.and ? additionalInformation.and : ''), ContentType.Markdown),
+			this.factories.contents.create(abt.and, ContentType.Markdown),
 		]);
 		response.addContent([
 			this.factories.contents.create('**BUT** ', ContentType.Markdown, true),
-			this.factories.contents.create((additionalInformation.but ? additionalInformation.but : ''), ContentType.Markdown),
+			this.factories.contents.create(abt.but, ContentType.Markdown),
 		]);
 		response.addContent([
 			this.factories.contents.create('**THEREFORE** ', ContentType.Markdown, true),
-			this.factories.contents.create((additionalInformation.therefore ? additionalInformation.therefore : ''), ContentType.Markdown),
+			this.factories.contents.create(abt.therefore, ContentType.Markdown),
 		]);
 
 		return response;

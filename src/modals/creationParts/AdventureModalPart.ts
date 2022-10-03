@@ -2,10 +2,10 @@ import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {ComponentType} from "../../enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
-import {AdventureV2Interface} from "../../_dbV2/components/interfaces/AdventureV2Interface";
+import {AdventureInterface} from "../../database/components/interfaces/AdventureInterface";
 
 export class AdventureModalPart extends AbstractModalPart {
-	private adventures: AdventureV2Interface[];
+	private adventures: AdventureInterface[];
 
 	private adventureEl: HTMLSelectElement;
 	private adventureErrorEl: HTMLParagraphElement;
@@ -22,7 +22,7 @@ export class AdventureModalPart extends AbstractModalPart {
 			this.modal.adventureId.id = 1;
 		}
 
-		this.adventures = this.database.readList<AdventureV2Interface>(ComponentType.Adventure, this.modal.campaignId);
+		this.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -76,7 +76,7 @@ export class AdventureModalPart extends AbstractModalPart {
 	private addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		this.adventures.forEach((adventure: AdventureV2Interface) => {
+		this.adventures.forEach((adventure: AdventureInterface) => {
 			if (this.modal.adventureId !== undefined && (adventure.id.adventureId ?? 0) >= (this.modal.adventureId.id ?? 0)) {
 				this.modal.adventureId.id = ((adventure.id.adventureId ?? 0) + 1);
 			}
@@ -100,7 +100,7 @@ export class AdventureModalPart extends AbstractModalPart {
 			}).selected = true;
 		}
 
-		this.adventures.forEach((adventure: AdventureV2Interface) => {
+		this.adventures.forEach((adventure: AdventureInterface) => {
 			const adventureOptionEl = this.adventureEl.createEl('option', {
 				text: adventure.file.basename,
 				value: adventure.id.adventureId?.toString(),

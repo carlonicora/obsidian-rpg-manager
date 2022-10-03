@@ -3,9 +3,9 @@ import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../enums/TableField";
-import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
-import {CharacterV2Interface} from "../../../_dbV2/components/interfaces/CharacterV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
+import {CharacterInterface} from "../../../database/components/interfaces/CharacterInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class CharacterTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.CharacterList;
@@ -22,13 +22,13 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		return super.generateHeaderElement(fieldType);
 	}
 
-	protected generateContentElement<T extends ComponentV2Interface>(
+	protected generateContentElement<T extends ComponentInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const character: CharacterV2Interface = <unknown>component as CharacterV2Interface;
+		const character: CharacterInterface = <unknown>component as CharacterInterface;
 		switch (fieldType) {
 			case TableField.Name:
 				return this.factories.contents.create(component.link + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);

@@ -4,10 +4,10 @@ import {FrontmatterElementSelectionModal} from "../modals/FrontmatterElementSele
 import {EditorSelector} from "../helpers/EditorSelector";
 import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
-import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {ComponentInterface} from "../database/interfaces/ComponentInterface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
-	protected currentElement: ComponentV2Interface;
+	protected currentElement: ComponentInterface;
 
 	protected headerTitleEl: HTMLDivElement;
 	protected headerInfoEl: HTMLDivElement;

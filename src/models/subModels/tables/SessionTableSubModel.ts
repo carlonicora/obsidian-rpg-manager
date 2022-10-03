@@ -3,20 +3,20 @@ import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {TableField} from "../../../enums/TableField";
-import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
-import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
+import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class SessionTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SessionList;
 
-	protected generateContentElement<T extends ComponentV2Interface>(
+	protected generateContentElement<T extends ComponentInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const session: SessionV2Interface = <unknown>component as SessionV2Interface;
+		const session: SessionInterface = <unknown>component as SessionInterface;
 		switch (fieldType) {
 			case TableField.Index:
 				return this.factories.contents.create(session.id.sessionId, ContentType.String, true);

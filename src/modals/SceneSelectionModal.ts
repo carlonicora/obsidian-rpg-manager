@@ -2,31 +2,31 @@ import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
-import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interface";
-import {DatabaseV2Initialiser} from "../_dbV2/DatabaseV2Initialiser";
+import {SceneInterface} from "../database/components/interfaces/SceneInterface";
+import {SessionInterface} from "../database/components/interfaces/SessionInterface";
+import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
 
 export class SceneSelectionModal extends AbstractRpgManagerModal {
-	private availableScenes:Array<SceneV2Interface>;
+	private availableScenes:Array<SceneInterface>;
 	private scenesEls: Array<HTMLInputElement>;
 
 	constructor(
 		app: App,
-		private session: SessionV2Interface,
+		private session: SessionInterface,
 	) {
 		super(app);
 
 		this.scenesEls = [];
 
-		this.availableScenes = this.database.read<SceneV2Interface>(
-			(scene: SceneV2Interface) =>
+		this.availableScenes = this.database.read<SceneInterface>(
+			(scene: SceneInterface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === session.id.campaignId &&
 				(scene.id.sessionId === undefined || scene.id.sessionId === session.id.sessionId),
-		).sort(this.factories.sorter.create<SceneV2Interface>([
-			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
-			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
-			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.sceneId),
+		).sort(this.factories.sorter.create<SceneInterface>([
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
 		]));
 	}
 
@@ -41,7 +41,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 		contentEl.createEl('p', {text: 'Select the scenes to add to the session "' + this.session.file.basename + '"'});
 		const sessionContainerEl = contentEl.createDiv();
 
-		this.availableScenes.forEach((scene: SceneV2Interface) => {
+		this.availableScenes.forEach((scene: SceneInterface) => {
 			const checkboxDiv = sessionContainerEl.createDiv();
 			const checkbox = checkboxDiv.createEl('input');
 			checkbox.type = 'checkbox';
@@ -62,7 +62,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 				.then(() => {
 					this.session.readMetadata()
 						.then(() => {
-							DatabaseV2Initialiser.reinitialiseRelationships(this.database);
+							DatabaseInitialiser.reinitialiseRelationships(this.database);
 						});
 					return;
 				})

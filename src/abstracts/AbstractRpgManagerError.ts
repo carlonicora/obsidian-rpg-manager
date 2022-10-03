@@ -6,7 +6,7 @@ import {FactoriesInterface} from "../interfaces/FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
-import {DatabaseV2Interface} from "../_dbV2/interfaces/DatabaseV2Interface";
+import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
 
 export abstract class AbstractRpgManagerError extends Error implements RpgErrorInterface, RpgManagerHelperInterface {
 	constructor(
@@ -22,7 +22,7 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 	}
 
 	public get database(
-	): DatabaseV2Interface {
+	): DatabaseInterface {
 		return this.app.plugins.getPlugin('rpg-manager').database;
 	}
 

@@ -2,10 +2,10 @@ import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {ComponentType} from "../../enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
-import {SessionV2Interface} from "../../_dbV2/components/interfaces/SessionV2Interface";
+import {SessionInterface} from "../../database/components/interfaces/SessionInterface";
 
 export class SessionModalPart extends AbstractModalPart {
-	private sessions: SessionV2Interface[];
+	private sessions: SessionInterface[];
 
 	private sessionEl: HTMLSelectElement;
 	private sessionErrorEl: HTMLParagraphElement;
@@ -20,7 +20,7 @@ export class SessionModalPart extends AbstractModalPart {
 		this.modal.sessionId = this.factories.id.create(ComponentType.Session, this.modal.campaignId.id);
 		this.modal.sessionId.id = 1;
 
-		this.sessions = this.database.readList<SessionV2Interface>(ComponentType.Session, this.modal.campaignId);
+		this.sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -48,7 +48,7 @@ export class SessionModalPart extends AbstractModalPart {
 	private addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		this.sessions.forEach((session: SessionV2Interface) => {
+		this.sessions.forEach((session: SessionInterface) => {
 			if (this.modal.sessionId !== undefined && (session.id.sessionId ?? 0) >= (this.modal.sessionId.id ?? 0)) {
 				this.modal.sessionId.id = ((session.id.sessionId ?? 0) + 1);
 			}

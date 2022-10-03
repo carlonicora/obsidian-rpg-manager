@@ -4,23 +4,23 @@ import {ComponentType} from "../../enums/ComponentType";
 import {SceneTableSubModel} from "../subModels/tables/SceneTableSubModel";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
 import {SessionHeaderSubModel} from "../subModels/headers/SessionHeaderSubModel";
-import {SessionV2Interface} from "../../_dbV2/components/interfaces/SessionV2Interface";
-import {SceneV2Interface} from "../../_dbV2/components/interfaces/SceneV2Interface";
+import {SessionInterface} from "../../database/components/interfaces/SessionInterface";
+import {SceneInterface} from "../../database/components/interfaces/SceneInterface";
 
 export class SessionNavigationModel extends AbstractModel {
-	protected currentElement: SessionV2Interface;
+	protected currentElement: SessionInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		const scenes = this.database.read<SceneV2Interface>(
-			(scene: SceneV2Interface) =>
+		const scenes = this.database.read<SceneInterface>(
+			(scene: SceneInterface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
 				scene.id.sessionId === this.currentElement.id.sessionId,
-		).sort(this.factories.sorter.create<SceneV2Interface>([
-			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
-			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
-			new SorterComparisonElement((scene: SceneV2Interface) => scene.id.sceneId),
+		).sort(this.factories.sorter.create<SceneInterface>([
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
 		]));
 
 		this.response.addElement(this.factories.breadcrumb.create(this.currentElement));

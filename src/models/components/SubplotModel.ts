@@ -3,11 +3,11 @@ import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInter
 import {ComponentType} from "../../enums/ComponentType";
 import {AbtPlotSubModel} from "../subModels/AbtPlotSubModel";
 import {SubplotHeaderSubModel} from "../subModels/headers/SubplotHeaderSubModel";
-import {SubplotV2Interface} from "../../_dbV2/components/interfaces/SubplotV2Interface";
-import {RelationshipV2Type} from "../../_dbV2/relationships/enums/RelationshipV2Type";
+import {SubplotInterface} from "../../database/components/interfaces/SubplotInterface";
+import {RelationshipType} from "../../database/relationships/enums/RelationshipType";
 
 export class SubplotModel extends AbstractModel {
-	protected currentElement: SubplotV2Interface;
+	protected currentElement: SubplotInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
@@ -27,8 +27,8 @@ export class SubplotModel extends AbstractModel {
 
 		await this.addRelationships(ComponentType.Event);
 		await this.addRelationships(ComponentType.Clue);
-		await this.addRelationships(ComponentType.Faction, RelationshipV2Type.Univocal);
-		await this.addRelationships(ComponentType.NonPlayerCharacter, RelationshipV2Type.Univocal);
+		await this.addRelationships(ComponentType.Faction, RelationshipType.Univocal);
+		await this.addRelationships(ComponentType.NonPlayerCharacter, RelationshipType.Univocal);
 
 		return this.response;
 	}

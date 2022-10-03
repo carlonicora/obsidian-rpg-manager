@@ -1,6 +1,6 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {FactionV2Interface} from "../../../_dbV2/components/interfaces/FactionV2Interface";
+import {FactionInterface} from "../../../database/components/interfaces/FactionInterface";
 
 export class FactionHeaderView extends AbstractHeaderView {
-	protected currentElement: FactionV2Interface;
+	protected currentElement: FactionInterface;
 }

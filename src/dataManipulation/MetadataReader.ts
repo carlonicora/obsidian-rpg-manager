@@ -32,7 +32,7 @@ export class MetadataReader extends AbstractRpgManager implements MetadataReader
 					if (section.type === 'code') {
 						if (arrayContent[section.position.start.line] === '```RpgManager') {
 							let codeBlockContent = '';
-							for (let index = section.position.start.line + 2; index < arrayContent.length; index++) {
+							for (let index = section.position.start.line + 1; index < arrayContent.length; index++) {
 								if (arrayContent[index] === '```') break;
 								if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
 							}
@@ -42,6 +42,8 @@ export class MetadataReader extends AbstractRpgManager implements MetadataReader
 				}
 			}
 		}
+
+		delete response['models'];
 
 		return response;
 	}

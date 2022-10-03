@@ -1,11 +1,11 @@
-import {RelationshipV2Type} from "../../_dbV2/relationships/enums/RelationshipV2Type";
+import {RelationshipType} from "../../database/relationships/enums/RelationshipType";
 
 export interface RelationshipTypeFactoryInterface {
 	createRelationshipType(
 		readableRelationshipType: string,
-	): RelationshipV2Type;
+	): RelationshipType;
 
 	createReadableRelationshipType(
-		type: RelationshipV2Type,
+		type: RelationshipType,
 	): string;
 }

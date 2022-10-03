@@ -6,12 +6,12 @@ import {TimelineElementResponseInterface} from "../interfaces/response/subModels
 import {Component, MarkdownRenderer, TAbstractFile, TFile} from "obsidian";
 import {ResponseTimelineElement} from "../responses/ResponseTimelineElement";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {CampaignV2Interface} from "../_dbV2/components/interfaces/CampaignV2Interface";
-import {EventV2Interface} from "../_dbV2/components/interfaces/EventV2Interface";
-import {ClueV2Interface} from "../_dbV2/components/interfaces/ClueV2Interface";
-import {CharacterV2Interface} from "../_dbV2/components/interfaces/CharacterV2Interface";
-import {SessionV2Interface} from "../_dbV2/components/interfaces/SessionV2Interface";
-import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
+import {CampaignInterface} from "../database/components/interfaces/CampaignInterface";
+import {EventInterface} from "../database/components/interfaces/EventInterface";
+import {ClueInterface} from "../database/components/interfaces/ClueInterface";
+import {CharacterInterface} from "../database/components/interfaces/CharacterInterface";
+import {SessionInterface} from "../database/components/interfaces/SessionInterface";
+import {SceneInterface} from "../database/components/interfaces/SceneInterface";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();
@@ -19,7 +19,7 @@ export class TimelineView extends AbstractRpgManagerView {
 	public icon = 'd20';
 
 	private campaignId: IdInterface;
-	private campaign: CampaignV2Interface;
+	private campaign: CampaignInterface;
 
 	private elements: Array<TimelineElementResponseInterface>;
 
@@ -27,18 +27,18 @@ export class TimelineView extends AbstractRpgManagerView {
 		params: Array<any>,
 	): void {
 		this.campaignId = params[0];
-		this.campaign = this.database.readSingle<CampaignV2Interface>(ComponentType.Campaign, this.campaignId);
+		this.campaign = this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.campaignId);
 
 		super.initialise([]);
 
 		this.elements = [];
 
-		this.database.read<EventV2Interface>(
-			(event: EventV2Interface) =>
+		this.database.read<EventInterface>(
+			(event: EventInterface) =>
 				event.id.type === ComponentType.Event &&
 				event.id.campaignId === this.campaignId.id &&
 				event.date != null,
-		).forEach((event: EventV2Interface) => {
+		).forEach((event: EventInterface) => {
 			if (event.date !== undefined) {
 				let time = (<Date>event.date).toLocaleTimeString();
 				time = time.substring(0, time.length - 3);
@@ -55,12 +55,12 @@ export class TimelineView extends AbstractRpgManagerView {
 			}
 		});
 
-		this.database.read<ClueV2Interface>(
-			(clue: ClueV2Interface) =>
+		this.database.read<ClueInterface>(
+			(clue: ClueInterface) =>
 				clue.id.type === ComponentType.Clue &&
 				clue.id.campaignId === this.campaignId.id &&
 				clue.found != null,
-		).forEach((clue: ClueV2Interface) => {
+		).forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
 				this.elements.push(
 					new ResponseTimelineElement(
@@ -75,12 +75,12 @@ export class TimelineView extends AbstractRpgManagerView {
 			}
 		});
 
-		this.database.read<CharacterV2Interface>(
-			(character: CharacterV2Interface) =>
+		this.database.read<CharacterInterface>(
+			(character: CharacterInterface) =>
 				((ComponentType.Character | ComponentType.NonPlayerCharacter) & character.id.type) === character.id.type &&
 				character.id.campaignId === this.campaignId.id &&
 				character.death != null,
-		).forEach((character: CharacterV2Interface) => {
+		).forEach((character: CharacterInterface) => {
 			if (character.death !== undefined) {
 				this.elements.push(
 					new ResponseTimelineElement(
@@ -95,22 +95,22 @@ export class TimelineView extends AbstractRpgManagerView {
 			}
 		});
 
-		const sessions = this.database.read<SessionV2Interface>(
-			(session: SessionV2Interface) =>
+		const sessions = this.database.read<SessionInterface>(
+			(session: SessionInterface) =>
 				ComponentType.Session === session.id.type &&
 				session.id.campaignId === this.campaignId.id
 		);
 
-		sessions.forEach((session: SessionV2Interface) => {
-			const scenes = this.database.read<SceneV2Interface>(
-				(scene: SceneV2Interface) =>
+		sessions.forEach((session: SessionInterface) => {
+			const scenes = this.database.read<SceneInterface>(
+				(scene: SceneInterface) =>
 					scene.id.type === ComponentType.Scene &&
 					scene.id.campaignId === this.campaignId.id &&
 					scene.id.sessionId === session.id.sessionId &&
 					scene.date != null
 			).sort(
-				this.factories.sorter.create<SceneV2Interface>([
-					new SorterComparisonElement((scene: SceneV2Interface) => scene.date)
+				this.factories.sorter.create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.date)
 				])
 			);
 

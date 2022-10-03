@@ -8,14 +8,14 @@ import {HeaderResponseInterface} from "../../../interfaces/response/subModels/He
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
-import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class SessionHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: SessionV2Interface;
+	protected data: SessionInterface;
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {
@@ -42,11 +42,14 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 				this.data.abtStage,
 				this.data.id
 			);
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
-				id: this.data.id,
-				file: this.data.file,
-				sceneAnalyser: analyser,
-			}));
+
+			if (analyser.scenesCount > 0) {
+				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
+					id: this.data.id,
+					file: this.data.file,
+					sceneAnalyser: analyser,
+				}));
+			}
 		}
 
 		return this.completeData(response);

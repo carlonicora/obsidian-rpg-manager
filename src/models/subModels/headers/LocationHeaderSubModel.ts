@@ -6,14 +6,14 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseType} from "../../../enums/ResponseType";
-import {LocationV2Interface} from "../../../_dbV2/components/interfaces/LocationV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {LocationInterface} from "../../../database/components/interfaces/LocationInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class LocationHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: LocationV2Interface;
+	protected data: LocationInterface;
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

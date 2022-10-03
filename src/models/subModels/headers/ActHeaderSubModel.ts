@@ -8,14 +8,14 @@ import {HeaderResponseInterface} from "../../../interfaces/response/subModels/He
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
-import {ActV2Interface} from "../../../_dbV2/components/interfaces/ActV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ActInterface} from "../../../database/components/interfaces/ActInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class ActHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: ActV2Interface;
+	protected data: ActInterface;
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {
@@ -41,11 +41,14 @@ export class ActHeaderSubModel extends AbstractHeaderSubModel {
 				this.data.abtStage,
 				this.data.id
 			);
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
-				id: this.data.id,
-				file: this.data.file,
-				sceneAnalyser: analyser,
-			}));
+
+			if (analyser.scenesCount > 0) {
+				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
+					id: this.data.id,
+					file: this.data.file,
+					sceneAnalyser: analyser,
+				}));
+			}
 		}
 
 		response.metadata = {actId: this.data.id, sourceMeta: additionalInformation};

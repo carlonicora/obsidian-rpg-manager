@@ -1,6 +1,6 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {SubplotV2Interface} from "../../../_dbV2/components/interfaces/SubplotV2Interface";
+import {SubplotInterface} from "../../../database/components/interfaces/SubplotInterface";
 
 export class SubplotHeaderView extends AbstractHeaderView {
-	protected currentElement: SubplotV2Interface;
+	protected currentElement: SubplotInterface;
 }

@@ -4,14 +4,14 @@ import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../enums/ResponseType";
-import {CampaignV2Interface} from "../../../_dbV2/components/interfaces/CampaignV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {CampaignInterface} from "../../../database/components/interfaces/CampaignInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: CampaignV2Interface;
+	protected data: CampaignInterface;
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

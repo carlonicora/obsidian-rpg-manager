@@ -6,14 +6,14 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ResponseType} from "../../../enums/ResponseType";
-import {MusicV2Interface} from "../../../_dbV2/components/interfaces/MusicV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {MusicInterface} from "../../../database/components/interfaces/MusicInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class MusicHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: MusicV2Interface;
+	protected data: MusicInterface;
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {

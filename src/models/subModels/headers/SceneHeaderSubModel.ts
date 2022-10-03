@@ -12,15 +12,15 @@ import {SorterComparisonElement} from "../../../database/SorterComparisonElement
 import {SorterType} from "../../../enums/SorterType";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {AbtStage} from "../../../enums/AbtStage";
-import {SceneV2Interface} from "../../../_dbV2/components/interfaces/SceneV2Interface";
-import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {SceneInterface} from "../../../database/components/interfaces/SceneInterface";
+import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {
-	protected data: SceneV2Interface;
+	protected data: SceneInterface;
 
 	public async generateData(
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {
@@ -28,9 +28,9 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 
 		this.synopsisTitle = 'Scene Goal';
 
-		const sessions: Array<SessionV2Interface> = this.database.read<SessionV2Interface>((session: SessionV2Interface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
-			.sort(this.factories.sorter.create<SessionV2Interface>([
-				new SorterComparisonElement((session: SessionV2Interface) => session.id.sessionId, SorterType.Descending)
+		const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
+			.sort(this.factories.sorter.create<SessionInterface>([
+				new SorterComparisonElement((session: SessionInterface) => session.id.sessionId, SorterType.Descending)
 			]));
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
@@ -40,21 +40,32 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Scene;
 		response.responseType = ResponseType.SceneHeader;
 
-		if (additionalInformation != null && additionalInformation.trigger != null && additionalInformation.trigger != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Trigger', additionalInformation.trigger, HeaderResponseType.Long));
+		if (this.data.trigger !== undefined && this.data.trigger != ''){
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Trigger', this.data.trigger, HeaderResponseType.Long));
 		}
 
-		if (this.data.action != null && this.data.action != ''){
+		if (this.data.action !== undefined && this.data.action != ''){
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Action', this.data.action, HeaderResponseType.Long));
-		} else if (additionalInformation != null && additionalInformation.action != null && additionalInformation.action != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Action', additionalInformation.action, HeaderResponseType.Long));
 		}
-		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.id.sessionId === undefined ? '' : this.data.id.sessionId.toString()), HeaderResponseType.SessionSelection, {sceneId: this.data.id, file: this.data.file, sessions: sessions}));
+
+		if (this.data.date !== undefined){
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Date', this.data.date.toDateString(), HeaderResponseType.Short));
+		}
+
+		if (sessions.length > 0) {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.id.sessionId === undefined ? '' : this.data.id.sessionId.toString()), HeaderResponseType.SessionSelection, {
+				sceneId: this.data.id,
+				file: this.data.file,
+				sessions: sessions
+			}));
+		}
+
 		if (this.settings.usePlotStructures) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (this.data.storycircleStage !== undefined ? StoryCircleStage[this.data.storycircleStage] : ''), HeaderResponseType.StoryCircleSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
+
 		}
 		if (this.settings.useSceneAnalyser) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Type', (this.data.sceneType !== undefined ? SceneType[this.data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {

@@ -2,11 +2,11 @@ import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {RunningTimeManagerInterface} from "../interfaces/dataManipulation/RunningTimeManagerInterface";
 import {SceneType} from "../enums/SceneType";
 import {ComponentType} from "../enums/ComponentType";
-import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
-import {CampaignV2Interface} from "../_dbV2/components/interfaces/CampaignV2Interface";
+import {SceneInterface} from "../database/components/interfaces/SceneInterface";
+import {CampaignInterface} from "../database/components/interfaces/CampaignInterface";
 
 export class RunningTimeManager extends AbstractRpgManager implements RunningTimeManagerInterface {
-	public currentlyRunningScene: SceneV2Interface|undefined = undefined;
+	public currentlyRunningScene: SceneInterface|undefined = undefined;
 	public medianDefaultTimes: Map<SceneType, Array<number>> = new Map<SceneType, Array<number>>([
 		[SceneType.Action, [15*60]],
 		[SceneType.Combat, [15*60]],
@@ -32,7 +32,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	}
 
 	public isCurrentlyRunningScene(
-		scene: SceneV2Interface,
+		scene: SceneInterface,
 	): boolean {
 		if (this.currentlyRunningScene === undefined) return false;
 
@@ -40,7 +40,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	}
 
 	public async startScene(
-		scene: SceneV2Interface,
+		scene: SceneInterface,
 	): Promise<void> {
 		if (this.currentlyRunningScene !== undefined) await this.stopScene(this.currentlyRunningScene);
 		this.currentlyRunningScene = scene;
@@ -49,7 +49,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	}
 
 	public async stopScene(
-		scene: SceneV2Interface,
+		scene: SceneInterface,
 	): Promise<void> {
 		if (this.currentlyRunningScene === undefined) return;
 
@@ -60,7 +60,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	public async updateMedianTimes(
 		isStartup=false,
 	): Promise<void> {
-		const campaigns: Array<CampaignV2Interface> = this.database.read<CampaignV2Interface>((campaign: CampaignV2Interface) =>
+		const campaigns: Array<CampaignInterface> = this.database.read<CampaignInterface>((campaign: CampaignInterface) =>
 			campaign.id.type === ComponentType.Campaign
 		);
 
@@ -68,11 +68,11 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 			this.medianTimes.set(campaigns[index].id.campaignId, structuredClone(this.medianDefaultTimes));
 		}
 
-		const scenes: Array<SceneV2Interface> = this.database.read<SceneV2Interface>((scene: SceneV2Interface) =>
+		const scenes: Array<SceneInterface> = this.database.read<SceneInterface>((scene: SceneInterface) =>
 			scene.id.type === ComponentType.Scene
 		);
 
-		await scenes.forEach((scene: SceneV2Interface) => {
+		await scenes.forEach((scene: SceneInterface) => {
 			if (isStartup && scene.isCurrentlyRunning) {
 				this.currentlyRunningScene = scene;
 				this.stopScene(scene);

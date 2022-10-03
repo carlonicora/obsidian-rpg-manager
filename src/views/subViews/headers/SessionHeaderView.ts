@@ -5,10 +5,10 @@ import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView"
 import {SceneSelectionModal} from "../../../modals/SceneSelectionModal";
 import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {SessionV2Interface} from "../../../_dbV2/components/interfaces/SessionV2Interface";
+import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: SessionV2Interface;
+	protected currentElement: SessionInterface;
 
 	public render(
 		container: HTMLElement,

@@ -14,15 +14,18 @@ import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
 import {CodeBlockEditorFactoryInterface} from "./factories/CodeBlockEditorFactoryInterface";
 import {RunningTimeManagerInterface} from "./dataManipulation/RunningTimeManagerInterface";
 import {MetadataReaderInterface} from "./dataManipulation/MetadataReaderInterface";
-import {DatabaseV2FactoryInterface} from "../_dbV2/factories/interfaces/DatabaseV2FactoryInterface";
-import {ComponentV2FactoryInterface} from "../_dbV2/factories/interfaces/ComponentV2FactoryInterface";
+import {DatabaseFactoryInterface} from "../database/factories/interfaces/DatabaseFactoryInterface";
+import {ComponentFactoryInterface} from "../database/factories/interfaces/ComponentFactoryInterface";
 import {ComponentTypeFactoryInterface} from "./factories/ComponentTypeFactoryInterface";
 import {RelationshipTypeFactoryInterface} from "./factories/RelationshipTypeFactoryInterface";
+import {SceneTypeFactoryInterface} from "./factories/SceneTypeFactoryInterface";
+import {StoryCircleStageFactoryInterface} from "./factories/StoryCircleStageFactoryInterface";
+import {AbtStageFactoryInterface} from "./factories/AbtStageFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
 	contents: ContentFactoryInterface;
-	component: ComponentV2FactoryInterface;
+	component: ComponentFactoryInterface;
 	files: FileFactoryInterface;
 	modals: ModalFactoryInterface;
 	models: ModelFactoryInterface;
@@ -30,7 +33,7 @@ export interface FactoriesInterface {
 	templates: TemplateFactoryInterface;
 	views: ViewFactoryInterface;
 	fetchers: FetcherFactoryInterface;
-	database: DatabaseV2FactoryInterface;
+	database: DatabaseFactoryInterface;
 	id: IdFactoryInterface;
 	breadcrumb: BreadcrumbFactoryInterface;
 	frontmatter: FrontmatterFactoryInterface;
@@ -40,4 +43,7 @@ export interface FactoriesInterface {
 	metadataReader: MetadataReaderInterface;
 	componentType: ComponentTypeFactoryInterface;
 	relationshipType: RelationshipTypeFactoryInterface;
+	sceneType: SceneTypeFactoryInterface;
+	storyCircleStage: StoryCircleStageFactoryInterface;
+	abtStage: AbtStageFactoryInterface;
 }

@@ -3,14 +3,14 @@ import {SubModelInterface} from "../interfaces/SubModelInterface";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {App} from "obsidian";
 import {SubModelFactoryInterface} from "../interfaces/factories/SubModelFactoryInterface";
-import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
-import {RelationshipV2Interface} from "../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
 
 export class SubModelFactory extends AbstractFactory implements SubModelFactoryInterface{
 	public async create<T extends SubModelInterface>(
-		subModelType: (new (app: App, currentElement: ComponentV2Interface) => T),
-		currentElement: ComponentV2Interface,
-		data: RelationshipV2Interface|RelationshipV2Interface[],
+		subModelType: (new (app: App, currentElement: ComponentInterface) => T),
+		currentElement: ComponentInterface,
+		data: RelationshipInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 	): Promise<ResponseDataElementInterface|null> {

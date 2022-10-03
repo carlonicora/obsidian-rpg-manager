@@ -2,7 +2,7 @@ import {AbstractResponse} from "../abstracts/AbstractResponse";
 import {BreadcrumbResponseInterface} from "../interfaces/response/subModels/BreadcrumbResponseInterface";
 import {ResponseType} from "../enums/ResponseType";
 import {App} from "obsidian";
-import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {ComponentInterface} from "../database/interfaces/ComponentInterface";
 
 export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbResponseInterface {
 	public link: string;
@@ -16,7 +16,7 @@ export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbRe
 
 	constructor(
 		app: App,
-		currentElement: ComponentV2Interface,
+		currentElement: ComponentInterface,
 	) {
 		super(app, currentElement);
 		this.responseType = ResponseType.Breadcrumb;

@@ -1,9 +1,9 @@
 import {ResponseDataElementInterface} from "./response/ResponseDataElementInterface";
-import {RelationshipV2Interface} from "../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
 
 export interface SubModelInterface {
 	generateData(
-		relationships: RelationshipV2Interface|RelationshipV2Interface[],
+		relationships: RelationshipInterface|RelationshipInterface[],
 		title: string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null>;

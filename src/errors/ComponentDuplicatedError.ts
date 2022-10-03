@@ -1,14 +1,14 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {App} from "obsidian";
 import {IdInterface} from "../interfaces/IdInterface";
-import {ComponentV2Interface} from "../_dbV2/interfaces/ComponentV2Interface";
+import {ComponentInterface} from "../database/interfaces/ComponentInterface";
 
 export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(
 		app: App,
 		idMap: IdInterface,
-		private duplication: Array<ComponentV2Interface>,
-		private duplicated: ComponentV2Interface|undefined=undefined,
+		private duplication: Array<ComponentInterface>,
+		private duplicated: ComponentInterface|undefined=undefined,
 	) {
 		super(app, idMap);
 	}
@@ -23,7 +23,7 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		let response = this.id.tag + '\n';
 
 		if (this.duplication.length > 1) {
-			this.duplication.forEach((component: ComponentV2Interface) => {
+			this.duplication.forEach((component: ComponentInterface) => {
 				response += ' - ' + component.file.basename + '\n';
 			})
 		} else if (this.duplicated !== undefined) {
@@ -46,7 +46,7 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		const response: Array<string> = [];
 
 		if (this.duplication.length > 1) {
-			this.duplication.forEach((component: ComponentV2Interface) => {
+			this.duplication.forEach((component: ComponentInterface) => {
 				response.push(component.file.path);
 			})
 		} else if (this.duplicated !== undefined) {

@@ -2,12 +2,12 @@ import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterfa
 import {FactoriesInterface} from "./FactoriesInterface";
 import {TagHelper} from "../helpers/TagHelper";
 import {DataManipulatorsInterface} from "./DataManipulatorsInterface";
-import {DatabaseV2Interface} from "../_dbV2/interfaces/DatabaseV2Interface";
+import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
 
 export interface RpgManagerHelperInterface {
 	get settings(): RpgManagerSettingsInterface;
-	get database(): DatabaseV2Interface;
-	set database(database: DatabaseV2Interface);
+	get database(): DatabaseInterface;
+	set database(database: DatabaseInterface);
 	get factories(): FactoriesInterface;
 	get dataManipulators(): DataManipulatorsInterface;
 	get tagHelper(): TagHelper;

@@ -6,11 +6,10 @@ import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {TFile} from "obsidian";
 import {Pronoun} from "../../../enums/Pronoun";
-import {CharacterV2Interface} from "../../../_dbV2/components/interfaces/CharacterV2Interface";
+import {CharacterInterface} from "../../../database/components/interfaces/CharacterInterface";
 
 export class CharacterHeaderView extends AbstractHeaderView {
-	protected currentElement:CharacterV2Interface;
-
+	protected currentElement:CharacterInterface;
 
 	public render(
 		container: HTMLElement,

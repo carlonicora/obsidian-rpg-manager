@@ -4,17 +4,19 @@ import {ResponseDataElementInterface} from "./interfaces/response/ResponseDataEl
 import {ViewInterface} from "./interfaces/ViewInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
-import {ErrorLog, LogMessageType} from "./helpers/Logger";
 import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
-import {ComponentV2Interface} from "./_dbV2/interfaces/ComponentV2Interface";
-import {CampaignV2Interface} from "./_dbV2/components/interfaces/CampaignV2Interface";
+import {ComponentInterface} from "./database/interfaces/ComponentInterface";
+import {CampaignInterface} from "./database/components/interfaces/CampaignInterface";
+import {
+	ControllerMetadataInterface
+} from "./database/interfaces/metadata/ControllerMetadataInterface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
 	private data: ResponseDataInterface;
-	private model: ModelInterface;
+	private models: Array<ModelInterface> = [];
 
-	private currentElement: ComponentV2Interface;
+	private currentElement: ComponentInterface;
 	private campaignSettings: CampaignSetting;
 
 	private componentVersion: number|undefined = undefined;
@@ -35,49 +37,79 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		oldPath: string,
 	): Promise<void>{
 		if (this.sourcePath === oldPath) this.sourcePath = file.path;
-		this.initialise();
-		this.render();
+		this._render();
 	}
 
-	private generateModel(
+	private _generateModels(
 	): void {
-		const sourceLines = this.source.split('\n');
-		let modelName = sourceLines[0].toLowerCase();
-		modelName = modelName[0].toUpperCase() + modelName.substring(1);
-		modelName = modelName.replace('navigation', 'Navigation');
-
-		sourceLines.shift();
-
-		const sourceMeta = parseYaml(sourceLines.join('\n'));
-
-		this.campaignSettings = CampaignSetting.Agnostic;
-		if (this.currentElement.campaign !== undefined){
-			this.campaignSettings = this.currentElement.campaign.campaignSettings;
-		} else if ((<CampaignV2Interface>this.currentElement).campaignSettings !== undefined) {
-			this.campaignSettings = (<CampaignV2Interface>this.currentElement).campaignSettings;
+		this.models = [];
+		if (this.campaignSettings === undefined) {
+			this.campaignSettings = CampaignSetting.Agnostic;
+			if (this.currentElement.campaign !== undefined) {
+				this.campaignSettings = this.currentElement.campaign.campaignSettings;
+			} else if ((<CampaignInterface>this.currentElement).campaignSettings !== undefined) {
+				this.campaignSettings = (<CampaignInterface>this.currentElement).campaignSettings;
+			}
 		}
 
 		try {
-			this.model = this.factories.models.create(
-				this.campaignSettings,
-				modelName,
-				this.currentElement,
-				this.source,
-				this.sourcePath,
-				sourceMeta,
-			);
+			const configurations: ControllerMetadataInterface | any = parseYaml(this.source);
+
+			if (configurations.models.header !== undefined){
+				this.models.push(this._generateModel('Header'));
+			}
+
+			/*
+			if (configurations.models.lists !== undefined){
+				Object.keys(configurations.models.lists).filter((v) => isNaN(Number(v))).forEach((name: string) => {
+					if (configurations.models.lists === undefined) return;
+					const list: ControllerMetadataModelElementInterface | undefined = configurations.models.lists[name as keyof ControllerMetadataModelListsInterface];
+					if (list === undefined) return;
+
+					this.models.push(this._generateModel(name, list.relationship));
+				});
+			}
+			*/
 		} catch (e) {
-			new ErrorLog(LogMessageType.Model, 'Cannot create model ' + CampaignSetting[this.campaignSettings] + modelName)
+			//No need to throw an exception... possibly saving before the data is ready
 		}
 	}
 
-	private initialise(
+	private _generateModel(
+		modelName: string,
+		sourceMeta: any|undefined = undefined,
+	): ModelInterface {
+		if (this.campaignSettings === undefined) this._initialiseCampaignSettings();
+
+		if (this.campaignSettings === undefined) throw new Error('');
+
+		return this.factories.models.create(
+			this.campaignSettings,
+			modelName,
+			this.currentElement,
+			this.source,
+			this.sourcePath,
+			sourceMeta,
+		);
+	}
+
+	private _initialiseCampaignSettings(
+	): void {
+		this.campaignSettings = CampaignSetting.Agnostic;
+		if (this.currentElement.campaign !== undefined){
+			this.campaignSettings = this.currentElement.campaign.campaignSettings;
+		} else if ((<CampaignInterface>this.currentElement).campaignSettings !== undefined) {
+			this.campaignSettings = (<CampaignInterface>this.currentElement).campaignSettings;
+		}
+	}
+
+	private _initialise(
 	): boolean {
-		const currentElement:ComponentV2Interface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentV2Interface>(this.sourcePath);
+		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
 		if (currentElement === undefined) return false;
 
 		if (currentElement.version === undefined) {
-			setTimeout(this.render.bind(this), 100);
+			setTimeout(this._render.bind(this), 100);
 			return false;
 		}
 
@@ -85,43 +117,45 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 		this.componentVersion = currentElement.version;
 
-		this.render = debounce(this.render, 250, true) as unknown as () => Promise<void>;
+		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
 		this.currentElement = currentElement;
-		this.generateModel();
+
+		this._generateModels();
 
 		return true;
 	}
 
 	onload() {
-		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
 		this.registerEvent(this.app.workspace.on("rpgmanager:force-refresh-views", (() => {
-			this.render(true);
+			this._render(true);
 		}).bind(this)));
-		this.render();
+		this._render();
 	}
 
-	private async render(
+	private async _render(
 		forceRefresh=false,
 	): Promise<void> {
 		if (this.database === undefined) return;
 
 		if (forceRefresh) this.componentVersion = undefined;
 
-		if (await this.initialise()) {
-
+		if (await this._initialise()) {
 			this.container.empty();
 
-			this.model.generateData()
-				.then((data: ResponseDataInterface) => {
-					data.elements.forEach((element: ResponseDataElementInterface) => {
-						const view: ViewInterface = this.factories.views.create(
-							this.campaignSettings,
-							element.responseType,
-							this.sourcePath,
-						);
-						view.render(this.container, element);
+			for (let modelCounter=0; modelCounter<this.models.length; modelCounter++){
+				this.models[modelCounter].generateData()
+					.then((data: ResponseDataInterface) => {
+						data.elements.forEach((element: ResponseDataElementInterface) => {
+							const view: ViewInterface = this.factories.views.create(
+								this.campaignSettings,
+								element.responseType,
+								this.sourcePath,
+							);
+							view.render(this.container, element);
+						});
 					});
-				});
+			}
 		}
 	}
 }

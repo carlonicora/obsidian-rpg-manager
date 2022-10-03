@@ -2,11 +2,11 @@ import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {ComponentType} from "../../enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../../interfaces/ModalInterface";
-import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
+import {ActInterface} from "../../database/components/interfaces/ActInterface";
 
 export class ActModalPart extends AbstractModalPart {
-	private acts: ActV2Interface[];
-	private allAct:ActV2Interface[];
+	private acts: ActInterface[];
+	private allAct:ActInterface[];
 
 	private actEl: HTMLSelectElement;
 	private actErrorEl: HTMLParagraphElement;
@@ -23,14 +23,14 @@ export class ActModalPart extends AbstractModalPart {
 			this.modal.actId.id = 1;
 		}
 
-		this.allAct = this.database.read<ActV2Interface>(
-			(component: ActV2Interface) =>
+		this.allAct = this.database.read<ActInterface>(
+			(component: ActInterface) =>
 				component.id.type === ComponentType.Act &&
 				component.id.campaignId === this.modal.campaignId.id
 		);
 
-		this.acts = this.database.read<ActV2Interface>(
-			(component: ActV2Interface) =>
+		this.acts = this.database.read<ActInterface>(
+			(component: ActInterface) =>
 				component.id.type === ComponentType.Act &&
 				component.id.campaignId === this.modal.campaignId.id &&
 				component.id.adventureId === this.modal.adventureId?.id
@@ -87,7 +87,7 @@ export class ActModalPart extends AbstractModalPart {
 	private addNewActElements(
 		containerEl: HTMLElement,
 	): void {
-		this.allAct.forEach((component: ActV2Interface) => {
+		this.allAct.forEach((component: ActInterface) => {
 			if (this.modal.actId !== undefined && (component.id.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
 				this.modal.actId.id = ((component.id.actId ?? 0) + 1);
 			}
@@ -112,7 +112,7 @@ export class ActModalPart extends AbstractModalPart {
 			}).selected = true;
 		}
 
-		this.acts.forEach((act: ActV2Interface) => {
+		this.acts.forEach((act: ActInterface) => {
 			const actOptionEl = this.actEl.createEl('option', {
 				text: act.file.basename,
 				value: act.id.actId?.toString(),

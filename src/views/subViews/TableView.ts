@@ -6,8 +6,8 @@ import {IdInterface} from "../../interfaces/IdInterface";
 import {DateContent} from "../../contents/DateContent";
 import {EditorSelector} from "../../helpers/EditorSelector";
 import {setIcon} from "obsidian";
-import {AdventureV2Interface} from "../../_dbV2/components/interfaces/AdventureV2Interface";
-import {ActV2Interface} from "../../_dbV2/components/interfaces/ActV2Interface";
+import {AdventureInterface} from "../../database/components/interfaces/AdventureInterface";
+import {ActInterface} from "../../database/components/interfaces/ActInterface";
 
 export class TableView extends AbstractSubModelView {
 	private tableEl: HTMLTableElement;
@@ -60,7 +60,7 @@ export class TableView extends AbstractSubModelView {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
 							id = this.factories.id.create(ComponentType.Adventure, data.campaignId, data.adventureId);
 							if (id !== undefined) {
-								const previousAdventure = this.database.readSingle<AdventureV2Interface>(
+								const previousAdventure = this.database.readSingle<AdventureInterface>(
 									ComponentType.Adventure,
 									id,
 									data.adventureId - 1,
@@ -68,12 +68,12 @@ export class TableView extends AbstractSubModelView {
 
 								let nextActId = 1;
 								if (previousAdventure != null){
-									const previousAdventureActs = this.database.readList<ActV2Interface>(
+									const previousAdventureActs = this.database.readList<ActInterface>(
 										ComponentType.Act,
 										id,
 										previousAdventure.id.adventureId,
 									);
-									previousAdventureActs.forEach((act: ActV2Interface) => {
+									previousAdventureActs.forEach((act: ActInterface) => {
 										if (nextActId <= (act.id.actId ?? 0)) nextActId = (act.id.actId ?? 0) + 1;
 									});
 								}

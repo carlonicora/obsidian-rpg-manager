@@ -5,7 +5,7 @@ import {IdInterface} from "../interfaces/IdInterface";
 import {AbtStage} from "../enums/AbtStage";
 import {SceneType} from "../enums/SceneType";
 import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {SceneV2Interface} from "../_dbV2/components/interfaces/SceneV2Interface";
+import {SceneInterface} from "../database/components/interfaces/SceneInterface";
 
 export enum ThresholdResult {
 	NotAnalysable,
@@ -26,7 +26,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 	private expectedExcitementDuration=0;
 	private sceneTypesUsed: Map<SceneType, number> = new Map<SceneType, number>();
 	private repetitiveScenes = 0;
-	private scenesCount = 0;
+	public scenesCount = 0;
 
 	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
 		[AbtStage.Need, 35],
@@ -57,7 +57,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 
 		if (scenes.length > 0) {
 			let previousType: SceneType|undefined = undefined;
-			scenes.forEach((scene: SceneV2Interface) => {
+			scenes.forEach((scene: SceneInterface) => {
 				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
 
@@ -79,32 +79,35 @@ export class SceneAnalyser extends AbstractRpgManager {
 	}
 
 	private get scenes(
-	): Array<SceneV2Interface> {
-		if (this.parentId.type === ComponentType.Session) return this.database.read<SceneV2Interface>(
-			(scene: SceneV2Interface) =>
-				scene.id.type === ComponentType.Scene &&
-				scene.id.campaignId === this.parentId.campaignId &&
-				scene.id.sessionId === this.parentId.sessionId,
+	): Array<SceneInterface> {
+		if (this.parentId.type === ComponentType.Session) {
+
+			return this.database.read<SceneInterface>(
+				(scene: SceneInterface) =>
+					scene.id.type === ComponentType.Scene &&
+					scene.id.campaignId === this.parentId.campaignId &&
+					scene.session?.id.sessionId === this.parentId.sessionId,
 			).sort(
-			this.factories.sorter.create<SceneV2Interface>([
-				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.campaignId),
-				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
-				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
-				new SorterComparisonElement((scene: SceneV2Interface) => scene.id.sceneId),
-			]));
+				this.factories.sorter.create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+				]));
+		}
 
 		if (this.parentId.type === ComponentType.Scene) {
 			this.isSingleScene = true;
-			return [this.database.readSingle<SceneV2Interface>(ComponentType.Scene, this.parentId)]
+			return [this.database.readSingle<SceneInterface>(ComponentType.Scene, this.parentId)]
 		}
 
-		return this.database.readList<SceneV2Interface>(ComponentType.Scene, this.parentId)
+		return this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId)
 			.sort(
-				this.factories.sorter.create<SceneV2Interface>([
-					new SorterComparisonElement((scene: SceneV2Interface) => scene.id.campaignId),
-					new SorterComparisonElement((scene: SceneV2Interface) => scene.id.adventureId),
-					new SorterComparisonElement((scene: SceneV2Interface) => scene.id.actId),
-					new SorterComparisonElement((scene: SceneV2Interface) => scene.id.sceneId),
+				this.factories.sorter.create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
 				]));
 	}
 

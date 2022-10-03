@@ -4,7 +4,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {FileFactoryInterface} from "../interfaces/factories/FileFactoryInterface";
 import {IdInterface} from "../interfaces/IdInterface";
-import {CampaignV2Interface} from "../_dbV2/components/interfaces/CampaignV2Interface";
+import {CampaignInterface} from "../database/components/interfaces/CampaignInterface";
 
 const path = require('path');
 
@@ -25,7 +25,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let folder = path.sep;
 
 		try {
-			const campaign: CampaignV2Interface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignV2Interface>(ComponentType.Campaign, campaignId);
+			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
 			settings = campaign.campaignSettings;
 			folder = campaign.folder;
 		} catch (e) {
@@ -97,12 +97,12 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		let folder = '';
 		let settings = CampaignSetting.Agnostic;
 
-		let campaign: CampaignV2Interface|undefined;
+		let campaign: CampaignInterface|undefined;
 		const id = this.factories.id.create(ComponentType.Campaign, campaignId);
 
 		if (id !== undefined){
 			try {
-				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignV2Interface>(ComponentType.Campaign, id);
+				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}

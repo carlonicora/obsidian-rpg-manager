@@ -1,11 +1,15 @@
 import {Pronoun} from "../../enums/Pronoun";
 
 export interface PronounFactoryInterface {
-	create(
-		pronoun: string|null,
-	): Pronoun|null;
+	createPronoun(
+		readablePronoun: string,
+	): Pronoun;
+
+	createReadablePronoun(
+		pronoun: Pronoun,
+	): string;
 
 	readPronoun(
-		pronoun: Pronoun
+		pronoun: Pronoun,
 	): string;
 }

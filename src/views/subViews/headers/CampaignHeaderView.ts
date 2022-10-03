@@ -4,11 +4,11 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {CampaignV2Interface} from "../../../_dbV2/components/interfaces/CampaignV2Interface";
-import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
+import {CampaignInterface} from "../../../database/components/interfaces/CampaignInterface";
+import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: CampaignV2Interface;
+	protected currentElement: CampaignInterface;
 
 	public render(
 		container: HTMLElement,
@@ -66,12 +66,12 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 
 		this.headerInfoEl.appendChild(headlessTable.tableEl as Node);
 
-		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.abt !== undefined){
-			this.addAbtPlot(data?.metadata?.sourceMeta?.abt);
+		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot){
+			this.addAbtPlot(data.currentElement.abt);
 		}
 
-		if (this.settings.usePlotStructures && data?.metadata?.sourceMeta?.storycircle !== undefined){
-			this.addStoryCirclePlot(data?.metadata?.sourceMeta?.storycircle);
+		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot){
+			this.addStoryCirclePlot(data.currentElement.storyCircle);
 		}
 	}
 
@@ -79,7 +79,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		contentEl: HTMLDivElement,
 		type: string,
 		currentComponent: string|undefined,
-		components: Array<ComponentV2Interface>,
+		components: Array<ComponentInterface>,
 	): any|ContentInterface|undefined {
 		const componentSelectorEl = contentEl.createEl("select");
 		componentSelectorEl.id = type;
@@ -89,7 +89,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			value: ""
 		}).selected = true;
 
-		components.forEach((component: ComponentV2Interface) => {
+		components.forEach((component: ComponentInterface) => {
 			const componentOptionEl = componentSelectorEl.createEl("option", {
 				text: component.file.basename,
 				value: component.id.stringValue,
@@ -108,9 +108,9 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			}
 		});
 
-		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentV2Interface>) => {
+		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentInterface>) => {
 			let link: string|undefined = undefined;
-			components.forEach((component: ComponentV2Interface) => {
+			components.forEach((component: ComponentInterface) => {
 				if (currentComponent === component.id.stringValue) link = component.file.path;
 			});
 

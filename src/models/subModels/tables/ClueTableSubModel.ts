@@ -3,9 +3,9 @@ import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../enums/TableField";
-import {ComponentV2Interface} from "../../../_dbV2/interfaces/ComponentV2Interface";
-import {ClueV2Interface} from "../../../_dbV2/components/interfaces/ClueV2Interface";
-import {RelationshipV2Interface} from "../../../_dbV2/relationships/interfaces/RelationshipV2Interface";
+import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
+import {ClueInterface} from "../../../database/components/interfaces/ClueInterface";
+import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
 
 export class ClueTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ClueList;
@@ -22,13 +22,13 @@ export class ClueTableSubModel extends AbstractTableSubModel {
 		return super.generateHeaderElement(fieldType);
 	}
 
-	protected generateContentElement<T extends ComponentV2Interface>(
+	protected generateContentElement<T extends ComponentInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,
-		relationship: RelationshipV2Interface,
+		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
-		const clue: ClueV2Interface = <unknown>component as ClueV2Interface;
+		const clue: ClueInterface = <unknown>component as ClueInterface;
 		switch (fieldType) {
 			case TableField.Found:
 				return this.factories.contents.create((clue.found !== undefined ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Date);

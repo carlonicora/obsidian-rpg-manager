@@ -46,7 +46,7 @@
   width: 100%;
   font-size: 1.6em;
 }
-.rpgm-header-overlay .rpgm-current-date {
+.rpgm-header-overlay .rpgm-current-date-timeline {
   display: inline-block;
   padding-left: 55px;
   text-transform: uppercase;
@@ -55,6 +55,14 @@
   letter-spacing: 2px;
   width: 100%;
   margin-top: 2px;
+}
+.rpgm-header-overlay .rpgm-current-date {
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.6em;
+  letter-spacing: 2px;
+  width: 100%;
 }
 
 .rpgm-timeline {

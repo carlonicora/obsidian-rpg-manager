@@ -30,21 +30,27 @@ import {CodeBlockEditorFactoryInterface} from "./interfaces/factories/CodeBlockE
 import {CodeBlockEditorFactory} from "./factories/CodeBlockEditorFactory";
 import {RunningTimeManagerInterface} from "./interfaces/dataManipulation/RunningTimeManagerInterface";
 import {RunningTimeManager} from "./dataManipulation/RunningTimeManager";
-import {DatabaseV2FactoryInterface} from "./_dbV2/factories/interfaces/DatabaseV2FactoryInterface";
-import {DatabaseV2Factory} from "./_dbV2/factories/DatabaseV2Factory";
+import {DatabaseFactoryInterface} from "./database/factories/interfaces/DatabaseFactoryInterface";
+import {DatabaseFactory} from "./database/factories/DatabaseFactory";
 import {MetadataReaderInterface} from "./interfaces/dataManipulation/MetadataReaderInterface";
 import {MetadataReader} from "./dataManipulation/MetadataReader";
-import {ComponentV2FactoryInterface} from "./_dbV2/factories/interfaces/ComponentV2FactoryInterface";
-import {ComponentV2Factory} from "./_dbV2/factories/ComponentV2Factory";
+import {ComponentFactoryInterface} from "./database/factories/interfaces/ComponentFactoryInterface";
+import {ComponentFactory} from "./database/factories/ComponentFactory";
 import {ComponentTypeFactoryInterface} from "./interfaces/factories/ComponentTypeFactoryInterface";
 import {ComponentTypeFactory} from "./factories/ComponentTypeFactory";
 import {RelationshipTypeFactoryInterface} from "./interfaces/factories/RelationshipTypeFactoryInterface";
 import {RelationshipTypeFactory} from "./factories/RelationshipTypeFactory";
+import {SceneTypeFactoryInterface} from "./interfaces/factories/SceneTypeFactoryInterface";
+import {SceneTypeFactory} from "./factories/SceneTypeFactory";
+import {StoryCircleStageFactoryInterface} from "./interfaces/factories/StoryCircleStageFactoryInterface";
+import {StoryCircleStageFactory} from "./factories/StoryCircleStageFactory";
+import {AbtStageFactoryInterface} from "./interfaces/factories/AbtStageFactoryInterface";
+import {AbtStageFactory} from "./factories/AbtStageFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
 	public contents: ContentFactoryInterface;
-	public component: ComponentV2FactoryInterface;
+	public component: ComponentFactoryInterface;
 	public files: FileFactoryInterface;
 	public modals: ModalFactoryInterface;
 	public models: ModelFactoryInterface;
@@ -52,7 +58,7 @@ export class Factories implements FactoriesInterface{
 	public templates: TemplateFactoryInterface;
 	public views: ViewFactoryInterface;
 	public fetchers: FetcherFactoryInterface;
-	public database: DatabaseV2FactoryInterface;
+	public database: DatabaseFactoryInterface;
 	public id: IdFactoryInterface;
 	public breadcrumb: BreadcrumbFactoryInterface;
 	public frontmatter: FrontmatterFactoryInterface;
@@ -62,13 +68,16 @@ export class Factories implements FactoriesInterface{
 	public metadataReader: MetadataReaderInterface;
 	public componentType: ComponentTypeFactoryInterface;
 	public relationshipType: RelationshipTypeFactoryInterface;
+	public sceneType: SceneTypeFactoryInterface;
+	public storyCircleStage: StoryCircleStageFactoryInterface;
+	public abtStage: AbtStageFactoryInterface;
 
 	constructor(
 		private app: App,
 	) {
 		this.subModels = new SubModelFactory(this.app);
 		this.contents = new ContentFactory(this.app);
-		this.component = new ComponentV2Factory(this.app);
+		this.component = new ComponentFactory(this.app);
 		this.files = new FileFactory(this.app);
 		this.modals = new ModalFactory(this.app);
 		this.models = new ModelFactory(this.app);
@@ -76,7 +85,7 @@ export class Factories implements FactoriesInterface{
 		this.templates = new TemplateFactory(this.app);
 		this.views = new ViewFactory(this.app);
 		this.fetchers = new FetcherFactory(this.app);
-		this.database = new DatabaseV2Factory(this.app);
+		this.database = new DatabaseFactory(this.app);
 		this.id = new IdFactory(this.app);
 		this.breadcrumb = new BreadcrumbFactory(this.app);
 		this.frontmatter = new FrontmatterFactory(this.app);
@@ -86,5 +95,8 @@ export class Factories implements FactoriesInterface{
 		this.metadataReader = new MetadataReader(this.app);
 		this.componentType = new ComponentTypeFactory(this.app);
 		this.relationshipType = new RelationshipTypeFactory(this.app);
+		this.sceneType = new SceneTypeFactory(this.app);
+		this.storyCircleStage = new StoryCircleStageFactory(this.app);
+		this.abtStage = new AbtStageFactory(this.app);
 	}
 }

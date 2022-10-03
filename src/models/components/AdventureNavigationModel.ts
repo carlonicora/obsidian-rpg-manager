@@ -1,10 +1,10 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
 import {AdventureHeaderSubModel} from "../subModels/headers/AdventureHeaderSubModel";
-import {AdventureV2Interface} from "../../_dbV2/components/interfaces/AdventureV2Interface";
+import {AdventureInterface} from "../../database/components/interfaces/AdventureInterface";
 
 export class AdventureNavigationModel extends AbstractModel {
-	protected currentElement: AdventureV2Interface;
+	protected currentElement: AdventureInterface;
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
