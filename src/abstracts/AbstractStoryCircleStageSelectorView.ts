@@ -12,7 +12,6 @@ export abstract class AbstractStoryCircleStageSelectorView extends AbstractHeade
 		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
 
 		if (sceneId !== undefined) {
-
 			const storyCircleSelectorEl = contentEl.createEl("select");
 			storyCircleSelectorEl.createEl("option", {
 				text: "",
@@ -25,16 +24,17 @@ export abstract class AbstractStoryCircleStageSelectorView extends AbstractHeade
 					value: type,
 				});
 
-				if (data.value.content.toString() === type) storyCircleOptionEl.selected = true;
+				if (data.value.content === StoryCircleStage[type as keyof typeof StoryCircleStage]) storyCircleOptionEl.selected = true;
 			});
 
 			storyCircleSelectorEl.addEventListener("change", (e) => {
 				const file: TFile|undefined = data.additionalInformation.file;
 
-				if (file !== undefined){
-					const map: Map<string,string> = new Map<string, string>();
-					map.set('storycircle', storyCircleSelectorEl.value);
-					this.factories.frontmatter.update(file, map);
+				if (file !== undefined) {
+					this.dataManipulators.codeblock.update(
+						'data.storyCircleStage',
+						storyCircleSelectorEl.value.toLowerCase(),
+					);
 				}
 			});
 		}

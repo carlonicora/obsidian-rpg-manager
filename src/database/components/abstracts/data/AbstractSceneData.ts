@@ -19,8 +19,8 @@ export abstract class AbstractSceneData extends AbstractComponent implements Sce
 		return (this.metadata.data?.date ? new Date(this.metadata.data?.date) : undefined);
 	}
 
-	get isActedUpon(): boolean | undefined {
-		return this.metadata.data?.isActedUpon;
+	get isExciting(): boolean {
+		return (this.metadata.data?.isActedUpon !== undefined && this.metadata.data.isActedUpon === true);
 	}
 
 	get sceneType(): SceneType | undefined {
@@ -29,7 +29,7 @@ export abstract class AbstractSceneData extends AbstractComponent implements Sce
 		return this.factories.sceneType.createSceneType(this.metadata.data.sceneType)
 	}
 
-	get storycircleStage(): StoryCircleStage | undefined {
+	get storyCircleStage(): StoryCircleStage | undefined {
 		if (this.metadata.data?.storyCircleStage == undefined || this.metadata.data.storyCircleStage === '') return undefined;
 
 		return this.factories.storyCircleStage.createStoryCircleStage(this.metadata.data.storyCircleStage)

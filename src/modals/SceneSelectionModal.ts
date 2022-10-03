@@ -22,7 +22,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			(scene: SceneInterface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === session.id.campaignId &&
-				(scene.id.sessionId === undefined || scene.id.sessionId === session.id.sessionId),
+				(scene.session === undefined || scene.session?.id.sessionId === session.id.sessionId),
 		).sort(this.factories.sorter.create<SceneInterface>([
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
@@ -48,7 +48,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			checkbox.value = scene.file.path;
 			checkbox.id = scene.file.basename;
 
-			if (scene.id.sessionId === this.session.id.sessionId) checkbox.checked = true;
+			if (scene.session?.id.sessionId === this.session.id.sessionId) checkbox.checked = true;
 
 			this.scenesEls.push(checkbox);
 
@@ -87,10 +87,11 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			const file: TAbstractFile|null = this.app.vault.getAbstractFileByPath(this.scenesEls[index].value);
 
 			if (file != null && file instanceof TFile){
-				const map: Map<string, string> = new Map<string, string>();
-				map.set('session', this.scenesEls[index].checked === true ? (this.session.id.sessionId?.toString() ?? '') : '');
-
-				await this.factories.frontmatter.update(file, map);
+				this.dataManipulators.codeblock.updateInFile(
+					file,
+					'data.sessionId',
+					(this.scenesEls[index].checked === true ? (this.session.id.sessionId ?? '') : ''),
+				)
 			}
 		}
 

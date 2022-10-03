@@ -2,15 +2,13 @@ export interface FileEditorInterface {
 	read(
 	): Promise<boolean>;
 
-	getCodeBloksMetadata(
+	getCodeBlocksMetadata(
 	): Array<any>;
 
 	getCodeBlockMetadata(
-		codeBlockIdentifier: string,
 	): any|undefined;
 
 	maybeReplaceCodeBlockMetadata(
-		codeBlockIdentifier: string,
 		newMetadata: any,
 	): Promise<void>;
 

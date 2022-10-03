@@ -6,10 +6,23 @@ import {SessionInterface} from "./interfaces/SessionInterface";
 import {AdventureInterface} from "./interfaces/AdventureInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {AbstractSceneData} from "./abstracts/data/AbstractSceneData";
+import {SceneType} from "../../enums/SceneType";
 
 export class Scene extends AbstractSceneData implements SceneInterface {
 	protected metadata: SceneMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
+
+	private activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
+		[SceneType.Action, true],
+		[SceneType.Combat, true],
+		[SceneType.Encounter, true],
+		[SceneType.Exposition, false],
+		[SceneType.Investigation, true],
+		[SceneType.Planning, false],
+		[SceneType.Preparation, true],
+		[SceneType.Recap, false],
+		[SceneType.SocialCombat, true],
+	]);
 
 	get act(): ActInterface {
 		const response = this.database.readSingle<ActInterface>(ComponentType.Act, this.id);
@@ -26,30 +39,64 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	}
 
 	get currentDuration(): number {
-		return 0;
+		return (this.metadata.data?.duration !== undefined ? this.metadata.data.duration : 0);
 	}
 
 	get duration(): string {
-		return "";
+		if (this.currentDuration === 0) return '00:00';
+
+		const hours: number = Math.floor(this.currentDuration / (60 * 60));
+		const minutes: number = Math.floor((this.currentDuration - (hours * 60 * 60))/60);
+		return (hours < 10 ? '0' + hours.toString() : hours.toString()) +
+			':' +
+			(minutes < 10 ? '0' + minutes.toString() : minutes.toString());
 	}
 
 	get expectedDuration(): number {
-		return 0;
+		if (this.sceneType === undefined) return 0;
+
+		const previousDurations: Array<number> = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
+		previousDurations.sort((left: number, right: number) => {
+			if (left > right) return +1;
+			if (left < right) return -1;
+			return 0;
+		});
+
+		if (previousDurations.length === 0) return 0;
+		if (previousDurations.length === 1) return previousDurations[0];
+
+		if (previousDurations.length % 2 === 0){
+			const previous = previousDurations[previousDurations.length/2];
+			const next = previousDurations[(previousDurations.length/2)-1];
+			return Math.floor((previous+next)/2);
+		} else {
+			return previousDurations[(previousDurations.length-1)/2];
+		}
 	}
 
 	get isActive(): boolean {
-		return false;
+		if (this.sceneType === undefined) return false;
+
+		return this.activeSceneTypes.get(this.sceneType) ?? false;
 	}
 
 	get isCurrentlyRunning(): boolean {
-		return false;
-	}
+		if (this.metadata.data?.durations === undefined) return false;
 
-	get isExciting(): boolean {
+		for (let index=0; index<this.metadata.data?.durations.length; index++) {
+			if (this.metadata.data?.durations[index].indexOf('-') === -1) return true;
+		}
+
 		return false;
 	}
 
 	get lastStart(): number {
+		if (!this.isCurrentlyRunning || this.metadata.data?.durations === undefined) return 0;
+
+		for (let index=0; index<this.metadata.data?.durations.length; index++) {
+			if (this.metadata.data?.durations[index].indexOf('-') === -1) return +this.metadata.data?.durations[index];
+		}
+
 		return 0;
 	}
 
@@ -61,8 +108,8 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 		return this._adjacentScene(false);
 	}
 
-	get session(): SessionInterface | null {
-		if (this.metadata.data?.sessionId === undefined) return null;
+	get session(): SessionInterface | undefined {
+		if (this.metadata.data?.sessionId === undefined) return undefined;
 
 		const response = this.database.read<SessionInterface>((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&
@@ -70,7 +117,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 			session.id.sessionId === this.metadata.data?.sessionId
 		);
 
-		return response[0] ?? null;
+		return response[0] ?? undefined;
 	}
 
 	private _adjacentScene(

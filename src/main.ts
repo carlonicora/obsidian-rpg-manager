@@ -30,14 +30,8 @@ import {SceneInterface} from "./database/components/interfaces/SceneInterface";
 import {ComponentInterface} from "./database/interfaces/ComponentInterface";
 
 /**
- * @TODO: test header data save
- * 	Act
- * 	Player Character
- * 	Non Player Character
- * 	Scene
- * 	Session
- * 	Campaign
  * @TODO: check list
+ * @TODO: check relationships
  * @TODO: update metadatatemplate
  */
 
@@ -147,59 +141,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 				return;
 			});
-
-
-		/*
-		DatabaseInitialiser.initialise(this.app)
-			.then((database: DatabaseInterface) => {
-				this.database = database;
-				this.factories.runningTimeManager.updateMedianTimes(true);
-
-				this.registerEvents();
-				this.app.workspace.trigger("rpgmanager:refresh-views");
-
-				this.app.workspace.on('active-leaf-change', (leaf: WorkspaceLeaf) => {
-					if (this.factories.runningTimeManager.isTimerRunning) {
-						let isCurrentlyRunningSceneOpen = false;
-						this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
-							if (leaf.view instanceof MarkdownView) {
-								const file = leaf.view?.file;
-								if (file !== undefined) {
-									const component: ComponentInterface|undefined = this.database.readByPath(file.path);
-									if (
-										component !== undefined &&
-										component.id.type === ComponentType.Scene &&
-										this.factories.runningTimeManager.isCurrentlyRunningScene(<SceneInterface>component)
-									) {
-										isCurrentlyRunningSceneOpen = true;
-									}
-								}
-							}
-						});
-
-						if (!isCurrentlyRunningSceneOpen && this.factories.runningTimeManager.currentlyRunningScene !== undefined){
-							this.factories.runningTimeManager.stopScene(this.factories.runningTimeManager.currentlyRunningScene);
-						}
-
-					}
-				});
-
-				console.log(
-					`RPG Manager: ${this.database.recordset.length} outlines and elements have been indexed in ${
-						(Date.now() - reloadStart) / 1000.0
-					}s.`
-				);
-
-				if (this.isVersionUpdated) {
-					this.factories.views.showObsidianView(ViewType.ReleaseNote);
-				} else {
-					this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
-				}
-
-				return;
-			})
-
-		 */
 	}
 
 	async onunload() {

@@ -62,9 +62,10 @@ export class CharacterHeaderView extends AbstractHeaderView {
 			const file: TFile|undefined = this.currentElement.file;
 
 			if (file !== undefined){
-				const map: Map<string,any> = new Map<string, any>();
-				map.set('pronoun', pronounSelectorEl.value);
-				this.factories.frontmatter.update(file, map);
+				this.dataManipulators.codeblock.update(
+					'data.pronoun',
+					pronounSelectorEl.value,
+				)
 			}
 		});
 

@@ -11,7 +11,6 @@ import {IdFactoryInterface} from "./factories/IdFactoryInterface";
 import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface";
 import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterface";
 import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
-import {CodeBlockEditorInterface} from "./dataManipulation/CodeBlockEditorInterface";
 import {RunningTimeManagerInterface} from "./dataManipulation/RunningTimeManagerInterface";
 import {MetadataReaderInterface} from "./dataManipulation/MetadataReaderInterface";
 import {DatabaseFactoryInterface} from "../database/factories/interfaces/DatabaseFactoryInterface";

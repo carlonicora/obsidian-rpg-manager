@@ -269,9 +269,10 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined){
-					const map: Map<string,string> = new Map<string, string>();
-					map.set('abt', abtSelectorEl.value);
-					this.factories.frontmatter.update(file, map);
+					this.dataManipulators.codeblock.update(
+						'data.abtStage',
+						abtSelectorEl.value.toLowerCase(),
+					);
 				}
 			});
 		}

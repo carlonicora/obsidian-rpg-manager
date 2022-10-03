@@ -26,8 +26,6 @@ import {FrontmatterFactoryInterface} from "./interfaces/factories/FrontmatterFac
 import {FrontmatterFactory} from "./factories/FrontmatterFactory";
 import {SorterFactoryInterface} from "./interfaces/factories/SorterFactoryInterface";
 import {SorterFactory} from "./factories/SorterFactory";
-import {CodeBlockEditorInterface} from "./interfaces/dataManipulation/CodeBlockEditorInterface";
-import {CodeBlockEditor} from "./dataManipulation/CodeBlockEditor";
 import {RunningTimeManagerInterface} from "./interfaces/dataManipulation/RunningTimeManagerInterface";
 import {RunningTimeManager} from "./dataManipulation/RunningTimeManager";
 import {DatabaseFactoryInterface} from "./database/factories/interfaces/DatabaseFactoryInterface";

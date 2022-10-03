@@ -26,7 +26,7 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 		return this.fileContent;
 	}
 
-	public getCodeBloksMetadata(
+	public getCodeBlocksMetadata(
 	): Array<any>{
 		const response: Array<any> = [];
 
@@ -38,7 +38,7 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 				if (section.type === 'code') {
 					if (arrayContent[section.position.start.line] === '```RpgManager') {
 						let codeBlockContent = '';
-						for (let index = section.position.start.line + 2; index < arrayContent.length; index++) {
+						for (let index = section.position.start.line + 1; index < arrayContent.length; index++) {
 							if (arrayContent[index] === '```') break;
 							if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
 						}
@@ -52,7 +52,6 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 	}
 
 	public getCodeBlockMetadata(
-		codeBlockIdentifier: string,
 		requestString = false,
 	): any|undefined {
 		const arrayContent: Array<string> = this.arrayContent;
@@ -61,9 +60,9 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 			const section = (this.cachedFile.sections !== undefined ? this.cachedFile.sections[index] : undefined);
 			if (section !== undefined) {
 				if (section.type === 'code'){
-					if (arrayContent[section.position.start.line] === '```RpgManager' && arrayContent[section.position.start.line+1] === codeBlockIdentifier){
+					if (arrayContent[section.position.start.line] === '```RpgManager'){
 						let codeBlockContent = '';
-						for (let index=section.position.start.line+2; index<arrayContent.length; index++){
+						for (let index=section.position.start.line+1; index<arrayContent.length; index++){
 							if (arrayContent[index] === '```') break;
 							codeBlockContent += arrayContent[index] + '\n';
 						}
@@ -81,16 +80,17 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 	}
 
 	public async maybeReplaceCodeBlockMetadata(
-		codeBlockIdentifier: string,
 		newMetadata: any,
 	): Promise<void> {
 		const arrayContent: Array<string> = this.arrayContent;
 
 		const newArrayContent: Array<string> = [];
 		let inCorrectCodeBlock = false;
+		let correctBlockProcessed = false;
 		for (let index=0; index<arrayContent.length; index++) {
 			if (inCorrectCodeBlock){
 				if (arrayContent[index] === '```'){
+					correctBlockProcessed = true;
 					inCorrectCodeBlock = false;
 					const newCodeBlock = stringifyYaml(newMetadata);
 					const newCodeBlockArray = newCodeBlock.split('\n');
@@ -99,9 +99,8 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 				}
 			} else {
 				newArrayContent.push(arrayContent[index]);
-				if (arrayContent[index] === '```RpgManager' && arrayContent[index+1] === codeBlockIdentifier) {
+				if (!correctBlockProcessed && arrayContent[index] === '```RpgManager') {
 					inCorrectCodeBlock = true;
-					newArrayContent.push(arrayContent[index+1]);
 				}
 			}
 		}
@@ -113,6 +112,8 @@ export class FileEditor extends AbstractRpgManager implements FileEditorInterfac
 			await this.database.onSave(this.file)
 				.then(() => {
 					this.factories.runningTimeManager.updateMedianTimes();
+					this.database.readByPath(this.file.path)?.touch();
+					this.app.workspace.trigger("rpgmanager:force-refresh-views");``
 				});
 		}
 	}

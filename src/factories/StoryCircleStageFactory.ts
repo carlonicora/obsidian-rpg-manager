@@ -13,7 +13,7 @@ export class StoryCircleStageFactory extends AbstractFactory implements StoryCir
 		readableStoryCircleStage: string,
 	): StoryCircleStage {
 		readableStoryCircleStage = readableStoryCircleStage[0].toUpperCase() + readableStoryCircleStage.substring(1).toLowerCase();
-		return StoryCircleStage[readableStoryCircleStage.toLowerCase() as keyof typeof StoryCircleStage];
+		return StoryCircleStage[readableStoryCircleStage as keyof typeof StoryCircleStage];
 	}
 
 }

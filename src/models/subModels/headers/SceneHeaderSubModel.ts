@@ -6,7 +6,6 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../enums/HeaderResponseType";
 import {StoryCircleStage} from "../../../enums/StoryCircleStage";
-import {SceneType} from "../../../enums/SceneType";
 import {ResponseType} from "../../../enums/ResponseType";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
 import {SorterType} from "../../../enums/SorterType";
@@ -61,14 +60,14 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		}
 
 		if (this.settings.usePlotStructures) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (this.data.storycircleStage !== undefined ? StoryCircleStage[this.data.storycircleStage] : ''), HeaderResponseType.StoryCircleSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (this.data.storyCircleStage !== undefined ? this.data.storyCircleStage : ''), HeaderResponseType.StoryCircleSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
 
 		}
 		if (this.settings.useSceneAnalyser) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Type', (this.data.sceneType !== undefined ? SceneType[this.data.sceneType] : ''), HeaderResponseType.SceneTypeSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Type', (this.data.sceneType !== undefined ?this.data.sceneType : ''), HeaderResponseType.SceneTypeSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
@@ -80,10 +79,10 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 			if (this.data.isCurrentlyRunning || this.data.currentDuration > 0) response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Duration', '', HeaderResponseType.SceneRunTime));
 		}
 
-		if (this.settings.useSceneAnalyser && this.data.sceneType !== undefined && this.data.storycircleStage !== undefined) {
+		if (this.settings.useSceneAnalyser && this.data.sceneType !== undefined && this.data.storyCircleStage !== undefined) {
 			let stage: AbtStage|undefined=undefined;
 
-			switch (this.data.storycircleStage){
+			switch (this.data.storyCircleStage){
 				case StoryCircleStage.You:
 				case StoryCircleStage.Need:
 					stage = AbtStage.Need;

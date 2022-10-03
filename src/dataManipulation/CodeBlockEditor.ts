@@ -10,10 +10,10 @@ export class CodeBlockEditor extends AbstractFactory implements CodeBlockEditorI
 		const fileEditor = new FileEditor(this.app, file);
 		if (!await fileEditor.read()) return;
 
-		const metadata = await fileEditor.getCodeBlockMetadata('sceneNavigation');
-		if (metadata === undefined || metadata.durations === undefined) return;
+		const metadata = await fileEditor.getCodeBlockMetadata();
+		if (metadata === undefined || metadata.data.durations === undefined) return;
 
-		const durations: Array<string> = metadata.durations;
+		const durations: Array<string> = metadata.data.durations;
 		let endDurationAdded=false;
 
 		for (let index=0; index<durations.length; index++){
@@ -24,18 +24,18 @@ export class CodeBlockEditor extends AbstractFactory implements CodeBlockEditorI
 
 				durations[index] = durations[index] + '-' + end.toString();
 
-				if (metadata.duration === undefined){
-					metadata.duration = 0;
+				if (metadata.data.duration === undefined){
+					metadata.data.duration = 0;
 				}
 
-				metadata.duration += (end - start);
+				metadata.data.duration += (end - start);
 
 				break;
 			}
 		}
 
 		if (endDurationAdded) {
-			await fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
+			await fileEditor.maybeReplaceCodeBlockMetadata(metadata);
 		}
 	}
 
@@ -45,13 +45,15 @@ export class CodeBlockEditor extends AbstractFactory implements CodeBlockEditorI
 		const fileEditor = new FileEditor(this.app, file);
 		if (!await fileEditor.read()) return;
 
-		let metadata = await fileEditor.getCodeBlockMetadata('sceneNavigation');
+		let metadata = await fileEditor.getCodeBlockMetadata();
 		if (metadata === undefined) {
-			metadata = {};
+			metadata = {
+				data: {}
+			};
 		}
 
-		if (metadata.durations === undefined) metadata.durations = [];
-		const durations: Array<string> = metadata.durations;
+		if (metadata.data.durations === undefined) metadata.data.durations = [];
+		const durations: Array<string> = metadata.data.durations;
 
 		for (let index = 0; index < durations.length; index++) {
 			if (durations[index].indexOf('-') === -1) {
@@ -60,7 +62,26 @@ export class CodeBlockEditor extends AbstractFactory implements CodeBlockEditorI
 		}
 
 		durations.push(Math.floor(Date.now()/1000).toString());
-		await fileEditor.maybeReplaceCodeBlockMetadata('sceneNavigation', metadata);
+		await fileEditor.maybeReplaceCodeBlockMetadata(metadata);
+	}
+
+	public async updateInFile(
+		file: TFile,
+		identifier: string,
+		value: string|boolean|number|undefined,
+	): Promise<void> {
+		const fileEditor = new FileEditor(this.app, file);
+		if (!await fileEditor.read()) return;
+
+		const metadata = await fileEditor.getCodeBlockMetadata();
+
+		this.updateYamlElement(
+			metadata,
+			identifier.split('.'),
+			value,
+		);
+
+		await fileEditor.maybeReplaceCodeBlockMetadata(metadata);
 	}
 
 	public async update(
@@ -97,7 +118,13 @@ export class CodeBlockEditor extends AbstractFactory implements CodeBlockEditorI
 						value,
 					);
 
-					await editor.replaceRange(stringifyYaml(yaml), start, end);
+					editor.replaceRange(stringifyYaml(yaml), start, end)
+					this.app.vault.modify(file, editor.getValue())
+						.then(() => {
+							this.database.readByPath(file.path)?.touch()
+							this.app.workspace.trigger("rpgmanager:force-refresh-views");
+						});
+
 
 					break;
 				}

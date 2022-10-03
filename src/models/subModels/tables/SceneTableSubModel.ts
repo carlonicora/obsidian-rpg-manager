@@ -67,7 +67,7 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;
 
-				return this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storycircleStage});
+				return this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storyCircleStage});
 				break;
 		}
 

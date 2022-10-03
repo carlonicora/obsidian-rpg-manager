@@ -12,7 +12,8 @@ export class SceneTypeFactory extends AbstractFactory implements SceneTypeFactor
 	createSceneType(
 		readableContentType: string,
 	): SceneType {
-		readableContentType = readableContentType.toLowerCase().replaceAll('combat', 'Combat');
+		readableContentType = readableContentType[0].toUpperCase() + readableContentType.substring(1).toLowerCase();
+		readableContentType = readableContentType.replaceAll('combat', 'Combat');
 		return SceneType[readableContentType as keyof typeof SceneType];
 	}
 

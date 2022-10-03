@@ -44,7 +44,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Adventure',
 				this.addCurrentComponentSelector.bind(this),
-				['adventure', this.currentElement.currentAdventure?.id.adventureId, data.metadata?.sourceMeta?.adventures]
+				['adventure', this.currentElement.currentAdventureId, data.metadata?.sourceMeta?.adventures]
 			);
 		}
 
@@ -52,7 +52,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Act',
 				this.addCurrentComponentSelector.bind(this),
-				['act', this.currentElement.currentAct?.id.actId, data.metadata?.sourceMeta?.acts]
+				['act', this.currentElement.currentActId, data.metadata?.sourceMeta?.acts]
 			);
 		}
 
@@ -60,7 +60,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Session',
 				this.addCurrentComponentSelector.bind(this),
-				['session', this.currentElement.currentSession?.id.sessionId, data.metadata?.sourceMeta?.sessions]
+				['session', this.currentElement.currentSessionId, data.metadata?.sourceMeta?.sessions]
 			);
 		}
 
@@ -104,14 +104,14 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			const file: TFile|undefined = this.currentElement.file;
 
 			if (file !== undefined){
-				this.dataManipulators.codeblock.update('data.current' + type[0].toUpperCase() + type.substring(1).toLowerCase() + 'Id', componentSelectorEl.value)
+				this.dataManipulators.codeblock.update('data.current' + type[0].toUpperCase() + type.substring(1).toLowerCase() + 'Id', componentSelectorEl.value);
 			}
 		});
 
 		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentInterface>) => {
 			let link: string|undefined = undefined;
 			components.forEach((component: ComponentInterface) => {
-				if (currentComponent === component.id.stringValue) link = component.file.path;
+				if (currentComponent === component.id.stringValue) link = component.link;
 			});
 
 			if (link !== undefined) {

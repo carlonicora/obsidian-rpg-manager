@@ -6,6 +6,12 @@ export interface CodeBlockEditorInterface {
 		value: string|boolean|number|undefined,
 	): Promise<void>;
 
+	updateInFile(
+		file: TFile,
+		identifier: string,
+		value: string|boolean|number|undefined,
+	): Promise<void>
+
 	stopCurrentDuration(
 		file: TFile,
 	): Promise<void>;

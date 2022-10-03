@@ -140,9 +140,10 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined){
-					const map: Map<string,any> = new Map<string, any>();
-					map.set('isActedUpon', sceneExcitementSelectorEl.checked);
-					this.factories.frontmatter.update(file, map);
+					this.dataManipulators.codeblock.update(
+						'data.isActedUpon',
+						sceneExcitementSelectorEl.checked,
+					);
 				}
 			});
 		}
@@ -168,16 +169,17 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					value: type,
 				});
 
-				if (data.value.content.toString() === type) sceneTypeOptionEl.selected = true;
+				if (data.value.content !== undefined && data.value.content === SceneType[type as keyof typeof SceneType]) sceneTypeOptionEl.selected = true;
 			});
 
 			sceneTypeSelectorEl.addEventListener("change", (e) => {
-				const file: TFile | undefined = data.additionalInformation.file;
+				const file: TFile|undefined = data.additionalInformation.file;
 
-				if (file !== undefined) {
-					const map: Map<string, string> = new Map<string, string>();
-					map.set('sceneType', sceneTypeSelectorEl.value);
-					this.factories.frontmatter.update(file, map);
+				if (file !== undefined){
+					this.dataManipulators.codeblock.update(
+						'data.sceneType',
+						this.factories.sceneType.createReadableSceneType(SceneType[sceneTypeSelectorEl.value as keyof typeof SceneType]),
+					);
 				}
 			});
 
@@ -235,7 +237,14 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			});
 
 			sessionSelectorEl.addEventListener("change", (e) => {
-				this.selectSession(data, sessionSelectorEl.value);
+				const file: TFile|undefined = data.additionalInformation.file;
+
+				if (file !== undefined){
+					this.dataManipulators.codeblock.update(
+						'data.sessionId',
+						+sessionSelectorEl.value,
+					);
+				}
 			});
 		}
 
