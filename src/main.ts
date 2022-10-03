@@ -31,6 +31,12 @@ import {ComponentInterface} from "./database/interfaces/ComponentInterface";
 
 /**
  * @TODO: test header data save
+ * 	Act
+ * 	Player Character
+ * 	Non Player Character
+ * 	Scene
+ * 	Session
+ * 	Campaign
  * @TODO: check list
  * @TODO: update metadatatemplate
  */

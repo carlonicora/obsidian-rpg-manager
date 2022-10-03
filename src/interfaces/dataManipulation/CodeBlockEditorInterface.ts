@@ -1,8 +1,7 @@
 import {TFile} from "obsidian";
 
-export interface CodeBlockEditorFactoryInterface {
+export interface CodeBlockEditorInterface {
 	update(
-		codeBlockName: string,
 		identifier: string,
 		value: string|boolean|number|undefined,
 	): Promise<void>;

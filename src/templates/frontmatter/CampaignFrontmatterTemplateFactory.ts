@@ -39,6 +39,9 @@ export class CampaignFrontmatterTemplateFactory extends AbstractComponentFrontma
 				synopsis: '',
 				image: '',
 				complete: false,
+				currentAdventureId: '',
+				currentActId: '',
+				currentSessionId: ''
 			}
 		};
 		return this.generateRpgManagerCodeBlock(

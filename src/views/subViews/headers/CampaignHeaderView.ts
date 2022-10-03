@@ -44,7 +44,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Adventure',
 				this.addCurrentComponentSelector.bind(this),
-				['adventure', data.metadata?.sourceMeta?.current?.adventure, data.metadata?.sourceMeta?.adventures]
+				['adventure', this.currentElement.currentAdventure?.id.adventureId, data.metadata?.sourceMeta?.adventures]
 			);
 		}
 
@@ -52,7 +52,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Act',
 				this.addCurrentComponentSelector.bind(this),
-				['act', data.metadata?.sourceMeta?.current?.act, data.metadata?.sourceMeta?.acts]
+				['act', this.currentElement.currentAct?.id.actId, data.metadata?.sourceMeta?.acts]
 			);
 		}
 
@@ -60,7 +60,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Session',
 				this.addCurrentComponentSelector.bind(this),
-				['session', data.metadata?.sourceMeta?.current?.session, data.metadata?.sourceMeta?.sessions]
+				['session', this.currentElement.currentSession?.id.sessionId, data.metadata?.sourceMeta?.sessions]
 			);
 		}
 
@@ -104,7 +104,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			const file: TFile|undefined = this.currentElement.file;
 
 			if (file !== undefined){
-				this.factories.codeblock.update('campaignNavigation', 'current.' + type, componentSelectorEl.value)
+				this.dataManipulators.codeblock.update('data.current' + type[0].toUpperCase() + type.substring(1).toLowerCase() + 'Id', componentSelectorEl.value)
 			}
 		});
 

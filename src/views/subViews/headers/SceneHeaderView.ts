@@ -231,7 +231,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					value: session.id.sessionId?.toString(),
 				});
 
-				if (data.value.content.toString() === session.id.sessionId?.toString()) sessionOptionEl.selected = true;
+				if (data.value.content !== undefined && data.value.content.toString() === session.id.sessionId?.toString()) sessionOptionEl.selected = true;
 			});
 
 			sessionSelectorEl.addEventListener("change", (e) => {
@@ -245,7 +245,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			if (sceneId !== undefined) {
 				const sessions = data.additionalInformation.sessions;
 				sessions.forEach((session: SessionInterface) => {
-					if (data.value.content.toString() === session.id.sessionId?.toString()) {
+					if (data.value.content !== undefined && data.value.content.toString() === session.id.sessionId?.toString()) {
 						MarkdownRenderer.renderMarkdown(
 							session.link,
 							contentEl,

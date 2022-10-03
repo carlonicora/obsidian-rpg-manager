@@ -45,7 +45,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 		if (this.currentlyRunningScene !== undefined) await this.stopScene(this.currentlyRunningScene);
 		this.currentlyRunningScene = scene;
 
-		await this.factories.codeblock.startNewDuration(this.currentlyRunningScene.file);
+		await this.dataManipulators.codeblock.startNewDuration(this.currentlyRunningScene.file);
 	}
 
 	public async stopScene(
@@ -53,7 +53,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	): Promise<void> {
 		if (this.currentlyRunningScene === undefined) return;
 
-		await this.factories.codeblock.stopCurrentDuration(this.currentlyRunningScene.file)
+		await this.dataManipulators.codeblock.stopCurrentDuration(this.currentlyRunningScene.file)
 		this.currentlyRunningScene = undefined;
 	}
 

@@ -11,7 +11,7 @@ import {IdFactoryInterface} from "./factories/IdFactoryInterface";
 import {BreadcrumbFactoryInterface} from "./factories/BreadcrumbFactoryInterface";
 import {FrontmatterFactoryInterface} from "./factories/FrontmatterFactoryInterface";
 import {SorterFactoryInterface} from "./factories/SorterFactoryInterface";
-import {CodeBlockEditorFactoryInterface} from "./factories/CodeBlockEditorFactoryInterface";
+import {CodeBlockEditorInterface} from "./dataManipulation/CodeBlockEditorInterface";
 import {RunningTimeManagerInterface} from "./dataManipulation/RunningTimeManagerInterface";
 import {MetadataReaderInterface} from "./dataManipulation/MetadataReaderInterface";
 import {DatabaseFactoryInterface} from "../database/factories/interfaces/DatabaseFactoryInterface";
@@ -38,7 +38,6 @@ export interface FactoriesInterface {
 	breadcrumb: BreadcrumbFactoryInterface;
 	frontmatter: FrontmatterFactoryInterface;
 	sorter: SorterFactoryInterface;
-	codeblock: CodeBlockEditorFactoryInterface;
 	runningTimeManager: RunningTimeManagerInterface;
 	metadataReader: MetadataReaderInterface;
 	componentType: ComponentTypeFactoryInterface;

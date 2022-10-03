@@ -26,8 +26,8 @@ import {FrontmatterFactoryInterface} from "./interfaces/factories/FrontmatterFac
 import {FrontmatterFactory} from "./factories/FrontmatterFactory";
 import {SorterFactoryInterface} from "./interfaces/factories/SorterFactoryInterface";
 import {SorterFactory} from "./factories/SorterFactory";
-import {CodeBlockEditorFactoryInterface} from "./interfaces/factories/CodeBlockEditorFactoryInterface";
-import {CodeBlockEditorFactory} from "./factories/CodeBlockEditorFactory";
+import {CodeBlockEditorInterface} from "./interfaces/dataManipulation/CodeBlockEditorInterface";
+import {CodeBlockEditor} from "./dataManipulation/CodeBlockEditor";
 import {RunningTimeManagerInterface} from "./interfaces/dataManipulation/RunningTimeManagerInterface";
 import {RunningTimeManager} from "./dataManipulation/RunningTimeManager";
 import {DatabaseFactoryInterface} from "./database/factories/interfaces/DatabaseFactoryInterface";
@@ -63,7 +63,6 @@ export class Factories implements FactoriesInterface{
 	public breadcrumb: BreadcrumbFactoryInterface;
 	public frontmatter: FrontmatterFactoryInterface;
 	public sorter: SorterFactoryInterface;
-	public codeblock: CodeBlockEditorFactoryInterface;
 	public runningTimeManager: RunningTimeManagerInterface;
 	public metadataReader: MetadataReaderInterface;
 	public componentType: ComponentTypeFactoryInterface;
@@ -90,7 +89,6 @@ export class Factories implements FactoriesInterface{
 		this.breadcrumb = new BreadcrumbFactory(this.app);
 		this.frontmatter = new FrontmatterFactory(this.app);
 		this.sorter = new SorterFactory(this.app);
-		this.codeblock = new CodeBlockEditorFactory(this.app);
 		this.runningTimeManager = new RunningTimeManager(this.app);
 		this.metadataReader = new MetadataReader(this.app);
 		this.componentType = new ComponentTypeFactory(this.app);

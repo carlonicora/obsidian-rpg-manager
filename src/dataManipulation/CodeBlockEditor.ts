@@ -1,9 +1,9 @@
 import {AbstractFactory} from "../abstracts/AbstractFactory";
-import {CodeBlockEditorFactoryInterface} from "../interfaces/factories/CodeBlockEditorFactoryInterface";
+import {CodeBlockEditorInterface} from "../interfaces/dataManipulation/CodeBlockEditorInterface";
 import {MarkdownView, parseYaml, stringifyYaml, TFile} from "obsidian";
-import {FileEditor} from "../dataManipulation/FileEditor";
+import {FileEditor} from "./FileEditor";
 
-export class CodeBlockEditorFactory extends AbstractFactory implements CodeBlockEditorFactoryInterface {
+export class CodeBlockEditor extends AbstractFactory implements CodeBlockEditorInterface {
 	public async stopCurrentDuration(
 		file: TFile,
 	): Promise<void> {
@@ -64,7 +64,6 @@ export class CodeBlockEditorFactory extends AbstractFactory implements CodeBlock
 	}
 
 	public async update(
-		codeBlockName: string,
 		identifier: string,
 		value: string|boolean|number|undefined,
 	): Promise<void> {
@@ -80,12 +79,11 @@ export class CodeBlockEditorFactory extends AbstractFactory implements CodeBlock
 
 				if (
 					stringYaml !== undefined &&
-					editor.getLine(stringYaml.position.start.line) === '```RpgManager' &&
-					editor.getLine(stringYaml.position.start.line+1).lastIndexOf(codeBlockName) !== -1
+					editor.getLine(stringYaml.position.start.line) === '```RpgManager'
 				){
 					if (stringYaml === undefined) continue;
 
-					const start = {line: stringYaml.position.start.line +2, ch: 0};
+					const start = {line: stringYaml.position.start.line +1, ch: 0};
 					const end = {line: stringYaml.position.end.line, ch: 0};
 					const range = editor.getRange(
 						start,
