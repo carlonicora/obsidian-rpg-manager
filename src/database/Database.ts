@@ -236,12 +236,14 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 			await this.replaceFileContent(file, oldBaseName, newBaseName);
 			await component.readMetadata();
 
+			DatabaseInitialiser.reinitialiseRelationships(this)
+				.then(() => {
+					if (this.app.workspace.getActiveFile()?.path === file.path){
+						this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
+					}
 
-			if (this.app.workspace.getActiveFile()?.path === file.path){
-				this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
-			}
-
-			this.app.workspace.trigger("rpgmanager:refresh-views");
+					this.app.workspace.trigger("rpgmanager:refresh-views");
+				});
 		}
 	}
 

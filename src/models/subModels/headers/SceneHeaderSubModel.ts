@@ -53,7 +53,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		}
 
 		if (sessions.length > 0) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.id.sessionId === undefined ? '' : this.data.id.sessionId.toString()), HeaderResponseType.SessionSelection, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.session === undefined ? '' : this.data.session?.id?.sessionId?.toString()), HeaderResponseType.SessionSelection, {
 				sceneId: this.data.id,
 				file: this.data.file,
 				sessions: sessions

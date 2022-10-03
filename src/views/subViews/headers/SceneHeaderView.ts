@@ -224,6 +224,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				text: "",
 				value: ""
 			}).selected = true;
+
 			sessions.forEach((session: SessionInterface) => {
 				const sessionOptionEl = sessionSelectorEl.createEl("option", {
 					text: session.file.basename,
@@ -246,7 +247,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				sessions.forEach((session: SessionInterface) => {
 					if (data.value.content.toString() === session.id.sessionId?.toString()) {
 						MarkdownRenderer.renderMarkdown(
-							session.file.path,
+							session.link,
 							contentEl,
 							'',
 							null as unknown as Component,

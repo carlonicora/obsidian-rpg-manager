@@ -6,7 +6,7 @@ import {CharacterMetadataInterface} from "../../../interfaces/metadata/component
 export class AbstractCharacterData extends AbstractComponent implements CharacterDataInterface {
 	protected metadata: CharacterMetadataInterface;
 
-		public get death(): Date | undefined {
+	public get death(): Date | undefined {
 		return (this.metadata.data?.death ? new Date(this.metadata.data.death) : undefined);
 	}
 
@@ -19,7 +19,7 @@ export class AbstractCharacterData extends AbstractComponent implements Characte
 	}
 
 	public get pronoun(): Pronoun | undefined {
-		if (this.metadata.data?.pronoun === undefined) return undefined;
+		if (this.metadata.data?.pronoun == null || this.metadata.data?.pronoun === '') return undefined;
 
 		return this.factories.pronouns.createPronoun(this.metadata.data.pronoun);
 	}

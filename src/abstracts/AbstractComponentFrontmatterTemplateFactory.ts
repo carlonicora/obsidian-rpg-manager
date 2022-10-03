@@ -3,19 +3,19 @@ import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../helpers/FileContentManager";
 import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/ComponentNotesTemplateFactoryInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {CampaignNotesTemplateFactory} from "../factories/templates/notes/CampaignNotesTemplateFactory";
-import {AdventureNotesTemplateFactory} from "../factories/templates/notes/AdventureNotesTemplateFactory";
-import {CharacterNotesTemplateFactory} from "../factories/templates/notes/CharacterNotesTemplateFactory";
-import {NonPlayerCharacterNotesTemplateFactory} from "../factories/templates/notes/NonPlayerCharacterNotesTemplateFactory";
-import {ClueNotesTemplateFactory} from "../factories/templates/notes/ClueNotesTemplateFactory";
-import {LocationNotesTemplateFactory} from "../factories/templates/notes/LocationNotesTemplateFactory";
-import {FactionNotesTemplateFactory} from "../factories/templates/notes/FactionNotesTemplateFactory";
-import {EventNotesTemplateFactory} from "../factories/templates/notes/EventNotesTemplateFactory";
+import {CampaignNotesTemplateFactory} from "../templates/notes/CampaignNotesTemplateFactory";
+import {AdventureNotesTemplateFactory} from "../templates/notes/AdventureNotesTemplateFactory";
+import {CharacterNotesTemplateFactory} from "../templates/notes/CharacterNotesTemplateFactory";
+import {NonPlayerCharacterNotesTemplateFactory} from "../templates/notes/NonPlayerCharacterNotesTemplateFactory";
+import {ClueNotesTemplateFactory} from "../templates/notes/ClueNotesTemplateFactory";
+import {LocationNotesTemplateFactory} from "../templates/notes/LocationNotesTemplateFactory";
+import {FactionNotesTemplateFactory} from "../templates/notes/FactionNotesTemplateFactory";
+import {EventNotesTemplateFactory} from "../templates/notes/EventNotesTemplateFactory";
 import {AbstractRpgManager} from "./AbstractRpgManager";
-import {ActNotesTemplateFactory} from "../factories/templates/notes/ActNotesTemplateFactory";
-import {SceneNotesTemplateFactory} from "../factories/templates/notes/SceneNotesTemplateFactory";
-import {SessionNotesTemplateFactory} from "../factories/templates/notes/SessionNotesTemplateFactory";
-import {SubplotNotesTemplateFactory} from "../factories/templates/notes/SubplotNotesTemplateFactory";
+import {ActNotesTemplateFactory} from "../templates/notes/ActNotesTemplateFactory";
+import {SceneNotesTemplateFactory} from "../templates/notes/SceneNotesTemplateFactory";
+import {SessionNotesTemplateFactory} from "../templates/notes/SessionNotesTemplateFactory";
+import {SubplotNotesTemplateFactory} from "../templates/notes/SubplotNotesTemplateFactory";
 
 export abstract class AbstractComponentFrontmatterTemplateFactory extends AbstractRpgManager implements ComponentFrontmatterTemplateFactoryInterface {
 	protected internalTemplate: ComponentNotesTemplateFactoryInterface|undefined;
@@ -92,7 +92,6 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 		const frontmatter = {
 			alias: [],
 			tags: [],
-			completed: false,
 		};
 
 		this.addFrontmatterData(frontmatter);
@@ -197,7 +196,6 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 	protected addFrontmatterData(
 		frontmatter: any,
 	): any {
-		frontmatter.synopsis = "";
 	}
 
 	protected generateInitialCodeBlock(
@@ -211,11 +209,9 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 	}
 
 	protected generateRpgManagerCodeBlock(
-		model: string,
 		additionalInformation: any|undefined = undefined,
 	): string {
 		let response = '```RpgManager\n';
-		response += model + '\n';
 
 		if (additionalInformation !== undefined){
 			response += stringifyYaml(additionalInformation);
@@ -223,6 +219,6 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 
 		response += '```\n';
 
-		return response;
+		return response.replaceAll("''", "").replaceAll('""', '');
 	}
 }

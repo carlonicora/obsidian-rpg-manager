@@ -1,3 +1,5 @@
 import {ComponentDataMetadataInterface} from "./ComponentDataMetadataInterface";
 
-export type AdventureDataMetadataInterface = ComponentDataMetadataInterface;
+export interface AdventureDataMetadataInterface extends ComponentDataMetadataInterface {
+
+}

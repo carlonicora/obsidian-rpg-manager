@@ -1,3 +1,6 @@
 import {ComponentMetadataInterface} from "./ComponentMetadataInterface";
+import {FactionDataMetadataInterface} from "../data/FactionDataMetadataInterface";
 
-export type FactionMetadataInterface = ComponentMetadataInterface;
+export interface FactionMetadataInterface extends ComponentMetadataInterface {
+	data?: FactionDataMetadataInterface;
+}

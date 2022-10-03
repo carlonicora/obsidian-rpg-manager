@@ -1,7 +1,7 @@
 import {RelationshipMetadataInterface} from "../RelationshipMetadataInterface";
-import {ComponentDataInterface} from "../../../components/interfaces/ComponentDataInterface";
+import {ComponentDataMetadataInterface} from "../data/ComponentDataMetadataInterface";
 
 export interface ComponentMetadataInterface {
-	data?: ComponentDataInterface|any;
+	data?: ComponentDataMetadataInterface|any;
 	relationships?: Array<RelationshipMetadataInterface> | undefined;
 }

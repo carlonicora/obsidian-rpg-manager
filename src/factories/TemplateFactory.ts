@@ -1,22 +1,22 @@
-import {CampaignFrontmatterTemplateFactory} from "./templates/frontmatter/CampaignFrontmatterTemplateFactory";
-import {AdventureFrontmatterTemplateFactory} from "./templates/frontmatter/AdventureFrontmatterTemplateFactory";
-import {ActFrontmatterTemplateFactory} from "./templates/frontmatter/ActFrontmatterTemplateFactory";
-import {SceneFrontmatterTemplateFactory} from "./templates/frontmatter/SceneFrontmatterTemplateFactory";
-import {CharacterFrontmatterTemplateFactory} from "./templates/frontmatter/CharacterFrontmatterTemplateFactory";
-import {NonPlayerCharacterFrontmatterTemplateFactory} from "./templates/frontmatter/NonPlayerCharacterFrontmatterTemplateFactory";
-import {LocationFrontmatterTemplateFactory} from "./templates/frontmatter/LocationFrontmatterTemplateFactory";
-import {EventFrontmatterTemplateFactory} from "./templates/frontmatter/EventFrontmatterTemplateFactory";
-import {ClueFrontmatterTemplateFactory} from "./templates/frontmatter/ClueFrontmatterTemplateFactory";
-import {FactionFrontmatterTemplateFactory} from "./templates/frontmatter/FactionFrontmatterTemplateFactory";
-import {MusicFrontmatterTemplateFactory} from "./templates/frontmatter/MusicFrontmatterTemplateFactory";
+import {CampaignFrontmatterTemplateFactory} from "../templates/frontmatter/CampaignFrontmatterTemplateFactory";
+import {AdventureFrontmatterTemplateFactory} from "../templates/frontmatter/AdventureFrontmatterTemplateFactory";
+import {ActFrontmatterTemplateFactory} from "../templates/frontmatter/ActFrontmatterTemplateFactory";
+import {SceneFrontmatterTemplateFactory} from "../templates/frontmatter/SceneFrontmatterTemplateFactory";
+import {CharacterFrontmatterTemplateFactory} from "../templates/frontmatter/CharacterFrontmatterTemplateFactory";
+import {NonPlayerCharacterFrontmatterTemplateFactory} from "../templates/frontmatter/NonPlayerCharacterFrontmatterTemplateFactory";
+import {LocationFrontmatterTemplateFactory} from "../templates/frontmatter/LocationFrontmatterTemplateFactory";
+import {EventFrontmatterTemplateFactory} from "../templates/frontmatter/EventFrontmatterTemplateFactory";
+import {ClueFrontmatterTemplateFactory} from "../templates/frontmatter/ClueFrontmatterTemplateFactory";
+import {FactionFrontmatterTemplateFactory} from "../templates/frontmatter/FactionFrontmatterTemplateFactory";
+import {MusicFrontmatterTemplateFactory} from "../templates/frontmatter/MusicFrontmatterTemplateFactory";
 import {AbstractFactory} from "../abstracts/AbstractFactory";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../enums/ComponentType";
 import {App} from "obsidian";
 import {TemplateFactoryInterface} from "../interfaces/factories/TemplateFactoryInterface";
 import {ComponentFrontmatterTemplateFactoryInterface} from "../interfaces/factories/ComponentFrontmatterTemplateFactoryInterface";
-import {SessionFrontmatterTemplateFactory} from "./templates/frontmatter/SessionFrontmatterTemplateFactory";
-import {SubplotFrontmatterTemplateFactory} from "./templates/frontmatter/SubplotFrontmatterTemplateFactory";
+import {SessionFrontmatterTemplateFactory} from "../templates/frontmatter/SessionFrontmatterTemplateFactory";
+import {SubplotFrontmatterTemplateFactory} from "../templates/frontmatter/SubplotFrontmatterTemplateFactory";
 
 export class TemplateFactory extends AbstractFactory implements TemplateFactoryInterface{
 	private templateTypeMap: Map<string,any>;

@@ -24,13 +24,13 @@ export abstract class AbstractSceneData extends AbstractComponent implements Sce
 	}
 
 	get sceneType(): SceneType | undefined {
-		if (this.metadata.data?.sceneType === undefined) return undefined;
+		if (this.metadata.data?.sceneType == undefined || this.metadata.data.sceneType === '') return undefined;
 
 		return this.factories.sceneType.createSceneType(this.metadata.data.sceneType)
 	}
 
 	get storycircleStage(): StoryCircleStage | undefined {
-		if (this.metadata.data?.storyCircleStage === undefined) return undefined;
+		if (this.metadata.data?.storyCircleStage == undefined || this.metadata.data.storyCircleStage === '') return undefined;
 
 		return this.factories.storyCircleStage.createStoryCircleStage(this.metadata.data.storyCircleStage)
 	}

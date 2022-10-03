@@ -1,3 +1,5 @@
 import {ComponentDataMetadataInterface} from "./ComponentDataMetadataInterface";
 
-export type SubplotDataMetadataInterface = ComponentDataMetadataInterface;
+export interface SubplotDataMetadataInterface extends ComponentDataMetadataInterface {
+
+}

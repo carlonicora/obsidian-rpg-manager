@@ -3,5 +3,5 @@ import {CampaignDataMetadataInterface} from "../data/CampaignDataMetadataInterfa
 import {ComponentMetadataInterface} from "./ComponentMetadataInterface";
 
 export interface CampaignMetadataInterface extends ComponentMetadataInterface, AbtPlotMetadataInterface {
-	data?: CampaignDataMetadataInterface;
+	data?: CampaignDataMetadataInterface|any;
 }

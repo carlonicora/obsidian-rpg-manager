@@ -14,6 +14,7 @@ import {FactionMetadataInterface} from "./components/FactionMetadataInterface";
 import {LocationMetadataInterface} from "./components/LocationMetadataInterface";
 import {MusicMetadataInterface} from "./components/MusicMetadataInterface";
 import {ControllerMetadataModelInterface} from "./ControllerMetadataModelInterface";
+import {ComponentDataMetadataInterface} from "./data/ComponentDataMetadataInterface";
 
 export interface ControllerMetadataInterface {
 	models: ControllerMetadataModelInterface;
@@ -33,5 +34,6 @@ export interface ControllerMetadataInterface {
 		EventMetadataInterface |
 		FactionMetadataInterface |
 		LocationMetadataInterface |
-		MusicMetadataInterface;
+		MusicMetadataInterface |
+		ComponentDataMetadataInterface;
 }

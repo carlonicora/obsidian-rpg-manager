@@ -29,6 +29,12 @@ import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 import {SceneInterface} from "./database/components/interfaces/SceneInterface";
 import {ComponentInterface} from "./database/interfaces/ComponentInterface";
 
+/**
+ * @TODO: test header data save
+ * @TODO: check list
+ * @TODO: update metadatatemplate
+ */
+
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;

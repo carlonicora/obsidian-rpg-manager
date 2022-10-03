@@ -66,6 +66,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 
 		const response = this.database.read<SessionInterface>((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&
+			session.id.campaignId === this.id.campaignId &&
 			session.id.sessionId === this.metadata.data?.sessionId
 		);
 

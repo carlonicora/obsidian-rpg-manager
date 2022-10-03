@@ -1,7 +1,7 @@
-import {ComponentNotesTemplateFactoryInterface} from "../../../interfaces/factories/ComponentNotesTemplateFactoryInterface";
-import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
-import {ComponentType} from "../../../enums/ComponentType";
-import {CharacterInterface} from "../../../database/components/interfaces/CharacterInterface";
+import {ComponentNotesTemplateFactoryInterface} from "../../interfaces/factories/ComponentNotesTemplateFactoryInterface";
+import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
+import {ComponentType} from "../../enums/ComponentType";
+import {CharacterInterface} from "../../database/components/interfaces/CharacterInterface";
 
 export class SessionNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
