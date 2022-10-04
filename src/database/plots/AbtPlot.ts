@@ -16,14 +16,12 @@ export class AbtPlot implements AbtInterface {
 	}
 
 	get isEmpty(): boolean {
-		if (
-			this.need === '' &&
+		return this.need === '' &&
 			this.and === '' &&
 			this.but === '' &&
-			this.therefore === ''
-		) return true;
+			this.therefore === '';
 
-		return false;
+
 	}
 
 	get need(): string {

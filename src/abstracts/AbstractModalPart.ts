@@ -59,5 +59,7 @@ export abstract class AbstractModalPart extends AbstractRpgManager implements Mo
 			sessionId,
 			additionalInformation,
 		);
+
+		return Promise.resolve(undefined);
 	}
 }

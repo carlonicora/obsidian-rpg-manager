@@ -20,7 +20,6 @@ export class AdventureTableSubModel extends AbstractTableSubModel {
 		switch (fieldType) {
 			case  TableField.Index:
 				return this.factories.contents.create(adventure.id.adventureId, ContentType.Number, true);
-				break;
 		}
 
 		return super.generateContentElement(index, fieldType, component, relationship);

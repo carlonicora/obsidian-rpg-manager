@@ -59,17 +59,18 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 				this.models.push(this._generateModel('Header'));
 			}
 
-			/*
-			if (configurations.models.lists !== undefined){
-				Object.keys(configurations.models.lists).filter((v) => isNaN(Number(v))).forEach((name: string) => {
-					if (configurations.models.lists === undefined) return;
-					const list: ControllerMetadataModelElementInterface | undefined = configurations.models.lists[name as keyof ControllerMetadataModelListsInterface];
-					if (list === undefined) return;
 
-					this.models.push(this._generateModel(name, list.relationship));
-				});
+			if (configurations.models.lists !== undefined){
+				this.models.push(this._generateModel('List', configurations.models.lists));
+				// Object.keys(configurations.models.lists).filter((v) => isNaN(Number(v))).forEach((name: string) => {
+
+					// if (configurations.models.lists === undefined) return;
+					// const list: ControllerMetadataModelElementInterface | undefined = configurations.models.lists[name as keyof ControllerMetadataModelListsInterface];
+					//if (list === undefined) return;
+
+					//this.models.push(this._generateModel(name, list.relationship));
+				// });
 			}
-			*/
 		} catch (e) {
 			//No need to throw an exception... possibly saving before the data is ready
 		}

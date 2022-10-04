@@ -65,22 +65,16 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		switch (fieldType) {
 			case  TableField.Index:
 				return this.factories.contents.create('#', ContentType.String, true);
-				break;
 			case  TableField.Date:
 				return this.factories.contents.create('Date', ContentType.String, true);
-				break;
 			case  TableField.Image:
 				return this.factories.contents.create('', ContentType.String, true);
-				break;
 			case  TableField.Name:
 				return this.factories.contents.create('Name', ContentType.String);
-				break;
 			case  TableField.Synopsis:
 				return this.factories.contents.create('Synopsis', ContentType.String);
-				break;
 			case  TableField.Url:
 				return this.factories.contents.create('Url', ContentType.String);
-				break;
 		}
 
 		return this.factories.contents.create('', ContentType.String);
@@ -113,13 +107,10 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		switch (fieldType) {
 			case  TableField.Name:
 				return this.factories.contents.create(component.link, ContentType.Link);
-				break;
 			case  TableField.Image:
 				return this.factories.contents.create(component.image, ContentType.Image, true);
-				break;
 			case  TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : component.synopsis, ContentType.Markdown);
-				break;
 		}
 
 		return this.factories.contents.create('', ContentType.String);

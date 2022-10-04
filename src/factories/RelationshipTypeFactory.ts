@@ -7,7 +7,7 @@ export class RelationshipTypeFactory extends AbstractFactory implements Relation
 		readableRelationshipType: string,
 	): RelationshipType {
 		readableRelationshipType = readableRelationshipType[0].toUpperCase() + readableRelationshipType.substring(1).toLowerCase();
-		return RelationshipType[readableRelationshipType.toLowerCase() as keyof typeof RelationshipType];
+		return RelationshipType[readableRelationshipType as keyof typeof RelationshipType];
 	}
 
 	createReadableRelationshipType(

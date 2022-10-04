@@ -113,7 +113,7 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 		mainContent: string|undefined,
 		lastCodeBlock: string|undefined,
 	): string {
-		let response = '';
+		let response: string;
 
 		const frontmatterString = stringifyYaml(frontmatter);
 		const frontmatterParsedString = frontmatterString.replaceAll('{}', '');

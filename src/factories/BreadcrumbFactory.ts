@@ -114,7 +114,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 				ComponentType.Adventure,
 				nextAdventure,
 				'next adventure >>',
-				(previousAdventure !== undefined ? false : true),
+				(previousAdventure === undefined),
 			);
 		}
 
@@ -162,7 +162,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 				ComponentType.Session,
 				nextSession,
 				'next session >>',
-				(previousSession !== undefined ? false : true),
+				(previousSession === undefined),
 			);
 		}
 
@@ -185,7 +185,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 		if (act.previousAct != null) previousBreadcrumb = this.generateElementBreadcrumb(actBreadcrumb, ComponentType.Act, act.previousAct, '<< prev act', true);
 
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
-		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), ComponentType.Act, act.nextAct, 'next act >>', (previousBreadcrumb != null ? false : true));
+		if (act.nextAct != null) nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), ComponentType.Act, act.nextAct, 'next act >>', (previousBreadcrumb == null));
 
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb));
 	}
@@ -203,7 +203,7 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 
 		let nextBreadcrumb: ResponseBreadcrumb|null = null;
 		if (scene.nextScene != null) {
-			nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), ComponentType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb != null ? false : true));
+			nextBreadcrumb = this.generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), ComponentType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb == null));
 		} else {
 			const newSceneBreadcrumb = new ResponseBreadcrumb(this.app, scene);
 			newSceneBreadcrumb.link = '';

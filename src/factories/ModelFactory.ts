@@ -20,6 +20,7 @@ import {FactionHeaderSubModel} from "../models/subModels/headers/FactionHeaderSu
 import {MusicHeaderSubModel} from "../models/subModels/headers/MusicHeaderSubModel";
 import {AbtPlotSubModel} from "../models/subModels/AbtPlotSubModel";
 import {StoryCirclePlotSubModel} from "../models/subModels/StoryCirclePlotSubModel";
+import {ListModel} from "../models/ListModel";
 
 export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
 	private modelTypeMap: Map<string,any>;
@@ -51,27 +52,8 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		
 		this.modelTypeMap = new Map([
 			['AgnosticHeader', HeaderModel],
+			['AgnosticList', ListModel]
 		]);
-		/*
-		this.modelTypeMap.set('AgnosticAdventure', AdventureModel);
-		this.modelTypeMap.set('AgnosticAdventureNavigation', AdventureNavigationModel);
-		this.modelTypeMap.set('AgnosticCampaign', CampaignModel);
-		this.modelTypeMap.set('AgnosticCampaignNavigation', CampaignNavigationModel);
-		this.modelTypeMap.set('AgnosticClue', ClueModel);
-		this.modelTypeMap.set('AgnosticEvent', EventModel);
-		this.modelTypeMap.set('AgnosticFaction', FactionModel);
-		this.modelTypeMap.set('AgnosticLocation', LocationModel);
-		this.modelTypeMap.set('AgnosticNpc', NpcModel);
-		this.modelTypeMap.set('AgnosticPc', PcModel);
-		this.modelTypeMap.set('AgnosticScene', SceneModel);
-		this.modelTypeMap.set('AgnosticSceneNavigation', SceneNavigationModel);
-		this.modelTypeMap.set('AgnosticSession', SessionModel);
-		this.modelTypeMap.set('AgnosticSessionNavigation', SessionNavigationModel);
-		this.modelTypeMap.set('AgnosticAct', ActModel);
-		this.modelTypeMap.set('AgnosticActNavigation', ActNavigationModel);
-		this.modelTypeMap.set('AgnosticMusic', MusicModel);
-		this.modelTypeMap.set('AgnosticSubplot', SubplotModel);
-		*/
 	}
 
 	public create(

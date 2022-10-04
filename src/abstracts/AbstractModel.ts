@@ -1,7 +1,6 @@
 import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {App} from "obsidian";
-import {SubModelFactory} from "../factories/SubModelFactory";
 import {ResponseData} from "../responses/ResponseData";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {ComponentType} from "../enums/ComponentType";
@@ -32,7 +31,6 @@ import {RelationshipInterface} from "../database/relationships/interfaces/Relati
 import {RelationshipType} from "../database/relationships/enums/RelationshipType";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
-	protected subModelFactory: SubModelFactory;
 	protected response:ResponseDataInterface;
 	protected subModelsMap: Map<ComponentType, any> = new Map<ComponentType, any>();
 	protected componentSortingMap: Map<ComponentType, Array<SorterComparisonElementInterface>> = new Map<ComponentType, Array<SorterComparisonElementInterface>>();
@@ -129,8 +127,9 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		type: ComponentType,
 		requiredRelationshipType: RelationshipType|undefined = RelationshipType.Biunivocal,
 		title: string|undefined=undefined,
+		sortByLatestUsage = false,
 	): Promise<void> {
-		return await this.add(type, requiredRelationshipType, undefined, title, false);
+		return await this.add(type, requiredRelationshipType, undefined, title, sortByLatestUsage);
 	}
 
 	private async add(

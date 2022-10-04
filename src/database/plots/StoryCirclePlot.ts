@@ -20,18 +20,16 @@ export class StoryCirclePlot implements StoryCircleInterface {
 	}
 
 	get isEmpty(): boolean {
-		if (
-			this.you === '' &&
+		return this.you === '' &&
 			this.need === '' &&
 			this.go === '' &&
 			this.search === '' &&
 			this.find === '' &&
 			this.take === '' &&
 			this.return === '' &&
-			this.change === ''
-		) return true;
+			this.change === '';
 
-		return false;
+
 	}
 
 	get need(): string {

@@ -20,7 +20,6 @@ export class ActTableSubModel extends AbstractTableSubModel {
 		switch (fieldType) {
 			case  TableField.Index:
 				return this.factories.contents.create(act.id.actId, ContentType.Number, true);
-				break;
 		}
 
 		return super.generateContentElement(index, fieldType, component, relationship);

@@ -111,9 +111,9 @@ export class TagHelper {
 		if (tag.startsWith(this.dataSettings.get(ComponentType.Faction) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(ComponentType.Event) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(ComponentType.Music) ?? '?')) return true;
-		if (tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?')) return true;
+		return tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?');
 
-		return false;
+
 	}
 
 	public getId(

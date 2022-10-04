@@ -16,7 +16,6 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		switch (fieldType) {
 			case TableField.Age:
 				return this.factories.contents.create('Age', ContentType.String);
-				break;
 		}
 
 		return super.generateHeaderElement(fieldType);
@@ -32,13 +31,10 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		switch (fieldType) {
 			case TableField.Name:
 				return this.factories.contents.create(component.link + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);
-				break;
 			case TableField.Synopsis:
 				return this.factories.contents.create(relationship.description !== '' ? relationship.description : component.synopsis, ContentType.Markdown);
-				break;
 			case TableField.Age:
 				return this.factories.contents.create(character.age?.toString(), ContentType.String, true);
-				break;
 		}
 
 		return super.generateContentElement(index, fieldType, component, relationship);
