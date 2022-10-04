@@ -124,7 +124,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	protected async addRelationships(
 		type: ComponentType,
-		requiredRelationshipType: RelationshipType|undefined = RelationshipType.Biunivocal,
+		requiredRelationshipType: RelationshipType|undefined=undefined,
 		title: string|undefined=undefined,
 		sortByLatestUsage = false,
 	): Promise<void> {
@@ -133,19 +133,24 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	private async add(
 		type: ComponentType,
-		requiredRelationshipType: RelationshipType|undefined = undefined,
+		requiredRelationshipType: RelationshipType|undefined,
 		component: ComponentInterface[]|ComponentInterface|RelationshipInterface[]|undefined=undefined,
 		title: string|undefined=undefined,
 		sortByLatestUsage: boolean,
 	): Promise<void>{
+		if (requiredRelationshipType === undefined) requiredRelationshipType = RelationshipType.Reversed | RelationshipType.Biunivocal | RelationshipType.Univocal;
+		console.log(requiredRelationshipType)
+
 		if (!this.isExcluded(type)){
 			const subModel = this.subModelsMap.get(type);
 			if (component === undefined) {
+				console.log(this.currentElement.getRelationships(), ComponentType[type]);
 				component = this.currentElement.getRelationships().filter((relationship: RelationshipInterface) =>
 					relationship.component !== undefined &&
 					relationship.component.id.type === type &&
-					(requiredRelationshipType === undefined || requiredRelationshipType === relationship.type)
+					(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
 				);
+				console.warn(component)
 			}
 
 			if (Array.isArray(component)) {

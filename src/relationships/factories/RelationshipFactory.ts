@@ -5,6 +5,7 @@ import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {Relationship} from "../Relationship";
 import {RelationshipType} from "../enums/RelationshipType";
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentStage} from "../../databases/components/enums/ComponentStage";
 
 export class RelationshipFactory extends AbstractFactory implements RelationshipFactoryInterface {
 	createFromMetadata(
@@ -21,10 +22,11 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 		component: ComponentInterface,
 		relationship: RelationshipInterface,
 	): RelationshipInterface|undefined {
+		if (component.stage === ComponentStage.Plot || component.stage === ComponentStage.Run) return undefined;
+
 		let reverseRelationshipType: RelationshipType|undefined = undefined;
 		switch (relationship.type){
 			case RelationshipType.Biunivocal:
-			case RelationshipType.Univocal:
 				reverseRelationshipType = RelationshipType.Reversed;
 				break;
 			case RelationshipType.Child:

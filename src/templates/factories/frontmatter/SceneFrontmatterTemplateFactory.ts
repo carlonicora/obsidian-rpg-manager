@@ -41,13 +41,27 @@ export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 		const metadata: ControllerMetadataInterface|ActDataInterface = {
 			models: {
 				lists: {
-					musics: {},
-					pcs: {},
-					npcs: {},
-					factions: {},
-					clues: {},
-					locations: {},
-					events: {},
+					musics: {
+						relationship: '',
+					},
+					pcs: {
+						relationship: '',
+					},
+					npcs: {
+						relationship: '',
+					},
+					factions: {
+						relationship: '',
+					},
+					clues: {
+						relationship: '',
+					},
+					locations: {
+						relationship: '',
+					},
+					events: {
+						relationship: '',
+					},
 				}
 			}
 		}
