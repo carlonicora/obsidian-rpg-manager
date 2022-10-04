@@ -1,13 +1,16 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
-import {
-	ControllerMetadataModelListsInterface
-} from "../metadatas/controllers/ControllerMetadataModelListsInterface";
+import {ControllerMetadataModelListsInterface} from "../metadatas/controllers/ControllerMetadataModelListsInterface";
 import {
 	ControllerMetadataModelElementInterface
 } from "../metadatas/controllers/ControllerMetadataModelElementInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
+import {SorterComparisonElement} from "../databases/SorterComparisonElement";
+import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
+import {Relationship} from "../relationships/Relationship";
 
 export class ListModel extends AbstractModel {
 	protected sourceMeta: ControllerMetadataModelListsInterface;
@@ -30,9 +33,34 @@ export class ListModel extends AbstractModel {
 					if (relationshipType === RelationshipType.Hierarchy) {
 						await this.addList(
 							componentType,
-							this.database.readList<ComponentInterface>(componentType, this.currentElement.id),
+							this.generateComponentList(componentType),
 						);
 					} else {
+						if (this.currentElement.id.type === ComponentType.Session) {
+							const scenes = await this.database.read<SceneInterface>(
+								(scene: SceneInterface) =>
+									scene.id.type === ComponentType.Scene &&
+									scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
+									scene.session?.id.sessionId === this.currentElement.id.sessionId,
+							).sort(this.factories.sorter.create<SceneInterface>([
+								new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+								new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+								new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+							]));
+
+							for (let sceneIndex=0; sceneIndex<scenes.length; sceneIndex++){
+								await scenes[sceneIndex].getRelationships().forEach((relationship: RelationshipInterface) => {
+									if (this.currentElement.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0)
+										if (relationship.type === RelationshipType.Univocal || relationship.type === RelationshipType.Biunivocal || relationshipType === RelationshipType.Reversed){
+											this.currentElement.addRelationship(
+												new Relationship(relationship.type, relationship.path, undefined, relationship.component)
+											);
+										}
+								});
+							}
+						}
+
+
 						await this.addRelationships(
 							componentType,
 							relationshipType,
@@ -44,5 +72,22 @@ export class ListModel extends AbstractModel {
 		}
 
 		return this.response;
+	}
+
+	private generateComponentList(
+		type: ComponentType,
+	): Array<ComponentInterface> {
+		if (this.currentElement.id.type !== ComponentType.Session) return this.database.readList<ComponentInterface>(type, this.currentElement.id)
+
+		return this.database.read<ComponentInterface>(
+			(scene: SceneInterface) =>
+				scene.id.type === ComponentType.Scene &&
+				scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
+				scene.id.sessionId === this.currentElement.id.sessionId,
+		).sort(this.factories.sorter.create<SceneInterface>([
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+		]));
 	}
 }

@@ -34,6 +34,6 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 
 		if (reverseRelationshipType === undefined) return undefined;
 
-		return new Relationship(reverseRelationshipType, component.file.basename, undefined, component);
+		return new Relationship(reverseRelationshipType, component.file.path, undefined, component);
 	}
 }
