@@ -30,7 +30,6 @@ import {SceneInterface} from "./databases/components/interfaces/SceneInterface";
 import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 
 /**
- * @TODO: update metadatatemplate
  * @TODO: manage edge case for scene session in list
  * @TODO: check relationships
  */
