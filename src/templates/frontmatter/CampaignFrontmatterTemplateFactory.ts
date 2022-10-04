@@ -1,6 +1,7 @@
 import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
 import {ControllerMetadataInterface} from "../../database/interfaces/metadata/ControllerMetadataInterface";
 import {CampaignMetadataInterface} from "../../database/interfaces/metadata/components/CampaignMetadataInterface";
+import {ActDataInterface} from "../../database/components/interfaces/data/ActDataInterface";
 
 export class CampaignFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
 	public addFrontmatterData(
@@ -44,6 +45,40 @@ export class CampaignFrontmatterTemplateFactory extends AbstractComponentFrontma
 				currentSessionId: ''
 			}
 		};
+		return this.generateRpgManagerCodeBlock(
+			metadata
+		);
+	}
+
+	public generateLastCodeBlock(
+	): string|undefined {
+		const metadata: ControllerMetadataInterface|ActDataInterface = {
+			models: {
+				lists: {
+					pcs: {
+						relationship: 'hierarchy'
+					},
+					subplots: {
+						relationship: 'hierarchy'
+					},
+					adventures: {
+						relationship: 'hierarchy'
+					},
+					acts: {
+						relationship: 'hierarchy'
+					},
+					sessions: {
+						relationship: 'hierarchy'
+					},
+					events: {
+						relationship: 'hierarchy'
+					},
+					npcs: {
+						relationship: 'hierarchy'
+					}
+				}
+			}
+		}
 		return this.generateRpgManagerCodeBlock(
 			metadata
 		);

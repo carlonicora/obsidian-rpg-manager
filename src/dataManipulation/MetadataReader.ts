@@ -1,6 +1,8 @@
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {CachedMetadata, parseYaml, SectionCache, TFile} from "obsidian";
 import {MetadataReaderInterface} from "../interfaces/dataManipulation/MetadataReaderInterface";
+import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
+import {RelationshipMetadataInterface} from "../database/interfaces/metadata/RelationshipMetadataInterface";
 
 export class MetadataReader extends AbstractRpgManager implements MetadataReaderInterface{
 	public async read(
@@ -36,7 +38,15 @@ export class MetadataReader extends AbstractRpgManager implements MetadataReader
 								if (arrayContent[index] === '```') break;
 								if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
 							}
-							if (codeBlockContent !== '') response = {...response, ...parseYaml(codeBlockContent)};
+							const newCodeBlockContent: any = parseYaml(codeBlockContent);
+							if (newCodeBlockContent.relationships !== undefined){
+								const newRelationships: Array<RelationshipInterface> = [];
+								await newCodeBlockContent.relationships.forEach((relationship: RelationshipMetadataInterface) => {
+									newRelationships.push(this.factories.relationship.createFromMetadata(relationship));
+								});
+								newCodeBlockContent.relationships = newRelationships;
+							}
+							if (codeBlockContent !== '') response = {...response, ...newCodeBlockContent};
 						}
 					}
 				}

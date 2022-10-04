@@ -13,7 +13,19 @@ export class MusicFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|MusicMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					musics: [
+						{
+							relationship: "parent",
+							title: "Part of playlists"
+						},
+						{
+							relationship: "child",
+							title: "Songs",
+						}
+					]
+				}
 			},
 			data: {
 				synopsis: '',

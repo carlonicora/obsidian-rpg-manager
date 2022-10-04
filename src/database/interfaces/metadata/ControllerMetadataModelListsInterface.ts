@@ -7,10 +7,10 @@ export interface ControllerMetadataModelListsInterface {
 	sessions?: ControllerMetadataModelElementInterface;
 	pcs?: ControllerMetadataModelElementInterface;
 	npcs?: ControllerMetadataModelElementInterface;
-	clues?: ControllerMetadataModelElementInterface;
-	events?: ControllerMetadataModelElementInterface;
-	factions?: ControllerMetadataModelElementInterface;
-	locations?: ControllerMetadataModelElementInterface;
-	musics?: ControllerMetadataModelElementInterface;
-	subplots?: ControllerMetadataModelElementInterface;
+	clues?: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>;
+	events?: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>;
+	factions?: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>;
+	locations?: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>;
+	musics?: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>;
+	subplots?: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>;
 }

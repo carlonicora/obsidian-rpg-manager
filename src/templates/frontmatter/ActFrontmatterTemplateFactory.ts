@@ -51,7 +51,9 @@ export class ActFrontmatterTemplateFactory extends AbstractComponentFrontmatterT
 		const metadata: ControllerMetadataInterface|ActDataInterface = {
 			models: {
 				lists: {
-					scenes: {},
+					scenes: {
+						relationship: 'hierarchy'
+					},
 					pcs: {},
 					npcs: {},
 					clues: {},

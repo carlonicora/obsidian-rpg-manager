@@ -13,7 +13,16 @@ export class EventFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|EventMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					subplots: {
+						relationship: "reversed",
+					},
+					pcs: {},
+					npcs: {},
+					clues: {},
+					locations: {},
+				}
 			},
 			data: {
 				synopsis: '',

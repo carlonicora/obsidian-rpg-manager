@@ -30,9 +30,9 @@ import {SceneInterface} from "./database/components/interfaces/SceneInterface";
 import {ComponentInterface} from "./database/interfaces/ComponentInterface";
 
 /**
- * @TODO: check list
- * @TODO: check relationships
  * @TODO: update metadatatemplate
+ * @TODO: manage edge case for scene session in list
+ * @TODO: check relationships
  */
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{

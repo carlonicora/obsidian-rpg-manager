@@ -14,6 +14,23 @@ export class NonPlayerCharacterFrontmatterTemplateFactory extends AbstractCompon
 		const metadata: ControllerMetadataInterface|CharacterMetadataInterface = {
 			models: {
 				header: true,
+				lists: {
+					subplots: {
+						relationship: "reversed",
+					},
+					factions: {
+						relationship: "univocal",
+					},
+					pcs: {
+						relationship: "univocal",
+					},
+					npcs: {
+						relationship: "univocal",
+					},
+					locations: {},
+					events: {},
+					clues: {},
+				}
 			},
 			data: {
 				synopsis: '',

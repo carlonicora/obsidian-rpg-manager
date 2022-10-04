@@ -11,8 +11,6 @@ import {MultipleTagsError} from "../errors/MultipleTagsError";
 import {ComponentInterface} from "./interfaces/ComponentInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "./relationships/interfaces/RelationshipInterface";
-import {Relationship} from "./relationships/Relationship";
-import {RelationshipType} from "./relationships/enums/RelationshipType";
 import {ComponentStage} from "./components/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
 
@@ -150,13 +148,15 @@ export class DatabaseInitialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
+		console.log('initialising relaitonship')
 		await database.recordset.forEach((component: ComponentInterface) => {
 			component.getRelationships(database).forEach((relationship: RelationshipInterface) => {
-				const relatedComponent: ComponentInterface|undefined = database.readByBaseName(relationship.path);
-				if (relatedComponent !== undefined){
-					relationship.component = relatedComponent;
-					const reverseRelationship: RelationshipInterface = new Relationship(RelationshipType.Reversed, component.file.basename, undefined, component);
-					relatedComponent.addRelationship(reverseRelationship, database);
+				if (relationship.component !== undefined){
+					const reverseRelationship: RelationshipInterface|undefined = this.factories.relationship.createFromReverse(component, relationship);
+
+					if (reverseRelationship !== undefined) {
+						relationship.component.addRelationship(reverseRelationship, database);
+					}
 				}
 			});
 		});

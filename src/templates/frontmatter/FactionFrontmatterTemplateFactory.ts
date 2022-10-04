@@ -13,7 +13,19 @@ export class FactionFrontmatterTemplateFactory extends AbstractComponentFrontmat
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|FactionMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					pcs: {
+						relationship: "reversed",
+					},
+					npcs: {
+						relationship: "reversed",
+					},
+					locations: {},
+					subplots: {
+						relationship: "reversed",
+					}
+				}
 			},
 			data: {
 				synopsis: '',

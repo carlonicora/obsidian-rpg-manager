@@ -44,6 +44,8 @@ import {StoryCircleStageFactoryInterface} from "./interfaces/factories/StoryCirc
 import {StoryCircleStageFactory} from "./factories/StoryCircleStageFactory";
 import {AbtStageFactoryInterface} from "./interfaces/factories/AbtStageFactoryInterface";
 import {AbtStageFactory} from "./factories/AbtStageFactory";
+import {RelationshipFactoryInterface} from "./interfaces/factories/RelationshipFactoryInterface";
+import {RelationshipFactory} from "./factories/RelationshipFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -68,6 +70,7 @@ export class Factories implements FactoriesInterface{
 	public sceneType: SceneTypeFactoryInterface;
 	public storyCircleStage: StoryCircleStageFactoryInterface;
 	public abtStage: AbtStageFactoryInterface;
+	public relationship: RelationshipFactoryInterface;
 
 	constructor(
 		private app: App,
@@ -94,5 +97,6 @@ export class Factories implements FactoriesInterface{
 		this.sceneType = new SceneTypeFactory(this.app);
 		this.storyCircleStage = new StoryCircleStageFactory(this.app);
 		this.abtStage = new AbtStageFactory(this.app);
+		this.relationship = new RelationshipFactory(this.app);
 	}
 }

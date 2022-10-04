@@ -20,6 +20,7 @@ import {RelationshipTypeFactoryInterface} from "./factories/RelationshipTypeFact
 import {SceneTypeFactoryInterface} from "./factories/SceneTypeFactoryInterface";
 import {StoryCircleStageFactoryInterface} from "./factories/StoryCircleStageFactoryInterface";
 import {AbtStageFactoryInterface} from "./factories/AbtStageFactoryInterface";
+import {RelationshipFactoryInterface} from "./factories/RelationshipFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -44,4 +45,5 @@ export interface FactoriesInterface {
 	sceneType: SceneTypeFactoryInterface;
 	storyCircleStage: StoryCircleStageFactoryInterface;
 	abtStage: AbtStageFactoryInterface;
+	relationship: RelationshipFactoryInterface;
 }

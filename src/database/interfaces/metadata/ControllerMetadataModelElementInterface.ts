@@ -1,4 +1,4 @@
 export interface ControllerMetadataModelElementInterface {
-	relationship?: 'univocal' | 'biunivocal' | 'reversed' | 'child' | 'parent' | 'hierarchy';
+	relationship?: 'univocal' | 'biunivocal' | 'reversed' | 'parent' | 'child' | 'hierarchy' | string;
 	title?: string;
 }

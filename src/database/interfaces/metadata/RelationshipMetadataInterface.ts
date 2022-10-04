@@ -1,5 +1,5 @@
 export interface RelationshipMetadataInterface {
-	type: 'univocal' | 'biunivocal' | 'reversed' | 'parent' | 'child' | 'hierarchy' | string,
+	type: 'univocal' | 'biunivocal' | 'parent' | string,
 	path: string,
 	description?: string|undefined,
 }

@@ -13,7 +13,23 @@ export class LocationFrontmatterTemplateFactory extends AbstractComponentFrontma
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|LocationMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					pcs: {},
+					npcs: {},
+					events: {},
+					clues: {},
+					locations: [
+						{
+							relationship: "parent",
+							title: "Inside"
+						},
+						{
+							relationship: "child",
+							title: "Other locations part of this"
+						}
+					],
+				}
 			},
 			data: {
 				synopsis: '',

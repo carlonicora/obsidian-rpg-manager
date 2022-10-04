@@ -13,6 +13,9 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		return this.dataManipulators.metadata.read(this.file)
 			.then((metadata: any) => {
 				this.metadata = metadata;
+				if (this.metadata.relationships === undefined){
+					this.metadata.relationships = [];
+				}
 				return;
 			});
 	}
@@ -24,8 +27,6 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	public getRelationships(
 		database: DatabaseInterface|undefined = undefined,
 	): Array<RelationshipInterface> {
-		if (this.metadata.relationships === undefined) return [];
-
 		this.metadata.relationships.forEach((relationship: RelationshipInterface) => {
 			if (relationship.component === undefined) relationship.component = (database ?? this.database).readByPath(relationship.path);
 		});
@@ -37,7 +38,9 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		relationship: RelationshipInterface,
 		database: DatabaseInterface|undefined=undefined,
 	): void {
-		this.getRelationships(database).push(relationship);
+		console.log(this.metadata.relationships);
+		this.metadata.relationships.push(relationship);
+		console.log(this.metadata.relationships);
 	}
 
 	public existsInRelationships(

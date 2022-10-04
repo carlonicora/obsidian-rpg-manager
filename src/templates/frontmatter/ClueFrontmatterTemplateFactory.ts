@@ -13,7 +13,17 @@ export class ClueFrontmatterTemplateFactory extends AbstractComponentFrontmatter
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|ClueMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					subplots: {
+						relationship: "reversed",
+					},
+					pcs: {},
+					npcs: {},
+					locations: {},
+					clues: {},
+					events: {},
+				}
 			},
 			data: {
 				synopsis: '',

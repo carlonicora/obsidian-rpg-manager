@@ -13,7 +13,17 @@ export class SubplotFrontmatterTemplateFactory extends AbstractComponentFrontmat
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|SubplotMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					events: {},
+					clues: {},
+					factions: {
+						relationship: "univocal"
+					},
+					npcs: {
+						relationship: "univocal"
+					},
+				}
 			},
 			plot: {
 				abt: {

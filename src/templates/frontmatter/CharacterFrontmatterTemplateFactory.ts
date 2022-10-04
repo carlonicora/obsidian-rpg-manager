@@ -13,7 +13,17 @@ export class CharacterFrontmatterTemplateFactory extends AbstractComponentFrontm
 	): string|undefined {
 		const metadata: ControllerMetadataInterface|CharacterMetadataInterface = {
 			models: {
-				header: true
+				header: true,
+				lists: {
+					factions: {},
+					pcs: {
+						relationship: "univocal",
+					},
+					npcs: {
+						relationship: "univocal",
+					},
+					locations: {},
+				}
 			},
 			data: {
 				synopsis: '',

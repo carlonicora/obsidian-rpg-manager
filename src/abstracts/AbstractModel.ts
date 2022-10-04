@@ -145,7 +145,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 				component = this.currentElement.getRelationships().filter((relationship: RelationshipInterface) =>
 					relationship.component !== undefined &&
 					relationship.component.id.type === type &&
-					(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
+					(requiredRelationshipType === undefined || requiredRelationshipType === relationship.type)
 				);
 			}
 

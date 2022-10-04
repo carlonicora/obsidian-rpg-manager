@@ -1,6 +1,7 @@
 import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
 import {ControllerMetadataInterface} from "../../database/interfaces/metadata/ControllerMetadataInterface";
 import {SceneMetadataInterface} from "../../database/interfaces/metadata/components/SceneMetadataInterface";
+import {ActDataInterface} from "../../database/components/interfaces/data/ActDataInterface";
 
 export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
 	public addFrontmatterData(
@@ -30,6 +31,26 @@ export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 				storyCircleStage: ''
 			}
 		};
+		return this.generateRpgManagerCodeBlock(
+			metadata
+		);
+	}
+
+	public generateLastCodeBlock(
+	): string|undefined {
+		const metadata: ControllerMetadataInterface|ActDataInterface = {
+			models: {
+				lists: {
+					musics: {},
+					pcs: {},
+					npcs: {},
+					factions: {},
+					clues: {},
+					locations: {},
+					events: {},
+				}
+			}
+		}
 		return this.generateRpgManagerCodeBlock(
 			metadata
 		);

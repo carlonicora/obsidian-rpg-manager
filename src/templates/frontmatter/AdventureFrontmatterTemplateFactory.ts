@@ -1,6 +1,7 @@
 import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
 import {ControllerMetadataInterface} from "../../database/interfaces/metadata/ControllerMetadataInterface";
 import {AdventureMetadataInterface} from "../../database/interfaces/metadata/components/AdventureMetadataInterface";
+import {ActDataInterface} from "../../database/components/interfaces/data/ActDataInterface";
 
 export class AdventureFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
 	public addFrontmatterData(
@@ -39,6 +40,22 @@ export class AdventureFrontmatterTemplateFactory extends AbstractComponentFrontm
 				complete: false,
 			}
 		};
+		return this.generateRpgManagerCodeBlock(
+			metadata
+		);
+	}
+
+	public generateLastCodeBlock(
+	): string|undefined {
+		const metadata: ControllerMetadataInterface|ActDataInterface = {
+			models: {
+				lists: {
+					acts: {
+						relationship: 'hierarchy'
+					}
+				}
+			}
+		}
 		return this.generateRpgManagerCodeBlock(
 			metadata
 		);
