@@ -1,6 +1,6 @@
 import {ComponentMetadataInterface} from "./ComponentMetadataInterface";
-import {PlotsMetadataInterface} from "../PlotsMetadataInterface";
-import {SubplotDataMetadataInterface} from "../data/SubplotDataMetadataInterface";
+import {PlotsMetadataInterface} from "../plots/PlotsMetadataInterface";
+import {SubplotDataMetadataInterface} from "./data/SubplotDataMetadataInterface";
 
 export interface SubplotMetadataInterface extends ComponentMetadataInterface, PlotsMetadataInterface{
 	data?: SubplotDataMetadataInterface;

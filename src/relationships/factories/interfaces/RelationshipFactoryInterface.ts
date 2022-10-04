@@ -1,5 +1,5 @@
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
-import {RelationshipMetadataInterface} from "../../../metadatas/RelationshipMetadataInterface";
+import {RelationshipMetadataInterface} from "../../../metadatas/relationships/RelationshipMetadataInterface";
 import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
 
 export interface RelationshipFactoryInterface {

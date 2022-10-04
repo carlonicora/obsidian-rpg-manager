@@ -1,6 +1,6 @@
 import {AbstractComponent} from "../databases/abstracts/AbstractComponent";
 import {PlotStoryCircleInterface} from "./interfaces/PlotStoryCircleInterface";
-import {StoryCircleMetadataInterface} from "../metadatas/StoryCircleMetadataInterface";
+import {StoryCircleMetadataInterface} from "../metadatas/plots/StoryCircleMetadataInterface";
 import {StoryCircleInterface} from "./interfaces/StoryCircleInterface";
 import {StoryCirclePlot} from "./StoryCirclePlot";
 

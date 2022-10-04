@@ -1,5 +1,5 @@
 import {AbstractComponentFrontmatterTemplateFactory} from "../../../abstracts/AbstractComponentFrontmatterTemplateFactory";
-import {ControllerMetadataInterface} from "../../../metadatas/ControllerMetadataInterface";
+import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {ClueMetadataInterface} from "../../../metadatas/components/ClueMetadataInterface";
 
 export class ClueFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {

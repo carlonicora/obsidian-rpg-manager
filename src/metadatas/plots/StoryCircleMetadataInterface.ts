@@ -1,4 +1,4 @@
-import {ComponentDataMetadataInterface} from "./data/ComponentDataMetadataInterface";
+import {ComponentDataMetadataInterface} from "../components/data/ComponentDataMetadataInterface";
 
 export interface StoryCircleMetadataInterface extends ComponentDataMetadataInterface{
 	you?: string | undefined;

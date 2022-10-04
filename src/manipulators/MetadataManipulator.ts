@@ -2,7 +2,7 @@ import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {CachedMetadata, parseYaml, SectionCache, TFile} from "obsidian";
 import {MetadataManipulatorInterface} from "./interfaces/MetadataManipulatorInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {RelationshipMetadataInterface} from "../metadatas/RelationshipMetadataInterface";
+import {RelationshipMetadataInterface} from "../metadatas/relationships/RelationshipMetadataInterface";
 
 export class MetadataManipulator extends AbstractRpgManager implements MetadataManipulatorInterface{
 	public async read(

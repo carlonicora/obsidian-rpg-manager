@@ -1,5 +1,5 @@
 import {StoryCircleInterface} from "./interfaces/StoryCircleInterface";
-import {StoryCirclePlotMetadataInterface} from "../metadatas/StoryCirclePlotMetadataInterface";
+import {StoryCirclePlotMetadataInterface} from "../metadatas/plots/StoryCirclePlotMetadataInterface";
 
 export class StoryCirclePlot implements StoryCircleInterface {
 	constructor(

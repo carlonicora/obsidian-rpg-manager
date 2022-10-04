@@ -2,10 +2,10 @@ import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
 import {
 	ControllerMetadataModelListsInterface
-} from "../metadatas/ControllerMetadataModelListsInterface";
+} from "../metadatas/controllers/ControllerMetadataModelListsInterface";
 import {
 	ControllerMetadataModelElementInterface
-} from "../metadatas/ControllerMetadataModelElementInterface";
+} from "../metadatas/controllers/ControllerMetadataModelElementInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 

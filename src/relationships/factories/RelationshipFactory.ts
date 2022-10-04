@@ -1,6 +1,6 @@
 import {AbstractFactory} from "../../abstracts/AbstractFactory";
 import {RelationshipFactoryInterface} from "./interfaces/RelationshipFactoryInterface";
-import {RelationshipMetadataInterface} from "../../metadatas/RelationshipMetadataInterface";
+import {RelationshipMetadataInterface} from "../../metadatas/relationships/RelationshipMetadataInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {Relationship} from "../Relationship";
 import {RelationshipType} from "../enums/RelationshipType";

@@ -1,5 +1,5 @@
 import {PlotsInterface} from "./interfaces/PlotsInterface";
-import {PlotsMetadataInterface} from "../metadatas/PlotsMetadataInterface";
+import {PlotsMetadataInterface} from "../metadatas/plots/PlotsMetadataInterface";
 import {AbstractComponent} from "../databases/abstracts/AbstractComponent";
 import {AbtInterface} from "./interfaces/AbtInterface";
 import {AbtPlot} from "./AbtPlot";

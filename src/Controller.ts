@@ -9,7 +9,7 @@ import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 import {CampaignInterface} from "./databases/components/interfaces/CampaignInterface";
 import {
 	ControllerMetadataInterface
-} from "./metadatas/ControllerMetadataInterface";
+} from "./metadatas/controllers/ControllerMetadataInterface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
