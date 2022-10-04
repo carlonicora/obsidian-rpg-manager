@@ -1,10 +1,10 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
-import {ComponentType} from "../enums/ComponentType";
-import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {SceneInterface} from "../database/components/interfaces/SceneInterface";
-import {SessionInterface} from "../database/components/interfaces/SessionInterface";
-import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {SorterComparisonElement} from "../databases/SorterComparisonElement";
+import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
+import {SessionInterface} from "../databases/components/interfaces/SessionInterface";
+import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
 
 export class SceneSelectionModal extends AbstractRpgManagerModal {
 	private availableScenes:Array<SceneInterface>;
@@ -87,7 +87,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			const file: TAbstractFile|null = this.app.vault.getAbstractFileByPath(this.scenesEls[index].value);
 
 			if (file != null && file instanceof TFile){
-				this.dataManipulators.codeblock.updateInFile(
+				this.manipulators.codeblock.updateInFile(
 					file,
 					'data.sessionId',
 					(this.scenesEls[index].checked === true ? (this.session.id.sessionId ?? '') : ''),

@@ -1,6 +1,6 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
-import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ComponentType} from "../enums/ComponentType";
+import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
 
 export class HeaderModel extends AbstractModel {
 	public async generateData(

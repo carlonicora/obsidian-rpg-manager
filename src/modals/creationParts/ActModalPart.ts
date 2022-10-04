@@ -1,8 +1,8 @@
 import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
-import {ComponentType} from "../../enums/ComponentType";
+import {ComponentType} from "../../databases/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../interfaces/ModalInterface";
-import {ActInterface} from "../../database/components/interfaces/ActInterface";
+import {ModalInterface} from "../interfaces/ModalInterface";
+import {ActInterface} from "../../databases/components/interfaces/ActInterface";
 
 export class ActModalPart extends AbstractModalPart {
 	private acts: ActInterface[];

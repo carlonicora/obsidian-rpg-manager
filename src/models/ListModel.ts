@@ -1,13 +1,13 @@
 import {AbstractModel} from "../abstracts/AbstractModel";
-import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
+import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
 import {
 	ControllerMetadataModelListsInterface
-} from "../database/interfaces/metadata/ControllerMetadataModelListsInterface";
+} from "../metadatas/ControllerMetadataModelListsInterface";
 import {
 	ControllerMetadataModelElementInterface
-} from "../database/interfaces/metadata/ControllerMetadataModelElementInterface";
-import {RelationshipType} from "../database/relationships/enums/RelationshipType";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+} from "../metadatas/ControllerMetadataModelElementInterface";
+import {RelationshipType} from "../relationships/enums/RelationshipType";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ListModel extends AbstractModel {
 	protected sourceMeta: ControllerMetadataModelListsInterface;

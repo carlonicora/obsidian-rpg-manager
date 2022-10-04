@@ -1,5 +1,5 @@
 import {App, CachedMetadata, MarkdownView} from "obsidian";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class EditorSelector {
 	public static select(

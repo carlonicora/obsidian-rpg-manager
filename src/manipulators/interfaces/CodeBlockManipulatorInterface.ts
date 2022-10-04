@@ -1,0 +1,22 @@
+import {TFile} from "obsidian";
+
+export interface CodeBlockManipulatorInterface {
+	update(
+		identifier: string,
+		value: string|boolean|number|undefined,
+	): Promise<void>;
+
+	updateInFile(
+		file: TFile,
+		identifier: string,
+		value: string|boolean|number|undefined,
+	): Promise<void>
+
+	stopCurrentDuration(
+		file: TFile,
+	): Promise<void>;
+
+	startNewDuration(
+		file: TFile,
+	): Promise<void>;
+}

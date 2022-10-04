@@ -1,11 +1,11 @@
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ViewType} from "../../../enums/ViewType";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ViewType} from "../../enums/ViewType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {CampaignInterface} from "../../../database/components/interfaces/CampaignInterface";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
+import {CampaignInterface} from "../../../databases/components/interfaces/CampaignInterface";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: CampaignInterface;
@@ -104,7 +104,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			const file: TFile|undefined = this.currentElement.file;
 
 			if (file !== undefined){
-				this.dataManipulators.codeblock.update('data.current' + type[0].toUpperCase() + type.substring(1).toLowerCase() + 'Id', componentSelectorEl.value);
+				this.manipulators.codeblock.update('data.current' + type[0].toUpperCase() + type.substring(1).toLowerCase() + 'Id', componentSelectorEl.value);
 			}
 		});
 

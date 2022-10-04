@@ -1,4 +1,4 @@
-import {TableField} from "../enums/TableField";
+import {TableField} from "../views/enums/TableField";
 
 export interface RpgManagerSettingsInterface {
 	campaignTag: string;

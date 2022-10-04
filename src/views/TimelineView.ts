@@ -1,17 +1,17 @@
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
-import {ViewType} from "../enums/ViewType";
-import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "../interfaces/IdInterface";
-import {TimelineElementResponseInterface} from "../interfaces/response/subModels/TimelineElementResponseInterface";
+import {ViewType} from "./enums/ViewType";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {IdInterface} from "../databases/interfaces/IdInterface";
+import {TimelineElementResponseInterface} from "../responses/interfaces/TimelineElementResponseInterface";
 import {Component, MarkdownRenderer, TAbstractFile, TFile} from "obsidian";
 import {ResponseTimelineElement} from "../responses/ResponseTimelineElement";
-import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {CampaignInterface} from "../database/components/interfaces/CampaignInterface";
-import {EventInterface} from "../database/components/interfaces/EventInterface";
-import {ClueInterface} from "../database/components/interfaces/ClueInterface";
-import {CharacterInterface} from "../database/components/interfaces/CharacterInterface";
-import {SessionInterface} from "../database/components/interfaces/SessionInterface";
-import {SceneInterface} from "../database/components/interfaces/SceneInterface";
+import {SorterComparisonElement} from "../databases/SorterComparisonElement";
+import {CampaignInterface} from "../databases/components/interfaces/CampaignInterface";
+import {EventInterface} from "../databases/components/interfaces/EventInterface";
+import {ClueInterface} from "../databases/components/interfaces/ClueInterface";
+import {CharacterInterface} from "../databases/components/interfaces/CharacterInterface";
+import {SessionInterface} from "../databases/components/interfaces/SessionInterface";
+import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();

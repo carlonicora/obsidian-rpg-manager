@@ -1,12 +1,12 @@
-import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
+import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {App} from "obsidian";
-import {IdInterface} from "../interfaces/IdInterface";
+import {IdInterface} from "../databases/interfaces/IdInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {FactoriesInterface} from "../interfaces/FactoriesInterface";
-import {TagHelper} from "../helpers/TagHelper";
+import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
+import {TagHelper} from "../databases/TagHelper";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
-import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
-import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
+import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
+import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 
 export abstract class AbstractRpgManagerError extends Error implements RpgErrorInterface, RpgManagerHelperInterface {
 	constructor(
@@ -31,9 +31,9 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 		return this.app.plugins.getPlugin('rpg-manager').factories;
 	}
 
-	public get dataManipulators(
-	): DataManipulatorsInterface {
-		return this.app.plugins.getPlugin('rpg-manager').dataManipulators;
+	public get manipulators(
+	): ManipulatorsInterface {
+		return this.app.plugins.getPlugin('rpg-manager').manipulators;
 	}
 
 	public get tagHelper(

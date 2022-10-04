@@ -1,19 +1,19 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ComponentType} from "../../../enums/ComponentType";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ComponentType} from "../../../databases/enums/ComponentType";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
-import {StoryCircleStage} from "../../../enums/StoryCircleStage";
-import {ResponseType} from "../../../enums/ResponseType";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
-import {SorterType} from "../../../enums/SorterType";
-import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
-import {AbtStage} from "../../../enums/AbtStage";
-import {SceneInterface} from "../../../database/components/interfaces/SceneInterface";
-import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
+import {StoryCircleStage} from "../../../plots/enums/StoryCircleStage";
+import {ResponseType} from "../../../responses/enums/ResponseType";
+import {SorterComparisonElement} from "../../../databases/SorterComparisonElement";
+import {SorterType} from "../../../databases/enums/SorterType";
+import {SceneAnalyser} from "../../../databases/SceneAnalyser";
+import {AbtStage} from "../../../plots/enums/AbtStage";
+import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
+import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SceneInterface;

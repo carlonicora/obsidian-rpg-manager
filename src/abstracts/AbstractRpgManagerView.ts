@@ -1,12 +1,12 @@
 import {App, ItemView, TFile, View, WorkspaceLeaf} from "obsidian";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {FactoriesInterface} from "../interfaces/FactoriesInterface";
-import {TagHelper} from "../helpers/TagHelper";
+import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
+import {TagHelper} from "../databases/TagHelper";
 import {base} from "w3c-keyname";
-import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
-import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
+import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -36,9 +36,9 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		return this.app.plugins.getPlugin('rpg-manager').factories;
 	}
 
-	public get dataManipulators(
-	): DataManipulatorsInterface {
-		return this.app.plugins.getPlugin('rpg-manager').dataManipulators;
+	public get manipulators(
+	): ManipulatorsInterface {
+		return this.app.plugins.getPlugin('rpg-manager').manipulators;
 	}
 
 	public get tagHelper(

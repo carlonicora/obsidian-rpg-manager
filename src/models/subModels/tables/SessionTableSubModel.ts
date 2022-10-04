@@ -1,11 +1,11 @@
-import {ContentType} from "../../../enums/ContentType";
+import {ContentType} from "../../../responses/enums/ContentType";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {TableField} from "../../../enums/TableField";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
-import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
+import {TableField} from "../../../views/enums/TableField";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class SessionTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SessionList;

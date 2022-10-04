@@ -1,11 +1,11 @@
-import {ContentType} from "../../../enums/ContentType";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {ContentType} from "../../../responses/enums/ContentType";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {TableField} from "../../../enums/TableField";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
-import {ActInterface} from "../../../database/components/interfaces/ActInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {TableField} from "../../../views/enums/TableField";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {ActInterface} from "../../../databases/components/interfaces/ActInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class ActTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ActList;

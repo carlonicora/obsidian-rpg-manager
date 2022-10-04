@@ -1,7 +1,7 @@
 import {AbstractHeaderView} from "./AbstractHeaderView";
-import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
-import {IdInterface} from "../interfaces/IdInterface";
-import {StoryCircleStage} from "../enums/StoryCircleStage";
+import {HeaderResponseElementInterface} from "../responses/interfaces/HeaderResponseElementInterface";
+import {IdInterface} from "../databases/interfaces/IdInterface";
+import {StoryCircleStage} from "../plots/enums/StoryCircleStage";
 import {TFile} from "obsidian";
 
 export abstract class AbstractStoryCircleStageSelectorView extends AbstractHeaderView {
@@ -31,7 +31,7 @@ export abstract class AbstractStoryCircleStageSelectorView extends AbstractHeade
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined) {
-					this.dataManipulators.codeblock.update(
+					this.manipulators.codeblock.update(
 						'data.storyCircleStage',
 						storyCircleSelectorEl.value.toLowerCase(),
 					);

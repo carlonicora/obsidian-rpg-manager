@@ -1,10 +1,10 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {ComponentType} from "../enums/ComponentType";
-import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {SorterType} from "../enums/SorterType";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {SorterComparisonElement} from "../databases/SorterComparisonElement";
+import {SorterType} from "../databases/enums/SorterType";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 
 export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 	private relationshipsEl: HTMLDivElement;
@@ -144,9 +144,9 @@ export class FrontmatterElementSelectionModal extends AbstractRpgManagerModal {
 		map.set('[[' + data.file.basename + ']]', '""');
 
 		if (checkboxEl.checked) {
-			this.factories.frontmatter.update(this.currentElement.file, map);
+			this.manipulators.frontmatter.update(this.currentElement.file, map);
 		} else {
-			this.factories.frontmatter.remove(this.currentElement.file, map);
+			this.manipulators.frontmatter.remove(this.currentElement.file, map);
 		}
 	}
 

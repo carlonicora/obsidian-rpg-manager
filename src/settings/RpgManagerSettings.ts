@@ -1,16 +1,16 @@
 import {App, Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
-import {SettingsFactory} from "../factories/SettingsFactory";
+import {SettingsFactory} from "./factories/SettingsFactory";
 import {
 	RpgManagerAdvancedSettingsInterface,
 	RpgManagerAdvancedSettingsListsInterface, RpgManagerDefaultSettings,
 	RpgManagerSettingsInterface
 } from "./RpgManagerSettingsInterface";
-import {SettingType} from "../enums/SettingType";
-import {SettingInterface} from "../interfaces/SettingsInterface";
-import {TagHelper} from "../helpers/TagHelper";
-import {tableFieldName} from "../enums/TableField";
+import {SettingType} from "../databases/enums/SettingType";
+import {SettingInterface} from "./interfaces/SettingsInterface";
+import {TagHelper} from "../databases/TagHelper";
+import {tableFieldName} from "../views/enums/TableField";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private plugin: RpgManagerInterface;
@@ -190,7 +190,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			this.plugin.tagHelper = new TagHelper(this.plugin.settings);
 			await this.settingsUpdater.updateTags(updatedTags);
 
-			response = 'Settings saved and database re-initialised';
+			response = 'Settings saved and databases re-initialised';
 		}
 
 		return response;

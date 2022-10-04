@@ -1,17 +1,17 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ComponentType} from "../../../enums/ComponentType";
-import {ResponseType} from "../../../enums/ResponseType";
-import {CampaignInterface} from "../../../database/components/interfaces/CampaignInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
-import {AdventureInterface} from "../../../database/components/interfaces/AdventureInterface";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
-import {SorterType} from "../../../enums/SorterType";
-import {ActInterface} from "../../../database/components/interfaces/ActInterface";
-import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {ResponseType} from "../../../responses/enums/ResponseType";
+import {CampaignInterface} from "../../../databases/components/interfaces/CampaignInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
+import {AdventureInterface} from "../../../databases/components/interfaces/AdventureInterface";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {SorterComparisonElement} from "../../../databases/SorterComparisonElement";
+import {SorterType} from "../../../databases/enums/SorterType";
+import {ActInterface} from "../../../databases/components/interfaces/ActInterface";
+import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 
 export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: CampaignInterface;

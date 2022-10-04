@@ -1,11 +1,11 @@
-import {ContentType} from "../../../enums/ContentType";
+import {ContentType} from "../../../responses/enums/ContentType";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {TableField} from "../../../enums/TableField";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
-import {CharacterInterface} from "../../../database/components/interfaces/CharacterInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {TableField} from "../../../views/enums/TableField";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {CharacterInterface} from "../../../databases/components/interfaces/CharacterInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class CharacterTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.CharacterList;

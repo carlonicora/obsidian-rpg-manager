@@ -1,21 +1,21 @@
-import {ComponentFrontmatterTemplateFactoryInterface} from "../interfaces/factories/ComponentFrontmatterTemplateFactoryInterface";
+import {ComponentFrontmatterTemplateFactoryInterface} from "../templates/factories/interfaces/ComponentFrontmatterTemplateFactoryInterface";
 import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../helpers/FileContentManager";
-import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/ComponentNotesTemplateFactoryInterface";
-import {ComponentType} from "../enums/ComponentType";
-import {CampaignNotesTemplateFactory} from "../templates/notes/CampaignNotesTemplateFactory";
-import {AdventureNotesTemplateFactory} from "../templates/notes/AdventureNotesTemplateFactory";
-import {CharacterNotesTemplateFactory} from "../templates/notes/CharacterNotesTemplateFactory";
-import {NonPlayerCharacterNotesTemplateFactory} from "../templates/notes/NonPlayerCharacterNotesTemplateFactory";
-import {ClueNotesTemplateFactory} from "../templates/notes/ClueNotesTemplateFactory";
-import {LocationNotesTemplateFactory} from "../templates/notes/LocationNotesTemplateFactory";
-import {FactionNotesTemplateFactory} from "../templates/notes/FactionNotesTemplateFactory";
-import {EventNotesTemplateFactory} from "../templates/notes/EventNotesTemplateFactory";
+import {ComponentNotesTemplateFactoryInterface} from "../templates/factories/interfaces/ComponentNotesTemplateFactoryInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {CampaignNotesTemplateFactory} from "../templates/factories/notes/CampaignNotesTemplateFactory";
+import {AdventureNotesTemplateFactory} from "../templates/factories/notes/AdventureNotesTemplateFactory";
+import {CharacterNotesTemplateFactory} from "../templates/factories/notes/CharacterNotesTemplateFactory";
+import {NonPlayerCharacterNotesTemplateFactory} from "../templates/factories/notes/NonPlayerCharacterNotesTemplateFactory";
+import {ClueNotesTemplateFactory} from "../templates/factories/notes/ClueNotesTemplateFactory";
+import {LocationNotesTemplateFactory} from "../templates/factories/notes/LocationNotesTemplateFactory";
+import {FactionNotesTemplateFactory} from "../templates/factories/notes/FactionNotesTemplateFactory";
+import {EventNotesTemplateFactory} from "../templates/factories/notes/EventNotesTemplateFactory";
 import {AbstractRpgManager} from "./AbstractRpgManager";
-import {ActNotesTemplateFactory} from "../templates/notes/ActNotesTemplateFactory";
-import {SceneNotesTemplateFactory} from "../templates/notes/SceneNotesTemplateFactory";
-import {SessionNotesTemplateFactory} from "../templates/notes/SessionNotesTemplateFactory";
-import {SubplotNotesTemplateFactory} from "../templates/notes/SubplotNotesTemplateFactory";
+import {ActNotesTemplateFactory} from "../templates/factories/notes/ActNotesTemplateFactory";
+import {SceneNotesTemplateFactory} from "../templates/factories/notes/SceneNotesTemplateFactory";
+import {SessionNotesTemplateFactory} from "../templates/factories/notes/SessionNotesTemplateFactory";
+import {SubplotNotesTemplateFactory} from "../templates/factories/notes/SubplotNotesTemplateFactory";
 
 export abstract class AbstractComponentFrontmatterTemplateFactory extends AbstractRpgManager implements ComponentFrontmatterTemplateFactoryInterface {
 	protected internalTemplate: ComponentNotesTemplateFactoryInterface|undefined;

@@ -1,10 +1,10 @@
 import {AbstractSubModel} from "../../abstracts/AbstractSubModel";
-import {ResponseDataElementInterface} from "../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseTable} from "../../responses/ResponseTable";
-import {ContentType} from "../../enums/ContentType";
-import {RelationshipInterface} from "../../database/relationships/interfaces/RelationshipInterface";
-import {AbtInterface} from "../../database/plots/interfaces/AbtInterface";
-import {PlotsInterface} from "../../database/plots/interfaces/PlotsInterface";
+import {ContentType} from "../../responses/enums/ContentType";
+import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {AbtInterface} from "../../plots/interfaces/AbtInterface";
+import {PlotsInterface} from "../../plots/interfaces/PlotsInterface";
 
 export class AbtPlotSubModel extends AbstractSubModel {
 
@@ -24,7 +24,7 @@ export class AbtPlotSubModel extends AbstractSubModel {
 
 		if (
 			data instanceof Adventure &&
-			this.database.readList<ActInterface>(ComponentType.Act, data.id).length === 0 &&
+			this.databases.readList<ActInterface>(ComponentType.Act, data.id).length === 0 &&
 			additionalInformation.need !== '' &&
 			additionalInformation.and !== '' &&
 			additionalInformation.but !== '' &&

@@ -1,11 +1,11 @@
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {SceneSelectionModal} from "../../../modals/SceneSelectionModal";
-import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
+import {SceneAnalyser} from "../../../databases/SceneAnalyser";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
+import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: SessionInterface;

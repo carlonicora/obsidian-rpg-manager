@@ -1,12 +1,12 @@
 import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {TFile} from "obsidian";
-import {Pronoun} from "../../../enums/Pronoun";
-import {CharacterInterface} from "../../../database/components/interfaces/CharacterInterface";
+import {Pronoun} from "../../../databases/enums/Pronoun";
+import {CharacterInterface} from "../../../databases/components/interfaces/CharacterInterface";
 
 export class CharacterHeaderView extends AbstractHeaderView {
 	protected currentElement:CharacterInterface;
@@ -62,7 +62,7 @@ export class CharacterHeaderView extends AbstractHeaderView {
 			const file: TFile|undefined = this.currentElement.file;
 
 			if (file !== undefined){
-				this.dataManipulators.codeblock.update(
+				this.manipulators.codeblock.update(
 					'data.pronoun',
 					pronounSelectorEl.value,
 				)

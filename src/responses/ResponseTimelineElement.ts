@@ -1,4 +1,4 @@
-import {TimelineElementResponseInterface} from "../interfaces/response/subModels/TimelineElementResponseInterface";
+import {TimelineElementResponseInterface} from "./interfaces/TimelineElementResponseInterface";
 
 export class ResponseTimelineElement implements TimelineElementResponseInterface {
 	constructor(

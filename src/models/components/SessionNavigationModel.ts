@@ -1,11 +1,11 @@
 import {AbstractModel} from "../../abstracts/AbstractModel";
-import {ResponseDataInterface} from "../../interfaces/response/ResponseDataInterface";
-import {ComponentType} from "../../enums/ComponentType";
+import {ResponseDataInterface} from "../../responses/interfaces/ResponseDataInterface";
+import {ComponentType} from "../../databases/enums/ComponentType";
 import {SceneTableSubModel} from "../subModels/tables/SceneTableSubModel";
-import {SorterComparisonElement} from "../../database/SorterComparisonElement";
+import {SorterComparisonElement} from "../../databases/SorterComparisonElement";
 import {SessionHeaderSubModel} from "../subModels/headers/SessionHeaderSubModel";
-import {SessionInterface} from "../../database/components/interfaces/SessionInterface";
-import {SceneInterface} from "../../database/components/interfaces/SceneInterface";
+import {SessionInterface} from "../../databases/components/interfaces/SessionInterface";
+import {SceneInterface} from "../../databases/components/interfaces/SceneInterface";
 
 export class SessionNavigationModel extends AbstractModel {
 	protected currentElement: SessionInterface;

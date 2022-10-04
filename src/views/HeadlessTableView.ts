@@ -1,5 +1,5 @@
-import {ContentInterface} from "../interfaces/ContentInterface";
-import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
+import {ContentInterface} from "../responses/contents/interfaces/ContentInterface";
+import {HeaderResponseElementInterface} from "../responses/interfaces/HeaderResponseElementInterface";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {App} from "obsidian";
 

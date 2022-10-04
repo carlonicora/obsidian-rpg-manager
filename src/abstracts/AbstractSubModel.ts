@@ -1,9 +1,9 @@
-import {SubModelInterface} from "../interfaces/SubModelInterface";
-import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
+import {SubModelInterface} from "../models/interfaces/SubModelInterface";
+import {ResponseDataElementInterface} from "../responses/interfaces/ResponseDataElementInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {App} from "obsidian";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 
 export abstract class AbstractSubModel extends AbstractRpgManager implements SubModelInterface {
 	constructor(

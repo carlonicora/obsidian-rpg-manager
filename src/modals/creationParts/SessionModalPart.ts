@@ -1,8 +1,8 @@
 import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
-import {ComponentType} from "../../enums/ComponentType";
+import {ComponentType} from "../../databases/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../interfaces/ModalInterface";
-import {SessionInterface} from "../../database/components/interfaces/SessionInterface";
+import {ModalInterface} from "../interfaces/ModalInterface";
+import {SessionInterface} from "../../databases/components/interfaces/SessionInterface";
 
 export class SessionModalPart extends AbstractModalPart {
 	private sessions: SessionInterface[];

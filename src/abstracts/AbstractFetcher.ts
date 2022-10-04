@@ -1,4 +1,4 @@
-import {FetcherInterface} from "../interfaces/FetcherInterface";
+import {FetcherInterface} from "../fetchers/interfaces/FetcherInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 
 export class AbstractFetcher extends AbstractRpgManager implements FetcherInterface{

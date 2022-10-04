@@ -1,11 +1,11 @@
 import {AbstractResponse} from "../abstracts/AbstractResponse";
-import {HeaderResponseInterface} from "../interfaces/response/subModels/HeaderResponseInterface";
+import {HeaderResponseInterface} from "./interfaces/HeaderResponseInterface";
 import {App} from "obsidian";
-import {ResponseType} from "../enums/ResponseType";
-import {ContentInterface} from "../interfaces/ContentInterface";
-import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
-import {ComponentType} from "../enums/ComponentType";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ResponseType} from "./enums/ResponseType";
+import {ContentInterface} from "./contents/interfaces/ContentInterface";
+import {HeaderResponseElementInterface} from "./interfaces/HeaderResponseElementInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public type: ComponentType;

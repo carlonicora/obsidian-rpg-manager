@@ -1,8 +1,8 @@
 import {AbstractResponse} from "../abstracts/AbstractResponse";
-import {BreadcrumbResponseInterface} from "../interfaces/response/subModels/BreadcrumbResponseInterface";
-import {ResponseType} from "../enums/ResponseType";
+import {BreadcrumbResponseInterface} from "./interfaces/BreadcrumbResponseInterface";
+import {ResponseType} from "./enums/ResponseType";
 import {App} from "obsidian";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbResponseInterface {
 	public link: string;

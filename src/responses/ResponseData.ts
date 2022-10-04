@@ -1,11 +1,11 @@
-import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataInterface} from "./interfaces/ResponseDataInterface";
+import {ResponseDataElementInterface} from "./interfaces/ResponseDataElementInterface";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
-import {AbstractComponent} from "../database/abstracts/AbstractComponent";
-import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../database/relationships/enums/RelationshipType";
-import {Relationship} from "../database/relationships/Relationship";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {AbstractComponent} from "../databases/abstracts/AbstractComponent";
+import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
+import {RelationshipType} from "../relationships/enums/RelationshipType";
+import {Relationship} from "../relationships/Relationship";
 
 export class ResponseData extends AbstractRpgManager implements ResponseDataInterface {
 	public elements: ResponseDataElementInterface[] = [];

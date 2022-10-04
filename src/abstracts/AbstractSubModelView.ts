@@ -1,5 +1,5 @@
-import {ViewInterface} from "../interfaces/ViewInterface";
-import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
+import {ViewInterface} from "../views/interfaces/ViewInterface";
+import {ResponseDataElementInterface} from "../responses/interfaces/ResponseDataElementInterface";
 import {App} from "obsidian";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 

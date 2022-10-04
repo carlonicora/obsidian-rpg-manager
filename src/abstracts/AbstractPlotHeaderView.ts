@@ -1,13 +1,13 @@
-import {SceneAnalyser, ThresholdResult} from "../helpers/SceneAnalyser";
-import {ComponentType} from "../enums/ComponentType";
+import {SceneAnalyser, ThresholdResult} from "../databases/SceneAnalyser";
+import {ComponentType} from "../databases/enums/ComponentType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSelectorView";
-import {HeaderResponseElementInterface} from "../interfaces/response/subModels/HeaderResponseElementInterface";
-import {AbtStage} from "../enums/AbtStage";
+import {HeaderResponseElementInterface} from "../responses/interfaces/HeaderResponseElementInterface";
+import {AbtStage} from "../plots/enums/AbtStage";
 import {EditorSelector} from "../helpers/EditorSelector";
-import {SceneType} from "../enums/SceneType";
-import {AbtInterface} from "../database/plots/interfaces/AbtInterface";
-import {StoryCircleInterface} from "../database/plots/interfaces/StoryCircleInterface";
+import {SceneType} from "../databases/enums/SceneType";
+import {AbtInterface} from "../plots/interfaces/AbtInterface";
+import {StoryCircleInterface} from "../plots/interfaces/StoryCircleInterface";
 
 export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSelectorView {
 	private _addPlotElement(
@@ -269,7 +269,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined){
-					this.dataManipulators.codeblock.update(
+					this.manipulators.codeblock.update(
 						'data.abtStage',
 						abtSelectorEl.value.toLowerCase(),
 					);

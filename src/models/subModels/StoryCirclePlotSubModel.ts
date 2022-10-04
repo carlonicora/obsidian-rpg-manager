@@ -1,8 +1,8 @@
 import {AbstractSubModel} from "../../abstracts/AbstractSubModel";
-import {ResponseDataElementInterface} from "../../interfaces/response/ResponseDataElementInterface";
-import {ContentType} from "../../enums/ContentType";
+import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
+import {ContentType} from "../../responses/enums/ContentType";
 import {ResponseTable} from "../../responses/ResponseTable";
-import {RelationshipInterface} from "../../database/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export class StoryCirclePlotSubModel extends AbstractSubModel {
 	public async generateData(

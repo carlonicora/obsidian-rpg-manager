@@ -1,6 +1,6 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentType} from "../enums/ComponentType";
-import {TagStatus} from "../enums/TagStatus";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {TagStatus} from "../databases/enums/TagStatus";
 
 export class TagMisconfiguredError extends AbstractRpgManagerError {
 	public showErrorMessage(

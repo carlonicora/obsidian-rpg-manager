@@ -1,8 +1,8 @@
 import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
 import {App} from "obsidian";
-import {ModalInterface} from "../../interfaces/ModalInterface";
-import {ComponentType} from "../../enums/ComponentType";
-import {SceneInterface} from "../../database/components/interfaces/SceneInterface";
+import {ModalInterface} from "../interfaces/ModalInterface";
+import {ComponentType} from "../../databases/enums/ComponentType";
+import {SceneInterface} from "../../databases/components/interfaces/SceneInterface";
 
 export class SceneModalPart extends AbstractModalPart {
 	private scenes: SceneInterface[];

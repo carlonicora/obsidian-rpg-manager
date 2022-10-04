@@ -1,10 +1,10 @@
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
-import {ComponentType} from "../enums/ComponentType";
-import {ViewType} from "../enums/ViewType";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {ViewType} from "./enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
 import {TFile} from "obsidian";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
-import {CampaignInterface} from "../database/components/interfaces/CampaignInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {CampaignInterface} from "../databases/components/interfaces/CampaignInterface";
 
 export class RPGManagerView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.RPGManager.toString();

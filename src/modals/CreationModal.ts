@@ -1,11 +1,11 @@
 import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
-import {ComponentType} from "../enums/ComponentType";
-import {ModalPartInterface} from "../interfaces/ModalPartInterface";
-import {CampaignSetting} from "../enums/CampaignSetting";
-import {ModalInterface} from "../interfaces/ModalInterface";
-import {ComponentNotesTemplateFactoryInterface} from "../interfaces/factories/ComponentNotesTemplateFactoryInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {ModalPartInterface} from "./interfaces/ModalPartInterface";
+import {CampaignSetting} from "../databases/enums/CampaignSetting";
+import {ModalInterface} from "./interfaces/ModalInterface";
+import {ComponentNotesTemplateFactoryInterface} from "../templates/factories/interfaces/ComponentNotesTemplateFactoryInterface";
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
-import {IdInterface} from "../interfaces/IdInterface";
+import {IdInterface} from "../databases/interfaces/IdInterface";
 
 export class CreationModal extends AbstractRpgManagerModal implements ModalInterface {
 	public saver: ModalPartInterface;

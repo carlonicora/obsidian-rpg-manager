@@ -1,6 +1,6 @@
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {AdventureInterface} from "../../../database/components/interfaces/AdventureInterface";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {AdventureInterface} from "../../../databases/components/interfaces/AdventureInterface";
 
 export class AdventureHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: AdventureInterface;

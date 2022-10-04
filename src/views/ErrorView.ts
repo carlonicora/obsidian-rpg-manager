@@ -1,6 +1,6 @@
 import {Component, MarkdownRenderer, TFile} from "obsidian";
-import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
-import {ViewType} from "../enums/ViewType";
+import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
+import {ViewType} from "./enums/ViewType";
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 
 export class ErrorView extends AbstractRpgManagerView {

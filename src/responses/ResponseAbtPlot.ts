@@ -1,9 +1,9 @@
 import {AbstractResponse} from "../abstracts/AbstractResponse";
-import {AbtPlotResponseInterface} from "../interfaces/response/subModels/AbtPlotResponseInterface";
+import {AbtPlotResponseInterface} from "./interfaces/AbtPlotResponseInterface";
 import {App} from "obsidian";
-import {ResponseType} from "../enums/ResponseType";
-import {ContentInterface} from "../interfaces/ContentInterface";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ResponseType} from "./enums/ResponseType";
+import {ContentInterface} from "./contents/interfaces/ContentInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ResponseAbtPlot extends AbstractResponse implements AbtPlotResponseInterface {
 	public need: ContentInterface;

@@ -1,9 +1,9 @@
-import {ResponseDataInterface} from "../interfaces/response/ResponseDataInterface";
-import {ModelInterface} from "../interfaces/ModelInterface";
+import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
+import {ModelInterface} from "../models/interfaces/ModelInterface";
 import {App} from "obsidian";
 import {ResponseData} from "../responses/ResponseData";
 import {AbstractRpgManager} from "./AbstractRpgManager";
-import {ComponentType} from "../enums/ComponentType";
+import {ComponentType} from "../databases/enums/ComponentType";
 import {LocationTableSubModel} from "../models/subModels/tables/LocationTableSubModel";
 import {FactionTableSubModel} from "../models/subModels/tables/FactionTableSubModel";
 import {ClueTableSubModel} from "../models/subModels/tables/ClueTableSubModel";
@@ -14,21 +14,20 @@ import {AdventureTableSubModel} from "../models/subModels/tables/AdventureTableS
 import {ActTableSubModel} from "../models/subModels/tables/ActTableSubModel";
 import {SceneTableSubModel} from "../models/subModels/tables/SceneTableSubModel";
 import {SessionTableSubModel} from "../models/subModels/tables/SessionTableSubModel";
-import {SorterComparisonElement} from "../database/SorterComparisonElement";
-import {SorterComparisonElementInterface} from "../interfaces/SorterComparisonElementInterface";
+import {SorterComparisonElement} from "../databases/SorterComparisonElement";
+import {SorterComparisonElementInterface} from "../databases/interfaces/SorterComparisonElementInterface";
 import {SubplotTableSubModel} from "../models/subModels/tables/SubplotTableSubModel";
 import {NonPlayerCharacterTableSubModel} from "../models/subModels/tables/NonPlayerCharacterTableSubModel";
-import {ArrayHelper} from "../helpers/ArrayHelper";
-import {SorterType} from "../enums/SorterType";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
-import {EventInterface} from "../database/components/interfaces/EventInterface";
-import {CampaignInterface} from "../database/components/interfaces/CampaignInterface";
-import {SessionInterface} from "../database/components/interfaces/SessionInterface";
-import {AdventureInterface} from "../database/components/interfaces/AdventureInterface";
-import {ActInterface} from "../database/components/interfaces/ActInterface";
-import {SceneInterface} from "../database/components/interfaces/SceneInterface";
-import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../database/relationships/enums/RelationshipType";
+import {SorterType} from "../databases/enums/SorterType";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {EventInterface} from "../databases/components/interfaces/EventInterface";
+import {CampaignInterface} from "../databases/components/interfaces/CampaignInterface";
+import {SessionInterface} from "../databases/components/interfaces/SessionInterface";
+import {AdventureInterface} from "../databases/components/interfaces/AdventureInterface";
+import {ActInterface} from "../databases/components/interfaces/ActInterface";
+import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
+import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
+import {RelationshipType} from "../relationships/enums/RelationshipType";
 
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected response:ResponseDataInterface;
@@ -149,7 +148,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 				);
 			}
 
-			if (ArrayHelper.isArray(component)) {
+			if (Array.isArray(component)) {
 				let sorter: Array<any> | undefined = undefined;
 
 				if ((<Array<any>>component)[0]?.component !== undefined) {

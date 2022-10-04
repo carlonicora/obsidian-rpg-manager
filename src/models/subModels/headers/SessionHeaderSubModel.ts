@@ -1,15 +1,15 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
-import {AbtStage} from "../../../enums/AbtStage";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
+import {AbtStage} from "../../../plots/enums/AbtStage";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ComponentType} from "../../../enums/ComponentType";
-import {ResponseType} from "../../../enums/ResponseType";
-import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
-import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {ResponseType} from "../../../responses/enums/ResponseType";
+import {SceneAnalyser} from "../../../databases/SceneAnalyser";
+import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SessionInterface;

@@ -1,11 +1,11 @@
-import {ContentType} from "../../../enums/ContentType";
+import {ContentType} from "../../../responses/enums/ContentType";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {TableField} from "../../../enums/TableField";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
-import {ClueInterface} from "../../../database/components/interfaces/ClueInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {TableField} from "../../../views/enums/TableField";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {ClueInterface} from "../../../databases/components/interfaces/ClueInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class ClueTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ClueList;

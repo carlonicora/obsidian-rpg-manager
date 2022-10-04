@@ -3,13 +3,13 @@ import {
 	RpgManagerAdvancedSettingsListElementInterface,
 	RpgManagerAdvancedSettingsListsInterface
 } from "../settings/RpgManagerSettingsInterface";
-import {ContentType} from "../enums/ContentType";
-import {ContentInterface} from "../interfaces/ContentInterface";
-import {ResponseDataElementInterface} from "../interfaces/response/ResponseDataElementInterface";
+import {ContentType} from "../responses/enums/ContentType";
+import {ContentInterface} from "../responses/contents/interfaces/ContentInterface";
+import {ResponseDataElementInterface} from "../responses/interfaces/ResponseDataElementInterface";
 import {ResponseTable} from "../responses/ResponseTable";
-import {TableField} from "../enums/TableField";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../database/relationships/interfaces/RelationshipInterface";
+import {TableField} from "../views/enums/TableField";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 
 export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface;

@@ -1,10 +1,10 @@
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
-import {SceneAnalyser} from "../../../helpers/SceneAnalyser";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
+import {SceneAnalyser} from "../../../databases/SceneAnalyser";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {ActInterface} from "../../../database/components/interfaces/ActInterface";
+import {ActInterface} from "../../../databases/components/interfaces/ActInterface";
 
 export class ActHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: ActInterface;

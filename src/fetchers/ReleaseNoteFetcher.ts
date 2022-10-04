@@ -1,5 +1,5 @@
 import {AbstractFetcher} from "../abstracts/AbstractFetcher";
-import {MarkdownFetcherInterface} from "../interfaces/fetchers/MarkdownFetcherInterface";
+import {MarkdownFetcherInterface} from "./interfaces/MarkdownFetcherInterface";
 
 export class ReleaseNoteFetcher extends AbstractFetcher implements MarkdownFetcherInterface{
 	public fetchUrl = 'https://raw.githubusercontent.com/carlonicora/obsidian-rpg-manager/master/ChangeLog.md';

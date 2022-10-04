@@ -1,5 +1,5 @@
 import {AbstractSubModelView} from "../../abstracts/AbstractSubModelView";
-import {BreadcrumbResponseInterface} from "../../interfaces/response/subModels/BreadcrumbResponseInterface";
+import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 
 export class BreadcrumbView extends AbstractSubModelView {

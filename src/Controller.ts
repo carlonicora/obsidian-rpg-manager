@@ -1,15 +1,15 @@
 import {App, Component, debounce, MarkdownPostProcessorContext, parseYaml, TFile} from "obsidian";
-import {ResponseDataInterface} from "./interfaces/response/ResponseDataInterface";
-import {ResponseDataElementInterface} from "./interfaces/response/ResponseDataElementInterface";
-import {ViewInterface} from "./interfaces/ViewInterface";
-import {ModelInterface} from "./interfaces/ModelInterface";
-import {CampaignSetting} from "./enums/CampaignSetting";
+import {ResponseDataInterface} from "./responses/interfaces/ResponseDataInterface";
+import {ResponseDataElementInterface} from "./responses/interfaces/ResponseDataElementInterface";
+import {ViewInterface} from "./views/interfaces/ViewInterface";
+import {ModelInterface} from "./models/interfaces/ModelInterface";
+import {CampaignSetting} from "./databases/enums/CampaignSetting";
 import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
-import {ComponentInterface} from "./database/interfaces/ComponentInterface";
-import {CampaignInterface} from "./database/components/interfaces/CampaignInterface";
+import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
+import {CampaignInterface} from "./databases/components/interfaces/CampaignInterface";
 import {
 	ControllerMetadataInterface
-} from "./database/interfaces/metadata/ControllerMetadataInterface";
+} from "./metadatas/ControllerMetadataInterface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;

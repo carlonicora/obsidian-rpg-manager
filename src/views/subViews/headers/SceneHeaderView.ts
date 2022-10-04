@@ -1,15 +1,15 @@
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../../../interfaces/response/subModels/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {Component, Editor, MarkdownRenderer, MarkdownView, TFile, WorkspaceLeaf} from "obsidian";
-import {SceneType, sceneTypeDescription} from "../../../enums/SceneType";
-import {IdInterface} from "../../../interfaces/IdInterface";
+import {SceneType, sceneTypeDescription} from "../../../databases/enums/SceneType";
+import {IdInterface} from "../../../databases/interfaces/IdInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
 import {SceneTypeDescriptionModal} from "../../../modals/SceneTypeDescriptionModal";
-import {SceneInterface} from "../../../database/components/interfaces/SceneInterface";
-import {SessionInterface} from "../../../database/components/interfaces/SessionInterface";
+import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
+import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentElement: SceneInterface;
@@ -140,7 +140,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined){
-					this.dataManipulators.codeblock.update(
+					this.manipulators.codeblock.update(
 						'data.isActedUpon',
 						sceneExcitementSelectorEl.checked,
 					);
@@ -176,7 +176,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined){
-					this.dataManipulators.codeblock.update(
+					this.manipulators.codeblock.update(
 						'data.sceneType',
 						this.factories.sceneType.createReadableSceneType(SceneType[sceneTypeSelectorEl.value as keyof typeof SceneType]),
 					);
@@ -240,7 +240,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				const file: TFile|undefined = data.additionalInformation.file;
 
 				if (file !== undefined){
-					this.dataManipulators.codeblock.update(
+					this.manipulators.codeblock.update(
 						'data.sessionId',
 						+sessionSelectorEl.value,
 					);
@@ -277,7 +277,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		if (file !== undefined){
 			const map: Map<string,string> = new Map<string, string>();
 			map.set('session', selectedValue);
-			this.factories.frontmatter.update(file, map);
+			this.manipulators.frontmatter.update(file, map);
 		}
 	}
 }

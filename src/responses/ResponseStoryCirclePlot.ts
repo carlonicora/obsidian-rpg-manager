@@ -1,9 +1,9 @@
 import {AbstractResponse} from "../abstracts/AbstractResponse";
 import {App} from "obsidian";
-import {ResponseType} from "../enums/ResponseType";
-import {ContentInterface} from "../interfaces/ContentInterface";
-import {StoryCirclePlotResponseInterface} from "../interfaces/response/subModels/StoryCirclePlotResponseInterface";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ResponseType} from "./enums/ResponseType";
+import {ContentInterface} from "./contents/interfaces/ContentInterface";
+import {StoryCirclePlotResponseInterface} from "./interfaces/StoryCirclePlotResponseInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ResponseStoryCirclePlot extends AbstractResponse implements StoryCirclePlotResponseInterface {
 	public you: ContentInterface;

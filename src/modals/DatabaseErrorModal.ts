@@ -1,6 +1,6 @@
 import {App, Component, MarkdownRenderer, TFile} from "obsidian";
-import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
-import {ViewType} from "../enums/ViewType";
+import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
+import {ViewType} from "../views/enums/ViewType";
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 
 export class DatabaseErrorModal extends AbstractRpgManagerModal {

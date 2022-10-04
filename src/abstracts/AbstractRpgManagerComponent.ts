@@ -1,10 +1,10 @@
 import {App, Component} from "obsidian";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {FactoriesInterface} from "../interfaces/FactoriesInterface";
-import {TagHelper} from "../helpers/TagHelper";
+import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
+import {TagHelper} from "../databases/TagHelper";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
-import {DataManipulatorsInterface} from "../interfaces/DataManipulatorsInterface";
-import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
+import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
+import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 
 export abstract class AbstractRpgManagerComponent extends Component implements RpgManagerHelperInterface {
 	constructor(
@@ -28,9 +28,9 @@ export abstract class AbstractRpgManagerComponent extends Component implements R
 		return this.app.plugins.getPlugin('rpg-manager').factories;
 	}
 
-	public get dataManipulators(
-	): DataManipulatorsInterface {
-		return this.app.plugins.getPlugin('rpg-manager').dataManipulators;
+	public get manipulators(
+	): ManipulatorsInterface {
+		return this.app.plugins.getPlugin('rpg-manager').manipulators;
 	}
 
 	public get tagHelper(

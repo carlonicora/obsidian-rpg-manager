@@ -1,10 +1,10 @@
 import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
-import {CampaignSetting} from "../../enums/CampaignSetting";
-import {ComponentType} from "../../enums/ComponentType";
+import {CampaignSetting} from "../../databases/enums/CampaignSetting";
+import {ComponentType} from "../../databases/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../interfaces/ModalInterface";
-import {IdInterface} from "../../interfaces/IdInterface";
-import {CampaignInterface} from "../../database/components/interfaces/CampaignInterface";
+import {ModalInterface} from "../interfaces/ModalInterface";
+import {IdInterface} from "../../databases/interfaces/IdInterface";
+import {CampaignInterface} from "../../databases/components/interfaces/CampaignInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
 	private campaigns: CampaignInterface[];

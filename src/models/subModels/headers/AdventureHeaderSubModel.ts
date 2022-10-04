@@ -1,11 +1,11 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ComponentType} from "../../../enums/ComponentType";
-import {ResponseType} from "../../../enums/ResponseType";
-import {AdventureInterface} from "../../../database/components/interfaces/AdventureInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {ResponseType} from "../../../responses/enums/ResponseType";
+import {AdventureInterface} from "../../../databases/components/interfaces/AdventureInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class AdventureHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: AdventureInterface;

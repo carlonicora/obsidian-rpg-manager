@@ -1,13 +1,13 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ComponentType} from "../../../enums/ComponentType";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ComponentType} from "../../../databases/enums/ComponentType";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
-import {HeaderResponseType} from "../../../enums/HeaderResponseType";
-import {ResponseType} from "../../../enums/ResponseType";
-import {MusicInterface} from "../../../database/components/interfaces/MusicInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
+import {ResponseType} from "../../../responses/enums/ResponseType";
+import {MusicInterface} from "../../../databases/components/interfaces/MusicInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class MusicHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: MusicInterface;

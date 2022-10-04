@@ -1,4 +1,4 @@
-import {ContentInterface} from "../interfaces/ContentInterface";
+import {ContentInterface} from "../responses/contents/interfaces/ContentInterface";
 import {AbstractRpgManager} from "./AbstractRpgManager";
 import {App} from "obsidian";
 

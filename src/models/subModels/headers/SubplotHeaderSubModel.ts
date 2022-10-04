@@ -1,11 +1,11 @@
 import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../interfaces/response/ResponseDataElementInterface";
+import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../interfaces/response/subModels/HeaderResponseInterface";
-import {ComponentType} from "../../../enums/ComponentType";
-import {ResponseType} from "../../../enums/ResponseType";
-import {SubplotInterface} from "../../../database/components/interfaces/SubplotInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {ResponseType} from "../../../responses/enums/ResponseType";
+import {SubplotInterface} from "../../../databases/components/interfaces/SubplotInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class SubplotHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SubplotInterface;

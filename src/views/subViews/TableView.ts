@@ -1,13 +1,13 @@
-import {TableResponseInterface} from "../../interfaces/response/subModels/TableResponseInterface";
-import {ContentInterface} from "../../interfaces/ContentInterface";
+import {TableResponseInterface} from "../../responses/interfaces/TableResponseInterface";
+import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
 import {AbstractSubModelView} from "../../abstracts/AbstractSubModelView";
-import {ComponentType} from "../../enums/ComponentType";
-import {IdInterface} from "../../interfaces/IdInterface";
-import {DateContent} from "../../contents/DateContent";
+import {ComponentType} from "../../databases/enums/ComponentType";
+import {IdInterface} from "../../databases/interfaces/IdInterface";
+import {DateContent} from "../../responses/contents/DateContent";
 import {EditorSelector} from "../../helpers/EditorSelector";
 import {setIcon} from "obsidian";
-import {AdventureInterface} from "../../database/components/interfaces/AdventureInterface";
-import {ActInterface} from "../../database/components/interfaces/ActInterface";
+import {AdventureInterface} from "../../databases/components/interfaces/AdventureInterface";
+import {ActInterface} from "../../databases/components/interfaces/ActInterface";
 
 export class TableView extends AbstractSubModelView {
 	private tableEl: HTMLTableElement;

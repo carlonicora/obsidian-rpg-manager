@@ -1,10 +1,10 @@
 import {AbstractResponse} from "../abstracts/AbstractResponse";
-import {ResponseType} from "../enums/ResponseType";
-import {TableResponseInterface} from "../interfaces/response/subModels/TableResponseInterface";
-import {ContentInterface} from "../interfaces/ContentInterface";
+import {ResponseType} from "./enums/ResponseType";
+import {TableResponseInterface} from "./interfaces/TableResponseInterface";
+import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {App} from "obsidian";
-import {ComponentType} from "../enums/ComponentType";
-import {ComponentInterface} from "../database/interfaces/ComponentInterface";
+import {ComponentType} from "../databases/enums/ComponentType";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public class: string|null;

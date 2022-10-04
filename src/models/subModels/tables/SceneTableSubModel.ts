@@ -1,12 +1,12 @@
-import {ContentType} from "../../../enums/ContentType";
+import {ContentType} from "../../../responses/enums/ContentType";
 import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {ContentInterface} from "../../../interfaces/ContentInterface";
-import {TableField} from "../../../enums/TableField";
-import {SceneType} from "../../../enums/SceneType";
-import {ComponentInterface} from "../../../database/interfaces/ComponentInterface";
-import {SceneInterface} from "../../../database/components/interfaces/SceneInterface";
-import {RelationshipInterface} from "../../../database/relationships/interfaces/RelationshipInterface";
+import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
+import {TableField} from "../../../views/enums/TableField";
+import {SceneType} from "../../../databases/enums/SceneType";
+import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
+import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export class SceneTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;

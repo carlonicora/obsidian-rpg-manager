@@ -1,5 +1,5 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentType} from "../enums/ComponentType";
+import {ComponentType} from "../databases/enums/ComponentType";
 
 export class ComponentNotFoundError extends AbstractRpgManagerError {
 	public showErrorMessage(

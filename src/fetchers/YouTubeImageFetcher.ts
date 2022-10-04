@@ -1,7 +1,7 @@
-import {YouTubeImageFetcherInterface} from "../interfaces/fetchers/images/YouTubeImageFetcherInterface";
+import {YouTubeImageFetcherInterface} from "./YouTubeImageFetcherInterface";
 import {AbstractFetcher} from "../abstracts/AbstractFetcher";
-import {ImageFetcherInterface} from "../interfaces/fetchers/ImageFetcherInterface";
-import {FetcherInterface} from "../interfaces/FetcherInterface";
+import {ImageFetcherInterface} from "./interfaces/ImageFetcherInterface";
+import {FetcherInterface} from "./interfaces/FetcherInterface";
 
 export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImageFetcherInterface, ImageFetcherInterface, FetcherInterface {
 	public fetchUrl ='https://www.googleapis.com/youtube/v3/';

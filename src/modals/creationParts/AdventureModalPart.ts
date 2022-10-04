@@ -1,8 +1,8 @@
 import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
-import {ComponentType} from "../../enums/ComponentType";
+import {ComponentType} from "../../databases/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../interfaces/ModalInterface";
-import {AdventureInterface} from "../../database/components/interfaces/AdventureInterface";
+import {ModalInterface} from "../interfaces/ModalInterface";
+import {AdventureInterface} from "../../databases/components/interfaces/AdventureInterface";
 
 export class AdventureModalPart extends AbstractModalPart {
 	private adventures: AdventureInterface[];
