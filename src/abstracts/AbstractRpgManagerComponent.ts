@@ -13,6 +13,10 @@ export abstract class AbstractRpgManagerComponent extends Component implements R
 		super();
 	}
 
+	public get pluginVersion(): string {
+		return this.app.plugins.getPlugin('rpg-manager').version;
+	}
+
 	public get settings(
 	): RpgManagerSettingsInterface {
 		return this.app.plugins.getPlugin('rpg-manager').settings;

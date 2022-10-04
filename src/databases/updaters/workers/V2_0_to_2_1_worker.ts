@@ -1,13 +1,9 @@
 import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerInterface";
 import {AbstractDatabaseWorker} from "../../../abstracts/AbstractDatabaseWorker";
-import {LogMessageType, WarningLog} from "../../../loggers/Logger";
+import {LogMessageType} from "../../../loggers/enums/LogMessageType";
 
-export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
+export class V2_0_to_2_1_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(): Promise<void> {
-		new WarningLog(LogMessageType.Updater, 'Updating RPG Manager from v1.3 to v2.0');
-
-		//const files: TFile[] = await this.app.vault.getMarkdownFiles();
-
-		//Get all the relationships and additional metadatas from the frontmatter and move them
+		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v2.1');
 	}
 }

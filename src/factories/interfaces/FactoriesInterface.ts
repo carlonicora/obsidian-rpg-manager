@@ -19,6 +19,7 @@ import {SceneTypeFactoryInterface} from "../../databases/factories/interfaces/Sc
 import {StoryCircleStageFactoryInterface} from "../../plots/factories/interfaces/StoryCircleStageFactoryInterface";
 import {AbtStageFactoryInterface} from "../../plots/factories/interfaces/AbtStageFactoryInterface";
 import {RelationshipFactoryInterface} from "../../relationships/factories/interfaces/RelationshipFactoryInterface";
+import {LoggerFactoryInterface} from "../../loggers/factories/interfaces/LoggerFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -41,6 +42,7 @@ export interface FactoriesInterface {
 	storyCircleStage: StoryCircleStageFactoryInterface;
 	abtStage: AbtStageFactoryInterface;
 	relationship: RelationshipFactoryInterface;
+	logger: LoggerFactoryInterface;
 
 	runningTimeManager: RunningTimeManagerInterface;
 }

@@ -38,9 +38,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		relationship: RelationshipInterface,
 		database: DatabaseInterface|undefined=undefined,
 	): void {
-		console.log(this.metadata.relationships);
 		this.metadata.relationships.push(relationship);
-		console.log(this.metadata.relationships);
 	}
 
 	public existsInRelationships(

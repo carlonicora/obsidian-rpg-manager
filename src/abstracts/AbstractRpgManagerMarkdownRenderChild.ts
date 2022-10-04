@@ -14,6 +14,10 @@ export abstract class AbstractRpgManagerMarkdownRenderChild extends MarkdownRend
 		super(container);
 	}
 
+	public get pluginVersion(): string {
+		return this.app.plugins.getPlugin('rpg-manager').version;
+	}
+
 	public get settings(
 	): RpgManagerSettingsInterface {
 		return this.app.plugins.getPlugin('rpg-manager').settings;

@@ -13,6 +13,10 @@ export abstract class AbstractRpgManagerModal extends Modal implements RpgManage
 		super(app);
 	}
 
+	public get pluginVersion(): string {
+		return this.app.plugins.getPlugin('rpg-manager').version;
+	}
+
 	public get settings(
 	): RpgManagerSettingsInterface {
 		return this.app.plugins.getPlugin('rpg-manager').settings;

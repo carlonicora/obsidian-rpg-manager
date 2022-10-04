@@ -10,6 +10,7 @@ export interface RpgManagerInterface {
 	factories: FactoriesInterface;
 	manipulators: ManipulatorsInterface;
 	tagHelper: TagHelper;
+	version: string;
 
 	updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,

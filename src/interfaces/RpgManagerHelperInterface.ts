@@ -11,6 +11,7 @@ export interface RpgManagerHelperInterface {
 	get factories(): FactoriesInterface;
 	get manipulators(): ManipulatorsInterface;
 	get tagHelper(): TagHelper;
+	get pluginVersion(): string;
 
 	updateSettings(settings: Partial<RpgManagerSettingsInterface>): Promise<void>;
 }

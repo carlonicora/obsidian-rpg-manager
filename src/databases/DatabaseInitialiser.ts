@@ -148,7 +148,6 @@ export class DatabaseInitialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		console.log('initialising relaitonship')
 		await database.recordset.forEach((component: ComponentInterface) => {
 			component.getRelationships(database).forEach((relationship: RelationshipInterface) => {
 				if (relationship.component !== undefined){
