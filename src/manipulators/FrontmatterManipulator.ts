@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {AbstractFactory} from "../factories/abstracts/AbstractFactory";
 import {FrontmatterManipulatorInterface} from "./interfaces/FrontmatterManipulatorInterface";
 import {TFile} from "obsidian";
 

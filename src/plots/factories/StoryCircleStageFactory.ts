@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {StoryCircleStageFactoryInterface} from "./interfaces/StoryCircleStageFactoryInterface";
 import {StoryCircleStage} from "../enums/StoryCircleStage";
 

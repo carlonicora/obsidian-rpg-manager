@@ -1,6 +1,6 @@
 import {BreadcrumbFactoryInterface} from "./interfaces/BreadcrumbFactoryInterface";
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {ResponseBreadcrumb} from "../../responses/ResponseBreadcrumb";
 import {ComponentType} from "../../databases/enums/ComponentType";
 import {FileFactory} from "../../templates/factories/FileFactory";

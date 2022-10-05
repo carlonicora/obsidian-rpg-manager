@@ -1,5 +1,5 @@
 import {Component, MarkdownRenderer} from "obsidian";
-import {AbstractContent} from "../../abstracts/AbstractContent";
+import {AbstractContent} from "../abstracts/AbstractContent";
 
 export class ObjectContent extends AbstractContent {
 	public content: any;

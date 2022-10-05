@@ -3,7 +3,7 @@ import {InfoLog} from "../InfoLog";
 import {LogMessageType} from "../enums/LogMessageType";
 import {WarningLog} from "../WarningLog";
 import {ErrorLog} from "../ErrorLog";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {App} from "obsidian";
 
 export class LoggerFactory extends AbstractFactory implements LoggerFactoryInterface {

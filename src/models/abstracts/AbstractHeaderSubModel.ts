@@ -1,11 +1,11 @@
 import {AbstractSubModel} from "./AbstractSubModel";
-import {ResponseDataElementInterface} from "../responses/interfaces/ResponseDataElementInterface";
-import {ResponseHeader} from "../responses/ResponseHeader";
-import {ContentType} from "../responses/enums/ContentType";
-import {ResponseHeaderElement} from "../responses/ResponseHeaderElement";
-import {HeaderResponseType} from "../responses/enums/HeaderResponseType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
+import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
+import {ResponseHeader} from "../../responses/ResponseHeader";
+import {ContentType} from "../../responses/enums/ContentType";
+import {ResponseHeaderElement} from "../../responses/ResponseHeaderElement";
+import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
+import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	protected data: ComponentInterface;

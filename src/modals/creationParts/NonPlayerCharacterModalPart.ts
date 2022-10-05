@@ -1,4 +1,4 @@
-import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../abstracts/AbstractModalPart";
 
 export class NonPlayerCharacterModalPart extends AbstractModalPart {
 	public async addElement(

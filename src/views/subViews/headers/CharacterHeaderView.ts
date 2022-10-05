@@ -1,4 +1,4 @@
-import {AbstractHeaderView} from "../../../abstracts/AbstractHeaderView";
+import {AbstractHeaderView} from "../../abstracts/AbstractHeaderView";
 import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";

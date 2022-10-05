@@ -1,5 +1,5 @@
 import {ContentType} from "../../../responses/enums/ContentType";
-import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
+import {AbstractTableSubModel} from "../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../views/enums/TableField";

@@ -1,5 +1,5 @@
 import {ComponentNotesTemplateFactoryInterface} from "../interfaces/ComponentNotesTemplateFactoryInterface";
-import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
+import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 import {ComponentType} from "../../../databases/enums/ComponentType";
 import {CharacterInterface} from "../../../databases/components/interfaces/CharacterInterface";
 

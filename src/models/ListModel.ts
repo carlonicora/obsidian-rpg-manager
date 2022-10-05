@@ -1,4 +1,4 @@
-import {AbstractModel} from "../abstracts/AbstractModel";
+import {AbstractModel} from "./abstracts/AbstractModel";
 import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
 import {ControllerMetadataModelListsInterface} from "../metadatas/controllers/ControllerMetadataModelListsInterface";
 import {

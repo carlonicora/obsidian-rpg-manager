@@ -1,5 +1,5 @@
 import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerInterface";
-import {AbstractDatabaseWorker} from "../../../abstracts/AbstractDatabaseWorker";
+import {AbstractDatabaseWorker} from "../abstracts/AbstractDatabaseWorker";
 import {TAbstractFile, TFile, TFolder} from "obsidian";
 import {LogMessageType} from "../../../loggers/enums/LogMessageType";
 

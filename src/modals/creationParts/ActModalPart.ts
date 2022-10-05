@@ -1,4 +1,4 @@
-import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../abstracts/AbstractModalPart";
 import {ComponentType} from "../../databases/enums/ComponentType";
 import {App} from "obsidian";
 import {ModalInterface} from "../interfaces/ModalInterface";

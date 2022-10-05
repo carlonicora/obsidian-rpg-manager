@@ -1,4 +1,4 @@
-import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
+import {AbstractHeaderSubModel} from "../../abstracts/AbstractHeaderSubModel";
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {AbtStage} from "../../../plots/enums/AbtStage";

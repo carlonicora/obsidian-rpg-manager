@@ -1,4 +1,4 @@
-import {AbstractTemplate} from "../../../abstracts/AbstractTemplate";
+import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 import {ComponentNotesTemplateFactoryInterface} from "../interfaces/ComponentNotesTemplateFactoryInterface";
 
 export class SubplotNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {

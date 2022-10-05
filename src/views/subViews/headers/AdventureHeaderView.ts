@@ -1,4 +1,4 @@
-import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {AbstractPlotHeaderView} from "../../abstracts/AbstractPlotHeaderView";
 import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
 import {AdventureInterface} from "../../../databases/components/interfaces/AdventureInterface";
 

@@ -1,5 +1,5 @@
 import {SorterFactoryInterface} from "./interfaces/SorterFactoryInterface";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {Sorter} from "../Sorter";
 import {SorterComparisonElementInterface} from "../interfaces/SorterComparisonElementInterface";
 

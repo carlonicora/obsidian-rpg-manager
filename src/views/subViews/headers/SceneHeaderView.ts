@@ -6,7 +6,7 @@ import {SceneType, sceneTypeDescription} from "../../../databases/enums/SceneTyp
 import {IdInterface} from "../../../databases/interfaces/IdInterface";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
-import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {AbstractPlotHeaderView} from "../../abstracts/AbstractPlotHeaderView";
 import {SceneTypeDescriptionModal} from "../../../modals/SceneTypeDescriptionModal";
 import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";

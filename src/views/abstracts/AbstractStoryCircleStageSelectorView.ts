@@ -1,7 +1,7 @@
 import {AbstractHeaderView} from "./AbstractHeaderView";
-import {HeaderResponseElementInterface} from "../responses/interfaces/HeaderResponseElementInterface";
-import {IdInterface} from "../databases/interfaces/IdInterface";
-import {StoryCircleStage} from "../plots/enums/StoryCircleStage";
+import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
+import {IdInterface} from "../../databases/interfaces/IdInterface";
+import {StoryCircleStage} from "../../plots/enums/StoryCircleStage";
 import {TFile} from "obsidian";
 
 export abstract class AbstractStoryCircleStageSelectorView extends AbstractHeaderView {

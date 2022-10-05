@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {App} from "obsidian";
 import {FetcherInterface} from "../interfaces/FetcherInterface";
 import {FetcherFactoryInterface} from "./interfaces/FetcherFactoryInterface";

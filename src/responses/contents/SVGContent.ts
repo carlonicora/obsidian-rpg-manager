@@ -1,4 +1,4 @@
-import {AbstractContent} from "../../abstracts/AbstractContent";
+import {AbstractContent} from "../abstracts/AbstractContent";
 import {setIcon} from "obsidian";
 import {StoryCircleStage} from "../../plots/enums/StoryCircleStage";
 

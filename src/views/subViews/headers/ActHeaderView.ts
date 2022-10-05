@@ -2,7 +2,7 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {SceneAnalyser} from "../../../databases/SceneAnalyser";
-import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {AbstractPlotHeaderView} from "../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ActInterface} from "../../../databases/components/interfaces/ActInterface";
 

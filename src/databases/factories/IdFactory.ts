@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {IdFactoryInterface} from "./interfaces/IdFactoryInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../interfaces/IdInterface";

@@ -1,5 +1,5 @@
 import {YouTubeImageFetcherInterface} from "./YouTubeImageFetcherInterface";
-import {AbstractFetcher} from "../abstracts/AbstractFetcher";
+import {AbstractFetcher} from "./abstracts/AbstractFetcher";
 import {ImageFetcherInterface} from "./interfaces/ImageFetcherInterface";
 import {FetcherInterface} from "./interfaces/FetcherInterface";
 

@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../abstracts/AbstractFactory";
+import {AbstractFactory} from "../factories/abstracts/AbstractFactory";
 import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorInterface";
 import {MarkdownView, parseYaml, stringifyYaml, TFile} from "obsidian";
 import {FileManipulator} from "./FileManipulator";

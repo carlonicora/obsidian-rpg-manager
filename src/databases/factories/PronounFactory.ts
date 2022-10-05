@@ -1,5 +1,5 @@
 import {Pronoun} from "../enums/Pronoun";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {PronounFactoryInterface} from "./interfaces/PronounFactoryInterface";
 
 export class PronounFactory extends AbstractFactory implements PronounFactoryInterface{

@@ -1,4 +1,4 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {CampaignMetadataInterface} from "../../../metadatas/components/CampaignMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";

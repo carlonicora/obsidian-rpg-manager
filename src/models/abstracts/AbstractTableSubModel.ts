@@ -2,14 +2,14 @@ import {AbstractSubModel} from "./AbstractSubModel";
 import {
 	RpgManagerAdvancedSettingsListElementInterface,
 	RpgManagerAdvancedSettingsListsInterface
-} from "../settings/RpgManagerSettingsInterface";
-import {ContentType} from "../responses/enums/ContentType";
-import {ContentInterface} from "../responses/contents/interfaces/ContentInterface";
-import {ResponseDataElementInterface} from "../responses/interfaces/ResponseDataElementInterface";
-import {ResponseTable} from "../responses/ResponseTable";
-import {TableField} from "../views/enums/TableField";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
+} from "../../settings/RpgManagerSettingsInterface";
+import {ContentType} from "../../responses/enums/ContentType";
+import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
+import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
+import {ResponseTable} from "../../responses/ResponseTable";
+import {TableField} from "../../views/enums/TableField";
+import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface;
@@ -110,7 +110,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 			case  TableField.Image:
 				return this.factories.contents.create(component.image, ContentType.Image, true);
 			case  TableField.Synopsis:
-				return this.factories.contents.create(relationship.description !== '' ? relationship.description : component.synopsis, ContentType.Markdown);
+				return this.factories.contents.create((relationship.description !== '' && relationship.description != undefined) ? relationship.description : component.synopsis, ContentType.Markdown);
 		}
 
 		return this.factories.contents.create('', ContentType.String);

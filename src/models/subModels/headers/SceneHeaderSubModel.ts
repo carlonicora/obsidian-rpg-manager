@@ -1,4 +1,4 @@
-import {AbstractHeaderSubModel} from "../../../abstracts/AbstractHeaderSubModel";
+import {AbstractHeaderSubModel} from "../../abstracts/AbstractHeaderSubModel";
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";

@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {RelationshipFactoryInterface} from "./interfaces/RelationshipFactoryInterface";
 import {RelationshipMetadataInterface} from "../../metadatas/relationships/RelationshipMetadataInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";

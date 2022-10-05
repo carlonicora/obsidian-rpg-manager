@@ -1,4 +1,4 @@
-import {AbstractModalPart} from "../../abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../abstracts/AbstractModalPart";
 
 export class ClueModalPart extends AbstractModalPart {
 	public async addElement(

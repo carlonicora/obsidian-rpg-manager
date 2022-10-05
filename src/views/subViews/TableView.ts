@@ -1,6 +1,6 @@
 import {TableResponseInterface} from "../../responses/interfaces/TableResponseInterface";
 import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
-import {AbstractSubModelView} from "../../abstracts/AbstractSubModelView";
+import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {ComponentType} from "../../databases/enums/ComponentType";
 import {IdInterface} from "../../databases/interfaces/IdInterface";
 import {DateContent} from "../../responses/contents/DateContent";

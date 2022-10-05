@@ -1,4 +1,4 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 import {ActMetadataInterface} from "../../../metadatas/components/ActMetadataInterface";

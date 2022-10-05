@@ -1,4 +1,4 @@
-import {AbstractModel} from "../../abstracts/AbstractModel";
+import {AbstractModel} from "../abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../responses/interfaces/ResponseDataInterface";
 import {ComponentType} from "../../databases/enums/ComponentType";
 import {SceneTableSubModel} from "../subModels/tables/SceneTableSubModel";

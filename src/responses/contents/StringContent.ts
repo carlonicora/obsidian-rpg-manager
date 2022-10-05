@@ -1,4 +1,4 @@
-import {AbstractContent} from "../../abstracts/AbstractContent";
+import {AbstractContent} from "../abstracts/AbstractContent";
 
 export class StringContent extends AbstractContent {
 	public content: string;

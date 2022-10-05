@@ -9,7 +9,7 @@ import {EventFrontmatterTemplateFactory} from "./frontmatter/EventFrontmatterTem
 import {ClueFrontmatterTemplateFactory} from "./frontmatter/ClueFrontmatterTemplateFactory";
 import {FactionFrontmatterTemplateFactory} from "./frontmatter/FactionFrontmatterTemplateFactory";
 import {MusicFrontmatterTemplateFactory} from "./frontmatter/MusicFrontmatterTemplateFactory";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {CampaignSetting} from "../../databases/enums/CampaignSetting";
 import {ComponentType} from "../../databases/enums/ComponentType";
 import {App} from "obsidian";

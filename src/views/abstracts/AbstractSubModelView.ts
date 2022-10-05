@@ -1,7 +1,7 @@
-import {ViewInterface} from "../views/interfaces/ViewInterface";
-import {ResponseDataElementInterface} from "../responses/interfaces/ResponseDataElementInterface";
+import {ViewInterface} from "../interfaces/ViewInterface";
+import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
 import {App} from "obsidian";
-import {AbstractRpgManager} from "./AbstractRpgManager";
+import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 
 export abstract class AbstractSubModelView extends AbstractRpgManager implements ViewInterface {
 	constructor(

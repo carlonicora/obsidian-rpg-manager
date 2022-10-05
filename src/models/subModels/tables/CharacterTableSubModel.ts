@@ -1,5 +1,5 @@
 import {ContentType} from "../../../responses/enums/ContentType";
-import {AbstractTableSubModel} from "../../../abstracts/AbstractTableSubModel";
+import {AbstractTableSubModel} from "../../abstracts/AbstractTableSubModel";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../views/enums/TableField";
@@ -31,8 +31,6 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		switch (fieldType) {
 			case TableField.Name:
 				return this.factories.contents.create(component.link + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);
-			case TableField.Synopsis:
-				return this.factories.contents.create(relationship.description !== '' ? relationship.description : component.synopsis, ContentType.Markdown);
 			case TableField.Age:
 				return this.factories.contents.create(character.age?.toString(), ContentType.String, true);
 		}

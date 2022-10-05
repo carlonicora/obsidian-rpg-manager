@@ -1,4 +1,4 @@
-import {AbstractFetcher} from "../abstracts/AbstractFetcher";
+import {AbstractFetcher} from "./abstracts/AbstractFetcher";
 import {MarkdownFetcherInterface} from "./interfaces/MarkdownFetcherInterface";
 
 export class ReleaseNoteFetcher extends AbstractFetcher implements MarkdownFetcherInterface{

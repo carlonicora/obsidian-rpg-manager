@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {RelationshipTypeFactoryInterface} from "./interfaces/RelationshipTypeFactoryInterface";
 import {RelationshipType} from "../enums/RelationshipType";
 

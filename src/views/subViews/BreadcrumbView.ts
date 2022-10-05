@@ -1,4 +1,4 @@
-import {AbstractSubModelView} from "../../abstracts/AbstractSubModelView";
+import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 

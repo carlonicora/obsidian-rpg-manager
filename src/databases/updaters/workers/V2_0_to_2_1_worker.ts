@@ -1,5 +1,5 @@
 import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerInterface";
-import {AbstractDatabaseWorker} from "../../../abstracts/AbstractDatabaseWorker";
+import {AbstractDatabaseWorker} from "../abstracts/AbstractDatabaseWorker";
 import {LogMessageType} from "../../../loggers/enums/LogMessageType";
 
 export class V2_0_to_2_1_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {

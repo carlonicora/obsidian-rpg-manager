@@ -1,13 +1,13 @@
-import {SceneAnalyser, ThresholdResult} from "../databases/SceneAnalyser";
-import {ComponentType} from "../databases/enums/ComponentType";
+import {SceneAnalyser, ThresholdResult} from "../../databases/SceneAnalyser";
+import {ComponentType} from "../../databases/enums/ComponentType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSelectorView";
-import {HeaderResponseElementInterface} from "../responses/interfaces/HeaderResponseElementInterface";
-import {AbtStage} from "../plots/enums/AbtStage";
-import {EditorSelector} from "../helpers/EditorSelector";
-import {SceneType} from "../databases/enums/SceneType";
-import {AbtInterface} from "../plots/interfaces/AbtInterface";
-import {StoryCircleInterface} from "../plots/interfaces/StoryCircleInterface";
+import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
+import {AbtStage} from "../../plots/enums/AbtStage";
+import {EditorSelector} from "../../helpers/EditorSelector";
+import {SceneType} from "../../databases/enums/SceneType";
+import {AbtInterface} from "../../plots/interfaces/AbtInterface";
+import {StoryCircleInterface} from "../../plots/interfaces/StoryCircleInterface";
 
 export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSelectorView {
 	private _addPlotElement(

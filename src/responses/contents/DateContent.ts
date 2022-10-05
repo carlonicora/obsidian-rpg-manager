@@ -1,4 +1,4 @@
-import {AbstractContent} from "../../abstracts/AbstractContent";
+import {AbstractContent} from "../abstracts/AbstractContent";
 import {Component, MarkdownRenderer} from "obsidian";
 
 export class DateContent extends AbstractContent {

@@ -1,5 +1,5 @@
 import {ComponentType} from "../../databases/enums/ComponentType";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {CampaignSetting} from "../../databases/enums/CampaignSetting";

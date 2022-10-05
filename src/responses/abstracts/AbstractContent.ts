@@ -1,5 +1,5 @@
-import {ContentInterface} from "../responses/contents/interfaces/ContentInterface";
-import {AbstractRpgManager} from "./AbstractRpgManager";
+import {ContentInterface} from "../contents/interfaces/ContentInterface";
+import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {App} from "obsidian";
 
 export abstract class AbstractContent extends AbstractRpgManager implements ContentInterface {

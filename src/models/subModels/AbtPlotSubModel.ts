@@ -1,4 +1,4 @@
-import {AbstractSubModel} from "../../abstracts/AbstractSubModel";
+import {AbstractSubModel} from "../abstracts/AbstractSubModel";
 import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseTable} from "../../responses/ResponseTable";
 import {ContentType} from "../../responses/enums/ContentType";

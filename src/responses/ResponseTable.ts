@@ -1,4 +1,4 @@
-import {AbstractResponse} from "../abstracts/AbstractResponse";
+import {AbstractResponse} from "./abstracts/AbstractResponse";
 import {ResponseType} from "./enums/ResponseType";
 import {TableResponseInterface} from "./interfaces/TableResponseInterface";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";

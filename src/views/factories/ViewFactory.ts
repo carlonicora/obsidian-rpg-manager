@@ -1,6 +1,6 @@
 import {TableView} from "../subViews/TableView";
 import {BreadcrumbView} from "../subViews/BreadcrumbView";
-import {AbstractFactory} from "../../abstracts/AbstractFactory";
+import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {CampaignSetting} from "../../databases/enums/CampaignSetting";
 import {ResponseType} from "../../responses/enums/ResponseType";
 import {ViewType} from "../enums/ViewType";

@@ -1,7 +1,7 @@
 import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
 import {ViewType} from "../../enums/ViewType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
-import {AbstractPlotHeaderView} from "../../../abstracts/AbstractPlotHeaderView";
+import {AbstractPlotHeaderView} from "../../abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {CampaignInterface} from "../../../databases/components/interfaces/CampaignInterface";

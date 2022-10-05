@@ -1,4 +1,4 @@
-import {AbstractResponse} from "../abstracts/AbstractResponse";
+import {AbstractResponse} from "./abstracts/AbstractResponse";
 import {HeaderResponseElementInterface} from "./interfaces/HeaderResponseElementInterface";
 import {HeaderResponseType} from "./enums/HeaderResponseType";
 import {App} from "obsidian";
