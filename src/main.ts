@@ -28,11 +28,6 @@ import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./databases/components/interfaces/SceneInterface";
 import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 
-/**
- * @TODO: manage edge case for scene session in list
- * @TODO: check relationships
- */
-
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;

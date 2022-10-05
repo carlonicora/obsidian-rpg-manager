@@ -39,14 +39,30 @@ export class SessionFrontmatterTemplateFactory extends AbstractComponentFrontmat
 		const metadata: ControllerMetadataInterface|ActDataInterface = {
 			models: {
 				lists: {
-					subplots: {},
-					musics: {},
-					pcs: {},
-					npcs: {},
-					factions: {},
-					clues: {},
-					locations: {},
-					events: {},
+					subplots: {
+						relationship: "hierarchy",
+					},
+					musics: {
+						relationship: "hierarchy",
+					},
+					pcs: {
+						relationship: "hierarchy",
+					},
+					npcs: {
+						relationship: "hierarchy",
+					},
+					factions: {
+						relationship: "hierarchy",
+					},
+					clues: {
+						relationship: "hierarchy",
+					},
+					locations: {
+						relationship: "hierarchy",
+					},
+					events: {
+						relationship: "hierarchy",
+					},
 				}
 			}
 		}

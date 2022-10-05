@@ -11,6 +11,7 @@ export abstract class AbstractContent extends AbstractRpgManager implements Cont
 		content: any|null,
 		isInLine: boolean|null = null,
 		public additionalInfo:any|undefined=undefined,
+		public isEditable: boolean = false,
 	) {
 		super(app);
 		this.content = content;

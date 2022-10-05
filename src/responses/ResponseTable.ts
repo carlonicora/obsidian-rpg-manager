@@ -5,11 +5,12 @@ import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {App} from "obsidian";
 import {ComponentType} from "../databases/enums/ComponentType";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public class: string|null;
 	public headers: Array<ContentInterface>;
-	public content: Array<Array<ContentInterface>>;
+	public content: Array<TableResponseElementInterface>;
 	public create: ComponentType|undefined;
 	public campaignId: number|undefined;
 	public adventureId: number|undefined;
@@ -35,14 +36,8 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 	}
 
 	public addContent(
-		content: Array<any>,
+		content: TableResponseElementInterface,
 	): void {
 		this.content.push(content);
-	}
-
-	public addContentList(
-		content: Array<Array<any>>,
-	): void {
-		this.content = content;
 	}
 }

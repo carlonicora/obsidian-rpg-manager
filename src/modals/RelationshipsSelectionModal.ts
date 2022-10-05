@@ -112,7 +112,6 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 				checkboxEl.id = component.file.basename;
 
 				if (relationship !== undefined) {
-					console.log(RelationshipType[relationship.type])
 					checkboxEl.checked = true;
 					if(relationship.isInContent || relationship.type === RelationshipType.Parent) checkboxEl.disabled = true;
 				}

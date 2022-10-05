@@ -28,4 +28,8 @@ export interface CodeBlockManipulatorInterface {
 	removeRelationship(
 		path: string,
 	): Promise<void>;
+
+	selectRelationship(
+		path: string,
+	): void;
 }

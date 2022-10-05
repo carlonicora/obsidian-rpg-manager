@@ -1,11 +1,12 @@
 import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
 import {ContentInterface} from "../contents/interfaces/ContentInterface";
 import {ComponentType} from "../../databases/enums/ComponentType";
+import {TableResponseElementInterface} from "./TableResponseElementInterface";
 
 export interface TableResponseInterface extends ResponseDataElementInterface {
 	class: string|null;
 	headers: Array<ContentInterface>;
-	content: Array<Array<ContentInterface>>;
+	content: Array<TableResponseElementInterface>;
 	create: ComponentType|undefined;
 	campaignId: number|undefined;
 	adventureId: number|undefined;
@@ -17,10 +18,6 @@ export interface TableResponseInterface extends ResponseDataElementInterface {
 	): void;
 
 	addContent(
-		content: Array<ContentInterface>,
-	): void;
-
-	addContentList(
-		content: Array<Array<ContentInterface>>,
+		content: TableResponseElementInterface,
 	): void;
 }

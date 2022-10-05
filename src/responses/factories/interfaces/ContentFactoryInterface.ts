@@ -7,5 +7,6 @@ export interface ContentFactoryInterface {
 		type: ContentType,
 		isInline?: boolean,
 		additionalInformation?: any|undefined,
+		isEditable?: boolean,
 	): ContentInterface;
 }

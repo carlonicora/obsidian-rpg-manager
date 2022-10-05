@@ -106,7 +106,6 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 			for (let index = 0; index < sections.length; index++) {
 				const section: SectionCache | undefined = sections[index];
 				if (section !== undefined) {
-					//@TODO ADD FRONTMATTER/YAML READ
 					if (section.type === 'code') {
 						if (arrayContent[section.position.start.line] === '```RpgManager') {
 							let codeBlockContent = '';

@@ -8,15 +8,11 @@ export class MarkdownContent extends AbstractContent {
 		container: HTMLElement,
 		sourcePath: string,
 	): void {
-		if (this.content != null){
-			MarkdownRenderer.renderMarkdown(
-				this.content,
-				container,
-				sourcePath,
-				null as unknown as Component,
-			);
-		} else {
-			container.textContent = '';
-		}
+		MarkdownRenderer.renderMarkdown(
+			(this.content != null ? this.content : '&nbsp;'),
+			container,
+			sourcePath,
+			null as unknown as Component,
+		);
 	}
 }

@@ -10,6 +10,8 @@ import {ResponseTable} from "../../responses/ResponseTable";
 import {TableField} from "../../views/enums/TableField";
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {ResponseTableElement} from "../../responses/ResponseTableElement";
+import {TableResponseElementInterface} from "../../responses/interfaces/TableResponseElementInterface";
 
 export abstract class AbstractTableSubModel extends AbstractSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface;
@@ -85,13 +87,18 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		fields: Array<RpgManagerAdvancedSettingsListElementInterface>,
 		component: T,
 		relationship: RelationshipInterface,
-	): Array<ContentInterface> {
-		const response: Array<ContentInterface> = []
+	): TableResponseElementInterface {
+		const response: ResponseTableElement = new ResponseTableElement(
+			component,
+			relationship,
+		);
 
 		fields.forEach((listElement: RpgManagerAdvancedSettingsListElementInterface) => {
 			if (listElement.checked) {
 				const content: ContentInterface | undefined = this.generateContentElement<T>(index, listElement.field, component, relationship);
-				if (content !== undefined) response.push(content);
+				if (content !== undefined) {
+					response.addElement(content);
+				}
 			}
 		});
 
@@ -110,7 +117,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 			case  TableField.Image:
 				return this.factories.contents.create(component.image, ContentType.Image, true);
 			case  TableField.Synopsis:
-				return this.factories.contents.create((relationship.description !== '' && relationship.description != undefined) ? relationship.description : component.synopsis, ContentType.Markdown);
+				return this.factories.contents.create((relationship.description !== '' && relationship.description != undefined) ? relationship.description : component.synopsis, ContentType.Markdown, false, undefined, true);
 		}
 
 		return this.factories.contents.create('', ContentType.String);

@@ -1,6 +1,6 @@
 import {AbstractFactory} from "../factories/abstracts/AbstractFactory";
 import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorInterface";
-import {MarkdownView, parseYaml, stringifyYaml, TFile} from "obsidian";
+import {CachedMetadata, MarkdownView, parseYaml, stringifyYaml, TFile} from "obsidian";
 import {FileManipulator} from "./FileManipulator";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {ControllerMetadataInterface} from "../metadatas/controllers/ControllerMetadataInterface";
@@ -87,6 +87,75 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		);
 
 		await fileEditor.maybeReplaceCodeBlockMetadata(metadata);
+	}
+
+	public selectRelationship(
+		path: string,
+	): void {
+
+		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+		if (activeView != null) {
+			const editor = activeView.editor;
+			const file = activeView.file;
+			const cache: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+
+			if (cache == null) return;
+
+			let stringYaml: any|undefined;
+			for (let index=0; index<(cache.sections?.length ?? 0); index++){
+				stringYaml = (cache.sections !== undefined ? cache.sections[index] : undefined);
+
+				if (
+					stringYaml !== undefined &&
+					editor.getLine(stringYaml.position.start.line) === '```RpgManager'
+				){
+					let relationshipsStarted = false
+					for (let lineIndex=stringYaml.position.start.line+1; lineIndex<stringYaml.position.end.line; lineIndex++) {
+						if (editor.getLine(lineIndex).trim().toLowerCase() === 'relationships:') {
+							relationshipsStarted = true
+							continue;
+						}
+						if (!relationshipsStarted) continue;
+
+						if (editor.getLine(lineIndex).trim().toLowerCase().startsWith('- type:')) {
+							const startOfPath = editor.getLine(lineIndex+1).indexOf('path: ');
+							if (startOfPath !== -1 && editor.getLine(lineIndex+1).substring(startOfPath+6).trim() === path){
+								const startOfDescription = editor.getLine(lineIndex+2).indexOf('description: ');
+								if (startOfDescription !== -1){
+									editor.setSelection({line: lineIndex+2, ch: startOfDescription + 13}, {line: lineIndex+2, ch: editor.getLine(lineIndex+2).length});
+									editor.focus();
+									editor.scrollIntoView({from: {line: lineIndex+2, ch: startOfDescription + 13}, to: {line: lineIndex+2, ch: editor.getLine(lineIndex+2).length}}, true)
+								} else {
+									let relatioshipContent: string = editor.getRange({line: lineIndex, ch: 0}, {line: lineIndex+2, ch:0});
+									relatioshipContent += ' '.repeat(startOfPath) + 'description: \n';
+									editor.replaceRange(relatioshipContent, {line: lineIndex, ch: 0}, {line: lineIndex+2, ch:0});
+									editor.setSelection({line: lineIndex+2, ch: startOfPath+13}, {line: lineIndex+2, ch: startOfPath+13});
+									editor.focus();
+									editor.scrollIntoView({from: {line: lineIndex+2, ch: startOfPath+13}, to: {line: lineIndex+2, ch: startOfPath+13}}, true)
+								}
+
+								return;
+							}
+						}
+					}
+
+					let newRelationship = '';
+					if (!relationshipsStarted) newRelationship += 'relationships:\n';
+					newRelationship += '  - type: univocal\n' +
+						'    path: ' + path + '\n'+
+						'    description: \n' +
+						'```\n';
+
+					editor.replaceRange(newRelationship, {line: stringYaml.position.end.line, ch: 0}, {line: stringYaml.position.end.line+1, ch:0});
+					editor.setSelection({line: stringYaml.position.end.line+2, ch: 17}, {line: stringYaml.position.end.line+2, ch:17})
+					editor.focus();
+					editor.scrollIntoView({from: {line: stringYaml.position.end.line+2, ch: 0}, to: {line: stringYaml.position.end.line+3, ch: 0}}, true)
+					return;
+
+					break;
+				}
+			}
+		}
 	}
 
 	public async update(
@@ -241,7 +310,6 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 			type: this.factories.relationshipType.createReadableRelationshipType(relationship.type),
 			path: relationship.path,
 			description: relationship.description,
-			isInContent: relationship.isInContent,
 		}
 
 		yaml.relationships.push(metadataRelationship);

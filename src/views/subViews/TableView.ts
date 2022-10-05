@@ -8,6 +8,8 @@ import {EditorSelector} from "../../helpers/EditorSelector";
 import {setIcon} from "obsidian";
 import {AdventureInterface} from "../../databases/components/interfaces/AdventureInterface";
 import {ActInterface} from "../../databases/components/interfaces/ActInterface";
+import {TableResponseElementInterface} from "../../responses/interfaces/TableResponseElementInterface";
+import {RelationshipType} from "../../relationships/enums/RelationshipType";
 
 export class TableView extends AbstractSubModelView {
 	private tableEl: HTMLTableElement;
@@ -78,8 +80,8 @@ export class TableView extends AbstractSubModelView {
 									});
 								}
 
-								data.content.forEach((element: Array<ContentInterface>) => {
-									const content = element[1];
+								data.content.forEach((element: TableResponseElementInterface) => {
+									const content = element.elements[1];
 									if (data.campaignId != null) {
 										this.factories.files.silentCreate(
 											ComponentType.Act,
@@ -126,17 +128,40 @@ export class TableView extends AbstractSubModelView {
 			});
 		}
 
-		data.content.forEach((element: Array<ContentInterface>) => {
-			const row = this.tableEl.createEl('tr');
-			element.forEach((content: ContentInterface) => {
-				const cell = row.createEl('td');
+		const tableBodyElement = this.tableEl.createTBody();
+		data.content.forEach((element: TableResponseElementInterface) => {
+			const row = tableBodyElement.insertRow();
+			row.addClass('hoverable');
+
+			const isRowEditable = (
+				element.relationship !== undefined &&
+				(
+					element.relationship.type !== RelationshipType.Parent &&
+					element.relationship.type !== RelationshipType.Hierarchy
+				)
+			)
+			if (isRowEditable) row.addClass('editable');
+
+			element.elements.forEach((content: ContentInterface) => {
+				const cell = row.insertCell();
 				if (content instanceof DateContent) {
 					cell.style.fontSize = '0.7em';
 				}
 				content.fillContent(cell, this.sourcePath);
 
-				if (content.isInLine){
-					cell.addClass('inline');
+				if (content.isInLine) cell.addClass('inline');
+
+				if (content.isEditable && isRowEditable) cell.addClass('editable');
+
+				if (content.isEditable && isRowEditable) {
+					const editorButtonEl = document.createElement('span');
+					editorButtonEl.addClass('editorIcon');
+					editorButtonEl.textContent = '</>';
+					cell.prepend(editorButtonEl);
+
+					editorButtonEl.addEventListener('click', () => {
+						this.manipulators.codeblock.selectRelationship(element.relationship.path);
+					});
 				}
 			});
 		});

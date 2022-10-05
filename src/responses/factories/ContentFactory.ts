@@ -17,31 +17,32 @@ export class ContentFactory extends AbstractFactory implements ContentFactoryInt
 		type: ContentType,
 		isInline = false,
 		additionalInformation: any|undefined=undefined,
+		isEditable = false,
 	): ContentInterface {
 		switch (type) {
 			case ContentType.String:
-				return new StringContent(this.app, content, isInline, additionalInformation);
+				return new StringContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.Date:
-				return new DateContent(this.app, content, isInline, additionalInformation);
+				return new DateContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.Link:
-				return new LinkContent(this.app, content, isInline, additionalInformation);
+				return new LinkContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.Number:
-				return new NumberContent(this.app, content, isInline, additionalInformation);
+				return new NumberContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.Object:
-				return new ObjectContent(this.app, content, isInline, additionalInformation);
+				return new ObjectContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.Markdown:
-				return new MarkdownContent(this.app, content, isInline, additionalInformation);
+				return new MarkdownContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.Image:
-				return new ImageContent(this.app, content, isInline, additionalInformation);
+				return new ImageContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 			case ContentType.SVG:
-				return new SVGContent(this.app, content, isInline, additionalInformation);
+				return new SVGContent(this.app, content, isInline, additionalInformation, isEditable);
 				break;
 		}
 	}

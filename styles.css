@@ -406,6 +406,31 @@
 .rpgm-table .inline {
   white-space: nowrap;
 }
+.rpgm-table tr.hoverable:hover:nth-child(odd), .rpgm-table tr.hoverable:hover:nth-child(even) {
+  background-color: var(--background-primary-alt);
+}
+.rpgm-table tr > td > span.editorIcon {
+  position: relative;
+  top: 1.5em;
+  right: 0;
+  float: right;
+  font-size: 0.8em;
+  color: var(--text-accent);
+  z-index: 1;
+  cursor: pointer;
+}
+.rpgm-table tr:hover > td > span.editorIcon {
+  display: block;
+}
+.rpgm-table tr > td > span.editorIcon {
+  display: none;
+}
+.rpgm-table tr:hover > td.editable {
+  font-style: italic;
+}
+.rpgm-table tr > td.editable {
+  font-style: normal;
+}
 .rpgm-table tr > th {
   white-space: nowrap;
   border-top: none;
