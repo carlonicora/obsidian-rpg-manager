@@ -26,7 +26,7 @@ export class LocationFrontmatterTemplateFactory extends AbstractComponentFrontma
 						},
 						{
 							relationship: "child",
-							title: "Other locations part of this"
+							title: "Contains"
 						}
 					],
 				}

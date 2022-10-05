@@ -5,7 +5,6 @@ import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 import {AbstractComponent} from "../databases/abstracts/AbstractComponent";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
-import {Relationship} from "../relationships/Relationship";
 
 export class ResponseData extends AbstractRpgManager implements ResponseDataInterface {
 	public elements: ResponseDataElementInterface[] = [];
@@ -22,7 +21,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 		let relationship: RelationshipInterface|undefined;
 
 		if (data instanceof AbstractComponent){
-			relationship = new Relationship(RelationshipType.Univocal, data.file.path, undefined, data);
+			relationship = this.factories.relationship.create(RelationshipType.Univocal, data.file.path, undefined, data);
 		} else if (data instanceof Array){
 			relationships = [];
 			if (data.length > 0){

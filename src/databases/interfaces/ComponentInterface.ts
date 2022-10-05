@@ -1,8 +1,8 @@
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 import {DatabaseInterface} from "./DatabaseInterface";
 import {ComponentDataInterface} from "../components/interfaces/ComponentDataInterface";
 import {AbtInterface} from "../../plots/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../plots/interfaces/StoryCircleInterface";
+import {RelationshipListInterface} from "../../relationships/interfaces/RelationshipListInterface";
 
 export interface ComponentInterface extends ComponentDataInterface{
 	get link(): string;
@@ -16,14 +16,5 @@ export interface ComponentInterface extends ComponentDataInterface{
 
 	getRelationships(
 		database?: DatabaseInterface|undefined,
-	): Array<RelationshipInterface>;
-
-	addRelationship(
-		relationship: RelationshipInterface,
-		database?: DatabaseInterface|undefined,
-	): void;
-
-	existsInRelationships(
-		relationships: Array<RelationshipInterface>,
-	): boolean;
+	): RelationshipListInterface;
 }

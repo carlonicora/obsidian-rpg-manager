@@ -219,6 +219,6 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 
 		response += '```\n';
 
-		return response.replaceAll("''", "").replaceAll('""', '');
+		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');
 	}
 }

@@ -1,8 +1,6 @@
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {CachedMetadata, parseYaml, SectionCache, TFile} from "obsidian";
 import {MetadataManipulatorInterface} from "./interfaces/MetadataManipulatorInterface";
-import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {RelationshipMetadataInterface} from "../metadatas/relationships/RelationshipMetadataInterface";
 
 export class MetadataManipulator extends AbstractRpgManager implements MetadataManipulatorInterface{
 	public async read(
@@ -13,6 +11,7 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 				const fileCacheMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 				if (fileCacheMetadata == null) return {};
 
+				//@TODO add relationship in code
 				return this._getCodeBloksMetadata(fileContent, fileCacheMetadata);
 			});
 	}
@@ -39,6 +38,7 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 								if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
 							}
 							const newCodeBlockContent: any = parseYaml(codeBlockContent);
+							/*
 							if (newCodeBlockContent.relationships !== undefined){
 								const newRelationships: Array<RelationshipInterface> = [];
 								await newCodeBlockContent.relationships.forEach((relationship: RelationshipMetadataInterface) => {
@@ -46,6 +46,7 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 								});
 								newCodeBlockContent.relationships = newRelationships;
 							}
+							*/
 							if (codeBlockContent !== '') response = {...response, ...newCodeBlockContent};
 						}
 					}

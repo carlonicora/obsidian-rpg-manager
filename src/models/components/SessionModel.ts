@@ -7,7 +7,6 @@ import {SceneInterface} from "../../databases/components/interfaces/SceneInterfa
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../../relationships/enums/RelationshipType";
-import {Relationship} from "../../relationships/Relationship";
 
 export class SessionModel extends AbstractModel {
 	protected currentElement: SessionInterface;
@@ -28,8 +27,8 @@ export class SessionModel extends AbstractModel {
 		for (let sceneIndex=0; sceneIndex<scenes.length; sceneIndex++){
 			await scenes[sceneIndex].getRelationships().forEach((relationship: RelationshipInterface) => {
 				if (this.currentElement.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0)
-					this.currentElement.addRelationship(
-						new Relationship(RelationshipType.Reversed, relationship.path, undefined, relationship.component)
+					this.currentElement.getRelationships().add(
+						this.factories.relationship.create(RelationshipType.Reversed, relationship.path, undefined, relationship.component)
 					);
 			});
 		}
@@ -54,8 +53,8 @@ export class SessionModel extends AbstractModel {
 			relationship.type === RelationshipType.Reversed
 		).forEach((relationship: RelationshipInterface) => {
 			if (this.currentElement.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0)
-				this.currentElement.addRelationship(
-					new Relationship(RelationshipType.Reversed, relationship.path, undefined, relationship.component)
+				this.currentElement.getRelationships().add(
+					this.factories.relationship.create(RelationshipType.Reversed, relationship.path, undefined, relationship.component)
 				);
 		});
 	}

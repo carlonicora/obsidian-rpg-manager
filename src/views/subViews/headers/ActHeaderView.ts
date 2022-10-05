@@ -49,10 +49,10 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 			this.addActBalance(analyser);
 		}
 
-		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot){
+		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot && !data.currentElement.abt.isEmpty){
 			this.addAbtPlot(data.currentElement.abt);
 		}
-		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot){
+		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot && !data.currentElement.storyCircle.isEmpty){
 			this.addStoryCirclePlot(data.currentElement.storyCircle);
 		}
 	}

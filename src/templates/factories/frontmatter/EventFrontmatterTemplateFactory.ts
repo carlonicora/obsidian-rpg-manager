@@ -15,9 +15,7 @@ export class EventFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 			models: {
 				header: true,
 				lists: {
-					subplots: {
-						relationship: "reversed",
-					},
+					subplots: {},
 					pcs: {},
 					npcs: {},
 					clues: {},

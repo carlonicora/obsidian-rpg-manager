@@ -17,12 +17,8 @@ export class SubplotFrontmatterTemplateFactory extends AbstractComponentFrontmat
 				lists: {
 					events: {},
 					clues: {},
-					factions: {
-						relationship: "univocal"
-					},
-					npcs: {
-						relationship: "univocal"
-					},
+					factions: {},
+					npcs: {},
 				}
 			},
 			plot: {

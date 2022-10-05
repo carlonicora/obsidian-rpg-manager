@@ -15,18 +15,14 @@ export class NonPlayerCharacterFrontmatterTemplateFactory extends AbstractCompon
 			models: {
 				header: true,
 				lists: {
-					subplots: {
-						relationship: "reversed",
-					},
-					factions: {
-						relationship: "univocal",
-					},
+					subplots: {},
 					pcs: {
 						relationship: "univocal",
 					},
 					npcs: {
 						relationship: "univocal",
 					},
+					factions: {},
 					locations: {},
 					events: {},
 					clues: {},

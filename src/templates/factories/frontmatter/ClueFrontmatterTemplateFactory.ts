@@ -15,9 +15,7 @@ export class ClueFrontmatterTemplateFactory extends AbstractComponentFrontmatter
 			models: {
 				header: true,
 				lists: {
-					subplots: {
-						relationship: "reversed",
-					},
+					subplots: {},
 					pcs: {},
 					npcs: {},
 					locations: {},

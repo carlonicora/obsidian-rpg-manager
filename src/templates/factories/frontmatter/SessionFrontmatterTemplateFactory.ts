@@ -16,7 +16,9 @@ export class SessionFrontmatterTemplateFactory extends AbstractComponentFrontmat
 			models: {
 				header: true,
 				lists: {
-					scenes: {},
+					scenes: {
+						relationship: "hierarchy",
+					},
 				}
 			},
 			data: {

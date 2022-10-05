@@ -42,25 +42,25 @@ export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 			models: {
 				lists: {
 					musics: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 					pcs: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 					npcs: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 					factions: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 					clues: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 					locations: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 					events: {
-						relationship: '',
+						relationship: 'univocal',
 					},
 				}
 			}

@@ -6,15 +6,27 @@ import {AbtPlot} from "../../plots/AbtPlot";
 import {AbtInterface} from "../../plots/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../plots/interfaces/StoryCircleInterface";
 import {StoryCirclePlot} from "../../plots/StoryCirclePlot";
+import {RelationshipListInterface} from "../../relationships/interfaces/RelationshipListInterface";
+import {RelationshipList} from "../../relationships/RelationshipList";
+import {RelationshipMetadataInterface} from "../../metadatas/relationships/RelationshipMetadataInterface";
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
+	private relationships: RelationshipListInterface = new RelationshipList();
+
 	public async readMetadata(
 	): Promise<void> {
+		this.relationships = new RelationshipList();
 		return this.manipulators.metadata.read(this.file)
 			.then((metadata: any) => {
 				this.metadata = metadata;
-				if (this.metadata.relationships === undefined){
-					this.metadata.relationships = [];
+
+				if (this.metadata.relationships !== undefined){
+					this.metadata.relationships.forEach((relationshipMetadata: RelationshipMetadataInterface) => {
+						this.relationships.add(
+							this.factories.relationship.createFromMetadata(relationshipMetadata),
+							false,
+						);
+					});
 				}
 				return;
 			});
@@ -26,29 +38,14 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	public getRelationships(
 		database: DatabaseInterface|undefined = undefined,
-	): Array<RelationshipInterface> {
-		this.metadata.relationships.forEach((relationship: RelationshipInterface) => {
-			if (relationship.component === undefined) relationship.component = (database ?? this.database).readByPath(relationship.path);
-		});
+	): RelationshipListInterface {
+		this.relationships
+			.filter((relationship: RelationshipInterface) => relationship.component === undefined)
+			.forEach((relationship: RelationshipInterface) => {
+				if (relationship.component === undefined) relationship.component = (database ?? this.database).readByPath(relationship.path);
+			});
 
-		return this.metadata.relationships;
-	}
-
-	public addRelationship(
-		relationship: RelationshipInterface,
-		database: DatabaseInterface|undefined=undefined,
-	): void {
-		this.metadata.relationships.push(relationship);
-	}
-
-	public existsInRelationships(
-		relationships: Array<RelationshipInterface>,
-	): boolean {
-		for (let relationshipCounter=0; relationshipCounter<relationships.length; relationshipCounter++){
-			if (relationships[relationshipCounter].path === this.file.path) return true;
-		}
-
-		return false;
+		return this.relationships;
 	}
 
 	public get hasStoryCirclePlot(): boolean {

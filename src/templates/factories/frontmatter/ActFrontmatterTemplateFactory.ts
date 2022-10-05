@@ -54,11 +54,21 @@ export class ActFrontmatterTemplateFactory extends AbstractComponentFrontmatterT
 					scenes: {
 						relationship: 'hierarchy'
 					},
-					pcs: {},
-					npcs: {},
-					clues: {},
-					locations: {},
-					factions: {}
+					pcs: {
+						relationship: 'univocal'
+					},
+					npcs: {
+						relationship: 'univocal'
+					},
+					clues: {
+						relationship: 'univocal'
+					},
+					locations: {
+						relationship: 'univocal'
+					},
+					factions: {
+						relationship: 'univocal'
+					}
 				}
 			}
 		}

@@ -151,11 +151,7 @@ export class DatabaseInitialiser {
 		await database.recordset.forEach((component: ComponentInterface) => {
 			component.getRelationships(database).forEach((relationship: RelationshipInterface) => {
 				if (relationship.component !== undefined){
-					const reverseRelationship: RelationshipInterface|undefined = this.factories.relationship.createFromReverse(component, relationship);
-
-					if (reverseRelationship !== undefined) {
-						relationship.component.addRelationship(reverseRelationship, database);
-					}
+					this.factories.relationship.createFromReverse(component, relationship);
 				}
 			});
 		});

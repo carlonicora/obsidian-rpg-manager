@@ -15,13 +15,13 @@ export class CharacterFrontmatterTemplateFactory extends AbstractComponentFrontm
 			models: {
 				header: true,
 				lists: {
-					factions: {},
 					pcs: {
 						relationship: "univocal",
 					},
 					npcs: {
 						relationship: "univocal",
 					},
+					factions: {},
 					locations: {},
 				}
 			},

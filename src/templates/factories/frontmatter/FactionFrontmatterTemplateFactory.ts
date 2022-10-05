@@ -15,16 +15,10 @@ export class FactionFrontmatterTemplateFactory extends AbstractComponentFrontmat
 			models: {
 				header: true,
 				lists: {
-					pcs: {
-						relationship: "reversed",
-					},
-					npcs: {
-						relationship: "reversed",
-					},
+					pcs: {},
+					npcs: {},
 					locations: {},
-					subplots: {
-						relationship: "reversed",
-					}
+					subplots: {}
 				}
 			},
 			data: {

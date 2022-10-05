@@ -255,13 +255,11 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		try {
 			const isNewComponent = component === undefined;
 
-			if (component !== undefined) {
-				await component.readMetadata();
-			} else {
-				component = await DatabaseInitialiser.createComponent(file);
-			}
+			if (isNewComponent) component = await DatabaseInitialiser.createComponent(file);
 
-			if (component === undefined) return;
+			if (component === undefined) return ;
+
+			await component.readMetadata();
 
 			if (isNewComponent && (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot)) {
 				try {
