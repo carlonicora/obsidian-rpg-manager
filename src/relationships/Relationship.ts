@@ -8,6 +8,7 @@ export class Relationship implements RelationshipInterface {
 		public path: string,
 		public description: string|undefined=undefined,
 		public component: ComponentInterface|undefined=undefined,
+		public isInContent: boolean = false,
 	) {
 	}
 }

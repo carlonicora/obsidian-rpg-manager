@@ -95,7 +95,7 @@ export class ListModel extends AbstractModel {
 						relationship.type === RelationshipType.Univocal
 					) {
 						this.currentElement.getRelationships().add(
-							this.factories.relationship.create(RelationshipType.Reversed, relationship.path, undefined, relationship.component)
+							this.factories.relationship.create(RelationshipType.Reversed, relationship.path, undefined, relationship.component, false)
 						);
 					}
 				});

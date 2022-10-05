@@ -1,8 +1,10 @@
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
-import {RelationshipMetadataInterface} from "../../../metadatas/relationships/RelationshipMetadataInterface";
 import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {RelationshipListInterface} from "../../interfaces/RelationshipListInterface";
+import {
+	ControllerMetadataRelationshipInterface
+} from "../../../metadatas/controllers/ControllerMetadataRelationshipInterface";
 
 export interface RelationshipFactoryInterface {
 	addRelationshipToExistingRelationships(
@@ -15,11 +17,12 @@ export interface RelationshipFactoryInterface {
 		path: string,
 		description?: string,
 		component?: ComponentInterface,
+		isInContent?: boolean,
 		existingRelationships?: RelationshipListInterface,
 	): RelationshipInterface;
 
 	createFromMetadata(
-		relationship: RelationshipMetadataInterface,
+		relationship: ControllerMetadataRelationshipInterface,
 		existingRelationships?: RelationshipListInterface,
 	): RelationshipInterface;
 

@@ -1,6 +1,7 @@
 import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
+import {FrontmatterElementSelectionModal} from "../../modals/FrontmatterElementSelectionModal";
 
 export class BreadcrumbView extends AbstractSubModelView {
 	render(
@@ -12,6 +13,16 @@ export class BreadcrumbView extends AbstractSubModelView {
 		const breadcrumbLine = breadcrumbContainer.createDiv({cls:'line'});
 
 		this.renderBreadcrumb(breadcrumbContainer, breadcrumbLine, data);
+
+		breadcrumbContainer.createDiv({cls: 'reset'});
+		const relationshipAdderContainerEl = breadcrumbContainer.createDiv({cls:'line spaced-line'});
+		const crumb = relationshipAdderContainerEl.createDiv({cls: 'crumb'})
+		crumb.createDiv({cls: 'title', text: 'Relationships'});
+		const value = crumb.createDiv({cls: 'value'});
+		const relationshipsAdderEl = value.createEl('span', {cls: 'rpgm-edit-icon', text: '+ add relationship'});
+		relationshipsAdderEl.addEventListener("click", () => {
+			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
+		});
 	}
 
 	private renderBreadcrumb(
@@ -59,8 +70,6 @@ export class BreadcrumbView extends AbstractSubModelView {
 				null as unknown as Component,
 			)
 		}
-
-
 
 		if (data.nextBreadcrumb != null){
 			if (data.nextBreadcrumb.isInNewLine === false) {

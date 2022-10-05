@@ -21,7 +21,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 		let relationship: RelationshipInterface|undefined;
 
 		if (data instanceof AbstractComponent){
-			relationship = this.factories.relationship.create(RelationshipType.Univocal, data.file.path, undefined, data);
+			relationship = this.factories.relationship.create(RelationshipType.Univocal, data.file.path, undefined, data, true);
 		} else if (data instanceof Array){
 			relationships = [];
 			if (data.length > 0){

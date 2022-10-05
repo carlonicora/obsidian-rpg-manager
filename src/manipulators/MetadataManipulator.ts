@@ -77,7 +77,7 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 					metadata.relationships?.push({
 						type: this.factories.relationshipType.createReadableRelationshipType(relationship),
 						path: path,
-
+						isInContent: true,
 					})
 				}
 			}
@@ -127,6 +127,8 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 			plot: controllerMetadataInterface.plot,
 			relationships: controllerMetadataInterface.relationships,
 		};
+
+		console.log(response)
 
 		return response;
 	}

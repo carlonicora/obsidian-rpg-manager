@@ -6,4 +6,5 @@ export interface RelationshipInterface {
 	path: string,
 	description?: string|undefined,
 	component?: ComponentInterface|undefined,
+	isInContent: boolean,
 }

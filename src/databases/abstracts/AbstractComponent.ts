@@ -8,8 +8,10 @@ import {StoryCircleInterface} from "../../plots/interfaces/StoryCircleInterface"
 import {StoryCirclePlot} from "../../plots/StoryCirclePlot";
 import {RelationshipListInterface} from "../../relationships/interfaces/RelationshipListInterface";
 import {RelationshipList} from "../../relationships/RelationshipList";
-import {RelationshipMetadataInterface} from "../../metadatas/relationships/RelationshipMetadataInterface";
 import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
+import {
+	ControllerMetadataRelationshipInterface
+} from "../../metadatas/controllers/ControllerMetadataRelationshipInterface";
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
 	private relationships: RelationshipListInterface = new RelationshipList();
@@ -22,7 +24,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 				this.metadata = metadata;
 
 				if (this.metadata.relationships !== undefined){
-					this.metadata.relationships.forEach((relationshipMetadata: RelationshipMetadataInterface) => {
+					this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 						this.relationships.add(
 							this.factories.relationship.createFromMetadata(relationshipMetadata),
 							false,

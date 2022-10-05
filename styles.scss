@@ -518,7 +518,7 @@
 		margin-bottom: 0px;
 	}
 
-	.line {
+	.line, .spaced-line {
 		margin-left: 0%;
 		margin-right: 0%;
 
@@ -535,7 +535,6 @@
 			}
 
 			.title {
-
 				font-weight: 100;
 				font-size: 0.7em;
 				font-variant-caps: small-caps;
@@ -552,6 +551,14 @@
 					margin-bottom: 0px;
 				}
 			}
+		}
+	}
+
+	.spaced-line {
+		margin-top: 20px;
+
+		.crumb > .title {
+			text-align: center;
 		}
 	}
 
@@ -578,7 +585,7 @@
 		}
 
 		p {
-			margin-top: -10px;
+			margin-top: 10px;
 			margin-bottom: 10px;
 		}
 	}

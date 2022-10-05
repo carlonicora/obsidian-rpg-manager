@@ -1,7 +1,5 @@
 import {AbstractSubModelView} from "./AbstractSubModelView";
 import {HeaderResponseInterface} from "../../responses/interfaces/HeaderResponseInterface";
-import {FrontmatterElementSelectionModal} from "../../modals/FrontmatterElementSelectionModal";
-import {EditorSelector} from "../../helpers/EditorSelector";
 import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
@@ -39,24 +37,10 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 
 		//Init
 		const crs = container.createDiv({cls: 'rpgm-header-info'});
-		const adderEl = crs.createDiv({cls: 'adder'});
 		this.headerTitleEl = crs.createDiv({cls: 'title'});
 
 		//title
 		data.link.fillContent(this.headerTitleEl, this.sourcePath);
-
-		//relationship button
-		const relationshipsAdderEl = adderEl.createEl('span', {cls: 'rpgm-edit-icon', text: '+ add relationship'});
-		relationshipsAdderEl.addEventListener("click", () => {
-			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
-		});
-
-		//edit button
-		const c = adderEl.createEl('span', {cls: 'rpgm-edit-icon', text: '</>'});
-
-		c.addEventListener("click",() => {
-			EditorSelector.select(this.app, data.currentElement);
-		});
 
 		//container
 		this.headerContainerEl = crs.createDiv({cls: 'container'});

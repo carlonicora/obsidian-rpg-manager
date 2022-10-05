@@ -421,34 +421,40 @@
 .rpgm-breadcrumb h2 {
   margin-bottom: 0px;
 }
-.rpgm-breadcrumb .line {
+.rpgm-breadcrumb .line, .rpgm-breadcrumb .spaced-line {
   margin-left: 0%;
   margin-right: 0%;
 }
-.rpgm-breadcrumb .line .separator {
+.rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .separator {
   padding-right: 10px;
   padding-left: 10px;
 }
-.rpgm-breadcrumb .line .crumb, .rpgm-breadcrumb .line .separator {
+.rpgm-breadcrumb .line .crumb, .rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .crumb, .rpgm-breadcrumb .spaced-line .separator {
   display: inline-block;
 }
-.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .line .separator .value {
+.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .title, .rpgm-breadcrumb .spaced-line .separator .value {
   text-align: left;
 }
-.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .separator .title {
+.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .separator .title {
   font-weight: 100;
   font-size: 0.7em;
   font-variant-caps: small-caps;
   color: var(--text-muted);
 }
-.rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value {
+.rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .value {
   font-weight: 300;
   font-size: 0.9em;
   text-align: left;
 }
-.rpgm-breadcrumb .line .crumb .value p, .rpgm-breadcrumb .line .separator .value p {
+.rpgm-breadcrumb .line .crumb .value p, .rpgm-breadcrumb .line .separator .value p, .rpgm-breadcrumb .spaced-line .crumb .value p, .rpgm-breadcrumb .spaced-line .separator .value p {
   margin-top: 0px;
   margin-bottom: 0px;
+}
+.rpgm-breadcrumb .spaced-line {
+  margin-top: 20px;
+}
+.rpgm-breadcrumb .spaced-line .crumb > .title {
+  text-align: center;
 }
 .rpgm-breadcrumb .reset {
   clear: both;
@@ -471,7 +477,7 @@
   font-size: 0.5em;
 }
 .rpgm-header-info .title p {
-  margin-top: -10px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 .rpgm-header-info .rpgm-header {
