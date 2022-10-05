@@ -38,6 +38,8 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 			}
 		}
 
+		response.component = component;
+
 		return response;
 	}
 

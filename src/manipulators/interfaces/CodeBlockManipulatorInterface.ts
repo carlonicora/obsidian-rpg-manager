@@ -1,4 +1,5 @@
 import {TFile} from "obsidian";
+import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export interface CodeBlockManipulatorInterface {
 	update(
@@ -18,5 +19,13 @@ export interface CodeBlockManipulatorInterface {
 
 	startNewDuration(
 		file: TFile,
+	): Promise<void>;
+
+	addOrUpdateRelationship(
+		relationship: RelationshipInterface,
+	): Promise<void>;
+
+	removeRelationship(
+		path: string,
 	): Promise<void>;
 }

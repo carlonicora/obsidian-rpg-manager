@@ -232,6 +232,9 @@
   margin-top: 20px;
   min-height: 400px;
 }
+.modal-content .rpgm-modal-relationships .relationships table {
+  width: 100%;
+}
 .modal-content .rpgm-modal-relationships .relationships table > tbody > tr:nth-child(odd) {
   background-color: var(--background-primary-alt);
 }
@@ -241,14 +244,25 @@
 .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input {
   margin: 0px 15px;
 }
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input:disabled, .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td select:disabled {
+  background-color: var(--background-modifier-border);
+}
 .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label {
   padding: 0px 10px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label span {
+  font-size: 0.8em;
+  font-style: italic;
 }
 .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description {
   max-width: 50%;
 }
 .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description p {
   font-size: 0.8em;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.selector select {
+  min-width: 10px;
+  width: 100%;
 }
 .modal-content .rpgm-elements .rpgm-elements-header {
   margin-bottom: -2px;

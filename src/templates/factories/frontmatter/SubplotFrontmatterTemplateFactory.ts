@@ -19,6 +19,7 @@ export class SubplotFrontmatterTemplateFactory extends AbstractComponentFrontmat
 					clues: {},
 					factions: {},
 					npcs: {},
+					locations: {},
 				}
 			},
 			plot: {

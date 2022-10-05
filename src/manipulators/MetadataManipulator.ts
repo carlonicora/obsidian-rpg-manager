@@ -128,8 +128,6 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 			relationships: controllerMetadataInterface.relationships,
 		};
 
-		console.log(response)
-
 		return response;
 	}
 }

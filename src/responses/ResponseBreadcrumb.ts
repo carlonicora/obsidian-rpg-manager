@@ -5,6 +5,7 @@ import {App} from "obsidian";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbResponseInterface {
+	public component: ComponentInterface|undefined = undefined;
 	public link: string;
 	public linkText: string|null;
 	public nextBreadcrumb: BreadcrumbResponseInterface|null;

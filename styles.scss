@@ -272,6 +272,10 @@
 			margin-top: 20px;
 			min-height: 400px;
 
+			table {
+				width: 100%;
+			}
+
 			table > tbody > tr {
 
 				&:nth-child(odd) {
@@ -284,8 +288,17 @@
 						margin: 0px 15px;
 					}
 
+					input:disabled, select:disabled {
+						background-color: var(--background-modifier-border);
+					}
+
 					&.label {
 						padding: 0px 10px;
+
+						span {
+							font-size: 0.8em;
+							font-style: italic;
+						}
 					}
 
 					&.description {
@@ -294,6 +307,12 @@
 						p {
 							font-size: 0.8em;
 						}
+					}
+				}
+				td.selector {
+					select {
+						min-width: 10px;
+						width: 100%;
 					}
 				}
 			}

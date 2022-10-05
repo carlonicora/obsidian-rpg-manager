@@ -1,13 +1,19 @@
 import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
-import {FrontmatterElementSelectionModal} from "../../modals/FrontmatterElementSelectionModal";
+import {RelationshipsSelectionModal} from "../../modals/RelationshipsSelectionModal";
+import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 
 export class BreadcrumbView extends AbstractSubModelView {
+	private currentElement: ComponentInterface;
+
 	render(
 		container: HTMLElement,
 		data: BreadcrumbResponseInterface,
 	): void {
+		if (data.component === undefined) return;
+		this.currentElement = data.component;
+
 		const breadcrumbContainer = container.createDiv({cls: 'rpgm-breadcrumb'});
 		breadcrumbContainer.createEl('h2').textContent = data.mainTitle;
 		const breadcrumbLine = breadcrumbContainer.createDiv({cls:'line'});
@@ -19,9 +25,9 @@ export class BreadcrumbView extends AbstractSubModelView {
 		const crumb = relationshipAdderContainerEl.createDiv({cls: 'crumb'})
 		crumb.createDiv({cls: 'title', text: 'Relationships'});
 		const value = crumb.createDiv({cls: 'value'});
-		const relationshipsAdderEl = value.createEl('span', {cls: 'rpgm-edit-icon', text: '+ add relationship'});
+		const relationshipsAdderEl = value.createEl('span', {cls: 'rpgm-edit-icon', text: 'Manage Relationship'});
 		relationshipsAdderEl.addEventListener("click", () => {
-			new FrontmatterElementSelectionModal(this.app, data.currentElement).open();
+			new RelationshipsSelectionModal(this.app, this.currentElement).open();
 		});
 	}
 
