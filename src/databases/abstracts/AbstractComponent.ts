@@ -9,6 +9,7 @@ import {StoryCirclePlot} from "../../plots/StoryCirclePlot";
 import {RelationshipListInterface} from "../../relationships/interfaces/RelationshipListInterface";
 import {RelationshipList} from "../../relationships/RelationshipList";
 import {RelationshipMetadataInterface} from "../../metadatas/relationships/RelationshipMetadataInterface";
+import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
 	private relationships: RelationshipListInterface = new RelationshipList();
@@ -16,8 +17,8 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	public async readMetadata(
 	): Promise<void> {
 		this.relationships = new RelationshipList();
-		return this.manipulators.metadata.read(this.file)
-			.then((metadata: any) => {
+		return this.manipulators.metadata.read(this.file, this)
+			.then((metadata: ControllerMetadataDataInterface) => {
 				this.metadata = metadata;
 
 				if (this.metadata.relationships !== undefined){
