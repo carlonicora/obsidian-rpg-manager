@@ -40,6 +40,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	ready = false;
 
 	async onload() {
+
 		this.version = this.manifest.version;
 		this.factories = await new Factories(this.app);
 		this.manipulators = await new Manipulators(this.app);
