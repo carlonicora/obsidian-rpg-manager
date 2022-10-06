@@ -149,6 +149,10 @@ export class DatabaseInitialiser {
 		database: DatabaseInterface,
 	): Promise<void> {
 		await database.recordset.forEach((component: ComponentInterface) => {
+			component.initialiseRelationships();
+		});
+
+		await database.recordset.forEach((component: ComponentInterface) => {
 			component.getRelationships(database).forEach((relationship: RelationshipInterface) => {
 				if (relationship.component !== undefined){
 					this.factories.relationship.createFromReverse(component, relationship);

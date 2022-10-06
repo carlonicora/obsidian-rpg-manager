@@ -11,13 +11,6 @@ import {
 } from "../../metadatas/controllers/ControllerMetadataRelationshipInterface";
 
 export class RelationshipFactory extends AbstractFactory implements RelationshipFactoryInterface {
-	public addRelationshipToExistingRelationships(
-		relationship: RelationshipInterface,
-		existingRelationships:RelationshipListInterface,
-	): void {
-		if (relationship.component !== undefined && !existingRelationships.existsAlready(relationship.component)) existingRelationships.add(relationship);
-	}
-
 	public create(
 		type: RelationshipType,
 		path: string,
@@ -34,7 +27,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 			isInContent,
 		);
 
-		if (existingRelationships !== undefined) this.addRelationshipToExistingRelationships(response, existingRelationships);
+		if (existingRelationships !== undefined) existingRelationships.add(response);
 
 		return response;
 	}
@@ -51,7 +44,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 			relationship.isInContent ?? false,
 		);
 
-		if (existingRelationships !== undefined) this.addRelationshipToExistingRelationships(response, existingRelationships);
+		if (existingRelationships !== undefined) existingRelationships.add(response);
 
 		return response;
 	}
@@ -76,9 +69,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 
 		const response = new Relationship(reverseRelationshipType, component.file.path, undefined, component, true);
 
-		if (relationship.component !== undefined) {
-			this.addRelationshipToExistingRelationships(response, relationship.component.getRelationships());
-		}
+		if (relationship.component !== undefined) relationship.component.getRelationships().add(response);
 
 		return response;
 	}

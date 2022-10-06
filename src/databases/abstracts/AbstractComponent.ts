@@ -22,17 +22,25 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		return this.manipulators.metadata.read(this.file, this)
 			.then((metadata: ControllerMetadataDataInterface) => {
 				this.metadata = metadata;
-
-				if (this.metadata.relationships !== undefined){
-					this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
-						this.relationships.add(
-							this.factories.relationship.createFromMetadata(relationshipMetadata),
-							false,
-						);
+				return this.initialiseRelationships()
+					.then(() => {
+						return;
 					});
-				}
-				return;
 			});
+	}
+
+	public async initialiseRelationships(
+	): Promise<void> {
+		this.relationships = new RelationshipList();
+
+		if (this.metadata.relationships !== undefined){
+			this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
+				this.relationships.add(
+					this.factories.relationship.createFromMetadata(relationshipMetadata),
+					false,
+				);
+			});
+		}
 	}
 
 	public get link(): string {

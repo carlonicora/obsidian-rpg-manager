@@ -14,6 +14,9 @@ export interface ComponentInterface extends ComponentDataInterface{
 	readMetadata(
 	): Promise<void>;
 
+	initialiseRelationships(
+	): Promise<void>
+
 	getRelationships(
 		database?: DatabaseInterface|undefined,
 	): RelationshipListInterface;

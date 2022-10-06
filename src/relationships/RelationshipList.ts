@@ -1,9 +1,22 @@
 import {RelationshipListInterface} from "./interfaces/RelationshipListInterface";
 import {RelationshipInterface} from "./interfaces/RelationshipInterface";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {RelationshipType} from "./enums/RelationshipType";
 
 export class RelationshipList implements RelationshipListInterface {
 	private relationships: Array<RelationshipInterface> = [];
+
+	private _getIndexOfExistingRelationship(
+		path: string,
+	): number {
+		for (let index=0; index<this.relationships.length; index++){
+			if (this.relationships[index].path === path){
+				return index;
+			}
+		}
+
+		return -1;
+	}
 
 	public existsAlready(
 		component: ComponentInterface,
@@ -15,12 +28,29 @@ export class RelationshipList implements RelationshipListInterface {
 		relationship: RelationshipInterface,
 		checkExistence = true,
 	): void {
+		const indexOfExistingRelationship = this._getIndexOfExistingRelationship(relationship.path);
+
 		if (!checkExistence) {
-			this.relationships.push(relationship)
+			if (indexOfExistingRelationship !== -1) this.relationships.splice(indexOfExistingRelationship, 1);
+			this.relationships.push(relationship);
 			return;
 		}
 
-		if (relationship.component !== undefined && !this.existsAlready(relationship.component)) this.relationships.push(relationship);
+		let existingRelationship: RelationshipInterface|undefined = undefined;
+		if (indexOfExistingRelationship !== -1) existingRelationship = this.getByPath(relationship.path);
+
+		if (indexOfExistingRelationship !== -1 && existingRelationship !== undefined) {
+			if (
+				(relationship.type !== RelationshipType.Reversed && existingRelationship?.type === RelationshipType.Reversed) ||
+				(relationship.type !== existingRelationship.type)
+			){
+				if (indexOfExistingRelationship !== -1) this.relationships.splice(indexOfExistingRelationship, 1);
+				this.relationships.push(relationship);
+				return;
+			}
+		} else {
+			this.relationships.push(relationship);
+		}
 	}
 
 	public getByPath(

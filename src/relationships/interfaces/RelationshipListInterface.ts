@@ -19,12 +19,6 @@ export interface RelationshipListInterface {
 		predicate: (value: RelationshipInterface) => boolean, thisArg?: any
 	): Array<RelationshipInterface>;
 
-	/*
-	filter(
-		query: any,
-	): Array<RelationshipInterface>;
-	*/
-
 	forEach(
 		callbackfn: any,
 	): void, thisArg?: RelationshipInterface;

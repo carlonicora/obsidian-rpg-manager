@@ -7,11 +7,6 @@ import {
 } from "../../../metadatas/controllers/ControllerMetadataRelationshipInterface";
 
 export interface RelationshipFactoryInterface {
-	addRelationshipToExistingRelationships(
-		relationship: RelationshipInterface,
-		existingRelationships?: RelationshipListInterface,
-	): void;
-
 	create(
 		type: RelationshipType,
 		path: string,

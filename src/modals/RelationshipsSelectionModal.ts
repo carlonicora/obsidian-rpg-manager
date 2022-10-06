@@ -55,6 +55,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 		this.requiredRelationshipType(relationshipsModalEl);
 		this.relationshipsEl = relationshipsModalEl.createDiv({cls:'relationships', text: ''});
+		this.addElementsToList();
 	}
 
 	private requiredRelationshipType(
@@ -62,7 +63,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		const relationshipTypeSelectorEl: HTMLSelectElement = contentEl.createEl('select');
 		relationshipTypeSelectorEl.createEl("option", {
-			text: '',
+			text: 'Existing Relationships',
 			value: '',
 		});
 		const availableRelationships = this.availableRelationships.get(this.currentComponent.id.type);
@@ -75,25 +76,37 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 			});
 			relationshipTypeSelectorEl.addEventListener('change', () => {
 				this.relationshipsEl.empty();
-				if (relationshipTypeSelectorEl.value !== ''){
-					this.addElementsToList(+relationshipTypeSelectorEl.value);
-				}
+				let value: ComponentType|undefined = undefined;
+
+				if (relationshipTypeSelectorEl.value !== '') value = (+relationshipTypeSelectorEl.value);
+				this.addElementsToList(value);
 			});
 		}
 	}
 
 	private addElementsToList(
-		type: ComponentType,
+		type: ComponentType|undefined = undefined,
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this.relationshipsEl.createEl('table').createTBody();
 
-		const components: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentComponent.id)
-			.sort(
-				this.factories.sorter.create<ComponentInterface>([
-					new SorterComparisonElement((component: ComponentInterface) => this.currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
-					new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
-				])
-			);
+		let components: Array<ComponentInterface> = [];
+		if (type !== undefined) {
+			components = this.database.readList<ComponentInterface>(type, this.currentComponent.id)
+				.sort(
+					this.factories.sorter.create<ComponentInterface>([
+						new SorterComparisonElement((component: ComponentInterface) => this.currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
+						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
+					])
+				);
+		} else {
+			components = this.database.recordset
+				.filter((component: ComponentInterface) => this.currentComponent.getRelationships().existsAlready(component))
+				.sort(
+					this.factories.sorter.create<ComponentInterface>([
+						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
+					])
+				);
+		}
 
 		components.forEach((component: ComponentInterface) => {
 			if (component.id !== this.currentComponent.id) {
@@ -101,7 +114,8 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 					.filter((relationship: RelationshipInterface) =>
 						relationship.component?.file.basename === component.file.basename
 					);
-				const relationship: RelationshipInterface|undefined = relationships[0] ?? undefined;
+
+				const relationship: RelationshipInterface | undefined = relationships[0] ?? undefined;
 
 				const rowEl: HTMLTableRowElement = relationshipsTableEl.insertRow();
 
@@ -113,13 +127,13 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 				if (relationship !== undefined) {
 					checkboxEl.checked = true;
-					if(relationship.isInContent || relationship.type === RelationshipType.Parent) checkboxEl.disabled = true;
+					if (relationship.isInContent || relationship.type === RelationshipType.Parent) checkboxEl.disabled = true;
 				}
 
 				if (relationship !== undefined) checkboxEl.checked = true;
 
 				/** IMAGE */
-				if (component.image != null){
+				if (component.image != null) {
 					const img = new Image(40, 40);
 					img.src = component.image;
 					img.style.objectFit = 'cover';
@@ -144,10 +158,10 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 
 				if (relationship !== undefined) {
-					if(relationship.isInContent) {
+					if (relationship.isInContent) {
 						titleCell.createEl('br');
 						titleCell.createSpan({text: 'relationship in the notes cannot be removed'});
-					} else if(relationship.type === RelationshipType.Parent) {
+					} else if (relationship.type === RelationshipType.Parent) {
 						titleCell.createEl('br');
 						titleCell.createSpan({text: 'parent element can only be removed from the parent'});
 					} else if (relationship.description != undefined && relationship.description !== '') {
@@ -159,14 +173,14 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 				/** SYNOPSIS */
 				const synopsisEl = rowEl.insertCell();
 				synopsisEl.addClass('description')
-					MarkdownRenderer.renderMarkdown(
-						(relationship !== undefined && relationship.description != undefined && relationship.description !== '')
-							? relationship.description
-							: (component.synopsis ?? ''),
-						synopsisEl,
-						'',
-						null as unknown as Component,
-					)
+				MarkdownRenderer.renderMarkdown(
+					(relationship !== undefined && relationship.description != undefined && relationship.description !== '')
+						? relationship.description
+						: (component.synopsis ?? ''),
+					synopsisEl,
+					'',
+					null as unknown as Component,
+				)
 
 				checkboxEl.addEventListener('change', () => {
 					this._addOrRemoveElementRelationship(
@@ -188,9 +202,10 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	): HTMLSelectElement {
 		containerEl.addClass('selector');
 		const availableRelationshipsType: Map<RelationshipType, string> = new Map<RelationshipType, string>();
+
+		if (this.currentComponent.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Biunivocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Biunivocal));
 		availableRelationshipsType.set(RelationshipType.Univocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Univocal));
 		if (this.currentComponent.id.type === component.id.type && this.relationshipTypeAllowedChildren.has(component.id.type)) availableRelationshipsType.set(RelationshipType.Child, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Child));
-		if (this.currentComponent.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Biunivocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Biunivocal));
 
 		const relationshipTypeSelectorEl: HTMLSelectElement = containerEl.createEl('select');
 		if (availableRelationshipsType.size === 1){
@@ -200,18 +215,17 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 				value: singleValue,
 			}).selected = true;
 		} else {
-			relationshipTypeSelectorEl.createEl("option", {
-				text: '',
-				value: '',
-			}).selected = true;
-
+			let isFirst = true;
 			availableRelationshipsType.forEach((relationshipTypeDescription: string, relationshipType: RelationshipType) => {
 				const currentOptionEl = relationshipTypeSelectorEl.createEl("option", {
 					text: relationshipTypeDescription,
 					value: relationshipTypeDescription,
 				});
 
-				if (relationship !== undefined && relationship.type === relationshipType) currentOptionEl.selected = true;
+				if (isFirst) {
+					currentOptionEl.selected = true;
+					isFirst = false;
+				} else if (relationship !== undefined && relationship.type === relationshipType) currentOptionEl.selected = true;
 
 				if (relationship !== undefined && relationship.type === RelationshipType.Parent) {
 					relationshipTypeSelectorEl.createEl("option", {
