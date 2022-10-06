@@ -28,7 +28,7 @@ export class ActHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Act;
 		response.responseType = ResponseType.ActHeader;
 
-		if (this.settings.usePlotStructures && this.data.abtStage !== undefined) {
+		if (this.settings.usePlotStructures) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
 				id: this.data.id,
 				file: this.data.file,

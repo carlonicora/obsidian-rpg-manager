@@ -29,7 +29,8 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 		response.responseType = ResponseType.SessionHeader;
 
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: this.data}));
-		if (this.settings.usePlotStructures && this.data.abtStage !== undefined) {
+
+		if (this.settings.usePlotStructures) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
 				id: this.data.id,
 				file: this.data.file,
