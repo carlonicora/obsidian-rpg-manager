@@ -20,7 +20,7 @@ export class SessionNotesTemplateFactory extends AbstractTemplate implements Com
 
 		let response = '---\n' +
 			'### Session Notes\n\n' +
-			'Recap: ' + possibleRecappers + '\n\n' +
+			'Previous Session Recap: ' + possibleRecappers + '\n\n' +
 			'### Storyteller Diary\n' +
 			'-\n\n' +
 			'### End of Session Feedbacks\n';
