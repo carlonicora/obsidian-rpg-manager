@@ -14,20 +14,21 @@ export class SessionNotesTemplateFactory extends AbstractTemplate implements Com
 
 		let possibleRecappers = '';
 		(characters || []).forEach((character: CharacterInterface) => {
-			possibleRecappers += character.file.path + '/';
+			possibleRecappers += character.link + '/';
 		});
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
 
-		let response = '---\n## Session Notes\n\n' +
+		let response = '---\n' +
+			'### Session Notes\n\n' +
 			'Recap: ' + possibleRecappers + '\n\n' +
-			'## GM Notes\n' +
+			'### Storyteller Diary\n' +
 			'-\n\n' +
-			'## Feedbacks\n';
+			'### End of Session Feedbacks\n';
 
-			response += this.generateFeedback('GM');
+			response += this.generateFeedback('Storyteller');
 
 			(characters || []).forEach((character: CharacterInterface) => {
-				response += this.generateFeedback(character.file.path);
+				response += this.generateFeedback(character.link);
 			});
 
 			response += '---\n';

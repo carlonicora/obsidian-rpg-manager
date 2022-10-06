@@ -3,6 +3,11 @@ import {AbstractTemplate} from "../../abstracts/AbstractTemplate";
 
 export class NonPlayerCharacterNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
-		return '## Notes\n- \n\n## Backstory\n';
+		return '---\n' +
+			'### Non Player Character Notes\n' +
+			' - \n\n' +
+			'### Non Player Character Story\n' +
+			' - \n\n' +
+			'---\n';
 	}
 }

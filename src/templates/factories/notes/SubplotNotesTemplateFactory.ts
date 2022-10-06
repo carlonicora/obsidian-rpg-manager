@@ -3,6 +3,9 @@ import {ComponentNotesTemplateFactoryInterface} from "../interfaces/ComponentNot
 
 export class SubplotNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
-		return "## Subplot Details\n\n";
+		return '---\n' +
+			'### Subplot Notes\n' +
+			' - \n\n' +
+			'---\n';
 	}
 }

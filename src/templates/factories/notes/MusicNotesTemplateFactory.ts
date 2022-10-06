@@ -3,7 +3,9 @@ import {ComponentNotesTemplateFactoryInterface} from "../interfaces/ComponentNot
 
 export class MusicNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
-		return '';
+		return '---\n' +
+			'### Music Details\n' +
+			' - \n\n' +
+			'---\n';
 	}
-
 }
