@@ -73,7 +73,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		this._addPlotElement('change', plot.change, tableEl);
 	}
 
-	protected addActBalance(
+	protected addSceneAnalyser(
 		analyser: SceneAnalyser,
 	): void {
 		if (analyser.boredomReference === 0) return;
@@ -98,10 +98,9 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 				analyser.varietyLevel === ThresholdResult.Correct &&
 				analyser.boredomLevel === ThresholdResult.Correct
 			) {
-				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced! Analysis Score: 100%';
+				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is perfect! Analysis Score: 100%';
+				analyserHeadlineEl.addClass('perfect');
 			} else {
-				analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
-				analyserHeadlineEl.addClass('warning');
 				const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
 				const analyserActivityElementEl: HTMLLIElement = analyserListEl.createEl('li');
 				const analyserActivityDescriptionEl: HTMLSpanElement = analyserActivityElementEl.createSpan({cls: 'description'});
@@ -237,6 +236,17 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 					analyserBoredomElementEl.appendChild(analyserBoredomDescriptionEl as Node);
 					analyserBoredomElementEl.addClass(warningErrorClass);
 					analyserBoredomDescriptionEl.textContent += analyser.boredomAmount + ' scene types repeated  in ' + analyser.boredomReference + ' scenes)'
+				}
+
+				if (score < 50){
+					analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is not balanced!';
+					analyserHeadlineEl.addClass('error');
+				} else if (score < 75) {
+					analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' still requires some work to be balanced!';
+					analyserHeadlineEl.addClass('warning');
+				} else {
+					analyserHeadlineEl.textContent = 'The ' + ComponentType[analyser.parentType] + ' is balanced!';
+					analyserHeadlineEl.addClass('balanced');
 				}
 
 				analyserHeadlineEl.textContent += ' Analysis Score: ' + score + '%';

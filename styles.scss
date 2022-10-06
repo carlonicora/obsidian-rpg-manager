@@ -1095,8 +1095,20 @@
 		font-weight: 300;
 		font-size: 0.9em;
 
-		&.warning {
+		&.error {
 			color: var(--text-error);
+		}
+
+		&.warning {
+			color: var(--code-important);
+		}
+
+		&.balanced {
+			color: var(--code-property);
+		}
+
+		&.perfect {
+			color: var(--text-success);
 		}
 	}
 

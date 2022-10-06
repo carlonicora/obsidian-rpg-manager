@@ -45,7 +45,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
 		if (analyser !== undefined){
-			this.addActBalance(analyser);
+			this.addSceneAnalyser(analyser);
 		}
 	}
 

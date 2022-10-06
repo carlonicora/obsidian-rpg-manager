@@ -46,7 +46,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
 		if (analyser !== undefined){
-			this.addActBalance(analyser);
+			this.addSceneAnalyser(analyser);
 		}
 
 		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){

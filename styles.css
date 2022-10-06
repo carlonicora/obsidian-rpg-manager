@@ -884,8 +884,17 @@
   font-weight: 300;
   font-size: 0.9em;
 }
-.rpgm-analyser span.header.warning {
+.rpgm-analyser span.header.error {
   color: var(--text-error);
+}
+.rpgm-analyser span.header.warning {
+  color: var(--code-important);
+}
+.rpgm-analyser span.header.balanced {
+  color: var(--code-property);
+}
+.rpgm-analyser span.header.perfect {
+  color: var(--text-success);
 }
 .rpgm-analyser ul {
   margin: 0px;
