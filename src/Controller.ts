@@ -16,7 +16,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private data: ResponseDataInterface;
 	private models: Array<ModelInterface> = [];
 
-	private currentElement: ComponentInterface;
+	private currentComponent: ComponentInterface;
 	private campaignSettings: CampaignSetting;
 
 	private componentVersion: number|undefined = undefined;
@@ -45,10 +45,10 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		this.models = [];
 		if (this.campaignSettings === undefined) {
 			this.campaignSettings = CampaignSetting.Agnostic;
-			if (this.currentElement.campaign !== undefined) {
-				this.campaignSettings = this.currentElement.campaign.campaignSettings;
-			} else if ((<CampaignInterface>this.currentElement).campaignSettings !== undefined) {
-				this.campaignSettings = (<CampaignInterface>this.currentElement).campaignSettings;
+			if (this.currentComponent.campaign !== undefined) {
+				this.campaignSettings = this.currentComponent.campaign.campaignSettings;
+			} else if ((<CampaignInterface>this.currentComponent).campaignSettings !== undefined) {
+				this.campaignSettings = (<CampaignInterface>this.currentComponent).campaignSettings;
 			}
 		}
 
@@ -87,7 +87,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		return this.factories.models.create(
 			this.campaignSettings,
 			modelName,
-			this.currentElement,
+			this.currentComponent,
 			this.source,
 			this.sourcePath,
 			sourceMeta,
@@ -97,29 +97,29 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private _initialiseCampaignSettings(
 	): void {
 		this.campaignSettings = CampaignSetting.Agnostic;
-		if (this.currentElement.campaign !== undefined){
-			this.campaignSettings = this.currentElement.campaign.campaignSettings;
-		} else if ((<CampaignInterface>this.currentElement).campaignSettings !== undefined) {
-			this.campaignSettings = (<CampaignInterface>this.currentElement).campaignSettings;
+		if (this.currentComponent.campaign !== undefined){
+			this.campaignSettings = this.currentComponent.campaign.campaignSettings;
+		} else if ((<CampaignInterface>this.currentComponent).campaignSettings !== undefined) {
+			this.campaignSettings = (<CampaignInterface>this.currentComponent).campaignSettings;
 		}
 	}
 
 	private _initialise(
 	): boolean {
-		const currentElement:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
-		if (currentElement === undefined) return false;
+		const currentComponent:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
+		if (currentComponent === undefined) return false;
 
-		if (currentElement.version === undefined) {
+		if (currentComponent.version === undefined) {
 			setTimeout(this._render.bind(this), 100);
 			return false;
 		}
 
-		if (this.componentVersion !== undefined && currentElement.version === this.componentVersion) return false;
+		if (this.componentVersion !== undefined && currentComponent.version === this.componentVersion) return false;
 
-		this.componentVersion = currentElement.version;
+		this.componentVersion = currentComponent.version;
 
 		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
-		this.currentElement = currentElement;
+		this.currentComponent = currentComponent;
 
 		this._generateModels();
 

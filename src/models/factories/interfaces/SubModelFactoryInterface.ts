@@ -7,7 +7,7 @@ import {RelationshipInterface} from "../../../relationships/interfaces/Relations
 export interface SubModelFactoryInterface {
 	create<T extends SubModelInterface>(
 		subModelType: (new (app: App) => T),
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		data: RelationshipInterface|RelationshipInterface[],
 		title?: string|undefined,
 		additionalInformation?: any|undefined,

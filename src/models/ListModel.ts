@@ -17,7 +17,7 @@ export class ListModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		if (this.currentElement.id.type === ComponentType.Session)this.updateRelationshipsList();
+		if (this.currentComponent.id.type === ComponentType.Session)this.updateRelationshipsList();
 		for (let listCounter=0; listCounter<Object.keys(this.sourceMeta).length; listCounter++){
 			const name = Object.keys(this.sourceMeta)[listCounter];
 			const componentType = this.factories.componentType.createComponentType(name.slice(0, -1));
@@ -57,13 +57,13 @@ export class ListModel extends AbstractModel {
 	private generateComponentList(
 		type: ComponentType,
 	): Array<ComponentInterface> {
-		if (this.currentElement.id.type !== ComponentType.Session) return this.database.readList<ComponentInterface>(type, this.currentElement.id)
+		if (this.currentComponent.id.type !== ComponentType.Session) return this.database.readList<ComponentInterface>(type, this.currentComponent.id)
 
 		return this.database.read<ComponentInterface>(
 			(scene: SceneInterface) =>
 				scene.id.type === ComponentType.Scene &&
-				scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
-				scene.session?.id.sessionId === this.currentElement.id.sessionId,
+				scene.id.campaignId === this.currentComponent.campaign.id.campaignId &&
+				scene.session?.id.sessionId === this.currentComponent.id.sessionId,
 		).sort(this.factories.sorter.create<SceneInterface>([
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
@@ -73,12 +73,12 @@ export class ListModel extends AbstractModel {
 
 	private updateRelationshipsList(
 	): void {
-		if (this.currentElement.id.type === ComponentType.Session) {
+		if (this.currentComponent.id.type === ComponentType.Session) {
 			const scenes = this.database.read<SceneInterface>(
 				(scene: SceneInterface) =>
 					scene.id.type === ComponentType.Scene &&
-					scene.id.campaignId === this.currentElement.campaign.id.campaignId &&
-					scene.session?.id.sessionId === this.currentElement.id.sessionId,
+					scene.id.campaignId === this.currentComponent.campaign.id.campaignId &&
+					scene.session?.id.sessionId === this.currentComponent.id.sessionId,
 			).sort(this.factories.sorter.create<SceneInterface>([
 				new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
 				new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
@@ -91,10 +91,10 @@ export class ListModel extends AbstractModel {
 						relationship.component !== undefined &&
 						relationship.component.stage !== ComponentStage.Plot &&
 						relationship.component.stage !== ComponentStage.Run &&
-						this.currentElement.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0 &&
+						this.currentComponent.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0 &&
 						relationship.type === RelationshipType.Univocal
 					) {
-						this.currentElement.getRelationships().add(
+						this.currentComponent.getRelationships().add(
 							this.factories.relationship.create(RelationshipType.Hierarchy, relationship.path, undefined, relationship.component, false)
 						);
 					}

@@ -8,7 +8,7 @@ import {CampaignInterface} from "../../../databases/components/interfaces/Campai
 import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: CampaignInterface;
+	protected currentComponent: CampaignInterface;
 
 	public render(
 		container: HTMLElement,
@@ -16,22 +16,22 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 	): void {
 		super.render(container, data);
 
-		if (this.currentElement.image != null){
+		if (this.currentComponent.image != null){
 			this.headerTitleEl.empty();
 			this.headerTitleEl.addClass('rpgm-header');
 			this.headerInfoEl.addClass('info-large');
 			this.headerContainerEl.removeChild(this.imageContainterEl);
 
-			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentElement.image + '\')';
+			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentComponent.image + '\')';
 
 			const overlay = this.headerTitleEl.createDiv({cls: 'rpgm-header-overlay'});
-			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentElement.file.basename});
+			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentComponent.file.basename});
 
 			//overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (this.currentElement.date !== null ? this.currentElement.date?.toDateString() : '')});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (this.currentComponent.date !== null ? this.currentComponent.date?.toDateString() : '')});
 		}
 
-		if (this.currentElement.date !== undefined) {
+		if (this.currentComponent.date !== undefined) {
 			this.headerTitleEl.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
 				.addEventListener("click", () => {
 					this.factories.views.showObsidianView(ViewType.Timeline, [data.metadata.campaignId]);
@@ -44,7 +44,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Adventure',
 				this.addCurrentComponentSelector.bind(this),
-				['adventure', this.currentElement.currentAdventureId, data.metadata?.sourceMeta?.adventures]
+				['adventure', this.currentComponent.currentAdventureId, data.metadata?.sourceMeta?.adventures]
 			);
 		}
 
@@ -52,7 +52,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Act',
 				this.addCurrentComponentSelector.bind(this),
-				['act', this.currentElement.currentActId, data.metadata?.sourceMeta?.acts]
+				['act', this.currentComponent.currentActId, data.metadata?.sourceMeta?.acts]
 			);
 		}
 
@@ -60,18 +60,18 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			headlessTable.addRow(
 				'Current Session',
 				this.addCurrentComponentSelector.bind(this),
-				['session', this.currentElement.currentSessionId, data.metadata?.sourceMeta?.sessions]
+				['session', this.currentComponent.currentSessionId, data.metadata?.sourceMeta?.sessions]
 			);
 		}
 
 		this.headerInfoEl.appendChild(headlessTable.tableEl as Node);
 
-		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot && !data.currentElement.abt.isEmpty){
-			this.addAbtPlot(data.currentElement.abt);
+		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){
+			this.addAbtPlot(data.currentComponent.abt);
 		}
 
-		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot && !data.currentElement.storyCircle.isEmpty){
-			this.addStoryCirclePlot(data.currentElement.storyCircle);
+		if (this.settings.usePlotStructures && data.currentComponent.hasStoryCirclePlot && !data.currentComponent.storyCircle.isEmpty){
+			this.addStoryCirclePlot(data.currentComponent.storyCircle);
 		}
 	}
 
@@ -101,7 +101,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		});
 
 		componentSelectorEl.addEventListener("change", (e) => {
-			const file: TFile|undefined = this.currentElement.file;
+			const file: TFile|undefined = this.currentComponent.file;
 
 			if (file !== undefined){
 				this.manipulators.codeblock.update('data.current' + type[0].toUpperCase() + type.substring(1).toLowerCase() + 'Id', componentSelectorEl.value);

@@ -7,7 +7,7 @@ import {HeadlessTableView} from "../../HeadlessTableView";
 import {ActInterface} from "../../../databases/components/interfaces/ActInterface";
 
 export class ActHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: ActInterface;
+	protected currentComponent: ActInterface;
 
 	public render(
 		container: HTMLElement,
@@ -27,7 +27,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.AbtSelector:
 					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
-					if (this.currentElement.abtStage !== undefined) {
+					if (this.currentComponent.abtStage !== undefined) {
 						analyser = element.additionalInformation.sceneAnalyser;
 					}
 					break;
@@ -49,11 +49,11 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 			this.addActBalance(analyser);
 		}
 
-		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot && !data.currentElement.abt.isEmpty){
-			this.addAbtPlot(data.currentElement.abt);
+		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){
+			this.addAbtPlot(data.currentComponent.abt);
 		}
-		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot && !data.currentElement.storyCircle.isEmpty){
-			this.addStoryCirclePlot(data.currentElement.storyCircle);
+		if (this.settings.usePlotStructures && data.currentComponent.hasStoryCirclePlot && !data.currentComponent.storyCircle.isEmpty){
+			this.addStoryCirclePlot(data.currentComponent.storyCircle);
 		}
 	}
 }

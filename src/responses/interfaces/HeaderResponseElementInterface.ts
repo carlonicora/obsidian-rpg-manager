@@ -3,7 +3,7 @@ import {ContentInterface} from "../contents/interfaces/ContentInterface";
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 
 export interface HeaderResponseElementInterface {
-	currentElement: ComponentInterface;
+	currentComponent: ComponentInterface;
 	title: string;
 	value: ContentInterface;
 	type:HeaderResponseType;

@@ -44,7 +44,7 @@ export class TableView extends AbstractSubModelView {
 			if (data.class === 'rpgm-plot'){
 				const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
 				titleEditor.addEventListener('click', () => {
-					EditorSelector.select(this.app, data.currentElement);
+					EditorSelector.select(this.app, data.currentComponent);
 				})
 			}
 		}

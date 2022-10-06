@@ -19,7 +19,7 @@ export class FactionHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Faction;
 		response.responseType = ResponseType.FactionHeader;

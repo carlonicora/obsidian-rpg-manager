@@ -37,13 +37,13 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	constructor(
 		app: App,
-		protected currentElement: ComponentInterface,
+		protected currentComponent: ComponentInterface,
 		protected source: string,
 		protected sourcePath: string,
 		protected sourceMeta: any,
 	) {
 		super(app);
-		this.currentElement.file.stat.mtime = Date.now();
+		this.currentComponent.file.stat.mtime = Date.now();
 
 		this.response = new ResponseData(this.app);
 
@@ -143,7 +143,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		if (!this.isExcluded(type)){
 			const subModel = this.subModelsMap.get(type);
 			if (component === undefined) {
-				component = this.currentElement.getRelationships().filter((relationship: RelationshipInterface) =>
+				component = this.currentComponent.getRelationships().filter((relationship: RelationshipInterface) =>
 					relationship.component !== undefined &&
 					relationship.component.id.type === type &&
 					(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
@@ -180,7 +180,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 			if (subModel !== undefined) {
 				await this.response.addSubModel(
 					subModel,
-					this.currentElement,
+					this.currentComponent,
 					component,
 					title,
 				);

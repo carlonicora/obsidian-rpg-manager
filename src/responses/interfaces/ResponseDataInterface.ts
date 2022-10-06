@@ -7,7 +7,7 @@ export interface ResponseDataInterface {
 
 	addSubModel<T>(
 		type: T,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		data: ComponentInterface[]|ComponentInterface|RelationshipInterface[],
 		title?: string|undefined,
 		additionalInformation?: any|undefined,

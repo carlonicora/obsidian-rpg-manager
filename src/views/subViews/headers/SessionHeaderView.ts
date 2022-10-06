@@ -8,7 +8,7 @@ import {HeadlessTableView} from "../../HeadlessTableView";
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: SessionInterface;
+	protected currentComponent: SessionInterface;
 
 	public render(
 		container: HTMLElement,
@@ -26,7 +26,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.AbtSelector:
 					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
-					if (this.currentElement.abtStage !== undefined) {
+					if (this.currentComponent.abtStage !== undefined) {
 						analyser = element.additionalInformation.sceneAnalyser;
 					}
 					break;

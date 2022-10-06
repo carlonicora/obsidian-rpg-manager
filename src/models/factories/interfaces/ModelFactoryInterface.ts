@@ -7,7 +7,7 @@ export interface ModelFactoryInterface {
 	create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,

@@ -19,7 +19,7 @@ export class SubplotHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Subplot;
 		response.responseType = ResponseType.SubplotHeader;

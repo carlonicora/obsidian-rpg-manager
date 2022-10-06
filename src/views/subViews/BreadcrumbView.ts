@@ -5,14 +5,14 @@ import {RelationshipsSelectionModal} from "../../modals/RelationshipsSelectionMo
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 
 export class BreadcrumbView extends AbstractSubModelView {
-	private currentElement: ComponentInterface;
+	private currentComponent: ComponentInterface;
 
 	render(
 		container: HTMLElement,
 		data: BreadcrumbResponseInterface,
 	): void {
 		if (data.component === undefined) return;
-		this.currentElement = data.component;
+		this.currentComponent = data.component;
 
 		const breadcrumbContainer = container.createDiv({cls: 'rpgm-breadcrumb'});
 		breadcrumbContainer.createEl('h2').textContent = data.mainTitle;
@@ -27,7 +27,7 @@ export class BreadcrumbView extends AbstractSubModelView {
 		const value = crumb.createDiv({cls: 'value'});
 		const relationshipsAdderEl = value.createEl('span', {cls: 'rpgm-edit-icon', text: 'Manage Relationship'});
 		relationshipsAdderEl.addEventListener("click", () => {
-			new RelationshipsSelectionModal(this.app, this.currentElement).open();
+			new RelationshipsSelectionModal(this.app, this.currentComponent).open();
 		});
 	}
 

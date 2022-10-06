@@ -23,7 +23,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 	): Promise<ResponseDataElementInterface|null> {
 		if (relationships.length === 0) return null;
 
-		const response = new ResponseTable(this.app, this.currentElement);
+		const response = new ResponseTable(this.app, this.currentComponent);
 		response.open = this.advancedSettings.defaultVisible;
 
 		response.addTitle(title ? title : this.advancedSettings.title);

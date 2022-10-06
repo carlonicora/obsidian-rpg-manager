@@ -9,7 +9,7 @@ import {Pronoun} from "../../../databases/enums/Pronoun";
 import {CharacterInterface} from "../../../databases/components/interfaces/CharacterInterface";
 
 export class CharacterHeaderView extends AbstractHeaderView {
-	protected currentElement:CharacterInterface;
+	protected currentComponent:CharacterInterface;
 
 	public render(
 		container: HTMLElement,
@@ -59,7 +59,7 @@ export class CharacterHeaderView extends AbstractHeaderView {
 		});
 
 		pronounSelectorEl.addEventListener("change", (e) => {
-			const file: TFile|undefined = this.currentElement.file;
+			const file: TFile|undefined = this.currentComponent.file;
 
 			if (file !== undefined){
 				this.manipulators.codeblock.update(

@@ -5,7 +5,7 @@ import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderR
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
-	protected currentElement: ComponentInterface;
+	protected currentComponent: ComponentInterface;
 
 	protected headerTitleEl: HTMLDivElement;
 	protected headerInfoEl: HTMLDivElement;
@@ -33,7 +33,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
-		this.currentElement = data.currentElement;
+		this.currentComponent = data.currentComponent;
 
 		//Init
 		const crs = container.createDiv({cls: 'rpgm-header-info'});

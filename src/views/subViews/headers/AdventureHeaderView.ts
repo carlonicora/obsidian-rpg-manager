@@ -3,7 +3,7 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {AdventureInterface} from "../../../databases/components/interfaces/AdventureInterface";
 
 export class AdventureHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: AdventureInterface;
+	protected currentComponent: AdventureInterface;
 
 	public render(
 		container: HTMLElement,
@@ -11,11 +11,11 @@ export class AdventureHeaderView extends AbstractPlotHeaderView {
 	): void {
 		super.render(container, data);
 
-		if (this.settings.usePlotStructures && data.currentElement.hasAbtPlot && !data.currentElement.abt.isEmpty){
-			this.addAbtPlot(data.currentElement.abt);
+		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){
+			this.addAbtPlot(data.currentComponent.abt);
 		}
-		if (this.settings.usePlotStructures && data.currentElement.hasStoryCirclePlot && !data.currentElement.storyCircle.isEmpty){
-			this.addStoryCirclePlot(data.currentElement.storyCircle);
+		if (this.settings.usePlotStructures && data.currentComponent.hasStoryCirclePlot && !data.currentComponent.storyCircle.isEmpty){
+			this.addStoryCirclePlot(data.currentComponent.storyCircle);
 		}
 	}
 }

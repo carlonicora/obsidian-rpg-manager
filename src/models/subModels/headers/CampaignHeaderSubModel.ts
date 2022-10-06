@@ -25,24 +25,24 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 
 		if (additionalInformation === undefined) additionalInformation = {};
 
-		additionalInformation.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.currentElement.id)
+		additionalInformation.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.currentComponent.id)
 			.sort(this.factories.sorter.create<ComponentInterface>([
 				new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
-		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentElement.id)
+		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentComponent.id)
 			.sort(this.factories.sorter.create<ComponentInterface>([
 				new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
-		additionalInformation.sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.currentElement.id)
+		additionalInformation.sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.currentComponent.id)
 			.sort(this.factories.sorter.create<ComponentInterface>([
 				new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Campaign;
 		response.responseType = ResponseType.CampaignHeader;

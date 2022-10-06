@@ -23,14 +23,14 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Session;
 		response.responseType = ResponseType.SessionHeader;
 
-		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: this.data}));
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scenes', '', HeaderResponseType.ScenesSelection, {session: this.data}));
 		if (this.settings.usePlotStructures && this.data.abtStage !== undefined) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'ABT Stage', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.AbtSelector, {
 				id: this.data.id,
 				file: this.data.file,
 			}));
@@ -44,7 +44,7 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 			);
 
 			if (analyser.scenesCount > 0) {
-				response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
+				response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
 					id: this.data.id,
 					file: this.data.file,
 					sceneAnalyser: analyser,

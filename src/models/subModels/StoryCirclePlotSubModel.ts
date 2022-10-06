@@ -36,7 +36,7 @@ export class StoryCirclePlotSubModel extends AbstractSubModel {
 		) return null;
 		if (relationship.component === undefined) return null;
 
-		const response = new ResponseTable(this.app, this.currentElement);
+		const response = new ResponseTable(this.app, this.currentComponent);
 
 		response.title = 'Story Circle Plot';
 		response.class = 'rpgm-plot';

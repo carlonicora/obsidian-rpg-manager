@@ -19,9 +19,9 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 	) {
-		super(app, currentElement);
+		super(app, currentComponent);
 		this.responseType = ResponseType.Header;
 		this.elements = [];
 	}

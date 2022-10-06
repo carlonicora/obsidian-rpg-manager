@@ -10,7 +10,7 @@ export abstract class AbstractResponse extends AbstractRpgManager implements Res
 
 	constructor(
 		app: App,
-		public currentElement: ComponentInterface,
+		public currentComponent: ComponentInterface,
 	) {
 		super(app);
 	}

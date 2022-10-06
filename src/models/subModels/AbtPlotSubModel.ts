@@ -13,9 +13,9 @@ export class AbtPlotSubModel extends AbstractSubModel {
 		title:string|undefined,
 		additionalInformation: any|undefined,
 	): Promise<ResponseDataElementInterface|null> {
-		if (!this.currentElement.hasAbtPlot || (<PlotsInterface>this.currentElement).abt.isEmpty) return null;
+		if (!this.currentComponent.hasAbtPlot || (<PlotsInterface>this.currentComponent).abt.isEmpty) return null;
 
-		const response = new ResponseTable(this.app, this.currentElement);
+		const response = new ResponseTable(this.app, this.currentComponent);
 
 		response.title = 'ABT Plot';
 		response.class = 'rpgm-plot';

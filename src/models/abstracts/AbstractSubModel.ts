@@ -8,7 +8,7 @@ import {RelationshipInterface} from "../../relationships/interfaces/Relationship
 export abstract class AbstractSubModel extends AbstractRpgManager implements SubModelInterface {
 	constructor(
 		app: App,
-		protected currentElement: ComponentInterface,
+		protected currentComponent: ComponentInterface,
 	) {
 		super(app);
 	}

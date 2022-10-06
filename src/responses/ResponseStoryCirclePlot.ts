@@ -17,9 +17,9 @@ export class ResponseStoryCirclePlot extends AbstractResponse implements StoryCi
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 	) {
-		super(app, currentElement);
+		super(app, currentComponent);
 		this.responseType = ResponseType.StoryCirclePlot;
 	}
 }

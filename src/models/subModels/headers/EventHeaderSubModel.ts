@@ -21,13 +21,13 @@ export class EventHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Event;
 		response.responseType = ResponseType.EventHeader;
 
 		if (this.data.date != null) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Date', this.data.date.toDateString(), HeaderResponseType.Short));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Date', this.data.date.toDateString(), HeaderResponseType.Short));
 		}
 
 		return this.completeData(response);

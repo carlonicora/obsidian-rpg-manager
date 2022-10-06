@@ -13,7 +13,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private hasCampaigns: boolean;
 
 	private currentCampaign: CampaignInterface|undefined;
-	private currentElement: ComponentInterface|undefined;
+	private currentComponent: ComponentInterface|undefined;
 
 	private verticalTabHeaderEl: HTMLDivElement;
 
@@ -37,9 +37,9 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 		const file:TFile|null = this.app.workspace.getActiveFile();
 		if (file != null){
-			this.currentElement = this.database.readByPath(file.path);
+			this.currentComponent = this.database.readByPath(file.path);
 		} else {
-			this.currentElement = undefined;
+			this.currentComponent = undefined;
 		}
 	}
 
@@ -159,9 +159,9 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	): void {
 		let modalOpened = false;
 
-		if (this.currentElement !== undefined) {
+		if (this.currentComponent !== undefined) {
 			modalOpened = true;
-			new CreationModal(this.app, type, true, null, this.currentElement?.id.campaignId, this.currentElement?.id.adventureId, this.currentElement?.id.actId).open();
+			new CreationModal(this.app, type, true, null, this.currentComponent?.id.campaignId, this.currentComponent?.id.adventureId, this.currentComponent?.id.actId).open();
 		} else if (this.currentCampaign !== undefined) {
 			modalOpened = true;
 			new CreationModal(this.app, type, true, null, this.currentCampaign?.id.campaignId).open();

@@ -36,7 +36,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 	constructor(
 		app: App,
-		private currentElement: ComponentInterface,
+		private currentComponent: ComponentInterface,
 	) {
 		super(app);
 	}
@@ -65,7 +65,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 			text: '',
 			value: '',
 		});
-		const availableRelationships = this.availableRelationships.get(this.currentElement.id.type);
+		const availableRelationships = this.availableRelationships.get(this.currentComponent.id.type);
 		if (availableRelationships !== undefined && availableRelationships.length > 0) {
 			availableRelationships.forEach((type: ComponentType) => {
 				relationshipTypeSelectorEl.createEl("option", {
@@ -87,17 +87,17 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this.relationshipsEl.createEl('table').createTBody();
 
-		const components: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentElement.id)
+		const components: Array<ComponentInterface> = this.database.readList<ComponentInterface>(type, this.currentComponent.id)
 			.sort(
 				this.factories.sorter.create<ComponentInterface>([
-					new SorterComparisonElement((component: ComponentInterface) => this.currentElement.getRelationships().existsAlready(component), SorterType.Descending),
+					new SorterComparisonElement((component: ComponentInterface) => this.currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
 					new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 				])
 			);
 
 		components.forEach((component: ComponentInterface) => {
-			if (component.id !== this.currentElement.id) {
-				const relationships: Array<RelationshipInterface> = this.currentElement.getRelationships()
+			if (component.id !== this.currentComponent.id) {
+				const relationships: Array<RelationshipInterface> = this.currentComponent.getRelationships()
 					.filter((relationship: RelationshipInterface) =>
 						relationship.component?.file.basename === component.file.basename
 					);
@@ -189,8 +189,8 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 		containerEl.addClass('selector');
 		const availableRelationshipsType: Map<RelationshipType, string> = new Map<RelationshipType, string>();
 		availableRelationshipsType.set(RelationshipType.Univocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Univocal));
-		if (this.currentElement.id.type === component.id.type && this.relationshipTypeAllowedChildren.has(component.id.type)) availableRelationshipsType.set(RelationshipType.Child, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Child));
-		if (this.currentElement.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Biunivocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Biunivocal));
+		if (this.currentComponent.id.type === component.id.type && this.relationshipTypeAllowedChildren.has(component.id.type)) availableRelationshipsType.set(RelationshipType.Child, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Child));
+		if (this.currentComponent.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Biunivocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Biunivocal));
 
 		const relationshipTypeSelectorEl: HTMLSelectElement = containerEl.createEl('select');
 		if (availableRelationshipsType.size === 1){
@@ -254,7 +254,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 				existingRelationship?.description,
 				relatedComponent,
 				false,
-				this.currentElement.getRelationships(),
+				this.currentComponent.getRelationships(),
 			)
 
 			this.manipulators.codeblock.addOrUpdateRelationship(newRelationship);

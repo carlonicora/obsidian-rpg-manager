@@ -19,9 +19,9 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 	) {
-		super(app, currentElement);
+		super(app, currentComponent);
 		this.responseType = ResponseType.Table;
 		this.class = null;
 		this.headers = [];

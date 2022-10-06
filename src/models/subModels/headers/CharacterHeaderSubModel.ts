@@ -32,25 +32,25 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Character;
 		response.responseType = ResponseType.CharacterHeader;
 
-		if (this.data.goals != null) response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Goals', this.data.goals.toString(), HeaderResponseType.Long));
+		if (this.data.goals != null) response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Goals', this.data.goals.toString(), HeaderResponseType.Long));
 
-		response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Pronoun', this.data.pronoun, HeaderResponseType.Pronoun));
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Pronoun', this.data.pronoun, HeaderResponseType.Pronoun));
 		if (this.data.age != null || this.data.death != null) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Status', this.data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Status', this.data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
 		}
 		if (this.data.death != null){
 			let death = this.data.death.toDateString();
 			if (this.data.age != null){
 				death += ' at age ' + this.data.age;
 			}
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Death', death, HeaderResponseType.Short));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Death', death, HeaderResponseType.Short));
 		} else if (this.data.age != null) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Age', this.data.age.toString(), HeaderResponseType.Short));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Age', this.data.age.toString(), HeaderResponseType.Short));
 		}
 
 		return this.completeData(response);

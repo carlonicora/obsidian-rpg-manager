@@ -11,7 +11,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 
 	public async addSubModel(
 		type: any,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		data: ComponentInterface[]|ComponentInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
@@ -41,7 +41,7 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 
 		const element = await this.factories.subModels.create(
 			type,
-			currentElement,
+			currentComponent,
 			relationship ?? relationships,
 			title,
 			additionalInformation,

@@ -34,25 +34,25 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentElement);
+		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Scene;
 		response.responseType = ResponseType.SceneHeader;
 
 		if (this.data.trigger !== undefined && this.data.trigger != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Trigger', this.data.trigger, HeaderResponseType.Long));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Trigger', this.data.trigger, HeaderResponseType.Long));
 		}
 
 		if (this.data.action !== undefined && this.data.action != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Action', this.data.action, HeaderResponseType.Long));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Action', this.data.action, HeaderResponseType.Long));
 		}
 
 		if (this.data.date !== undefined){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Date', this.data.date.toDateString(), HeaderResponseType.Short));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Date', this.data.date.toDateString(), HeaderResponseType.Short));
 		}
 
 		if (sessions.length > 0) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Session', (this.data.session === undefined ? '' : this.data.session?.id?.sessionId?.toString()), HeaderResponseType.SessionSelection, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Session', (this.data.session === undefined ? '' : this.data.session?.id?.sessionId?.toString()), HeaderResponseType.SessionSelection, {
 				sceneId: this.data.id,
 				file: this.data.file,
 				sessions: sessions
@@ -60,23 +60,23 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		}
 
 		if (this.settings.usePlotStructures) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Story Circle Stage', (this.data.storyCircleStage !== undefined ? this.data.storyCircleStage : ''), HeaderResponseType.StoryCircleSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Story Circle Stage', (this.data.storyCircleStage !== undefined ? this.data.storyCircleStage : ''), HeaderResponseType.StoryCircleSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
 
 		}
 		if (this.settings.useSceneAnalyser) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Type', (this.data.sceneType !== undefined ?this.data.sceneType : ''), HeaderResponseType.SceneTypeSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Type', (this.data.sceneType !== undefined ?this.data.sceneType : ''), HeaderResponseType.SceneTypeSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'External actions?', this.data.isExciting, HeaderResponseType.SceneExcitment, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'External actions?', this.data.isExciting, HeaderResponseType.SceneExcitment, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
-			response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Run', this.data.isCurrentlyRunning, HeaderResponseType.SceneRun));
-			if (this.data.isCurrentlyRunning || this.data.currentDuration > 0) response.addElement(new ResponseHeaderElement(this.app, this.currentElement, 'Scene Duration', '', HeaderResponseType.SceneRunTime));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Run', this.data.isCurrentlyRunning, HeaderResponseType.SceneRun));
+			if (this.data.isCurrentlyRunning || this.data.currentDuration > 0) response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Duration', '', HeaderResponseType.SceneRunTime));
 		}
 
 		if (this.settings.useSceneAnalyser && this.data.sceneType !== undefined && this.data.storyCircleStage !== undefined) {

@@ -4,12 +4,12 @@ import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 export class EditorSelector {
 	public static select(
 		app: App,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		specificYamlKey: string|undefined=undefined,
 	): void {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		if (activeView != null) {
-			const metadata: CachedMetadata|null = app.metadataCache.getFileCache(currentElement.file)
+			const metadata: CachedMetadata|null = app.metadataCache.getFileCache(currentComponent.file)
 			if (metadata != null && metadata.sections !== undefined) {
 				for (let index=0; index<metadata.sections.length; index++){
 					const editor = activeView.editor;

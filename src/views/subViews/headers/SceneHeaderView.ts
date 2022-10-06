@@ -12,7 +12,7 @@ import {SceneInterface} from "../../../databases/components/interfaces/SceneInte
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
-	protected currentElement: SceneInterface;
+	protected currentComponent: SceneInterface;
 
 	public render(
 		container: HTMLElement,
@@ -63,7 +63,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
 		const durationEl = contentEl.createSpan({text: this.countOngoingDuration()});
-		if (this.currentElement.isCurrentlyRunning) {
+		if (this.currentComponent.isCurrentlyRunning) {
 			setInterval(() => {
 				durationEl.textContent = this.countOngoingDuration();
 			}, 1000);
@@ -72,9 +72,9 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 	private countOngoingDuration(
 	): string {
-		let duration: number = this.currentElement.currentDuration ?? 0;
-		if (this.currentElement.lastStart !== undefined && this.currentElement.lastStart !== 0){
-			duration += (Math.floor(Date.now()/1000) - this.currentElement.lastStart);
+		let duration: number = this.currentComponent.currentDuration ?? 0;
+		if (this.currentComponent.lastStart !== undefined && this.currentComponent.lastStart !== 0){
+			duration += (Math.floor(Date.now()/1000) - this.currentComponent.lastStart);
 		}
 
 		const expectedHoursDuration: number = Math.floor(duration / 60);
@@ -88,7 +88,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
-		const startStopEl = contentEl.createEl('a', {href: '#', text: (this.currentElement.isCurrentlyRunning ? 'stop' : 'start')});
+		const startStopEl = contentEl.createEl('a', {href: '#', text: (this.currentComponent.isCurrentlyRunning ? 'stop' : 'start')});
 		startStopEl.addEventListener('click', (e) => {
 			const editorPositions: Map<Editor, number> = new Map<Editor, number>();
 
@@ -101,13 +101,13 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 			e.preventDefault();
 
-			if (this.currentElement.isCurrentlyRunning){
-				this.factories.runningTimeManager.stopScene(this.currentElement)
+			if (this.currentComponent.isCurrentlyRunning){
+				this.factories.runningTimeManager.stopScene(this.currentComponent)
 					.then(() => {
 						setTimeout(() => {this.refreshEditorsPosition(editorPositions)},0);
 					});
 			} else {
-				this.factories.runningTimeManager.startScene(this.currentElement)
+				this.factories.runningTimeManager.startScene(this.currentComponent)
 					.then(() => {
 						setTimeout(() => {this.refreshEditorsPosition(editorPositions)},0);
 					});

@@ -36,7 +36,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		headerEl.createSpan({text: 'ABT Plot'});
 		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: '</>'});
 		titleEditor.addEventListener('click', () => {
-			EditorSelector.select(this.app, this.currentElement);
+			EditorSelector.select(this.app, this.currentComponent);
 		})
 
 		const tableEl = plotEl.createEl('table');
@@ -57,7 +57,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		headerEl.createSpan({text: 'Story Circle Plot'});
 		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
 		titleEditor.addEventListener('click', () => {
-			EditorSelector.select(this.app, this.currentElement);
+			EditorSelector.select(this.app, this.currentComponent);
 		})
 
 		const tableEl = plotEl.createEl('table');

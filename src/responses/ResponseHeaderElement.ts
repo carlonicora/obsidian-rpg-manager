@@ -11,13 +11,13 @@ export class ResponseHeaderElement extends AbstractResponse implements HeaderRes
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		public title: string,
 		content: any,
 		public type: HeaderResponseType,
 		public additionalInformation: any|undefined=undefined,
 	) {
-		super(app, currentElement);
+		super(app, currentComponent);
 		this.value = this.factories.contents.create(content, ContentType.Markdown);
 	}
 }

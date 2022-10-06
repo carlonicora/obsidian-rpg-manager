@@ -59,7 +59,7 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 	public create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,
@@ -68,7 +68,7 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		if (!this.modelTypeMap.has(modelKey)) modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName;
 		if (!this.modelTypeMap.has(modelKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + modelName + ' cannot be found');
 
-		return new (this.modelTypeMap.get(modelKey))(this.app, currentElement, source, sourcePath, sourceMeta);
+		return new (this.modelTypeMap.get(modelKey))(this.app, currentComponent, source, sourcePath, sourceMeta);
 	}
 
 	public createSubModel(

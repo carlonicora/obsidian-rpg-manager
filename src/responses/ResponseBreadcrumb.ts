@@ -17,9 +17,9 @@ export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbRe
 
 	constructor(
 		app: App,
-		currentElement: ComponentInterface,
+		currentComponent: ComponentInterface,
 	) {
-		super(app, currentElement);
+		super(app, currentComponent);
 		this.responseType = ResponseType.Breadcrumb;
 	}
 }

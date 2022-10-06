@@ -8,13 +8,13 @@ import {RelationshipInterface} from "../../relationships/interfaces/Relationship
 
 export class SubModelFactory extends AbstractFactory implements SubModelFactoryInterface{
 	public async create<T extends SubModelInterface>(
-		subModelType: (new (app: App, currentElement: ComponentInterface) => T),
-		currentElement: ComponentInterface,
+		subModelType: (new (app: App, currentComponent: ComponentInterface) => T),
+		currentComponent: ComponentInterface,
 		data: RelationshipInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 	): Promise<ResponseDataElementInterface|null> {
-		const subModel: SubModelInterface = new subModelType(this.app, currentElement);
+		const subModel: SubModelInterface = new subModelType(this.app, currentComponent);
 		return subModel.generateData(data, title, additionalInformation);
 	}
 }
