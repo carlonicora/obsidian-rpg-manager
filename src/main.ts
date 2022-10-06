@@ -24,9 +24,9 @@ import {TimelineView} from "./views/TimelineView";
 import {ManipulatorsInterface} from "./manipulators/interfaces/ManipulatorsInterface";
 import {Manipulators} from "./manipulators/Manipulators";
 import {DatabaseInterface} from "./databases/interfaces/DatabaseInterface";
+import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./databases/components/interfaces/SceneInterface";
-import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
@@ -40,7 +40,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	ready = false;
 
 	async onload() {
-
 		this.version = this.manifest.version;
 		this.factories = await new Factories(this.app);
 		this.manipulators = await new Manipulators(this.app);
