@@ -22,6 +22,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 	private activeScenes=0;
 	public parentType: ComponentType;
 	public expectedRunningTime=0;
+	public actualRunningTime=0;
 	public isSingleScene=false;
 	private expectedExcitementDuration=0;
 	private sceneTypesUsed: Map<SceneType, number> = new Map<SceneType, number>();
@@ -58,6 +59,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 		if (scenes.length > 0) {
 			let previousType: SceneType|undefined = undefined;
 			scenes.forEach((scene: SceneInterface) => {
+				this.actualRunningTime += scene.currentDuration;
 				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
 				if (scene.isActive) this.activeScenes++;
 
