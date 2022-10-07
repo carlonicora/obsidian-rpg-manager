@@ -3,12 +3,18 @@ import {AbstractDatabaseWorker} from "../abstracts/AbstractDatabaseWorker";
 import {LogMessageType} from "../../../loggers/enums/LogMessageType";
 import {CachedMetadata, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
 import {ComponentType} from "../../enums/ComponentType";
+import {DatabaseUpdaterReporterInterface} from "../interfaces/DatabaseUpdaterReporterInterface";
 
 export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
-	public async run(): Promise<void> {
+	public async run(
+		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
+	): Promise<void> {
 		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v3.0');
 
 		const files: Array<TFile> = await this.app.vault.getMarkdownFiles();
+
+		if (reporter !== undefined) reporter.setFileCount(files.length);
+
 		for (let filesIndex=0; filesIndex<files.length; filesIndex++){
 			// Read file and metadata
 			const file: TFile = files[filesIndex];
@@ -19,16 +25,28 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			const cachedMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (cachedMetadata == null) continue;
 
-			if (cachedMetadata?.frontmatter?.tags == null) continue;
+			if (cachedMetadata?.frontmatter?.tags == null) {
+				if (reporter !== undefined) reporter.addFileUpdated();
+				continue;
+			}
 
 			const tags = this.tagHelper.sanitiseTags(cachedMetadata?.frontmatter?.tags);
-			if (tags.length === 0) continue;
+			if (tags.length === 0) {
+				if (reporter !== undefined) reporter.addFileUpdated();
+				continue;
+			}
 
 			const tag = this.tagHelper.getTag(tags);
-			if (tag === undefined) continue;
+			if (tag === undefined) {
+				if (reporter !== undefined) reporter.addFileUpdated();
+				continue;
+			}
 
 			const type = this.tagHelper.getDataType(tag);
-			if (type === undefined) continue;
+			if (type === undefined) {
+				if (reporter !== undefined) reporter.addFileUpdated();
+				continue;
+			}
 
 			let frontmatterMetadataStartLine: number|undefined = undefined;
 			let frontmatterMetadataEndLine: number|undefined = undefined;
@@ -126,7 +144,10 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 			// Save file
 			fileContent = fileContentArray.join('\n');
-			this.app.vault.modify(file, fileContent);
+			this.app.vault.modify(file, fileContent)
+				.then(() => {
+					if (reporter !== undefined) reporter.addFileUpdated();
+				});
 		}
 	}
 
@@ -157,6 +178,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		if (frontmatter.action !== undefined) delete(frontmatter.action);
 		if (frontmatter.storycircle !== undefined) delete(frontmatter.storycircle);
 		if (frontmatter.sceneType !== undefined) delete(frontmatter.sceneType);
+		if (frontmatter.date !== undefined) delete(frontmatter.date);
 
 		return frontmatter;
 	}
@@ -299,49 +321,34 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				if (frontmatterMetadata?.action != undefined) metadata.data.action = frontmatterMetadata.action;
 				if (frontmatterMetadata?.date != undefined) metadata.data.date = frontmatterMetadata.date;
 				if (frontmatterMetadata?.session != undefined) metadata.data.sessionId = frontmatterMetadata.session;
+
 				if (codeblockMetadata?.action != undefined) metadata.data.action = frontmatterMetadata.action;
 				if (codeblockMetadata?.trigger != undefined) metadata.data.trigger = frontmatterMetadata.trigger;
 
-				if (frontmatterMetadata?.time != undefined && frontmatterMetadata?.time?.start != undefined && frontmatterMetadata?.time?.end != undefined) {
-					const indexOfStartT = frontmatterMetadata.time?.start.indexOf('T');
-					const indexOfEndT = frontmatterMetadata.time?.end.indexOf('T');
-
-					if (indexOfStartT !== -1 && indexOfEndT !== -1){
-						const [startHour, startMinute] = frontmatterMetadata.time.start.substring(indexOfStartT + 1).split(':');
-						const [endHour, endMinute] = frontmatterMetadata.time.end.substring(indexOfEndT + 1).split(':');
-						const start:number = +startHour * 60 + startMinute;
-						const end:number = +endHour * 60 + endMinute;
-						const duration: number = end-start;
-
-						if (duration !== undefined && duration > 0){
-							metadata.data.durations = [];
-							metadata.data.durations.push('0-' + duration.toString());
-							metadata.data.duration = +duration;
-						}
+				if (codeblockMetadata?.durations !== undefined && codeblockMetadata?.duration){
+					metadata.data.duration = codeblockMetadata.duration;
+					metadata.data.durations = codeblockMetadata.durations;
+				} else {
+					if (frontmatterMetadata?.time != undefined && frontmatterMetadata?.time?.start != undefined && frontmatterMetadata?.time?.end != undefined) {
+						this._addDurations(
+							frontmatterMetadata.time.start,
+							frontmatterMetadata.time.end,
+							metadata,
+						)
 					}
-				}
 
-				if (frontmatterMetadata.times != undefined && frontmatterMetadata.times?.start != undefined && frontmatterMetadata.times?.end != undefined) {
-					const indexOfStartT = frontmatterMetadata.times?.start.indexOf('T');
-					const indexOfEndT = frontmatterMetadata.times?.end.indexOf('T');
-
-					if (indexOfStartT !== -1 && indexOfEndT !== -1){
-						const [startHour, startMinute] = frontmatterMetadata.times.start.substring(indexOfStartT + 1).split(':');
-						const [endHour, endMinute] = frontmatterMetadata.times.end.substring(indexOfEndT + 1).split(':');
-						const start:number = +startHour * 60 + startMinute;
-						const end:number = +endHour * 60 + endMinute;
-						const duration: number = end-start;
-
-						if (duration !== undefined && duration > 0){
-							metadata.data.durations = [];
-							metadata.data.durations.push('0-' + duration.toString());
-							metadata.data.duration = +duration;
-						}
+					if (frontmatterMetadata.times != undefined && frontmatterMetadata.times?.start != undefined && frontmatterMetadata.times?.end != undefined) {
+						this._addDurations(
+							frontmatterMetadata.times.start,
+							frontmatterMetadata.times.end,
+							metadata,
+						)
 					}
 				}
 				break;
 			case ComponentType.Session:
 				if (frontmatterMetadata?.dates?.irl != undefined) metadata.data.irl = frontmatterMetadata.dates.irl;
+				if (frontmatterMetadata?.abt != undefined) metadata.data.abtStage = frontmatterMetadata.abt;
 				break;
 			case ComponentType.Character:
 				if (frontmatterMetadata?.dates?.dob != undefined) metadata.data.dob = frontmatterMetadata.dates.dob;
@@ -371,8 +378,15 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		if (codeblockMetadata?.abt != undefined && metadata.plot != undefined) metadata.plot.abt = codeblockMetadata.abt;
 		if (codeblockMetadata?.storycircle != undefined && metadata.plot != undefined) metadata.plot.storycircle = codeblockMetadata.storycircle;
 
-		if (frontmatterMetadata?.complete != undefined && frontmatterMetadata.complete === false) metadata.data.complete = false;
-		if (frontmatterMetadata?.completed != undefined && frontmatterMetadata.completed === false) metadata.data.complete = false;
+		if (frontmatterMetadata?.complete !== undefined || frontmatterMetadata?.completed !== undefined ){
+			if (frontmatterMetadata?.complete !== undefined && frontmatterMetadata.complete === false ){
+				metadata.data.complete = false;
+			} else if (frontmatterMetadata?.completed !== undefined && frontmatterMetadata.completed === false ){
+				metadata.data.complete = false;
+			}
+		} else {
+			delete (metadata.data.complete);
+		}
 		if (frontmatterMetadata?.synopsis != undefined) metadata.data.synopsis = frontmatterMetadata.synopsis;
 		if (frontmatterMetadata?.image != undefined) metadata.data.image = frontmatterMetadata.image;
 
@@ -380,12 +394,41 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 		let response: string = stringifyYaml(metadata);
 		response = response
-			.replaceAll('0', '')
-			.replaceAll("''", '')
-			.replaceAll('{}', '')
-			.replaceAll('""', '');
+			.replaceAll('0,', ',')
+			.replaceAll("'',", ',')
+			.replaceAll('{},', ',')
+			.replaceAll('"",', ',');
 
 		return response;
+	}
+
+	private _addDurations(
+		start: string,
+		end: string,
+		metadata: any,
+	): void {
+		const indexOfStartT = start.indexOf('T');
+		const indexOfEndT = end.indexOf('T');
+
+		if (indexOfStartT !== -1 && indexOfEndT !== -1){
+			const [startHour, startMinute] = start.substring(indexOfStartT + 1).split(':');
+			const [endHour, endMinute] = end.substring(indexOfEndT + 1).split(':');
+			const startTime:number = (+startHour) * 60 + (+startMinute);
+			let endTime:number = (+endHour) * 60 + (+endMinute);
+			if (startTime > endTime) endTime += 24*60;
+			const duration: number = (endTime-startTime) * 60;
+
+			if (duration !== undefined && duration > 0){
+				const durations: Array<string> = [];
+				metadata.data.durations = [];
+				let singleDuration = '0';
+				singleDuration += '-';
+				singleDuration += duration.toString();
+				durations.push('' + singleDuration);
+				metadata.data.durations = durations;
+				metadata.data.duration = duration;
+			}
+		}
 	}
 
 	private _getControllerMetadata(
@@ -397,7 +440,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				return {
 					models: {header: true},
 					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {date: '', synopsis: '', image: '', complete: false, currentAdventureId: '', currentActId: '', currentSessionId: ''},
+					data: {date: '', synopsis: '', image: '', complete: '', currentAdventureId: '', currentActId: '', currentSessionId: ''},
 				}
 			case 'campaign':
 				return {
@@ -407,7 +450,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				return {
 					models: {header: true},
 					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {synopsis: '', complete: false,},
+					data: {synopsis: '', complete: '',},
 					relationships: [],
 				}
 			case 'adventure':
@@ -418,7 +461,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				return {
 					models: {header: true},
 					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {synopsis: '', image: '', complete: false, abtStage: ''},
+					data: {synopsis: '', image: '', complete: '', abtStage: ''},
 					relationships: [],
 				}
 			case 'act':
@@ -428,7 +471,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'scenenavigation':
 				return {
 					models: {header: true},
-					data: {synopsis: '', image: '', complete: false, sessionId: 0, action: '', trigger: '', date: '', sceneType: '', isActedUpon: false, duration: 0, durations: [], storyCircleStage: ''},
+					data: {synopsis: '', image: '', complete: '', sessionId: 0, action: '', trigger: '', date: '', sceneType: '', isActedUpon: false, duration: 0, durations: [], storyCircleStage: ''},
 					relationships: [],
 				}
 			case 'scene':
@@ -438,7 +481,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'sessionnavigation':
 				return {
 					models: {header: true, lists: {scenes: {relationship: "hierarchy",},}},
-					data: {synopsis: '', image: '', complete: false, irl: undefined, abtStage: undefined},
+					data: {synopsis: '', image: '', complete: '', irl: undefined, abtStage: undefined},
 					relationships: [],
 				}
 			case 'session':
@@ -449,49 +492,49 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				return {
 					models: {header: true, lists: {events: {}, clues: {}, factions: {}, npcs: {}, locations: {},}},
 					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {synopsis: '', image: '', complete: false},
+					data: {synopsis: '', image: '', complete: ''},
 					relationships: [],
 				}
 			case 'pc':
 				return {
 					models: {header: true, lists: {pcs: {relationship: "univocal",}, npcs: {relationship: "univocal",}, factions: {}, locations: {},}},
-					data: {synopsis: '', image: '', complete: false, dob: '', death: '', goals: '', pronoun: ''},
+					data: {synopsis: '', image: '', complete: '', dob: '', death: '', goals: '', pronoun: ''},
 					relationships: [],
 				}
 			case 'clue':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {}, npcs: {}, locations: {}, clues: {}, events: {},}},
-					data: {synopsis: '', image: '', complete: false, found: ''},
+					data: {synopsis: '', image: '', complete: '', found: ''},
 					relationships: [],
 				}
 			case 'event':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {}, npcs: {}, clues: {}, locations: {},}},
-					data: {synopsis: '', image: '', complete: false, date: ''},
+					data: {synopsis: '', image: '', complete: '', date: ''},
 					relationships: [],
 				}
 			case 'faction':
 				return {
 					models: {header: true, lists: {pcs: {}, npcs: {}, locations: {}, subplots: {}}},
-					data: {synopsis: '', image: '', complete: false},
+					data: {synopsis: '', image: '', complete: ''},
 					relationships: [],
 				}
 			case 'location':
 				return {
 					models: {header: true, lists: {pcs: {}, npcs: {}, events: {}, clues: {}, locations: [{relationship: "parent", title: "Inside"}, {relationship: "child", title: "Contains"}],}},
-					data: {synopsis: '', image: '', complete: false, address: ''},
+					data: {synopsis: '', image: '', complete: '', address: ''},
 					relationships: [],
 				}
 			case 'music':
 				return {
 					models: {header: true, lists: {musics: [{relationship: "parent", title: "Part of playlists"}, {relationship: "child", title: "Songs",}]}},
-					data: {synopsis: '', image: '', complete: false, url: ''},
+					data: {synopsis: '', image: '', complete: '', url: ''},
 					relationships: [],
 				}
 			case 'npc':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {relationship: "univocal",}, npcs: {relationship: "univocal",}, factions: {}, locations: {}, events: {}, clues: {},}},
-					data: {synopsis: '', image: '', death: '', dob: '', goals: '', pronoun: '', complete: false},
+					data: {synopsis: '', image: '', death: '', dob: '', goals: '', pronoun: '', complete: ''},
 					relationships: [],
 				}
 		}

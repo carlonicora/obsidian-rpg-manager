@@ -2,9 +2,11 @@ import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerI
 import {AbstractDatabaseWorker} from "../abstracts/AbstractDatabaseWorker";
 import {TAbstractFile, TFile, TFolder} from "obsidian";
 import {LogMessageType} from "../../../loggers/enums/LogMessageType";
+import {DatabaseUpdaterReporterInterface} from "../interfaces/DatabaseUpdaterReporterInterface";
 
 export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(
+		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
 	): Promise<void> {
 		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v1.3 to v2.0');
 

@@ -1,9 +1,15 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
 import {DatabaseUpdater} from "../databases/updaters/DatabaseUpdater";
+import {DatabaseUpdaterReporterInterface} from "../databases/updaters/interfaces/DatabaseUpdaterReporterInterface";
 
-export class UpdaterModal extends AbstractRpgManagerModal {
+export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpdaterReporterInterface {
 	private infoEl: HTMLDivElement;
+
+	private versionEl: HTMLDivElement;
+	private countEl: HTMLSpanElement;
+	private currentEl: HTMLSpanElement;
+	private currentCounter = 0;
 
 	constructor(
 		app: App,
@@ -43,9 +49,10 @@ export class UpdaterModal extends AbstractRpgManagerModal {
 
 		const updateButtonEl = this.contentEl.createEl('button', {text: 'Update the data to v' + this.updater.newVersion + ' or RPG Manager'});
 		updateButtonEl.addEventListener('click', () => {
-			this._updateModalDescription(waitMessage);
+			this._updateModalDescription(waitMessage, true);
+			updateButtonEl.remove();
 
-			this.updater.update()
+			this.updater.update(this)
 				.then(() => {
 					this.app.plugins.getPlugin('rpg-manager').initialise();
 					this._updateModalDescription(successMessage);
@@ -56,6 +63,7 @@ export class UpdaterModal extends AbstractRpgManagerModal {
 
 	private async _updateModalDescription(
 		content: string,
+		addCounters: boolean|undefined = undefined,
 	): Promise<void> {
 		this.infoEl.empty();
 		MarkdownRenderer.renderMarkdown(
@@ -64,6 +72,17 @@ export class UpdaterModal extends AbstractRpgManagerModal {
 			'',
 			null as unknown as Component,
 		);
+
+		if (addCounters) {
+			const updaterInfoContainerEl = this.infoEl.createDiv();
+			this.versionEl = updaterInfoContainerEl.createDiv({text: 'Updating'});
+			const countersContainerEl = updaterInfoContainerEl.createDiv();
+			this.currentEl = countersContainerEl.createSpan({text: '0'});
+			countersContainerEl.createSpan({text: ' out of '});
+			this.countEl = countersContainerEl.createSpan({text: '0'});
+			countersContainerEl.createSpan({text: ' components updated'});
+			this.currentCounter = 0;
+		}
 	}
 
 	public onClose() {
@@ -71,5 +90,24 @@ export class UpdaterModal extends AbstractRpgManagerModal {
 		contentEl.empty();
 
 		super.onClose();
+	}
+
+	public async setUpdater(
+		startVersion: string,
+		endVersion: string,
+	): Promise<void> {
+		if (this.versionEl !== undefined) this.versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
+	}
+
+	public async setFileCount(
+		count: number
+	): Promise<void> {
+		if (this.countEl !== undefined) this.countEl.textContent = count.toString();
+	}
+
+	public async addFileUpdated(
+	): Promise<void> {
+		this.currentCounter++;
+		if (this.currentEl !== undefined) this.currentEl.textContent = this.currentCounter.toString();
 	}
 }

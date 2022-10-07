@@ -4,6 +4,7 @@ import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
 import {RpgManagerInterface} from "../../interfaces/RpgManagerInterface";
 import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
 import {V2_0_to_3_0_worker} from "./workers/V2_0_to_3_0_worker";
+import {DatabaseUpdaterReporterInterface} from "./interfaces/DatabaseUpdaterReporterInterface";
 
 const VersionMap = {
 	'1.2': V1_2_to_1_3_worker,
@@ -56,6 +57,7 @@ export class DatabaseUpdater {
 	}
 
 	public async update(
+		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
 	): Promise<boolean> {
 		let response = false;
 
@@ -74,7 +76,8 @@ export class DatabaseUpdater {
 		while (updater !== undefined){
 			response = true;
 			const worker: DatabaseUpdateWorkerInterface = await new VersionMap[updater.previousVersion as keyof typeof VersionMap](this.app);
-			await worker.run();
+			if (reporter !== undefined) reporter.setUpdater(this.previousVersion, this.currentVersion);
+			await worker.run(reporter);
 
 			updater = await this.versionsHistory.get(updater.nextVersion);
 		}
