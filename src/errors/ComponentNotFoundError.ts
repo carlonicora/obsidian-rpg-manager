@@ -1,7 +1,10 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {ComponentType} from "../databases/enums/ComponentType";
+import {IdInterface} from "../databases/interfaces/IdInterface";
 
 export class ComponentNotFoundError extends AbstractRpgManagerError {
+	public id: IdInterface;
+
 	public showErrorMessage(
 	): string {
 		const response = 'The tag `' + this.id.tag + '` refers to an outline that does not exist.\n';

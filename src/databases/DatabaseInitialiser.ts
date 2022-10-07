@@ -38,22 +38,29 @@ export class DatabaseInitialiser {
 		const components: Array<ComponentInterface> = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 		for (let index=0; index<markdownFiles.length; index++){
-			await this.createComponent(markdownFiles[index])
-				.then((component: ComponentInterface|undefined) => {
-					if (component === undefined) return undefined;
+			try {
+				await this.createComponent(markdownFiles[index])
+					.then((component: ComponentInterface | undefined) => {
+						if (component === undefined) return undefined;
 
-					if (component.stage == ComponentStage.Plot || component.stage === ComponentStage.Run){
-						try {
-							const duplicate = response.readSingle(component.id.type, component.id);
-							throw new ComponentDuplicatedError(this.app, component.id, [duplicate], component);
-						} catch (e) {
-							//No need to trap any additional errors here
+						if (component.stage == ComponentStage.Plot || component.stage === ComponentStage.Run) {
+							let error: Error | undefined = undefined;
+							try {
+								const duplicate = response.readSingle(component.id.type, component.id);
+								error = new ComponentDuplicatedError(this.app, component.id, [duplicate], component);
+							} catch (e) {
+								//no need to trap anything here
+							}
+
+							if (error !== undefined) throw error;
 						}
-					}
 
-					response.create(component);
-					components.push(component);
-				});
+						response.create(component);
+						components.push(component);
+					});
+			} catch (e) {
+				this.misconfiguredTags.set(markdownFiles[index], e);
+			}
 		}
 
 		await Promise.all(components);
@@ -61,7 +68,11 @@ export class DatabaseInitialiser {
 
 		const metadata: Array<Promise<void>> = [];
 		await components.forEach((component: ComponentInterface) => {
-			metadata.push(component.readMetadata());
+			try {
+				metadata.push(component.readMetadata());
+			} catch (e) {
+				this.misconfiguredTags.set(component.file, e);
+			}
 		})
 
 		Promise.all(metadata)
@@ -85,32 +96,30 @@ export class DatabaseInitialiser {
 	public static async createComponent(
 		file: TFile,
 	): Promise<ComponentInterface|undefined> {
-		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		if (metadata == null)  return undefined;
+		const metadata: CachedMetadata | null = this.app.metadataCache.getFileCache(file);
+		if (metadata == null) return undefined;
 
 		const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
 		if (tags.length === 0) return undefined;
 
 		if (!this.tagHelper.hasRpgManagerTags(tags)) return undefined;
 
-		const id: IdInterface | undefined = this.factories.id.createFromTags(tags);
-		if (!id.isValid) throw new TagMisconfiguredError(this.app, id);
-
 		let rpgManagerTagCounter = 0;
 		for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
 			if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-			if (rpgManagerTagCounter > 1) throw new MultipleTagsError(this.app, id);
+			if (rpgManagerTagCounter > 1) throw new MultipleTagsError(this.app, undefined);
 		}
+
+		const id: IdInterface | undefined = this.factories.id.createFromTags(tags);
+		if (!id.isValid) throw new TagMisconfiguredError(this.app, id);
 
 		const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
 
-		const response = await this.factories.component.create(
+		return await this.factories.component.create(
 			settings,
 			file,
 			id,
 		);
-
-		return response;
 	}
 
 	/**

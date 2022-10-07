@@ -11,7 +11,7 @@ import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 export abstract class AbstractRpgManagerError extends Error implements RpgErrorInterface, RpgManagerHelperInterface {
 	constructor(
 		public app: App,
-		public id: IdInterface,
+		public id: IdInterface|undefined,
 	) {
 		super();
 	}

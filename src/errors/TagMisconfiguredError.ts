@@ -1,8 +1,11 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {ComponentType} from "../databases/enums/ComponentType";
 import {TagStatus} from "../databases/enums/TagStatus";
+import {IdInterface} from "../databases/interfaces/IdInterface";
 
 export class TagMisconfiguredError extends AbstractRpgManagerError {
+	public id: IdInterface;
+
 	public showErrorMessage(
 	): string {
 		let response = 'The tag `' + this.id.tag + '` is misconfigured\n' +

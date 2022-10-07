@@ -20,7 +20,7 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 
 	public showErrorMessage(
 	): string {
-		let response = this.id.tag + '\n';
+		let response = ''; //this.id.tag + '\n';
 
 		if (this.duplication.length > 1) {
 			this.duplication.forEach((component: ComponentInterface) => {

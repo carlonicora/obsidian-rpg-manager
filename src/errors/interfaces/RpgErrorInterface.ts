@@ -1,7 +1,7 @@
 import {IdInterface} from "../../databases/interfaces/IdInterface";
 
 export interface RpgErrorInterface {
-	id: IdInterface;
+	id: IdInterface|undefined;
 
 	getErrorTitle(
 	): string|undefined;
