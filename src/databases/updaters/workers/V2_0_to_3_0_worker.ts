@@ -504,7 +504,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'clue':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {}, npcs: {}, locations: {}, clues: {}, events: {},}},
-					data: {synopsis: '', image: '', complete: '', found: ''},
+					data: {synopsis: '', image: '', complete: '', found: false},
 					relationships: [],
 				}
 			case 'event':
