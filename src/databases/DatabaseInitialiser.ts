@@ -64,7 +64,6 @@ export class DatabaseInitialiser {
 		}
 
 		await Promise.all(components);
-		response.ready();
 
 		const metadata: Array<Promise<void>> = [];
 		await components.forEach((component: ComponentInterface) => {
@@ -77,7 +76,10 @@ export class DatabaseInitialiser {
 
 		Promise.all(metadata)
 			.then(() => {
-				this._initialiseRelationships(response);
+				this._initialiseRelationships(response)
+					.then(() => {
+						response.ready();
+					})
 			})
 
 		if (this.misconfiguredTags.size > 0){

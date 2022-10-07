@@ -139,6 +139,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		sortByLatestUsage: boolean,
 	): Promise<void>{
 		if (requiredRelationshipType === undefined) requiredRelationshipType = RelationshipType.Reversed | RelationshipType.Biunivocal | RelationshipType.Univocal;
+		if (requiredRelationshipType === RelationshipType.Univocal) requiredRelationshipType = RelationshipType.Univocal | RelationshipType.Biunivocal;
 
 		if (!this.isExcluded(type)){
 			const subModel = this.subModelsMap.get(type);

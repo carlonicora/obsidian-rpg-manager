@@ -8,7 +8,7 @@ import {IdInterface} from "../interfaces/IdInterface";
 import {ComponentMetadataInterface} from "../../metadatas/components/ComponentMetadataInterface";
 import {ComponentStage} from "../components/enums/ComponentStage";
 
-export class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
+export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
 	private static root: string|undefined;
 
 	public static initialiseRoots(
@@ -69,11 +69,8 @@ export class AbstractComponentData extends AbstractRpgManager implements Compone
 		return this.metadata?.data?.complete !== false;
 	}
 
-	public touch(
-	): void {
-		if (this.version === undefined) this.version = 0;
-		this.version++;
-	}
+	abstract touch(
+	): void;
 
 	private _fileExists(
 		path: string

@@ -100,7 +100,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;
-				console.info(this.database);
+				//console.info(this.database);
 				this.factories.runningTimeManager.updateMedianTimes(true);
 
 				this.registerEvents();

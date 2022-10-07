@@ -108,8 +108,12 @@ export class MetadataManipulator extends AbstractRpgManager implements MetadataM
 								if (arrayContent[index] === '```') break;
 								if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
 							}
-							const newCodeBlockContent: any = parseYaml(codeBlockContent);
-							if (codeBlockContent !== '') controllerMetadataInterface = {...controllerMetadataInterface, ...newCodeBlockContent};
+							try {
+								const newCodeBlockContent: any = parseYaml(codeBlockContent);
+								if (codeBlockContent !== '') controllerMetadataInterface = {...controllerMetadataInterface, ...newCodeBlockContent};
+							} catch (e) {
+								throw new Error('INVALID YAML')
+							}
 						}
 					}
 				}

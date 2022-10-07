@@ -2,6 +2,7 @@ import {RelationshipListInterface} from "./interfaces/RelationshipListInterface"
 import {RelationshipInterface} from "./interfaces/RelationshipInterface";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 import {RelationshipType} from "./enums/RelationshipType";
+import {Md5} from "ts-md5";
 
 export class RelationshipList implements RelationshipListInterface {
 	private relationships: Array<RelationshipInterface> = [];
@@ -76,5 +77,24 @@ export class RelationshipList implements RelationshipListInterface {
 		callbackfn: any,
 	): void {
 		return this.relationships.forEach(callbackfn);
+	}
+
+	public md5(): string|Int32Array|undefined {
+		const strigified: Array<any> = [];
+
+		for (let index=0; index<this.relationships.length; index++){
+			const relationship = this.relationships[index];
+			strigified.push({
+				path: relationship.path,
+				description: relationship.description,
+				type: relationship.type.toString(),
+				isInContent: relationship.isInContent.valueOf(),
+				componentVersion: relationship.component !== undefined ? relationship.component.version : 0
+			})
+		}
+
+		const md5 = new Md5();
+		md5.appendStr(JSON.stringify(strigified));
+		return md5.end();
 	}
 }

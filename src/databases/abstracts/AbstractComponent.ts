@@ -13,10 +13,15 @@ import {
 	ControllerMetadataRelationshipInterface
 } from "../../metadatas/controllers/ControllerMetadataRelationshipInterface";
 import {FileManipulatorInterface} from "../../manipulators/interfaces/FileManipulatorInterface";
+import {Md5} from "ts-md5";
+
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
 	private relationships: RelationshipListInterface = new RelationshipList();
 	protected fileManipulator: FileManipulatorInterface;
+
+	private previousMetadata: string|Int32Array|undefined;
+	private previousRelationships: string|Int32Array|undefined;
 
 	public async readMetadata(
 	): Promise<void> {
@@ -34,6 +39,9 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 						.then(() => {
 							return;
 						});
+				})
+				.catch((e) => {
+					if (e.message === 'INVALID YAML') return;
 				});
 		}
 	}
@@ -53,7 +61,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 					this.factories.relationship.createFromMetadata(relationshipMetadata),
 					false,
 				);
-			});
+			})
 		}
 	}
 
@@ -87,5 +95,21 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	get storyCircle(): StoryCircleInterface {
 		return new StoryCirclePlot({});
+	}
+
+	public touch(
+	): void {
+		const md5 = new Md5();
+		md5.appendStr(JSON.stringify(this.metadata));
+		const metadataMd5 = md5.end();
+		const relationshipsMd5 = this.relationships.md5();
+
+		if (this.previousMetadata !== metadataMd5 || this.previousRelationships !== relationshipsMd5){
+			this.previousMetadata = metadataMd5;
+			this.previousRelationships = relationshipsMd5;
+
+			if (this.version === undefined) this.version = 0;
+			this.version++;
+		}
 	}
 }

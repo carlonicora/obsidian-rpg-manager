@@ -22,4 +22,6 @@ export interface RelationshipListInterface {
 	forEach(
 		callbackfn: any,
 	): void, thisArg?: RelationshipInterface;
+
+	md5(): string|Int32Array|undefined;
 }
