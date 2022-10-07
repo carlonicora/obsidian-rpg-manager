@@ -4,9 +4,9 @@ import {LogMessageType} from "../../../loggers/enums/LogMessageType";
 import {CachedMetadata, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
 import {ComponentType} from "../../enums/ComponentType";
 
-export class V2_0_to_2_1_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
+export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(): Promise<void> {
-		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v2.1');
+		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v3.0');
 
 		const files: Array<TFile> = await this.app.vault.getMarkdownFiles();
 		for (let filesIndex=0; filesIndex<files.length; filesIndex++){

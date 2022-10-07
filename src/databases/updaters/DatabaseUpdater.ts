@@ -3,12 +3,12 @@ import {DatabaseUpdateWorkerInterface} from "./interfaces/DatabaseUpdateWorkerIn
 import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
 import {RpgManagerInterface} from "../../interfaces/RpgManagerInterface";
 import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
-import {V2_0_to_2_1_worker} from "./workers/V2_0_to_2_1_worker";
+import {V2_0_to_3_0_worker} from "./workers/V2_0_to_3_0_worker";
 
 const VersionMap = {
 	'1.2': V1_2_to_1_3_worker,
 	'1.3': V1_3_to_2_0_worker,
-	'2.0': V2_0_to_2_1_worker,
+	'2.0': V2_0_to_3_0_worker,
 }
 
 interface VersionHistoryElementInterface {
@@ -26,7 +26,7 @@ export class DatabaseUpdater {
 		this.versionsHistory = new Map<string, VersionHistoryElementInterface>();
 		this.versionsHistory.set('1.2', {previousVersion: '1.2', nextVersion: '1.3'});
 		this.versionsHistory.set('1.3', {previousVersion: '1.3', nextVersion: '2.0'});
-		this.versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '2.1'});
+		this.versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '3.0'});
 	}
 
 	public async update(
