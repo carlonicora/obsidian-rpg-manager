@@ -44,6 +44,8 @@ import {RelationshipFactoryInterface} from "../relationships/factories/interface
 import {RelationshipFactory} from "../relationships/factories/RelationshipFactory";
 import {LoggerFactoryInterface} from "../loggers/factories/interfaces/LoggerFactoryInterface";
 import {LoggerFactory} from "../loggers/factories/LoggerFactory";
+import {FileManipulatorFactoryInterface} from "../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
+import {FileManipulatorFactory} from "../manipulators/factories/FileManipulatorFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -68,6 +70,7 @@ export class Factories implements FactoriesInterface{
 	public abtStage: AbtStageFactoryInterface;
 	public relationship: RelationshipFactoryInterface;
 	public logger: LoggerFactoryInterface;
+	public fileManipulator: FileManipulatorFactoryInterface;
 
 	constructor(
 		private app: App,
@@ -93,6 +96,7 @@ export class Factories implements FactoriesInterface{
 		this.abtStage = new AbtStageFactory(this.app);
 		this.relationship = new RelationshipFactory(this.app);
 		this.logger = new LoggerFactory(this.app);
+		this.fileManipulator = new FileManipulatorFactory(this.app);
 
 		this.runningTimeManager = new RunningTimeManager(this.app);
 	}

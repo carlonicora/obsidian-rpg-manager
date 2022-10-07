@@ -1,28 +1,23 @@
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
-import {CachedMetadata, parseYaml, SectionCache, TFile} from "obsidian";
+import {CachedMetadata, parseYaml, SectionCache} from "obsidian";
 import {MetadataManipulatorInterface} from "./interfaces/MetadataManipulatorInterface";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 import {ComponentStage} from "../databases/components/enums/ComponentStage";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 import {ControllerMetadataDataInterface} from "../metadatas/controllers/ControllerMetadataDataInterface";
 import {ControllerMetadataInterface} from "../metadatas/controllers/ControllerMetadataInterface";
+import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
 
 export class MetadataManipulator extends AbstractRpgManager implements MetadataManipulatorInterface{
 	public async read(
-		file: TFile,
+		fileManipulator: FileManipulatorInterface,
 		component: ComponentInterface,
 	): Promise<ControllerMetadataDataInterface> {
-		return this.app.vault.read(file)
-			.then((fileContent: string):ControllerMetadataDataInterface => {
-				const fileCacheMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-				if (fileCacheMetadata == null) return {};
-
-				return this._addRelationshipsFromContent(
-					fileContent,
-					this._getCodeBloksMetadata(fileContent, fileCacheMetadata),
-					component,
-				);
-			});
+		return this._addRelationshipsFromContent(
+			fileManipulator.content,
+			this._getCodeBloksMetadata(fileManipulator.content, fileManipulator.cachedFile),
+			component,
+		);
 	}
 
 	private _addRelationshipsFromContent(

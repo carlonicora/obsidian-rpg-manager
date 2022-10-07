@@ -14,6 +14,9 @@ export interface ComponentInterface extends ComponentDataInterface{
 	readMetadata(
 	): Promise<void>;
 
+	initialiseData(
+	): Promise<void>;
+
 	initialiseRelationships(
 	): Promise<void>
 

@@ -20,6 +20,7 @@ import {StoryCircleStageFactoryInterface} from "../../plots/factories/interfaces
 import {AbtStageFactoryInterface} from "../../plots/factories/interfaces/AbtStageFactoryInterface";
 import {RelationshipFactoryInterface} from "../../relationships/factories/interfaces/RelationshipFactoryInterface";
 import {LoggerFactoryInterface} from "../../loggers/factories/interfaces/LoggerFactoryInterface";
+import {FileManipulatorFactoryInterface} from "../../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -43,6 +44,7 @@ export interface FactoriesInterface {
 	abtStage: AbtStageFactoryInterface;
 	relationship: RelationshipFactoryInterface;
 	logger: LoggerFactoryInterface;
+	fileManipulator: FileManipulatorFactoryInterface;
 
 	runningTimeManager: RunningTimeManagerInterface;
 }

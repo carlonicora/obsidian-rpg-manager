@@ -544,6 +544,9 @@
 .rpgm-header-info .container {
   width: 100%;
 }
+.rpgm-header-info .container div > .actionButton {
+  margin: 10px;
+}
 .rpgm-header-info .container .info, .rpgm-header-info .container .image {
   padding: 10px;
 }

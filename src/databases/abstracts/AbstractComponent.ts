@@ -12,21 +12,35 @@ import {ControllerMetadataDataInterface} from "../../metadatas/controllers/Contr
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../metadatas/controllers/ControllerMetadataRelationshipInterface";
+import {FileManipulatorInterface} from "../../manipulators/interfaces/FileManipulatorInterface";
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
 	private relationships: RelationshipListInterface = new RelationshipList();
+	protected fileManipulator: FileManipulatorInterface;
 
 	public async readMetadata(
 	): Promise<void> {
 		this.relationships = new RelationshipList();
-		return this.manipulators.metadata.read(this.file, this)
-			.then((metadata: ControllerMetadataDataInterface) => {
-				this.metadata = metadata;
-				return this.initialiseRelationships()
-					.then(() => {
-						return;
-					});
-			});
+
+		const fileManipulator = await this.factories.fileManipulator.create(this.file)
+
+		if (fileManipulator !== undefined) {
+			this.fileManipulator = fileManipulator;
+			return this.manipulators.metadata.read(this.fileManipulator, this)
+				.then((metadata: ControllerMetadataDataInterface) => {
+					this.metadata = metadata;
+					this.initialiseData();
+					return this.initialiseRelationships()
+						.then(() => {
+							return;
+						});
+				});
+		}
+	}
+
+	public async initialiseData(
+	): Promise<void> {
+		return;
 	}
 
 	public async initialiseRelationships(

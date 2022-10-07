@@ -6,6 +6,7 @@ import {SceneSelectionModal} from "../../../modals/SceneSelectionModal";
 import {SceneAnalyser} from "../../../databases/SceneAnalyser";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
+import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SessionInterface;
@@ -43,6 +44,26 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		});
 
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
+
+		if (data.metadata.isSceneNoteListAvailable && data.metadata.scenes !== undefined && data.metadata.scenes.length > 0){
+			const sceneNoteReplacerButtonEl = this.headerContainerEl
+				.createDiv().
+				createEl('button', {cls: 'actionButton', text: 'Add scene list to Storyteller Diary'});
+
+			sceneNoteReplacerButtonEl.addEventListener('click', () => {
+				const content: Array<string> = [];
+				content.push('### Storyteller Diary');
+				data.metadata.scenes.forEach((scene: SceneInterface) => {
+					content.push(scene.link);
+					content.push('-');
+					content.push('');
+				})
+				content.push('');
+				content.push('###');
+
+				this.currentComponent.replaceSceneNoteList(content);
+			});
+		}
 
 		if (analyser !== undefined){
 			this.addSceneAnalyser(analyser);

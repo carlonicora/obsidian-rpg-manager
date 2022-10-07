@@ -1,4 +1,10 @@
+import {CachedMetadata, TFile} from "obsidian";
+import {FilePatternPositionInterface} from "./FilePatternPositionInterface";
+
 export interface FileManipulatorInterface {
+	file: TFile;
+	cachedFile: CachedMetadata;
+
 	read(
 	): Promise<boolean>;
 
@@ -16,9 +22,13 @@ export interface FileManipulatorInterface {
 		newContent: string,
 	): Promise<void>;
 
-	maybeReplace(
-		content: string,
-		newContent: string,
+	patternPosition(
+		pattern: Array<string>,
+	): FilePatternPositionInterface|undefined;
+
+	replacePattern(
+		patternPosition: FilePatternPositionInterface,
+		content: Array<string>,
 	): Promise<void>;
 
 	get content(): string;

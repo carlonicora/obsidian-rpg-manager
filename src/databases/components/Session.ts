@@ -3,10 +3,29 @@ import {ComponentType} from "../enums/ComponentType";
 import {SessionMetadataInterface} from "../../metadatas/components/SessionMetadataInterface";
 import {ComponentStage} from "./enums/ComponentStage";
 import {AbstractSessionData} from "./abstracts/data/AbstractSessionData";
+import {FilePatternPositionInterface} from "../../manipulators/interfaces/FilePatternPositionInterface";
 
 export class Session extends AbstractSessionData implements SessionInterface {
 	protected metadata: SessionMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Run;
+
+	private sceneNoteListPattern: FilePatternPositionInterface|undefined = undefined;
+
+	public async initialiseData(
+	): Promise<void> {
+		const pattern: Array<string> = ['### Storyteller Diary','-', '', '###'];
+		this.sceneNoteListPattern = await this.fileManipulator.patternPosition(pattern);
+	}
+
+	get isSceneNoteListAvailable(): boolean {
+		return this.sceneNoteListPattern !== undefined;
+	}
+
+	public async replaceSceneNoteList(
+		content: Array<string>,
+	): Promise<void> {
+		if (this.sceneNoteListPattern !== undefined) this.fileManipulator.replacePattern(this.sceneNoteListPattern, content);
+	}
 
 	get nextSession(): SessionInterface | null {
 		return this._adjacentSession(true);

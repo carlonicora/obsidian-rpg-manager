@@ -1,10 +1,10 @@
-import {TFile} from "obsidian";
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
+import {FileManipulatorInterface} from "./FileManipulatorInterface";
 
 export interface MetadataManipulatorInterface {
 	read(
-		file: TFile,
+		fileManipulator: FileManipulatorInterface,
 		component: ComponentInterface,
 	): Promise<ControllerMetadataDataInterface>;
 }
