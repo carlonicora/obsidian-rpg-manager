@@ -27,7 +27,9 @@ export class TableView extends AbstractSubModelView {
 
 			const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
 
-			if (data.open) arrowIconEl.style.transform = 'rotate(90deg)';
+			if (data.open) {
+				arrowIconEl.style.transform = 'rotate(90deg)';
+			}
 
 			headerEl.createSpan({text: data.title});
 

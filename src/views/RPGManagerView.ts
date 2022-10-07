@@ -2,7 +2,7 @@ import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 import {ComponentType} from "../databases/enums/ComponentType";
 import {ViewType} from "./enums/ViewType";
 import {CreationModal} from "../modals/CreationModal";
-import {TFile} from "obsidian";
+import {setIcon, TFile} from "obsidian";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 import {CampaignInterface} from "../databases/components/interfaces/CampaignInterface";
 
@@ -16,6 +16,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private currentComponent: ComponentInterface|undefined;
 
 	private verticalTabHeaderEl: HTMLDivElement;
+	private incompleteListEl: HTMLDivElement;
 
 	onResize() {
 		super.onResize();
@@ -52,12 +53,63 @@ export class RPGManagerView extends AbstractRpgManagerView {
 		this.verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-header'});
 		this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title  title', text: 'RPG Manager'});
 
-
 		this.addCreationLinks();
-		this.addReleaseNotes();
+		this.addIncompleteComponents();
 		this.addToDoList();
+		this.addReleaseNotes();
 
 		return Promise.resolve(undefined);
+	}
+
+	private async addIncompleteComponents(
+	): Promise<void> {
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title'});
+
+		const arrowEl: HTMLSpanElement = groupEl.createSpan();
+		arrowEl.style.marginRight = '10px';
+		setIcon(arrowEl, 'openClose');
+		const titleEl = groupEl.createSpan({text: 'Incomplete Components'});
+
+		const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
+
+		this.incompleteListEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
+		this.incompleteListEl.style.display = 'none';
+
+		arrowEl.addEventListener('click', () => {
+			if (this.incompleteListEl.style.display === 'none'){
+				this.incompleteListEl.style.display = '';
+				arrowIconEl.style.transform = 'rotate(90deg)';
+			} else {
+				this.incompleteListEl.style.display = 'none';
+				arrowIconEl.style.transform = 'rotate(0deg)';
+			}
+		});
+
+		titleEl.addEventListener('click', () => {
+			if (this.incompleteListEl.style.display === 'none'){
+				this.incompleteListEl.style.display = '';
+				arrowIconEl.style.transform = 'rotate(90deg)';
+			} else {
+				this.incompleteListEl.style.display = 'none';
+				arrowIconEl.style.transform = 'rotate(0deg)';
+			}
+		});
+
+		this.addIncompleteComponentList();
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.addIncompleteComponentList.bind(this)));
+	}
+
+	private async addIncompleteComponentList(
+	): Promise<void> {
+		this.incompleteListEl.empty();
+		const components: Array<ComponentInterface> = this.database.read<ComponentInterface>((component: ComponentInterface) => component.isComplete === false);
+		components.forEach((component: ComponentInterface) => {
+			const itemEl = this.incompleteListEl.createDiv({cls: 'vertical-tab-nav-item', text: component.file.basename});
+
+			itemEl.addEventListener('click', () => {
+				this.app.workspace.getLeaf(false).openFile(component.file);
+			});
+		});
 	}
 
 	private async addReleaseNotes(
@@ -72,10 +124,38 @@ export class RPGManagerView extends AbstractRpgManagerView {
 
 	private addToDoList(
 	): void {
-		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title', text: 'To Do List'});
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
-		this.loadToDo(groupItemEl);
+		const groupEl = this.verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title'});
 
+		const arrowEl: HTMLSpanElement = groupEl.createSpan();
+		arrowEl.style.marginRight = '10px';
+		setIcon(arrowEl, 'openClose');
+		const titleEl = groupEl.createSpan({text: 'To Do List'});
+
+		const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
+
+		arrowEl.addEventListener('click', () => {
+			if (this.incompleteListEl.style.display === 'none'){
+				this.incompleteListEl.style.display = '';
+				arrowIconEl.style.transform = 'rotate(90deg)';
+			} else {
+				this.incompleteListEl.style.display = 'none';
+				arrowIconEl.style.transform = 'rotate(0deg)';
+			}
+		});
+
+		titleEl.addEventListener('click', () => {
+			if (this.incompleteListEl.style.display === 'none'){
+				this.incompleteListEl.style.display = '';
+				arrowIconEl.style.transform = 'rotate(90deg)';
+			} else {
+				this.incompleteListEl.style.display = 'none';
+				arrowIconEl.style.transform = 'rotate(0deg)';
+			}
+		});
+
+		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
+		groupItemEl.style.display = 'none';
+		this.loadToDo(groupItemEl);
 	}
 
 	private addCreationLinks(
