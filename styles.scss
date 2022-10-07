@@ -669,12 +669,12 @@
 		}
 	}
 
+	.container > div > .actionButton, .title > div > .actionButton {
+		margin: 10px
+	}
+
 	.container {
 		width: 100%;
-
-		div > .actionButton {
-			margin: 10px
-		}
 
 		.info, .image {
 			padding: 10px;

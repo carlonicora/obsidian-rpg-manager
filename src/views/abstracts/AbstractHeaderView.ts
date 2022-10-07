@@ -42,6 +42,18 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		//title
 		data.link.fillContent(this.headerTitleEl, this.sourcePath);
 
+		if (!this.currentComponent.isComplete){
+			const completerEl = this.headerTitleEl.createDiv();
+			const completeButtonEl = completerEl.createEl('button', {cls: 'actionButton', text: 'Mark this component as completed'});
+			completeButtonEl.addEventListener('click', () => {
+				this.manipulators.codeblock.update(
+					'data.complete',
+					true,
+				);
+			});
+		}
+
+
 		//container
 		this.headerContainerEl = crs.createDiv({cls: 'container'});
 		this.headerInfoEl = this.headerContainerEl.createDiv({cls: 'info'});
