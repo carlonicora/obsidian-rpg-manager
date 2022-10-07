@@ -177,8 +177,19 @@ export class DatabaseInitialiser {
 	}
 
 	public static async reinitialiseRelationships(
+		component: ComponentInterface,
 		database: DatabaseInterface,
 	): Promise<void> {
-		return this._initialiseRelationships(database);
+		return component.initialiseRelationships()
+			.then(() => {
+				const relationships = component.getRelationships();
+				if (component.touch()) {
+					relationships.forEach((relationship: RelationshipInterface) => {
+						if (relationship.component === undefined) this.factories.relationship.createFromReverse(component, relationship);
+					})
+				}
+
+				return;
+			})
 	}
 }

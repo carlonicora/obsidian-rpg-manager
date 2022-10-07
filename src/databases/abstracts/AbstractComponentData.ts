@@ -70,7 +70,7 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 	}
 
 	abstract touch(
-	): void;
+	): boolean;
 
 	private _fileExists(
 		path: string

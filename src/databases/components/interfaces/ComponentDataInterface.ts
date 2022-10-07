@@ -12,7 +12,7 @@ export interface ComponentDataInterface {
 	version: number|undefined;
 
 	touch(
-	): void;
+	): boolean;
 
 	get campaign(): CampaignInterface;
 	get synopsis(): string | undefined;

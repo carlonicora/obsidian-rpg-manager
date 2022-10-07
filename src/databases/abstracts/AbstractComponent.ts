@@ -22,11 +22,10 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	private previousMetadata: string|Int32Array|undefined;
 	private previousRelationships: string|Int32Array|undefined;
+	private previousRelationshipsStringified: Array<any>;
 
 	public async readMetadata(
 	): Promise<void> {
-		this.relationships = new RelationshipList();
-
 		const fileManipulator = await this.factories.fileManipulator.create(this.file)
 
 		if (fileManipulator !== undefined) {
@@ -53,10 +52,8 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	public async initialiseRelationships(
 	): Promise<void> {
-		this.relationships = new RelationshipList();
-
 		if (this.metadata.relationships !== undefined){
-			this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
+			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 				this.relationships.add(
 					this.factories.relationship.createFromMetadata(relationshipMetadata),
 					false,
@@ -98,7 +95,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	}
 
 	public touch(
-	): void {
+	): boolean {
 		const md5 = new Md5();
 		md5.appendStr(JSON.stringify(this.metadata));
 		const metadataMd5 = md5.end();
@@ -107,9 +104,14 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		if (this.previousMetadata !== metadataMd5 || this.previousRelationships !== relationshipsMd5){
 			this.previousMetadata = metadataMd5;
 			this.previousRelationships = relationshipsMd5;
+			this.previousRelationshipsStringified = structuredClone(this.relationships.stringified);
 
 			if (this.version === undefined) this.version = 0;
 			this.version++;
+
+			return true;
 		}
+
+		return false;
 	}
 }

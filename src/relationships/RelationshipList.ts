@@ -79,12 +79,12 @@ export class RelationshipList implements RelationshipListInterface {
 		return this.relationships.forEach(callbackfn);
 	}
 
-	public md5(): string|Int32Array|undefined {
-		const strigified: Array<any> = [];
+	get stringified(): Array<any> {
+		const response: Array<any> = [];
 
 		for (let index=0; index<this.relationships.length; index++){
 			const relationship = this.relationships[index];
-			strigified.push({
+			response.push({
 				path: relationship.path,
 				description: relationship.description,
 				type: relationship.type.toString(),
@@ -93,8 +93,12 @@ export class RelationshipList implements RelationshipListInterface {
 			})
 		}
 
+		return response;
+	}
+
+	public md5(): string|Int32Array|undefined {
 		const md5 = new Md5();
-		md5.appendStr(JSON.stringify(strigified));
+		md5.appendStr(JSON.stringify(this.stringified));
 		return md5.end();
 	}
 }

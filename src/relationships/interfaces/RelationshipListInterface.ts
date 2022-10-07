@@ -24,4 +24,6 @@ export interface RelationshipListInterface {
 	): void, thisArg?: RelationshipInterface;
 
 	md5(): string|Int32Array|undefined;
+
+	get stringified(): Array<any>;
 }

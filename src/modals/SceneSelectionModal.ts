@@ -62,7 +62,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 				.then(() => {
 					this.session.readMetadata()
 						.then(() => {
-							DatabaseInitialiser.reinitialiseRelationships(this.database);
+							DatabaseInitialiser.reinitialiseRelationships(this.session, this.database);
 						});
 					return;
 				})

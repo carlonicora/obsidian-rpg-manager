@@ -108,7 +108,6 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 		if (this.componentVersion !== undefined && currentComponent.version === this.componentVersion) return false;
 
-		console.warn(this.componentVersion, currentComponent.version);
 		this.componentVersion = currentComponent.version;
 
 		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
