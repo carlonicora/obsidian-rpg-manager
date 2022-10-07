@@ -27,6 +27,7 @@ import {DatabaseInterface} from "./databases/interfaces/DatabaseInterface";
 import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./databases/components/interfaces/SceneInterface";
+import {UpdaterModal} from "./modals/UpdaterModal";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
@@ -75,11 +76,22 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.app.workspace.detachLeavesOfType(ViewType.RPGManager.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.Timeline.toString());
 
+		//let requiresUpdate = false;
 		if (this.settings.previousVersion !== this.manifest.version){
-			const databaseUpdater = await new DatabaseUpdater(this.app, this);
-			this.isVersionUpdated = await databaseUpdater.update(this.settings.previousVersion, this.manifest.version);
+			const databaseUpdater = await new DatabaseUpdater(this.app, this, this.settings.previousVersion, this.manifest.version);
+
+			if (databaseUpdater.requiresDatabaseUpdate()) {
+				//requiresUpdate = true;
+				new UpdaterModal(this.app, databaseUpdater).open();
+
+			}
 		}
 
+		//if (!requiresUpdate) this.initialise();
+	}
+
+	public async initialise(
+	): Promise<void> {
 		const reloadStart = Date.now();
 
 		this.registerCodeBlock();

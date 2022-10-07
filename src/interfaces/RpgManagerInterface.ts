@@ -15,4 +15,7 @@ export interface RpgManagerInterface {
 	updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,
 	): Promise<void>;
+
+	initialise(
+	): Promise<void>;
 }

@@ -22,6 +22,8 @@ export class DatabaseUpdater {
 	constructor(
 		private app: App,
 		private rpgManager: RpgManagerInterface,
+		private previousVersion: string,
+		private currentVersion: string,
 	) {
 		this.versionsHistory = new Map<string, VersionHistoryElementInterface>();
 		this.versionsHistory.set('1.2', {previousVersion: '1.2', nextVersion: '1.3'});
@@ -29,16 +31,38 @@ export class DatabaseUpdater {
 		this.versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '3.0'});
 	}
 
+	public get newVersion(): string {
+		return this.currentVersion;
+	}
+
+	public get oldVersion(): string {
+		return this.previousVersion;
+	}
+
+	public requiresDatabaseUpdate(
+	): boolean {
+		if (this.previousVersion === '') this.previousVersion = '1.2';
+
+		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(this.previousVersion);
+		const currentVersionMajorMinor = this.getMajorMinor(this.currentVersion);
+
+		if (
+			previousVersionMajorMinor === undefined ||
+			currentVersionMajorMinor === undefined ||
+			previousVersionMajorMinor === currentVersionMajorMinor
+		) return false;
+
+		return this.versionsHistory.get(previousVersionMajorMinor) !== undefined;
+	}
+
 	public async update(
-		previousVersion: string,
-		currentVersion: string,
 	): Promise<boolean> {
 		let response = false;
 
-		if (previousVersion === '') previousVersion = '1.2';
+		if (this.previousVersion === '') this.previousVersion = '1.2';
 
-		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(previousVersion);
-		const currentVersionMajorMinor = this.getMajorMinor(currentVersion);
+		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(this.previousVersion);
+		const currentVersionMajorMinor = this.getMajorMinor(this.currentVersion);
 
 		if (
 			previousVersionMajorMinor === undefined ||
