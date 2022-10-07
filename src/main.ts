@@ -76,18 +76,18 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.app.workspace.detachLeavesOfType(ViewType.RPGManager.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.Timeline.toString());
 
-		//let requiresUpdate = false;
+		let requiresUpdate = false;
 		if (this.settings.previousVersion !== this.manifest.version){
 			const databaseUpdater = await new DatabaseUpdater(this.app, this, this.settings.previousVersion, this.manifest.version);
 
 			if (databaseUpdater.requiresDatabaseUpdate()) {
-				//requiresUpdate = true;
+				requiresUpdate = true;
 				new UpdaterModal(this.app, databaseUpdater).open();
 
 			}
 		}
 
-		//if (!requiresUpdate) this.initialise();
+		if (!requiresUpdate) this.initialise();
 	}
 
 	public async initialise(
