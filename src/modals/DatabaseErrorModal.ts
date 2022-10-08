@@ -28,7 +28,7 @@ export class DatabaseErrorModal extends AbstractRpgManagerModal {
 
 		if (this.misconfiguredTags === undefined) this.misconfiguredTags = new Map<TFile, RpgErrorInterface>();
 
-		contentEl.createEl('p', {text: 'One or more of the tags that define an outline or an element are not correctly misconfigured and can\'t be read!'});
+		contentEl.createEl('p', {text: 'One or more of the tags that define an outline or an element are not correctly configured and can\'t be read!'});
 		contentEl.createEl('p', {text: 'Please double check the errors and correct them.'});
 
 		this.misconfiguredTags.forEach((error: RpgErrorInterface, file: TFile) => {
