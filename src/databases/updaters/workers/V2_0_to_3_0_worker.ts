@@ -322,8 +322,8 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				if (frontmatterMetadata?.date != undefined) metadata.data.date = frontmatterMetadata.date;
 				if (frontmatterMetadata?.session != undefined) metadata.data.sessionId = frontmatterMetadata.session;
 
-				if (codeblockMetadata?.action != undefined) metadata.data.action = frontmatterMetadata.action;
-				if (codeblockMetadata?.trigger != undefined) metadata.data.trigger = frontmatterMetadata.trigger;
+				if (codeblockMetadata?.action != undefined) metadata.data.action = codeblockMetadata.action;
+				if (codeblockMetadata?.trigger != undefined) metadata.data.trigger = codeblockMetadata.trigger;
 
 				if (codeblockMetadata?.durations !== undefined && codeblockMetadata?.duration){
 					metadata.data.duration = codeblockMetadata.duration;
