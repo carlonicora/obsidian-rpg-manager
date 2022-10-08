@@ -107,6 +107,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			case HeaderResponseType.SceneTypeSelector:
 			case HeaderResponseType.SessionSelection:
 			case HeaderResponseType.ScenesSelection:
+			case HeaderResponseType.DateSelector:
 				prefix = 'half';
 				crsContainer = this.headerInfoEl.createDiv({cls: 'half'});
 				break;
@@ -136,8 +137,6 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 				fn;
 		}
 
-		//if (element.type !== HeaderResponseType.Long){
-			containerEl.createDiv({cls: 'reset'});
-		//}
+		containerEl.createDiv({cls: 'reset'});
 	}
 }

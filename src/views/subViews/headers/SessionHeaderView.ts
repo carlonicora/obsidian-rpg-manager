@@ -7,6 +7,9 @@ import {SceneAnalyser} from "../../../databases/SceneAnalyser";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
+import {AbtStage} from "../../../plots/enums/AbtStage";
+import {TFile} from "obsidian";
+import flatpickr from "flatpickr";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SessionInterface;
@@ -33,6 +36,9 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.SceneAnalyser:
 					analyser = element.additionalInformation.sceneAnalyser;
+					break;
+				case HeaderResponseType.DateSelector:
+					headlessTable.addRow(element, this.addIrlDateSelector.bind(this));
 					break;
 				default:
 					element.value.fillContent(
@@ -69,6 +75,37 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 			this.addSceneAnalyser(analyser);
 		}
 	}
+
+	protected addIrlDateSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): void {
+		const options:any = {
+			allowInput: true,
+			dateFormat: "Y-m-d",
+			altInput: true,
+			onChange: (selectedDate: any, dateStr: any , instance: any) => {
+				this.manipulators.codeblock.update(
+					'data.irl',
+					dateStr,
+				);
+			}
+		};
+
+		if (this.currentComponent.irl !== undefined) {
+			options.defaultDate = this.currentComponent.irl
+		} else {
+			//const previousSession = this.currentComponent.previousSession;
+			//if (previousSession !== undefined && previousSession?.irl !== undefined) options.setSelectedDate(previousSession?.irl);
+		}
+
+		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
+		flatpickrEl.placeholder = 'Select the Session Date';
+		flatpickrEl.readOnly = true;
+
+		flatpickr(flatpickrEl, options);
+	}
+
 
 	protected addScenesSelection(
 		contentEl: HTMLDivElement,

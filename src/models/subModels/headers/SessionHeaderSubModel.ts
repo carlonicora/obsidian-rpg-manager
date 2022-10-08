@@ -40,6 +40,8 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 			}));
 		}
 
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Session Date', this.data.irl, HeaderResponseType.DateSelector));
+
 		if (response.metadata === undefined) response.metadata = {};
 		response.metadata.isSceneNoteListAvailable = this.data.isSceneNoteListAvailable;
 

@@ -12,4 +12,5 @@ export enum HeaderResponseType {
 	SceneRunTime,
 	SceneAnalyser,
 	Pronoun,
+	DateSelector,
 }
