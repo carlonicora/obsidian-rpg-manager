@@ -14,4 +14,8 @@ export class AbstractSessionData extends Plots implements SessionDataInterface {
 		if (this.metadata.data?.abtStage == undefined) return undefined;
 		return this.factories.abtStage.createAbtStage(this.metadata.data.abtStage);
 	}
+
+	public get targetDuration(): number|undefined {
+		return this.metadata.data?.targetDuration;
+	}
 }

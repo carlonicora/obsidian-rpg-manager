@@ -40,6 +40,9 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 				case HeaderResponseType.DateSelector:
 					headlessTable.addRow(element, this.addIrlDateSelector.bind(this));
 					break;
+				case HeaderResponseType.DurationSelector:
+					headlessTable.addRow(element, this.addTargetDurationSelector.bind(this));
+					break;
 				default:
 					element.value.fillContent(
 						this.createContainerEl(element.type, element.title),
@@ -74,6 +77,41 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		if (analyser !== undefined){
 			this.addSceneAnalyser(analyser);
 		}
+	}
+
+	protected addTargetDurationSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): void {
+		const options:any = {
+			allowInput: true,
+			enableTime: true,
+			noCalendar: true,
+			minuteIncrement: 15,
+			time_24hr: true,
+			onChange: (selectedDate: Date, dateStr: string , instance: flatpickr.Instance) => {
+				const [hours, minutes] = dateStr.split(':');
+				const duration = +hours * 60 + +minutes;
+
+				this.manipulators.codeblock.update(
+					'data.targetDuration',
+					duration,
+				);
+			}
+		};
+
+		if (this.currentComponent.targetDuration != undefined) {
+			const hours = Math.floor(this.currentComponent.targetDuration/60);
+			const minutes = (this.currentComponent.targetDuration % 60);
+
+			options.defaultDate = hours.toString() + ':' + (minutes < 10 ? '0' : '') + minutes.toString()
+		}
+
+		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
+		flatpickrEl.placeholder = 'Target Duration';
+		flatpickrEl.readOnly = true;
+
+		flatpickr(flatpickrEl, options);
 	}
 
 	protected addIrlDateSelector(

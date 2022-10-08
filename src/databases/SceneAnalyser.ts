@@ -6,6 +6,7 @@ import {AbtStage} from "../plots/enums/AbtStage";
 import {SceneType} from "./enums/SceneType";
 import {SorterComparisonElement} from "./SorterComparisonElement";
 import {SceneInterface} from "./components/interfaces/SceneInterface";
+import {SessionInterface} from "./components/interfaces/SessionInterface";
 
 export enum ThresholdResult {
 	NotAnalysable,
@@ -28,6 +29,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 	private sceneTypesUsed: Map<SceneType, number> = new Map<SceneType, number>();
 	private repetitiveScenes = 0;
 	public scenesCount = 0;
+	public targetDuration: number|undefined = undefined;
 
 	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
 		[AbtStage.Need, 35],
@@ -83,6 +85,12 @@ export class SceneAnalyser extends AbstractRpgManager {
 	private get scenes(
 	): Array<SceneInterface> {
 		if (this.parentId.type === ComponentType.Session) {
+
+			try {
+				const session: SessionInterface = this.database.readSingle<SessionInterface>(ComponentType.Session, this.parentId);
+				if (session.targetDuration != undefined) this.targetDuration = session.targetDuration;
+			} catch (e) {
+			}
 
 			return this.database.read<SceneInterface>(
 				(scene: SceneInterface) =>
@@ -209,6 +217,30 @@ export class SceneAnalyser extends AbstractRpgManager {
 		return ThresholdResult.Correct;
 	}
 
+	public get targetDurationLevel(
+	): ThresholdResult {
+		if (this.targetDuration === undefined || this.expectedRunningTime == undefined) return ThresholdResult.NotAnalysable;
+
+		const differenceStep = this.targetDuration /10;
+		const expectedRunningTime = Math.floor(this.expectedRunningTime/60);
+
+		if (expectedRunningTime > this.targetDuration + differenceStep * 3) return  ThresholdResult.CriticallyHigh;
+		if (expectedRunningTime > this.targetDuration + differenceStep * 1) return ThresholdResult.High;
+		if (expectedRunningTime < this.targetDuration - differenceStep * 3) return  ThresholdResult.CriticallyLow;
+		if (expectedRunningTime < this.targetDuration - differenceStep * 1) return ThresholdResult.Low;
+		return ThresholdResult.Correct;
+	}
+
+	public get durationScenePercentage(
+	): number {
+		if (this.targetDuration === undefined || this.expectedRunningTime == undefined) return 0;
+
+		const expectedRunningTime = Math.floor(this.expectedRunningTime/60);
+		const difference = Math.abs(this.targetDuration-expectedRunningTime);
+
+		return Math.trunc(difference/this.targetDuration*100);
+	}
+
 	public get boredomAmount(
 	): number {
 		return this.repetitiveScenes;
@@ -217,5 +249,39 @@ export class SceneAnalyser extends AbstractRpgManager {
 	public get boredomReference(
 	): number {
 		return this.scenesCount;
+	}
+
+	public calculateScore(
+	): number {
+		let response = 0;
+
+		let maxLevel = 100;
+		if (this.targetDuration !== undefined) {
+			maxLevel += 25;
+			response += this._calculateThresholdScore(this.targetDurationLevel);
+		}
+
+		response += this._calculateThresholdScore(this.activityLevel)
+		response += this._calculateThresholdScore(this.excitementLevel)
+		response += this._calculateThresholdScore(this.varietyLevel)
+		response += this._calculateThresholdScore(this.boredomLevel)
+
+		return Math.floor(response*100/maxLevel);
+	}
+
+	private _calculateThresholdScore(
+		threshold: ThresholdResult,
+	): number {
+		switch (threshold){
+			case ThresholdResult.Correct:
+				return 25;
+			case ThresholdResult.CriticallyHigh:
+			case ThresholdResult.CriticallyLow:
+				return 5;
+			case ThresholdResult.High:
+			case ThresholdResult.Low:
+				return 15;
+		}
+		return 0;
 	}
 }
