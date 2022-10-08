@@ -47,9 +47,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Action', this.data.action, HeaderResponseType.Long));
 		}
 
-		if (this.data.date !== undefined){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Date', this.data.date.toDateString(), HeaderResponseType.Short));
-		}
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Date', this.data.date, HeaderResponseType.DateSelector));
 
 		if (sessions.length > 0) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Session', (this.data.session === undefined ? '' : this.data.session?.id?.sessionId?.toString()), HeaderResponseType.SessionSelection, {

@@ -10,6 +10,7 @@ import {AbstractPlotHeaderView} from "../../abstracts/AbstractPlotHeaderView";
 import {SceneTypeDescriptionModal} from "../../../modals/SceneTypeDescriptionModal";
 import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
+import flatpickr from "flatpickr";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SceneInterface;
@@ -41,6 +42,8 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.SceneRunTime:
 					headlessTable.addRow(element, this.sceneRunTime.bind(this));
+				case HeaderResponseType.DateSelector:
+					headlessTable.addRow(element, this.addSceneDateSelector.bind(this));
 					break;
 				default:
 					element.value.fillContent(
@@ -56,6 +59,31 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		if (data.metadata?.sourceMeta?.analyser !== undefined){
 			this.addSceneAnalyser(data.metadata.sourceMeta.analyser);
 		}
+	}
+
+	private addSceneDateSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): void {
+		const options:any = {
+			allowInput: true,
+			dateFormat: "Y-m-d",
+			altInput: true,
+			onChange: (selectedDate: any, dateStr: any , instance: any) => {
+				this.manipulators.codeblock.update(
+					'data.date',
+					dateStr,
+				);
+			}
+		};
+
+		if (this.currentComponent.date !== undefined) options.defaultDate = this.currentComponent.date
+
+		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
+		flatpickrEl.placeholder = 'Select the Scene Date';
+		flatpickrEl.readOnly = true;
+
+		flatpickr(flatpickrEl, options);
 	}
 
 	private sceneRunTime(
