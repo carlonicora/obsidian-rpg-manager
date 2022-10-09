@@ -189,9 +189,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		setIcon(el, 'd20');
 
 		el.style.cursor = 'pointer';
-		(<HTMLDivElement>el.parentNode).style.float = 'left';
-		(<HTMLDivElement>el.parentNode).style.position = 'absolute';
-		(<HTMLDivElement>el.parentNode).style.zIndex = '1';
 
 		el.addEventListener('click', () => {
 			rpgm.manipulators.codeblock.selectData();
