@@ -6,10 +6,10 @@ storyCircleStage
 # storyCircleStage
 
 The story circle stage is a key that identifies the stage in which a [scene](../../components/scene.md) 
-is in using a [structured plotting](../plots/index.md) approach. The value refers to the story circle plot
+is in using a [structured plotting](../../plots/index.md) approach. The value refers to the story circle plot
 stage of the [act](../../components/act.md) of which the [scene](../../components/scene.md) is part of.
 
-This value is valid if you use a [structured plotting](../plots/index.md) approach.
+This value is valid if you use a [Story Circle structured plotting](../../plots/storycircle.md) approach.
 
 Accepted Values:
 - "You"
