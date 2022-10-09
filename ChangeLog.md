@@ -1,5 +1,37 @@
 # RPG Manager Change Log
 
+## Version 3.0
+_2022-10-12_
+
+Version 3.0 is another major upgrade to RPG Manager and it focused on three areas:
+- Data simplification
+- Speed
+- The addition of the Scene Analyser
+
+In order to use the newest version, RPG Manager needs to update all your `components` to make them compatible with the
+newest version. When you open RPG Manager v3.0 for the first time, you will be prompted to upgrade your vault. Please
+ensure you make a backup copy of it before running the updater.
+
+Also, as the changes are extremely extensive, please make sure to read the [documentation](documentation/index.md)!
+
+**Updates**
+- Plots can be shown or hidden from a setting. **Please note** the new setting is switched off by default. If you use
+the [abt](documentation/plots/abt.md) and/or the [story circle](documentation/plots/storycircle.md) structure, you 
+must turn the setting on to see your content
+- Relationships between `components` have been completely rewritten and (in large part) automated.
+- List of pronouns extended
+- 
+
+**Whats' new?**
+- Scene Analyser: your personal Machine Learning tool to help you balance your acts and sessions
+- Added Scene Types to support Scene analyser
+- Added Scene timing during games to track scenes durations
+- Cleanup of the data from the frontmatter
+- Codeblock rewrite: all the codeblocks have been updated to be more flexible
+- List of current adventure, act and session added to campaign
+
+For a full list see the [task log on github](https://github.com/carlonicora/obsidian-rpg-manager/milestone/8?closed=1)
+
 ## Version 2.0
 _2022-09-27_
 
