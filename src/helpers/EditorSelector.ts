@@ -19,7 +19,7 @@ export class EditorSelector {
 							{line: metadata.sections[index].position.start.line + 1, ch: 0},
 						).replaceAll('\n', '');
 
-						if (codeType === 'RpgManager') {
+						if (codeType === 'RpgManagerData') {
 							if (specificYamlKey === undefined) {
 								editor.setSelection(
 									{line: metadata.sections[index].position.start.line + 2, ch: 0},
