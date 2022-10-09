@@ -7,7 +7,8 @@ export abstract class AbstractActData extends Plots implements  ActDataInterface
 	protected metadata: ActMetadataInterface;
 
 	public get abtStage(): AbtStage|undefined {
-		if (this.metadata.data?.abtStage == undefined) return undefined;
+		if (this.metadata.data?.abtStage == undefined || this.metadata.data.abtStage === '') return undefined;
+
 		return this.factories.abtStage.createAbtStage(this.metadata.data.abtStage);
 	}
 }
