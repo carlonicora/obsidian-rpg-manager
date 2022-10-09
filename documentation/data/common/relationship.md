@@ -26,4 +26,4 @@ Accepted Value for each relationship:
 
 > **Relevant links**
 >
-> [relationships](../../relationships.md)
+> [relationships](../../relationships/index.md)

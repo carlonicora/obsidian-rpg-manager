@@ -60,7 +60,7 @@ the `RpgManager` code blocks work, you can refer to the [views section](views/in
 
 One of the key element in RPG Manager is the ability to put two `component` in relationship one with the other. There 
 are various types of possible relationships, and while they are managed transparently most of the times (_especially if 
-you manage them through the provided Relationship Manager_), you can [read more about Relationships](relationships.md)
+you manage them through the provided Relationship Manager_), you can [read more about Relationships](relationships/index.md)
 directly in their documentation.
 
 ## Plots
