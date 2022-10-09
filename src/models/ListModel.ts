@@ -17,7 +17,7 @@ export class ListModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		if (this.currentComponent.id.type === ComponentType.Session)this.updateRelationshipsList();
+		if (this.currentComponent.id.type === ComponentType.Session) this.updateRelationshipsList();
 		for (let listCounter=0; listCounter<Object.keys(this.sourceMeta).length; listCounter++){
 			const name = Object.keys(this.sourceMeta)[listCounter];
 			const componentType = this.factories.componentType.createComponentType(name.slice(0, -1));
@@ -35,7 +35,7 @@ export class ListModel extends AbstractModel {
 				if (element !== undefined) {
 					const relationshipType = ((element.relationship != null) ? this.factories.relationshipType.createRelationshipType(element.relationship) : undefined);
 
-					if (relationshipType === RelationshipType.Hierarchy) {
+					if (relationshipType === RelationshipType.Hierarchy && this.currentComponent.id.type !== ComponentType.Session) {
 						await this.addList(
 							componentType,
 							this.generateComponentList(componentType),
@@ -94,9 +94,14 @@ export class ListModel extends AbstractModel {
 						this.currentComponent.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0 &&
 						relationship.type === RelationshipType.Univocal
 					) {
-						this.currentComponent.getRelationships().add(
-							this.factories.relationship.create(RelationshipType.Hierarchy, relationship.path, undefined, relationship.component, false)
-						);
+						this.factories.relationship.create(
+							RelationshipType.Hierarchy,
+							relationship.path,
+							undefined,
+							relationship.component,
+							false,
+							this.currentComponent.getRelationships()
+						)
 					}
 				});
 			}
