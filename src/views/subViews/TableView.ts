@@ -10,6 +10,7 @@ import {AdventureInterface} from "../../databases/components/interfaces/Adventur
 import {ActInterface} from "../../databases/components/interfaces/ActInterface";
 import {TableResponseElementInterface} from "../../responses/interfaces/TableResponseElementInterface";
 import {RelationshipType} from "../../relationships/enums/RelationshipType";
+import {ImageContent} from "../../responses/contents/ImageContent";
 
 export class TableView extends AbstractSubModelView {
 	private tableEl: HTMLTableElement;
@@ -146,10 +147,13 @@ export class TableView extends AbstractSubModelView {
 
 			element.elements.forEach((content: ContentInterface) => {
 				const cell = row.insertCell();
-				if (content instanceof DateContent) {
-					cell.style.fontSize = '0.7em';
-				}
+
+				if (content instanceof DateContent) cell.style.fontSize = '0.7em';
+				if (content instanceof ImageContent) cell.addClass('image');
+
 				content.fillContent(cell, this.sourcePath);
+
+
 
 				if (content.isInLine) cell.addClass('inline');
 

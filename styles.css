@@ -406,6 +406,9 @@
 .rpgm-table .inline {
   white-space: nowrap;
 }
+.rpgm-table tr > td.image {
+  width: 75px;
+}
 .rpgm-table tr.hoverable:hover:nth-child(odd), .rpgm-table tr.hoverable:hover:nth-child(even) {
   background-color: var(--background-primary-alt);
 }

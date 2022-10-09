@@ -141,65 +141,49 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		if (requiredRelationshipType === undefined) requiredRelationshipType = RelationshipType.Reversed | RelationshipType.Biunivocal | RelationshipType.Univocal;
 		if (requiredRelationshipType === RelationshipType.Univocal) requiredRelationshipType = RelationshipType.Univocal | RelationshipType.Biunivocal;
 
-		if (!this.isExcluded(type)){
-			const subModel = this.subModelsMap.get(type);
-			if (component === undefined) {
-				component = this.currentComponent.getRelationships().filter((relationship: RelationshipInterface) =>
-					relationship.component !== undefined &&
-					relationship.component.id.type === type &&
-					(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
-				);
-			}
+		const subModel = this.subModelsMap.get(type);
+		if (component === undefined) {
+			component = this.currentComponent.getRelationships().filter((relationship: RelationshipInterface) =>
+				relationship.component !== undefined &&
+				relationship.component.id.type === type &&
+				(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
+			);
+		}
 
-			if (Array.isArray(component)) {
-				let sorter: Array<any> | undefined = undefined;
+		if (Array.isArray(component)) {
+			let sorter: Array<any> | undefined = undefined;
 
-				if ((<Array<any>>component)[0]?.component !== undefined) {
-					if (sortByLatestUsage){
-						sorter = [
-							new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.stat.mtime, SorterType.Descending)
-						];
-					} else {
-						sorter = this.relationshipSortingMap.get(type);
-						if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.basename)];
-					}
+			if ((<Array<any>>component)[0]?.component !== undefined) {
+				if (sortByLatestUsage){
+					sorter = [
+						new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.stat.mtime, SorterType.Descending)
+					];
 				} else {
-					if (sortByLatestUsage){
-						sorter = [
-							new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending)
-						];
-					} else {
-						sorter = this.componentSortingMap.get(type);
-						if (sorter === undefined) sorter = [new SorterComparisonElement((component: ComponentInterface) => component.file.basename)];
-					}
+					sorter = this.relationshipSortingMap.get(type);
+					if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.basename)];
 				}
-
-				if (sorter !== undefined) component = (<Array<any>>component).sort(this.factories.sorter.create<any>(sorter))
+			} else {
+				if (sortByLatestUsage){
+					sorter = [
+						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending)
+					];
+				} else {
+					sorter = this.componentSortingMap.get(type);
+					if (sorter === undefined) sorter = [new SorterComparisonElement((component: ComponentInterface) => component.file.basename)];
+				}
 			}
 
-
-			if (subModel !== undefined) {
-				await this.response.addSubModel(
-					subModel,
-					this.currentComponent,
-					component,
-					title,
-				);
-			}
-		}
-	}
-
-	protected isExcluded(
-		type: ComponentType,
-	): boolean {
-		if (this.sourceMeta != null && this.sourceMeta.exclude !== undefined && typeof this.sourceMeta.exclude === 'object'){
-			for (let index=0; index<this.sourceMeta.exclude.length; index++){
-				const excludedType:ComponentType|undefined = ComponentType[this.sourceMeta.exclude[index] as keyof typeof ComponentType];
-
-				if (excludedType !== undefined && excludedType === type) return true;
-			}
+			if (sorter !== undefined) component = (<Array<any>>component).sort(this.factories.sorter.create<any>(sorter))
 		}
 
-		return false;
+
+		if (subModel !== undefined) {
+			await this.response.addSubModel(
+				subModel,
+				this.currentComponent,
+				component,
+				title,
+			);
+		}
 	}
 }
