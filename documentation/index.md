@@ -14,6 +14,9 @@ run of their campaigns.
 - [Types of code blocks](#types-of-code-blocks)
 - [RpgManagerData code block](#rpgmanagerdata-code-block)
 - [RpgManager code block](#rpgmanager-code-block)
+- [Relationships](#relationships)
+- [Plots](#plots)
+- [Scene Analyser](#scene-analyser)
 
 ## What is a RPG Manager Component?
 
@@ -52,3 +55,14 @@ through the d20 icon. An in-depth explanation of each key of the data code block
 Each component shows a different set of information. RPG Manager automatically prepares a set of views for each type
 of `component`; however, you can edit or add more `RpgManager` code blocks to suit your need. To dig deeper in how
 the `RpgManager` code blocks work, you can refer to the [views section](views/index.md)
+
+## Relationships
+
+One of the key element in RPG Manager is the ability to put two `component` in relationship one with the other. There 
+are various types of possible relationships, and while they are managed transparently most of the times (_especially if 
+you manage them through the provided Relationship Manager_), you can [read more about Relationships](relationships.md)
+directly in their documentation.
+
+## Plots
+
+## Scene Analyser

@@ -5,7 +5,7 @@ export interface SceneDataMetadataInterface extends ComponentDataMetadataInterfa
 	action?: string | undefined;
 	trigger?: string | undefined;
 	date?: string | undefined;
-	sceneType?: 'action' | 'combat' | 'encounter' | 'exposition' | 'Iinvestigation' | 'planning' | 'preparation' | 'recap' | 'socialcombat' | string | undefined;
+	sceneType?: 'action' | 'combat' | 'encounter' | 'exposition' | 'investigation' | 'planning' | 'preparation' | 'recap' | 'socialcombat' | string | undefined;
 	isActedUpon?: boolean | undefined;
 	duration?: number | undefined;
 	durations?: Array<string> | undefined;

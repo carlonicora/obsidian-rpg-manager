@@ -5,14 +5,14 @@ Act Data Codeblock
 # Act Data Code Block
 
 
-In addition to its own data, the `act` code block contains the [plot](../common/plot.md), the
+In addition to its own data, the `act` code block contains the [plot](../shared/plot.md), the
 [common data](../common/index.md) and the [relationships](../common/relationship.md).
 
 ## Act-Specific Data
 
 The `act` contains the following  data:
 
-- [abtStage](../common/abtstage.md)
+- [abtStage](../shared/abtstage.md)
 
 ## RpgManagerData Structure for Act
 

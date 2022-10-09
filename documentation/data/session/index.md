@@ -1,44 +1,34 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Session Data Codeblock
 
-# TYPE Data Code Block
+# Session Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+In addition to its own data, the `session` code block contains the [common data](../common/index.md). Please
+note that the `session` cannot have direct relationships with any other `components`, but inherit all the 
+relationships from the [scenes](../../components/scene.md) it contains.
 
-## Act-Specific Data
+## Session-Specific Data
 
-The `act` contains the following  data:
+The `session` contains the following  data:
 
-- [abtStage](abtstage.md)
+- [irl](irl.md)
+- [abtStage](../shared/abtstage.md)
+- [targetDuration](tagetDuration.md)
 
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Session
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
-relationships: []
+  complete:
+  irl:
+  abtStage:
+  targetDuration:
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Session component](../../components/session.md)

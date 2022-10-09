@@ -1,44 +1,29 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Clue Data Codeblock
 
-# TYPE Data Code Block
+# Clue Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+In addition to its own data, the `clue` code block contains the [common data](../common/index.md) and the 
+[relationships](../common/relationship.md).
 
-## Act-Specific Data
+## Clue-Specific Data
 
-The `act` contains the following  data:
+The `clue` contains the following  data:
 
-- [abtStage](abtstage.md)
+- [found](found.md)
 
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Clue
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
+  complete: 
 relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Clue component](../../components/clue.md)

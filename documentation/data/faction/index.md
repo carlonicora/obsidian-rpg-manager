@@ -1,44 +1,27 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Faction Data Codeblock
 
-# TYPE Data Code Block
+# Faction Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+In addition to its own data, the `faction` code block contains the [common data](../common/index.md) and the 
+[relationships](../common/relationship.md).
 
-## Act-Specific Data
+## Faction-Specific Data
 
-The `act` contains the following  data:
+The `faction` does not contain any specific data
 
-- [abtStage](abtstage.md)
-
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Faction
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
+  complete: 
 relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Faction component](../../components/faction.md)

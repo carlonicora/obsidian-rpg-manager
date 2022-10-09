@@ -1,44 +1,30 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Music Data Codeblock
 
-# TYPE Data Code Block
+# Music Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+In addition to its own data, the `music` code block contains the [common data](../common/index.md) and the 
+[relationships](../common/relationship.md).
 
-## Act-Specific Data
+## Music-Specific Data
 
-The `act` contains the following  data:
+The `music` contains the following  data:
 
-- [abtStage](abtstage.md)
+- [url](url.md)
 
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Music
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
+  complete: 
+  url:
 relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Music component](../../components/music.md)

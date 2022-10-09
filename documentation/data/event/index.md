@@ -1,44 +1,30 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Event Data Codeblock
 
-# TYPE Data Code Block
+# Event Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+In addition to its own data, the 'event` code block contains the [common data](../common/index.md) and the 
+[relationships](../common/relationship.md).
 
-## Act-Specific Data
+## Event-Specific Data
 
-The `act` contains the following  data:
+The `event` contains the following  data:
 
-- [abtStage](abtstage.md)
+- [date](date.md)
 
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Event
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
+  complete: 
+  date:
 relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Event component](../../components/event.md)

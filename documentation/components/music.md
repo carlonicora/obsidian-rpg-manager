@@ -12,4 +12,4 @@ identifying a specific song.
 
 > **Relevant links**
 >
-> [Data Structure of an act](../data/act/index.md)
+> [Data Structure of an act](../data/music/index.md)

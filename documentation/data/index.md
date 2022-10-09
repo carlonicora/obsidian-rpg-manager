@@ -12,8 +12,9 @@ the [RpgManager code block](../views/index.md).
 
 ## Component Specific Data Code Blocks
 
-RPG Manager has one data code block for each of its components. You can find the specifications for each component
-type below:
+RPG Manager has one data code block for each of its components. The code block automatically realise in what type
+of component you currently are and presets the required data during its creation. You can find the specifications 
+for each component type below:
 
 - [Campaign](campaign/index.md)
 - [Adventure](adventure/index.md)

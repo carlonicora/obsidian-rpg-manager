@@ -1,5 +1,5 @@
 [RPG Manager Documentation](../../index.md) >
-Frontmatter
+Hierarchy
 
 # Plot Hierarachy
 

@@ -1,44 +1,35 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Player Character Data Codeblock
 
-# TYPE Data Code Block
+# Player Character Data Code Block
 
+In addition to its own data, the `player character` code block contains the [common data](../common/index.md) 
+and the [relationships](../common/relationship.md).
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+## Player Character-Specific Data
 
-## Act-Specific Data
+The `player character` contains the following  data:
 
-The `act` contains the following  data:
+- [dob](../shared/dob.md)
+- [death](../shared/death.md)
+- [goals](../shared/goals.md)
+- [pronoun](../shared/pronoun.md)
 
-- [abtStage](abtstage.md)
-
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Player Character
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
-relationships: []
+  complete: 
+  dob:
+  death:
+  goals:
+  pronoun:
+  relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Character component](../../components/character.md)

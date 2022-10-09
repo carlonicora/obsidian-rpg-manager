@@ -1,44 +1,46 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Scene Data Codeblock
 
-# TYPE Data Code Block
+# Scene Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
-[common data](../common/index.md) and the [relationships](../common/relationship.md).
+In addition to its own data, the `scene` code block contains the [common data](../common/index.md) and the 
+[relationships](../common/relationship.md).
 
-## Act-Specific Data
+## Scene-Specific Data
 
-The `act` contains the following  data:
+The `scene` contains the following  data:
 
-- [abtStage](abtstage.md)
+- [sessionId](sessionId.md)
+- [action](action.md)
+- [trigger](trigger.md)
+- [date](date.md)
+- [sceneType](sceneType.md)
+- [isActedUpon](isActedUpon.md)
+- [duration](duration.md)
+- [durations](durations.md)
+- [storyCircleStage](storyCircleStage.md)
 
-## RpgManagerData Structure for Act
+## RpgManagerData Structure for Scene
 
 ```yaml
-plot:
-  abt:
-    need: 
-    and: 
-    but: 
-    therefore: 
-  storycircle:
-    you: 
-    need: 
-    go: 
-    search: 
-    find: 
-    take: 
-    return: 
-    change: 
 data:
   synopsis: 
   image: 
-  complete: false
+  complete:
+  sessionId:
+  action:
+  trigger:
+  date:
+  sceneType:
+  isActedUpon:
+  duration:
+  durations: []
+  storyCircleStage:
 relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Scene component](../../components/scene.md)

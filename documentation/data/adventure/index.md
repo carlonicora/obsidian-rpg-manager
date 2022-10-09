@@ -4,7 +4,7 @@ Adventure Data Codeblock
 
 # Adventure Data Code Block
 
-In addition to its own data, the `adventure` code block contains the [plot](../common/plot.md), the
+In addition to its own data, the `adventure` code block contains the [plot](../shared/plot.md), the
 [common data](../common/index.md) and the [relationships](../common/relationship.md).
 
 ## Adventure-Specific Data
@@ -38,4 +38,4 @@ relationships: []
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Adventure component](../../components/TYPE.md)

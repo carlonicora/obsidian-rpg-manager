@@ -1,18 +1,18 @@
 [RPG Manager Documentation](../../index.md) >
 [RPG Manager Data Code Block](../index.md) >
-TYPE Data Codeblock
+Subplot Data Codeblock
 
-# TYPE Data Code Block
+# Subplot Data Code Block
 
 
-In addition to its own data, the TYPE code block contains the [plot](../common/plot.md), the
+In addition to its own data, the `subplot` code block contains the [plot](../shared/plot.md), the
 [common data](../common/index.md) and the [relationships](../common/relationship.md).
 
-## Adventure-Specific Data
+## Subplot-Specific Data
 
-The `adventure` does not contain any specific data
+The `subplot` does not contain any specific data
 
-## RpgManagerData Structure for Adventure
+## RpgManagerData Structure for Subplot
 
 ```yaml
 plot:
@@ -33,10 +33,10 @@ plot:
 data:
   synopsis: 
   image: 
-  complete: false
+  complete: 
 relationships: []
 ```
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Subplot component](../../components/subplot.md)

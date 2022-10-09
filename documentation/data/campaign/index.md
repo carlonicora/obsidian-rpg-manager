@@ -5,7 +5,7 @@ Campaign Data Codeblock
 # Campaign Data Code Block
 
 
-In addition to its own data, the `campaign` code block contains the [plot](../common/plot.md), the
+In addition to its own data, the `campaign` code block contains the [plot](../shared/plot.md), the
 [common data](../common/index.md) and the [relationships](../common/relationship.md).
 
 ## Campaign-Specific Data
@@ -48,4 +48,4 @@ relationships: []
 
 > **Relevant links**
 >
-> [TYPE component](../../components/TYPE.md)
+> [Campaign component](../../components/TYPE.md)
