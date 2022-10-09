@@ -1,4 +1,4 @@
-import {ComponentFrontmatterTemplateFactoryInterface} from "../factories/interfaces/ComponentFrontmatterTemplateFactoryInterface";
+import {ComponentTemplateFactoryInterface} from "../factories/interfaces/ComponentTemplateFactoryInterface";
 import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../../helpers/FileContentManager";
 import {ComponentNotesTemplateFactoryInterface} from "../factories/interfaces/ComponentNotesTemplateFactoryInterface";
@@ -16,8 +16,10 @@ import {ActNotesTemplateFactory} from "../factories/notes/ActNotesTemplateFactor
 import {SceneNotesTemplateFactory} from "../factories/notes/SceneNotesTemplateFactory";
 import {SessionNotesTemplateFactory} from "../factories/notes/SessionNotesTemplateFactory";
 import {SubplotNotesTemplateFactory} from "../factories/notes/SubplotNotesTemplateFactory";
+import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
+import {ControllerMetadataInterface} from "../../metadatas/controllers/ControllerMetadataInterface";
 
-export abstract class AbstractComponentFrontmatterTemplateFactory extends AbstractRpgManager implements ComponentFrontmatterTemplateFactoryInterface {
+export abstract class AbstractComponentTemplateFactory extends AbstractRpgManager implements ComponentTemplateFactoryInterface {
 	protected internalTemplate: ComponentNotesTemplateFactoryInterface|undefined;
 
 	constructor(
@@ -97,18 +99,20 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 		this.addFrontmatterData(frontmatter);
 		this.mergeFrontmatters(frontmatter, templateFrontmatter);
 
-		const initialCodeblock: string|undefined = this.generateInitialCodeBlock();
+		const dataCodeblock: string = this.generateDataCodeBlock();
+		const initialCodeblock: string = this.generateInitialCodeBlock();
 		const lastCodeblock: string|undefined = this.generateLastCodeBlock();
 
 		if (this.internalTemplate !== undefined){
 			templateContent = this.internalTemplate.getContent();
 		}
 
-		return this.generateResponse(frontmatter, initialCodeblock, templateContent, lastCodeblock);
+		return this.generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock);
 	}
 
 	private generateResponse(
 		frontmatter: any,
+		dataCodebBlock: string|undefined,
 		initialCodeBlock: string|undefined,
 		mainContent: string|undefined,
 		lastCodeBlock: string|undefined,
@@ -118,7 +122,8 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 		const frontmatterString = stringifyYaml(frontmatter);
 		const frontmatterParsedString = frontmatterString.replaceAll('{}', '');
 		response = '---\n' + frontmatterParsedString + '---\n';
-		if (initialCodeBlock !== undefined) response += initialCodeBlock;
+		response += dataCodebBlock;
+		response += initialCodeBlock;
 		response += mainContent ?? '\n';
 		if (lastCodeBlock !== undefined) response += lastCodeBlock;
 
@@ -198,9 +203,14 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 	): any {
 	}
 
+	protected generateDataCodeBlock(
+	): string {
+		return '';
+	}
+
 	protected generateInitialCodeBlock(
-	): string|undefined {
-		return undefined;
+	): string {
+		return '';
 	}
 
 	protected generateLastCodeBlock(
@@ -208,15 +218,21 @@ export abstract class AbstractComponentFrontmatterTemplateFactory extends Abstra
 		return undefined;
 	}
 
+	protected generateRpgManagerDataCodeBlock(
+		metadata: ControllerMetadataDataInterface,
+	): string {
+		let response = '```RpgManagerData\n';
+		response += stringifyYaml(metadata);
+		response += '```\n';
+
+		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');
+	}
+
 	protected generateRpgManagerCodeBlock(
-		additionalInformation: any|undefined = undefined,
+		metadata: ControllerMetadataInterface,
 	): string {
 		let response = '```RpgManager\n';
-
-		if (additionalInformation !== undefined){
-			response += stringifyYaml(additionalInformation);
-		}
-
+		response += stringifyYaml(metadata);
 		response += '```\n';
 
 		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');

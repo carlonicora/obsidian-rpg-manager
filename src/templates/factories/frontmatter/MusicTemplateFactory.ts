@@ -1,17 +1,30 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {MusicMetadataInterface} from "../../../metadatas/components/MusicMetadataInterface";
 
-export class MusicFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
+export class MusicTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		frontmatter.tags.push(this.settings.musicTag + '/' + this.campaignId);
 	}
 
+	protected generateDataCodeBlock(
+	): string {
+		const metadata: MusicMetadataInterface = {
+			data: {
+				synopsis: '',
+				image: '',
+				complete: false,
+				url: ''
+			}
+		};
+		return this.generateRpgManagerDataCodeBlock(metadata);
+	}
+
 	public generateInitialCodeBlock(
-	): string|undefined {
-		const metadata: ControllerMetadataInterface|MusicMetadataInterface = {
+	): string {
+		const metadata: ControllerMetadataInterface = {
 			models: {
 				header: true,
 				lists: {
@@ -27,15 +40,8 @@ export class MusicFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 					]
 				}
 			},
-			data: {
-				synopsis: '',
-				image: '',
-				complete: false,
-				url: ''
-			}
 		};
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 }

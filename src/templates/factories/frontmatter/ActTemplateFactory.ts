@@ -1,21 +1,18 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 import {ActMetadataInterface} from "../../../metadatas/components/ActMetadataInterface";
 
-export class ActFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
+export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		frontmatter.tags.push(this.settings.actTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId);
 	}
 
-	public generateInitialCodeBlock(
-	): string|undefined {
-		const metadata: ControllerMetadataInterface|ActMetadataInterface = {
-			models: {
-				header: true
-			},
+	protected generateDataCodeBlock(
+	): string {
+		const metadata: ActMetadataInterface = {
 			plot: {
 				abt: {
 					need: '',
@@ -41,14 +38,23 @@ export class ActFrontmatterTemplateFactory extends AbstractComponentFrontmatterT
 				abtStage: ''
 			}
 		};
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+		return this.generateRpgManagerDataCodeBlock(metadata);
+	}
+
+	public generateInitialCodeBlock(
+	): string {
+		const metadata: ControllerMetadataInterface = {
+			models: {
+				header: true
+			},
+		};
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 
 	public generateLastCodeBlock(
 	): string|undefined {
-		const metadata: ControllerMetadataInterface|ActDataInterface = {
+		const metadata: ControllerMetadataInterface = {
 			models: {
 				lists: {
 					scenes: {
@@ -72,8 +78,6 @@ export class ActFrontmatterTemplateFactory extends AbstractComponentFrontmatterT
 				}
 			}
 		}
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 }

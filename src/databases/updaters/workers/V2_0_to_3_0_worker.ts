@@ -16,7 +16,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		if (reporter !== undefined) reporter.setFileCount(files.length);
 
 		for (let filesIndex=0; filesIndex<files.length; filesIndex++){
-			// Read file and metadata
 			const file: TFile = files[filesIndex];
 
 			let fileContent = await this.app.vault.read(file);
@@ -53,101 +52,106 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			const frontmatterMetadata: any = cachedMetadata.frontmatter;
 			let frontmatterMetadataContentArray: Array<string>|undefined = undefined;
 
-			let dataMetadataStartLine: number|undefined = undefined;
-			let dataMetadataEndLine: number|undefined = undefined;
-			let dataMetadata: any|undefined = undefined;
-			let dataMetadataType: string|undefined;
-			let dataMetadataContent: string|undefined = undefined;
-			let dataMetadataContentArray: Array<string>|undefined = undefined;
-			let dataNewMetadata: any|undefined=undefined;
-			let dataNewMetadataContent: string|undefined = undefined;
+			let firstCodeblockStartLine: number|undefined = undefined;
+			let firstCodeblockEndLine: number|undefined = undefined;
+			let firstCodeblockMetadata: any|undefined = undefined;
+			let firstCodeblockMetadataType: string|undefined;
+			let firstCodeblockMetadataContent: string|undefined = undefined;
+			let firstCodeblockMetadataContentArray: Array<string>|undefined = undefined;
+			let firstCodeblockNewMetadata: any|undefined=undefined;
+			let firstCodeblockNewMetadataContent: string|undefined = undefined;
 
-			let listMetadataStartLine: number|undefined = undefined;
-			let listMetadataEndLine: number|undefined = undefined;
-			let listMetadataType: string|undefined;
-			let listNewMetadata: any|undefined=undefined;
-			let listNewMetadataContent: string|undefined = undefined;
+			let secondCodeblockMetadataStartLine: number|undefined = undefined;
+			let secondCodeblockMetadataEndLine: number|undefined = undefined;
+			let secondCodeblockMetadataType: string|undefined;
+			let secondCodeblockNewMetadata: any|undefined=undefined;
+			let secondCodeblockNewMetadataContent: string|undefined = undefined;
 
 			let codeblock: SectionCache|undefined;
 			for (let index=0; index<(cachedMetadata.sections?.length ?? 0); index++){
 				codeblock = (cachedMetadata.sections !== undefined ? cachedMetadata.sections[index] : undefined);
 				if (codeblock !== undefined && codeblock.type === 'yaml' && index === 0){
-					//  Read frontmatter
 					frontmatterMetadataStartLine = codeblock.position.start.line;
 					frontmatterMetadataEndLine = codeblock.position.end.line;
 					frontmatterMetadataContentArray = fileContentArray.slice(frontmatterMetadataStartLine, frontmatterMetadataEndLine);
 				} else if (codeblock !== undefined && fileContentArray[codeblock.position.start.line] === '```RpgManager'){
-					if (dataMetadataStartLine === undefined){
-						// Read codeblock data structure
-						dataMetadataStartLine = codeblock.position.start.line+1;
-						dataMetadataEndLine = codeblock.position.end.line;
-						if (dataMetadataStartLine != undefined && dataMetadataEndLine != undefined){
-							dataMetadataType = fileContentArray[dataMetadataStartLine];
-							dataMetadataContentArray = fileContentArray.slice(dataMetadataStartLine+1, dataMetadataEndLine)
-							dataMetadataContentArray.slice(1);
-							dataMetadataContent = dataMetadataContentArray.join('\n');
-							dataMetadata = parseYaml(dataMetadataContent);
+					if (firstCodeblockStartLine === undefined){
+						firstCodeblockStartLine = codeblock.position.start.line+1;
+						firstCodeblockEndLine = codeblock.position.end.line;
+						if (firstCodeblockStartLine != undefined && firstCodeblockEndLine != undefined){
+							firstCodeblockMetadataType = fileContentArray[firstCodeblockStartLine];
+							firstCodeblockMetadataContentArray = fileContentArray.slice(firstCodeblockStartLine+1, firstCodeblockEndLine)
+							firstCodeblockMetadataContentArray.slice(1);
+							firstCodeblockMetadataContent = firstCodeblockMetadataContentArray.join('\n');
+							firstCodeblockMetadata = parseYaml(firstCodeblockMetadataContent);
 						}
 					} else {
-						// Maybe read codeblock linkonly structure
-						listMetadataStartLine = codeblock.position.start.line+1;
-						listMetadataEndLine = codeblock.position.end.line;
-						if (listMetadataStartLine != undefined && listMetadataEndLine != undefined){
-							listMetadataType = fileContentArray[listMetadataStartLine];
+						secondCodeblockMetadataStartLine = codeblock.position.start.line+1;
+						secondCodeblockMetadataEndLine = codeblock.position.end.line;
+						if (secondCodeblockMetadataStartLine != undefined && secondCodeblockMetadataEndLine != undefined){
+							secondCodeblockMetadataType = fileContentArray[secondCodeblockMetadataStartLine];
 						}
 					}
 				}
 			}
 
-			//LOAD RELATIONSHIPS FROM METADATA
 			let metadataRelationships: Array<any> = [];
 			if (frontmatterMetadataContentArray !== undefined){
-				// Read frontmatter relationships
 				metadataRelationships = await this._readRelationshipsFromFrontmatter(frontmatterMetadataContentArray);
 			}
-			// Read content relationships
 			const relationships = await this._addRelationshipsFromContent(metadataRelationships, fileContentArray);
 
-			if (dataMetadataType !== undefined){
-				// Update codeblock data with frontmatter metadata
-				// Add relationships to codeblockdata
-				dataNewMetadata = this._getControllerMetadata(dataMetadataType.toLowerCase());
-				dataNewMetadataContent = await this._updateMetadata(type, dataNewMetadata, frontmatterMetadata, dataMetadata, relationships);
+			const dataCodeblockMetadata = this._getComponentRpgManagerDataCodeBlockMetadata(type);
+			let dataCodeblockMetadataContent: string = '';
+
+			if (firstCodeblockMetadataType !== undefined){
+				firstCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(firstCodeblockMetadataType.toLowerCase());
+				firstCodeblockNewMetadataContent = stringifyYaml(firstCodeblockNewMetadata);
+
+				dataCodeblockMetadataContent = await this._updateMetadata(
+					type,
+					dataCodeblockMetadata,
+					frontmatterMetadata,
+					firstCodeblockMetadata,
+					relationships
+				);
 			}
 
-			if (listMetadataType !== undefined){
-				listNewMetadata = this._getControllerMetadata(listMetadataType.toLowerCase());
-				listNewMetadataContent = stringifyYaml(listNewMetadata);
+			if (secondCodeblockMetadataType !== undefined){
+				secondCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(secondCodeblockMetadataType.toLowerCase());
+				secondCodeblockNewMetadataContent = stringifyYaml(secondCodeblockNewMetadata);
 			}
 
-			if (listNewMetadataContent !== undefined && listMetadataStartLine !== undefined && listMetadataEndLine !== undefined){
-				// Maybe replace codeblock linkonly
-				const listNewMetadataContentArray: Array<string> = listNewMetadataContent.split('\n');
+			if (secondCodeblockNewMetadataContent !== undefined && secondCodeblockMetadataStartLine !== undefined && secondCodeblockMetadataEndLine !== undefined){
+				const listNewMetadataContentArray: Array<string> = secondCodeblockNewMetadataContent.split('\n');
 				listNewMetadataContentArray[listNewMetadataContentArray.length - 1] = '```';
-				fileContentArray.splice(listMetadataStartLine, listMetadataEndLine  - listMetadataStartLine + 1, ...listNewMetadataContentArray)
+				fileContentArray.splice(secondCodeblockMetadataStartLine, secondCodeblockMetadataEndLine  - secondCodeblockMetadataStartLine + 1, ...listNewMetadataContentArray)
 			}
 
-			if (dataNewMetadataContent !== undefined && dataMetadataStartLine !== undefined && dataMetadataEndLine !== undefined){
-				// Replace codeblock data
-				const dataNewMetadataContentArray: Array<string> = dataNewMetadataContent.split('\n');
+			if (firstCodeblockNewMetadataContent !== undefined && firstCodeblockStartLine !== undefined && firstCodeblockEndLine !== undefined){
+				const dataNewMetadataContentArray: Array<string> = firstCodeblockNewMetadataContent.split('\n');
 				dataNewMetadataContentArray[dataNewMetadataContentArray.length-1] = '```';
-				fileContentArray.splice(dataMetadataStartLine, dataMetadataEndLine - dataMetadataStartLine + 1, ...dataNewMetadataContentArray)
+				fileContentArray.splice(firstCodeblockStartLine, firstCodeblockEndLine - firstCodeblockStartLine + 1, ...dataNewMetadataContentArray)
 			}
 
 			if (frontmatterMetadataContentArray !== undefined && frontmatterMetadataStartLine !== undefined && frontmatterMetadataEndLine !== undefined) {
-				// Cleanup frontmatter
 				const frontmatter: any = this._cleanFrontmatter(frontmatterMetadataContentArray);
-				const frontmatterContent: string = '---\n' + stringifyYaml(frontmatter) + '---';
-				// Replace frontmatter
+				const frontmatterContent: string = '---\n' +
+					stringifyYaml(frontmatter) +
+					'---\n' +
+					'```RpgManagerData\n' +
+					dataCodeblockMetadataContent +
+					'```';
+
 				fileContentArray.splice(frontmatterMetadataStartLine, frontmatterMetadataEndLine - frontmatterMetadataStartLine + 1, ...frontmatterContent.split('\n'))
 			}
 
-			// Save file
 			fileContent = fileContentArray.join('\n');
 			this.app.vault.modify(file, fileContent)
 				.then(() => {
 					if (reporter !== undefined) reporter.addFileUpdated();
 				});
+
 		}
 	}
 
@@ -179,6 +183,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		if (frontmatter.storycircle !== undefined) delete(frontmatter.storycircle);
 		if (frontmatter.sceneType !== undefined) delete(frontmatter.sceneType);
 		if (frontmatter.date !== undefined) delete(frontmatter.date);
+		if (frontmatter.pronoun !== undefined) delete(frontmatter.pronoun);
 
 		return frontmatter;
 	}
@@ -431,7 +436,81 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		}
 	}
 
-	private _getControllerMetadata(
+	private _getComponentRpgManagerDataCodeBlockMetadata(
+		type: ComponentType,
+	): any {
+		switch (type){
+			case ComponentType.Campaign:
+				return {
+					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
+					data: {date: '', synopsis: '', image: '', complete: true, currentAdventureId: '', currentActId: '', currentSessionId: ''},
+				}
+			case ComponentType.Adventure:
+				return {
+					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
+					data: {synopsis: '', complete: false,},
+				}
+			case ComponentType.Act:
+				return {
+					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
+					data: {synopsis: '', image: '', complete: false, abtStage: ''},
+					relationships: [],
+				}
+			case ComponentType.Scene:
+				return {
+					data: {synopsis: '', image: '', complete: false, sessionId: 0, action: '', trigger: '', date: '', sceneType: '', isActedUpon: false, duration: 0, durations: [], storyCircleStage: ''},
+					relationships: [],
+				}
+			case ComponentType.Session:
+				return {
+					data: {synopsis: '', image: '', complete: false, irl: undefined, abtStage: undefined},
+					relationships: [],
+				}
+			case ComponentType.Subplot:
+				return {
+					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
+					data: {synopsis: '', image: '', complete: false},
+					relationships: [],
+				}
+			case ComponentType.Character:
+				return {
+					data: {synopsis: '', image: '', complete: false, dob: '', death: '', goals: '', pronoun: ''},
+					relationships: [],
+				}
+			case ComponentType.Clue:
+				return {
+					data: {synopsis: '', image: '', complete: false, found: false},
+					relationships: [],
+				}
+			case ComponentType.Event:
+				return {
+					data: {synopsis: '', image: '', complete: false, date: ''},
+					relationships: [],
+				}
+			case ComponentType.Faction:
+				return {
+					data: {synopsis: '', image: '', complete: false},
+					relationships: [],
+				}
+			case ComponentType.Location:
+				return {
+					data: {synopsis: '', image: '', complete: false, address: ''},
+					relationships: [],
+				}
+			case ComponentType.Music:
+				return {
+					data: {synopsis: '', image: '', complete: false, url: ''},
+					relationships: [],
+				}
+			case ComponentType.NonPlayerCharacter:
+				return {
+					data: {synopsis: '', image: '', death: '', dob: '', goals: '', pronoun: '', complete: false},
+					relationships: [],
+				}
+		}
+	}
+
+	private _getComponentRpgManagerCodeBlockMetadata(
 		codeBlockType: 'campaignnavigation' | 'campaign' | 'adventurenavigation' | 'adventure' | 'scenenavigation' | 'scene' | 'actnavigation' | 'act' | 'sessionnavigation' | 'session' |
 			'subplot' | 'pc' | 'clue' | 'event' | 'faction' | 'location' | 'music' | 'npc' | string,
 	): any {
@@ -439,8 +518,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'campaignnavigation':
 				return {
 					models: {header: true},
-					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {date: '', synopsis: '', image: '', complete: '', currentAdventureId: '', currentActId: '', currentSessionId: ''},
 				}
 			case 'campaign':
 				return {
@@ -449,9 +526,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'adventurenavigation':
 				return {
 					models: {header: true},
-					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {synopsis: '', complete: '',},
-					relationships: [],
 				}
 			case 'adventure':
 				return {
@@ -460,9 +534,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'actnavigation':
 				return {
 					models: {header: true},
-					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {synopsis: '', image: '', complete: '', abtStage: ''},
-					relationships: [],
 				}
 			case 'act':
 				return {
@@ -471,8 +542,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'scenenavigation':
 				return {
 					models: {header: true},
-					data: {synopsis: '', image: '', complete: '', sessionId: 0, action: '', trigger: '', date: '', sceneType: '', isActedUpon: false, duration: 0, durations: [], storyCircleStage: ''},
-					relationships: [],
 				}
 			case 'scene':
 				return {
@@ -481,8 +550,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'sessionnavigation':
 				return {
 					models: {header: true, lists: {scenes: {relationship: "hierarchy",},}},
-					data: {synopsis: '', image: '', complete: '', irl: undefined, abtStage: undefined},
-					relationships: [],
 				}
 			case 'session':
 				return {
@@ -491,51 +558,34 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			case 'subplot':
 				return {
 					models: {header: true, lists: {events: {}, clues: {}, factions: {}, npcs: {}, locations: {},}},
-					plot: {abt: {need: '', and: '', but: '', therefore: '',}, storycircle: {you: '', need: '', go: '', search: '', find: '', take: '', return: '', change: '',}},
-					data: {synopsis: '', image: '', complete: ''},
-					relationships: [],
 				}
 			case 'pc':
 				return {
 					models: {header: true, lists: {pcs: {relationship: "univocal",}, npcs: {relationship: "univocal",}, factions: {}, locations: {},}},
-					data: {synopsis: '', image: '', complete: '', dob: '', death: '', goals: '', pronoun: ''},
-					relationships: [],
 				}
 			case 'clue':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {}, npcs: {}, locations: {}, clues: {}, events: {},}},
-					data: {synopsis: '', image: '', complete: '', found: false},
-					relationships: [],
 				}
 			case 'event':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {}, npcs: {}, clues: {}, locations: {},}},
-					data: {synopsis: '', image: '', complete: '', date: ''},
-					relationships: [],
 				}
 			case 'faction':
 				return {
 					models: {header: true, lists: {pcs: {}, npcs: {}, locations: {}, subplots: {}}},
-					data: {synopsis: '', image: '', complete: ''},
-					relationships: [],
 				}
 			case 'location':
 				return {
 					models: {header: true, lists: {pcs: {}, npcs: {}, events: {}, clues: {}, locations: [{relationship: "parent", title: "Inside"}, {relationship: "child", title: "Contains"}],}},
-					data: {synopsis: '', image: '', complete: '', address: ''},
-					relationships: [],
 				}
 			case 'music':
 				return {
 					models: {header: true, lists: {musics: [{relationship: "parent", title: "Part of playlists"}, {relationship: "child", title: "Songs",}]}},
-					data: {synopsis: '', image: '', complete: '', url: ''},
-					relationships: [],
 				}
 			case 'npc':
 				return {
 					models: {header: true, lists: {subplots: {}, pcs: {relationship: "univocal",}, npcs: {relationship: "univocal",}, factions: {}, locations: {}, events: {}, clues: {},}},
-					data: {synopsis: '', image: '', death: '', dob: '', goals: '', pronoun: '', complete: ''},
-					relationships: [],
 				}
 		}
 	}

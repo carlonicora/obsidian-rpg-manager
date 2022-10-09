@@ -790,7 +790,7 @@
 .rpgm-headless-table td {
   border: none;
 }
-.rpgm-headless-table td select, .rpgm-headless-table td input {
+.rpgm-headless-table td select, .rpgm-headless-table td inputt[type=text] {
   border: none;
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;

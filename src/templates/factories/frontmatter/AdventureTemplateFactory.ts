@@ -1,22 +1,19 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {AdventureMetadataInterface} from "../../../metadatas/components/AdventureMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
+import {ActMetadataInterface} from "../../../metadatas/components/ActMetadataInterface";
 
-export class AdventureFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
+export class AdventureTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		frontmatter.tags.push(this.settings.adventureTag + '/' + this.campaignId + '/' + this.adventureId);
 	}
 
-	public generateInitialCodeBlock(
-	): string|undefined {
-
-		const metadata: ControllerMetadataInterface|AdventureMetadataInterface = {
-			models: {
-				header: true
-			},
+	protected generateDataCodeBlock(
+	): string {
+		const metadata: AdventureMetadataInterface = {
 			plot: {
 				abt: {
 					need: '',
@@ -40,14 +37,23 @@ export class AdventureFrontmatterTemplateFactory extends AbstractComponentFrontm
 				complete: false,
 			}
 		};
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+		return this.generateRpgManagerDataCodeBlock(metadata);
+	}
+
+	public generateInitialCodeBlock(
+	): string {
+		const metadata: ControllerMetadataInterface = {
+			models: {
+				header: true
+			},
+		};
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 
 	public generateLastCodeBlock(
 	): string|undefined {
-		const metadata: ControllerMetadataInterface|ActDataInterface = {
+		const metadata: ControllerMetadataInterface = {
 			models: {
 				lists: {
 					acts: {
@@ -56,8 +62,7 @@ export class AdventureFrontmatterTemplateFactory extends AbstractComponentFrontm
 				}
 			}
 		}
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 }

@@ -986,7 +986,7 @@
 	td {
 		border: none;
 
-		select, input {
+		select, inputt[type=text] {
 			border: none;
 			border-bottom: solid 1px var(--background-modifier-border);
 			border-radius: 0;

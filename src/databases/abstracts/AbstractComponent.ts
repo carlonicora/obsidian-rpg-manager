@@ -30,7 +30,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 		if (fileManipulator !== undefined) {
 			this.fileManipulator = fileManipulator;
-			return this.manipulators.metadata.read(this.fileManipulator, this)
+			return this.manipulators.codeblock.read(this.fileManipulator, this)
 				.then((metadata: ControllerMetadataDataInterface) => {
 					this.metadata = metadata;
 					this.initialiseData();

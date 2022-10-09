@@ -7,10 +7,7 @@ export interface FileManipulatorInterface {
 
 	read(
 	): Promise<boolean>;
-
-	getCodeBlocksMetadata(
-	): Array<any>;
-
+	
 	getCodeBlockMetadata(
 	): any|undefined;
 

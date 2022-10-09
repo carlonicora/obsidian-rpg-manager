@@ -3,7 +3,7 @@ import {
 	Component,
 	MarkdownPostProcessorContext,
 	MarkdownView,
-	Plugin,
+	Plugin, setIcon,
 	WorkspaceLeaf
 } from 'obsidian';
 import {Controller} from "./Controller";
@@ -182,6 +182,22 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		);
 	}
 
+	public async createRpgDataView(
+		rpgm: RpgManagerInterface,
+		el: HTMLElement,
+	) {
+		setIcon(el, 'd20');
+
+		el.style.cursor = 'pointer';
+		(<HTMLDivElement>el.parentNode).style.float = 'left';
+		(<HTMLDivElement>el.parentNode).style.position = 'absolute';
+		(<HTMLDivElement>el.parentNode).style.zIndex = '1';
+
+		el.addEventListener('click', () => {
+			rpgm.manipulators.codeblock.selectData();
+		});
+	}
+
 	async loadSettings() {
 		this.settings = Object.assign({}, RpgManagerDefaultSettings, await this.loadData());
 	}
@@ -204,6 +220,9 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	): void {
 		this.registerMarkdownCodeBlockProcessor('RpgManager', async (source: string, el, ctx) =>
 			this.createRpgView(source, el, ctx, ctx.sourcePath)
+		);
+		this.registerMarkdownCodeBlockProcessor('RpgManagerData', async (source: string, el, ctx) =>
+			this.createRpgDataView(this, el)
 		);
 	}
 

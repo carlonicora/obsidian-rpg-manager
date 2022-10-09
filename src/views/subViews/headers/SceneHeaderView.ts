@@ -295,17 +295,4 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		}
 		);
 	}
-
-	protected async selectSession(
-		data: HeaderResponseElementInterface,
-		selectedValue: string,
-	): Promise<void> {
-		const file: TFile|undefined = data.additionalInformation.file;
-
-		if (file !== undefined){
-			const map: Map<string,string> = new Map<string, string>();
-			map.set('session', selectedValue);
-			this.manipulators.frontmatter.update(file, map);
-		}
-	}
 }

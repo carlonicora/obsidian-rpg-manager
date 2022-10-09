@@ -1,27 +1,17 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SubplotMetadataInterface} from "../../../metadatas/components/SubplotMetadataInterface";
 
-export class SubplotFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
+export class SubplotTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		frontmatter.tags.push(this.settings.subplotTag + '/' + this.campaignId);
 	}
 
-	public generateInitialCodeBlock(
-	): string|undefined {
-		const metadata: ControllerMetadataInterface|SubplotMetadataInterface = {
-			models: {
-				header: true,
-				lists: {
-					events: {},
-					clues: {},
-					factions: {},
-					npcs: {},
-					locations: {},
-				}
-			},
+	protected generateDataCodeBlock(
+	): string {
+		const metadata: SubplotMetadataInterface = {
 			plot: {
 				abt: {
 					need: '',
@@ -46,8 +36,23 @@ export class SubplotFrontmatterTemplateFactory extends AbstractComponentFrontmat
 				complete: false
 			}
 		};
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+		return this.generateRpgManagerDataCodeBlock(metadata);
+	}
+
+	public generateInitialCodeBlock(
+	): string {
+		const metadata: ControllerMetadataInterface = {
+			models: {
+				header: true,
+				lists: {
+					events: {},
+					clues: {},
+					factions: {},
+					npcs: {},
+					locations: {},
+				}
+			},
+		};
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 }

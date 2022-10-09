@@ -1,7 +1,15 @@
 import {TFile} from "obsidian";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {FileManipulatorInterface} from "./FileManipulatorInterface";
+import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
 
 export interface CodeBlockManipulatorInterface {
+	read(
+		fileManipulator: FileManipulatorInterface,
+		component: ComponentInterface,
+	): Promise<ControllerMetadataDataInterface>;
+	
 	update(
 		identifier: string,
 		value: string|boolean|number|undefined,
@@ -31,5 +39,8 @@ export interface CodeBlockManipulatorInterface {
 
 	selectRelationship(
 		path: string,
+	): void;
+
+	selectData(
 	): void;
 }

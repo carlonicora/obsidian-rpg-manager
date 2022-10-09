@@ -1,6 +1,6 @@
 import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 import {ComponentType} from "../../../databases/enums/ComponentType";
-import {ComponentFrontmatterTemplateFactoryInterface} from "./ComponentFrontmatterTemplateFactoryInterface";
+import {ComponentTemplateFactoryInterface} from "./ComponentTemplateFactoryInterface";
 
 export interface TemplateFactoryInterface {
 	create(
@@ -14,5 +14,5 @@ export interface TemplateFactoryInterface {
 		sceneId: number|undefined,
 		sessionId: number|undefined,
 		additionalInformation?: any|null,
-	): ComponentFrontmatterTemplateFactoryInterface;
+	): ComponentTemplateFactoryInterface;
 }

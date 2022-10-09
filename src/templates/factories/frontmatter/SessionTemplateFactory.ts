@@ -1,26 +1,18 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SessionMetadataInterface} from "../../../metadatas/components/SessionMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 
-export class SessionFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
+export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		frontmatter.tags.push(this.settings.sessionTag + '/' + this.campaignId + '/' + this.sessionId);
 	}
 
-	public generateInitialCodeBlock(
-	): string|undefined {
-		const metadata: ControllerMetadataInterface|SessionMetadataInterface = {
-			models: {
-				header: true,
-				lists: {
-					scenes: {
-						relationship: "hierarchy",
-					},
-				}
-			},
+	protected generateDataCodeBlock(
+	): string {
+		const metadata: SessionMetadataInterface = {
 			data: {
 				synopsis: '',
 				image: '',
@@ -29,14 +21,28 @@ export class SessionFrontmatterTemplateFactory extends AbstractComponentFrontmat
 				abtStage: undefined
 			}
 		};
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+		return this.generateRpgManagerDataCodeBlock(metadata);
+	}
+
+	public generateInitialCodeBlock(
+	): string {
+		const metadata: ControllerMetadataInterface = {
+			models: {
+				header: true,
+				lists: {
+					scenes: {
+						relationship: "hierarchy",
+					},
+				}
+			},
+		};
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 
 	public generateLastCodeBlock(
 	): string|undefined {
-		const metadata: ControllerMetadataInterface|ActDataInterface = {
+		const metadata: ControllerMetadataInterface = {
 			models: {
 				lists: {
 					subplots: {
@@ -66,8 +72,7 @@ export class SessionFrontmatterTemplateFactory extends AbstractComponentFrontmat
 				}
 			}
 		}
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 }

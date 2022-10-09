@@ -1,21 +1,18 @@
-import {AbstractComponentFrontmatterTemplateFactory} from "../../abstracts/AbstractComponentFrontmatterTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SceneMetadataInterface} from "../../../metadatas/components/SceneMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 
-export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatterTemplateFactory {
+export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
 		frontmatter.tags.push(this.settings.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId);
 	}
 
-	public generateInitialCodeBlock(
-	): string|undefined {
-		const metadata: ControllerMetadataInterface|SceneMetadataInterface = {
-			models: {
-				header: true
-			},
+	protected generateDataCodeBlock(
+	): string {
+		const metadata: SceneMetadataInterface = {
 			data: {
 				synopsis: '',
 				image: '',
@@ -31,9 +28,18 @@ export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 				storyCircleStage: ''
 			}
 		};
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+		return this.generateRpgManagerDataCodeBlock(metadata);
+	}
+
+	public generateInitialCodeBlock(
+	): string {
+		const metadata: ControllerMetadataInterface = {
+			models: {
+				header: true
+			},
+		};
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 
 	public generateLastCodeBlock(
@@ -65,9 +71,8 @@ export class SceneFrontmatterTemplateFactory extends AbstractComponentFrontmatte
 				}
 			}
 		}
-		return this.generateRpgManagerCodeBlock(
-			metadata
-		);
+
+		return this.generateRpgManagerCodeBlock(metadata);
 	}
 }
 

@@ -1,12 +1,17 @@
 import {AbstractFactory} from "../factories/abstracts/AbstractFactory";
 import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorInterface";
-import {CachedMetadata, MarkdownView, parseYaml, stringifyYaml, TFile} from "obsidian";
+import {CachedMetadata, MarkdownView, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
 import {FileManipulator} from "./FileManipulator";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {ControllerMetadataInterface} from "../metadatas/controllers/ControllerMetadataInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../metadatas/controllers/ControllerMetadataRelationshipInterface";
+import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
+import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ControllerMetadataDataInterface} from "../metadatas/controllers/ControllerMetadataDataInterface";
+import {RelationshipType} from "../relationships/enums/RelationshipType";
+import {ComponentStage} from "../databases/components/enums/ComponentStage";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async stopCurrentDuration(
@@ -107,7 +112,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 
 				if (
 					stringYaml !== undefined &&
-					editor.getLine(stringYaml.position.start.line) === '```RpgManager'
+					editor.getLine(stringYaml.position.start.line) === '```RpgManagerData'
 				){
 					let relationshipsStarted = false
 					for (let lineIndex=stringYaml.position.start.line+1; lineIndex<stringYaml.position.end.line; lineIndex++) {
@@ -174,7 +179,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 
 				if (
 					stringYaml !== undefined &&
-					editor.getLine(stringYaml.position.start.line) === '```RpgManager'
+					editor.getLine(stringYaml.position.start.line) === '```RpgManagerData'
 				){
 					if (stringYaml === undefined) continue;
 
@@ -261,7 +266,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 
 				if (
 					stringYaml !== undefined &&
-					editor.getLine(stringYaml.position.start.line) === '```RpgManager'
+					editor.getLine(stringYaml.position.start.line) === '```RpgManagerData'
 				){
 					if (stringYaml === undefined) continue;
 
@@ -289,7 +294,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	}
 
 	private _addOrUpdateRelationship(
-		yaml: ControllerMetadataInterface,
+		yaml: ControllerMetadataDataInterface,
 		relationship: RelationshipInterface,
 	): void {
 		if (yaml.relationships === undefined) yaml.relationships = [];
@@ -316,7 +321,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	}
 
 	private _removeRelationship(
-		yaml: ControllerMetadataInterface,
+		yaml: ControllerMetadataDataInterface,
 		path: string,
 	): void {
 		if (yaml.relationships === undefined) return;
@@ -332,5 +337,137 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		if (found !== undefined){
 			yaml.relationships.splice(found, 1);
 		}
+	}
+
+	public selectData(
+	): void {
+		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+		if (activeView == null) return;
+
+		const editor = activeView.editor;
+		const file = activeView.file;
+		const cache: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+
+		if (cache == null) return;
+
+		cache.sections?.forEach((section: SectionCache) => {
+			if (section.type === 'code' && editor.getLine(section.position.start.line) === '```RpgManagerData'){
+				editor.setSelection({line: section.position.start.line + 1, ch: 0}, {line: section.position.end.line, ch: 0});
+				editor.focus();
+			}
+		});
+	}
+
+	public async read(
+		fileManipulator: FileManipulatorInterface,
+		component: ComponentInterface,
+	): Promise<ControllerMetadataDataInterface> {
+		return this._addRelationshipsFromContent(
+			fileManipulator.content,
+			this._readMetadata(fileManipulator.content, fileManipulator.cachedFile),
+			component,
+		);
+	}
+
+	private _addRelationshipsFromContent(
+		fileContent: string,
+		metadata: ControllerMetadataDataInterface,
+		component: ComponentInterface,
+	): ControllerMetadataDataInterface {
+		if (metadata.relationships == undefined) metadata.relationships = [];
+
+		let content = fileContent;
+		let indexOfRelationship: number = content.indexOf('[[');
+		while (indexOfRelationship !== -1){
+			content = content.substring(content.indexOf('[[') + 2);
+			const endLinkIndex = content.indexOf(']]');
+			if (endLinkIndex === -1) break;
+
+			const nameAndAlias = content.substring(0, endLinkIndex);
+			const aliasIndex = nameAndAlias.indexOf('|');
+			let basename: string;
+			if (aliasIndex === -1){
+				basename = nameAndAlias;
+			} else {
+				basename = nameAndAlias.substring(0, aliasIndex);
+			}
+
+			let path: string|undefined = undefined;
+			const allFiles = this.app.vault.getMarkdownFiles();
+			for (let filesIndex=0; filesIndex<allFiles.length; filesIndex++){
+				if (allFiles[filesIndex].basename === basename){
+					path = allFiles[filesIndex].path;
+					break;
+				}
+			}
+
+			if (path !== undefined) {
+				let relationshipAlreadyExists = false;
+				for(let relationshipsIndex=0; relationshipsIndex<metadata.relationships.length; relationshipsIndex++){
+					if (metadata.relationships[relationshipsIndex].path === path) {
+						relationshipAlreadyExists = true;
+						break;
+					}
+				}
+
+				if (!relationshipAlreadyExists) {
+					let relationship: RelationshipType | undefined = undefined;
+					if (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot) {
+						relationship = RelationshipType.Univocal;
+					} else {
+						relationship = RelationshipType.Biunivocal;
+					}
+
+					metadata.relationships?.push({
+						type: this.factories.relationshipType.createReadableRelationshipType(relationship),
+						path: path,
+						isInContent: true,
+					})
+				}
+			}
+
+			indexOfRelationship = content.indexOf('[[');
+		}
+
+		return metadata;
+	}
+
+	private _readMetadata(
+		fileContent: string,
+		fileCacheMetadata: CachedMetadata,
+	): ControllerMetadataDataInterface{
+		let response: ControllerMetadataDataInterface = {
+			plot: {},
+			data: {},
+			relationships: [],
+		};
+
+		const arrayContent: Array<string> = fileContent.split('\n');
+		const sections: Array<SectionCache>|undefined = fileCacheMetadata.sections;
+
+		if (sections !== undefined) {
+			for (let index = 0; index < sections.length; index++) {
+				const section: SectionCache | undefined = sections[index];
+				if (section !== undefined) {
+					if (section.type === 'code') {
+						if (arrayContent[section.position.start.line] === '```RpgManagerData') {
+							let codeBlockContent = '';
+							for (let index = section.position.start.line + 1; index < arrayContent.length; index++) {
+								if (arrayContent[index] === '```') break;
+								if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
+							}
+							try {
+								const newCodeBlockContent: any = parseYaml(codeBlockContent);
+								if (codeBlockContent !== '') response = {...response, ...newCodeBlockContent};
+							} catch (e) {
+								throw new Error('INVALID YAML')
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return response;
 	}
 }

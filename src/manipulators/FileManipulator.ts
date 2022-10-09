@@ -27,31 +27,6 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 		return this.fileContent;
 	}
 
-	public getCodeBlocksMetadata(
-	): Array<any>{
-		const response: Array<any> = [];
-
-		const arrayContent: Array<string> = this.arrayContent;
-
-		for (let index = 0; index < (this.cachedFile.sections?.length ?? 0); index++) {
-			const section = (this.cachedFile.sections !== undefined ? this.cachedFile.sections[index] : undefined);
-			if (section !== undefined) {
-				if (section.type === 'code') {
-					if (arrayContent[section.position.start.line] === '```RpgManager') {
-						let codeBlockContent = '';
-						for (let index = section.position.start.line + 1; index < arrayContent.length; index++) {
-							if (arrayContent[index] === '```') break;
-							if (arrayContent[index] !== '') codeBlockContent += arrayContent[index] + '\n';
-						}
-						if (codeBlockContent !== '') response.push(parseYaml(codeBlockContent));
-					}
-				}
-			}
-		}
-
-		return response;
-	}
-
 	public getCodeBlockMetadata(
 		requestString = false,
 	): any|undefined {
@@ -61,7 +36,7 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 			const section = (this.cachedFile.sections !== undefined ? this.cachedFile.sections[index] : undefined);
 			if (section !== undefined) {
 				if (section.type === 'code'){
-					if (arrayContent[section.position.start.line] === '```RpgManager'){
+					if (arrayContent[section.position.start.line] === '```RpgManagerData'){
 						let codeBlockContent = '';
 						for (let index=section.position.start.line+1; index<arrayContent.length; index++){
 							if (arrayContent[index] === '```') break;
@@ -100,7 +75,7 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 				}
 			} else {
 				newArrayContent.push(arrayContent[index]);
-				if (!correctBlockProcessed && arrayContent[index] === '```RpgManager') {
+				if (!correctBlockProcessed && arrayContent[index] === '```RpgManagerData') {
 					inCorrectCodeBlock = true;
 				}
 			}
