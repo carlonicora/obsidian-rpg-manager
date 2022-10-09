@@ -35,7 +35,7 @@ export class ListModel extends AbstractModel {
 				if (element !== undefined) {
 					const relationshipType = ((element.relationship != null) ? this.factories.relationshipType.createRelationshipType(element.relationship) : undefined);
 
-					if (relationshipType === RelationshipType.Hierarchy && this.currentComponent.id.type !== ComponentType.Session) {
+					if (relationshipType === RelationshipType.Hierarchy && (this.currentComponent.id.type !== ComponentType.Session || componentType === ComponentType.Scene)) {
 						await this.addList(
 							componentType,
 							this.generateComponentList(componentType),
