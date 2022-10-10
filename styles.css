@@ -216,6 +216,7 @@
   font-size: 0.9em;
 }
 .modal-content .rpgm-modal-relationships select {
+  background-color: var(--background-secondary);
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;
   min-width: 150px;
@@ -261,6 +262,7 @@
   font-size: 0.8em;
 }
 .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.selector select {
+  background-color: var(--background-secondary);
   min-width: 10px;
   width: 100%;
 }
@@ -359,6 +361,14 @@
   padding: 0px;
   margin-top: -10px;
 }
+.rpgm-modal select {
+  background-color: var(--background-secondary);
+}
+.rpgm-modal select:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
+}
 .rpgm-modal select,
 .rpgm-modal select:focus {
   border: none;
@@ -371,6 +381,9 @@
 .rpgm-modal button {
   display: block;
   margin-top: 10px;
+}
+.rpgm-modal div.selector {
+  margin-bottom: 30px;
 }
 
 .modal-content h1.error {
@@ -599,6 +612,7 @@
   clear: both;
 }
 .rpgm-header-info .container .info select {
+  background-color: var(--background-secondary);
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;
   width: 100%;
@@ -818,6 +832,7 @@
   border: none;
 }
 .rpgm-headless-table td select, .rpgm-headless-table td inputt[type=text] {
+  background-color: var(--background-secondary);
   border: none;
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;
