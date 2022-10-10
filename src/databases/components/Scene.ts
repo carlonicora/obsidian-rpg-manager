@@ -7,6 +7,7 @@ import {AdventureInterface} from "./interfaces/AdventureInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {AbstractSceneData} from "./abstracts/data/AbstractSceneData";
 import {SceneType} from "../enums/SceneType";
+import {ComponentNotFoundError} from "../../errors/ComponentNotFoundError";
 
 export class Scene extends AbstractSceneData implements SceneInterface {
 	protected metadata: SceneMetadataInterface;
@@ -23,6 +24,18 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 		[SceneType.Recap, false],
 		[SceneType.SocialCombat, true],
 	]);
+
+	public validateHierarchy(
+	): void {
+		super.validateHierarchy();
+
+		try {
+			this.adventure.validateHierarchy();
+			this.act.validateHierarchy();
+		} catch (e) {
+			throw new ComponentNotFoundError(this.app, this.id);
+		}
+	}
 
 	get act(): ActInterface {
 		const response = this.database.readSingle<ActInterface>(ComponentType.Act, this.id);

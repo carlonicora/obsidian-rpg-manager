@@ -4,10 +4,22 @@ import {AdventureInterface} from "./interfaces/AdventureInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {ActMetadataInterface} from "../../metadatas/components/ActMetadataInterface";
 import {AbstractActData} from "./abstracts/data/AbstractActData";
+import {ComponentNotFoundError} from "../../errors/ComponentNotFoundError";
 
 export class Act extends AbstractActData implements ActInterface {
 	protected metadata: ActMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
+
+	public validateHierarchy(
+	): void {
+		super.validateHierarchy();
+
+		try {
+			this.adventure.validateHierarchy();
+		} catch (e) {
+			throw new ComponentNotFoundError(this.app, this.id);
+		}
+	}
 
 	public get adventure(): AdventureInterface {
 		const response = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);

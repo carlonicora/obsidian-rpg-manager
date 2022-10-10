@@ -14,6 +14,7 @@ import {
 } from "../../metadatas/controllers/ControllerMetadataRelationshipInterface";
 import {FileManipulatorInterface} from "../../manipulators/interfaces/FileManipulatorInterface";
 import {Md5} from "ts-md5";
+import {ComponentNotFoundError} from "../../errors/ComponentNotFoundError";
 
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
@@ -48,6 +49,15 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	public async initialiseData(
 	): Promise<void> {
 		return;
+	}
+
+	public validateHierarchy(
+	): void {
+		try {
+			this.campaign;
+		} catch (e) {
+			throw new ComponentNotFoundError(this.app, this.id);
+		}
 	}
 
 	public async initialiseRelationships(

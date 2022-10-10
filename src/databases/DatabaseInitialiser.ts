@@ -78,15 +78,31 @@ export class DatabaseInitialiser {
 			.then(() => {
 				this._initialiseRelationships(response)
 					.then(() => {
-						response.ready();
-					})
-			})
+						this._validateComponents(response)
+							.then(() => {
+								response.ready();
 
-		if (this.misconfiguredTags.size > 0){
-			new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
-		}
+								if (this.misconfiguredTags.size > 0){
+									new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
+								}
+							});
+					});
+			});
 
 		return response;
+	}
+
+	private static async _validateComponents(
+		database: DatabaseInterface,
+	) {
+		database.recordset.forEach((component: ComponentInterface) => {
+			try {
+				component.validateHierarchy();
+			} catch (e) {
+				database.delete(component);
+				this.misconfiguredTags.set(component.file, e);
+			}
+		})
 	}
 
 	/**

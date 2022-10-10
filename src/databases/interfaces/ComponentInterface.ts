@@ -23,4 +23,7 @@ export interface ComponentInterface extends ComponentDataInterface{
 	getRelationships(
 		database?: DatabaseInterface|undefined,
 	): RelationshipListInterface;
+
+	validateHierarchy(
+	): void;
 }

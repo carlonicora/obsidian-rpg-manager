@@ -276,9 +276,10 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 				}
 			}
 
-			if (component === undefined) return ;
+			if (component === undefined) return;
 
 			await component.readMetadata();
+			await component.validateHierarchy();
 
 			if (isNewComponent && (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot)) {
 				let error: RpgErrorInterface | undefined = undefined;
