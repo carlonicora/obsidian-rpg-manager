@@ -343,9 +343,9 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 				if (!relationshipAlreadyExists) {
 					let relationship: RelationshipType | undefined = undefined;
 					if (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot) {
-						relationship = RelationshipType.Univocal;
+						relationship = RelationshipType.Unidirectional;
 					} else {
-						relationship = RelationshipType.Biunivocal;
+						relationship = RelationshipType.Bidirectional;
 					}
 
 					metadata.relationships?.push({

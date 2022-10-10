@@ -20,7 +20,7 @@ description:
 ```
 
 Accepted Value for each relationship:
-- type: 'univocal' | 'biunivocal' | 'child'
+- type: 'unidirectional' | 'bidirectional' | 'child'
 - path: the path to the `related component`
 - description: the description of the relationship as seen by the `component`
 

@@ -222,7 +222,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 				if (path !== undefined && !this._pathExistsInRelationships(path, response)) {
 					const newRelationship = {
-						type: 'biunivocal',
+						type: 'bidirectional',
 						path: path,
 						description: line
 					}
@@ -275,7 +275,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 			if (!this._pathExistsInRelationships(path, frontmatterRelationships)){
 				const newRelationship = {
-					type: 'biunivocal',
+					type: 'bidirectional',
 					path: path,
 					isInContent: true,
 				}
@@ -537,7 +537,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				}
 			case 'act':
 				return {
-					models: {lists: {scenes: {relationship: 'hierarchy'}, pcs: {relationship: 'univocal'}, npcs: {relationship: 'univocal'}, clues: {relationship: 'univocal'}, locations: {relationship: 'univocal'}, factions: {relationship: 'univocal'}}}
+					models: {lists: {scenes: {relationship: 'hierarchy'}, pcs: {relationship: 'unidirectional'}, npcs: {relationship: 'unidirectional'}, clues: {relationship: 'unidirectional'}, locations: {relationship: 'unidirectional'}, factions: {relationship: 'unidirectional'}}}
 				}
 			case 'scenenavigation':
 				return {
@@ -545,7 +545,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				}
 			case 'scene':
 				return {
-					models: {lists: {musics: {relationship: 'univocal',}, pcs: {relationship: 'univocal',}, npcs: {relationship: 'univocal',}, factions: {relationship: 'univocal',}, clues: {relationship: 'univocal',}, locations: {relationship: 'univocal',}, events: {relationship: 'univocal',},}}
+					models: {lists: {musics: {relationship: 'unidirectional',}, pcs: {relationship: 'unidirectional',}, npcs: {relationship: 'unidirectional',}, factions: {relationship: 'unidirectional',}, clues: {relationship: 'unidirectional',}, locations: {relationship: 'unidirectional',}, events: {relationship: 'unidirectional',},}}
 				}
 			case 'sessionnavigation':
 				return {
@@ -561,7 +561,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				}
 			case 'pc':
 				return {
-					models: {header: true, lists: {pcs: {relationship: "univocal",}, npcs: {relationship: "univocal",}, factions: {}, locations: {},}},
+					models: {header: true, lists: {pcs: {relationship: "unidirectional",}, npcs: {relationship: "unidirectional",}, factions: {}, locations: {},}},
 				}
 			case 'clue':
 				return {
@@ -585,7 +585,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				}
 			case 'npc':
 				return {
-					models: {header: true, lists: {subplots: {}, pcs: {relationship: "univocal",}, npcs: {relationship: "univocal",}, factions: {}, locations: {}, events: {}, clues: {},}},
+					models: {header: true, lists: {subplots: {}, pcs: {relationship: "unidirectional",}, npcs: {relationship: "unidirectional",}, factions: {}, locations: {}, events: {}, clues: {},}},
 				}
 		}
 	}

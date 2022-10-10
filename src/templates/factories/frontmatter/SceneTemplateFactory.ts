@@ -48,25 +48,25 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 			models: {
 				lists: {
 					musics: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 					pcs: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 					npcs: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 					factions: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 					clues: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 					locations: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 					events: {
-						relationship: 'univocal',
+						relationship: 'unidirectional',
 					},
 				}
 			}

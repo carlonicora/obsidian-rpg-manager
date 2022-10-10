@@ -92,7 +92,7 @@ export class ListModel extends AbstractModel {
 						relationship.component.stage !== ComponentStage.Plot &&
 						relationship.component.stage !== ComponentStage.Run &&
 						this.currentComponent.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0 &&
-						relationship.type === RelationshipType.Univocal
+						relationship.type === RelationshipType.Unidirectional
 					) {
 						this.factories.relationship.create(
 							RelationshipType.Hierarchy,

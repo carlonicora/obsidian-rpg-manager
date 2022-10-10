@@ -93,7 +93,7 @@ export class EditorSelector {
 
 					let newRelationship = '';
 					if (!relationshipsStarted) newRelationship += 'relationships:\n';
-					newRelationship += '  - type: univocal\n' +
+					newRelationship += '  - type: unidirectional\n' +
 						'    path: ' + path + '\n'+
 						'    description: \n' +
 						'```\n';

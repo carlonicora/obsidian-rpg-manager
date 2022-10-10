@@ -60,19 +60,19 @@ export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 						relationship: 'hierarchy'
 					},
 					pcs: {
-						relationship: 'univocal'
+						relationship: 'unidirectional'
 					},
 					npcs: {
-						relationship: 'univocal'
+						relationship: 'unidirectional'
 					},
 					clues: {
-						relationship: 'univocal'
+						relationship: 'unidirectional'
 					},
 					locations: {
-						relationship: 'univocal'
+						relationship: 'unidirectional'
 					},
 					factions: {
-						relationship: 'univocal'
+						relationship: 'unidirectional'
 					}
 				}
 			}

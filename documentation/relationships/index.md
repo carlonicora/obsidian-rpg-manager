@@ -19,8 +19,8 @@ There are six types of relationships, but only three are available to the user. 
 by RPG Manager to manage hidden or reversed relationships.
 
 **User-defined**
-- Biunivocal
-- Univocal
+- Bidirectional
+- Unidirectional
 - Child
 
 **System-defined**
@@ -28,16 +28,16 @@ by RPG Manager to manage hidden or reversed relationships.
 - Parent
 - Hierarchy
 
-### Biunivocal
-The `biunivocal` relationships are relationships that live in one `component`, but are read by both component. This types of relationships should be the more common.
-If both `components` require a specific description for the relationships, both can have a `biunivocal` relationship with each other.
+### Bidirectional
+The `bidirectional` relationships are relationships that live in one `component`, but are read by both component. This types of relationships should be the more common.
+If both `components` require a specific description for the relationships, both can have a `bidirectional` relationship with each other.
 
-> The `biunivocal` relationship is read in the other component as a `reverse` relationship with the default description of the component.
+> The `bidirectional` relationship is read in the other component as a `reverse` relationship with the default description of the component.
 
-### Univocal
-The `univocal` relationship is a relationship that matter exclusively to the `component` in which it is created. An example of this is the relationship between two Non-player characters.
+### Unidirectional
+The `unidirectional` relationship is a relationship that matter exclusively to the `component` in which it is created. An example of this is the relationship between two Non-player characters.
 
-> The `univocal` relationship **does not** create a reverse relationship.
+> The `unidirectional` relationship **does not** create a reverse relationship.
 
 ### Child
 The `child` relationship define a parent/children relationship (*one to many*). The relationship carries, if needed, a description. It is important to understand that this type of relationship identify a hierarcy.
@@ -45,7 +45,7 @@ The `child` relationship define a parent/children relationship (*one to many*). 
 > The `child` relationship is read in the other component as a `parent` relationship with the default description of the component.
 
 ### Reversed (not assigneable, auto generated only)
-The `reversed` relationship is a relationship which is automatically generated when a another component has a `biunivocal` relationship with the current component. It is not possible to create a `reverse` relationship, as it is generated dynamically from the system.
+The `reversed` relationship is a relationship which is automatically generated when a another component has a `bidirectional` relationship with the current component. It is not possible to create a `reverse` relationship, as it is generated dynamically from the system.
 
 ### Parent (not assigneable, auto generated only)
 The `parent` relationship is an automatically generated relationship that is created when another component define the current component as its `child`. There is no description for the relationship with a parent.

@@ -1,5 +1,5 @@
 export interface ControllerMetadataRelationshipInterface {
-	type: 'univocal' | 'biunivocal' | 'child' | string,
+	type: 'unidirectional' | 'bidirectional' | 'child' | string,
 	path: string,
 	description?: string|undefined,
 	isInContent?: boolean,

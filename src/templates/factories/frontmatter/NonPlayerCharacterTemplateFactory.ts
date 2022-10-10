@@ -33,10 +33,10 @@ export class NonPlayerCharacterTemplateFactory extends AbstractComponentTemplate
 				lists: {
 					subplots: {},
 					pcs: {
-						relationship: "univocal",
+						relationship: "unidirectional",
 					},
 					npcs: {
-						relationship: "univocal",
+						relationship: "unidirectional",
 					},
 					factions: {},
 					locations: {},

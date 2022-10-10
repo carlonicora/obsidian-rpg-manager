@@ -32,10 +32,10 @@ export class CharacterTemplateFactory extends AbstractComponentTemplateFactory {
 				header: true,
 				lists: {
 					pcs: {
-						relationship: "univocal",
+						relationship: "unidirectional",
 					},
 					npcs: {
-						relationship: "univocal",
+						relationship: "unidirectional",
 					},
 					factions: {},
 					locations: {},

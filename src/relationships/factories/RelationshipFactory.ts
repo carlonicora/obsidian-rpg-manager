@@ -57,7 +57,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 
 		let reverseRelationshipType: RelationshipType|undefined = undefined;
 		switch (relationship.type){
-			case RelationshipType.Biunivocal:
+			case RelationshipType.Bidirectional:
 				reverseRelationshipType = RelationshipType.Reversed;
 				break;
 			case RelationshipType.Child:
