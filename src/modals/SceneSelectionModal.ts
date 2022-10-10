@@ -157,7 +157,6 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 				checkboxLabel.htmlFor = scene.file.basename;
 			}
 		});
-		console.log(this.initialScenesEls)
 	}
 
 	private async _addScenes(

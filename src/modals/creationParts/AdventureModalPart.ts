@@ -19,7 +19,7 @@ export class AdventureModalPart extends AbstractModalPart {
 		super(app, modal);
 		if (this.modal.adventureId === undefined) {
 			this.modal.adventureId = this.factories.id.create(ComponentType.Adventure, this.modal.campaignId.id);
-			this.modal.adventureId.id = 1;
+			this.modal.adventureId.id = 0;
 		}
 
 		this.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
@@ -70,6 +70,8 @@ export class AdventureModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
+		if (this.modal.adventureId?.id === 0) this.modal.adventureId.id = 1;
+
 		return true;
 	}
 

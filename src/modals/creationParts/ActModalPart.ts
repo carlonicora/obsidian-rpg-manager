@@ -20,7 +20,7 @@ export class ActModalPart extends AbstractModalPart {
 
 		if (this.modal.actId === undefined) {
 			this.modal.actId = this.factories.id.create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
-			this.modal.actId.id = 1;
+			this.modal.actId.id = 0;
 		}
 
 		this.allAct = this.database.read<ActInterface>(
@@ -81,6 +81,8 @@ export class ActModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
+		if (this.modal.actId?.id === 0) this.modal.actId.id = 1;
+
 		return true;
 	}
 

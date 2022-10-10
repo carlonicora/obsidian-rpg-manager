@@ -18,7 +18,7 @@ export class SessionModalPart extends AbstractModalPart {
 	) {
 		super(app, modal);
 		this.modal.sessionId = this.factories.id.create(ComponentType.Session, this.modal.campaignId.id);
-		this.modal.sessionId.id = 1;
+		this.modal.sessionId.id = 0;
 
 		this.sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
@@ -42,6 +42,7 @@ export class SessionModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
+		if (this.modal.sessionId?.id === 0) this.modal.sessionId.id = 1;
 		return true;
 	}
 

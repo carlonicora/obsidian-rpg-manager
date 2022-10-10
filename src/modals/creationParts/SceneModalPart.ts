@@ -13,7 +13,7 @@ export class SceneModalPart extends AbstractModalPart {
 	) {
 		super(app, modal);
 		this.modal.sceneId = this.factories.id.create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
-		this.modal.sceneId.id = 1;
+		this.modal.sceneId.id = 0;
 
 		if (this.modal.adventureId != null && this.modal.actId != null) {
 			this.scenes = this.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
@@ -44,6 +44,7 @@ export class SceneModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
+		if (this.modal.sceneId?.id === 0) this.modal.sceneId.id = 1;
 		return true;
 	}
 
