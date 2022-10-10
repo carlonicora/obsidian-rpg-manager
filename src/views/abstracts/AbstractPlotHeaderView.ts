@@ -14,6 +14,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		name: string,
 		value: string,
 		tableEl: HTMLTableElement,
+		identifier: string,
 	): void {
 		const row = tableEl.createEl('tr');
 		row.createEl('td', {cls: 'header', text: name});
@@ -25,6 +26,8 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 			this.sourcePath,
 			null as unknown as Component,
 		);
+
+		this.addEditorIcon(valueRowEl, this.currentComponent, identifier);
 	}
 
 	protected addAbtPlot(
@@ -34,18 +37,14 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
 		headerEl.createSpan({text: 'ABT Plot'});
-		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: '</>'});
-		titleEditor.addEventListener('click', () => {
-			EditorSelector.select(this.app, this.currentComponent);
-		})
 
 		const tableEl = plotEl.createEl('table');
 		tableEl.addClass('rpgm-table');
 
-		this._addPlotElement('need', plot.need, tableEl);
-		this._addPlotElement('and', plot.and, tableEl);
-		this._addPlotElement('but', plot.but, tableEl);
-		this._addPlotElement('therefore', plot.therefore, tableEl);
+		this._addPlotElement('need', plot.need, tableEl, 'plot.abt.need');
+		this._addPlotElement('and', plot.and, tableEl, 'plot.abt.and');
+		this._addPlotElement('but', plot.but, tableEl, 'plot.abt.but');
+		this._addPlotElement('therefore', plot.therefore, tableEl, 'plot.abt.therefore');
 	}
 
 	protected addStoryCirclePlot(
@@ -55,22 +54,18 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 
 		const headerEl = plotEl.createEl('h3', {cls: 'rpgm-table-header'});
 		headerEl.createSpan({text: 'Story Circle Plot'});
-		const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
-		titleEditor.addEventListener('click', () => {
-			EditorSelector.select(this.app, this.currentComponent);
-		})
 
 		const tableEl = plotEl.createEl('table');
 		tableEl.addClass('rpgm-table');
 
-		this._addPlotElement('you', plot.you, tableEl);
-		this._addPlotElement('need', plot.need, tableEl);
-		this._addPlotElement('go', plot.go, tableEl);
-		this._addPlotElement('search', plot.search, tableEl);
-		this._addPlotElement('find', plot.find, tableEl);
-		this._addPlotElement('take', plot.take, tableEl);
-		this._addPlotElement('return', plot.return, tableEl);
-		this._addPlotElement('change', plot.change, tableEl);
+		this._addPlotElement('you', plot.you, tableEl, 'plot.storycircle.you');
+		this._addPlotElement('need', plot.need, tableEl, 'plot.storycircle.need');
+		this._addPlotElement('go', plot.go, tableEl, 'plot.storycircle.go');
+		this._addPlotElement('search', plot.search, tableEl, 'plot.storycircle.search');
+		this._addPlotElement('find', plot.find, tableEl, 'plot.storycircle.find');
+		this._addPlotElement('take', plot.take, tableEl, 'plot.storycircle.take');
+		this._addPlotElement('return', plot.return, tableEl, 'plot.storycircle.return');
+		this._addPlotElement('change', plot.change, tableEl, 'plot.storycircle.change');
 	}
 
 	protected addSceneAnalyser(

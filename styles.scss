@@ -515,7 +515,7 @@
 
 	tr > td > span.editorIcon {
 		position: relative;
-		top: 1.5em;
+		//top: 1.5em;
 		right: 0;
 		float: right;
 		font-size: 0.8em;
@@ -1075,6 +1075,10 @@
 			p {
 				margin: 0px;
 			}
+		}
+
+		tr > td:hover {
+			background-color: var(--background-primary-alt);
 		}
 
 		tr > td.header {

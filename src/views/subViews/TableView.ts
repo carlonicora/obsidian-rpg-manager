@@ -47,7 +47,7 @@ export class TableView extends AbstractSubModelView {
 			if (data.class === 'rpgm-plot'){
 				const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
 				titleEditor.addEventListener('click', () => {
-					EditorSelector.select(this.app, data.currentComponent);
+					EditorSelector.focusOnDataKey(this.app, data.currentComponent);
 				})
 			}
 		}
@@ -160,14 +160,7 @@ export class TableView extends AbstractSubModelView {
 				if (content.isEditable && isRowEditable) cell.addClass('editable');
 
 				if (content.isEditable && isRowEditable) {
-					const editorButtonEl = document.createElement('span');
-					editorButtonEl.addClass('editorIcon');
-					editorButtonEl.textContent = '</>';
-					cell.prepend(editorButtonEl);
-
-					editorButtonEl.addEventListener('click', () => {
-						this.manipulators.codeblock.selectRelationship(element.relationship.path);
-					});
+					this.addRelationshipEditorIcon(cell, data.currentComponent, element.relationship.path);
 				}
 			});
 		});

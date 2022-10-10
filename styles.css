@@ -414,7 +414,6 @@
 }
 .rpgm-table tr > td > span.editorIcon {
   position: relative;
-  top: 1.5em;
   right: 0;
   float: right;
   font-size: 0.8em;
@@ -862,6 +861,9 @@
 }
 .rpgm-plot-container table tr > td p {
   margin: 0px;
+}
+.rpgm-plot-container table tr > td:hover {
+  background-color: var(--background-primary-alt);
 }
 .rpgm-plot-container table tr > td.header {
   font-variant: small-caps;

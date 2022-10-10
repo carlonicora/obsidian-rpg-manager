@@ -53,7 +53,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	}
 
 	get expectedDuration(): number {
-		if (this.sceneType === undefined) return 0;
+		if (this.sceneType == undefined) return 0;
 
 		const previousDurations: Array<number> = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
 		previousDurations.sort((left: number, right: number) => {
@@ -75,13 +75,13 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	}
 
 	get isActive(): boolean {
-		if (this.sceneType === undefined) return false;
+		if (this.sceneType == undefined) return false;
 
 		return this.activeSceneTypes.get(this.sceneType) ?? false;
 	}
 
 	get isCurrentlyRunning(): boolean {
-		if (this.metadata.data?.durations === undefined) return false;
+		if (this.metadata.data?.durations == undefined) return false;
 
 		for (let index=0; index<this.metadata.data?.durations.length; index++) {
 			if (this.metadata.data?.durations[index].indexOf('-') === -1) return true;
@@ -91,7 +91,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	}
 
 	get lastStart(): number {
-		if (!this.isCurrentlyRunning || this.metadata.data?.durations === undefined) return 0;
+		if (!this.isCurrentlyRunning || this.metadata.data?.durations == undefined) return 0;
 
 		for (let index=0; index<this.metadata.data?.durations.length; index++) {
 			if (this.metadata.data?.durations[index].indexOf('-') === -1) return +this.metadata.data?.durations[index];

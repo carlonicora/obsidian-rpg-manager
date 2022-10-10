@@ -37,10 +37,6 @@ export interface CodeBlockManipulatorInterface {
 		path: string,
 	): Promise<void>;
 
-	selectRelationship(
-		path: string,
-	): void;
-
 	selectData(
 	): void;
 }
