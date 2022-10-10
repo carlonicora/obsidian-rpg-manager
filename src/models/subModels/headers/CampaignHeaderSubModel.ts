@@ -31,7 +31,7 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 			]));
 
 		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentComponent.id);
-		if (this.data.currentAdventureId !== undefined) {
+		if (this.data.currentAdventureId != undefined && this.data.currentAdventureId !== '') {
 			const currentAdventureId = +this.data.currentAdventureId.split('/')[2];
 			additionalInformation.acts = additionalInformation.acts.filter((act: ActInterface) => act.id.adventureId === currentAdventureId)
 		}
