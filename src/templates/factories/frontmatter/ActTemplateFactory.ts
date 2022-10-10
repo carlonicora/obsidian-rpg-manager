@@ -1,6 +1,5 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
-import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 import {ActMetadataInterface} from "../../../metadatas/components/ActMetadataInterface";
 
 export class ActTemplateFactory extends AbstractComponentTemplateFactory {

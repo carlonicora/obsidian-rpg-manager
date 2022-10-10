@@ -1,7 +1,6 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SessionMetadataInterface} from "../../../metadatas/components/SessionMetadataInterface";
-import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 
 export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(

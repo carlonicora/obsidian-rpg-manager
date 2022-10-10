@@ -40,11 +40,11 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		response.responseType = ResponseType.SceneHeader;
 
 		if (this.data.trigger !== undefined && this.data.trigger != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Trigger', this.data.trigger, HeaderResponseType.Long));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Trigger', this.data.trigger, HeaderResponseType.Long, {editableField: 'data.trigger'}));
 		}
 
 		if (this.data.action !== undefined && this.data.action != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Action', this.data.action, HeaderResponseType.Long));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Action', this.data.action, HeaderResponseType.Long, {editableField: 'data.action'}));
 		}
 
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Date', this.data.date, HeaderResponseType.DateSelector));

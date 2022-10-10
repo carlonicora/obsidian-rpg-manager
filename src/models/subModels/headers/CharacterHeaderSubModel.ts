@@ -37,7 +37,10 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Character;
 		response.responseType = ResponseType.CharacterHeader;
 
-		if (this.data.goals != null) response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Goals', this.data.goals.toString(), HeaderResponseType.Long));
+		let goals = this.data?.goals;
+		if (this.data.goals == null || this.data.goals === '') goals = '<span class="rpgm-missing">Goals missing</span>';
+
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Goals', goals, HeaderResponseType.Long, {editableField: 'data.goals'}));
 
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Pronoun', this.data.pronoun, HeaderResponseType.Pronoun));
 		if (this.data.age != null || this.data.death != null) {

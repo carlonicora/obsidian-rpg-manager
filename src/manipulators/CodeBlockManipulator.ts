@@ -3,7 +3,6 @@ import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorIn
 import {CachedMetadata, MarkdownView, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
 import {FileManipulator} from "./FileManipulator";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {ControllerMetadataInterface} from "../metadatas/controllers/ControllerMetadataInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../metadatas/controllers/ControllerMetadataRelationshipInterface";

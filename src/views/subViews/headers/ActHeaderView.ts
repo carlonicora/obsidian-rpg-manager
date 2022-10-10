@@ -36,7 +36,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 					break;
 				default:
 					element.value.fillContent(
-						this.createContainerEl(element.type, element.title),
+						this.createContainerEl(element),
 						this.sourcePath,
 					);
 					break;

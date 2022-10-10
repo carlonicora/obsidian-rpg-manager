@@ -102,7 +102,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			const relationships = await this._addRelationshipsFromContent(metadataRelationships, fileContentArray);
 
 			const dataCodeblockMetadata = this._getComponentRpgManagerDataCodeBlockMetadata(type);
-			let dataCodeblockMetadataContent: string = '';
+			let dataCodeblockMetadataContent = '';
 
 			if (firstCodeblockMetadataType !== undefined){
 				firstCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(firstCodeblockMetadataType.toLowerCase());

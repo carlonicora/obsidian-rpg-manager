@@ -1,8 +1,6 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {AdventureMetadataInterface} from "../../../metadatas/components/AdventureMetadataInterface";
-import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
-import {ActMetadataInterface} from "../../../metadatas/components/ActMetadataInterface";
 
 export class AdventureTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(

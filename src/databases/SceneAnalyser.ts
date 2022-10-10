@@ -90,6 +90,7 @@ export class SceneAnalyser extends AbstractRpgManager {
 				const session: SessionInterface = this.database.readSingle<SessionInterface>(ComponentType.Session, this.parentId);
 				if (session.targetDuration != undefined) this.targetDuration = session.targetDuration;
 			} catch (e) {
+				//no need to trigger an error here
 			}
 
 			return this.database.read<SceneInterface>(

@@ -7,8 +7,6 @@ import {SceneAnalyser} from "../../../databases/SceneAnalyser";
 import {HeadlessTableView} from "../../HeadlessTableView";
 import {SessionInterface} from "../../../databases/components/interfaces/SessionInterface";
 import {SceneInterface} from "../../../databases/components/interfaces/SceneInterface";
-import {AbtStage} from "../../../plots/enums/AbtStage";
-import {TFile} from "obsidian";
 import flatpickr from "flatpickr";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
@@ -45,7 +43,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 					break;
 				default:
 					element.value.fillContent(
-						this.createContainerEl(element.type, element.title),
+						this.createContainerEl(element),
 						this.sourcePath,
 					);
 					break;

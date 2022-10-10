@@ -1,7 +1,6 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {CampaignMetadataInterface} from "../../../metadatas/components/CampaignMetadataInterface";
-import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
 
 export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(

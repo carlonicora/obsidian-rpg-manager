@@ -1,4 +1,4 @@
-import {App, CachedMetadata, Editor, EditorPosition, EditorRange, MarkdownView, parseYaml} from "obsidian";
+import {App, CachedMetadata, Editor, EditorPosition, EditorRange, MarkdownView} from "obsidian";
 import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 
 export class EditorSelector {
@@ -57,8 +57,7 @@ export class EditorSelector {
 		for (let index=0; index<metadata.sections.length; index++) {
 			const editor = activeView.editor;
 			if (metadata.sections[index].type === 'code' && editor.getLine(metadata.sections[index].position.start.line) === '```RpgManagerData') {
-				let dataYaml: any|undefined;
-				dataYaml = (metadata.sections !== undefined ? metadata.sections[index] : undefined);
+				const dataYaml: any|undefined = (metadata.sections !== undefined ? metadata.sections[index] : undefined);
 				let metadataKeyStart: EditorPosition|undefined = undefined;
 				let metadataKeyEnd: EditorPosition|undefined = undefined;
 
@@ -120,8 +119,8 @@ export class EditorSelector {
 		endLine: number,
 		endCharacter: number,
 	): void {
-		let metadataKeyStart: EditorPosition = {line: startLine, ch: startCharacter};
-		let metadataKeyEnd: EditorPosition = {line: endLine, ch:endCharacter};
+		const metadataKeyStart: EditorPosition = {line: startLine, ch: startCharacter};
+		const metadataKeyEnd: EditorPosition = {line: endLine, ch:endCharacter};
 
 		return this._setPositionsAndScroll(editor, metadataKeyStart, metadataKeyEnd);
 	}
@@ -160,7 +159,6 @@ export class EditorSelector {
 		while (arrKey.length !== 0){
 			let breakMe = true;
 			for (let index=startLine; index<arr.length; index++){
-				console.log(arr[index])
 				if (arr[index].trimStart().startsWith(arrKey[0] + ':')){
 					if (arrKey.length === 1){
 						const startingPosition = arr[index].indexOf(arrKey[0] + ':') + arrKey[0].length +2;
