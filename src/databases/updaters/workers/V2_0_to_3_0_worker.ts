@@ -18,10 +18,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		for (let filesIndex=0; filesIndex<files.length; filesIndex++){
 			const file: TFile = files[filesIndex];
 
-			let fileContent = await this.app.vault.read(file);
-			const fileContentArray = await fileContent.split('\n');
-
-			const cachedMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+			let cachedMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (cachedMetadata == null) continue;
 
 			if (cachedMetadata?.frontmatter?.tags == null) {
@@ -78,11 +75,15 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				}
 			}
 
-			const type = this.tagHelper.getDataType(tag);
 			if (type === undefined) {
-				if (reporter !== undefined) reporter.addFileUpdated();
-				continue;
+				type = this.tagHelper.getDataType(tag);
+				if (type === undefined) {
+					if (reporter !== undefined) reporter.addFileUpdated();
+					continue;
+				}
 			}
+
+			const fileContentArray = await fileContent.split('\n');
 
 			let frontmatterMetadataStartLine: number|undefined = undefined;
 			let frontmatterMetadataEndLine: number|undefined = undefined;
@@ -186,9 +187,24 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			fileContent = fileContentArray.join('\n');
 			this.app.vault.modify(file, fileContent)
 				.then(() => {
+					const settings: any = this.settings;
+					delete settings.campaignTag;
+					delete settings.adventureTag;
+					delete settings.actTag;
+					delete settings.sceneTag;
+					delete settings.sessionTag;
+					delete settings.subplotTag;
+					delete settings.npcTag;
+					delete settings.pcTag;
+					delete settings.clueTag;
+					delete settings.eventTag;
+					delete settings.locationTag;
+					delete settings.factionTag;
+					delete settings.musicTag;
+					this.updateSettings(settings, false);
+
 					if (reporter !== undefined) reporter.addFileUpdated();
 				});
-
 		}
 	}
 
