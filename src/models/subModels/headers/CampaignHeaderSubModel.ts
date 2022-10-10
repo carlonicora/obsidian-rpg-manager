@@ -30,8 +30,13 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 				new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
-		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentComponent.id)
-			.sort(this.factories.sorter.create<ComponentInterface>([
+		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentComponent.id);
+		if (this.data.currentAdventureId !== undefined) {
+			const currentAdventureId = +this.data.currentAdventureId.split('/')[2];
+			additionalInformation.acts = additionalInformation.acts.filter((act: ActInterface) => act.id.adventureId === currentAdventureId)
+		}
+
+		additionalInformation.acts.sort(this.factories.sorter.create<ComponentInterface>([
 				new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
