@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {EventMetadataInterface} from "../../../metadatas/components/EventMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class EventTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.eventTag + '/' + this.campaignId);
+		frontmatter.tags.push(TagHelper.eventTag + '/' + this.campaignId);
 	}
 
 	protected generateDataCodeBlock(

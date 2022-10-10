@@ -187,8 +187,13 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	public async updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,
+		partial = true,
 	): Promise<void> {
-		Object.assign(this.settings, settings);
+		if (partial) {
+			Object.assign(this.settings, settings);
+		} else {
+			this.settings = settings as RpgManagerSettingsInterface;
+		}
 		await this.saveData(this.settings);
 	}
 

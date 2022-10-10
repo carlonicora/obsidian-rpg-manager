@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {ClueMetadataInterface} from "../../../metadatas/components/ClueMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class ClueTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.clueTag + '/' + this.campaignId);
+		frontmatter.tags.push(TagHelper.clueTag + '/' + this.campaignId);
 	}
 
 	protected generateDataCodeBlock(

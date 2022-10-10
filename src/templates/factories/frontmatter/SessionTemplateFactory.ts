@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SessionMetadataInterface} from "../../../metadatas/components/SessionMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.sessionTag + '/' + this.campaignId + '/' + this.sessionId);
+		frontmatter.tags.push(TagHelper.sessionTag + '/' + this.campaignId + '/' + this.sessionId);
 	}
 
 	protected generateDataCodeBlock(

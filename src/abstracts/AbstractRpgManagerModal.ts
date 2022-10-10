@@ -44,7 +44,8 @@ export abstract class AbstractRpgManagerModal extends Modal implements RpgManage
 
 	public updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,
+		partial = true,
 	): Promise<void> {
-		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings);
+		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings, partial);
 	}
 }

@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SubplotMetadataInterface} from "../../../metadatas/components/SubplotMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class SubplotTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.subplotTag + '/' + this.campaignId);
+		frontmatter.tags.push(TagHelper.subplotTag + '/' + this.campaignId);
 	}
 
 	protected generateDataCodeBlock(

@@ -35,10 +35,47 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				continue;
 			}
 
-			const tag = this.tagHelper.getTag(tags);
+			let fileContent = await this.app.vault.read(file);
+
+			let tag = this.tagHelper.getTag(tags);
+
+			let type: ComponentType|undefined = undefined;
+
 			if (tag === undefined) {
-				if (reporter !== undefined) reporter.addFileUpdated();
-				continue;
+				const fuzzyGuessedTag = this.tagHelper.fuzzyTagsGuesser(tags);
+
+				if (fuzzyGuessedTag !== undefined) {
+					tag = this.tagHelper.dataSettings.get(fuzzyGuessedTag.type);
+
+					if (tag !== undefined) {
+						type = fuzzyGuessedTag.type;
+
+						let parameterCount = 1;
+						switch (type) {
+							case ComponentType.Adventure:
+							case ComponentType.Session:
+								parameterCount = 2;
+								break;
+							case ComponentType.Act:
+								parameterCount = 3;
+								break;
+							case ComponentType.Scene:
+								parameterCount = 4;
+								break;
+						}
+						const tagElements: Array<string> = fuzzyGuessedTag.tag.split('/');
+						const remainingTagElements = tagElements.slice(tagElements.length - parameterCount);
+						if (!tag.endsWith('/')) tag += '/';
+						tag += remainingTagElements.join('/');
+
+						fileContent = fileContent.replaceAll(fuzzyGuessedTag.tag, tag);
+					}
+				}
+
+				if (tag === undefined) {
+					if (reporter !== undefined) reporter.addFileUpdated();
+					continue;
+				}
 			}
 
 			const type = this.tagHelper.getDataType(tag);

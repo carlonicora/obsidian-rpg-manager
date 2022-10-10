@@ -2,12 +2,13 @@ import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponen
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SceneMetadataInterface} from "../../../metadatas/components/SceneMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId);
+		frontmatter.tags.push(TagHelper.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId);
 	}
 
 	protected generateDataCodeBlock(

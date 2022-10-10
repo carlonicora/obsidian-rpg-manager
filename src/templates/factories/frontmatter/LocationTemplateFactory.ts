@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {LocationMetadataInterface} from "../../../metadatas/components/LocationMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.locationTag + '/' + this.campaignId);
+		frontmatter.tags.push(TagHelper.locationTag + '/' + this.campaignId);
 	}
 
 	protected generateDataCodeBlock(

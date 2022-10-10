@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {CharacterMetadataInterface} from "../../../metadatas/components/CharacterMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class CharacterTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.pcTag + '/' + this.campaignId);
+		frontmatter.tags.push(TagHelper.pcTag + '/' + this.campaignId);
 	}
 
 	protected generateDataCodeBlock(

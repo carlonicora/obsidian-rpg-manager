@@ -1,12 +1,13 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {CampaignMetadataInterface} from "../../../metadatas/components/CampaignMetadataInterface";
+import {TagHelper} from "../../../databases/TagHelper";
 
 export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 	public addFrontmatterData(
 		frontmatter: any,
 	): void {
-		frontmatter.tags.push(this.settings.campaignTag +'/' + this.campaignId);
+		frontmatter.tags.push(TagHelper.campaignTag +'/' + this.campaignId);
 		frontmatter.settings = "Agnostic";
 	}
 
