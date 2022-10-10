@@ -1,11 +1,4 @@
-import {
-	addIcon,
-	Component,
-	MarkdownPostProcessorContext,
-	MarkdownView,
-	Plugin, setIcon,
-	WorkspaceLeaf
-} from 'obsidian';
+import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, setIcon, WorkspaceLeaf} from 'obsidian';
 import {Controller} from "./Controller";
 import {ComponentType} from "./databases/enums/ComponentType";
 import {Factories} from "./factories/Factories";
@@ -28,6 +21,7 @@ import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
 import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./databases/components/interfaces/SceneInterface";
 import {UpdaterModal} from "./modals/UpdaterModal";
+import {LogMessageType} from "./loggers/enums/LogMessageType";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
@@ -92,14 +86,14 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	public async initialise(
 	): Promise<void> {
-		const reloadStart = Date.now();
-
 		this.registerCodeBlock();
 		this.registerCommands();
 
 		DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;
+				this.factories.logger.info(LogMessageType.Database, 'Database Initialised', this.database)
+
 				//console.info(this.database);
 				this.factories.runningTimeManager.updateMedianTimes(true);
 
@@ -132,13 +126,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 					}
 				});
-
-
-				console.info(
-					`RPG Manager: ${this.database.recordset.length} outlines and elements have been indexed in ${
-						(Date.now() - reloadStart) / 1000.0
-					}s.`
-				);
 
 				if (this.isVersionUpdated) {
 					this.factories.views.showObsidianView(ViewType.ReleaseNote);

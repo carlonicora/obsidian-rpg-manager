@@ -42,10 +42,11 @@ import {AbtStageFactoryInterface} from "../plots/factories/interfaces/AbtStageFa
 import {AbtStageFactory} from "../plots/factories/AbtStageFactory";
 import {RelationshipFactoryInterface} from "../relationships/factories/interfaces/RelationshipFactoryInterface";
 import {RelationshipFactory} from "../relationships/factories/RelationshipFactory";
-import {LoggerFactoryInterface} from "../loggers/factories/interfaces/LoggerFactoryInterface";
-import {LoggerFactory} from "../loggers/factories/LoggerFactory";
 import {FileManipulatorFactoryInterface} from "../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
 import {FileManipulatorFactory} from "../manipulators/factories/FileManipulatorFactory";
+import {LogFactoryInterface} from "../loggers/interfaces/LogFactoryInterface";
+import {LogFactory} from "../loggers/factories/LogFactory";
+import {LogWriterType} from "../loggers/enums/LogWriterType";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -69,7 +70,7 @@ export class Factories implements FactoriesInterface{
 	public storyCircleStage: StoryCircleStageFactoryInterface;
 	public abtStage: AbtStageFactoryInterface;
 	public relationship: RelationshipFactoryInterface;
-	public logger: LoggerFactoryInterface;
+	public logger: LogFactoryInterface;
 	public fileManipulator: FileManipulatorFactoryInterface;
 
 	constructor(
@@ -95,7 +96,7 @@ export class Factories implements FactoriesInterface{
 		this.storyCircleStage = new StoryCircleStageFactory(this.app);
 		this.abtStage = new AbtStageFactory(this.app);
 		this.relationship = new RelationshipFactory(this.app);
-		this.logger = new LoggerFactory(this.app);
+		this.logger = new LogFactory(this.app, LogWriterType.Console);
 		this.fileManipulator = new FileManipulatorFactory(this.app);
 
 		this.runningTimeManager = new RunningTimeManager(this.app);

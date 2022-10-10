@@ -10,6 +10,7 @@ import {CampaignInterface} from "./databases/components/interfaces/CampaignInter
 import {
 	ControllerMetadataInterface
 } from "./metadatas/controllers/ControllerMetadataInterface";
+import {LogMessageType} from "./loggers/enums/LogMessageType";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;
@@ -74,7 +75,10 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	): ModelInterface {
 		if (this.campaignSettings === undefined) this._initialiseCampaignSettings();
 
-		if (this.campaignSettings === undefined) throw new Error('');
+		if (this.campaignSettings === undefined) {
+			this.factories.logger.error(LogMessageType.Model, 'No campaign setting available', this);
+			throw new Error('');
+		}
 
 		return this.factories.models.create(
 			this.campaignSettings,

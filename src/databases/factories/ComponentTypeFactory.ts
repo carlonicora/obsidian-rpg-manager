@@ -1,6 +1,7 @@
 import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {ComponentTypeFactoryInterface} from "./interfaces/ComponentTypeFactoryInterface";
 import {ComponentType} from "../enums/ComponentType";
+import {LogMessageType} from "../../loggers/enums/LogMessageType";
 
 export class ComponentTypeFactory extends AbstractFactory implements ComponentTypeFactoryInterface {
 	private contentTypeMap: Map<ComponentType, string> = new Map<ComponentType, string>([
@@ -28,7 +29,10 @@ export class ComponentTypeFactory extends AbstractFactory implements ComponentTy
 			if (value === readableContentType.toLowerCase()) response = type;
 		});
 
-		if (response === undefined) throw new Error('wrong component type: ' + readableContentType);
+		if (response === undefined) {
+			this.factories.logger.error(LogMessageType.ComponentInitialisation, 'wrong component type: ' + readableContentType, this);
+			throw new Error('wrong component type: ' + readableContentType);
+		}
 
 		return response;
 	}
@@ -38,7 +42,10 @@ export class ComponentTypeFactory extends AbstractFactory implements ComponentTy
 	): string {
 		const response: string|undefined = this.contentTypeMap.get(type);
 
-		if (response === undefined) throw new Error('Non existing component type: ' + type);
+		if (response === undefined) {
+			this.factories.logger.error(LogMessageType.ComponentInitialisation, 'Non existing component type: ' + type, this);
+			throw new Error('Non existing component type: ' + type);
+		}
 
 		return response;
 	}

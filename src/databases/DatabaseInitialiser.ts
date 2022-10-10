@@ -13,6 +13,7 @@ import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {ComponentStage} from "./components/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
+import {LogMessageType} from "../loggers/enums/LogMessageType";
 
 export class DatabaseInitialiser {
 	private static campaignSettings: Map<number, CampaignSetting> = new Map();
@@ -31,12 +32,19 @@ export class DatabaseInitialiser {
 		this.factories = this.app.plugins.getPlugin('rpg-manager').factories;
 		this.tagHelper = this.app.plugins.getPlugin('rpg-manager').tagHelper;
 
+		const group = this.factories.logger.createGroup();
+
 		const response: DatabaseInterface = await this.factories.database.create();
+		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
 		await this._loadCampaignSettings();
 
+		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Campaign Settings Loaded'));
+
 		const components: Array<ComponentInterface> = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
+
+		let componentCounter = 0;
 		for (let index=0; index<markdownFiles.length; index++){
 			try {
 				await this.createComponent(markdownFiles[index])
@@ -57,11 +65,14 @@ export class DatabaseInitialiser {
 
 						response.create(component);
 						components.push(component);
+						componentCounter++;
 					});
 			} catch (e) {
 				this.misconfiguredTags.set(markdownFiles[index], e);
 			}
 		}
+
+		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, componentCounter + ' Components created'));
 
 		await Promise.all(components);
 
@@ -76,15 +87,19 @@ export class DatabaseInitialiser {
 
 		Promise.all(metadata)
 			.then(() => {
+				group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Data read for ' + metadata.length + ' Components'));
 				this._initialiseRelationships(response)
 					.then(() => {
+						group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Relationships created'));
 						this._validateComponents(response)
 							.then(() => {
+								group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Components Validated'));
 								response.ready();
-
 								if (this.misconfiguredTags.size > 0){
 									new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
 								}
+
+								this.factories.logger.group(group);
 							});
 					});
 			});
