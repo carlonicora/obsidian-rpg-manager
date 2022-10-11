@@ -5,10 +5,6 @@
   font-size: 0.9em;
 }
 
-.rpgm-container {
-  overflow: hidden;
-}
-
 .rpgm-header {
   background-size: cover;
   color: var(--background-primary);
@@ -38,7 +34,6 @@
   padding-left: 30px;
   width: 100%;
   margin-top: 50px;
-  margin-bottom: 50px;
 }
 .rpgm-header-overlay .rpgm-campaign-name {
   display: inline-block;
@@ -65,107 +60,6 @@
   width: 100%;
 }
 
-.rpgm-timeline {
-  margin-top: 50px;
-}
-.rpgm-timeline ul {
-  padding: 1em 0 0 2em;
-  margin: 0;
-  list-style: none;
-  position: relative;
-  padding-inline-start: 0px;
-}
-.rpgm-timeline ul::before {
-  content: " ";
-  height: 100%;
-  width: 1px;
-  background-color: var(--background-modifier-border);
-  position: absolute;
-  top: 0;
-  left: 133px;
-  z-index: 1;
-}
-.rpgm-timeline li {
-  margin-bottom: 10px;
-}
-.rpgm-timeline li div {
-  display: inline-block;
-  margin: 1em 0;
-  vertical-align: top;
-}
-.rpgm-timeline .bullet {
-  width: 1em;
-  height: 1em;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background: var(--text-muted);
-  z-index: 2;
-  margin-right: 10px;
-  border: 1px solid var(--text-muted);
-  margin-top: 0px;
-}
-.rpgm-timeline .bullet.red {
-  border: 1px solid var(--text-error);
-  background: var(--text-error);
-}
-.rpgm-timeline .bullet.green {
-  border: 1px solid var(--interactive-success);
-  background: var(--interactive-success);
-}
-.rpgm-timeline .bullet.blue {
-  border: 1px solid var(--background-modifier-success);
-  background: var(--background-modifier-success);
-}
-.rpgm-timeline .bullet.purple {
-  border: 1px solid var(--interactive-accent);
-  background: var(--interactive-accent);
-}
-.rpgm-timeline .event-time-container {
-  width: 115px;
-  margin-top: -7px;
-  margin-right: 10px;
-  text-align: right;
-}
-.rpgm-timeline .event-time-container .event-time {
-  width: 115px;
-  font-size: 0.75em;
-  padding-top: 0.25em;
-  margin-top: 0px;
-}
-.rpgm-timeline .event-time-container .event-type {
-  width: 115px;
-  font-size: 0.75em;
-  margin-left: 0px;
-  margin-top: 0px;
-}
-.rpgm-timeline .event-time-container .event-type.red {
-  color: var(--text-error);
-}
-.rpgm-timeline .event-time-container .event-type.green {
-  color: var(--interactive-success);
-}
-.rpgm-timeline .event-time-container .event-type.blue {
-  color: var(--background-modifier-success);
-}
-.rpgm-timeline .event-time-container .event-type.purple {
-  color: var(--interactive-accent);
-}
-.rpgm-timeline .event-details {
-  margin-top: -4px;
-  width: calc(100% - 151px);
-}
-.rpgm-timeline .event-details h3 {
-  font-size: 1.1em;
-  font-weight: 400;
-  margin: 0;
-}
-.rpgm-timeline .event-details span {
-  margin: 0;
-  font-size: 0.9em;
-  font-weight: 400;
-  color: var(--text-muted);
-}
-
 .rpg-error {
   border: solid 1px var(--text-error);
   background-color: var(--background-secondary);
@@ -177,45 +71,22 @@
   font-weight: 400;
 }
 
-.rpgm-box {
-  border: solid 1px var(--background-modifier-border);
-  padding: 10px 25px;
-  font-size: 1em;
-  margin-top: 20px;
-  margin-bottom: 40px;
+.rpgm-modal {
+  display: block;
+  padding: 20px;
 }
-.rpgm-box p {
-  margin-top: 10px;
-}
-.rpgm-box .title {
-  font-size: 0.7em;
-  font-variant: all-small-caps;
-  overflow: hidden;
-  white-space: nowrap;
-  margin-top: -10px;
-  text-align: right;
-  margin-right: -20px;
-  color: var(--text-muted);
-}
-.rpgm-box.white {
-  background-color: var(--background-primary);
-}
-.rpgm-box.off-white {
-  background-color: var(--background-primary-alt);
-}
-
-.modal-content .rpgm-modal-scene-descriptions .description-container {
+.rpgm-modal .rpgm-modal-scene-descriptions .description-container {
   margin-top: 20px;
   border-top: solid 1px var(--background-modifier-border);
 }
-.modal-content .rpgm-modal-scene-descriptions .description-container div, .modal-content .rpgm-modal-scene-descriptions .description-container span {
+.rpgm-modal .rpgm-modal-scene-descriptions .description-container div, .rpgm-modal .rpgm-modal-scene-descriptions .description-container span {
   margin-left: 20px;
 }
-.modal-content .rpgm-modal-scene-descriptions .description-container span {
+.rpgm-modal .rpgm-modal-scene-descriptions .description-container span {
   font-style: italic;
   font-size: 0.9em;
 }
-.modal-content .rpgm-modal-relationships select {
+.rpgm-modal .rpgm-modal-relationships select {
   background-color: var(--background-secondary);
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;
@@ -224,76 +95,47 @@
   width: 100%;
   box-shadow: none;
 }
-.modal-content .rpgm-modal-relationships select:hover {
+.rpgm-modal .rpgm-modal-relationships select:hover {
   box-shadow: none;
   background-color: var(--interactive-hover);
   cursor: pointer;
 }
-.modal-content .rpgm-modal-relationships .relationships {
+.rpgm-modal .rpgm-modal-relationships .relationships {
   margin-top: 20px;
   min-height: 400px;
 }
-.modal-content .rpgm-modal-relationships .relationships table {
+.rpgm-modal .rpgm-modal-relationships .relationships table {
   width: 100%;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr:nth-child(odd) {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr:nth-child(odd) {
   background-color: var(--background-primary-alt);
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td {
   height: 30px;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td input {
   margin: 0px 15px;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input:disabled, .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td select:disabled {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td input:disabled, .rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td select:disabled {
   background-color: var(--background-modifier-border);
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.label {
   padding: 0px 10px;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label span {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.label span {
   font-size: 0.8em;
   font-style: italic;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.description {
   max-width: 50%;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description p {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.description p {
   font-size: 0.8em;
 }
-.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.selector select {
+.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.selector select {
   background-color: var(--background-secondary);
   min-width: 10px;
   width: 100%;
-}
-.modal-content .rpgm-elements .rpgm-elements-header {
-  margin-bottom: -2px;
-}
-.modal-content .rpgm-elements .rpgm-elements-header span {
-  padding: 0px 10px;
-  border-top: solid 1px var(--background-modifier-border);
-  border-right: solid 1px var(--background-modifier-border);
-}
-.modal-content .rpgm-elements .rpgm-elements-header .first {
-  border-left: solid 1px var(--background-modifier-border);
-}
-.modal-content .rpgm-elements .rpgm-elements-header .last {
-  margin-right: 25px;
-}
-.modal-content .rpgm-elements .rpgm-elements-header .selected {
-  border-bottom: solid 2px var(--background-secondary);
-}
-.modal-content .rpgm-elements .rpgm-elements-container {
-  border: solid 1px var(--background-modifier-border);
-  min-height: 50px;
-}
-.modal-content .rpgm-elements .rpgm-elements-container ul {
-  list-style: none;
-}
-
-.rpgm-modal {
-  display: block;
-  padding: 20px;
 }
 .rpgm-modal h2.rpgm-modal-title {
   text-align: center;

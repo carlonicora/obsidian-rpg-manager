@@ -5,10 +5,6 @@
 	font-size: 0.9em;
 }
 
-.rpgm-container {
-	overflow: hidden;
-}
-
 .rpgm-header {
 	background-size: cover;
 	color: var(--background-primary);
@@ -39,7 +35,6 @@
 		padding-left: 30px;
 		width: 100%;
 		margin-top: 50px;
-		margin-bottom: 50px;
 	}
 
 	.rpgm-campaign-name {
@@ -70,126 +65,6 @@
 	}
 }
 
-.rpgm-timeline {
-	margin-top: 50px;
-
-	ul {
-		padding: 1em 0 0 2em;
-		margin: 0;
-		list-style: none;
-		position: relative;
-		padding-inline-start: 0px;
-
-		&::before {
-			content: ' ';
-			height: 100%;
-			width: 1px;
-			background-color: var(--background-modifier-border);
-			position: absolute;
-			top: 0;
-			left: 133px;
-			z-index: 1;
-		}
-	}
-
-	li {
-		margin-bottom: 10px;
-	}
-
-	li div{
-		display: inline-block;
-		margin: 1em 0;
-		vertical-align: top;
-	}
-
-	.bullet {
-		width: 1em;
-		height: 1em;
-		box-sizing: border-box;
-		border-radius: 50%;
-		background: var(--text-muted);
-		z-index: 2;
-		margin-right: 10px;
-		border: 1px solid var(--text-muted);
-		margin-top: 0px;
-
-		&.red {
-			border: 1px solid var(--text-error);
-			background: var(--text-error);
-		}
-
-		&.green {
-			border: 1px solid var(--interactive-success);
-			background: var(--interactive-success);
-		}
-
-		&.blue {
-			border: 1px solid var(--background-modifier-success);
-			background: var(--background-modifier-success);
-		}
-
-		&.purple {
-			border: 1px solid var(--interactive-accent);
-			background: var(--interactive-accent);
-		}
-	}
-
-	.event-time-container {
-		width: 115px;
-		margin-top: -7px;
-		margin-right: 10px;
-		text-align: right;
-
-		.event-time {
-			width: 115px;
-			font-size: 0.75em;
-			padding-top: 0.25em;
-			margin-top: 0px;
-		}
-
-		.event-type {
-			width: 115px;
-			font-size: 0.75em;
-			margin-left: 0px;
-			margin-top: 0px;
-
-			&.red {
-				color: var(--text-error);
-			}
-
-			&.green {
-				color: var(--interactive-success);
-			}
-
-			&.blue {
-				color: var(--background-modifier-success);
-			}
-
-			&.purple {
-				color: var(--interactive-accent);
-			}
-		}
-	}
-
-	.event-details {
-		margin-top: -4px;
-		width: calc(100% - 151px);
-
-		h3 {
-			font-size: 1.1em;
-			font-weight: 400;
-			margin: 0;
-		}
-
-		span {
-			margin: 0;
-			font-size: 0.9em;
-			font-weight: 400;
-			color: var(--text-muted);
-		}
-	}
-}
-
 .rpg-error {
 	border: solid 1px var(--text-error);
 	background-color: var(--background-secondary);
@@ -202,37 +77,14 @@
 	}
 }
 
-.rpgm-box {
-	border: solid 1px var(--background-modifier-border);
-	padding: 10px 25px;
-	font-size: 1.0em;
-	margin-top: 20px;
-	margin-bottom: 40px;
+.modal-content {
 
-	p {
-		margin-top: 10px;
-	}
-
-	.title {
-		font-size: 0.7em;
-		font-variant: all-small-caps;
-		overflow: hidden;
-		white-space: nowrap;
-		margin-top: -10px;
-		text-align: right;
-		margin-right: -20px;
-		color: var(--text-muted);
-	}
-
-	&.white{
-		background-color: var(--background-primary);
-	}
-	&.off-white{
-		background-color: var(--background-primary-alt);
-	}
 }
 
-.modal-content {
+.rpgm-modal {
+	display: block;
+	padding: 20px;
+
 	.rpgm-modal-scene-descriptions {
 		.description-container{
 			margin-top: 20px;
@@ -318,45 +170,6 @@
 			}
 		}
 	}
-
-
-	.rpgm-elements{
-		.rpgm-elements-header{
-			margin-bottom: -2px;
-
-			span {
-				padding: 0px 10px;
-				border-top: solid 1px var(--background-modifier-border);
-				border-right: solid 1px var(--background-modifier-border);
-			}
-
-			.first {
-				border-left: solid 1px var(--background-modifier-border);
-			}
-
-			.last {
-				margin-right: 25px;
-			}
-
-			.selected {
-				border-bottom: solid 2px var(--background-secondary);
-			}
-		}
-
-		.rpgm-elements-container {
-			border: solid 1px var(--background-modifier-border);
-			min-height: 50px;
-
-			ul {
-				list-style: none;
-			}
-		}
-	}
-}
-
-.rpgm-modal {
-	display: block;
-	padding: 20px;
 
 	h2.rpgm-modal-title {
 		text-align: center;
