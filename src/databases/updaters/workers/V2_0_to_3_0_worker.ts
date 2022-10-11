@@ -39,13 +39,20 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				continue;
 			}
 
+			let fileContent = await this.app.vault.read(file);
+
 			const tagAndType = this._getTagAndType(tags);
 			if (tagAndType === undefined){
 				if (reporter !== undefined) reporter.addFileUpdated();
 				continue;
+			} else {
+				if (fileContent.indexOf('```RpgManager') === -1){
+					if (reporter !== undefined) reporter.addFileUpdated();
+					continue;
+				}
 			}
 
-			let fileContent = await this.app.vault.read(file);
+
 
 			if (tagAndType.updated === true){
 				fileContent = fileContent.replaceAll(tagAndType.fuzzyGuessedTag, tagAndType.tag);
