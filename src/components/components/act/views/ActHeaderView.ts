@@ -5,6 +5,7 @@ import {SceneAnalyser} from "../../../../analyser/SceneAnalyser";
 import {AbstractPlotHeaderView} from "../../../../views/abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../../../views/HeadlessTableView";
 import {ActInterface} from "../interfaces/ActInterface";
+import {SceneBuilderModal} from "../../../../modals/SceneBuilderModal";
 
 export class ActHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: ActInterface;

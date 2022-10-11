@@ -1,8 +1,8 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App} from "obsidian";
-import {IdInterface} from "../databases/interfaces/IdInterface";
 import {AbstractModal} from "./abstracts/AbstractModal";
-import {SceneType, sceneTypeDescription} from "../databases/enums/SceneType";
+import {IdInterface} from "../id/interfaces/IdInterface";
+import {SceneType, sceneTypeDescription} from "../components/enums/SceneType";
 
 export class SceneBuilderModal extends AbstractModal {
 	private scenesContainerEl: HTMLTableSectionElement;
