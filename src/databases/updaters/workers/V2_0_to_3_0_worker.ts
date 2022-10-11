@@ -164,6 +164,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				const computedTag = tagAndType.type + '-' + campaignSettings + '-' + tagAndType.tag.substring(defaultTag.length)
 
 				fileContentArray.push('```RpgManagerID');
+				fileContentArray.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
 				fileContentArray.push('id: ' + computedTag);
 				fileContentArray.push('checksum: ' + Md5.hashStr(computedTag));
 				fileContentArray.push('```');
