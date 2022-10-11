@@ -5,7 +5,7 @@ import {RelationshipType} from "./enums/RelationshipType";
 import {Md5} from "ts-md5";
 
 export class RelationshipList implements RelationshipListInterface {
-	private relationships: Array<RelationshipInterface> = [];
+	public relationships: Array<RelationshipInterface> = [];
 
 	private _getIndexOfExistingRelationship(
 		path: string,
@@ -43,7 +43,7 @@ export class RelationshipList implements RelationshipListInterface {
 		if (indexOfExistingRelationship !== -1 && existingRelationship !== undefined) {
 			if (
 				(relationship.type !== RelationshipType.Reversed && existingRelationship?.type === RelationshipType.Reversed) ||
-				(relationship.type !== existingRelationship.type)
+				(relationship.type === existingRelationship.type)
 			){
 				if (indexOfExistingRelationship !== -1) this.relationships.splice(indexOfExistingRelationship, 1);
 				this.relationships.push(relationship);

@@ -22,6 +22,7 @@ import {LogMessageType} from "../loggers/enums/LogMessageType";
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public recordset: Array<ComponentInterface> = [];
 	private basenameIndex: Map<string, string>;
+	private isDatabaseReady = false;
 
 	constructor(
 		app: App,
@@ -35,12 +36,18 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	 */
 	public async ready(
 	): Promise<void> {
+		this.isDatabaseReady = true;
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.onDelete(file)));
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
+	}
+
+	get isReady(
+	): boolean {
+		return this.isDatabaseReady;
 	}
 
 	public create(
@@ -260,24 +267,6 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 			if (component === undefined) {
 				component = await DatabaseInitialiser.createComponent(file);
-			} else {
-				const metadata: CachedMetadata | null = this.app.metadataCache.getFileCache(file);
-				if (metadata == null) return ;
-
-				const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
-				if (tags.length === 0 || !this.tagHelper.hasRpgManagerTags(tags)) {
-					this.delete(component);
-					return;
-				}
-
-				let rpgManagerTagCounter = 0;
-				for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
-					if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-					if (rpgManagerTagCounter > 1) {
-						this.factories.logger.error(LogMessageType.DatabaseInitialisation, 'Multiple component with the same tag found', this);
-						throw new MultipleTagsError(this.app, undefined);
-					}
-				}
 			}
 
 			if (component === undefined) return;

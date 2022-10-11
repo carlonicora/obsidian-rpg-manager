@@ -112,7 +112,7 @@ export class DatabaseInitialiser {
 		})
 	}
 
-	private static async _readID(
+	public static async readID(
 		file: TFile
 	): Promise<IdInterface|undefined> {
 		const metadata = this.app.metadataCache.getFileCache(file);
@@ -142,7 +142,7 @@ export class DatabaseInitialiser {
 	public static async createComponent(
 		file: TFile,
 	): Promise<ComponentInterface|undefined> {
-		const id: IdInterface|undefined = await this._readID(file);
+		const id: IdInterface|undefined = await this.readID(file);
 		if (id === undefined) return undefined;
 
 		if (!id.isValid) throw new TagMisconfiguredError(this.app, id);
@@ -157,21 +157,29 @@ export class DatabaseInitialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		await database.recordset.forEach((component: ComponentInterface) => {
-			component.initialiseRelationships();
+		let relationshipsInitialisation: Array<Promise<void>> = [];
+
+		database.recordset.forEach((component: ComponentInterface) => {
+			relationshipsInitialisation.push(component.initialiseRelationships());
 		});
 
-		await database.recordset.forEach((component: ComponentInterface) => {
-			component.getRelationships(database).forEach((relationship: RelationshipInterface) => {
-				if (relationship.component !== undefined){
-					this.factories.relationship.createFromReverse(component, relationship);
+		return Promise.all(relationshipsInitialisation)
+			.then(() => {
+				for (let index=0; index<database.recordset.length; index++){
+					const relationships = database.recordset[index].getRelationships(database).relationships;
+					for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
+						if (relationships[relationshipIndex].component !== undefined){
+							this.factories.relationship.createFromReverse(database.recordset[index], relationships[relationshipIndex]);
+						}
+					}
 				}
-			});
-		});
 
-		await database.recordset.forEach((component: ComponentInterface) => {
-			component.touch();
-		});
+				for (let index=0; index<database.recordset.length; index++){
+					database.recordset[index].touch();
+				}
+
+				return
+			});
 	}
 
 	public static async reinitialiseRelationships(

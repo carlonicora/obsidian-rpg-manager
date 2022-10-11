@@ -39,8 +39,6 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	) {
 		super(app, container);
 
-		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
-
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
@@ -92,16 +90,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	private async _initialise(
 	): Promise<boolean> {
-		if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')){
-			console.log(
-				'component version: ' + this.currentComponent.version + '\n' +
-				'saving time :' + this.currentComponent.file.stat.mtime + '\n' +
-				'controller version : ' + this.componentVersion
-			);
-		}
-
 		if (this.componentVersion !== undefined && this.currentComponent.version === this.componentVersion) {
-			if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('component same version')
 			return false;
 		}
 
@@ -114,10 +103,9 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	private async waitForComponentToBeReady() {
 		const poll = (resolve: any) => {
-			if(this.currentComponent.version !== undefined) {
+			if(this.database.isReady && this.currentComponent.version !== undefined) {
 				resolve();
 			} else {
-				console.log('waiting...')
 				setTimeout(_ => poll(resolve), 100);
 			}
 		}
@@ -127,14 +115,12 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 	onload() {
 		super.onload();
-		console.log(this.container)
 		this._render();
 	}
 
 	private async _render(
 		forceRefresh=false,
 	): Promise<void> {
-
 		if (this.database === undefined) return;
 
 		if (this.currentComponent === undefined){
@@ -145,18 +131,12 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 
 		await this.waitForComponentToBeReady();
 
-		if (await !this.isComponentVisible()) return;
-
-		if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.warn('trying to render')
+		//if (await !this.isComponentVisible()) return;
 
 		if (forceRefresh) this.componentVersion = undefined;
 
-		if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.error('trying to reload')
-
 		if (await this._initialise()) {
-			if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('Emptying...')
 			this.container.empty();
-			if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('...emptied!')
 
 			for (let modelCounter = 0; modelCounter < this.models.length; modelCounter++) {
 				await this.models[modelCounter].generateData()
@@ -169,25 +149,21 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 							);
 
 							view.render(this.container, element);
-							if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('...')
 						});
 					});
 			}
 
 			this.container.show();
-			console.log(this.container)
 		}
 	}
 
 	private async isComponentVisible(
 	): Promise<boolean> {
 		if (this.currentComponent === undefined) {
-			console.log('no component')
 			return false;
 		}
 
 		if (this.currentComponent.file === undefined) {
-			console.log('no file')
 			return false;
 		}
 

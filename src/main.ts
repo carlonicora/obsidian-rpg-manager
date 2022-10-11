@@ -34,8 +34,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	ready = false;
 
-	private components: Map<string, Controller>;
-
 	async onload() {
 		this.version = this.manifest.version;
 		this.factories = await new Factories(this.app);
@@ -67,7 +65,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async onLayoutReady(){
-		this.components = new Map<string, Controller>();
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.RPGManager.toString());
@@ -160,31 +157,15 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		component: Component | MarkdownPostProcessorContext,
 		sourcePath: string
 	) {
-		const controllerId = sourcePath+source;
-		let controller = this.components.get(controllerId);
-
-		if (controller !== undefined){
-			console.warn('same version')
-			controller.componentVersion = undefined;
-		} else {
-			console.warn('new')
-			controller = new Controller(
+		component.addChild(
+			new Controller(
 				this.app,
 				el,
 				source,
 				component,
 				sourcePath,
-			);
-
-			this.components.set(controllerId, controller);
-		}
-
-		if (controller !== undefined) {
-			console.warn('component version ' + controller.componentVersion)
-			component.addChild(
-				controller
-			);
-		}
+			)
+		);
 	}
 
 	public async createRpgDataView(

@@ -13,6 +13,8 @@ export interface DatabaseInterface {
 	ready(
 	): void;
 
+	get isReady(): boolean;
+
 	read<T>(
 		query: any,
 	): Array<T>;

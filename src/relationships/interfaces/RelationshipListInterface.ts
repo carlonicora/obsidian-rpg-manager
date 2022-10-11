@@ -2,6 +2,8 @@ import {RelationshipInterface} from "./RelationshipInterface";
 import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
 
 export interface RelationshipListInterface {
+	relationships: Array<RelationshipInterface>;
+
 	existsAlready(
 		component: ComponentInterface,
 	): boolean;
