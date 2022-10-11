@@ -1,5 +1,6 @@
 import {ComponentType} from "../../enums/ComponentType";
 import {IdInterface} from "../../interfaces/IdInterface";
+import {CampaignSetting} from "../../enums/CampaignSetting";
 
 export interface IdFactoryInterface {
 	create(
@@ -10,6 +11,7 @@ export interface IdFactoryInterface {
 		sceneId?: string|number|undefined,
 		sessionId?: string|number|undefined,
 		existingTag?: string|undefined,
+		campaignSettings?: CampaignSetting,
 	): IdInterface;
 
 	createFromTag(

@@ -2,6 +2,7 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {ViewType} from "./enums/ViewType";
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
+import {IdSwitcherModal} from "../modals/IdSwitcherModal";
 
 export class ErrorView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Errors.toString();
@@ -44,6 +45,14 @@ export class ErrorView extends AbstractRpgManagerView {
 					null as unknown as Component,
 				);
 
+				const errorLinksEl = errorDescriptionEl.createEl('ul');
+				const errorLinkEl = errorLinksEl.createEl('li');
+				const errorLinkAnchorEl = errorLinkEl.createEl('a', {href: '#', text: 'Fix the issue'});
+				errorLinkAnchorEl.addEventListener('click', () => {
+					new IdSwitcherModal(this.app, file).open();
+				});
+
+				/*
 				const errorLinks = error.getErrorLinks();
 				if (errorLinks !== undefined){
 					const errorLinksEl = errorDescriptionEl.createEl('ul');
@@ -53,6 +62,7 @@ export class ErrorView extends AbstractRpgManagerView {
 						this.addLink(errorLinkAnchor, path);
 					});
 				}
+				 */
 			});
 		}
 

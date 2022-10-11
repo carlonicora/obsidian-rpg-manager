@@ -39,13 +39,18 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				continue;
 			}
 
+			let fileContent = await this.app.vault.read(file);
+
 			const tagAndType = this._getTagAndType(tags);
 			if (tagAndType === undefined){
 				if (reporter !== undefined) reporter.addFileUpdated();
 				continue;
+			} else {
+				if (fileContent.indexOf('```RpgManager') === -1){
+					if (reporter !== undefined) reporter.addFileUpdated();
+					continue;
+				}
 			}
-
-			let fileContent = await this.app.vault.read(file);
 
 			if (tagAndType.updated === true){
 				fileContent = fileContent.replaceAll(tagAndType.fuzzyGuessedTag, tagAndType.tag);
@@ -161,9 +166,21 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				let campaignSettings = this.campaignSettings.get(+campaignId);
 				if (campaignSettings === undefined) campaignSettings = CampaignSetting.Agnostic;
 
+				const validator = tagAndType.tag.substring(defaultTag.length).split('/');
+				let isValidTag = true;
+				for (let index=0; index<validator.length; index++){
+					if (isNaN(+validator[index])) {
+						isValidTag = false;
+						break;
+					};
+				}
+
+				if (!isValidTag) continue;
+
 				const computedTag = tagAndType.type + '-' + campaignSettings + '-' + tagAndType.tag.substring(defaultTag.length)
 
 				fileContentArray.push('```RpgManagerID');
+				fileContentArray.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
 				fileContentArray.push('id: ' + computedTag);
 				fileContentArray.push('checksum: ' + Md5.hashStr(computedTag));
 				fileContentArray.push('```');

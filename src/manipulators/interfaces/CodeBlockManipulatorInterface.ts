@@ -39,4 +39,9 @@ export interface CodeBlockManipulatorInterface {
 
 	selectData(
 	): void;
+
+	replaceID(
+		file: TFile,
+		ID: string,
+	): Promise<void>;
 }

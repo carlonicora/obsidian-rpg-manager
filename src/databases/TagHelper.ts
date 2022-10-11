@@ -268,6 +268,7 @@ export class TagHelper {
 
 		for (let index=0; index<tags.length; index++){
 			response = this.fuzzyTagGuesser(tags[index]);
+			if (response !== undefined && response.tag.indexOf('rpgm') === -1) response = undefined;
 		}
 
 		if (response !== undefined){

@@ -85,6 +85,16 @@
 	display: block;
 	padding: 20px;
 
+	.input-title {
+		font-weight: 100;
+		font-size: 0.9em;
+		font-variant-caps: small-caps;
+		color: var(--text-muted);
+		border: none;
+		text-align: left;
+		margin-top: 20px;
+	}
+
 	.rpgm-modal-scene-descriptions {
 		.description-container{
 			margin-top: 20px;

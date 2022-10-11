@@ -257,6 +257,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		};
 
 		let response = '```RpgManagerID\n';
+		response += '### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###\n';
 		response += stringifyYaml(metadata);
 		response += '```\n';
 
