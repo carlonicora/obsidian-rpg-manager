@@ -4,6 +4,7 @@ import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../interfaces/IdInterface";
 import {Id} from "../Id";
 import {Md5} from "ts-md5";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 	public create(
@@ -14,8 +15,9 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		sceneId: string|number|undefined=undefined,
 		sessionId: string|number|undefined=undefined,
 		existingTag: string|undefined=undefined,
+		campaignSettings: CampaignSetting|undefined=undefined,
 	): IdInterface {
-		return new Id(
+		const response = new Id(
 			this.app,
 			type,
 			this.convertIdElement(campaignId),
@@ -25,6 +27,10 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 			this.convertIdElement(sessionId),
 			existingTag,
 		);
+
+		if (campaignSettings !== undefined) response.campaignSettings = campaignSettings;
+
+		return response;
 	}
 
 	public createFromTag(
@@ -85,8 +91,6 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		);
 
 		response.campaignSettings = +campaignSettings;
-
-
 
 		return response;
 	}

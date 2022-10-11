@@ -10,6 +10,7 @@ export class AbstractModal extends AbstractRpgManagerModal {
 
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.addClass('rpgm-modal');
 
 		if (this.maxWidth) this.modalEl.style.width = 'var(--modal-max-width)';
 

@@ -10,13 +10,15 @@ export class IdSwitcherModal extends AbstractModal {
 	private id: IdInterface;
 	private newId: IdInterface;
 	private updateButtonEl: HTMLButtonElement;
+	private newIdEl: HTMLInputElement;
+	private errorIdEl: HTMLSpanElement;
 
 	constructor(
 		app: App,
 		private file: TFile,
 	) {
 		super(app);
-		this.title = 'Component Updated'
+		this.title = 'Component ID Updater'
 	}
 
 	onClose() {
@@ -57,11 +59,65 @@ export class IdSwitcherModal extends AbstractModal {
 			const newCampaignId = this._proposeNewId(ComponentType.Campaign);
 			this.newId = this.factories.id.create(
 				ComponentType.Campaign,
-				newCampaignId
+				newCampaignId,
+				undefined,
+				undefined,
+				undefined,
+				undefined,
+				undefined,
+				this.id.campaignSettings,
 			);
+
+			this._addIdSelector(formEl, newCampaignId.toString());
+
 			this.updateButtonEl.disabled = false;
 		} else {
 			this._addSelector(formEl, ComponentType.Campaign);
+		}
+	}
+
+	private _addIdSelector(
+		containerId: HTMLDivElement,
+		newId: string,
+	): void {
+		containerId.createDiv({cls: 'input-title', text: 'New ID'})
+		containerId.createEl('div', {text: 'The proposed new ID is ' + newId + ' but you can change it if you want'});
+		this.newIdEl = containerId.createEl('input', {type: 'text'});
+		this.errorIdEl = containerId.createSpan({text: 'The selected ID is already in use. Please select a different one'});
+		this.errorIdEl.style.display = 'none';
+		this.newIdEl.value = newId;
+		this.newIdEl.addEventListener('keyup', this._validateNewId.bind(this));
+	}
+
+	private _validateNewId(
+	): void {
+		switch (this.newId.type){
+			case ComponentType.Campaign:
+				this.newId = this.factories.id.create(ComponentType.Campaign, +this.newIdEl.value, undefined, undefined, undefined, undefined, undefined, this.id.campaignSettings);
+				break;
+			case ComponentType.Adventure:
+				this.newId = this.factories.id.create(ComponentType.Adventure, this.newId.campaignId, +this.newIdEl.value, undefined, undefined, undefined, undefined, this.id.campaignSettings);
+				break;
+			case ComponentType.Act:
+				this.newId = this.factories.id.create(ComponentType.Act, this.newId.campaignId, this.newId.adventureId, +this.newIdEl.value, undefined, undefined, undefined, this.id.campaignSettings);
+				break;
+			case ComponentType.Scene:
+				this.newId = this.factories.id.create(ComponentType.Scene, this.newId.campaignId, this.newId.adventureId, this.newId.actId, +this.newIdEl.value, undefined, undefined, this.id.campaignSettings);
+				break;
+			case ComponentType.Session:
+				this.newId = this.factories.id.create(ComponentType.Session, +this.newIdEl.value, undefined, undefined, undefined, +this.newIdEl.value, undefined, this.id.campaignSettings);
+				break;
+			default:
+				return;
+		}
+
+		try {
+			const existingComponent = this.database.readSingle<ComponentInterface>(this.newId.type, this.newId);
+			this.updateButtonEl.disabled = true;
+			this.errorIdEl.style.display = '';
+		} catch (e) {
+			this.updateButtonEl.disabled = false;
+			this.errorIdEl.style.display = 'none';
 		}
 	}
 
@@ -81,9 +137,11 @@ export class IdSwitcherModal extends AbstractModal {
 	): void {
 		const selectorContainerEl: HTMLDivElement = containerEl.createDiv();
 		selectorContainerEl.createDiv({
+			cls: 'input-title',
 			text: 'Select the ' + ComponentType[type] +
 				' the ' + ComponentType[this.id.type] + ' belongs to'
 		});
+
 		const typeSelectorEl: HTMLSelectElement = selectorContainerEl.createDiv().createEl('select');
 
 		typeSelectorEl.createEl('option', {value: '', text: ''}).selected;
@@ -96,8 +154,6 @@ export class IdSwitcherModal extends AbstractModal {
 			actId,
 			sessionId,
 		);
-
-
 	}
 
 	private _fillSelector(
@@ -118,6 +174,7 @@ export class IdSwitcherModal extends AbstractModal {
 
 		if (subContainerEl !== undefined) {
 			selectorEl.addEventListener('change', () => {
+				subContainerEl.empty();
 				let hasLoadedSomethingElse = false;
 				let hasMissingValidId = false;
 
@@ -208,9 +265,30 @@ export class IdSwitcherModal extends AbstractModal {
 									idValues.sessionId = newId;
 									break;
 							}
-						}
 
-						console.log(idValues)
+							this._addIdSelector(subContainerEl, newId.toString());
+						} else {
+							let newId: number|undefined = undefined;
+							switch (idValues.type){
+								case ComponentType.Campaign:
+									newId =idValues.campaignId;
+									break;
+								case ComponentType.Adventure:
+									newId = idValues.adventureId;
+									break;
+								case ComponentType.Act:
+									newId = idValues.actId;
+									break;
+								case ComponentType.Scene:
+									newId = idValues.sceneId;
+									break;
+								case ComponentType.Session:
+									newId = idValues.sessionId;
+									break;
+							}
+
+							if (newId !== undefined) this._addIdSelector(subContainerEl, newId.toString());
+						}
 
 						this.newId = this.factories.id.create(
 							idValues.type,
@@ -219,10 +297,10 @@ export class IdSwitcherModal extends AbstractModal {
 							idValues.actId,
 							idValues.sceneId,
 							idValues.sessionId,
+							undefined,
+							this.id.campaignSettings,
 						)
 						this.updateButtonEl.disabled = false;
-					} else {
-						//NEED SOMETHING ELSE
 					}
 				}
 			});
@@ -251,8 +329,6 @@ export class IdSwitcherModal extends AbstractModal {
 				(campaignId !== undefined ? component.id.campaignId === campaignId : true)
 			);
 		}
-
-		console.warn(components)
 
 		components.forEach((component: ComponentInterface) => {
 			if (component.id.id >= response) response = component.id.id + 1;
