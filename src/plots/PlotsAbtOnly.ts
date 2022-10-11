@@ -1,7 +1,7 @@
-import {AbstractComponent} from "../databases/abstracts/AbstractComponent";
+import {AbstractComponent} from "../components/abstracts/AbstractComponent";
 import {PlotAbtInterface} from "./interfaces/PlotAbtInterface";
 import {AbtInterface} from "./interfaces/AbtInterface";
-import {AbtPlotMetadataInterface} from "../metadatas/plots/AbtPlotMetadataInterface";
+import {AbtPlotMetadataInterface} from "./interfaces/AbtPlotMetadataInterface";
 import {AbtPlot} from "./AbtPlot";
 
 export class PlotsAbtOnly extends AbstractComponent implements PlotAbtInterface {

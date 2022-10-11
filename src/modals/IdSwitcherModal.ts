@@ -1,9 +1,9 @@
 import {AbstractModal} from "./abstracts/AbstractModal";
 import {App, TFile} from "obsidian";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {IdInterface} from "../id/interfaces/IdInterface";
 import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {InvalidIdChecksumError} from "../errors/InvalidIdChecksumError";
 
 export class IdSwitcherModal extends AbstractModal {
@@ -112,7 +112,7 @@ export class IdSwitcherModal extends AbstractModal {
 		}
 
 		try {
-			const existingComponent = this.database.readSingle<ComponentInterface>(this.newId.type, this.newId);
+			this.database.readSingle<ComponentInterface>(this.newId.type, this.newId);
 			this.updateButtonEl.disabled = true;
 			this.errorIdEl.style.display = '';
 		} catch (e) {

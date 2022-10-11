@@ -1,7 +1,7 @@
 import {App} from "obsidian";
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {SubModelInterface} from "../../interfaces/SubModelInterface";
-import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 
 export interface SubModelFactoryInterface {

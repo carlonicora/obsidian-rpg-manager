@@ -5,12 +5,12 @@ import {FileManipulator} from "./FileManipulator";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../metadatas/controllers/ControllerMetadataRelationshipInterface";
+} from "../controller/interfaces/ControllerMetadataRelationshipInterface";
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
-import {ControllerMetadataDataInterface} from "../metadatas/controllers/ControllerMetadataDataInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {ControllerMetadataDataInterface} from "../controller/interfaces/ControllerMetadataDataInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
-import {ComponentStage} from "../databases/components/enums/ComponentStage";
+import {ComponentStage} from "../components/enums/ComponentStage";
 import {Md5} from "ts-md5";
 import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";

@@ -1,5 +1,5 @@
 import {RelationshipInterface} from "./RelationshipInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export interface RelationshipListInterface {
 	relationships: Array<RelationshipInterface>;

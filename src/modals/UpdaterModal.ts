@@ -1,7 +1,7 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {DatabaseUpdater} from "../databases/updaters/DatabaseUpdater";
-import {DatabaseUpdaterReporterInterface} from "../databases/updaters/interfaces/DatabaseUpdaterReporterInterface";
+import {DatabaseUpdater} from "../updaters/DatabaseUpdater";
+import {DatabaseUpdaterReporterInterface} from "../updaters/interfaces/DatabaseUpdaterReporterInterface";
 
 export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpdaterReporterInterface {
 	private infoEl: HTMLDivElement;

@@ -1,9 +1,9 @@
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {RunningTimeManagerInterface} from "./interfaces/RunningTimeManagerInterface";
-import {SceneType} from "../databases/enums/SceneType";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
-import {CampaignInterface} from "../databases/components/interfaces/CampaignInterface";
+import {SceneType} from "../components/enums/SceneType";
+import {ComponentType} from "../components/enums/ComponentType";
+import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
+import {CampaignInterface} from "../components/components/campaign/interfaces/CampaignInterface";
 
 export class RunningTimeManager extends AbstractRpgManager implements RunningTimeManagerInterface {
 	public currentlyRunningScene: SceneInterface|undefined = undefined;

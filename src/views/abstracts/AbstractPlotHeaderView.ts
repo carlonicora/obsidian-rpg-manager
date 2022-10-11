@@ -1,10 +1,10 @@
-import {SceneAnalyser, ThresholdResult} from "../../databases/SceneAnalyser";
-import {ComponentType} from "../../databases/enums/ComponentType";
+import {SceneAnalyser, ThresholdResult} from "../../analyser/SceneAnalyser";
+import {ComponentType} from "../../components/enums/ComponentType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSelectorView";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
 import {AbtStage} from "../../plots/enums/AbtStage";
-import {SceneType} from "../../databases/enums/SceneType";
+import {SceneType} from "../../components/enums/SceneType";
 import {AbtInterface} from "../../plots/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../plots/interfaces/StoryCircleInterface";
 

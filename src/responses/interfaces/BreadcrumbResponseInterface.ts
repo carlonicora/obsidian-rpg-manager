@@ -1,5 +1,5 @@
 import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export interface BreadcrumbResponseInterface extends ResponseDataElementInterface {
 	component: ComponentInterface|undefined,

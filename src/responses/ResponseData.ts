@@ -1,8 +1,8 @@
 import {ResponseDataInterface} from "./interfaces/ResponseDataInterface";
 import {ResponseDataElementInterface} from "./interfaces/ResponseDataElementInterface";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
-import {AbstractComponent} from "../databases/abstracts/AbstractComponent";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {AbstractComponent} from "../components/abstracts/AbstractComponent";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 

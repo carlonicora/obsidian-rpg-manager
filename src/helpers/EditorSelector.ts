@@ -1,5 +1,5 @@
 import {App, CachedMetadata, Editor, EditorPosition, EditorRange, MarkdownView} from "obsidian";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class EditorSelector {
 	public static focusOnDataKey(

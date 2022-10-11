@@ -1,5 +1,5 @@
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {ComponentType} from "./enums/ComponentType";
+import {ComponentType} from "../components/enums/ComponentType";
 
 export class TagHelper {
 	public static campaignTag = 'rpgm/campaign';

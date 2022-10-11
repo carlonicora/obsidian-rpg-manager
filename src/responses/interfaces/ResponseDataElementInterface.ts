@@ -1,5 +1,5 @@
 import {ResponseType} from "../enums/ResponseType";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export interface ResponseDataElementInterface {
 	currentComponent: ComponentInterface;

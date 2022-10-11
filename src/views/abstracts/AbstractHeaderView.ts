@@ -2,7 +2,7 @@ import {AbstractSubModelView} from "./AbstractSubModelView";
 import {HeaderResponseInterface} from "../../responses/interfaces/HeaderResponseInterface";
 import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;

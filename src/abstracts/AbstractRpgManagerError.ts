@@ -1,6 +1,6 @@
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {App} from "obsidian";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {IdInterface} from "../id/interfaces/IdInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
 import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
 import {TagHelper} from "../databases/TagHelper";

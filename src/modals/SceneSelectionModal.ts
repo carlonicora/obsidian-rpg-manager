@@ -1,11 +1,11 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
-import {ComponentType} from "../databases/enums/ComponentType";
+import {ComponentType} from "../components/enums/ComponentType";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
-import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
-import {SessionInterface} from "../databases/components/interfaces/SessionInterface";
+import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
+import {SessionInterface} from "../components/components/session/interfaces/SessionInterface";
 import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
-import {ActInterface} from "../databases/components/interfaces/ActInterface";
+import {ActInterface} from "../components/components/act/interfaces/ActInterface";
 import {SorterType} from "../databases/enums/SorterType";
 
 export class SceneSelectionModal extends AbstractRpgManagerModal {

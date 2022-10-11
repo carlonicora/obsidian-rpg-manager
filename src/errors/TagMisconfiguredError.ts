@@ -1,7 +1,7 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {TagStatus} from "../databases/enums/TagStatus";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {TagStatus} from "../id/enums/TagStatus";
+import {IdInterface} from "../id/interfaces/IdInterface";
 
 export class TagMisconfiguredError extends AbstractRpgManagerError {
 	public id: IdInterface;

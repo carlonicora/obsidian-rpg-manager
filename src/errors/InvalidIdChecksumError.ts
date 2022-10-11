@@ -1,5 +1,5 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentType} from "../databases/enums/ComponentType";
+import {ComponentType} from "../components/enums/ComponentType";
 
 export class InvalidIdChecksumError extends AbstractRpgManagerError {
 	showErrorActions(): string {

@@ -1,8 +1,8 @@
 import {TFile} from "obsidian";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 import {FileManipulatorInterface} from "./FileManipulatorInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
-import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ControllerMetadataDataInterface} from "../../controller/interfaces/ControllerMetadataDataInterface";
 
 export interface CodeBlockManipulatorInterface {
 	read(

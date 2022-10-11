@@ -1,6 +1,6 @@
-import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
-import {ComponentType} from "../../../databases/enums/ComponentType";
-import {IdInterface} from "../../../databases/interfaces/IdInterface";
+import {CampaignSetting} from "../../../components/components/campaign/enums/CampaignSetting";
+import {ComponentType} from "../../../components/enums/ComponentType";
+import {IdInterface} from "../../../id/interfaces/IdInterface";
 
 export interface FileFactoryInterface {
 	create(
