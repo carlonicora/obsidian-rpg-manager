@@ -2,15 +2,10 @@ import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponen
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SceneMetadataInterface} from "../../../metadatas/components/SceneMetadataInterface";
 import {ActDataInterface} from "../../../databases/components/interfaces/data/ActDataInterface";
-import {TagHelper} from "../../../databases/TagHelper";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 
 export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
-	public addFrontmatterData(
-		frontmatter: any,
-	): void {
-		frontmatter.tags.push(TagHelper.sceneTag + '/' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId);
-	}
-
 	protected generateDataCodeBlock(
 	): string {
 		const metadata: SceneMetadataInterface = {
@@ -74,6 +69,11 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 		}
 
 		return this.generateRpgManagerCodeBlock(metadata);
+	}
+
+	public generateID(
+	): string {
+		return ComponentType.Scene + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId;
 	}
 }
 

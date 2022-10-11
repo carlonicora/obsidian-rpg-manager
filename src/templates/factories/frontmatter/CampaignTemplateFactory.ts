@@ -1,16 +1,10 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {CampaignMetadataInterface} from "../../../metadatas/components/CampaignMetadataInterface";
-import {TagHelper} from "../../../databases/TagHelper";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 
 export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
-	public addFrontmatterData(
-		frontmatter: any,
-	): void {
-		frontmatter.tags.push(TagHelper.campaignTag +'/' + this.campaignId);
-		frontmatter.settings = "Agnostic";
-	}
-
 	protected generateDataCodeBlock(
 	): string {
 		const metadata: CampaignMetadataInterface = {
@@ -87,5 +81,10 @@ export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 		}
 
 		return this.generateRpgManagerCodeBlock(metadata);
+	}
+
+	public generateID(
+	): string {
+		return ComponentType.Campaign + '-' + CampaignSetting.Agnostic + '-' + this.campaignId;
 	}
 }

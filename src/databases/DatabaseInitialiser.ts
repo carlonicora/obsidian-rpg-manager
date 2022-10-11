@@ -157,7 +157,7 @@ export class DatabaseInitialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		let relationshipsInitialisation: Array<Promise<void>> = [];
+		const relationshipsInitialisation: Array<Promise<void>> = [];
 
 		database.recordset.forEach((component: ComponentInterface) => {
 			relationshipsInitialisation.push(component.initialiseRelationships());

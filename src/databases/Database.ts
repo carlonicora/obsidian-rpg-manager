@@ -16,8 +16,6 @@ import {ComponentStage} from "./components/enums/ComponentStage";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
-import {MultipleTagsError} from "../errors/MultipleTagsError";
-import {LogMessageType} from "../loggers/enums/LogMessageType";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public recordset: Array<ComponentInterface> = [];

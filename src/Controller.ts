@@ -1,25 +1,20 @@
 import {
 	App,
 	Component,
-	debounce,
 	MarkdownPostProcessorContext,
 	MarkdownView,
 	parseYaml,
 	TFile, WorkspaceLeaf,
-	WorkspaceWindow
 } from "obsidian";
 import {ResponseDataInterface} from "./responses/interfaces/ResponseDataInterface";
 import {ResponseDataElementInterface} from "./responses/interfaces/ResponseDataElementInterface";
 import {ViewInterface} from "./views/interfaces/ViewInterface";
 import {ModelInterface} from "./models/interfaces/ModelInterface";
-import {CampaignSetting} from "./databases/enums/CampaignSetting";
 import {AbstractRpgManagerMarkdownRenderChild} from "./abstracts/AbstractRpgManagerMarkdownRenderChild";
 import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
-import {CampaignInterface} from "./databases/components/interfaces/CampaignInterface";
 import {
 	ControllerMetadataInterface
 } from "./metadatas/controllers/ControllerMetadataInterface";
-import {LogMessageType} from "./loggers/enums/LogMessageType";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private isActive = false;

@@ -1,15 +1,10 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {LocationMetadataInterface} from "../../../metadatas/components/LocationMetadataInterface";
-import {TagHelper} from "../../../databases/TagHelper";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 
 export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
-	public addFrontmatterData(
-		frontmatter: any,
-	): void {
-		frontmatter.tags.push(TagHelper.locationTag + '/' + this.campaignId);
-	}
-
 	protected generateDataCodeBlock(
 	): string {
 		const metadata: LocationMetadataInterface = {
@@ -48,5 +43,10 @@ export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 		};
 
 		return this.generateRpgManagerCodeBlock(metadata);
+	}
+
+	public generateID(
+	): string {
+		return ComponentType.Location + '-' + CampaignSetting.Agnostic + '-' + this.campaignId;
 	}
 }

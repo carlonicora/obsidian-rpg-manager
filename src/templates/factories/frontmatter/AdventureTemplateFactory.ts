@@ -1,15 +1,10 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {AdventureMetadataInterface} from "../../../metadatas/components/AdventureMetadataInterface";
-import {TagHelper} from "../../../databases/TagHelper";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 
 export class AdventureTemplateFactory extends AbstractComponentTemplateFactory {
-	public addFrontmatterData(
-		frontmatter: any,
-	): void {
-		frontmatter.tags.push(TagHelper.adventureTag + '/' + this.campaignId + '/' + this.adventureId);
-	}
-
 	protected generateDataCodeBlock(
 	): string {
 		const metadata: AdventureMetadataInterface = {
@@ -63,5 +58,10 @@ export class AdventureTemplateFactory extends AbstractComponentTemplateFactory {
 		}
 
 		return this.generateRpgManagerCodeBlock(metadata);
+	}
+
+	public generateID(
+	): string {
+		return ComponentType.Adventure + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.adventureId;
 	}
 }

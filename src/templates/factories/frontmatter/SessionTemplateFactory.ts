@@ -1,15 +1,10 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {SessionMetadataInterface} from "../../../metadatas/components/SessionMetadataInterface";
-import {TagHelper} from "../../../databases/TagHelper";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 
 export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
-	public addFrontmatterData(
-		frontmatter: any,
-	): void {
-		frontmatter.tags.push(TagHelper.sessionTag + '/' + this.campaignId + '/' + this.sessionId);
-	}
-
 	protected generateDataCodeBlock(
 	): string {
 		const metadata: SessionMetadataInterface = {
@@ -74,5 +69,10 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 		}
 
 		return this.generateRpgManagerCodeBlock(metadata);
+	}
+
+	public generateID(
+	): string {
+		return ComponentType.Session + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.sessionId;
 	}
 }

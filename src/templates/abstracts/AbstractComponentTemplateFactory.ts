@@ -18,6 +18,7 @@ import {SessionNotesTemplateFactory} from "../factories/notes/SessionNotesTempla
 import {SubplotNotesTemplateFactory} from "../factories/notes/SubplotNotesTemplateFactory";
 import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
 import {ControllerMetadataInterface} from "../../metadatas/controllers/ControllerMetadataInterface";
+import {Md5} from "ts-md5";
 
 export abstract class AbstractComponentTemplateFactory extends AbstractRpgManager implements ComponentTemplateFactoryInterface {
 	protected internalTemplate: ComponentNotesTemplateFactoryInterface|undefined;
@@ -107,7 +108,9 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 			templateContent = this.internalTemplate.getContent();
 		}
 
-		return this.generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock);
+		const idCodeBlock: string  = this.generateRpgManagerIDCodeBlock(this.generateID())
+
+		return this.generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock, idCodeBlock);
 	}
 
 	private generateResponse(
@@ -116,6 +119,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		initialCodeBlock: string|undefined,
 		mainContent: string|undefined,
 		lastCodeBlock: string|undefined,
+		idCodeBlock: string,
 	): string {
 		let response: string;
 
@@ -126,6 +130,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		response += initialCodeBlock;
 		response += mainContent ?? '\n';
 		if (lastCodeBlock !== undefined) response += lastCodeBlock;
+		response += idCodeBlock;
 
 		return response;
 	}
@@ -218,6 +223,11 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		return undefined;
 	}
 
+	protected generateID(
+	): string {
+		return '';
+	}
+
 	protected generateRpgManagerDataCodeBlock(
 		metadata: ControllerMetadataDataInterface,
 	): string {
@@ -236,5 +246,20 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		response += '```\n';
 
 		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');
+	}
+
+	protected generateRpgManagerIDCodeBlock(
+		ID: string,
+	): string {
+		const metadata = {
+			id: ID,
+			checksum: Md5.hashStr(ID),
+		};
+
+		let response = '```RpgManagerID\n';
+		response += stringifyYaml(metadata);
+		response += '```\n';
+
+		return response;
 	}
 }

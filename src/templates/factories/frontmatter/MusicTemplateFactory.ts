@@ -1,15 +1,10 @@
 import {AbstractComponentTemplateFactory} from "../../abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../metadatas/controllers/ControllerMetadataInterface";
 import {MusicMetadataInterface} from "../../../metadatas/components/MusicMetadataInterface";
-import {TagHelper} from "../../../databases/TagHelper";
+import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
 
 export class MusicTemplateFactory extends AbstractComponentTemplateFactory {
-	public addFrontmatterData(
-		frontmatter: any,
-	): void {
-		frontmatter.tags.push(TagHelper.musicTag + '/' + this.campaignId);
-	}
-
 	protected generateDataCodeBlock(
 	): string {
 		const metadata: MusicMetadataInterface = {
@@ -44,5 +39,10 @@ export class MusicTemplateFactory extends AbstractComponentTemplateFactory {
 		};
 
 		return this.generateRpgManagerCodeBlock(metadata);
+	}
+
+	public generateID(
+	): string {
+		return ComponentType.Music + '-' + CampaignSetting.Agnostic + '-' + this.campaignId;
 	}
 }
