@@ -3,6 +3,7 @@ import {IdFactoryInterface} from "./interfaces/IdFactoryInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../interfaces/IdInterface";
 import {Id} from "../Id";
+import {Md5} from "ts-md5";
 
 export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 	public create(
@@ -84,6 +85,8 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		);
 
 		response.campaignSettings = +campaignSettings;
+
+
 
 		return response;
 	}

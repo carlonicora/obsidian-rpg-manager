@@ -11,8 +11,45 @@ import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
 import {ControllerMetadataDataInterface} from "../metadatas/controllers/ControllerMetadataDataInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 import {ComponentStage} from "../databases/components/enums/ComponentStage";
+import {Md5} from "ts-md5";
+import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
+import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
+	public async replaceID(
+		file: TFile,
+		ID: string,
+	): Promise<void> {
+		const fileEditor = new FileManipulator(this.app, file);
+		if (!await fileEditor.read()) return;
+
+		const metadata = {
+			id: ID,
+			checksum: Md5.hashStr(ID),
+		};
+
+		const newIdCodeBlock: Array<string> = [];
+		newIdCodeBlock.push('```RpgManagerID');
+		newIdCodeBlock.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
+		newIdCodeBlock.push(stringifyYaml(metadata));
+		newIdCodeBlock.push('```');
+
+		fileEditor.cachedFile.sections?.forEach((section: SectionCache) => {
+			if (section.type === 'code' && fileEditor.arrayContent[section.position.start.line] === '```RpgManagerID'){
+				const replacedArray = fileEditor.arrayContent;
+				replacedArray.splice(section.position.start.line, section.position.end.line - section.position.start.line + 1, ...newIdCodeBlock);
+				fileEditor.maybeWrite(replacedArray.join('\n'))
+					.then(() => {
+						DatabaseInitialiser.initialise(this.app)
+							.then((database: DatabaseInterface) => {
+								this.database = database;
+								this.app.workspace.trigger("rpgmanager:force-refresh-views");
+							})
+					});
+			}
+		});
+	}
+
 	public async stopCurrentDuration(
 		file: TFile,
 	): Promise<void> {

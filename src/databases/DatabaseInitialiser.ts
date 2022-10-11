@@ -11,6 +11,8 @@ import {RelationshipInterface} from "../relationships/interfaces/RelationshipInt
 import {ComponentStage} from "./components/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
 import {LogMessageType} from "../loggers/enums/LogMessageType";
+import {Md5} from "ts-md5";
+import {InvalidIdChecksumError} from "../errors/InvalidIdChecksumError";
 
 export class DatabaseInitialiser {
 	private static misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
@@ -126,7 +128,12 @@ export class DatabaseInitialiser {
 			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
 				const RpgManagerIdContent: Array<string> = contentArray.slice(section.position.start.line + 1, section.position.end.line);
 				const RpgManagerID: {id: string, checksum: string} = parseYaml(RpgManagerIdContent.join('\n'));
-				return this.factories.id.createFromID(RpgManagerID.id);
+
+				const response = this.factories.id.createFromID(RpgManagerID.id);
+
+				if (Md5.hashStr(RpgManagerID.id) !== RpgManagerID.checksum) throw new InvalidIdChecksumError(this.app, response)
+
+				return response;
 			}
 		}
 

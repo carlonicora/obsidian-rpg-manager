@@ -52,4 +52,6 @@ export interface IdInterface {
 	getTypeValue(
 		type: ComponentType,
 	): number|undefined;
+
+	get stringID(): string;
 }

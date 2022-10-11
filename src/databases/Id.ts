@@ -32,6 +32,25 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		this.generateTagValue(ComponentType.Session, sessionId);
 	}
 
+	get stringID(
+	): string{
+		let response = this.type + '-' + this.campaignSettings + '-' + this.campaignId;
+
+		if (this.type === ComponentType.Session){
+			response += '/' + this.sessionId;
+		} else if (this.type === ComponentType.Adventure || this.type === ComponentType.Act || this.type === ComponentType.Scene){
+			response += '/' + this.adventureId;
+			if (this.type === ComponentType.Act || this.type === ComponentType.Scene) {
+				response += '/' + this.actId;
+				if (this.type == ComponentType.Scene){
+					response += '/' + this.sceneId;
+				}
+			}
+		}
+
+		return response;
+	}
+
 	public get id(
 	): number {
 		const response:number|undefined = this.tagMap.get(this.type)?.value;
