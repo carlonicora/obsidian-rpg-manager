@@ -143,35 +143,11 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 		const subModel = this.subModelsMap.get(type);
 		if (component === undefined) {
-			console.warn(ComponentType[type])
-			console.log(requiredRelationshipType)
-			console.log(this.currentComponent.getRelationships())
-
-
-			const a = this.currentComponent.getRelationships().relationships;
-			console.log(a)
-			for (let i=0;i<a.length;i++){
-				console.log(a[i].path);
-				if (a[i].component === undefined) {
-					console.log('component undefined');
-					continue
-				}
-				if (a[i].component?.id.type !== type) {
-					console.log('wrong type of component');
-					continue;
-				}
-
-				if (requiredRelationshipType === undefined || (requiredRelationshipType & a[i].type) !== a[i].type){
-					console.log('wrong relationship type. Required ' + requiredRelationshipType + ' and have ' + a[i].type)
-				}
-			}
-
 			component = this.currentComponent.getRelationships().filter((relationship: RelationshipInterface) =>
 				relationship.component !== undefined &&
 				relationship.component.id.type === type &&
 				(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
 			);
-			console.log(component)
 		}
 
 		if (Array.isArray(component)) {
