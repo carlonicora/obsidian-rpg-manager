@@ -1,6 +1,6 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {IdInterface} from "../id/interfaces/IdInterface";
 
 export class ComponentNotFoundError extends AbstractRpgManagerError {
 	public id: IdInterface;

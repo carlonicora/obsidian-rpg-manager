@@ -1,5 +1,5 @@
-import {SceneType} from "../../databases/enums/SceneType";
-import {SceneInterface} from "../../databases/components/interfaces/SceneInterface";
+import {SceneType} from "../../components/enums/SceneType";
+import {SceneInterface} from "../../components/components/scene/interfaces/SceneInterface";
 
 export interface RunningTimeManagerInterface{
 	currentlyRunningScene: SceneInterface|undefined;

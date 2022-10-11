@@ -1,10 +1,10 @@
 import {RelationshipInterface} from "../../interfaces/RelationshipInterface";
-import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
 import {RelationshipType} from "../../enums/RelationshipType";
 import {RelationshipListInterface} from "../../interfaces/RelationshipListInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../../../metadatas/controllers/ControllerMetadataRelationshipInterface";
+} from "../../../controller/interfaces/ControllerMetadataRelationshipInterface";
 
 export interface RelationshipFactoryInterface {
 	create(

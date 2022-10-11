@@ -3,8 +3,8 @@ import {ResponseType} from "./enums/ResponseType";
 import {TableResponseInterface} from "./interfaces/TableResponseInterface";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {App} from "obsidian";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {

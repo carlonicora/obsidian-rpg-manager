@@ -3,7 +3,7 @@ import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseD
 import {App} from "obsidian";
 import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {EditorSelector} from "../../helpers/EditorSelector";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export abstract class AbstractSubModelView extends AbstractRpgManager implements ViewInterface {
 	constructor(

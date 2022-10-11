@@ -1,7 +1,7 @@
-import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
+import {CampaignSetting} from "../../../components/components/campaign/enums/CampaignSetting";
 import {ModelInterface} from "../../interfaces/ModelInterface";
-import {ComponentInterface} from "../../../databases/interfaces/ComponentInterface";
-import {ComponentType} from "../../../databases/enums/ComponentType";
+import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
+import {ComponentType} from "../../../components/enums/ComponentType";
 
 export interface ModelFactoryInterface {
 	create(

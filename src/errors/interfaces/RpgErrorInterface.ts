@@ -1,4 +1,4 @@
-import {IdInterface} from "../../databases/interfaces/IdInterface";
+import {IdInterface} from "../../id/interfaces/IdInterface";
 
 export interface RpgErrorInterface {
 	id: IdInterface|undefined;

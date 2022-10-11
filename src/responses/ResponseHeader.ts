@@ -4,8 +4,8 @@ import {App} from "obsidian";
 import {ResponseType} from "./enums/ResponseType";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {HeaderResponseElementInterface} from "./interfaces/HeaderResponseElementInterface";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public type: ComponentType;

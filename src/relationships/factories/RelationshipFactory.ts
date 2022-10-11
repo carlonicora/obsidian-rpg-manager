@@ -3,12 +3,12 @@ import {RelationshipFactoryInterface} from "./interfaces/RelationshipFactoryInte
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {Relationship} from "../Relationship";
 import {RelationshipType} from "../enums/RelationshipType";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
-import {ComponentStage} from "../../databases/components/enums/ComponentStage";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ComponentStage} from "../../components/enums/ComponentStage";
 import {RelationshipListInterface} from "../interfaces/RelationshipListInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../../metadatas/controllers/ControllerMetadataRelationshipInterface";
+} from "../../controller/interfaces/ControllerMetadataRelationshipInterface";
 
 export class RelationshipFactory extends AbstractFactory implements RelationshipFactoryInterface {
 	public create(

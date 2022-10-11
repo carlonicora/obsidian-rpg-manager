@@ -1,9 +1,9 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {ComponentType} from "../databases/enums/ComponentType";
+import {ComponentType} from "../components/enums/ComponentType";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
 import {SorterType} from "../databases/enums/SorterType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 

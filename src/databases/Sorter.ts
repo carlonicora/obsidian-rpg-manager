@@ -1,7 +1,7 @@
 import {SorterComparisonElementInterface} from "./interfaces/SorterComparisonElementInterface";
 import {SorterType} from "./enums/SorterType";
 import {SorterInterface} from "./interfaces/SorterInterface";
-import {ComponentInterface} from "./interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class Sorter implements SorterInterface {
 	public comparisonElements: Array<SorterComparisonElementInterface>;

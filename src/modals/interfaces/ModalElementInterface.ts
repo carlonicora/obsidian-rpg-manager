@@ -1,4 +1,4 @@
-import {ComponentType} from "../../databases/enums/ComponentType";
+import {ComponentType} from "../../components/enums/ComponentType";
 
 export interface ModalElementInterface {
 	type: ComponentType;
