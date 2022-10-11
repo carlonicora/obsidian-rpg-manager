@@ -4,12 +4,19 @@ import {LogMessageType} from "../../../loggers/enums/LogMessageType";
 import {CachedMetadata, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
 import {ComponentType} from "../../enums/ComponentType";
 import {DatabaseUpdaterReporterInterface} from "../interfaces/DatabaseUpdaterReporterInterface";
+import {Md5} from "ts-md5";
+import {CampaignSetting} from "../../enums/CampaignSetting";
 
 export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
+	private campaignSettings: Map<number, CampaignSetting>;
+
 	public async run(
 		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
 	): Promise<void> {
 		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v3.0');
+
+		this.campaignSettings = new Map<number, CampaignSetting>();
+		this._loadCampaignSettings();
 
 		const files: Array<TFile> = await this.app.vault.getMarkdownFiles();
 
@@ -18,7 +25,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		for (let filesIndex=0; filesIndex<files.length; filesIndex++){
 			const file: TFile = files[filesIndex];
 
-			let cachedMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+			const cachedMetadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 			if (cachedMetadata == null) continue;
 
 			if (cachedMetadata?.frontmatter?.tags == null) {
@@ -32,55 +39,16 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				continue;
 			}
 
-			let fileContent = await this.app.vault.read(file);
-
-			let tag = this.tagHelper.getTag(tags);
-
-			let type: ComponentType|undefined = undefined;
-
-			if (tag === undefined) {
-				const fuzzyGuessedTag = this.tagHelper.fuzzyTagsGuesser(tags);
-
-				if (fuzzyGuessedTag !== undefined) {
-					tag = this.tagHelper.dataSettings.get(fuzzyGuessedTag.type);
-
-					if (tag !== undefined) {
-						type = fuzzyGuessedTag.type;
-
-						let parameterCount = 1;
-						switch (type) {
-							case ComponentType.Adventure:
-							case ComponentType.Session:
-								parameterCount = 2;
-								break;
-							case ComponentType.Act:
-								parameterCount = 3;
-								break;
-							case ComponentType.Scene:
-								parameterCount = 4;
-								break;
-						}
-						const tagElements: Array<string> = fuzzyGuessedTag.tag.split('/');
-						const remainingTagElements = tagElements.slice(tagElements.length - parameterCount);
-						if (!tag.endsWith('/')) tag += '/';
-						tag += remainingTagElements.join('/');
-
-						fileContent = fileContent.replaceAll(fuzzyGuessedTag.tag, tag);
-					}
-				}
-
-				if (tag === undefined) {
-					if (reporter !== undefined) reporter.addFileUpdated();
-					continue;
-				}
+			const tagAndType = this._getTagAndType(tags);
+			if (tagAndType === undefined){
+				if (reporter !== undefined) reporter.addFileUpdated();
+				continue;
 			}
 
-			if (type === undefined) {
-				type = this.tagHelper.getDataType(tag);
-				if (type === undefined) {
-					if (reporter !== undefined) reporter.addFileUpdated();
-					continue;
-				}
+			let fileContent = await this.app.vault.read(file);
+
+			if (tagAndType.updated === true){
+				fileContent = fileContent.replaceAll(tagAndType.fuzzyGuessedTag, tagAndType.tag);
 			}
 
 			const fileContentArray = await fileContent.split('\n');
@@ -139,7 +107,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			}
 			const relationships = await this._addRelationshipsFromContent(metadataRelationships, fileContentArray);
 
-			const dataCodeblockMetadata = this._getComponentRpgManagerDataCodeBlockMetadata(type);
+			const dataCodeblockMetadata = this._getComponentRpgManagerDataCodeBlockMetadata(tagAndType.type);
 			let dataCodeblockMetadataContent = '';
 
 			if (firstCodeblockMetadataType !== undefined){
@@ -147,7 +115,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				firstCodeblockNewMetadataContent = stringifyYaml(firstCodeblockNewMetadata);
 
 				dataCodeblockMetadataContent = await this._updateMetadata(
-					type,
+					tagAndType.type,
 					dataCodeblockMetadata,
 					frontmatterMetadata,
 					firstCodeblockMetadata,
@@ -184,6 +152,23 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				fileContentArray.splice(frontmatterMetadataStartLine, frontmatterMetadataEndLine - frontmatterMetadataStartLine + 1, ...frontmatterContent.split('\n'))
 			}
 
+			let defaultTag = this.tagHelper.dataSettings.get(tagAndType.type);
+
+			if (defaultTag !== undefined) {
+				if (!defaultTag.endsWith('/')) defaultTag += '/';
+				const tagIds = tagAndType.tag.substring(defaultTag.length);
+				const [campaignId] = tagIds.split('/');
+				let campaignSettings = this.campaignSettings.get(+campaignId);
+				if (campaignSettings === undefined) campaignSettings = CampaignSetting.Agnostic;
+
+				const computedTag = tagAndType.type + '-' + campaignSettings + '-' + tagAndType.tag.substring(defaultTag.length)
+
+				fileContentArray.push('```RpgManagerID');
+				fileContentArray.push('id: ' + computedTag);
+				fileContentArray.push('checksum: ' + Md5.hashStr(computedTag));
+				fileContentArray.push('```');
+			}
+
 			fileContent = fileContentArray.join('\n');
 			this.app.vault.modify(file, fileContent)
 				.then(() => {
@@ -208,6 +193,48 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		}
 	}
 
+	private _getTagAndType(
+		tags: Array<string>,
+	): {tag: string, fuzzyGuessedTag: string, type: ComponentType, updated: boolean}|undefined{
+		let type: ComponentType|undefined = undefined;
+		let tag = this.tagHelper.getTag(tags);
+
+		if (tag === undefined) {
+			const fuzzyGuessedTag = this.tagHelper.fuzzyTagsGuesser(tags);
+			if (fuzzyGuessedTag === undefined) return undefined;
+
+			tag = this.tagHelper.dataSettings.get(fuzzyGuessedTag.type);
+			if (tag === undefined) return undefined;
+
+			type = fuzzyGuessedTag.type;
+
+			let parameterCount = 1;
+			switch (type) {
+				case ComponentType.Adventure:
+				case ComponentType.Session:
+					parameterCount = 2;
+					break;
+				case ComponentType.Act:
+					parameterCount = 3;
+					break;
+				case ComponentType.Scene:
+					parameterCount = 4;
+					break;
+			}
+			const tagElements: Array<string> = fuzzyGuessedTag.tag.split('/');
+			const remainingTagElements = tagElements.slice(tagElements.length - parameterCount);
+			if (!tag.endsWith('/')) tag += '/';
+			tag += remainingTagElements.join('/');
+
+			return {tag: tag, fuzzyGuessedTag: fuzzyGuessedTag.tag, type: type, updated: true}
+		}
+
+		type = this.tagHelper.getDataType(tag);
+		if (type === undefined) return undefined;
+
+		return {tag: tag, fuzzyGuessedTag: tag, type: type, updated: false}
+	}
+
 	private _cleanFrontmatter(
 		frontmatterMetadataContentArray: Array<string>,
 	): any {
@@ -220,6 +247,19 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 		const frontmatter: any = parseYaml(frontmatterContent);
 
+		if (frontmatter.tags !== undefined){
+			for (let index = frontmatter.tags.length - 1; index >= 0 ; index--) {
+				if (this.tagHelper.isRpgManagerTag(frontmatter.tags[index])){
+					frontmatter.tags.splice(index, 1);
+				}
+			}
+		} else {
+			frontmatter.tags = [];
+		}
+
+		if (frontmatter.alias == undefined) frontmatter.alias = [];
+
+		if (frontmatter.settings !== undefined) delete(frontmatter.settings);
 		if (frontmatter.completed !== undefined) delete(frontmatter.completed);
 		if (frontmatter.synopsis !== undefined) delete(frontmatter.synopsis);
 		if (frontmatter.image !== undefined) delete(frontmatter.image);
@@ -641,5 +681,31 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 					models: {header: true, lists: {subplots: {}, pcs: {relationship: "unidirectional",}, npcs: {relationship: "unidirectional",}, factions: {}, locations: {}, events: {}, clues: {},}},
 				}
 		}
+	}
+
+	private _loadCampaignSettings(
+	): void {
+		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
+			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+			if (metadata?.frontmatter?.tags != null) {
+				const tags = this.tagHelper.sanitiseTags(metadata.frontmatter.tags);
+				if (tags.length === 0) return;
+
+				const tagAndType = this._getTagAndType(tags);
+				if (tagAndType !== undefined){
+					if (tagAndType.type === ComponentType.Campaign){
+						const id = this.factories.id.createFromTag(tagAndType.tag);
+						try {
+							const settings = metadata?.frontmatter?.settings != undefined ?
+								CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :
+								CampaignSetting.Agnostic;
+							this.campaignSettings.set(id.campaignId, settings);
+						} catch (e) {
+							//No need to trap the errors here
+						}
+					}
+				}
+			}
+		});
 	}
 }

@@ -19,4 +19,9 @@ export interface IdFactoryInterface {
 	createFromTags(
 		tags: Array<string>,
 	): IdInterface;
+
+	createFromID(
+		ID: string,
+		checksum?: string,
+	): IdInterface;
 }

@@ -5,9 +5,11 @@ import {App} from "obsidian";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
 import {IdInterface} from "./interfaces/IdInterface";
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
+import {CampaignSetting} from "./enums/CampaignSetting";
 
 export class Id extends AbstractRpgManager implements IdInterface{
 	public tagMap: Map<ComponentType, TagValueInterface>;
+	public campaignSettings: CampaignSetting = CampaignSetting.Agnostic;
 
 	constructor(
 		app: App,

@@ -60,13 +60,13 @@ export class ConsoleLogger extends AbstractRpgManager implements LogWriterInterf
 			const messageContent: Array<any> = [];
 
 			const messageType = group.logs[0].messageType;
-			const totalDuration = Date.now() - group.logs[0].start;
+			const totalDuration = Date.now() - group.start;
 
 			for (let index = 0; index < group.logs.length; index++) {
-				if (group.logs[index + 1] == undefined) {
-					group.logs[index].duration = Date.now() - group.logs[index].start;
+				if (index === 0) {
+					group.logs[0].duration = group.logs[index].start - group.start;
 				} else {
-					group.logs[index].duration = group.logs[index + 1].start - group.logs[index].start;
+					group.logs[index].duration = group.logs[index].start - group.logs[index - 1].start;
 				}
 
 				messageContent.push(group.logs[index].message + ' in ' + group.logs[index].duration + 'ms\n');

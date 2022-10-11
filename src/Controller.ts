@@ -1,4 +1,13 @@
-import {App, Component, debounce, MarkdownPostProcessorContext, parseYaml, TFile} from "obsidian";
+import {
+	App,
+	Component,
+	debounce,
+	MarkdownPostProcessorContext,
+	MarkdownView,
+	parseYaml,
+	TFile, WorkspaceLeaf,
+	WorkspaceWindow
+} from "obsidian";
 import {ResponseDataInterface} from "./responses/interfaces/ResponseDataInterface";
 import {ResponseDataElementInterface} from "./responses/interfaces/ResponseDataElementInterface";
 import {ViewInterface} from "./views/interfaces/ViewInterface";
@@ -18,9 +27,8 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private models: Array<ModelInterface> = [];
 
 	private currentComponent: ComponentInterface;
-	private campaignSettings: CampaignSetting;
 
-	private componentVersion: number|undefined = undefined;
+	public componentVersion: number|undefined = undefined;
 
 	constructor(
 		app: App,
@@ -30,7 +38,15 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		private sourcePath: string,
 	) {
 		super(app, container);
+
+		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
+
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
+
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
+		this.registerEvent(this.app.workspace.on("rpgmanager:force-refresh-views", (() => {
+			this._render(true);
+		}).bind(this)));
 	}
 
 	private async onRename(
@@ -44,15 +60,6 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private _generateModels(
 	): void {
 		this.models = [];
-		if (this.campaignSettings === undefined) {
-			this.campaignSettings = CampaignSetting.Agnostic;
-			if (this.currentComponent.campaign !== undefined) {
-				this.campaignSettings = this.currentComponent.campaign.campaignSettings;
-			} else if ((<CampaignInterface>this.currentComponent).campaignSettings !== undefined) {
-				this.campaignSettings = (<CampaignInterface>this.currentComponent).campaignSettings;
-			}
-		}
-
 		try {
 			const configurations: ControllerMetadataInterface | any = parseYaml(this.source);
 
@@ -73,15 +80,8 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		modelName: string,
 		sourceMeta: any|undefined = undefined,
 	): ModelInterface {
-		if (this.campaignSettings === undefined) this._initialiseCampaignSettings();
-
-		if (this.campaignSettings === undefined) {
-			this.factories.logger.error(LogMessageType.Model, 'No campaign setting available', this);
-			throw new Error('');
-		}
-
 		return this.factories.models.create(
-			this.campaignSettings,
+			this.currentComponent.campaignSettings,
 			modelName,
 			this.currentComponent,
 			this.source,
@@ -90,69 +90,116 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		);
 	}
 
-	private _initialiseCampaignSettings(
-	): void {
-		this.campaignSettings = CampaignSetting.Agnostic;
-		if (this.currentComponent.campaign !== undefined){
-			this.campaignSettings = this.currentComponent.campaign.campaignSettings;
-		} else if ((<CampaignInterface>this.currentComponent).campaignSettings !== undefined) {
-			this.campaignSettings = (<CampaignInterface>this.currentComponent).campaignSettings;
+	private async _initialise(
+	): Promise<boolean> {
+		if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')){
+			console.log(
+				'component version: ' + this.currentComponent.version + '\n' +
+				'saving time :' + this.currentComponent.file.stat.mtime + '\n' +
+				'controller version : ' + this.componentVersion
+			);
 		}
-	}
 
-	private _initialise(
-	): boolean {
-		const currentComponent:ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
-		if (currentComponent === undefined) return false;
-
-		if (currentComponent.version === undefined) {
-			setTimeout(this._render.bind(this), 100);
+		if (this.componentVersion !== undefined && this.currentComponent.version === this.componentVersion) {
+			if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('component same version')
 			return false;
 		}
 
-		if (this.componentVersion !== undefined && currentComponent.version === this.componentVersion) return false;
-
-		this.componentVersion = currentComponent.version;
-
-		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
-		this.currentComponent = currentComponent;
+		this.componentVersion = this.currentComponent.version ?? 0 + 0;
 
 		this._generateModels();
 
 		return true;
 	}
 
+	private async waitForComponentToBeReady() {
+		const poll = (resolve: any) => {
+			if(this.currentComponent.version !== undefined) {
+				resolve();
+			} else {
+				console.log('waiting...')
+				setTimeout(_ => poll(resolve), 100);
+			}
+		}
+
+		return new Promise(poll);
+	}
+
 	onload() {
-		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
-		this.registerEvent(this.app.workspace.on("rpgmanager:force-refresh-views", (() => {
-			this._render(true);
-		}).bind(this)));
+		super.onload();
+		console.log(this.container)
 		this._render();
 	}
 
 	private async _render(
 		forceRefresh=false,
 	): Promise<void> {
+
 		if (this.database === undefined) return;
+
+		if (this.currentComponent === undefined){
+			const rpgmComponent: ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
+			if (rpgmComponent === undefined) return;
+			this.currentComponent = rpgmComponent;
+		}
+
+		await this.waitForComponentToBeReady();
+
+		if (await !this.isComponentVisible()) return;
+
+		if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.warn('trying to render')
 
 		if (forceRefresh) this.componentVersion = undefined;
 
-		if (await this._initialise()) {
-			this.container.empty();
+		if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.error('trying to reload')
 
-			for (let modelCounter=0; modelCounter<this.models.length; modelCounter++){
-				this.models[modelCounter].generateData()
+		if (await this._initialise()) {
+			if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('Emptying...')
+			this.container.empty();
+			if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('...emptied!')
+
+			for (let modelCounter = 0; modelCounter < this.models.length; modelCounter++) {
+				await this.models[modelCounter].generateData()
 					.then((data: ResponseDataInterface) => {
 						data.elements.forEach((element: ResponseDataElementInterface) => {
 							const view: ViewInterface = this.factories.views.create(
-								this.campaignSettings,
+								this.currentComponent.campaignSettings,
 								element.responseType,
 								this.sourcePath,
 							);
+
 							view.render(this.container, element);
+							if (this.sourcePath === 'NonPlayerCharacters/Backstories/Dana Schafer.md' && this.source.startsWith('models:\n  header: true\n')) console.log('...')
 						});
 					});
 			}
+
+			this.container.show();
+			console.log(this.container)
 		}
+	}
+
+	private async isComponentVisible(
+	): Promise<boolean> {
+		if (this.currentComponent === undefined) {
+			console.log('no component')
+			return false;
+		}
+
+		if (this.currentComponent.file === undefined) {
+			console.log('no file')
+			return false;
+		}
+
+		await this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
+			if (leaf.view instanceof MarkdownView) {
+				const file = leaf.view?.file;
+				if (file !== undefined){
+					if (file.path === this.currentComponent.file.path) return true;
+				}
+			}
+		});
+
+		return false;
 	}
 }

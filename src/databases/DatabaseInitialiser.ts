@@ -1,13 +1,10 @@
-import {CampaignSetting} from "./enums/CampaignSetting";
-import {App, CachedMetadata, TFile} from "obsidian";
+import {App, parseYaml, TFile} from "obsidian";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
 import {TagHelper} from "./TagHelper";
-import {ComponentType} from "./enums/ComponentType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {IdInterface} from "./interfaces/IdInterface";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
-import {MultipleTagsError} from "../errors/MultipleTagsError";
 import {ComponentInterface} from "./interfaces/ComponentInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
@@ -16,7 +13,6 @@ import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
 import {LogMessageType} from "../loggers/enums/LogMessageType";
 
 export class DatabaseInitialiser {
-	private static campaignSettings: Map<number, CampaignSetting> = new Map();
 	private static misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
 	private static app: App;
 
@@ -36,10 +32,6 @@ export class DatabaseInitialiser {
 
 		const response: DatabaseInterface = await this.factories.database.create();
 		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
-
-		await this._loadCampaignSettings();
-
-		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Campaign Settings Loaded'));
 
 		const components: Array<ComponentInterface> = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
@@ -120,6 +112,27 @@ export class DatabaseInitialiser {
 		})
 	}
 
+	private static async _readID(
+		file: TFile
+	): Promise<IdInterface|undefined> {
+		const metadata = this.app.metadataCache.getFileCache(file);
+		if (metadata == undefined) return undefined;
+		if (metadata.sections == undefined || metadata.sections.length === 0) return undefined;
+
+		const content: string = await this.app.vault.read(file);
+		const contentArray: Array<string> = content.split('\n');
+		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
+			const section = metadata.sections[sectionIndex];
+			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
+				const RpgManagerIdContent: Array<string> = contentArray.slice(section.position.start.line + 1, section.position.end.line);
+				const RpgManagerID: {id: string, checksum: string} = parseYaml(RpgManagerIdContent.join('\n'));
+				return this.factories.id.createFromID(RpgManagerID.id);
+			}
+		}
+
+		return undefined;
+	}
+
 	/**
 	 * Creates a Component from an Obsidian TFile
 	 *
@@ -129,62 +142,16 @@ export class DatabaseInitialiser {
 	public static async createComponent(
 		file: TFile,
 	): Promise<ComponentInterface|undefined> {
-		const metadata: CachedMetadata | null = this.app.metadataCache.getFileCache(file);
-		if (metadata == null) return undefined;
+		const id: IdInterface|undefined = await this._readID(file);
+		if (id === undefined) return undefined;
 
-		const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
-		if (tags.length === 0) return undefined;
-
-		if (!this.tagHelper.hasRpgManagerTags(tags)) return undefined;
-
-		let rpgManagerTagCounter = 0;
-		for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
-			if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-			if (rpgManagerTagCounter > 1) throw new MultipleTagsError(this.app, undefined);
-		}
-
-		const id: IdInterface | undefined = this.factories.id.createFromTags(tags);
 		if (!id.isValid) throw new TagMisconfiguredError(this.app, id);
 
-		const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
-
 		return await this.factories.component.create(
-			settings,
+			id.campaignSettings,
 			file,
 			id,
 		);
-	}
-
-	/**
-	 * PRIVATE METHODS
-	 */
-	private static _loadCampaignSettings(
-	): void {
-		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
-			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-			if (metadata?.frontmatter?.tags != null) {
-				const tags = this.tagHelper.sanitiseTags(metadata.frontmatter.tags);
-				if (tags.length === 0) return;
-
-				const tag = this.tagHelper.getTag(tags);
-				if (tag === undefined) return;
-
-				const type = this.tagHelper.getDataType(tag);
-				if (type === undefined) return;
-
-				if (type === ComponentType.Campaign){
-					const id = this.factories.id.createFromTag(tag);
-					try {
-						const settings = metadata?.frontmatter?.settings != undefined ?
-							CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :
-							CampaignSetting.Agnostic;
-						this.campaignSettings.set(id.campaignId, settings);
-					} catch (e) {
-						//No need to trap the errors here
-					}
-				}
-			}
-		});
 	}
 
 	private static async _initialiseRelationships(

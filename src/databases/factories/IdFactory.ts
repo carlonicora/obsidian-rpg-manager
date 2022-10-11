@@ -62,4 +62,29 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 
 		return id;
 	}
+
+	createFromID(
+		ID: string,
+		checksum?: string,
+	): IdInterface {
+		const [typeString, campaignSettings, ids] = ID.split('-');
+		const [campaignId, adventureIdOrSessionId, actId, sceneId] = ids.split('/');
+		const type: ComponentType = +typeString;
+
+		const adventureId = (adventureIdOrSessionId !== undefined  && type !== ComponentType.Session ? adventureIdOrSessionId : undefined);
+		const sessionId = (adventureIdOrSessionId !== undefined  && type === ComponentType.Session ? adventureIdOrSessionId : undefined);
+
+		const response = this.create(
+			type,
+			campaignId,
+			adventureId,
+			actId,
+			sceneId,
+			sessionId,
+		);
+
+		response.campaignSettings = +campaignSettings;
+
+		return response;
+	}
 }

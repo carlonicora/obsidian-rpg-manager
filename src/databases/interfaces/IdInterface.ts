@@ -1,10 +1,12 @@
 import {ComponentType} from "../enums/ComponentType";
 import {TagValueInterface} from "./TagValueInterface";
 import {TagStatus} from "../enums/TagStatus";
+import {CampaignSetting} from "../enums/CampaignSetting";
 
 export interface IdInterface {
 	type: ComponentType;
 	tagMap: Map<ComponentType, TagValueInterface>;
+	campaignSettings: CampaignSetting;
 
 	get id(
 	):number;
