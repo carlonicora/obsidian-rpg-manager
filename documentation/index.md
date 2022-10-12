@@ -10,7 +10,6 @@ run of their campaigns.
 - [What is a RPG Manager Component?](#what-is-a-rpg-manager-component)
 - [How RPG Manager identifies its components](#how-rpg-manager-identifies-its-components)
 - [What are the types of RPG Manager Components?](#what-are-the-types-of-rpg-manager-components)
-- [Frontmatter metadata](#frontmatter-metadata)
 - [Types of code blocks](#types-of-code-blocks)
 - [RpgManagerData code block](#rpgmanagerdata-code-block)
 - [RpgManager code block](#rpgmanager-code-block)
@@ -25,7 +24,10 @@ certain metadata that are relevant for the type of the component or for forming 
 
 ## How RPG Manager identifies its components
 
-RPG Manager uses a single [tag](frontmatter/tag.md) in the Frontmatter to identify an Obsidian Note as a `component`.
+RPG Manager uses a metadata stored in a code block at the end of the Obsidian Note to identify the note as a`component`.
+Please note, this codeblock (called `RpgManagerID`) should **never** be edited or deleted! This is part of the core
+functionality. Deleting the codeblock won't allow RPG Manager to identify a note as a component, and edting it 
+manually will disable it.
 
 ## What are the types of RPG Manager Components?
 
