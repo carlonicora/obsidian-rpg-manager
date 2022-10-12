@@ -64,10 +64,12 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	): Promise<void> {
 		if (this.metadata.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
-				this.relationships.add(
-					this.factories.relationship.createFromMetadata(relationshipMetadata),
-					false,
-				);
+				if (relationshipMetadata.path !== this.file.path) {
+					this.relationships.add(
+						this.factories.relationship.createFromMetadata(relationshipMetadata),
+						false,
+					);
+				}
 			})
 		}
 	}

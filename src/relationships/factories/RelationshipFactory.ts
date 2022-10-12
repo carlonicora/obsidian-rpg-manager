@@ -54,6 +54,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 		relationship: RelationshipInterface,
 	): RelationshipInterface|undefined {
 		if (component.stage === ComponentStage.Plot || component.stage === ComponentStage.Run) return undefined;
+		if (relationship.component !== null && component.file.path === relationship.component?.file.path) return undefined;
 
 		let reverseRelationshipType: RelationshipType|undefined = undefined;
 		switch (relationship.type){
