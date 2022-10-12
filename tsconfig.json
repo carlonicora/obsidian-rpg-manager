@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "../../../Desktop/New Folder With Items",
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
@@ -16,7 +16,7 @@
       "ES5",
       "ES6",
       "ES7",
-	  "ES2021.String",
+	  "ES2021.String"
     ]
   },
   "include": [
