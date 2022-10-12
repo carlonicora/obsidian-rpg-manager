@@ -8,7 +8,7 @@ import {ContentInterface} from "../../responses/contents/interfaces/ContentInter
 import {ResponseDataElementInterface} from "../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseTable} from "../../responses/ResponseTable";
 import {TableField} from "../../views/enums/TableField";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 import {ResponseTableElement} from "../../responses/ResponseTableElement";
 import {TableResponseElementInterface} from "../../responses/interfaces/TableResponseElementInterface";

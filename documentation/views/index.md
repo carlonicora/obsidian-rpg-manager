@@ -54,13 +54,13 @@ moreover, every list type can specifiy the required [relationship](../relationsh
 
 | Type of Relationship | Description                                                                                                                                     |
 |----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| Biunivocal           | Shows all the relations contained in the `component` as well as all the `components` that have a `biunivocal` relationship with the current one |
-| Univocal             | Shows only the relationships contained in the component, without showing external relationships to the `component`                              |
+| Bidirectional           | Shows all the relations contained in the `component` as well as all the `components` that have a `bidirectional` relationship with the current one |
+| Unidirectional             | Shows only the relationships contained in the component, without showing external relationships to the `component`                              |
 | Child                | Shows only the `related` that have been marked as `child` of the current `component`                                                            |
 | Parent               | Shows only the `related` that marked the current `component` as `child`                                                                         |
 | Hierarchy            | Shows herarchical relationships, that occur between plot components                                                                             |
 
-You can also leave the relationship type empty, and RPG Manager will display all the Univocal, Biunivocal and Reversed
+You can also leave the relationship type empty, and RPG Manager will display all the Unidirectional, Bidirectional and Reversed
 relationships.
 
 ```
@@ -68,9 +68,9 @@ relationships.
 models:
   lists: 
     pcs:
-      relationship: biunivocal
+      relationship: bidirectional
     npcs:
-      relationship: univocal
+      relationship: unidirectional
     locations:
     factions:
 ```

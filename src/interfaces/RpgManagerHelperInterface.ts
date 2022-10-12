@@ -13,5 +13,8 @@ export interface RpgManagerHelperInterface {
 	get tagHelper(): TagHelper;
 	get pluginVersion(): string;
 
-	updateSettings(settings: Partial<RpgManagerSettingsInterface>): Promise<void>;
+	updateSettings(
+		settings: Partial<RpgManagerSettingsInterface>,
+		partial?: boolean,
+	): Promise<void>;
 }

@@ -3,7 +3,7 @@ import {AbtPlotResponseInterface} from "./interfaces/AbtPlotResponseInterface";
 import {App} from "obsidian";
 import {ResponseType} from "./enums/ResponseType";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class ResponseAbtPlot extends AbstractResponse implements AbtPlotResponseInterface {
 	public need: ContentInterface;

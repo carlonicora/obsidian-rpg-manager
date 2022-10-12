@@ -6,7 +6,7 @@ import {TagHelper} from "../databases/TagHelper";
 import {base} from "w3c-keyname";
 import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -52,8 +52,9 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 
 	public updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,
+		partial = true,
 	): Promise<void> {
-		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings);
+		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings, partial);
 	}
 
 	public initialise(

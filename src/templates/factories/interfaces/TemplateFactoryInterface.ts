@@ -1,5 +1,5 @@
-import {CampaignSetting} from "../../../databases/enums/CampaignSetting";
-import {ComponentType} from "../../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../../components/components/campaign/enums/CampaignSetting";
+import {ComponentType} from "../../../components/enums/ComponentType";
 import {ComponentTemplateFactoryInterface} from "./ComponentTemplateFactoryInterface";
 
 export interface TemplateFactoryInterface {

@@ -1,7 +1,21 @@
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {ComponentType} from "./enums/ComponentType";
+import {ComponentType} from "../components/enums/ComponentType";
 
 export class TagHelper {
+	public static campaignTag = 'rpgm/campaign';
+	public static adventureTag = 'rpgm/adventure';
+	public static actTag = 'rpgm/act';
+	public static sceneTag = 'rpgm/scene';
+	public static sessionTag = 'rpgm/session';
+	public static npcTag = 'rpgm/npc';
+	public static pcTag = 'rpgm/pc';
+	public static locationTag = 'rpgm/location';
+	public static factionTag = 'rpgm/faction';
+	public static eventTag = 'rpgm/event';
+	public static clueTag = 'rpgm/clue';
+	public static musicTag = 'rpgm/music';
+	public static subplotTag ='rpgm/subplot';
+
 	public dataSettings: Map<ComponentType, string>;
 	private requiredIds: Map<ComponentType, Array<ComponentType>>;
 
@@ -9,19 +23,19 @@ export class TagHelper {
 		private settings: RpgManagerSettingsInterface,
 	) {
 		this.dataSettings = new Map();
-		this.dataSettings.set(ComponentType.Campaign, settings.campaignTag);
-		this.dataSettings.set(ComponentType.Adventure, settings.adventureTag);
-		this.dataSettings.set(ComponentType.Act, settings.actTag);
-		this.dataSettings.set(ComponentType.Scene, settings.sceneTag);
-		this.dataSettings.set(ComponentType.Session, settings.sessionTag);
-		this.dataSettings.set(ComponentType.Character, settings.pcTag);
-		this.dataSettings.set(ComponentType.Clue, settings.clueTag);
-		this.dataSettings.set(ComponentType.Event, settings.eventTag);
-		this.dataSettings.set(ComponentType.Faction, settings.factionTag);
-		this.dataSettings.set(ComponentType.Location, settings.locationTag);
-		this.dataSettings.set(ComponentType.NonPlayerCharacter, settings.npcTag);
-		this.dataSettings.set(ComponentType.Music, settings.musicTag);
-		this.dataSettings.set(ComponentType.Subplot, settings.subplotTag);
+		this.dataSettings.set(ComponentType.Campaign, TagHelper.campaignTag);
+		this.dataSettings.set(ComponentType.Adventure, TagHelper.adventureTag);
+		this.dataSettings.set(ComponentType.Act, TagHelper.actTag);
+		this.dataSettings.set(ComponentType.Scene, TagHelper.sceneTag);
+		this.dataSettings.set(ComponentType.Session, TagHelper.sessionTag);
+		this.dataSettings.set(ComponentType.Character, TagHelper.pcTag);
+		this.dataSettings.set(ComponentType.Clue, TagHelper.clueTag);
+		this.dataSettings.set(ComponentType.Event, TagHelper.eventTag);
+		this.dataSettings.set(ComponentType.Faction, TagHelper.factionTag);
+		this.dataSettings.set(ComponentType.Location, TagHelper.locationTag);
+		this.dataSettings.set(ComponentType.NonPlayerCharacter, TagHelper.npcTag);
+		this.dataSettings.set(ComponentType.Music, TagHelper.musicTag);
+		this.dataSettings.set(ComponentType.Subplot, TagHelper.subplotTag);
 
 		this.requiredIds = new Map();
 		this.requiredIds.set(ComponentType.Campaign, [ComponentType.Campaign]);
@@ -112,8 +126,6 @@ export class TagHelper {
 		if (tag.startsWith(this.dataSettings.get(ComponentType.Event) ?? '?')) return true;
 		if (tag.startsWith(this.dataSettings.get(ComponentType.Music) ?? '?')) return true;
 		return tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?');
-
-
 	}
 
 	public getId(
@@ -178,6 +190,92 @@ export class TagHelper {
 				if (tag.startsWith(this.dataSettings.get(ComponentType.Subplot) ?? '?')) response = tag;
 			}
 		});
+
+		return response;
+	}
+
+	public fuzzyTagGuesser(
+		tag: string
+	): {tag: string, type: ComponentType}|undefined {
+		const response: string|undefined = undefined;
+
+		const settings: any = this.settings;
+		const oldCampaignTag: string|undefined = settings.campaignTag;
+		const oldAdventureTag: string|undefined = settings.adventureTag;
+		const oldActTag: string|undefined = settings.actTag;
+		const oldSceneTag: string|undefined = settings.sceneTag;
+		const oldSessionTag: string|undefined = settings.sessionTag;
+		const oldSubplotTag: string|undefined = settings.subplotTag;
+		const oldPcTag: string|undefined = settings.pcTag;
+		const oldNpcTag: string|undefined = settings.npcTag;
+		const oldClueTag: string|undefined = settings.clueTag;
+		const oldEventTag: string|undefined = settings.eventTag;
+		const oldLocationTag: string|undefined = settings.locationTag;
+		const oldFactionTag: string|undefined = settings.factionTag;
+		const oldMusicTag: string|undefined = settings.musicTag;
+
+		if (oldCampaignTag !== undefined && tag.startsWith(oldCampaignTag)) return {tag: oldCampaignTag, type: ComponentType.Campaign};
+		if (oldAdventureTag !== undefined && tag.startsWith(oldAdventureTag)) return {tag: oldAdventureTag, type: ComponentType.Adventure};
+		if (oldActTag !== undefined && tag.startsWith(oldActTag)) return {tag: oldActTag, type: ComponentType.Act};
+		if (oldSceneTag !== undefined && tag.startsWith(oldSceneTag)) return {tag: oldSceneTag, type: ComponentType.Scene};
+		if (oldSessionTag !== undefined && tag.startsWith(oldSessionTag)) return {tag: oldSessionTag, type: ComponentType.Session};
+		if (oldSubplotTag !== undefined && tag.startsWith(oldSubplotTag)) return {tag: oldSubplotTag, type: ComponentType.Subplot};
+		if (oldPcTag !== undefined && tag.startsWith(oldPcTag)) return {tag: oldPcTag, type: ComponentType.Character};
+		if (oldNpcTag !== undefined && tag.startsWith(oldNpcTag)) return {tag: oldNpcTag, type: ComponentType.NonPlayerCharacter};
+		if (oldClueTag !== undefined && tag.startsWith(oldClueTag)) return {tag: oldClueTag, type: ComponentType.Clue};
+		if (oldEventTag !== undefined && tag.startsWith(oldEventTag)) return {tag: oldEventTag, type: ComponentType.Event};
+		if (oldLocationTag !== undefined && tag.startsWith(oldLocationTag)) return {tag: oldLocationTag, type: ComponentType.Location};
+		if (oldFactionTag !== undefined && tag.startsWith(oldFactionTag)) return {tag: oldFactionTag, type: ComponentType.Faction};
+		if (oldMusicTag !== undefined && tag.startsWith(oldMusicTag)) return {tag: oldMusicTag, type: ComponentType.Music};
+
+		if (tag.startsWith('rpgm/outline/campaign')) return {tag: tag, type: ComponentType.Campaign};
+		if (tag.startsWith('rpgm/outline/adventure')) return {tag: tag, type: ComponentType.Adventure};
+		if (tag.startsWith('rpgm/outline/act')) return {tag: tag, type: ComponentType.Act};
+		if (tag.startsWith('rpgm/outline/scene')) return {tag: tag, type: ComponentType.Scene};
+		if (tag.startsWith('rpgm/outline/session')) return {tag: tag, type: ComponentType.Session};
+		if (tag.startsWith('rpgm/outline/subplot')) return {tag: tag, type: ComponentType.Subplot};
+		if (tag.startsWith('rpgm/element/character/pc')) return {tag: tag, type: ComponentType.Character};
+		if (tag.startsWith('rpgm/element/character/npc')) return {tag: tag, type: ComponentType.NonPlayerCharacter};
+		if (tag.startsWith('rpgm/element/clue')) return {tag: tag, type: ComponentType.Clue};
+		if (tag.startsWith('rpgm/element/event')) return {tag: tag, type: ComponentType.Event};
+		if (tag.startsWith('rpgm/element/location')) return {tag: tag, type: ComponentType.Location};
+		if (tag.startsWith('rpgm/element/faction')) return {tag: tag, type: ComponentType.Faction};
+		if (tag.startsWith('rpgm/element/music')) return {tag: tag, type: ComponentType.Music};
+
+		if (tag.toLowerCase().indexOf('campaign') !== -1) return {tag: tag, type: ComponentType.Campaign};
+		if (tag.toLowerCase().indexOf('adventure') !== -1) return {tag: tag, type: ComponentType.Adventure};
+		if (tag.toLowerCase().indexOf('act') !== -1) return {tag: tag, type: ComponentType.Act};
+		if (tag.toLowerCase().indexOf('scene') !== -1) return {tag: tag, type: ComponentType.Scene};
+		if (tag.toLowerCase().indexOf('session') !== -1) return {tag: tag, type: ComponentType.Session};
+		if (tag.toLowerCase().indexOf('subplot') !== -1) return {tag: tag, type: ComponentType.Subplot};
+		if (tag.toLowerCase().indexOf('pc') !== -1) return {tag: tag, type: ComponentType.Character};
+		if (tag.toLowerCase().indexOf('npc') !== -1) return {tag: tag, type: ComponentType.NonPlayerCharacter};
+		if (tag.toLowerCase().indexOf('clue') !== -1) return {tag: tag, type: ComponentType.Clue};
+		if (tag.toLowerCase().indexOf('event') !== -1) return {tag: tag, type: ComponentType.Event};
+		if (tag.toLowerCase().indexOf('location') !== -1) return {tag: tag, type: ComponentType.Location};
+		if (tag.toLowerCase().indexOf('faction') !== -1) return {tag: tag, type: ComponentType.Faction};
+		if (tag.toLowerCase().indexOf('music') !== -1) return {tag: tag, type: ComponentType.Music};
+
+		return response;
+	}
+
+	public fuzzyTagsGuesser(
+		tags: Array<string>,
+	): {tag: string, type: ComponentType}|undefined {
+		if (tags == null) return undefined;
+
+		let response: {tag: string, type: ComponentType}|undefined;
+
+		for (let index=0; index<tags.length; index++){
+			response = this.fuzzyTagGuesser(tags[index]);
+			if (response !== undefined && response.tag.indexOf('rpgm') === -1) response = undefined;
+		}
+
+		if (response !== undefined){
+			for (let index=0; index<tags.length; index++){
+				if (tags[index].startsWith(response.tag)) response.tag = tags[index];
+			}
+		}
 
 		return response;
 	}

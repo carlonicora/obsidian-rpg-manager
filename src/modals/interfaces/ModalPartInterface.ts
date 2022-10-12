@@ -1,6 +1,6 @@
-import {ComponentType} from "../../databases/enums/ComponentType";
-import {CampaignSetting} from "../../databases/enums/CampaignSetting";
-import {IdInterface} from "../../databases/interfaces/IdInterface";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {CampaignSetting} from "../../components/components/campaign/enums/CampaignSetting";
+import {IdInterface} from "../../id/interfaces/IdInterface";
 
 export interface ModalPartInterface {
 	addElement(

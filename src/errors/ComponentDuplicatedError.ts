@@ -1,7 +1,7 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {App} from "obsidian";
-import {IdInterface} from "../databases/interfaces/IdInterface";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {IdInterface} from "../id/interfaces/IdInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(

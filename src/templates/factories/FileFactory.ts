@@ -1,10 +1,10 @@
 import {MarkdownView} from "obsidian";
-import {ComponentType} from "../../databases/enums/ComponentType";
-import {CampaignSetting} from "../../databases/enums/CampaignSetting";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {CampaignSetting} from "../../components/components/campaign/enums/CampaignSetting";
 import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {FileFactoryInterface} from "./interfaces/FileFactoryInterface";
-import {IdInterface} from "../../databases/interfaces/IdInterface";
-import {CampaignInterface} from "../../databases/components/interfaces/CampaignInterface";
+import {IdInterface} from "../../id/interfaces/IdInterface";
+import {CampaignInterface} from "../../components/components/campaign/interfaces/CampaignInterface";
 
 const path = require('path');
 

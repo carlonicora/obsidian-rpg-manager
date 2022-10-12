@@ -1,5 +1,5 @@
 import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export interface ResponseDataInterface {

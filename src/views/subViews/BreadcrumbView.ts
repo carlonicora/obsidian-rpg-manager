@@ -2,7 +2,9 @@ import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 import {RelationshipsSelectionModal} from "../../modals/RelationshipsSelectionModal";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {IdSwitcherModal} from "../../modals/IdSwitcherModal";
 
 export class BreadcrumbView extends AbstractSubModelView {
 	private currentComponent: ComponentInterface;
@@ -22,12 +24,26 @@ export class BreadcrumbView extends AbstractSubModelView {
 
 		breadcrumbContainer.createDiv({cls: 'reset'});
 		const relationshipAdderContainerEl = breadcrumbContainer.createDiv({cls:'line spaced-line'});
+
 		const crumb = relationshipAdderContainerEl.createDiv({cls: 'crumb'})
 		crumb.createDiv({cls: 'title', text: 'Relationships'});
 		const value = crumb.createDiv({cls: 'value'});
 		const relationshipsAdderEl = value.createEl('span', {cls: 'rpgm-edit-icon', text: 'Manage Relationship'});
 		relationshipsAdderEl.addEventListener("click", () => {
 			new RelationshipsSelectionModal(this.app, this.currentComponent).open();
+		});
+
+		const separator = relationshipAdderContainerEl.createDiv({cls: 'separator'});
+		separator.createDiv({cls: 'title', text: ' '});
+		const separatorText = separator.createDiv({cls: 'value'});
+		separatorText.createEl('p').textContent = '|';
+
+		const idChangerCrumbEl = relationshipAdderContainerEl.createDiv({cls: 'crumb'})
+		idChangerCrumbEl.createDiv({cls: 'title', text: 'Move'});
+		const idChangerValueEl = idChangerCrumbEl.createDiv({cls: 'value'});
+		const idChangerAdderEl = idChangerValueEl.createEl('span', {cls: 'rpgm-edit-icon', text: 'Move your ' + ComponentType[this.currentComponent.id.type]});
+		idChangerAdderEl.addEventListener("click", () => {
+			new IdSwitcherModal(this.app, this.currentComponent.file).open();
 		});
 	}
 

@@ -2,13 +2,13 @@ import {BreadcrumbFactoryInterface} from "./interfaces/BreadcrumbFactoryInterfac
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {ResponseBreadcrumb} from "../../responses/ResponseBreadcrumb";
-import {ComponentType} from "../../databases/enums/ComponentType";
+import {ComponentType} from "../../components/enums/ComponentType";
 import {FileFactory} from "../../templates/factories/FileFactory";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
-import {AdventureInterface} from "../../databases/components/interfaces/AdventureInterface";
-import {SessionInterface} from "../../databases/components/interfaces/SessionInterface";
-import {ActInterface} from "../../databases/components/interfaces/ActInterface";
-import {SceneInterface} from "../../databases/components/interfaces/SceneInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {AdventureInterface} from "../../components/components/adventure/interfaces/AdventureInterface";
+import {SessionInterface} from "../../components/components/session/interfaces/SessionInterface";
+import {ActInterface} from "../../components/components/act/interfaces/ActInterface";
+import {SceneInterface} from "../../components/components/scene/interfaces/SceneInterface";
 
 export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFactoryInterface {
 	public create(

@@ -2,22 +2,23 @@ import {ComponentTemplateFactoryInterface} from "../factories/interfaces/Compone
 import {App, stringifyYaml} from "obsidian";
 import {FileContentManager} from "../../helpers/FileContentManager";
 import {ComponentNotesTemplateFactoryInterface} from "../factories/interfaces/ComponentNotesTemplateFactoryInterface";
-import {ComponentType} from "../../databases/enums/ComponentType";
-import {CampaignNotesTemplateFactory} from "../factories/notes/CampaignNotesTemplateFactory";
-import {AdventureNotesTemplateFactory} from "../factories/notes/AdventureNotesTemplateFactory";
-import {CharacterNotesTemplateFactory} from "../factories/notes/CharacterNotesTemplateFactory";
-import {NonPlayerCharacterNotesTemplateFactory} from "../factories/notes/NonPlayerCharacterNotesTemplateFactory";
-import {ClueNotesTemplateFactory} from "../factories/notes/ClueNotesTemplateFactory";
-import {LocationNotesTemplateFactory} from "../factories/notes/LocationNotesTemplateFactory";
-import {FactionNotesTemplateFactory} from "../factories/notes/FactionNotesTemplateFactory";
-import {EventNotesTemplateFactory} from "../factories/notes/EventNotesTemplateFactory";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {CampaignNotesTemplateFactory} from "../../components/components/campaign/templates/CampaignNotesTemplateFactory";
+import {AdventureNotesTemplateFactory} from "../../components/components/adventure/templates/AdventureNotesTemplateFactory";
+import {CharacterNotesTemplateFactory} from "../../components/components/character/templates/CharacterNotesTemplateFactory";
+import {NonPlayerCharacterNotesTemplateFactory} from "../../components/components/character/templates/NonPlayerCharacterNotesTemplateFactory";
+import {ClueNotesTemplateFactory} from "../../components/components/clue/templates/ClueNotesTemplateFactory";
+import {LocationNotesTemplateFactory} from "../../components/components/location/templates/LocationNotesTemplateFactory";
+import {FactionNotesTemplateFactory} from "../../components/components/faction/templates/FactionNotesTemplateFactory";
+import {EventNotesTemplateFactory} from "../../components/components/event/templates/EventNotesTemplateFactory";
 import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
-import {ActNotesTemplateFactory} from "../factories/notes/ActNotesTemplateFactory";
-import {SceneNotesTemplateFactory} from "../factories/notes/SceneNotesTemplateFactory";
-import {SessionNotesTemplateFactory} from "../factories/notes/SessionNotesTemplateFactory";
-import {SubplotNotesTemplateFactory} from "../factories/notes/SubplotNotesTemplateFactory";
-import {ControllerMetadataDataInterface} from "../../metadatas/controllers/ControllerMetadataDataInterface";
-import {ControllerMetadataInterface} from "../../metadatas/controllers/ControllerMetadataInterface";
+import {ActNotesTemplateFactory} from "../../components/components/act/templates/ActNotesTemplateFactory";
+import {SceneNotesTemplateFactory} from "../../components/components/scene/templates/SceneNotesTemplateFactory";
+import {SessionNotesTemplateFactory} from "../../components/components/session/templates/SessionNotesTemplateFactory";
+import {SubplotNotesTemplateFactory} from "../../components/components/subplot/templates/SubplotNotesTemplateFactory";
+import {ControllerMetadataDataInterface} from "../../controller/interfaces/ControllerMetadataDataInterface";
+import {ControllerMetadataInterface} from "../../controller/interfaces/ControllerMetadataInterface";
+import {Md5} from "ts-md5";
 
 export abstract class AbstractComponentTemplateFactory extends AbstractRpgManager implements ComponentTemplateFactoryInterface {
 	protected internalTemplate: ComponentNotesTemplateFactoryInterface|undefined;
@@ -107,7 +108,9 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 			templateContent = this.internalTemplate.getContent();
 		}
 
-		return this.generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock);
+		const idCodeBlock: string  = this.generateRpgManagerIDCodeBlock(this.generateID())
+
+		return this.generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock, idCodeBlock);
 	}
 
 	private generateResponse(
@@ -116,6 +119,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		initialCodeBlock: string|undefined,
 		mainContent: string|undefined,
 		lastCodeBlock: string|undefined,
+		idCodeBlock: string,
 	): string {
 		let response: string;
 
@@ -126,6 +130,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		response += initialCodeBlock;
 		response += mainContent ?? '\n';
 		if (lastCodeBlock !== undefined) response += lastCodeBlock;
+		response += idCodeBlock;
 
 		return response;
 	}
@@ -218,6 +223,11 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		return undefined;
 	}
 
+	protected generateID(
+	): string {
+		return '';
+	}
+
 	protected generateRpgManagerDataCodeBlock(
 		metadata: ControllerMetadataDataInterface,
 	): string {
@@ -236,5 +246,21 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		response += '```\n';
 
 		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');
+	}
+
+	protected generateRpgManagerIDCodeBlock(
+		ID: string,
+	): string {
+		const metadata = {
+			id: ID,
+			checksum: Md5.hashStr(ID),
+		};
+
+		let response = '```RpgManagerID\n';
+		response += '### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###\n';
+		response += stringifyYaml(metadata);
+		response += '```\n';
+
+		return response;
 	}
 }

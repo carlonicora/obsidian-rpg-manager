@@ -1,16 +1,16 @@
 import {AbstractModel} from "./abstracts/AbstractModel";
 import {ResponseDataInterface} from "../responses/interfaces/ResponseDataInterface";
-import {ControllerMetadataModelListsInterface} from "../metadatas/controllers/ControllerMetadataModelListsInterface";
+import {ControllerMetadataModelListsInterface} from "../controller/interfaces/ControllerMetadataModelListsInterface";
 import {
 	ControllerMetadataModelElementInterface
-} from "../metadatas/controllers/ControllerMetadataModelElementInterface";
+} from "../controller/interfaces/ControllerMetadataModelElementInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {ComponentStage} from "../databases/components/enums/ComponentStage";
+import {ComponentStage} from "../components/enums/ComponentStage";
 
 export class ListModel extends AbstractModel {
 	protected sourceMeta: ControllerMetadataModelListsInterface;
@@ -92,7 +92,7 @@ export class ListModel extends AbstractModel {
 						relationship.component.stage !== ComponentStage.Plot &&
 						relationship.component.stage !== ComponentStage.Run &&
 						this.currentComponent.getRelationships().filter((internalRelationship: RelationshipInterface) => internalRelationship.path === relationship.path).length === 0 &&
-						relationship.type === RelationshipType.Univocal
+						relationship.type === RelationshipType.Unidirectional
 					) {
 						this.factories.relationship.create(
 							RelationshipType.Hierarchy,

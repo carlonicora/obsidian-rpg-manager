@@ -3,17 +3,53 @@ import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorIn
 import {CachedMetadata, MarkdownView, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
 import {FileManipulator} from "./FileManipulator";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {ControllerMetadataInterface} from "../metadatas/controllers/ControllerMetadataInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../metadatas/controllers/ControllerMetadataRelationshipInterface";
+} from "../controller/interfaces/ControllerMetadataRelationshipInterface";
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
-import {ControllerMetadataDataInterface} from "../metadatas/controllers/ControllerMetadataDataInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {ControllerMetadataDataInterface} from "../controller/interfaces/ControllerMetadataDataInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
-import {ComponentStage} from "../databases/components/enums/ComponentStage";
+import {ComponentStage} from "../components/enums/ComponentStage";
+import {Md5} from "ts-md5";
+import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
+import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
+	public async replaceID(
+		file: TFile,
+		ID: string,
+	): Promise<void> {
+		const fileEditor = new FileManipulator(this.app, file);
+		if (!await fileEditor.read()) return;
+
+		const metadata = {
+			id: ID,
+			checksum: Md5.hashStr(ID),
+		};
+
+		const newIdCodeBlock: Array<string> = [];
+		newIdCodeBlock.push('```RpgManagerID');
+		newIdCodeBlock.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
+		newIdCodeBlock.push(stringifyYaml(metadata));
+		newIdCodeBlock.push('```');
+
+		fileEditor.cachedFile.sections?.forEach((section: SectionCache) => {
+			if (section.type === 'code' && fileEditor.arrayContent[section.position.start.line] === '```RpgManagerID'){
+				const replacedArray = fileEditor.arrayContent;
+				replacedArray.splice(section.position.start.line, section.position.end.line - section.position.start.line + 1, ...newIdCodeBlock);
+				fileEditor.maybeWrite(replacedArray.join('\n'))
+					.then(() => {
+						DatabaseInitialiser.initialise(this.app)
+							.then((database: DatabaseInterface) => {
+								this.database = database;
+								this.app.workspace.trigger("rpgmanager:force-refresh-views");
+							})
+					});
+			}
+		});
+	}
+
 	public async stopCurrentDuration(
 		file: TFile,
 	): Promise<void> {
@@ -92,75 +128,6 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		);
 
 		await fileEditor.maybeReplaceCodeBlockMetadata(metadata);
-	}
-
-	public selectRelationship(
-		path: string,
-	): void {
-
-		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-		if (activeView != null) {
-			const editor = activeView.editor;
-			const file = activeView.file;
-			const cache: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-
-			if (cache == null) return;
-
-			let stringYaml: any|undefined;
-			for (let index=0; index<(cache.sections?.length ?? 0); index++){
-				stringYaml = (cache.sections !== undefined ? cache.sections[index] : undefined);
-
-				if (
-					stringYaml !== undefined &&
-					editor.getLine(stringYaml.position.start.line) === '```RpgManagerData'
-				){
-					let relationshipsStarted = false
-					for (let lineIndex=stringYaml.position.start.line+1; lineIndex<stringYaml.position.end.line; lineIndex++) {
-						if (editor.getLine(lineIndex).trim().toLowerCase() === 'relationships:') {
-							relationshipsStarted = true
-							continue;
-						}
-						if (!relationshipsStarted) continue;
-
-						if (editor.getLine(lineIndex).trim().toLowerCase().startsWith('- type:')) {
-							const startOfPath = editor.getLine(lineIndex+1).indexOf('path: ');
-							if (startOfPath !== -1 && editor.getLine(lineIndex+1).substring(startOfPath+6).trim() === path){
-								const startOfDescription = editor.getLine(lineIndex+2).indexOf('description: ');
-								if (startOfDescription !== -1){
-									editor.setSelection({line: lineIndex+2, ch: startOfDescription + 13}, {line: lineIndex+2, ch: editor.getLine(lineIndex+2).length});
-									editor.focus();
-									editor.scrollIntoView({from: {line: lineIndex+2, ch: startOfDescription + 13}, to: {line: lineIndex+2, ch: editor.getLine(lineIndex+2).length}}, true)
-								} else {
-									let relatioshipContent: string = editor.getRange({line: lineIndex, ch: 0}, {line: lineIndex+2, ch:0});
-									relatioshipContent += ' '.repeat(startOfPath) + 'description: \n';
-									editor.replaceRange(relatioshipContent, {line: lineIndex, ch: 0}, {line: lineIndex+2, ch:0});
-									editor.setSelection({line: lineIndex+2, ch: startOfPath+13}, {line: lineIndex+2, ch: startOfPath+13});
-									editor.focus();
-									editor.scrollIntoView({from: {line: lineIndex+2, ch: startOfPath+13}, to: {line: lineIndex+2, ch: startOfPath+13}}, true)
-								}
-
-								return;
-							}
-						}
-					}
-
-					let newRelationship = '';
-					if (!relationshipsStarted) newRelationship += 'relationships:\n';
-					newRelationship += '  - type: univocal\n' +
-						'    path: ' + path + '\n'+
-						'    description: \n' +
-						'```\n';
-
-					editor.replaceRange(newRelationship, {line: stringYaml.position.end.line, ch: 0}, {line: stringYaml.position.end.line+1, ch:0});
-					editor.setSelection({line: stringYaml.position.end.line+2, ch: 17}, {line: stringYaml.position.end.line+2, ch:17})
-					editor.focus();
-					editor.scrollIntoView({from: {line: stringYaml.position.end.line+2, ch: 0}, to: {line: stringYaml.position.end.line+3, ch: 0}}, true)
-					return;
-
-					break;
-				}
-			}
-		}
 	}
 
 	public async update(
@@ -413,9 +380,9 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 				if (!relationshipAlreadyExists) {
 					let relationship: RelationshipType | undefined = undefined;
 					if (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot) {
-						relationship = RelationshipType.Univocal;
+						relationship = RelationshipType.Unidirectional;
 					} else {
-						relationship = RelationshipType.Biunivocal;
+						relationship = RelationshipType.Bidirectional;
 					}
 
 					metadata.relationships?.push({

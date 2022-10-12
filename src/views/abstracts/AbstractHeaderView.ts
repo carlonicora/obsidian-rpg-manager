@@ -2,7 +2,7 @@ import {AbstractSubModelView} from "./AbstractSubModelView";
 import {HeaderResponseInterface} from "../../responses/interfaces/HeaderResponseInterface";
 import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -11,6 +11,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected headerInfoEl: HTMLDivElement;
 	protected headerContainerEl: HTMLDivElement;
 	protected imageContainterEl: HTMLDivElement;
+	protected infoTableEl: HTMLTableSectionElement;
 
 	private isInternalRender = false;
 
@@ -57,6 +58,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		//container
 		this.headerContainerEl = crs.createDiv({cls: 'container'});
 		this.headerInfoEl = this.headerContainerEl.createDiv({cls: 'info'});
+		this.infoTableEl = this.headerInfoEl.createEl('table', {cls: 'rpgm-headless-table'}).createTBody();
 
 		//image
 		//const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
@@ -80,7 +82,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 
 		if (!this.isInternalRender){
 			data.elements.forEach((element: HeaderResponseElementInterface) => {
-				const containerEl = this.createContainerEl(element.type, element.title);
+				const containerEl = this.createContainerEl(element);
 				element.value.fillContent(containerEl, this.sourcePath);
 			});
 		}
@@ -89,41 +91,34 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	}
 
 	protected createContainerEl(
-		responseType: HeaderResponseType,
-		title: string,
-	): HTMLDivElement {
-		let prefix = 'short';
-		let crsContainer: HTMLDivElement;
+		element: HeaderResponseElementInterface,
+	): HTMLTableCellElement {
+		let tableRowEl = this.infoTableEl.insertRow();
+		const titleCellEl = tableRowEl.insertCell();
+		titleCellEl.addClass('title');
+		titleCellEl.textContent = element.title;
 
-		switch (responseType){
-			case HeaderResponseType.Long:
-				prefix = 'long';
-				crsContainer = this.headerInfoEl;
-				break;
-			case HeaderResponseType.Half:
-			case HeaderResponseType.StoryCircleSelector:
-			case HeaderResponseType.AbtSelector:
-			case HeaderResponseType.SceneExcitment:
-			case HeaderResponseType.SceneTypeSelector:
-			case HeaderResponseType.SessionSelection:
-			case HeaderResponseType.ScenesSelection:
-			case HeaderResponseType.DateSelector:
-				prefix = 'half';
-				crsContainer = this.headerInfoEl.createDiv({cls: 'half'});
-				break;
-			default:
-				crsContainer = this.headerInfoEl.createDiv({cls: 'short'});
-				break;
+		if (element.type === HeaderResponseType.Long){
+			titleCellEl.colSpan = 2;
+			tableRowEl = this.infoTableEl.insertRow();
 		}
 
-		crsContainer.createDiv({cls: prefix+ 'Title', text: title});
-		crsContainer.createDiv({cls: prefix+ 'Text'});
+		const response = tableRowEl.insertCell();
+		response.addClass('content');
 
-		return crsContainer;
+		if (element.additionalInformation?.editableField !== undefined) this.addEditorIcon(response, element.currentComponent, element.additionalInformation.editableField)
+
+		if (element.type === HeaderResponseType.Long) {
+			response.colSpan = 2;
+		} else {
+			response.addClass('contentShort');
+		}
+
+		return response;
 	}
 
 	protected addElement(
-		containerEl: HTMLDivElement,
+		containerEl: HTMLTableCellElement,
 		element: HeaderResponseElementInterface,
 		fn: any,
 	): void {

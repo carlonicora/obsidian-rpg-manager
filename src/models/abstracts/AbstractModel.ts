@@ -3,29 +3,29 @@ import {ModelInterface} from "../interfaces/ModelInterface";
 import {App} from "obsidian";
 import {ResponseData} from "../../responses/ResponseData";
 import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
-import {ComponentType} from "../../databases/enums/ComponentType";
-import {LocationTableSubModel} from "../subModels/tables/LocationTableSubModel";
-import {FactionTableSubModel} from "../subModels/tables/FactionTableSubModel";
-import {ClueTableSubModel} from "../subModels/tables/ClueTableSubModel";
-import {EventTableSubModel} from "../subModels/tables/EventTableSubModel";
-import {MusicTableSubModel} from "../subModels/tables/MusicTableSubModel";
-import {CharacterTableSubModel} from "../subModels/tables/CharacterTableSubModel";
-import {AdventureTableSubModel} from "../subModels/tables/AdventureTableSubModel";
-import {ActTableSubModel} from "../subModels/tables/ActTableSubModel";
-import {SceneTableSubModel} from "../subModels/tables/SceneTableSubModel";
-import {SessionTableSubModel} from "../subModels/tables/SessionTableSubModel";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {LocationTableSubModel} from "../../components/components/location/models/LocationTableSubModel";
+import {FactionTableSubModel} from "../../components/components/faction/models/FactionTableSubModel";
+import {ClueTableSubModel} from "../../components/components/clue/models/ClueTableSubModel";
+import {EventTableSubModel} from "../../components/components/event/models/EventTableSubModel";
+import {MusicTableSubModel} from "../../components/components/music/models/MusicTableSubModel";
+import {CharacterTableSubModel} from "../../components/components/character/models/CharacterTableSubModel";
+import {AdventureTableSubModel} from "../../components/components/adventure/models/AdventureTableSubModel";
+import {ActTableSubModel} from "../../components/components/act/models/ActTableSubModel";
+import {SceneTableSubModel} from "../../components/components/scene/models/SceneTableSubModel";
+import {SessionTableSubModel} from "../../components/components/session/models/SessionTableSubModel";
 import {SorterComparisonElement} from "../../databases/SorterComparisonElement";
 import {SorterComparisonElementInterface} from "../../databases/interfaces/SorterComparisonElementInterface";
-import {SubplotTableSubModel} from "../subModels/tables/SubplotTableSubModel";
-import {NonPlayerCharacterTableSubModel} from "../subModels/tables/NonPlayerCharacterTableSubModel";
+import {SubplotTableSubModel} from "../../components/components/subplot/models/SubplotTableSubModel";
+import {NonPlayerCharacterTableSubModel} from "../../components/components/character/models/NonPlayerCharacterTableSubModel";
 import {SorterType} from "../../databases/enums/SorterType";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
-import {EventInterface} from "../../databases/components/interfaces/EventInterface";
-import {CampaignInterface} from "../../databases/components/interfaces/CampaignInterface";
-import {SessionInterface} from "../../databases/components/interfaces/SessionInterface";
-import {AdventureInterface} from "../../databases/components/interfaces/AdventureInterface";
-import {ActInterface} from "../../databases/components/interfaces/ActInterface";
-import {SceneInterface} from "../../databases/components/interfaces/SceneInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {EventInterface} from "../../components/components/event/interfaces/EventInterface";
+import {CampaignInterface} from "../../components/components/campaign/interfaces/CampaignInterface";
+import {SessionInterface} from "../../components/components/session/interfaces/SessionInterface";
+import {AdventureInterface} from "../../components/components/adventure/interfaces/AdventureInterface";
+import {ActInterface} from "../../components/components/act/interfaces/ActInterface";
+import {SceneInterface} from "../../components/components/scene/interfaces/SceneInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../../relationships/enums/RelationshipType";
 
@@ -138,68 +138,52 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		title: string|undefined=undefined,
 		sortByLatestUsage: boolean,
 	): Promise<void>{
-		if (requiredRelationshipType === undefined) requiredRelationshipType = RelationshipType.Reversed | RelationshipType.Biunivocal | RelationshipType.Univocal;
-		if (requiredRelationshipType === RelationshipType.Univocal) requiredRelationshipType = RelationshipType.Univocal | RelationshipType.Biunivocal;
+		if (requiredRelationshipType === undefined) requiredRelationshipType = RelationshipType.Reversed | RelationshipType.Bidirectional | RelationshipType.Unidirectional;
+		if (requiredRelationshipType === RelationshipType.Unidirectional) requiredRelationshipType = RelationshipType.Unidirectional | RelationshipType.Bidirectional;
 
-		if (!this.isExcluded(type)){
-			const subModel = this.subModelsMap.get(type);
-			if (component === undefined) {
-				component = this.currentComponent.getRelationships().filter((relationship: RelationshipInterface) =>
-					relationship.component !== undefined &&
-					relationship.component.id.type === type &&
-					(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
-				);
-			}
+		const subModel = this.subModelsMap.get(type);
+		if (component === undefined) {
+			component = this.currentComponent.getRelationships().filter((relationship: RelationshipInterface) =>
+				relationship.component !== undefined &&
+				relationship.component.id.type === type &&
+				(requiredRelationshipType === undefined || (requiredRelationshipType & relationship.type) === relationship.type)
+			);
+		}
 
-			if (Array.isArray(component)) {
-				let sorter: Array<any> | undefined = undefined;
+		if (Array.isArray(component)) {
+			let sorter: Array<any> | undefined = undefined;
 
-				if ((<Array<any>>component)[0]?.component !== undefined) {
-					if (sortByLatestUsage){
-						sorter = [
-							new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.stat.mtime, SorterType.Descending)
-						];
-					} else {
-						sorter = this.relationshipSortingMap.get(type);
-						if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.basename)];
-					}
+			if ((<Array<any>>component)[0]?.component !== undefined) {
+				if (sortByLatestUsage){
+					sorter = [
+						new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.stat.mtime, SorterType.Descending)
+					];
 				} else {
-					if (sortByLatestUsage){
-						sorter = [
-							new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending)
-						];
-					} else {
-						sorter = this.componentSortingMap.get(type);
-						if (sorter === undefined) sorter = [new SorterComparisonElement((component: ComponentInterface) => component.file.basename)];
-					}
+					sorter = this.relationshipSortingMap.get(type);
+					if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.basename)];
 				}
-
-				if (sorter !== undefined) component = (<Array<any>>component).sort(this.factories.sorter.create<any>(sorter))
+			} else {
+				if (sortByLatestUsage){
+					sorter = [
+						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending)
+					];
+				} else {
+					sorter = this.componentSortingMap.get(type);
+					if (sorter === undefined) sorter = [new SorterComparisonElement((component: ComponentInterface) => component.file.basename)];
+				}
 			}
 
-
-			if (subModel !== undefined) {
-				await this.response.addSubModel(
-					subModel,
-					this.currentComponent,
-					component,
-					title,
-				);
-			}
-		}
-	}
-
-	protected isExcluded(
-		type: ComponentType,
-	): boolean {
-		if (this.sourceMeta != null && this.sourceMeta.exclude !== undefined && typeof this.sourceMeta.exclude === 'object'){
-			for (let index=0; index<this.sourceMeta.exclude.length; index++){
-				const excludedType:ComponentType|undefined = ComponentType[this.sourceMeta.exclude[index] as keyof typeof ComponentType];
-
-				if (excludedType !== undefined && excludedType === type) return true;
-			}
+			if (sorter !== undefined) component = (<Array<any>>component).sort(this.factories.sorter.create<any>(sorter))
 		}
 
-		return false;
+
+		if (subModel !== undefined) {
+			await this.response.addSubModel(
+				subModel,
+				this.currentComponent,
+				component,
+				title,
+			);
+		}
 	}
 }

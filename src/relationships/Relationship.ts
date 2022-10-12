@@ -1,6 +1,6 @@
 import {RelationshipInterface} from "./interfaces/RelationshipInterface";
 import {RelationshipType} from "./enums/RelationshipType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class Relationship implements RelationshipInterface {
 	constructor(

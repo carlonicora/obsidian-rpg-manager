@@ -1,9 +1,9 @@
 import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {ComponentType} from "../databases/enums/ComponentType";
+import {ComponentType} from "../components/enums/ComponentType";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
 import {SorterType} from "../databases/enums/SorterType";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../relationships/enums/RelationshipType";
 
@@ -203,8 +203,8 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 		containerEl.addClass('selector');
 		const availableRelationshipsType: Map<RelationshipType, string> = new Map<RelationshipType, string>();
 
-		if (this.currentComponent.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Biunivocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Biunivocal));
-		availableRelationshipsType.set(RelationshipType.Univocal, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Univocal));
+		if (this.currentComponent.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Bidirectional, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Bidirectional));
+		availableRelationshipsType.set(RelationshipType.Unidirectional, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Unidirectional));
 		if (this.currentComponent.id.type === component.id.type && this.relationshipTypeAllowedChildren.has(component.id.type)) availableRelationshipsType.set(RelationshipType.Child, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Child));
 
 		const relationshipTypeSelectorEl: HTMLSelectElement = containerEl.createEl('select');
@@ -259,7 +259,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		if (checkboxEl.checked) {
 			const relationshipType = (relationshipTypeSelectorEl.value === '')
-				? RelationshipType.Biunivocal
+				? RelationshipType.Bidirectional
 				: this.factories.relationshipType.createRelationshipType(relationshipTypeSelectorEl.value);
 
 			const newRelationship = this.factories.relationship.create(
