@@ -7,49 +7,35 @@ import {SceneType} from "../components/enums/SceneType";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
 import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
 import {SessionInterface} from "../components/components/session/interfaces/SessionInterface";
+import {AnalyserThresholdResult} from "./enums/AnalyserThresholdResult";
+import {AnalyserDataImportInterface} from "./interfaces/AnalyserDataImportInterface";
+import {AnalyserReportDetailInterface} from "./interfaces/AnalyserReportDetailInterface";
+import {AnalyserReportInterface} from "./interfaces/AnalyserReportInterface";
+import {AnalyserInterface} from "./interfaces/AnalyserInterface";
+import {AbstractAnalyser} from "./abstracts/AbstractAnalyser";
 
-export enum ThresholdResult {
-	NotAnalysable,
-	CriticallyHigh,
-	High,
-	Correct,
-	Low,
-	CriticallyLow,
+
+export class SceneAnalyser extends AbstractAnalyser {
+	constructor(
+		app: App,
+		scene: SceneInterface,
+		abtStage: AbtStage|undefined,
+	) {
+		super(app, abtStage);
+
+		this.isSingleScene = true;
+		this._addScene(this.database.readSingle<SceneInterface>(ComponentType.Scene, scene.id));
+
+		super._ingestData();
+	}
 }
 
-export interface AnalyserDataInterface {
-	currentDuration?: number|undefined,
-	isExciting: boolean,
-	isActive: boolean,
-	expectedDuration: number,
-	type?: SceneType|undefined,
-}
 
-export interface AnalyserReportInterface {
-	excitement: AnalyserReportDetailInterface;
-	activity: AnalyserReportDetailInterface;
-	variety: AnalyserReportDetailInterface;
-	interest: AnalyserReportDetailInterface;
-	duration: AnalyserReportDetailInterface;
 
-	get score(): number;
-	get description(): string;
-	get type(): string;
-}
 
-export interface AnalyserReportDetailInterface {
-	type: string;
-	threshold: ThresholdResult;
-	points: number;
-	total: number;
-	current: number;
-	description: string;
-	details: string;
 
-	get percentage(): number;
-}
 
-export class SceneAnalyser extends AbstractRpgManager {
+export class SceneAnalyserOLD extends AbstractRpgManager implements AnalyserInterface{
 	private excitmentPercentage: number|undefined = undefined;
 	private activityPercentage: number|undefined = undefined;
 	private activeScenes=0;
@@ -63,178 +49,9 @@ export class SceneAnalyser extends AbstractRpgManager {
 	public scenesCount = 0;
 	public targetDuration: number|undefined = undefined;
 
-	private abtStageExcitementThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
-		[AbtStage.Need, 35],
-		[AbtStage.And, 35],
-		[AbtStage.But, 75],
-		[AbtStage.Therefore, 50],
-	]);
-
-	private abtStageActivityThreshold: Map<AbtStage, number> = new Map<AbtStage, number>([
-		[AbtStage.Need, 35],
-		[AbtStage.And, 75],
-		[AbtStage.But, 50],
-		[AbtStage.Therefore, 75],
-	]);
-
-	constructor(
-		app: App,
-		private abtStage: AbtStage|undefined,
-		private parentId: IdInterface,
-	) {
-		super(app);
-
-		this.dataList = [];
-
-		this.parentType = this.parentId.type;
-
-		const scenes = this.scenes;
-
-		this.scenesCount = scenes.length;
-
-		if (scenes.length > 0) {
-			let previousType: SceneType|undefined = undefined;
-			scenes.forEach((scene: SceneInterface) => {
-				this.actualRunningTime += scene.currentDuration;
-				if (scene.isExciting) this.expectedExcitementDuration += scene.expectedDuration;
-				if (scene.isActive) this.activeScenes++;
-
-				if (scene.sceneType !== undefined){
-					this.sceneTypesUsed.set(scene.sceneType, (this.sceneTypesUsed.get(scene.sceneType) ?? 0) + 1);
-					if (previousType === scene.sceneType) {
-						this.repetitiveScenes++;
-					} else {
-						previousType = scene.sceneType;
-					}
-				}
-
-				this.expectedRunningTime += scene.expectedDuration;
-			});
-
-			this.excitmentPercentage = this.expectedExcitementDuration * 100 / this.expectedRunningTime;
-			this.activityPercentage = this.activeScenes * 100 / scenes.length;
-		}
-	}
-
-	private dataList: Array<AnalyserDataInterface>;
-	private totalRunningTime = 0;
-	private totalActiveScenes = 0;
-	private totalRepetitiveScenes = 0;
-	private totalExpectedRunningTime = 0;
-	private totalExpectedExcitmentDuration = 0;
-	private totalExcitementPercentage = 0;
-	private totalActivityPercentage = 0;
-	private dataTypeUsed: Map<SceneType, number> = new Map<SceneType, number>();
-
-	public analyse(
-	): void {
-		if (this.dataList.length > 0) {
-			let previousType: SceneType | undefined = undefined;
-			this.dataList.forEach((data: AnalyserDataInterface) => {
-				this.totalRunningTime += data.currentDuration ?? 0;
-				this.totalExpectedRunningTime += data.expectedDuration;
-				if (data.isExciting) this.totalExpectedExcitmentDuration += data.expectedDuration;
-				if (data.isActive) this.totalActiveScenes++;
-
-				if (data.type !== undefined) {
-					this.dataTypeUsed.set(data.type, (this.dataTypeUsed.get(data.type) ?? 0) + 1);
-					if (previousType === data.type) {
-						this.totalRepetitiveScenes++;
-					} else {
-						previousType = data.type;
-					}
-				}
-			});
-
-			this.totalExcitementPercentage = Math.floor(this.totalExpectedExcitmentDuration * 100 / this.totalExpectedRunningTime);
-			this.totalActivityPercentage = Math.floor(this.totalActiveScenes * 100 / this.dataList.length);
-		}
-	}
-
-	public get report(): AnalyserReportInterface {
-
-	}
-
-	public addData(
-		data: AnalyserDataInterface,
-	): void {
-		this.dataList.push(data);
-	}
-
-	public addScene(
-		scene: SceneInterface,
-	): void {
-		this.dataList.push(this._convertScene(scene));
-	}
-
-	private _convertScene(
-		scene: SceneInterface,
-	): AnalyserDataInterface {
-		const response: AnalyserDataInterface = {
-			isExciting: false,
-			isActive: false,
-			expectedDuration: 0,
-		};
-
-		response.currentDuration = scene.currentDuration;
-		response.isExciting = scene.isExciting;
-		response.expectedDuration = scene.expectedDuration;
-		response.isActive = scene.isActive;
-		response.type = scene.sceneType;
-
-		return response;
-	}
-
-	public addScenesList(
-		scenes: Array<SceneInterface>,
-	): void {
-		scenes.forEach((scene: SceneInterface) => {
-			this.addScene(scene);
-		});
-	}
-
-	private get scenes(
-	): Array<SceneInterface> {
-		if (this.parentId.type === ComponentType.Session) {
-
-			try {
-				const session: SessionInterface = this.database.readSingle<SessionInterface>(ComponentType.Session, this.parentId);
-				if (session.targetDuration != undefined) this.targetDuration = session.targetDuration;
-			} catch (e) {
-				//no need to trigger an error here
-			}
-
-			return this.database.read<SceneInterface>(
-				(scene: SceneInterface) =>
-					scene.id.type === ComponentType.Scene &&
-					scene.id.campaignId === this.parentId.campaignId &&
-					scene.session?.id.sessionId === this.parentId.sessionId,
-			).sort(
-				this.factories.sorter.create<SceneInterface>([
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
-				]));
-		}
-
-		if (this.parentId.type === ComponentType.Scene) {
-			this.isSingleScene = true;
-			return [this.database.readSingle<SceneInterface>(ComponentType.Scene, this.parentId)]
-		}
-
-		return this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId)
-			.sort(
-				this.factories.sorter.create<SceneInterface>([
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
-				]));
-	}
 
 	public get excitementLevel(
-	):ThresholdResult {
+	):AnalyserThresholdResult {
 		let expectedThreshold: number|undefined = undefined;
 		if (this.abtStage === undefined){
 			expectedThreshold = 50;
@@ -242,18 +59,18 @@ export class SceneAnalyser extends AbstractRpgManager {
 			expectedThreshold = this.abtStageExcitementThreshold.get(this.abtStage);
 		}
 
-		if (expectedThreshold === undefined || this.excitmentPercentage === undefined) return ThresholdResult.NotAnalysable;
+		if (expectedThreshold === undefined || this.excitmentPercentage === undefined) return AnalyserThresholdResult.NotAnalysable;
 
-		if (this.excitmentPercentage > (expectedThreshold + 25)) return ThresholdResult.CriticallyHigh;
-		if (this.excitmentPercentage > (expectedThreshold + 10)) return ThresholdResult.High;
-		if (this.excitmentPercentage < (expectedThreshold - 25)) return ThresholdResult.CriticallyLow;
-		if (this.excitmentPercentage < (expectedThreshold - 10)) return ThresholdResult.Low;
+		if (this.excitmentPercentage > (expectedThreshold + 25)) return AnalyserThresholdResult.CriticallyHigh;
+		if (this.excitmentPercentage > (expectedThreshold + 10)) return AnalyserThresholdResult.High;
+		if (this.excitmentPercentage < (expectedThreshold - 25)) return AnalyserThresholdResult.CriticallyLow;
+		if (this.excitmentPercentage < (expectedThreshold - 10)) return AnalyserThresholdResult.Low;
 
-		return ThresholdResult.Correct;
+		return AnalyserThresholdResult.Correct;
 	}
 
 	public get activityLevel(
-	):ThresholdResult {
+	):AnalyserThresholdResult {
 		let expectedThreshold: number|undefined = undefined;
 		if (this.abtStage === undefined){
 			expectedThreshold = 50;
@@ -261,14 +78,14 @@ export class SceneAnalyser extends AbstractRpgManager {
 			expectedThreshold = this.abtStageActivityThreshold.get(this.abtStage);
 		}
 
-		if (expectedThreshold === undefined || this.activityPercentage === undefined) return ThresholdResult.NotAnalysable;
+		if (expectedThreshold === undefined || this.activityPercentage === undefined) return AnalyserThresholdResult.NotAnalysable;
 
-		if (this.activityPercentage > expectedThreshold + 25) return ThresholdResult.CriticallyHigh;
-		if (this.activityPercentage > expectedThreshold + 10) return ThresholdResult.High;
-		if (this.activityPercentage < expectedThreshold - 25) return ThresholdResult.CriticallyLow;
-		if (this.activityPercentage < expectedThreshold - 10) return ThresholdResult.Low;
+		if (this.activityPercentage > expectedThreshold + 25) return AnalyserThresholdResult.CriticallyHigh;
+		if (this.activityPercentage > expectedThreshold + 10) return AnalyserThresholdResult.High;
+		if (this.activityPercentage < expectedThreshold - 25) return AnalyserThresholdResult.CriticallyLow;
+		if (this.activityPercentage < expectedThreshold - 10) return AnalyserThresholdResult.Low;
 
-		return ThresholdResult.Correct;
+		return AnalyserThresholdResult.Correct;
 	}
 
 	public get excitingScenePercentage(
@@ -310,10 +127,10 @@ export class SceneAnalyser extends AbstractRpgManager {
 	}
 
 	public get varietyLevel(
-	): ThresholdResult {
-		if (this.sceneTypesUsed.size < 4) return ThresholdResult.CriticallyLow;
-		if (this.sceneTypesUsed.size < 6) return ThresholdResult.Low;
-		return ThresholdResult.Correct;
+	): AnalyserThresholdResult {
+		if (this.sceneTypesUsed.size < 4) return AnalyserThresholdResult.CriticallyLow;
+		if (this.sceneTypesUsed.size < 6) return AnalyserThresholdResult.Low;
+		return AnalyserThresholdResult.Correct;
 	}
 
 	public get varietyCount(
@@ -322,25 +139,25 @@ export class SceneAnalyser extends AbstractRpgManager {
 	}
 
 	public get boredomLevel(
-	): ThresholdResult {
-		if (this.repetitiveScenes >= (this.scenesCount / 2)) return ThresholdResult.CriticallyHigh;
-		if (this.repetitiveScenes >= (this.scenesCount / 3)) return ThresholdResult.High;
+	): AnalyserThresholdResult {
+		if (this.repetitiveScenes >= (this.scenesCount / 2)) return AnalyserThresholdResult.CriticallyHigh;
+		if (this.repetitiveScenes >= (this.scenesCount / 3)) return AnalyserThresholdResult.High;
 
-		return ThresholdResult.Correct;
+		return AnalyserThresholdResult.Correct;
 	}
 
 	public get targetDurationLevel(
-	): ThresholdResult {
-		if (this.targetDuration === undefined || this.expectedRunningTime == undefined) return ThresholdResult.NotAnalysable;
+	): AnalyserThresholdResult {
+		if (this.targetDuration === undefined || this.expectedRunningTime == undefined) return AnalyserThresholdResult.NotAnalysable;
 
 		const differenceStep = this.targetDuration /10;
 		const expectedRunningTime = Math.floor(this.expectedRunningTime/60);
 
-		if (expectedRunningTime > this.targetDuration + differenceStep * 3) return  ThresholdResult.CriticallyHigh;
-		if (expectedRunningTime > this.targetDuration + differenceStep * 1) return ThresholdResult.High;
-		if (expectedRunningTime < this.targetDuration - differenceStep * 3) return  ThresholdResult.CriticallyLow;
-		if (expectedRunningTime < this.targetDuration - differenceStep * 1) return ThresholdResult.Low;
-		return ThresholdResult.Correct;
+		if (expectedRunningTime > this.targetDuration + differenceStep * 3) return  AnalyserThresholdResult.CriticallyHigh;
+		if (expectedRunningTime > this.targetDuration + differenceStep * 1) return AnalyserThresholdResult.High;
+		if (expectedRunningTime < this.targetDuration - differenceStep * 3) return  AnalyserThresholdResult.CriticallyLow;
+		if (expectedRunningTime < this.targetDuration - differenceStep * 1) return AnalyserThresholdResult.Low;
+		return AnalyserThresholdResult.Correct;
 	}
 
 	public get durationScenePercentage(
@@ -382,48 +199,18 @@ export class SceneAnalyser extends AbstractRpgManager {
 	}
 
 	private _calculateThresholdScore(
-		threshold: ThresholdResult,
+		threshold: AnalyserThresholdResult,
 	): number {
 		switch (threshold){
-			case ThresholdResult.Correct:
+			case AnalyserThresholdResult.Correct:
 				return 25;
-			case ThresholdResult.CriticallyHigh:
-			case ThresholdResult.CriticallyLow:
+			case AnalyserThresholdResult.CriticallyHigh:
+			case AnalyserThresholdResult.CriticallyLow:
 				return 5;
-			case ThresholdResult.High:
-			case ThresholdResult.Low:
+			case AnalyserThresholdResult.High:
+			case AnalyserThresholdResult.Low:
 				return 15;
 		}
 		return 0;
 	}
-}
-
-export class SceneAnalyserBuilder extends SceneAnalyser {
-
-}
-
-export class SceneAnalyserAct extends SceneAnalyser {
-	constructor(
-		app: App,
-		private abtStage: AbtStage|undefined,
-		private parentId: IdInterface,
-	) {
-		super(app, abtStage, parentId);
-
-		const sceneList = this.database.readList<SceneInterface>(ComponentType.Scene, this.parentId)
-			.sort(
-				this.factories.sorter.create<SceneInterface>([
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
-				]));
-
-		super.addScenesList(sceneList);
-		super.analyse();
-	}
-}
-
-export class SceneAnalyserSession extends SceneAnalyserAct {
-
 }

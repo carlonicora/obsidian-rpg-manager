@@ -1,4 +1,4 @@
-import {SceneAnalyser, ThresholdResult} from "../../analyser/SceneAnalyser";
+import {SceneAnalyser, AnalyserThresholdResult} from "../../analyser/SceneAnalyser";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSelectorView";
