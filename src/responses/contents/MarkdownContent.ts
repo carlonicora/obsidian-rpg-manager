@@ -5,9 +5,11 @@ export class MarkdownContent extends AbstractContent {
 	public content: string;
 
 	public fillContent(
-		container: HTMLElement,
+		container: HTMLElement|undefined,
 		sourcePath: string,
 	): void {
+		if (container === undefined) return;
+
 		MarkdownRenderer.renderMarkdown(
 			(this.content != null ? this.content : '&nbsp;'),
 			container,

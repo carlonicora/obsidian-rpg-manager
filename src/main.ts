@@ -1,13 +1,6 @@
-import {
-	addIcon,
-	Component,
-	MarkdownPostProcessorContext,
-	MarkdownView,
-	Plugin, setIcon,
-	WorkspaceLeaf
-} from 'obsidian';
-import {Controller} from "./Controller";
-import {ComponentType} from "./databases/enums/ComponentType";
+import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, setIcon, WorkspaceLeaf} from 'obsidian';
+import {Controller} from "./controller/Controller";
+import {ComponentType} from "./components/enums/ComponentType";
 import {Factories} from "./factories/Factories";
 import {CreationModal} from "./modals/CreationModal";
 import {RpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
@@ -15,7 +8,7 @@ import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./interfaces/RpgManagerInterface";
 import {ErrorView} from "./views/ErrorView";
 import {ViewType} from "./views/enums/ViewType";
-import {DatabaseUpdater} from "./databases/updaters/DatabaseUpdater";
+import {DatabaseUpdater} from "./updaters/DatabaseUpdater";
 import {ReleaseNoteView} from "./views/ReleaseNoteView";
 import {FactoriesInterface} from "./factories/interfaces/FactoriesInterface";
 import {TagHelper} from "./databases/TagHelper";
@@ -24,10 +17,11 @@ import {TimelineView} from "./views/TimelineView";
 import {ManipulatorsInterface} from "./manipulators/interfaces/ManipulatorsInterface";
 import {Manipulators} from "./manipulators/Manipulators";
 import {DatabaseInterface} from "./databases/interfaces/DatabaseInterface";
-import {ComponentInterface} from "./databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "./components/interfaces/ComponentInterface";
 import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
-import {SceneInterface} from "./databases/components/interfaces/SceneInterface";
+import {SceneInterface} from "./components/components/scene/interfaces/SceneInterface";
 import {UpdaterModal} from "./modals/UpdaterModal";
+import {LogMessageType} from "./loggers/enums/LogMessageType";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private isVersionUpdated=false;
@@ -92,15 +86,14 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	public async initialise(
 	): Promise<void> {
-		const reloadStart = Date.now();
-
 		this.registerCodeBlock();
 		this.registerCommands();
 
 		DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;
-				//console.info(this.database);
+				this.factories.logger.info(LogMessageType.Database, 'Database Initialised', this.database)
+
 				this.factories.runningTimeManager.updateMedianTimes(true);
 
 				this.registerEvents();
@@ -132,13 +125,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 					}
 				});
-
-
-				console.info(
-					`RPG Manager: ${this.database.recordset.length} outlines and elements have been indexed in ${
-						(Date.now() - reloadStart) / 1000.0
-					}s.`
-				);
 
 				if (this.isVersionUpdated) {
 					this.factories.views.showObsidianView(ViewType.ReleaseNote);
@@ -189,9 +175,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		setIcon(el, 'd20');
 
 		el.style.cursor = 'pointer';
-		(<HTMLDivElement>el.parentNode).style.float = 'left';
-		(<HTMLDivElement>el.parentNode).style.position = 'absolute';
-		(<HTMLDivElement>el.parentNode).style.zIndex = '1';
 
 		el.addEventListener('click', () => {
 			rpgm.manipulators.codeblock.selectData();
@@ -204,8 +187,13 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	public async updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,
+		partial = true,
 	): Promise<void> {
-		Object.assign(this.settings, settings);
+		if (partial) {
+			Object.assign(this.settings, settings);
+		} else {
+			this.settings = settings as RpgManagerSettingsInterface;
+		}
 		await this.saveData(this.settings);
 	}
 
@@ -224,6 +212,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.registerMarkdownCodeBlockProcessor('RpgManagerData', async (source: string, el, ctx) =>
 			this.createRpgDataView(this, el)
 		);
+		this.registerMarkdownCodeBlockProcessor('RpgManagerID', async (source: string, el, ctx) => {});
 	}
 
 	private registerCommands(

@@ -1,5 +1,5 @@
 import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 

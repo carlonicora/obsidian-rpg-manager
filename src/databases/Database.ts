@@ -1,26 +1,26 @@
 import {AbstractRpgManagerComponent} from "../abstracts/AbstractRpgManagerComponent";
 import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
-import {ComponentType} from "./enums/ComponentType";
-import {IdInterface} from "./interfaces/IdInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {IdInterface} from "../id/interfaces/IdInterface";
 import {ComponentNotFoundError} from "../errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {ComponentInterface} from "./interfaces/ComponentInterface";
-import {CampaignInterface} from "./components/interfaces/CampaignInterface";
-import {AdventureInterface} from "./components/interfaces/AdventureInterface";
-import {SessionInterface} from "./components/interfaces/SessionInterface";
-import {ActInterface} from "./components/interfaces/ActInterface";
-import {SceneInterface} from "./components/interfaces/SceneInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {CampaignInterface} from "../components/components/campaign/interfaces/CampaignInterface";
+import {AdventureInterface} from "../components/components/adventure/interfaces/AdventureInterface";
+import {SessionInterface} from "../components/components/session/interfaces/SessionInterface";
+import {ActInterface} from "../components/components/act/interfaces/ActInterface";
+import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
-import {ComponentStage} from "./components/enums/ComponentStage";
+import {ComponentStage} from "../components/enums/ComponentStage";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
-import {MultipleTagsError} from "../errors/MultipleTagsError";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public recordset: Array<ComponentInterface> = [];
 	private basenameIndex: Map<string, string>;
+	private isDatabaseReady = false;
 
 	constructor(
 		app: App,
@@ -34,12 +34,18 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	 */
 	public async ready(
 	): Promise<void> {
+		this.isDatabaseReady = true;
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
 		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
 		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.onDelete(file)));
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
+	}
+
+	get isReady(
+	): boolean {
+		return this.isDatabaseReady;
 	}
 
 	public create(
@@ -259,26 +265,12 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 			if (component === undefined) {
 				component = await DatabaseInitialiser.createComponent(file);
-			} else {
-				const metadata: CachedMetadata | null = this.app.metadataCache.getFileCache(file);
-				if (metadata == null) return ;
-
-				const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
-				if (tags.length === 0 || !this.tagHelper.hasRpgManagerTags(tags)) {
-					this.delete(component);
-					return;
-				}
-
-				let rpgManagerTagCounter = 0;
-				for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
-					if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-					if (rpgManagerTagCounter > 1) throw new MultipleTagsError(this.app, undefined);
-				}
 			}
 
-			if (component === undefined) return ;
+			if (component === undefined) return;
 
 			await component.readMetadata();
+			await component.validateHierarchy();
 
 			if (isNewComponent && (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot)) {
 				let error: RpgErrorInterface | undefined = undefined;

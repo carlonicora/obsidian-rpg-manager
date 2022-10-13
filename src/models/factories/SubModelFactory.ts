@@ -3,7 +3,7 @@ import {SubModelInterface} from "../interfaces/SubModelInterface";
 import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
 import {App} from "obsidian";
 import {SubModelFactoryInterface} from "./interfaces/SubModelFactoryInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export class SubModelFactory extends AbstractFactory implements SubModelFactoryInterface{

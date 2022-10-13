@@ -1,22 +1,22 @@
-import {CampaignTemplateFactory} from "./frontmatter/CampaignTemplateFactory";
-import {AdventureTemplateFactory} from "./frontmatter/AdventureTemplateFactory";
-import {ActTemplateFactory} from "./frontmatter/ActTemplateFactory";
-import {SceneTemplateFactory} from "./frontmatter/SceneTemplateFactory";
-import {CharacterTemplateFactory} from "./frontmatter/CharacterTemplateFactory";
-import {NonPlayerCharacterTemplateFactory} from "./frontmatter/NonPlayerCharacterTemplateFactory";
-import {LocationTemplateFactory} from "./frontmatter/LocationTemplateFactory";
-import {EventTemplateFactory} from "./frontmatter/EventTemplateFactory";
-import {ClueTemplateFactory} from "./frontmatter/ClueTemplateFactory";
-import {FactionTemplateFactory} from "./frontmatter/FactionTemplateFactory";
-import {MusicTemplateFactory} from "./frontmatter/MusicTemplateFactory";
+import {CampaignTemplateFactory} from "../../components/components/campaign/templates/CampaignTemplateFactory";
+import {AdventureTemplateFactory} from "../../components/components/adventure/templates/AdventureTemplateFactory";
+import {ActTemplateFactory} from "../../components/components/act/templates/ActTemplateFactory";
+import {SceneTemplateFactory} from "../../components/components/scene/templates/SceneTemplateFactory";
+import {CharacterTemplateFactory} from "../../components/components/character/templates/CharacterTemplateFactory";
+import {NonPlayerCharacterTemplateFactory} from "../../components/components/character/templates/NonPlayerCharacterTemplateFactory";
+import {LocationTemplateFactory} from "../../components/components/location/templates/LocationTemplateFactory";
+import {EventTemplateFactory} from "../../components/components/event/templates/EventTemplateFactory";
+import {ClueTemplateFactory} from "../../components/components/clue/templates/ClueTemplateFactory";
+import {FactionTemplateFactory} from "../../components/components/faction/templates/FactionTemplateFactory";
+import {MusicTemplateFactory} from "../../components/components/music/templates/MusicTemplateFactory";
 import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
-import {CampaignSetting} from "../../databases/enums/CampaignSetting";
-import {ComponentType} from "../../databases/enums/ComponentType";
+import {CampaignSetting} from "../../components/components/campaign/enums/CampaignSetting";
+import {ComponentType} from "../../components/enums/ComponentType";
 import {App} from "obsidian";
 import {TemplateFactoryInterface} from "./interfaces/TemplateFactoryInterface";
 import {ComponentTemplateFactoryInterface} from "./interfaces/ComponentTemplateFactoryInterface";
-import {SessionTemplateFactory} from "./frontmatter/SessionTemplateFactory";
-import {SubplotTemplateFactory} from "./frontmatter/SubplotTemplateFactory";
+import {SessionTemplateFactory} from "../../components/components/session/templates/SessionTemplateFactory";
+import {SubplotTemplateFactory} from "../../components/components/subplot/templates/SubplotTemplateFactory";
 
 export class TemplateFactory extends AbstractFactory implements TemplateFactoryInterface{
 	private templateTypeMap: Map<string,any>;

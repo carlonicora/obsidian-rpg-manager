@@ -3,24 +3,24 @@ import {ContentFactoryInterface} from "../../responses/factories/interfaces/Cont
 import {FileFactoryInterface} from "../../templates/factories/interfaces/FileFactoryInterface";
 import {ModalFactoryInterface} from "../../modals/factories/interfaces/ModalFactoryInterface";
 import {ModelFactoryInterface} from "../../models/factories/interfaces/ModelFactoryInterface";
-import {PronounFactoryInterface} from "../../databases/factories/interfaces/PronounFactoryInterface";
+import {PronounFactoryInterface} from "../../components/factories/interfaces/PronounFactoryInterface";
 import {TemplateFactoryInterface} from "../../templates/factories/interfaces/TemplateFactoryInterface";
 import {ViewFactoryInterface} from "../../views/factories/interfaces/ViewFactoryInterface";
 import {FetcherFactoryInterface} from "../../fetchers/factories/interfaces/FetcherFactoryInterface";
-import {IdFactoryInterface} from "../../databases/factories/interfaces/IdFactoryInterface";
+import {IdFactoryInterface} from "../../id/factories/interfaces/IdFactoryInterface";
 import {BreadcrumbFactoryInterface} from "../../views/factories/interfaces/BreadcrumbFactoryInterface";
 import {SorterFactoryInterface} from "../../databases/factories/interfaces/SorterFactoryInterface";
 import {RunningTimeManagerInterface} from "../../timers/interfaces/RunningTimeManagerInterface";
 import {DatabaseFactoryInterface} from "../../databases/factories/interfaces/DatabaseFactoryInterface";
-import {ComponentFactoryInterface} from "../../databases/factories/interfaces/ComponentFactoryInterface";
-import {ComponentTypeFactoryInterface} from "../../databases/factories/interfaces/ComponentTypeFactoryInterface";
+import {ComponentFactoryInterface} from "../../components/factories/interfaces/ComponentFactoryInterface";
+import {ComponentTypeFactoryInterface} from "../../components/factories/interfaces/ComponentTypeFactoryInterface";
 import {RelationshipTypeFactoryInterface} from "../../relationships/factories/interfaces/RelationshipTypeFactoryInterface";
-import {SceneTypeFactoryInterface} from "../../databases/factories/interfaces/SceneTypeFactoryInterface";
+import {SceneTypeFactoryInterface} from "../../components/factories/interfaces/SceneTypeFactoryInterface";
 import {StoryCircleStageFactoryInterface} from "../../plots/factories/interfaces/StoryCircleStageFactoryInterface";
 import {AbtStageFactoryInterface} from "../../plots/factories/interfaces/AbtStageFactoryInterface";
 import {RelationshipFactoryInterface} from "../../relationships/factories/interfaces/RelationshipFactoryInterface";
-import {LoggerFactoryInterface} from "../../loggers/factories/interfaces/LoggerFactoryInterface";
 import {FileManipulatorFactoryInterface} from "../../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
+import {LogFactoryInterface} from "../../loggers/interfaces/LogFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -43,7 +43,7 @@ export interface FactoriesInterface {
 	storyCircleStage: StoryCircleStageFactoryInterface;
 	abtStage: AbtStageFactoryInterface;
 	relationship: RelationshipFactoryInterface;
-	logger: LoggerFactoryInterface;
+	logger: LogFactoryInterface;
 	fileManipulator: FileManipulatorFactoryInterface;
 
 	runningTimeManager: RunningTimeManagerInterface;

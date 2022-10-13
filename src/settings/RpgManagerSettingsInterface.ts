@@ -1,23 +1,10 @@
 import {TableField} from "../views/enums/TableField";
 
 export interface RpgManagerSettingsInterface {
-	campaignTag: string;
-	adventureTag: string;
-	actTag: string;
-	sceneTag: string;
-	sessionTag: string,
-	npcTag: string;
-	pcTag: string;
-	locationTag: string;
-	factionTag: string;
-	eventTag: string;
-	clueTag: string;
-	automaticMove: boolean;
 	templateFolder: string;
-	musicTag: string;
+	automaticMove: boolean;
 	YouTubeKey: string;
 	previousVersion: string;
-	subplotTag:string;
 	usePlotStructures: boolean;
 	useSceneAnalyser: boolean;
 	advanced: RpgManagerAdvanceSettingsSettingListInterface;
@@ -56,19 +43,6 @@ export interface RpgManagerAdvancedSettingsListElementInterface {
 
 
 export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
-	campaignTag: 'rpgm/campaign',
-	adventureTag: 'rpgm/adventure',
-	actTag: 'rpgm/act',
-	sessionTag: 'rpgm/session',
-	sceneTag: 'rpgm/scene',
-	subplotTag: 'rpgm/subplot',
-	npcTag: 'rpgm/npc',
-	pcTag: 'rpgm/pc',
-	locationTag: 'rpgm/location',
-	factionTag: 'rpgm/faction',
-	eventTag: 'rpgm/event',
-	clueTag: 'rpgm/clue',
-	musicTag: 'rpgm/music',
 	automaticMove: true,
 	templateFolder: '',
 	YouTubeKey: '',

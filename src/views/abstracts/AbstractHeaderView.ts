@@ -2,7 +2,9 @@ import {AbstractSubModelView} from "./AbstractSubModelView";
 import {HeaderResponseInterface} from "../../responses/interfaces/HeaderResponseInterface";
 import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
+import flatpickr from "flatpickr";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -11,6 +13,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected headerInfoEl: HTMLDivElement;
 	protected headerContainerEl: HTMLDivElement;
 	protected imageContainterEl: HTMLDivElement;
+	protected infoTableEl: HTMLTableSectionElement;
 
 	private isInternalRender = false;
 
@@ -57,6 +60,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		//container
 		this.headerContainerEl = crs.createDiv({cls: 'container'});
 		this.headerInfoEl = this.headerContainerEl.createDiv({cls: 'info'});
+		this.infoTableEl = this.headerInfoEl.createEl('table', {cls: 'rpgm-headless-table'}).createTBody();
 
 		//image
 		//const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
@@ -68,19 +72,20 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			//const image = new Image(data.imgWidth, data.imgHeight);
 			const image = new Image();
 			image.src = data.imgSrc;
-			//image.style.objectFit = 'cover';
 
-			if (image.src.startsWith('http')) {
-				const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
-				crsImageLink.append(image);
-			} else {
-				this.imageContainterEl.append(image);
+			image.onload = (evt: Event) => {
+				if (image.src.startsWith('http')) {
+					const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
+					crsImageLink.append(image);
+				} else {
+					this.imageContainterEl.append(image);
+				}
 			}
 		}
 
 		if (!this.isInternalRender){
 			data.elements.forEach((element: HeaderResponseElementInterface) => {
-				const containerEl = this.createContainerEl(element.type, element.title);
+				const containerEl = this.createContainerEl(element);
 				element.value.fillContent(containerEl, this.sourcePath);
 			});
 		}
@@ -89,54 +94,86 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	}
 
 	protected createContainerEl(
-		responseType: HeaderResponseType,
-		title: string,
-	): HTMLDivElement {
-		let prefix = 'short';
-		let crsContainer: HTMLDivElement;
+		element: HeaderResponseElementInterface,
+		fn: Function|undefined = undefined,
+		additionalParams: Array<any>|undefined=undefined,
+	): HTMLTableCellElement|undefined {
+		let tableRowEl = this.infoTableEl.insertRow();
+		const titleCellEl = tableRowEl.insertCell();
+		titleCellEl.addClass('title');
+		titleCellEl.textContent = element.title;
 
-		switch (responseType){
-			case HeaderResponseType.Long:
-				prefix = 'long';
-				crsContainer = this.headerInfoEl;
-				break;
-			case HeaderResponseType.Half:
-			case HeaderResponseType.StoryCircleSelector:
-			case HeaderResponseType.AbtSelector:
-			case HeaderResponseType.SceneExcitment:
-			case HeaderResponseType.SceneTypeSelector:
-			case HeaderResponseType.SessionSelection:
-			case HeaderResponseType.ScenesSelection:
-			case HeaderResponseType.DateSelector:
-				prefix = 'half';
-				crsContainer = this.headerInfoEl.createDiv({cls: 'half'});
-				break;
-			default:
-				crsContainer = this.headerInfoEl.createDiv({cls: 'short'});
-				break;
+		if (element.type === HeaderResponseType.Long) {
+			titleCellEl.colSpan = 2;
+			tableRowEl = this.infoTableEl.insertRow();
 		}
 
-		crsContainer.createDiv({cls: prefix+ 'Title', text: title});
-		crsContainer.createDiv({cls: prefix+ 'Text'});
+		const response = tableRowEl.insertCell();
+		response.addClass('content');
 
-		return crsContainer;
+		if (fn !== undefined){
+			let subContent: any|ContentInterface|undefined;
+
+			if (additionalParams === undefined) {
+				subContent = fn(response, element);
+			} else {
+				subContent = fn(response, ...additionalParams);
+			}
+
+			if (subContent !== undefined) {
+				const subRowEl = this.infoTableEl.insertRow();
+				subRowEl.insertCell().textContent = '';
+				const subRowContentEl = subRowEl.insertCell();
+				subRowContentEl.addClass('subcontent');
+
+				if (typeof subContent === 'function'){
+					if (additionalParams === undefined) {
+						subContent(subRowContentEl, element);
+					} else {
+						subContent(subRowContentEl, ...additionalParams);
+					}
+				} else {
+					subContent.fillContent(subRowContentEl, this.sourcePath);
+				}
+			}
+		} else {
+			if (element.additionalInformation?.editableField !== undefined) this.addEditorIcon(response, element.currentComponent, element.additionalInformation.editableField)
+
+			if (element.type === HeaderResponseType.Long) {
+				response.colSpan = 2;
+			} else {
+				response.addClass('contentShort');
+			}
+		}
+
+		return response;
 	}
 
-	protected addElement(
-		containerEl: HTMLDivElement,
-		element: HeaderResponseElementInterface,
-		fn: any,
+	protected addDateSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
 	): void {
-		switch (element.type){
-			case HeaderResponseType.Long:
-			case HeaderResponseType.Short:
-			case HeaderResponseType.Half:
-				element.value.fillContent(containerEl.children[1] as HTMLDivElement, this.sourcePath);
-				break;
-			default:
-				fn;
-		}
+		if (data.additionalInformation === undefined)
+			return;
 
-		containerEl.createDiv({cls: 'reset'});
+		const options:any = {
+			allowInput: true,
+			dateFormat: "Y-m-d",
+			altInput: true,
+			onChange: (selectedDate: any, dateStr: any , instance: any) => {
+				this.manipulators.codeblock.update(
+					data.additionalInformation.yamlIdentifier,
+					dateStr,
+				);
+			}
+		};
+
+		if (data.additionalInformation.date !== undefined) options.defaultDate = data.additionalInformation.date;
+
+		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
+		flatpickrEl.placeholder = data.additionalInformation.placeholder;
+		flatpickrEl.readOnly = true;
+
+		flatpickr(flatpickrEl, options);
 	}
 }

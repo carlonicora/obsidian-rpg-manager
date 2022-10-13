@@ -4,7 +4,7 @@ import {ResponseHeader} from "../../responses/ResponseHeader";
 import {ContentType} from "../../responses/enums/ContentType";
 import {ResponseHeaderElement} from "../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
-import {ComponentInterface} from "../../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
 
 export abstract class AbstractHeaderSubModel extends AbstractSubModel {
@@ -36,7 +36,7 @@ export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 		if (this.data.synopsis != null && this.data.synopsis != '') {
 			this.synopsis = this.data.synopsis;
 		}
-		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, this.synopsisTitle, this.synopsis, HeaderResponseType.Long));
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, this.synopsisTitle, this.synopsis, HeaderResponseType.Long, {editableField: 'data.synopsis'}));
 
 		return response;
 	}

@@ -4,7 +4,7 @@ import {ContentFactory} from "../responses/factories/ContentFactory";
 import {FileFactory} from "../templates/factories/FileFactory";
 import {ModalFactory} from "../modals/factories/ModalFactory";
 import {ModelFactory} from "../models/factories/ModelFactory";
-import {PronounFactory} from "../databases/factories/PronounFactory";
+import {PronounFactory} from "../components/factories/PronounFactory";
 import {TemplateFactory} from "../templates/factories/TemplateFactory";
 import {ViewFactory} from "../views/factories/ViewFactory";
 import {FetcherFactory} from "../fetchers/factories/FetcherFactory";
@@ -13,13 +13,13 @@ import {ContentFactoryInterface} from "../responses/factories/interfaces/Content
 import {FileFactoryInterface} from "../templates/factories/interfaces/FileFactoryInterface";
 import {ModalFactoryInterface} from "../modals/factories/interfaces/ModalFactoryInterface";
 import {ModelFactoryInterface} from "../models/factories/interfaces/ModelFactoryInterface";
-import {PronounFactoryInterface} from "../databases/factories/interfaces/PronounFactoryInterface";
+import {PronounFactoryInterface} from "../components/factories/interfaces/PronounFactoryInterface";
 import {TemplateFactoryInterface} from "../templates/factories/interfaces/TemplateFactoryInterface";
 import {ViewFactoryInterface} from "../views/factories/interfaces/ViewFactoryInterface";
 import {FetcherFactoryInterface} from "../fetchers/factories/interfaces/FetcherFactoryInterface";
 import {FactoriesInterface} from "./interfaces/FactoriesInterface";
-import {IdFactoryInterface} from "../databases/factories/interfaces/IdFactoryInterface";
-import {IdFactory} from "../databases/factories/IdFactory";
+import {IdFactoryInterface} from "../id/factories/interfaces/IdFactoryInterface";
+import {IdFactory} from "../id/factories/IdFactory";
 import {BreadcrumbFactoryInterface} from "../views/factories/interfaces/BreadcrumbFactoryInterface";
 import {BreadcrumbFactory} from "../views/factories/BreadcrumbFactory";
 import {SorterFactoryInterface} from "../databases/factories/interfaces/SorterFactoryInterface";
@@ -28,24 +28,25 @@ import {RunningTimeManagerInterface} from "../timers/interfaces/RunningTimeManag
 import {RunningTimeManager} from "../timers/RunningTimeManager";
 import {DatabaseFactoryInterface} from "../databases/factories/interfaces/DatabaseFactoryInterface";
 import {DatabaseFactory} from "../databases/factories/DatabaseFactory";
-import {ComponentFactoryInterface} from "../databases/factories/interfaces/ComponentFactoryInterface";
-import {ComponentFactory} from "../databases/factories/ComponentFactory";
-import {ComponentTypeFactoryInterface} from "../databases/factories/interfaces/ComponentTypeFactoryInterface";
-import {ComponentTypeFactory} from "../databases/factories/ComponentTypeFactory";
+import {ComponentFactoryInterface} from "../components/factories/interfaces/ComponentFactoryInterface";
+import {ComponentFactory} from "../components/factories/ComponentFactory";
+import {ComponentTypeFactoryInterface} from "../components/factories/interfaces/ComponentTypeFactoryInterface";
+import {ComponentTypeFactory} from "../components/factories/ComponentTypeFactory";
 import {RelationshipTypeFactoryInterface} from "../relationships/factories/interfaces/RelationshipTypeFactoryInterface";
 import {RelationshipTypeFactory} from "../relationships/factories/RelationshipTypeFactory";
-import {SceneTypeFactoryInterface} from "../databases/factories/interfaces/SceneTypeFactoryInterface";
-import {SceneTypeFactory} from "../databases/factories/SceneTypeFactory";
+import {SceneTypeFactoryInterface} from "../components/factories/interfaces/SceneTypeFactoryInterface";
+import {SceneTypeFactory} from "../components/factories/SceneTypeFactory";
 import {StoryCircleStageFactoryInterface} from "../plots/factories/interfaces/StoryCircleStageFactoryInterface";
 import {StoryCircleStageFactory} from "../plots/factories/StoryCircleStageFactory";
 import {AbtStageFactoryInterface} from "../plots/factories/interfaces/AbtStageFactoryInterface";
 import {AbtStageFactory} from "../plots/factories/AbtStageFactory";
 import {RelationshipFactoryInterface} from "../relationships/factories/interfaces/RelationshipFactoryInterface";
 import {RelationshipFactory} from "../relationships/factories/RelationshipFactory";
-import {LoggerFactoryInterface} from "../loggers/factories/interfaces/LoggerFactoryInterface";
-import {LoggerFactory} from "../loggers/factories/LoggerFactory";
 import {FileManipulatorFactoryInterface} from "../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
 import {FileManipulatorFactory} from "../manipulators/factories/FileManipulatorFactory";
+import {LogFactoryInterface} from "../loggers/interfaces/LogFactoryInterface";
+import {LogFactory} from "../loggers/factories/LogFactory";
+import {LogWriterType} from "../loggers/enums/LogWriterType";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -69,7 +70,7 @@ export class Factories implements FactoriesInterface{
 	public storyCircleStage: StoryCircleStageFactoryInterface;
 	public abtStage: AbtStageFactoryInterface;
 	public relationship: RelationshipFactoryInterface;
-	public logger: LoggerFactoryInterface;
+	public logger: LogFactoryInterface;
 	public fileManipulator: FileManipulatorFactoryInterface;
 
 	constructor(
@@ -95,7 +96,7 @@ export class Factories implements FactoriesInterface{
 		this.storyCircleStage = new StoryCircleStageFactory(this.app);
 		this.abtStage = new AbtStageFactory(this.app);
 		this.relationship = new RelationshipFactory(this.app);
-		this.logger = new LoggerFactory(this.app);
+		this.logger = new LogFactory(this.app, LogWriterType.Console);
 		this.fileManipulator = new FileManipulatorFactory(this.app);
 
 		this.runningTimeManager = new RunningTimeManager(this.app);

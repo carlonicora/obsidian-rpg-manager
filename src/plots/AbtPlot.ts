@@ -1,5 +1,5 @@
 import {AbtInterface} from "./interfaces/AbtInterface";
-import {AbtPlotMetadataInterface} from "../metadatas/plots/AbtPlotMetadataInterface";
+import {AbtPlotMetadataInterface} from "./interfaces/AbtPlotMetadataInterface";
 
 export class AbtPlot implements AbtInterface {
 	constructor(

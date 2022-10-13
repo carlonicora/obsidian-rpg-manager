@@ -1,17 +1,17 @@
 import {AbstractRpgManagerView} from "../abstracts/AbstractRpgManagerView";
 import {ViewType} from "./enums/ViewType";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {IdInterface} from "../id/interfaces/IdInterface";
 import {TimelineElementResponseInterface} from "../responses/interfaces/TimelineElementResponseInterface";
 import {Component, MarkdownRenderer, TAbstractFile, TFile} from "obsidian";
 import {ResponseTimelineElement} from "../responses/ResponseTimelineElement";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
-import {CampaignInterface} from "../databases/components/interfaces/CampaignInterface";
-import {EventInterface} from "../databases/components/interfaces/EventInterface";
-import {ClueInterface} from "../databases/components/interfaces/ClueInterface";
-import {CharacterInterface} from "../databases/components/interfaces/CharacterInterface";
-import {SessionInterface} from "../databases/components/interfaces/SessionInterface";
-import {SceneInterface} from "../databases/components/interfaces/SceneInterface";
+import {CampaignInterface} from "../components/components/campaign/interfaces/CampaignInterface";
+import {EventInterface} from "../components/components/event/interfaces/EventInterface";
+import {ClueInterface} from "../components/components/clue/interfaces/ClueInterface";
+import {CharacterInterface} from "../components/components/character/interfaces/CharacterInterface";
+import {SessionInterface} from "../components/components/session/interfaces/SessionInterface";
+import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();

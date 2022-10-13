@@ -2,7 +2,7 @@ import {AbstractResponse} from "./abstracts/AbstractResponse";
 import {BreadcrumbResponseInterface} from "./interfaces/BreadcrumbResponseInterface";
 import {ResponseType} from "./enums/ResponseType";
 import {App} from "obsidian";
-import {ComponentInterface} from "../databases/interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbResponseInterface {
 	public component: ComponentInterface|undefined = undefined;

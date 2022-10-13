@@ -1,7 +1,7 @@
 import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
 import {ContentInterface} from "../contents/interfaces/ContentInterface";
 import {HeaderResponseElementInterface} from "./HeaderResponseElementInterface";
-import {ComponentType} from "../../databases/enums/ComponentType";
+import {ComponentType} from "../../components/enums/ComponentType";
 
 export interface HeaderResponseInterface extends ResponseDataElementInterface {
 	type: ComponentType;

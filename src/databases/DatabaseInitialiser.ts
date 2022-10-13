@@ -1,21 +1,20 @@
-import {CampaignSetting} from "./enums/CampaignSetting";
-import {App, CachedMetadata, TFile} from "obsidian";
+import {App, parseYaml, TFile} from "obsidian";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
 import {TagHelper} from "./TagHelper";
-import {ComponentType} from "./enums/ComponentType";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
-import {IdInterface} from "./interfaces/IdInterface";
+import {IdInterface} from "../id/interfaces/IdInterface";
 import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
-import {MultipleTagsError} from "../errors/MultipleTagsError";
-import {ComponentInterface} from "./interfaces/ComponentInterface";
+import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {ComponentStage} from "./components/enums/ComponentStage";
+import {ComponentStage} from "../components/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
+import {LogMessageType} from "../loggers/enums/LogMessageType";
+import {Md5} from "ts-md5";
+import {InvalidIdChecksumError} from "../errors/InvalidIdChecksumError";
 
 export class DatabaseInitialiser {
-	private static campaignSettings: Map<number, CampaignSetting> = new Map();
 	private static misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
 	private static app: App;
 
@@ -31,12 +30,15 @@ export class DatabaseInitialiser {
 		this.factories = this.app.plugins.getPlugin('rpg-manager').factories;
 		this.tagHelper = this.app.plugins.getPlugin('rpg-manager').tagHelper;
 
-		const response: DatabaseInterface = await this.factories.database.create();
+		const group = this.factories.logger.createGroup();
 
-		await this._loadCampaignSettings();
+		const response: DatabaseInterface = await this.factories.database.create();
+		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
 		const components: Array<ComponentInterface> = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
+
+		let componentCounter = 0;
 		for (let index=0; index<markdownFiles.length; index++){
 			try {
 				await this.createComponent(markdownFiles[index])
@@ -57,11 +59,14 @@ export class DatabaseInitialiser {
 
 						response.create(component);
 						components.push(component);
+						componentCounter++;
 					});
 			} catch (e) {
 				this.misconfiguredTags.set(markdownFiles[index], e);
 			}
 		}
+
+		group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, componentCounter + ' Components created'));
 
 		await Promise.all(components);
 
@@ -76,17 +81,63 @@ export class DatabaseInitialiser {
 
 		Promise.all(metadata)
 			.then(() => {
+				group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Data read for ' + metadata.length + ' Components'));
 				this._initialiseRelationships(response)
 					.then(() => {
-						response.ready();
-					})
-			})
+						group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Relationships created'));
+						this._validateComponents(response)
+							.then(() => {
+								group.add(this.factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Components Validated'));
+								response.ready();
+								if (this.misconfiguredTags.size > 0){
+									new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
+								}
 
-		if (this.misconfiguredTags.size > 0){
-			new DatabaseErrorModal(this.app, this.misconfiguredTags).open();
-		}
+								this.factories.logger.group(group);
+							});
+					});
+			});
 
 		return response;
+	}
+
+	private static async _validateComponents(
+		database: DatabaseInterface,
+	) {
+		database.recordset.forEach((component: ComponentInterface) => {
+			try {
+				component.validateHierarchy();
+			} catch (e) {
+				database.delete(component);
+				this.misconfiguredTags.set(component.file, e);
+			}
+		})
+	}
+
+	public static async readID(
+		file: TFile
+	): Promise<IdInterface|undefined> {
+		const metadata = this.app.metadataCache.getFileCache(file);
+		if (metadata == undefined) return undefined;
+		if (metadata.sections == undefined || metadata.sections.length === 0) return undefined;
+
+		const content: string = await this.app.vault.read(file);
+		const contentArray: Array<string> = content.split('\n');
+		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
+			const section = metadata.sections[sectionIndex];
+			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
+				const RpgManagerIdContent: Array<string> = contentArray.slice(section.position.start.line + 1, section.position.end.line);
+				const RpgManagerID: {id: string, checksum: string} = parseYaml(RpgManagerIdContent.join('\n'));
+
+				const response = this.factories.id.createFromID(RpgManagerID.id);
+
+				if (Md5.hashStr(RpgManagerID.id) !== RpgManagerID.checksum) throw new InvalidIdChecksumError(this.app, response)
+
+				return response;
+			}
+		}
+
+		return undefined;
 	}
 
 	/**
@@ -98,82 +149,44 @@ export class DatabaseInitialiser {
 	public static async createComponent(
 		file: TFile,
 	): Promise<ComponentInterface|undefined> {
-		const metadata: CachedMetadata | null = this.app.metadataCache.getFileCache(file);
-		if (metadata == null) return undefined;
+		const id: IdInterface|undefined = await this.readID(file);
+		if (id === undefined) return undefined;
 
-		const tags = this.tagHelper.sanitiseTags(metadata?.frontmatter?.tags);
-		if (tags.length === 0) return undefined;
-
-		if (!this.tagHelper.hasRpgManagerTags(tags)) return undefined;
-
-		let rpgManagerTagCounter = 0;
-		for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
-			if (this.tagHelper.isRpgManagerTag(tags[tagIndex])) rpgManagerTagCounter++;
-			if (rpgManagerTagCounter > 1) throw new MultipleTagsError(this.app, undefined);
-		}
-
-		const id: IdInterface | undefined = this.factories.id.createFromTags(tags);
 		if (!id.isValid) throw new TagMisconfiguredError(this.app, id);
 
-		const settings = this.campaignSettings.get(id.campaignId) ?? CampaignSetting.Agnostic;
-
 		return await this.factories.component.create(
-			settings,
+			id.campaignSettings,
 			file,
 			id,
 		);
 	}
 
-	/**
-	 * PRIVATE METHODS
-	 */
-	private static _loadCampaignSettings(
-	): void {
-		this.app.vault.getMarkdownFiles().forEach((file: TFile) => {
-			const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-			if (metadata?.frontmatter?.tags != null) {
-				const tags = this.tagHelper.sanitiseTags(metadata.frontmatter.tags);
-				if (tags.length === 0) return;
-
-				const tag = this.tagHelper.getTag(tags);
-				if (tag === undefined) return;
-
-				const type = this.tagHelper.getDataType(tag);
-				if (type === undefined) return;
-
-				if (type === ComponentType.Campaign){
-					const id = this.factories.id.createFromTag(tag);
-					try {
-						const settings = metadata?.frontmatter?.settings != undefined ?
-							CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :
-							CampaignSetting.Agnostic;
-						this.campaignSettings.set(id.campaignId, settings);
-					} catch (e) {
-						//No need to trap the errors here
-					}
-				}
-			}
-		});
-	}
-
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		await database.recordset.forEach((component: ComponentInterface) => {
-			component.initialiseRelationships();
+		const relationshipsInitialisation: Array<Promise<void>> = [];
+
+		database.recordset.forEach((component: ComponentInterface) => {
+			relationshipsInitialisation.push(component.initialiseRelationships());
 		});
 
-		await database.recordset.forEach((component: ComponentInterface) => {
-			component.getRelationships(database).forEach((relationship: RelationshipInterface) => {
-				if (relationship.component !== undefined){
-					this.factories.relationship.createFromReverse(component, relationship);
+		return Promise.all(relationshipsInitialisation)
+			.then(() => {
+				for (let index=0; index<database.recordset.length; index++){
+					const relationships = database.recordset[index].getRelationships(database).relationships;
+					for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
+						if (relationships[relationshipIndex].component !== undefined){
+							this.factories.relationship.createFromReverse(database.recordset[index], relationships[relationshipIndex]);
+						}
+					}
 				}
-			});
-		});
 
-		await database.recordset.forEach((component: ComponentInterface) => {
-			component.touch();
-		});
+				for (let index=0; index<database.recordset.length; index++){
+					database.recordset[index].touch();
+				}
+
+				return
+			});
 	}
 
 	public static async reinitialiseRelationships(
@@ -186,7 +199,12 @@ export class DatabaseInitialiser {
 				if (component.touch()) {
 					relationships.forEach((relationship: RelationshipInterface) => {
 						if (relationship.component === undefined) this.factories.relationship.createFromReverse(component, relationship);
-					})
+					});
+
+					database.recordset.forEach((component: ComponentInterface) => {
+						component.getRelationships(database);
+						component.touch();
+					});
 				}
 
 				return;

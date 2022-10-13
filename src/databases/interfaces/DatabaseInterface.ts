@@ -1,6 +1,6 @@
-import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "./IdInterface";
-import {ComponentInterface} from "./ComponentInterface";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {IdInterface} from "../../id/interfaces/IdInterface";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {TFile} from "obsidian";
 
 export interface DatabaseInterface {
@@ -12,6 +12,8 @@ export interface DatabaseInterface {
 
 	ready(
 	): void;
+
+	get isReady(): boolean;
 
 	read<T>(
 		query: any,

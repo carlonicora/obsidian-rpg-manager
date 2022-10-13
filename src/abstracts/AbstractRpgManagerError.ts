@@ -1,6 +1,6 @@
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {App} from "obsidian";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {IdInterface} from "../id/interfaces/IdInterface";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
 import {FactoriesInterface} from "../factories/interfaces/FactoriesInterface";
 import {TagHelper} from "../databases/TagHelper";
@@ -47,8 +47,9 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 
 	public updateSettings(
 		settings: Partial<RpgManagerSettingsInterface>,
+		partial = true,
 	): Promise<void> {
-		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings);
+		return this.app.plugins.getPlugin('rpg-manager').updateSettings(settings, partial);
 	}
 
 	public getErrorTitle(

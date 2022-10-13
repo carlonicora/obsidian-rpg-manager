@@ -1,6 +1,6 @@
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
-import {ComponentType} from "../databases/enums/ComponentType";
-import {IdInterface} from "../databases/interfaces/IdInterface";
+import {ComponentType} from "../components/enums/ComponentType";
+import {IdInterface} from "../id/interfaces/IdInterface";
 
 export class ComponentNotFoundError extends AbstractRpgManagerError {
 	public id: IdInterface;
@@ -9,7 +9,7 @@ export class ComponentNotFoundError extends AbstractRpgManagerError {
 	): string {
 		const response = 'The tag `' + this.id.tag + '` refers to an outline that does not exist.\n';
 
-		let check = 'Please check you have the followinf Outlines:\n';
+		let check = 'Please check you have the following Outlines:\n';
 		this.id.possiblyNotFoundIds?.forEach((id: number, type: ComponentType) => {
 			check += ' - ' + ComponentType[type].toLowerCase() + ' with an id of `' + id.toString() + '`\n';
 		});

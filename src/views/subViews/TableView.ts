@@ -1,15 +1,16 @@
 import {TableResponseInterface} from "../../responses/interfaces/TableResponseInterface";
 import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
 import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
-import {ComponentType} from "../../databases/enums/ComponentType";
-import {IdInterface} from "../../databases/interfaces/IdInterface";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {IdInterface} from "../../id/interfaces/IdInterface";
 import {DateContent} from "../../responses/contents/DateContent";
 import {EditorSelector} from "../../helpers/EditorSelector";
 import {setIcon} from "obsidian";
-import {AdventureInterface} from "../../databases/components/interfaces/AdventureInterface";
-import {ActInterface} from "../../databases/components/interfaces/ActInterface";
+import {AdventureInterface} from "../../components/components/adventure/interfaces/AdventureInterface";
+import {ActInterface} from "../../components/components/act/interfaces/ActInterface";
 import {TableResponseElementInterface} from "../../responses/interfaces/TableResponseElementInterface";
 import {RelationshipType} from "../../relationships/enums/RelationshipType";
+import {ImageContent} from "../../responses/contents/ImageContent";
 
 export class TableView extends AbstractSubModelView {
 	private tableEl: HTMLTableElement;
@@ -46,7 +47,7 @@ export class TableView extends AbstractSubModelView {
 			if (data.class === 'rpgm-plot'){
 				const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
 				titleEditor.addEventListener('click', () => {
-					EditorSelector.select(this.app, data.currentComponent);
+					EditorSelector.focusOnDataKey(this.app, data.currentComponent);
 				})
 			}
 		}
@@ -146,24 +147,20 @@ export class TableView extends AbstractSubModelView {
 
 			element.elements.forEach((content: ContentInterface) => {
 				const cell = row.insertCell();
-				if (content instanceof DateContent) {
-					cell.style.fontSize = '0.7em';
-				}
+
+				if (content instanceof DateContent) cell.style.fontSize = '0.7em';
+				if (content instanceof ImageContent) cell.addClass('image');
+
 				content.fillContent(cell, this.sourcePath);
+
+
 
 				if (content.isInLine) cell.addClass('inline');
 
 				if (content.isEditable && isRowEditable) cell.addClass('editable');
 
 				if (content.isEditable && isRowEditable) {
-					const editorButtonEl = document.createElement('span');
-					editorButtonEl.addClass('editorIcon');
-					editorButtonEl.textContent = '</>';
-					cell.prepend(editorButtonEl);
-
-					editorButtonEl.addEventListener('click', () => {
-						this.manipulators.codeblock.selectRelationship(element.relationship.path);
-					});
+					this.addRelationshipEditorIcon(cell, data.currentComponent, element.relationship.path);
 				}
 			});
 		});

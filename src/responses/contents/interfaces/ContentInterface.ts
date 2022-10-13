@@ -5,7 +5,7 @@ export interface ContentInterface {
 	isEditable?: boolean;
 
 	fillContent(
-		container: HTMLElement,
+		container: HTMLElement|undefined,
 		sourcePath: string,
 	): void;
 }
