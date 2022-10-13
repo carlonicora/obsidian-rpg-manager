@@ -135,9 +135,18 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 				/** IMAGE */
 				if (component.image != null) {
 					const img = new Image(40, 40);
+
+					img.onerror = (evt: Event|string) => {
+						rowEl.insertCell();
+					};
+
+					img.onload = (evt: Event) => {
+						img.style.objectFit = 'cover';
+						rowEl.insertCell().append(img as Node);
+					};
+
 					img.src = component.image;
-					img.style.objectFit = 'cover';
-					rowEl.insertCell().append(img as Node);
+
 				} else {
 					rowEl.insertCell();
 				}

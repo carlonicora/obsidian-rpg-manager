@@ -11,11 +11,20 @@ export class ImageContent extends AbstractContent {
 
 		if (this.content != null){
 			const image = new Image(75, 75);
-			image.src = this.content;
-			image.style.objectFit = 'cover';
 
-			container.append(image);
-			container.style.width = image.style.width;
+			image.onerror = (evt: Event|string) => {
+				container.textContent = '';
+				return;
+			};
+
+			image.onload = (evt: Event) => {
+				image.style.objectFit = 'cover';
+
+				container.append(image);
+				container.style.width = image.style.width;
+			};
+
+			image.src = this.content;
 		} else {
 			container.textContent = '';
 		}
