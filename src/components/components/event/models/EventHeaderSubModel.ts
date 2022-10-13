@@ -26,9 +26,20 @@ export class EventHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Event;
 		response.responseType = ResponseType.EventHeader;
 
-		if (this.data.date != null) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Date', this.data.date.toDateString(), HeaderResponseType.Short));
-		}
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Event date',
+				(this.data.date != null ? this.data.date.toDateString() : undefined),
+				HeaderResponseType.DateSelector,
+				{
+					yamlIdentifier: 'data.date',
+					date: this.data.date,
+					placeholder: 'Select the event date'
+				}
+			)
+		);
 
 		return this.completeData(response);
 	}

@@ -5,9 +5,11 @@ export class DateContent extends AbstractContent {
 	public content: string;
 
 	public fillContent(
-		container: HTMLElement,
+		container: HTMLElement|undefined,
 		sourcePath: string,
 	): void {
+		if (container === undefined) return;
+
 		if (this.content != null){
 			MarkdownRenderer.renderMarkdown(
 				this.content,
