@@ -1,7 +1,8 @@
 import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
+import {AnalyserScoreType} from "../enums/AnalyserScoreType";
+import {AnalyserReportScoreInterface} from "./AnalyserReportScoreInterface";
 
-export interface AnalyserReportDetailInterface {
-	type: string;
+export interface AnalyserReportDetailInterface extends AnalyserReportScoreInterface{
 	threshold: AnalyserThresholdResult;
 	points: number;
 	total: number;
@@ -9,5 +10,5 @@ export interface AnalyserReportDetailInterface {
 	description: string;
 	details: string;
 
-	get percentage(): number;
+	get isRelevant(): boolean;
 }

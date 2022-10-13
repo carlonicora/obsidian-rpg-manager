@@ -11,7 +11,7 @@ export class BuilderAnalyser extends AbstractAnalyser {
 	) {
 		super(app, abtStage);
 
-		this.data = dataList;
+		this.rawData = dataList;
 		super._ingestData();
 	}
 }

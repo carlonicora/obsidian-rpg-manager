@@ -8,15 +8,16 @@ import {SceneType} from "../../components/enums/SceneType";
 import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
 import {AnalyserDataInterface} from "../interfaces/AnalyserDataInterface";
 import {AnalyserData} from "../AnalyserData";
-import {AnalyserMinimalReporter} from "../reporters/AnalyserMinimalReporter";
+import {AnalyserMinimalView} from "../views/AnalyserMinimalView";
 import {AnalyserReportType} from "../enums/AnalyserReportType";
-import {AnalyserExtendedReporter} from "../reporters/AnalyserExtendedReporter";
+import {AnalyserExtendedView} from "../views/AnalyserExtendedView";
+import {AnalyserReport} from "../reports/AnalyserReport";
+import {AnalyserViewInterface} from "../interfaces/AnalyserViewInterface";
 
 export abstract class AbstractAnalyser extends AbstractRpgManager implements AnalyserInterface {
-	protected data: Array<AnalyserDataImportInterface>;
+	protected rawData: Array<AnalyserDataImportInterface>;
 	protected isSingleScene = false;
 
-	private dataList: Array<AnalyserDataImportInterface>;
 	private analyserData: AnalyserDataInterface;
 
 	constructor(
@@ -24,7 +25,7 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 		protected abtStage: AbtStage|undefined,
 	) {
 		super(app);
-		this.data = [];
+		this.rawData = [];
 		this.analyserData = new AnalyserData();
 	}
 
@@ -32,23 +33,33 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 		this.analyserData.totalTargetDuration = duration;
 	}
 
-	public getReport(
+	public render(
 		type: AnalyserReportType,
-	): AnalyserReportInterface {
-		switch (type) {
+		containerEl: HTMLDivElement,
+	): void {
+		const report = new AnalyserReport(this.app, this.analyserData);
+		let view: AnalyserViewInterface|undefined = undefined;
+
+		switch(type){
 			case AnalyserReportType.Minimal:
-				return new AnalyserMinimalReporter(this.analyserData).generateReport();
+				view = new AnalyserMinimalView(this.app);
+				break;
 			case AnalyserReportType.Extended:
-				return new AnalyserExtendedReporter(this.analyserData).generateReport();
+				view = new AnalyserExtendedView(this.app);
+				break;
+			default:
+				return;
 		}
+
+		view.render(report, containerEl);
 	}
 
 	protected _ingestData(
 	): void {
-		if (this.dataList.length > 0) {
-			this.analyserData.dataLength = this.dataList.length;
+		if (this.rawData.length > 0) {
+			this.analyserData.dataLength = this.rawData.length;
 			let previousType: SceneType | undefined = undefined;
-			this.dataList.forEach((data: AnalyserDataImportInterface) => {
+			this.rawData.forEach((data: AnalyserDataImportInterface) => {
 				this.analyserData.totalRunningTime += data.currentDuration ?? 0;
 				this.analyserData.addExpectedRunningTime(data.expectedDuration);
 				if (data.isExciting)
@@ -83,7 +94,7 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 	protected _addScene(
 		scene: SceneInterface,
 	): void {
-		this.data.push(this._convertScene(scene));
+		this.rawData.push(this._convertScene(scene));
 	}
 
 	protected _addScenesList(

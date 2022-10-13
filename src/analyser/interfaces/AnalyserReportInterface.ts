@@ -1,4 +1,5 @@
 import {AnalyserReportDetailInterface} from "./AnalyserReportDetailInterface";
+import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
 
 export interface AnalyserReportInterface {
 	excitement: AnalyserReportDetailInterface;
@@ -6,10 +7,4 @@ export interface AnalyserReportInterface {
 	variety: AnalyserReportDetailInterface;
 	interest: AnalyserReportDetailInterface;
 	duration: AnalyserReportDetailInterface;
-
-	get score(): number;
-	get description(): string;
-	set description(description: string);
-	get type(): string;
-	set type(type: string);
 }
