@@ -45,7 +45,7 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 	}
 
 	public get image(): string | undefined {
-		if (this.metadata?.data?.image !== undefined && this.metadata?.data?.image !== '') return this.metadata.data.image;
+		if (this.metadata?.data?.image != undefined && this.metadata?.data?.image !== '') return this.metadata.data.image;
 
 		let localImage: string|undefined = undefined;
 		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
