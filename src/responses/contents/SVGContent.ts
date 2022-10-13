@@ -6,9 +6,11 @@ export class SVGContent extends AbstractContent {
 	public content: string;
 
 	public fillContent(
-		container: HTMLElement,
+		container: HTMLElement|undefined,
 		sourcePath: string,
 	): void {
+		if (container === undefined) return;
+
 		if (this.content != null){
 			if (this.additionalInfo.storyCircleStage !== undefined) {
 				const storyCircleStage: StoryCircleStage = this.additionalInfo.storyCircleStage;

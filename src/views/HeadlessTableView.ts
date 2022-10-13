@@ -24,7 +24,6 @@ export class HeadlessTableView extends AbstractRpgManager{
 		rowEl.createEl('td', {cls: 'header', text: (typeof element === 'string' ? element : element.title)});
 		const cellContentEl = rowEl.createEl('td', {cls: 'content'});
 
-
 		let subContent: any|ContentInterface|undefined;
 
 		if (additionalParams === undefined) {

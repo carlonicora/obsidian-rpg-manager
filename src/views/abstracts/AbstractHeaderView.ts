@@ -3,6 +3,8 @@ import {HeaderResponseInterface} from "../../responses/interfaces/HeaderResponse
 import {HeaderResponseType} from "../../responses/enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
+import flatpickr from "flatpickr";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -70,13 +72,14 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			//const image = new Image(data.imgWidth, data.imgHeight);
 			const image = new Image();
 			image.src = data.imgSrc;
-			//image.style.objectFit = 'cover';
 
-			if (image.src.startsWith('http')) {
-				const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
-				crsImageLink.append(image);
-			} else {
-				this.imageContainterEl.append(image);
+			image.onload = (evt: Event) => {
+				if (image.src.startsWith('http')) {
+					const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
+					crsImageLink.append(image);
+				} else {
+					this.imageContainterEl.append(image);
+				}
 			}
 		}
 
@@ -92,13 +95,15 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 
 	protected createContainerEl(
 		element: HeaderResponseElementInterface,
-	): HTMLTableCellElement {
+		fn: Function|undefined = undefined,
+		additionalParams: Array<any>|undefined=undefined,
+	): HTMLTableCellElement|undefined {
 		let tableRowEl = this.infoTableEl.insertRow();
 		const titleCellEl = tableRowEl.insertCell();
 		titleCellEl.addClass('title');
 		titleCellEl.textContent = element.title;
 
-		if (element.type === HeaderResponseType.Long){
+		if (element.type === HeaderResponseType.Long) {
 			titleCellEl.colSpan = 2;
 			tableRowEl = this.infoTableEl.insertRow();
 		}
@@ -106,32 +111,69 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		const response = tableRowEl.insertCell();
 		response.addClass('content');
 
-		if (element.additionalInformation?.editableField !== undefined) this.addEditorIcon(response, element.currentComponent, element.additionalInformation.editableField)
+		if (fn !== undefined){
+			let subContent: any|ContentInterface|undefined;
 
-		if (element.type === HeaderResponseType.Long) {
-			response.colSpan = 2;
+			if (additionalParams === undefined) {
+				subContent = fn(response, element);
+			} else {
+				subContent = fn(response, ...additionalParams);
+			}
+
+			if (subContent !== undefined) {
+				const subRowEl = this.infoTableEl.insertRow();
+				subRowEl.insertCell().textContent = '';
+				const subRowContentEl = subRowEl.insertCell();
+				subRowContentEl.addClass('subcontent');
+
+				if (typeof subContent === 'function'){
+					if (additionalParams === undefined) {
+						subContent(subRowContentEl, element);
+					} else {
+						subContent(subRowContentEl, ...additionalParams);
+					}
+				} else {
+					subContent.fillContent(subRowContentEl, this.sourcePath);
+				}
+			}
 		} else {
-			response.addClass('contentShort');
+			if (element.additionalInformation?.editableField !== undefined) this.addEditorIcon(response, element.currentComponent, element.additionalInformation.editableField)
+
+			if (element.type === HeaderResponseType.Long) {
+				response.colSpan = 2;
+			} else {
+				response.addClass('contentShort');
+			}
 		}
 
 		return response;
 	}
 
-	protected addElement(
-		containerEl: HTMLTableCellElement,
-		element: HeaderResponseElementInterface,
-		fn: any,
+	protected addDateSelector(
+		contentEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
 	): void {
-		switch (element.type){
-			case HeaderResponseType.Long:
-			case HeaderResponseType.Short:
-			case HeaderResponseType.Half:
-				element.value.fillContent(containerEl.children[1] as HTMLDivElement, this.sourcePath);
-				break;
-			default:
-				fn;
-		}
+		if (data.additionalInformation === undefined)
+			return;
 
-		containerEl.createDiv({cls: 'reset'});
+		const options:any = {
+			allowInput: true,
+			dateFormat: "Y-m-d",
+			altInput: true,
+			onChange: (selectedDate: any, dateStr: any , instance: any) => {
+				this.manipulators.codeblock.update(
+					data.additionalInformation.yamlIdentifier,
+					dateStr,
+				);
+			}
+		};
+
+		if (data.additionalInformation.date !== undefined) options.defaultDate = data.additionalInformation.date;
+
+		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
+		flatpickrEl.placeholder = data.additionalInformation.placeholder;
+		flatpickrEl.readOnly = true;
+
+		flatpickr(flatpickrEl, options);
 	}
 }

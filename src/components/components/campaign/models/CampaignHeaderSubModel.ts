@@ -12,6 +12,8 @@ import {SorterComparisonElement} from "../../../../databases/SorterComparisonEle
 import {SorterType} from "../../../../databases/enums/SorterType";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
+import {ResponseHeaderElement} from "../../../../responses/ResponseHeaderElement";
+import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
 
 export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: CampaignInterface;
@@ -47,10 +49,26 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;
 
-		if (response === null) response = new ResponseHeader(this.app, this.currentComponent);
+		if (response === null)
+			response = new ResponseHeader(this.app, this.currentComponent);
 
 		response.type = ComponentType.Campaign;
 		response.responseType = ResponseType.CampaignHeader;
+
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Current Date',
+				(this.data.date != null ? this.data.date.toDateString() : undefined),
+				HeaderResponseType.DateSelector,
+				{
+					yamlIdentifier: 'data.date',
+					date: this.data.date,
+					placeholder: 'Select the current date in the campaign'
+				}
+			)
+		);
 
 		response.metadata = {campaignId: this.data.id, sourceMeta: additionalInformation};
 

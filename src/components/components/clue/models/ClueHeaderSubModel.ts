@@ -26,11 +26,22 @@ export class ClueHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Clue;
 		response.responseType = ResponseType.ClueHeader;
 
-		const clueFound = this.data.found !== undefined
-			? 'Clue found on ' + this.data.found?.toDateString()
-			: '<span class="rpgm-missing">Clue not found yet</span>';
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Found', (this.data.found !== undefined ? 'Yes' : 'No'), HeaderResponseType.Short));
 
-		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Found', clueFound, HeaderResponseType.Short));
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Discovery date',
+				(this.data.found != null ? this.data.found.toDateString() : undefined),
+				HeaderResponseType.DateSelector,
+				{
+					yamlIdentifier: 'data.found',
+					date: this.data.found,
+					placeholder: 'Clue discovery date'
+				}
+			)
+		);
 
 		return this.completeData(response);
 	}

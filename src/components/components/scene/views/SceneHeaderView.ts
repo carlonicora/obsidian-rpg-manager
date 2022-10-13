@@ -42,6 +42,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.SceneRunTime:
 					headlessTable.addRow(element, this.sceneRunTime.bind(this));
+					break;
 				case HeaderResponseType.DateSelector:
 					headlessTable.addRow(element, this.addSceneDateSelector.bind(this));
 					break;

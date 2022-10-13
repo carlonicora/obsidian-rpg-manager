@@ -15,6 +15,7 @@ import {
 import {FileManipulatorInterface} from "../../manipulators/interfaces/FileManipulatorInterface";
 import {Md5} from "ts-md5";
 import {ComponentNotFoundError} from "../../errors/ComponentNotFoundError";
+import {RelationshipType} from "../../relationships/enums/RelationshipType";
 
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
@@ -64,10 +65,12 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	): Promise<void> {
 		if (this.metadata.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
-				this.relationships.add(
-					this.factories.relationship.createFromMetadata(relationshipMetadata),
-					false,
-				);
+				if (relationshipMetadata.path !== this.file.path) {
+					this.relationships.add(
+						this.factories.relationship.createFromMetadata(relationshipMetadata),
+						false,
+					);
+				}
 			})
 		}
 	}
@@ -82,7 +85,25 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		this.relationships
 			.filter((relationship: RelationshipInterface) => relationship.component === undefined)
 			.forEach((relationship: RelationshipInterface) => {
-				if (relationship.component === undefined) relationship.component = (database ?? this.database).readByPath(relationship.path);
+				if (relationship.component === undefined) {
+					const path = relationship.path;
+					if (relationship.type !== RelationshipType.Undefined){
+						relationship.component = (database ?? this.database).readByPath(path);
+					} else {
+						const maybeRelatedComponents = (database ?? this.database).read<ComponentInterface>((component: ComponentInterface) =>
+							component.file.basename === path
+						);
+
+						if (maybeRelatedComponents.length === 1) {
+							/**
+							 * @TODO: what is the defaultRelationship for this.id.type?
+							 */
+							relationship.type = RelationshipType.Unidirectional;
+							relationship.component = maybeRelatedComponents[0];
+							relationship.path = maybeRelatedComponents[0].file.path;
+						}
+					}
+				}
 			});
 
 		return this.relationships;

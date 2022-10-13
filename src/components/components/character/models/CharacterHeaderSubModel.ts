@@ -43,9 +43,41 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Goals', goals, HeaderResponseType.Long, {editableField: 'data.goals'}));
 
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Pronoun', this.data.pronoun, HeaderResponseType.Pronoun));
+
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Birth',
+				(this.data.dob != null ? this.data.dob.toDateString() : undefined),
+				HeaderResponseType.DateSelector,
+				{
+					yamlIdentifier: 'data.dob',
+					date: this.data.dob,
+					placeholder: 'Select the birth date of the character'
+				}
+			)
+		);
+
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Death',
+				(this.data.death != null ? this.data.death.toDateString() : undefined),
+				HeaderResponseType.DateSelector,
+				{
+					yamlIdentifier: 'data.death',
+					date: this.data.death,
+					placeholder: 'Select the death date of the character'
+				}
+			)
+		);
+
 		if (this.data.age != null || this.data.death != null) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Status', this.data.death ? 'Dead' : 'Alive', HeaderResponseType.Short));
 		}
+
 		if (this.data.death != null){
 			let death = this.data.death.toDateString();
 			if (this.data.age != null){

@@ -6,6 +6,8 @@ import {HeadlessTableView} from "../../../../views/HeadlessTableView";
 import {ContentInterface} from "../../../../responses/contents/interfaces/ContentInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
+import {HeaderResponseElementInterface} from "../../../../responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: CampaignInterface;
@@ -14,7 +16,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
-		super.render(container, data);
+		super.internalRender(container, data);
 
 		if (this.currentComponent.image != null){
 			this.headerTitleEl.empty();
@@ -39,6 +41,20 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
+
+		data.elements.forEach((element: HeaderResponseElementInterface) => {
+			switch (element.type){
+				case HeaderResponseType.DateSelector:
+					this.createContainerEl(element, this.addDateSelector.bind(this))
+					break;
+				default:
+					element.value.fillContent(
+						this.createContainerEl(element),
+						this.sourcePath,
+					);
+					break;
+			}
+		});
 
 		if (data.metadata?.sourceMeta?.adventures !== undefined){
 			headlessTable.addRow(

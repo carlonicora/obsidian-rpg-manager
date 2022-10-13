@@ -21,7 +21,7 @@ export abstract class AbstractContent extends AbstractRpgManager implements Cont
 	}
 
 	abstract fillContent(
-		container: HTMLElement,
+		container: HTMLElement|undefined,
 		sourcePath: string,
 	): void;
 }

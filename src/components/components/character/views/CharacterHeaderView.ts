@@ -21,6 +21,9 @@ export class CharacterHeaderView extends AbstractHeaderView {
 
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
 			switch (element.type){
+				case HeaderResponseType.DateSelector:
+					this.createContainerEl(element, this.addDateSelector.bind(this))
+					break;
 				case HeaderResponseType.Pronoun:
 					headlessTable.addRow(element, this.addPronoun.bind(this));
 					break;

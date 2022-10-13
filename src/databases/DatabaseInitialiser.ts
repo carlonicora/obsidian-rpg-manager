@@ -199,7 +199,12 @@ export class DatabaseInitialiser {
 				if (component.touch()) {
 					relationships.forEach((relationship: RelationshipInterface) => {
 						if (relationship.component === undefined) this.factories.relationship.createFromReverse(component, relationship);
-					})
+					});
+
+					database.recordset.forEach((component: ComponentInterface) => {
+						component.getRelationships(database);
+						component.touch();
+					});
 				}
 
 				return;
