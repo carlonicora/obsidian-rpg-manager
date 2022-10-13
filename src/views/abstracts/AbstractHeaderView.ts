@@ -72,13 +72,18 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			//const image = new Image(data.imgWidth, data.imgHeight);
 			const image = new Image();
 			image.src = data.imgSrc;
-			//image.style.objectFit = 'cover';
 
-			if (image.src.startsWith('http')) {
-				const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
-				crsImageLink.append(image);
-			} else {
-				this.imageContainterEl.append(image);
+			try {
+				image.onload = (evt: Event) => {
+					if (image.src.startsWith('http')) {
+						const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
+						crsImageLink.append(image);
+					} else {
+						this.imageContainterEl.append(image);
+					}
+				}
+			} catch (e) {
+				//No need to trow an error, as the error management is handled by the image.onload event
 			}
 		}
 
