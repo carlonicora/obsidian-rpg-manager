@@ -37,7 +37,7 @@ export class RelationshipFactory extends AbstractFactory implements Relationship
 		existingRelationships:RelationshipListInterface|undefined = undefined,
 	): RelationshipInterface {
 		const response = new Relationship(
-			this.factories.relationshipType.createRelationshipType(relationship.type),
+			(relationship.type !== undefined ? this.factories.relationshipType.createRelationshipType(relationship.type) : RelationshipType.Undefined),
 			relationship.path,
 			relationship.description,
 			undefined,
