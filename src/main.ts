@@ -82,10 +82,9 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		if (this.settings.previousVersion !== this.manifest.version){
 			const databaseUpdater = await new DatabaseUpdater(this.app, this, this.settings.previousVersion, this.manifest.version);
 
-			if (databaseUpdater.requiresDatabaseUpdate()) {
+			if (await databaseUpdater.requiresDatabaseUpdate()) {
 				requiresUpdate = true;
 				new UpdaterModal(this.app, databaseUpdater).open();
-
 			}
 		}
 

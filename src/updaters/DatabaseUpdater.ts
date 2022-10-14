@@ -1,4 +1,4 @@
-import {App} from "obsidian";
+import {App, SectionCache} from "obsidian";
 import {DatabaseUpdateWorkerInterface} from "./interfaces/DatabaseUpdateWorkerInterface";
 import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
@@ -40,8 +40,8 @@ export class DatabaseUpdater {
 		return this.previousVersion;
 	}
 
-	public requiresDatabaseUpdate(
-	): boolean {
+	public async requiresDatabaseUpdate(
+	): Promise<boolean> {
 		if (this.previousVersion === '') this.previousVersion = '1.2';
 
 		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(this.previousVersion);
@@ -52,6 +52,12 @@ export class DatabaseUpdater {
 			currentVersionMajorMinor === undefined ||
 			previousVersionMajorMinor === currentVersionMajorMinor
 		) return false;
+
+		if (await this._isVaultEmptyOfRpgManagerComponents()) {
+			const currentVersionMajorMinor = this.getMajorMinor(this.currentVersion);
+			await this.rpgManager.updateSettings({previousVersion: currentVersionMajorMinor});
+			return false;
+		}
 
 		return this.versionsHistory.get(previousVersionMajorMinor) !== undefined;
 	}
@@ -72,12 +78,17 @@ export class DatabaseUpdater {
 			previousVersionMajorMinor === currentVersionMajorMinor
 		) return false;
 
+		const empty = await this._isVaultEmptyOfRpgManagerComponents();
+		console.warn(empty)
+
 		let updater = await this.versionsHistory.get(previousVersionMajorMinor);
 		while (updater !== undefined){
 			response = true;
-			const worker: DatabaseUpdateWorkerInterface = await new VersionMap[updater.previousVersion as keyof typeof VersionMap](this.app);
-			if (reporter !== undefined) reporter.setUpdater(this.previousVersion, this.currentVersion);
-			await worker.run(reporter);
+			if (!empty) {
+				const worker: DatabaseUpdateWorkerInterface = await new VersionMap[updater.previousVersion as keyof typeof VersionMap](this.app);
+				if (reporter !== undefined) reporter.setUpdater(this.previousVersion, this.currentVersion);
+				await worker.run(reporter);
+			}
 
 			updater = await this.versionsHistory.get(updater.nextVersion);
 		}
@@ -85,6 +96,25 @@ export class DatabaseUpdater {
 		await this.rpgManager.updateSettings({previousVersion: currentVersionMajorMinor});
 
 		return response;
+	}
+
+	private async _isVaultEmptyOfRpgManagerComponents(
+	): Promise<boolean> {
+		const everyMarkdown = this.app.vault.getMarkdownFiles();
+
+		for (let index=0; index<everyMarkdown.length; index++){
+			const cache = this.app.metadataCache.getFileCache(everyMarkdown[index]);
+			if (cache === undefined || cache?.sections == undefined) continue;
+
+			const validSections = cache.sections.filter((section: SectionCache) => section.type === 'code');
+			for (let sectionIndex=0; sectionIndex<validSections.length; sectionIndex++) {
+				const fileContent = await this.app.vault.read(everyMarkdown[index]);
+				const fileArray = fileContent.split('\n');
+				if (fileArray[validSections[sectionIndex].position.start.line].startsWith('```RpgManager')) return false;
+			}
+		}
+
+		return true;
 	}
 
 	private getMajorMinor(
