@@ -11,7 +11,7 @@ RPG Manager helps you create the plot of a story, organising, and referencing el
 THERE NEEDS TO BE SOMETHING HERE I DO NOT KNOW WHAT YET
 
 ## Goals
-The **Primary Goal** of RPG Manager is to lower the time needed to write a story, increase the quality of writing produced by narrowing focus, and to increase the quality of the sessions you run for your players. It accomplishes this by incorporating a combination of **[And, But, Therefore](documentation/plots/abt.md)** (ABT) and [**Story Circle**](documentation/plots/storycircle.md) (SC) Frameworks in the plugin. These additions are optional features and can be disabled. 
+The **Primary Goal** of RPG Manager is to lower the time needed to write a story, increase the quality of writing produced by narrowing focus, and to increase the quality of the sessions you run for your players. It accomplishes this by incorporating a combination of **[And, But, Therefore](documentation/plots/abt.md)** (ABT) and [**Story Circle**](documentation/plots/storycircle.md) (SC) Frameworks in the plugin to balance **[Dramatic Action]()** with **[Physical Action]()**. These additions are optional features and can be disabled. 
 
 The **Secondary Goal** of RPG Manager is to provide a story or campaign management system framework within Obsidian that is, at its core, system agnostic. It is intended to work for authors of all genres, DnD, Genesys, Sectors without Numbers, Vampire: The Masquerade, Warhammer, Warcraft, and more. If RPG Manager cannot support it, we [**want to know about it**](https://github.com/carlonicora/obsidian-rpg-manager/issues) so we can correct it. 
 
