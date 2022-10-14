@@ -1,4 +1,4 @@
-# Role Playing Game Manager Obsidian Plugin 
+# Role Playing Game Manager
 
 Role Playing Game Manager (RPG Manager or RPGM) is an [Obsidian.md](https://obsidian.md) plugin that helps you outline and manage your Tabletop Role Playing Game (TTRPG) stories. 
 
