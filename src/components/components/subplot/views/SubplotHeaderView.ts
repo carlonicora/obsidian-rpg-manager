@@ -1,10 +1,7 @@
-import {AbstractHeaderView} from "../../../../views/abstracts/AbstractHeaderView";
 import {SubplotInterface} from "../interfaces/SubplotInterface";
 import {HeaderResponseInterface} from "../../../../responses/interfaces/HeaderResponseInterface";
-import {SceneAnalyser} from "../../../../analyser/SceneAnalyser";
 import {HeadlessTableView} from "../../../../views/HeadlessTableView";
 import {HeaderResponseElementInterface} from "../../../../responses/interfaces/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
 import {AbstractPlotHeaderView} from "../../../../views/abstracts/AbstractPlotHeaderView";
 
 export class SubplotHeaderView extends AbstractPlotHeaderView {
@@ -15,8 +12,6 @@ export class SubplotHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseInterface,
 	): void {
 		super.internalRender(container, data);
-
-		const analyser: SceneAnalyser|undefined = undefined;
 
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 

@@ -2,7 +2,7 @@ import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {ComponentDataInterface} from "../interfaces/ComponentDataInterface";
 import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {App, TAbstractFile, TFile} from "obsidian";
+import {App, TFile} from "obsidian";
 import {CampaignSetting} from "../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../id/interfaces/IdInterface";
 import {ComponentMetadataInterface} from "../interfaces/ComponentMetadataInterface";
@@ -51,7 +51,7 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 		const imageExtensions = ["jpeg", "jpg", "png", "webp"];
 
 		for (let extensionCount = 0; extensionCount < imageExtensions.length; extensionCount++) {
-			const fileName = this.app.vault.config.attachmentFolderPath + '/' + this.file.basename + '.' + imageExtensions[extensionCount];
+			const fileName = ((this.settings.imagesFolder !== undefined && this.settings.imagesFolder !== '') ? this.settings.imagesFolder : this.app.vault.config.attachmentFolderPath) + '/' + this.file.basename + '.' + imageExtensions[extensionCount];
 
 			if (this._fileExists(fileName)) {
 				if (AbstractComponentData.root === undefined) AbstractComponentData.initialiseRoots(this.app);
@@ -75,13 +75,25 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 	private _fileExists(
 		path: string
 	): boolean {
-		const abstractFile = this.app.vault.getAbstractFileByPath(path);
-		let response = false;
+		let folder: string|undefined = undefined;
+		const folderSeparatorIndex = path.lastIndexOf('/');
 
-		if (abstractFile instanceof TAbstractFile) {
-			response = true;
+		if (folderSeparatorIndex !== -1){
+			folder = path.substring(0, folderSeparatorIndex);
 		}
 
-		return response;
+		const allFiles = this.app.vault.getFiles().filter((file: TFile) =>
+			(
+				folder !== undefined
+					? file.path.substring(0, file.path.lastIndexOf('/')) === folder
+					: file.parent.parent === undefined
+			)
+		);
+
+		for (let index=0; index<allFiles.length; index++){
+			if (allFiles[index].path.toLowerCase() === path.toLowerCase()) return true
+		}
+
+		return false;
 	}
 }

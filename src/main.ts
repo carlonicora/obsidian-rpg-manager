@@ -1,4 +1,12 @@
-import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, setIcon, WorkspaceLeaf} from 'obsidian';
+import {
+	addIcon,
+	Component,
+	MarkdownPostProcessorContext,
+	MarkdownView,
+	Plugin,
+	setIcon,
+	WorkspaceLeaf
+} from 'obsidian';
 import {Controller} from "./controller/Controller";
 import {ComponentType} from "./components/enums/ComponentType";
 import {Factories} from "./factories/Factories";
