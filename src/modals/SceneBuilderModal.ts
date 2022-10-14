@@ -1,4 +1,3 @@
-import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 import {App} from "obsidian";
 import {AbstractModal} from "./abstracts/AbstractModal";
 import {IdInterface} from "../id/interfaces/IdInterface";
@@ -75,7 +74,7 @@ export class SceneBuilderModal extends AbstractModal {
 		const titleInputEl: HTMLInputElement = titleCellEl.createEl('input');
 		const goalInputEl: HTMLInputElement = goalCellEl.createEl('input');
 		const typeSelectionEl: HTMLSelectElement = typeCellEl.createEl('select');
-		const excitmentCheckboxEl: HTMLInputElement = excitingCellEl.createEl('input');
+		const excitementCheckboxEl: HTMLInputElement = excitingCellEl.createEl('input');
 
 		/** TYPE */
 		typeSelectionEl.createEl('option', {text: '', value: ''}).selected = true;
@@ -88,7 +87,7 @@ export class SceneBuilderModal extends AbstractModal {
 		});
 
 		/** EXCITEMENT */
-		excitmentCheckboxEl.type = 'checkbox';
+		excitementCheckboxEl.type = 'checkbox';
 
 		titleInputEl.addEventListener('keyup', () => {
 			console.log('title changed')
@@ -97,7 +96,7 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitmentCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false
 				),
 			);
 		});
@@ -110,7 +109,7 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitmentCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false
 				),
 				true,
 			);
@@ -124,7 +123,7 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitmentCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false
 				),
 			);
 		});
@@ -137,7 +136,7 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitmentCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false
 				),
 				true,
 			);
@@ -151,13 +150,13 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitmentCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false
 				),
 				true
 			);
 		});
 
-		excitmentCheckboxEl.addEventListener('change', () => {
+		excitementCheckboxEl.addEventListener('change', () => {
 			console.log('checkbox changed')
 			this._updateEmptyLines(
 				id,
@@ -165,7 +164,7 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitmentCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false
 				),
 				true
 			);

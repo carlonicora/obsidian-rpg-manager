@@ -47,6 +47,8 @@ import {FileManipulatorFactory} from "../manipulators/factories/FileManipulatorF
 import {LogFactoryInterface} from "../loggers/interfaces/LogFactoryInterface";
 import {LogFactory} from "../loggers/factories/LogFactory";
 import {LogWriterType} from "../loggers/enums/LogWriterType";
+import {AnalyserFactoryInterface} from "../analyser/factories/interfaces/AnalyserFactoryInterface";
+import {AnalyserFactory} from "../analyser/factories/AnalyserFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -72,6 +74,7 @@ export class Factories implements FactoriesInterface{
 	public relationship: RelationshipFactoryInterface;
 	public logger: LogFactoryInterface;
 	public fileManipulator: FileManipulatorFactoryInterface;
+	public analyser: AnalyserFactoryInterface;
 
 	constructor(
 		private app: App,
@@ -98,6 +101,7 @@ export class Factories implements FactoriesInterface{
 		this.relationship = new RelationshipFactory(this.app);
 		this.logger = new LogFactory(this.app, LogWriterType.Console);
 		this.fileManipulator = new FileManipulatorFactory(this.app);
+		this.analyser = new AnalyserFactory(this.app);
 
 		this.runningTimeManager = new RunningTimeManager(this.app);
 	}

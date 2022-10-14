@@ -4,7 +4,6 @@ import {HeaderResponseInterface} from "../../../../responses/interfaces/HeaderRe
 import {HeadlessTableView} from "../../../../views/HeadlessTableView";
 import {HeaderResponseElementInterface} from "../../../../responses/interfaces/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
-import flatpickr from "flatpickr";
 
 export class EventHeaderView extends AbstractHeaderView {
 	protected currentComponent: EventInterface;

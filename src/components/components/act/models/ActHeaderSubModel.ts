@@ -7,9 +7,9 @@ import {ResponseHeader} from "../../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../../responses/interfaces/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
-import {SceneAnalyser} from "../../../../analyser/SceneAnalyser";
 import {ActInterface} from "../interfaces/ActInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
 
 export class ActHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: ActInterface;
@@ -36,10 +36,9 @@ export class ActHeaderSubModel extends AbstractHeaderSubModel {
 		}
 
 		if (this.settings.useSceneAnalyser) {
-			const analyser = new SceneAnalyser(
-				this.app,
+			const analyser: AnalyserInterface = this.factories.analyser.createAct(
+				this.data,
 				this.data.abtStage,
-				this.data.id
 			);
 
 			if (analyser.scenesCount > 0) {

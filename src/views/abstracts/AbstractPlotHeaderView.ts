@@ -1,10 +1,7 @@
-import {SceneAnalyser, AnalyserThresholdResult} from "../../analyser/SceneAnalyser";
-import {ComponentType} from "../../components/enums/ComponentType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {AbstractStoryCircleStageSelectorView} from "./AbstractStoryCircleStageSelectorView";
 import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderResponseElementInterface";
 import {AbtStage} from "../../plots/enums/AbtStage";
-import {SceneType} from "../../components/enums/SceneType";
 import {AbtInterface} from "../../plots/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../plots/interfaces/StoryCircleInterface";
 
@@ -67,6 +64,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 		this._addPlotElement('change', plot.change, tableEl, 'plot.storycircle.change');
 	}
 
+	/*
 	protected addSceneAnalyser(
 		analyser: SceneAnalyser,
 	): void {
@@ -289,6 +287,7 @@ export abstract class AbstractPlotHeaderView extends AbstractStoryCircleStageSel
 			}
 		}
 	}
+	*/
 
 	protected addAbtStageSelector(
 		contentEl: HTMLDivElement,

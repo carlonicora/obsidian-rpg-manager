@@ -1,7 +1,9 @@
 import {AnalyserDataInterface} from "./interfaces/AnalyserDataInterface";
 import {SceneType} from "../components/enums/SceneType";
+import {AbtStage} from "../plots/enums/AbtStage";
 
 export class AnalyserData implements AnalyserDataInterface {
+	public abtStage: AbtStage|undefined = undefined;
 	public dataLength = 0;
 	public totalRunningTime = 0;
 	public totalActiveScenes = 0;
@@ -12,14 +14,6 @@ export class AnalyserData implements AnalyserDataInterface {
 	public dataTypeUsed: Map<SceneType, number> = new Map<SceneType, number>();
 
 	private previousType: SceneType|undefined = undefined;
-
-	get totalExcitementPercentage(): number {
-		return Math.floor(this.totalExpectedExcitmentDuration * 100 / this.totalExpectedRunningTime);
-	}
-
-	get totalActivityPercentage(): number {
-		return Math.floor(this.totalActiveScenes * 100 / this.dataLength)
-	}
 
 	get isValid(): boolean {
 		return this.dataLength !== 0;

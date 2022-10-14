@@ -8,9 +8,9 @@ import {ActInterface} from "../../components/components/act/interfaces/ActInterf
 import {SessionInterface} from "../../components/components/session/interfaces/SessionInterface";
 import {AbtStage} from "../../plots/enums/AbtStage";
 import {BuilderAnalyser} from "../BuilderAnalyser";
-import {SceneAnalyser} from "../SceneAnalyser";
 import {ActAnalyser} from "../ActAnalyser";
 import {SessionAnalyser} from "../SessionAnalyser";
+import {SceneAnalyser} from "../SceneAnalyser";
 
 export class AnalyserFactory extends AbstractFactory implements AnalyserFactoryInterface {
 	constructor(

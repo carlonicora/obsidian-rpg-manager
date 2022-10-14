@@ -1,4 +1,5 @@
 import {SceneType} from "../../components/enums/SceneType";
+import {AbtStage} from "../../plots/enums/AbtStage";
 
 export interface AnalyserDataInterface {
 	dataLength: number;
@@ -9,9 +10,8 @@ export interface AnalyserDataInterface {
 	totalExpectedExcitmentDuration: number;
 	totalTargetDuration: number;
 	dataTypeUsed: Map<SceneType, number>;
+	abtStage: AbtStage|undefined;
 
-	get totalExcitementPercentage(): number;
-	get totalActivityPercentage(): number;
 	get isValid(): boolean;
 	set dataCount(count: number);
 

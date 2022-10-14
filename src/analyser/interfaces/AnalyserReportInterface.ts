@@ -1,10 +1,11 @@
 import {AnalyserReportDetailInterface} from "./AnalyserReportDetailInterface";
-import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
+import {AnalyserReportScoreInterface} from "./AnalyserReportScoreInterface";
 
-export interface AnalyserReportInterface {
-	excitement: AnalyserReportDetailInterface;
-	activity: AnalyserReportDetailInterface;
-	variety: AnalyserReportDetailInterface;
-	interest: AnalyserReportDetailInterface;
-	duration: AnalyserReportDetailInterface;
+export interface AnalyserReportInterface extends AnalyserReportScoreInterface{
+	get isValid(): boolean;
+	get details(): Array<AnalyserReportDetailInterface>;
+
+	get actualDuration(): number|undefined;
+	get expectedDuration(): number|undefined;
+	get targetDuration(): number|undefined;
 }

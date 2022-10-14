@@ -9,7 +9,6 @@ import {StoryCircleStage} from "../../../../plots/enums/StoryCircleStage";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
 import {SorterComparisonElement} from "../../../../databases/SorterComparisonElement";
 import {SorterType} from "../../../../databases/enums/SorterType";
-import {SceneAnalyser} from "../../../../analyser/SceneAnalyser";
 import {AbtStage} from "../../../../plots/enums/AbtStage";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
@@ -101,10 +100,10 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 
 			if (stage !== undefined) {
 				if (additionalInformation == null) additionalInformation = {};
-				additionalInformation.analyser =  new SceneAnalyser(
-					this.app,
+
+				additionalInformation.analyser = this.factories.analyser.createScene(
+					this.data,
 					stage,
-					this.data.id
 				);
 			}
 		}

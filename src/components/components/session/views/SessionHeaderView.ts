@@ -3,14 +3,17 @@ import {HeaderResponseElementInterface} from "../../../../responses/interfaces/H
 import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
 import {AbstractPlotHeaderView} from "../../../../views/abstracts/AbstractPlotHeaderView";
 import {SceneSelectionModal} from "../../../../modals/SceneSelectionModal";
-import {SceneAnalyser} from "../../../../analyser/SceneAnalyser";
 import {HeadlessTableView} from "../../../../views/HeadlessTableView";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import flatpickr from "flatpickr";
+import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../../analyser/enums/AnalyserReportType";
 
 export class SessionHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SessionInterface;
+
+	private _analyser: AnalyserInterface|undefined;
 
 	public render(
 		container: HTMLElement,
@@ -18,7 +21,6 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 	): void {
 		super.internalRender(container, data);
 
-		let analyser: SceneAnalyser|undefined = undefined;
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
@@ -29,11 +31,11 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 				case HeaderResponseType.AbtSelector:
 					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
 					if (this.currentComponent.abtStage !== undefined) {
-						analyser = element.additionalInformation.sceneAnalyser;
+						this._analyser = element.additionalInformation.sceneAnalyser as AnalyserInterface;
 					}
 					break;
 				case HeaderResponseType.SceneAnalyser:
-					analyser = element.additionalInformation.sceneAnalyser;
+					this._analyser = element.additionalInformation.sceneAnalyser;
 					break;
 				case HeaderResponseType.DateSelector:
 					headlessTable.addRow(element, this.addIrlDateSelector.bind(this));
@@ -72,8 +74,8 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 			});
 		}
 
-		if (analyser !== undefined){
-			this.addSceneAnalyser(analyser);
+		if (this._analyser !== undefined){
+			this._analyser.render(AnalyserReportType.Extended, this.headerContainerEl)
 		}
 	}
 

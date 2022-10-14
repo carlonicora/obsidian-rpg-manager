@@ -21,6 +21,7 @@ import {AbtStageFactoryInterface} from "../../plots/factories/interfaces/AbtStag
 import {RelationshipFactoryInterface} from "../../relationships/factories/interfaces/RelationshipFactoryInterface";
 import {FileManipulatorFactoryInterface} from "../../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
 import {LogFactoryInterface} from "../../loggers/interfaces/LogFactoryInterface";
+import {AnalyserFactoryInterface} from "../../analyser/factories/interfaces/AnalyserFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -45,6 +46,7 @@ export interface FactoriesInterface {
 	relationship: RelationshipFactoryInterface;
 	logger: LogFactoryInterface;
 	fileManipulator: FileManipulatorFactoryInterface;
+	analyser: AnalyserFactoryInterface;
 
 	runningTimeManager: RunningTimeManagerInterface;
 }

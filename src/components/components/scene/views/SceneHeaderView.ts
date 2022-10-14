@@ -58,7 +58,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
 		if (data.metadata?.sourceMeta?.analyser !== undefined){
-			this.addSceneAnalyser(data.metadata.sourceMeta.analyser);
+			data.metadata.sourceMeta.analyser.render(this.headerContainerEl)
 		}
 	}
 

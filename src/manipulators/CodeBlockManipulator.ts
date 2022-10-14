@@ -14,7 +14,6 @@ import {ComponentStage} from "../components/enums/ComponentStage";
 import {Md5} from "ts-md5";
 import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
-import {base} from "w3c-keyname";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async replaceID(

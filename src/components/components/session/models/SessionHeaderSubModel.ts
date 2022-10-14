@@ -7,12 +7,12 @@ import {ResponseHeader} from "../../../../responses/ResponseHeader";
 import {HeaderResponseInterface} from "../../../../responses/interfaces/HeaderResponseInterface";
 import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
-import {SceneAnalyser} from "../../../../analyser/SceneAnalyser";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../../../databases/SorterComparisonElement";
+import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
 
 export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SessionInterface;
@@ -60,10 +60,9 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 		}
 
 		if (this.settings.useSceneAnalyser){
-			const analyser = new SceneAnalyser(
-				this.app,
+			const analyser: AnalyserInterface = this.factories.analyser.createSession(
+				this.data,
 				this.data.abtStage,
-				this.data.id
 			);
 
 			if (analyser.scenesCount > 0) {

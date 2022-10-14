@@ -4,8 +4,6 @@ import {App} from "obsidian";
 import {AbtStage} from "../../plots/enums/AbtStage";
 import {AnalyserDataImportInterface} from "../interfaces/AnalyserDataImportInterface";
 import {SceneInterface} from "../../components/components/scene/interfaces/SceneInterface";
-import {SceneType} from "../../components/enums/SceneType";
-import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
 import {AnalyserDataInterface} from "../interfaces/AnalyserDataInterface";
 import {AnalyserData} from "../AnalyserData";
 import {AnalyserMinimalView} from "../views/AnalyserMinimalView";
@@ -13,20 +11,27 @@ import {AnalyserReportType} from "../enums/AnalyserReportType";
 import {AnalyserExtendedView} from "../views/AnalyserExtendedView";
 import {AnalyserReport} from "../reports/AnalyserReport";
 import {AnalyserViewInterface} from "../interfaces/AnalyserViewInterface";
+import {ComponentType} from "../../components/enums/ComponentType";
 
 export abstract class AbstractAnalyser extends AbstractRpgManager implements AnalyserInterface {
 	protected rawData: Array<AnalyserDataImportInterface>;
 	protected isSingleScene = false;
 
 	private analyserData: AnalyserDataInterface;
+	protected type: ComponentType;
 
 	constructor(
 		app: App,
-		protected abtStage: AbtStage|undefined,
+		abtStage: AbtStage|undefined,
 	) {
 		super(app);
 		this.rawData = [];
 		this.analyserData = new AnalyserData();
+		this.analyserData.abtStage = abtStage;
+	}
+
+	get scenesCount(): number {
+		return this.rawData.length;
 	}
 
 	public set targetDuration(duration: number) {
@@ -42,10 +47,10 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 
 		switch(type){
 			case AnalyserReportType.Minimal:
-				view = new AnalyserMinimalView(this.app);
+				view = new AnalyserMinimalView(this.app, this.type);
 				break;
 			case AnalyserReportType.Extended:
-				view = new AnalyserExtendedView(this.app);
+				view = new AnalyserExtendedView(this.app, this.type);
 				break;
 			default:
 				return;
@@ -58,7 +63,6 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 	): void {
 		if (this.rawData.length > 0) {
 			this.analyserData.dataLength = this.rawData.length;
-			let previousType: SceneType | undefined = undefined;
 			this.rawData.forEach((data: AnalyserDataImportInterface) => {
 				this.analyserData.totalRunningTime += data.currentDuration ?? 0;
 				this.analyserData.addExpectedRunningTime(data.expectedDuration);

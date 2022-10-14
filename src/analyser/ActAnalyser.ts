@@ -1,13 +1,14 @@
 import {AbstractAnalyser} from "./abstracts/AbstractAnalyser";
 import {App} from "obsidian";
 import {AbtStage} from "../plots/enums/AbtStage";
-import {AnalyserDataImportInterface} from "./interfaces/AnalyserDataImportInterface";
 import {ActInterface} from "../components/components/act/interfaces/ActInterface";
 import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
 import {ComponentType} from "../components/enums/ComponentType";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
 
 export class ActAnalyser extends AbstractAnalyser {
+	protected type: ComponentType = ComponentType.Act;
+
 	constructor(
 		app: App,
 		act: ActInterface,

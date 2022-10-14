@@ -1,13 +1,14 @@
 import {AbstractAnalyser} from "./abstracts/AbstractAnalyser";
 import {App} from "obsidian";
 import {AbtStage} from "../plots/enums/AbtStage";
-import {ActInterface} from "../components/components/act/interfaces/ActInterface";
 import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
 import {ComponentType} from "../components/enums/ComponentType";
 import {SorterComparisonElement} from "../databases/SorterComparisonElement";
 import {SessionInterface} from "../components/components/session/interfaces/SessionInterface";
 
 export class SessionAnalyser extends AbstractAnalyser {
+	protected type: ComponentType = ComponentType.Session;
+
 	constructor(
 		app: App,
 		session: SessionInterface,
