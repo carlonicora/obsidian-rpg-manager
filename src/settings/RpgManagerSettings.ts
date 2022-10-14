@@ -7,7 +7,7 @@ import {
 	RpgManagerAdvancedSettingsListsInterface, RpgManagerDefaultSettings,
 	RpgManagerSettingsInterface
 } from "./RpgManagerSettingsInterface";
-import {SettingType} from "../databases/enums/SettingType";
+import {SettingType} from "./enums/SettingType";
 import {SettingInterface} from "./interfaces/SettingsInterface";
 import {tableFieldName} from "../views/enums/TableField";
 
@@ -17,7 +17,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 	private settingsUpdater: SettingsUpdater;
 	private map: Map<SettingType, SettingInterface>;
 	public containerEl: HTMLElement;
-	private templateFolderMap: Map<string, string>;
+	private folderMap: Map<string, string>;
 
 	private advancedSettingsDescription: Map<string, {title: string, description: string}> = new Map<string, {title: string, description: string}>();
 
@@ -38,6 +38,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.map.set(SettingType.YouTubeApiKey, {title: 'YouTube API Key', value: this.plugin.settings.YouTubeKey, placeholder: 'Your YouTube API Key'});
 		this.map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this.plugin.settings.automaticMove, placeholder: 'Organise new elements'});
 		this.map.set(SettingType.templateFolder, {title: 'Template folder', value: this.plugin.settings.templateFolder, placeholder: 'Template Folder'});
+		this.map.set(SettingType.imagesFolder, {title: 'Images folder', value: this.plugin.settings.imagesFolder, placeholder: 'Images Folder'});
 		this.map.set(SettingType.usePlotStructures, {title: 'Abt/Story Circle plot structure', value: this.plugin.settings.usePlotStructures, placeholder: ''});
 		this.map.set(SettingType.useSceneAnalyser, {title: 'Scene Analyser', value: this.plugin.settings.useSceneAnalyser, placeholder: ''});
 
@@ -61,11 +62,12 @@ export class RpgManagerSettings extends PluginSettingTab {
 	display(): void {
 		this.containerEl.empty();
 
-		this.createTemplateFolderMap();
+		this.createFolderMap();
 
 		this.settingsFactory.createHeader('CampaignSetting for Role Playing Game Manager');
 
 		this.loadTemplatesSettings();
+		this.loadImagesSettings();
 		this.loadExternalServicesSettings();
 		this.loadAdvancedSettings();
 	}
@@ -88,7 +90,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this.settingsFactory.createDropdownSetting(
 			SettingType.templateFolder,
 			`Select the folder in which you keep the templates for RPG Manager.`,
-			this.templateFolderMap,
+			this.folderMap,
 		)
 
 		this.settingsFactory.createToggleSetting(
@@ -107,20 +109,32 @@ export class RpgManagerSettings extends PluginSettingTab {
 		);
 	}
 
-	private createTemplateFolderMap(
-		parent: TFolder|undefined=undefined,
+	private loadImagesSettings(
+	): void {
+		this.settingsFactory.createHeader('Images Management', 3, 'Manage where you store the images for all your campaigns');
+
+		this.settingsFactory.createDropdownSetting(
+			SettingType.imagesFolder,
+			`Select the folder in which you keep the images for RPG Manager. Leave it empty if you want to use the default Obsidian Attachment folder. RPG Manager scans every subfolder in the one you selected`,
+			this.folderMap,
+		)
+	}
+
+	private createFolderMap(
+		parent: TFolder|undefined = undefined,
+		indent = 0,
 	): void {
 		let folderList: TAbstractFile[] = [];
 		if (parent != undefined) {
 			folderList = parent.children.filter((file: TAbstractFile) => file instanceof TFolder);
 		} else {
-			this.templateFolderMap = new Map();
+			this.folderMap = new Map();
 			folderList = this.app.vault.getRoot().children.filter((file: TAbstractFile) => file instanceof TFolder);
 		}
 
 		folderList.forEach((folder: TFolder) => {
-			this.templateFolderMap.set(folder.path, folder.path);
-			this.createTemplateFolderMap(folder);
+			this.folderMap.set(folder.path, folder.path);
+			this.createFolderMap(folder, indent + 1);
 		});
 	}
 

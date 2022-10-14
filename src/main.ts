@@ -1,4 +1,12 @@
-import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, setIcon, WorkspaceLeaf} from 'obsidian';
+import {
+	addIcon,
+	Component,
+	MarkdownPostProcessorContext,
+	MarkdownView,
+	Plugin,
+	setIcon,
+	WorkspaceLeaf
+} from 'obsidian';
 import {Controller} from "./controller/Controller";
 import {ComponentType} from "./components/enums/ComponentType";
 import {Factories} from "./factories/Factories";
@@ -74,10 +82,9 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		if (this.settings.previousVersion !== this.manifest.version){
 			const databaseUpdater = await new DatabaseUpdater(this.app, this, this.settings.previousVersion, this.manifest.version);
 
-			if (databaseUpdater.requiresDatabaseUpdate()) {
+			if (await databaseUpdater.requiresDatabaseUpdate()) {
 				requiresUpdate = true;
 				new UpdaterModal(this.app, databaseUpdater).open();
-
 			}
 		}
 

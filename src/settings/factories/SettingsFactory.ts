@@ -1,6 +1,6 @@
 import {App, Setting} from "obsidian";
 import {RpgManagerInterface} from "../../interfaces/RpgManagerInterface";
-import {SettingType} from "../../databases/enums/SettingType";
+import {SettingType} from "../enums/SettingType";
 import {SettingInterface} from "../interfaces/SettingsInterface";
 
 export class SettingsFactory {
@@ -79,6 +79,7 @@ export class SettingsFactory {
 				options.forEach((value: string, display: string) => {
 					dropdown.addOption(value, display);
 				});
+
 				dropdown.setValue(settings.value);
 				dropdown.onChange(async value => {
 					switch (type) {
@@ -86,6 +87,11 @@ export class SettingsFactory {
 							await this.plugin.updateSettings({templateFolder: value});
 							settings.value = value;
 							break;
+						case SettingType.imagesFolder:
+							await this.plugin.updateSettings({imagesFolder: value});
+							settings.value = value;
+							break;
+
 					}
 				})
 			});

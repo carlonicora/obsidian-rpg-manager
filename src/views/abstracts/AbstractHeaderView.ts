@@ -95,7 +95,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 
 	protected createContainerEl(
 		element: HeaderResponseElementInterface,
-		fn: Function|undefined = undefined,
+		fn: any|undefined = undefined,
 		additionalParams: Array<any>|undefined=undefined,
 	): HTMLTableCellElement|undefined {
 		let tableRowEl = this.infoTableEl.insertRow();

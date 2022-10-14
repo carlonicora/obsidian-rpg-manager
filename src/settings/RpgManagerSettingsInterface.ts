@@ -2,6 +2,7 @@ import {TableField} from "../views/enums/TableField";
 
 export interface RpgManagerSettingsInterface {
 	templateFolder: string;
+	imagesFolder: string;
 	automaticMove: boolean;
 	YouTubeKey: string;
 	previousVersion: string;
@@ -45,6 +46,7 @@ export interface RpgManagerAdvancedSettingsListElementInterface {
 export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	automaticMove: true,
 	templateFolder: '',
+	imagesFolder: '',
 	YouTubeKey: '',
 	previousVersion: '',
 	usePlotStructures: false,
