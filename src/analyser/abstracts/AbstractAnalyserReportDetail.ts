@@ -11,7 +11,7 @@ export abstract class AbstractAnalyserReportDetail implements AnalyserReportDeta
 	protected _isRelevant: boolean;
 	protected _maximumScore: number;
 	protected _score: number;
-	protected _expectedThreshold: number|undefined;
+	protected _idealScore: number|undefined;
 
 	constructor(
 		protected data: AnalyserDataInterface,
@@ -20,15 +20,11 @@ export abstract class AbstractAnalyserReportDetail implements AnalyserReportDeta
 	}
 
 	get ideal(): number|undefined {
-		return undefined;
+		return this._idealScore;
 	}
 
 	get detailType(): AnalyserDetailType {
 		return this._detailType;
-	}
-
-	get thresholdType(): AnalyserThresholdResult {
-		return this._threshold;
 	}
 
 	get scoreType(): AnalyserScoreType {
@@ -48,7 +44,36 @@ export abstract class AbstractAnalyserReportDetail implements AnalyserReportDeta
 	}
 
 	get percentage(): number {
-		if (this.maximumScore === 0 || this.score === 0) return 0;
+		if (this.maximumScore === 0) return 0;
 		return Math.floor(this.score * 100 / this.maximumScore);
+	}
+
+	get thresholdType(): AnalyserThresholdResult {
+		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime === 0) return 0;
+
+		if (this.percentage < 50) return AnalyserThresholdResult.CriticallyLow;
+		if (this.percentage < 80) return AnalyserThresholdResult.Low;
+
+		return AnalyserThresholdResult.Correct;
+	}
+
+	protected get percentageThresholdScore(): AnalyserThresholdResult {
+		if (this._idealScore === undefined) return AnalyserThresholdResult.NotAnalysable;
+
+		if (this._score > this._idealScore){
+			if (this.percentage < 60)
+				return AnalyserThresholdResult.CriticallyHigh;
+
+			if (this.percentage < 80)
+				return AnalyserThresholdResult.High;
+		} else {
+			if (this.percentage < 60)
+				return AnalyserThresholdResult.CriticallyLow;
+
+			if (this.percentage < 80)
+				return AnalyserThresholdResult.Low;
+		}
+
+		return AnalyserThresholdResult.Correct;
 	}
 }

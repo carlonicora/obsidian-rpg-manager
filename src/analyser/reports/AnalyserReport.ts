@@ -40,6 +40,7 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 			[AnalyserDetailType.Interest, this.interest],
 			[AnalyserDetailType.Variety, this.variety],
 		]);
+
 	}
 
 	get ideal(): number|undefined {
@@ -73,7 +74,21 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 	}
 
 	get targetDuration(): number|undefined {
-		return this.data.totalTargetDuration;
+		if (this.data.totalTargetDuration === undefined)
+			return undefined;
+
+		return this.data.totalTargetDuration * 60;
+	}
+
+	get durationThreshold(): AnalyserThresholdResult {
+		if (this.targetDuration === undefined || this.actualDuration === undefined) return AnalyserThresholdResult.Correct;
+
+		if (this.durationPercentage < 30) return AnalyserThresholdResult.CriticallyLow;
+		if (this.durationPercentage < 60) return AnalyserThresholdResult.Low;
+		if (this.durationPercentage < 75) return AnalyserThresholdResult.Correct;
+		if (this.durationPercentage < 90) return AnalyserThresholdResult.Correct;
+
+		return AnalyserThresholdResult.Correct;
 	}
 
 	get score(): number {
@@ -97,9 +112,23 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 		return Math.floor(percentage * 100 / maximumPercentage);
 	}
 
+	get durationPercentage(): number {
+		if (this.targetDuration === undefined || this.actualDuration === undefined) return 0;
+
+		if (this.actualDuration > (this.targetDuration * 2))
+			return 0;
+
+		if (this.actualDuration > this.targetDuration) {
+			const actualDuration = this.targetDuration -  (this.actualDuration - this.targetDuration);
+			return Math.floor(actualDuration * 100 / this.targetDuration);
+		}
+
+		return Math.floor(this.actualDuration * 100 / this.targetDuration);
+	}
+
 	get thresholdType(): AnalyserThresholdResult {
-		if (this.percentage < 20) return AnalyserThresholdResult.CriticallyLow;
-		if (this.percentage < 50) return AnalyserThresholdResult.Low;
+		if (this.percentage < 30) return AnalyserThresholdResult.CriticallyLow;
+		if (this.percentage < 60) return AnalyserThresholdResult.Low;
 		if (this.percentage < 75) return AnalyserThresholdResult.Correct;
 		if (this.percentage < 90) return AnalyserThresholdResult.High;
 

@@ -813,6 +813,43 @@
   color: var(--text-error);
 }
 
+.rpgm-new-analyser {
+  padding: 20px;
+  color: var(--text-muted);
+  border-top: solid 1px var(--background-modifier-border);
+}
+.rpgm-new-analyser span.header, .rpgm-new-analyser ul > li > span.subtitle {
+  font-weight: 400;
+  font-size: 1em;
+}
+.rpgm-new-analyser span.header.error, .rpgm-new-analyser ul > li > span.subtitle.error {
+  color: var(--text-error);
+}
+.rpgm-new-analyser span.header.warning, .rpgm-new-analyser ul > li > span.subtitle.warning {
+  color: var(--code-important);
+}
+.rpgm-new-analyser span.header.balanced, .rpgm-new-analyser ul > li > span.subtitle.balanced {
+  color: var(--code-property);
+}
+.rpgm-new-analyser span.header.perfect, .rpgm-new-analyser ul > li > span.subtitle.perfect {
+  color: var(--text-success);
+}
+.rpgm-new-analyser ul {
+  margin: 0px;
+}
+.rpgm-new-analyser ul li {
+  list-style: none;
+  font-size: 0.8em;
+}
+.rpgm-new-analyser ul li span.subtitle {
+  font-weight: 300;
+  font-size: 1em;
+}
+.rpgm-new-analyser ul li span.description {
+  font-size: 0.9em;
+  font-style: italic;
+}
+
 .flatpickr-calendar {
   background: transparent;
   opacity: 0;

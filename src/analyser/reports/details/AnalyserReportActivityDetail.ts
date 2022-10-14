@@ -21,43 +21,25 @@ export class AnalyserReportActivityDetail extends AbstractAnalyserReportDetail {
 	) {
 		super(data);
 
-		if (this.data.abtStage === undefined) {
-			this._expectedThreshold = 50;
-		} else {
-			this._expectedThreshold = this._abtStageActivityThreshold.get(this.data.abtStage);
-		}
-
 		this._maximumScore = this.data.dataLength;
 		this._score = this.data.totalActiveScenes;
-	}
 
-	get ideal(): number|undefined {
-		if (this._expectedThreshold === undefined)
-			return undefined;
-
-		return Math.floor(this._expectedThreshold * this._maximumScore / 100);
+		if (this.data.abtStage === undefined) {
+			this._idealScore =  Math.floor(this.maximumScore * 50 / 100);
+		} else {
+			this._idealScore = Math.floor(this.maximumScore * (this._abtStageActivityThreshold.get(this.data.abtStage) ?? 50) / 100);
+		}
 	}
 
 	get percentage(): number {
-		if (this._expectedThreshold === undefined) return 0;
+		if (this._idealScore === undefined) return 0;
 
-		const percentageScore = Math.floor(this._score * 100 / this._maximumScore);
-
-		if (percentageScore <= this._expectedThreshold) {
-			return 100 - Math.floor((this._expectedThreshold - percentageScore) * 100 / this._expectedThreshold);
-		}
-
-
-		return 100 - Math.floor((percentageScore - this._expectedThreshold) * 100 / (100 - this._expectedThreshold));
+		if (this._score === this._idealScore) return 100;
+		if (this._score > this._idealScore) return Math.floor((this._idealScore - (this._score - this._idealScore)) * 100 / this._idealScore);
+		return Math.floor(this._score * 100 / this._idealScore);
 	}
 
 	get thresholdType(): AnalyserThresholdResult {
-		if (this._expectedThreshold === undefined || this._score === undefined) return this._threshold = AnalyserThresholdResult.NotAnalysable;
-
-		if (this.percentage > (this._expectedThreshold + 25)) return AnalyserThresholdResult.CriticallyHigh;
-		if (this.percentage > (this._expectedThreshold + 10)) return this._threshold = AnalyserThresholdResult.High;
-		if (this.percentage < (this._expectedThreshold - 25)) return this._threshold = AnalyserThresholdResult.CriticallyLow;
-		if (this.percentage < (this._expectedThreshold - 10)) return this._threshold = AnalyserThresholdResult.Low;
-		return AnalyserThresholdResult.Correct;
+		return this.percentageThresholdScore;
 	}
 }

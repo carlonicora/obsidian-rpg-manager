@@ -13,33 +13,24 @@ export class AnalyserReportDurationDetail extends AbstractAnalyserReportDetail {
 	) {
 		super(data);
 
-		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime) {
+		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime === 0) {
 			this._isRelevant = false;
 			return;
 		}
 
 		this._maximumScore = this.data.totalTargetDuration;
 		this._score = Math.floor(this.data.totalExpectedRunningTime / 60);
-
-		const differenceStep = this._maximumScore /10;
-		this._threshold = this._maximumScore + differenceStep * 3;
 	}
 
 	get percentage(): number {
-		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime === 0 || this._expectedThreshold === undefined) return 0;
+		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime === 0) return 0;
 
-		const difference = Math.abs(this._maximumScore-this._score);
+		if (this._score > (this._maximumScore * 2))
+			return 0;
 
-		return Math.floor(difference/this._maximumScore*100);
-	}
+		if (this._score > this._maximumScore)
+			return Math.floor((this._maximumScore -  (this._score - this._maximumScore)) * 100 / this._maximumScore);
 
-	get thresholdType(): AnalyserThresholdResult {
-		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime === 0 || this._expectedThreshold === undefined) return 0;
-
-		if (this._score > this._expectedThreshold) return  AnalyserThresholdResult.CriticallyHigh;
-		if (this._score > this._expectedThreshold) return AnalyserThresholdResult.High;
-		if (this._score < this._expectedThreshold) return  AnalyserThresholdResult.CriticallyLow;
-		if (this._score < this._expectedThreshold) return AnalyserThresholdResult.Low;
-		return AnalyserThresholdResult.Correct;
+		return Math.floor(this._score * 100 / this._maximumScore);
 	}
 }

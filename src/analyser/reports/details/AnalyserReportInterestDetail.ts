@@ -13,17 +13,8 @@ export class AnalyserReportInterestDetail extends AbstractAnalyserReportDetail {
 	) {
 		super(data);
 
+		this._score = this.data.dataLength - this.data.totalRepetitiveScenes;
 		this._maximumScore = this.data.dataLength;
-		this._score = this.data.totalRepetitiveScenes;
-	}
-
-	get ideal(): number|undefined {
-		return Math.floor(this._maximumScore / 4);
-	}
-
-	get thresholdType(): AnalyserThresholdResult {
-		if (this._score >= (this._maximumScore / 2)) return AnalyserThresholdResult.CriticallyHigh;
-		if (this._score >= (this._maximumScore / 3)) return AnalyserThresholdResult.High;
-		return AnalyserThresholdResult.Correct;
+		this._idealScore = this.data.dataLength;
 	}
 }

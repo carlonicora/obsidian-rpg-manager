@@ -13,13 +13,15 @@ export class AnalyserReportVarietyDetail extends AbstractAnalyserReportDetail {
 	) {
 		super(data);
 
-		this._maximumScore = this.data.dataLength;
 		this._score = this.data.dataTypeUsed.size;
+		this._maximumScore = this.data.dataLength;
+		this._idealScore = 6;
 	}
 
-	get thresholdType(): AnalyserThresholdResult {
-		if (this._score < 3) return AnalyserThresholdResult.CriticallyLow;
-		if (this._score < 6) return AnalyserThresholdResult.Low;
-		return AnalyserThresholdResult.Correct;
+	get percentage(): number {
+		if (this._idealScore === undefined) return 0;
+
+		if (this._score >= this._idealScore) return 100;
+		return Math.floor(this._score * 100 / this._idealScore);
 	}
 }

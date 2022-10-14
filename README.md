@@ -66,7 +66,11 @@ making up an act or a scene and is an important tool to provide feedback you can
 them more balanced. The Analyser keep into consideration the duration of your past scenes during runtime thanks to a 
 timer, and estimate the running time of an act or a session when you create their scenes.
 
-## Tutorials and Help (version 2)
+## Video Tutorials
+
+- [Installing RPG Manager](https://www.youtube.com/watch?v=QGIbNNhL8so&list=PLAO6liEcd6-0iJXIKznSfkBenDxgmFR2h)
+
+## Tutorials and Help (from version 2)
 
 - [Watch a tutorial on how to use RPG Manager](https://youtu.be/NLvzfOWI4aE)
 - [Watch an example of world building and campaign creation](https://youtu.be/die8QGKtk5A)

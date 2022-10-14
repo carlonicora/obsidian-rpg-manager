@@ -1,7 +1,8 @@
 export enum AnalyserDetailType {
-	Excitement,
 	Activity,
-	Variety,
-	Interest,
 	Duration,
+	Excitement,
+	Interest,
+	Timing,
+	Variety,
 }
