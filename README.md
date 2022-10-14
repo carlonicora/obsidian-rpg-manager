@@ -91,5 +91,8 @@ My most humble thanks go to everyone who is helping RPG Manager becoming a bette
 <a href="https://github.com/SlRvb">
   <img src="https://github.com/SlRvb.png?size=50">
 </a>
+<a href="https://github.com/x1101">
+  <img src="https://github.com/x1101.png?size=50">
+</a>
 
 [We are always looking for help. Join us!](https://github.com/carlonicora/obsidian-rpg-manager/issues/151)
