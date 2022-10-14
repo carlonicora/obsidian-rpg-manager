@@ -1,24 +1,36 @@
-# Role Playing Game Manager
+# Obsidian Role Playing Game Manager
 
-Role Playing Game Manager (RPG Manager or RPGM) is an [Obsidian.md](https://obsidian.md) plugin that helps you outline and manage your Tabletop Role Playing Game (TTRPG) stories. 
+Role Playing Game Manager (RPG Manager or RPGM) is an [Obsidian.md](https://obsidian.md) plugin that helps you outline and manage your Tabletop Role Playing Game (TTRPG) {stories or campaigns}. 
+
+---
+
+> You've come to the library in search of knowledge. You want to know how something works. The tomes you need, you cannot find them. A quiet 'ahem' and 
+> there stands a library with a knowing look on their face. A flick of their wrists and in outstratched palms are the tomes you have been looking for. 
+> 
+> As you reach for the one of texts, the librarian _tsks_. "Ah. Your kind are so predictable. They always go for that one first. Good luck."
+>
+> [**Tome of the Reader: A Reference on Using RPG Manager in Traditional Word and Image Form**]()
+>
+> [**Tome of the Watcher: A Follow-Along Guide on Using RPG Manager in Audio and Video**]()
+
+---
 
 ## Introduction
-RPG Manager helps you create the plot of a story, organising, and referencing elements where they are used. The plugin revolves around three main types of features: 
-- **Plotting**: When you develop the rough sequence of events in the story.
+RPG Manager helps you create the plot of a {story or campaign}, {organizing or organising}, and referencing elements where they are used. The plugin revolves around three main types of features: 
+- **Plotting**: When you develop the rough sequence of events in the {story or campaign}.
 - **Running**: When you run play within the story such as when you are actively playing a session. 
 - **Elements**: The individual pieces that may be present in your story, including non-player-characters (NPCs), locations, items, and governments. 
 
-THERE NEEDS TO BE SOMETHING HERE I DO NOT KNOW WHAT YET
+{THERE NEEDS TO BE SOMETHING HERE I DO NOT KNOW WHAT YET}
 
 ## Goals
 The **Primary Goal** of RPG Manager is to lower the time needed to write a story, increase the quality of writing produced by narrowing focus, and to increase the quality of the sessions you run for your players. It accomplishes this by incorporating a combination of **[And, But, Therefore](documentation/plots/abt.md)** (ABT) and [**Story Circle**](documentation/plots/storycircle.md) (SC) Frameworks in the plugin to balance **[Dramatic Action]()** with **[Physical Action]()**. These additions are optional features and can be disabled. 
 
 The **Secondary Goal** of RPG Manager is to provide a story or campaign management system framework within Obsidian that is, at its core, system agnostic. It is intended to work for authors of all genres, DnD, Genesys, Sectors without Numbers, Vampire: The Masquerade, Warhammer, Warcraft, and more. If RPG Manager cannot support it, we [**want to know about it**](https://github.com/carlonicora/obsidian-rpg-manager/issues) so we can correct it. 
 
-## Tutorials and Help
+## Features
 
-- [Watch a tutorial on how to use RPG Manager](https://youtu.be/NLvzfOWI4aE)
-- [Watch an example of world building and campaign creation](https://youtu.be/die8QGKtk5A)
+{This is where we throw some awesome features. And in a gallery of screenshots.}
 
 ## Installing RPG Manager from Obsidian
 **`RPG Manager`** can be found by name in the Obsidian Community plugins directory, which is located in Obsidian's Community plugins settings. You may be prompted to **`Turn on Community Plugins`**. Turning on community plugins is required to utilize any Obsidian third-party plugins.
