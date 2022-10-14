@@ -7,9 +7,11 @@ import {CampaignSetting} from "../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../id/interfaces/IdInterface";
 import {ComponentMetadataInterface} from "../interfaces/ComponentMetadataInterface";
 import {ComponentStage} from "../enums/ComponentStage";
+import {ImageInterface} from "../../images/interfaces/ImageInterface";
+import {ImageMetadataInterface} from "../interfaces/ImageMetadataInterface";
 
 export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
-	private static root: string|undefined;
+	public static root: string|undefined;
 	private static _imageExtensions: Array<string> = ["jpeg", "jpg", "png", "webp"];
 
 	public static initialiseRoots(
@@ -45,10 +47,28 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 		return this.metadata?.data?.synopsis;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public get image(): string | undefined {
 		if (this.metadata?.data?.image != undefined && this.metadata?.data?.image !== '') return this.metadata.data.image;
 
 		return this._getImage(this.file.basename);
+	}
+
+	public get images(): Array<ImageInterface> {
+		const response: Array<ImageInterface> = [];
+
+		if (this.metadata?.data?.images != undefined && Array.isArray(this.metadata?.data?.images)){
+			this.metadata.data.images.forEach((imageMetadata: ImageMetadataInterface) => {
+				const image: ImageInterface|undefined = this.factories.image.create(imageMetadata.source, imageMetadata.caption);
+
+				if (image !== undefined)
+					response.push(image);
+			});
+		}
+
+		return response;
 	}
 
 	public get isComplete(): boolean {

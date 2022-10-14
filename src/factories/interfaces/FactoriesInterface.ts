@@ -22,6 +22,7 @@ import {RelationshipFactoryInterface} from "../../relationships/factories/interf
 import {FileManipulatorFactoryInterface} from "../../manipulators/factories/interfaces/FileManipulatorFactoryInterface";
 import {LogFactoryInterface} from "../../loggers/interfaces/LogFactoryInterface";
 import {AnalyserFactoryInterface} from "../../analyser/factories/interfaces/AnalyserFactoryInterface";
+import {ImageFactoryInterface} from "../../images/factories/interfaces/ImageFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -47,6 +48,7 @@ export interface FactoriesInterface {
 	logger: LogFactoryInterface;
 	fileManipulator: FileManipulatorFactoryInterface;
 	analyser: AnalyserFactoryInterface;
+	image: ImageFactoryInterface;
 
 	runningTimeManager: RunningTimeManagerInterface;
 }

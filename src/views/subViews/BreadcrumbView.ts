@@ -45,6 +45,14 @@ export class BreadcrumbView extends AbstractSubModelView {
 		idChangerAdderEl.addEventListener("click", () => {
 			new IdSwitcherModal(this.app, this.currentComponent.file).open();
 		});
+
+		//TODO: add image manager
+		/*
+		imageManagementNavigatorEl = containerEl.createDiv({cls: 'manager'});
+		imageManagementNavigatorEl?.addEventListener('click', () => {
+			//open image manager
+		});
+		 */
 	}
 
 	private renderBreadcrumb(

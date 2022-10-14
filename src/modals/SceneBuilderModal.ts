@@ -90,7 +90,6 @@ export class SceneBuilderModal extends AbstractModal {
 		excitementCheckboxEl.type = 'checkbox';
 
 		titleInputEl.addEventListener('keyup', () => {
-			console.log('title changed')
 			this._updateEmptyLines(id,
 				(
 					titleInputEl.value === '' &&
@@ -102,7 +101,6 @@ export class SceneBuilderModal extends AbstractModal {
 		});
 
 		titleInputEl.addEventListener('focusout', () =>{
-			console.log('title lost focus')
 			this._updateEmptyLines(
 				id,
 				(
@@ -116,7 +114,6 @@ export class SceneBuilderModal extends AbstractModal {
 		});
 
 		goalInputEl.addEventListener('keyup', () => {
-			console.log('goal changed')
 			this._updateEmptyLines(
 				id,
 				(
@@ -129,7 +126,6 @@ export class SceneBuilderModal extends AbstractModal {
 		});
 
 		goalInputEl.addEventListener('focusout', () =>{
-			console.log('goal lostfocus')
 			this._updateEmptyLines(
 				id,
 				(
@@ -143,7 +139,6 @@ export class SceneBuilderModal extends AbstractModal {
 		});
 
 		typeSelectionEl.addEventListener('change', () => {
-			console.log('selector changed')
 			this._updateEmptyLines(
 				id,
 				(
@@ -157,7 +152,6 @@ export class SceneBuilderModal extends AbstractModal {
 		});
 
 		excitementCheckboxEl.addEventListener('change', () => {
-			console.log('checkbox changed')
 			this._updateEmptyLines(
 				id,
 				(

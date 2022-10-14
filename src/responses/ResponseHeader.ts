@@ -6,6 +6,7 @@ import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {HeaderResponseElementInterface} from "./interfaces/HeaderResponseElementInterface";
 import {ComponentType} from "../components/enums/ComponentType";
 import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {ImageInterface} from "../images/interfaces/ImageInterface";
 
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public type: ComponentType;
@@ -16,6 +17,7 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 	public imgHeight: number;
 	public elements: Array<HeaderResponseElementInterface>;
 	public metadata: any|null;
+	public images: Array<ImageInterface>;
 
 	constructor(
 		app: App,
@@ -24,6 +26,7 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 		super(app, currentComponent);
 		this.responseType = ResponseType.Header;
 		this.elements = [];
+		this.images = [];
 	}
 
 	public addElement(

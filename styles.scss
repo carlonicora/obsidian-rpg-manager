@@ -434,10 +434,10 @@
 			text-align: center;
 		}
 	}
+}
 
-	.reset {
-		clear: both;
-	}
+.reset {
+	clear: both;
 }
 
 .rpgm-header-info {
@@ -673,17 +673,8 @@
 
 			.vertical-tab-header-group-items {
 				.vertical-tab-nav-item {
-
 					padding: 5px 0px;
 					margin: 0 8px 0;
-					/*
-					color: var(--text-muted);
-					font-weight: 400;
-					border: none;
-					cursor: var(--cursor);
-					border-radius: var(--radius-m);
-					*/
-
 					font-size: 1em;
 				}
 
@@ -1041,7 +1032,58 @@
 			}
 		}
 	}
+}
 
+.rpgm-image-carousel {
+	width: 300px;
+	float: right;
+	margin: 10px;
+	padding: 10px;
+	border: solid 1px var(--background-modifier-border);
+	background-color: var(--background-modifier-cover);
+
+	.images {
+		.group {
+			width: 100%;
+
+			.container {
+				width: 100%;
+				font-size: 0.9em;
+				color: var(--text-muted);
+
+				image {
+					width: 280px;
+				}
+			}
+		}
+		.invisible {
+			display: none;
+		}
+	}
+	.navigator {
+		padding: 0px 50px 10px 50px;
+
+		.counter {
+			font-size: 0.8em;
+			color: var(--text-faint);
+			margin: 0 auto;
+			width: 100px;
+			text-align: center;
+		}
+
+		.previous, .next {
+			font-size: 0.9em;
+			cursor: pointer;
+			color: var(--text-accent);
+		}
+
+		.previous {
+			float: left;
+		}
+		.next {
+			float: right;
+		}
+	}
 }
 
 

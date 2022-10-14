@@ -44,11 +44,7 @@ export abstract class AbstractHeaderSubModel extends AbstractSubModel {
 	protected completeData(
 		response: ResponseDataElementInterface,
 	): ResponseDataElementInterface {
-		if (this.data.image !== null) {
-			(<ResponseHeader>response).imgSrc = this.data.image;
-			(<ResponseHeader>response).imgWidth = 300;
-			(<ResponseHeader>response).imgHeight = 300;
-		}
+		(<ResponseHeader>response).images = this.data.images;
 
 		return response;
 	}

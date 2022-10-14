@@ -363,7 +363,8 @@
 .rpgm-breadcrumb .spaced-line .crumb > .title {
   text-align: center;
 }
-.rpgm-breadcrumb .reset {
+
+.reset {
   clear: both;
 }
 
@@ -551,13 +552,6 @@
 .rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item {
   padding: 5px 0px;
   margin: 0 8px 0;
-  /*
-  color: var(--text-muted);
-  font-weight: 400;
-  border: none;
-  cursor: var(--cursor);
-  border-radius: var(--radius-m);
-  */
   font-size: 1em;
 }
 .rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item:hover {
@@ -848,6 +842,50 @@
 .rpgm-new-analyser ul li span.description {
   font-size: 0.9em;
   font-style: italic;
+}
+
+.rpgm-image-carousel {
+  width: 300px;
+  float: right;
+  margin: 10px;
+  padding: 10px;
+  border: solid 1px var(--background-modifier-border);
+  background-color: var(--background-modifier-cover);
+}
+.rpgm-image-carousel .images .group {
+  width: 100%;
+}
+.rpgm-image-carousel .images .group .container {
+  width: 100%;
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+.rpgm-image-carousel .images .group .container image {
+  width: 280px;
+}
+.rpgm-image-carousel .images .invisible {
+  display: none;
+}
+.rpgm-image-carousel .navigator {
+  padding: 0px 50px 10px 50px;
+}
+.rpgm-image-carousel .navigator .counter {
+  font-size: 0.8em;
+  color: var(--text-faint);
+  margin: 0 auto;
+  width: 100px;
+  text-align: center;
+}
+.rpgm-image-carousel .navigator .previous, .rpgm-image-carousel .navigator .next {
+  font-size: 0.9em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+.rpgm-image-carousel .navigator .previous {
+  float: left;
+}
+.rpgm-image-carousel .navigator .next {
+  float: right;
 }
 
 .flatpickr-calendar {

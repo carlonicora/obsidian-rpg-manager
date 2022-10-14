@@ -5,6 +5,7 @@ import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderR
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
 import flatpickr from "flatpickr";
+import {ImageCarouselView} from "../ImageCarouselView";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -62,14 +63,17 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		this.headerInfoEl = this.headerContainerEl.createDiv({cls: 'info'});
 		this.infoTableEl = this.headerInfoEl.createEl('table', {cls: 'rpgm-headless-table'}).createTBody();
 
-		//image
-		//const crsImage = this.headerContainerEl.createDiv({cls: 'image'});
+		console.log(data.images.length);
+
+		if (data.images.length > 0){
+			new ImageCarouselView(this.app, data.images).render(this.headerContainerEl);
+		}
+
+		/*
 		if (data.imgSrc == null) {
-			//crsImage.addClass('invisible');
 			this.headerInfoEl.addClass('info-large');
 		} else {
 			this.imageContainterEl = this.headerContainerEl.createDiv({cls: 'image'});
-			//const image = new Image(data.imgWidth, data.imgHeight);
 			const image = new Image();
 			image.src = data.imgSrc;
 
@@ -82,6 +86,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 				}
 			}
 		}
+		*/
 
 		if (!this.isInternalRender){
 			data.elements.forEach((element: HeaderResponseElementInterface) => {
