@@ -32,7 +32,7 @@ import {UpdaterModal} from "./modals/UpdaterModal";
 import {LogMessageType} from "./loggers/enums/LogMessageType";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
-	private isVersionUpdated=false;
+	private _isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
 	database: DatabaseInterface;
 	factories: FactoriesInterface;
@@ -93,8 +93,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	public async initialise(
 	): Promise<void> {
-		this.registerCodeBlock();
-		this.registerCommands();
+		this._registerCodeBlock();
+		this._registerCommands();
 
 		DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
@@ -103,7 +103,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 				this.factories.runningTimeManager.updateMedianTimes(true);
 
-				this.registerEvents();
+				this._registerEvents();
 
 				this.app.workspace.trigger("rpgmanager:refresh-views");
 
@@ -133,7 +133,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 					}
 				});
 
-				if (this.isVersionUpdated) {
+				if (this._isVersionUpdated) {
 					this.factories.views.showObsidianView(ViewType.ReleaseNote);
 				} else {
 					this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
@@ -204,14 +204,14 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		await this.saveData(this.settings);
 	}
 
-	private registerEvents(
+	private _registerEvents(
 	) : void {
 
 		this.registerEvent(this.app.metadataCache.on('resolved', this.refreshViews.bind(this)));
 		this.registerEvent(this.app.workspace.on('file-open', this.refreshViews.bind(this)));
 	}
 
-	private registerCodeBlock(
+	private _registerCodeBlock(
 	): void {
 		this.registerMarkdownCodeBlockProcessor('RpgManager', async (source: string, el, ctx) =>
 			this.createRpgView(source, el, ctx, ctx.sourcePath)
@@ -222,7 +222,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this.registerMarkdownCodeBlockProcessor('RpgManagerID', async (source: string, el, ctx) => {});
 	}
 
-	private registerCommands(
+	private _registerCommands(
 	): void {
 		Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 			this.addCommand({

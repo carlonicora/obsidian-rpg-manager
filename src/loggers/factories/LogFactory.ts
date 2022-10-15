@@ -13,14 +13,14 @@ import {LogWriterType} from "../enums/LogWriterType";
 import {LogGroup} from "../groups/LogGroup";
 
 export class LogFactory extends AbstractFactory implements LogFactoryInterface {
-	private logWriter: LogWriterInterface;
+	private _logWriter: LogWriterInterface;
 
 	constructor(
 		app: App,
 		type: LogWriterType,
 	) {
 		super(app);
-		this.logWriter = new ConsoleLogger(this.app);
+		this._logWriter = new ConsoleLogger(this.app);
 	}
 
 	public createInfo(
@@ -36,7 +36,7 @@ export class LogFactory extends AbstractFactory implements LogFactoryInterface {
 		message: string,
 		object?: any|undefined,
 	): Promise<void> {
-		this.logWriter.maybeWriteLog(
+		this._logWriter.maybeWriteLog(
 			this.createInfo(messageType, message, object)
 		);
 	}
@@ -54,7 +54,7 @@ export class LogFactory extends AbstractFactory implements LogFactoryInterface {
 		message: string,
 		object?: any|undefined,
 	): Promise<void> {
-		this.logWriter.maybeWriteLog(
+		this._logWriter.maybeWriteLog(
 			this.createWarning(messageType, message, object)
 		);
 	}
@@ -72,7 +72,7 @@ export class LogFactory extends AbstractFactory implements LogFactoryInterface {
 		message: string,
 		object?: any|undefined,
 	): Promise<void> {
-		this.logWriter.maybeWriteLog(
+		this._logWriter.maybeWriteLog(
 			this.createError(messageType, message, object)
 		);
 	}
@@ -85,6 +85,6 @@ export class LogFactory extends AbstractFactory implements LogFactoryInterface {
 	public async group(
 		group: LogGroupInterface,
 	): Promise<void> {
-		this.logWriter.maybeWriteLogList(group);
+		this._logWriter.maybeWriteLogList(group);
 	}
 }

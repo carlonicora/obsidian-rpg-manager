@@ -121,7 +121,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 
 		const metadata = await fileEditor.getCodeBlockMetadata();
 
-		this.updateYamlElement(
+		this._updateYamlElement(
 			metadata,
 			identifier.split('.'),
 			value,
@@ -158,7 +158,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 					);
 					const yaml = parseYaml(range) ?? {};
 
-					this.updateYamlElement(
+					this._updateYamlElement(
 						yaml,
 						identifier.split('.'),
 						value,
@@ -178,7 +178,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		}
 	}
 
-	private updateYamlElement(
+	private _updateYamlElement(
 		yaml: Partial<any>,
 		key: Array<string>,
 		value: string|number|boolean|undefined,
@@ -193,7 +193,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		}
 
 		if (key.length > 0) {
-			return this.updateYamlElement(yaml[initialKeyPart], key, value);
+			return this._updateYamlElement(yaml[initialKeyPart], key, value);
 		} else {
 			yaml[initialKeyPart] = value;
 		}

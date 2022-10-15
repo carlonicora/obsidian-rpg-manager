@@ -5,12 +5,12 @@ import {ModalInterface} from "../../../../modals/interfaces/ModalInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 
 export class SessionModalPart extends AbstractModalPart {
-	private sessions: SessionInterface[];
+	private _sessions: SessionInterface[];
 
-	private sessionEl: HTMLSelectElement;
-	private sessionErrorEl: HTMLParagraphElement;
-	private childEl: HTMLDivElement;
-	private synopsisEl: HTMLTextAreaElement;
+	private _sessionEl: HTMLSelectElement;
+	private _sessionErrorEl: HTMLParagraphElement;
+	private _childEl: HTMLDivElement;
+	private _synopsisEl: HTMLTextAreaElement;
 
 	constructor(
 		app: App,
@@ -20,7 +20,7 @@ export class SessionModalPart extends AbstractModalPart {
 		this.modal.sessionId = this.factories.id.create(ComponentType.Session, this.modal.campaignId.id);
 		this.modal.sessionId.id = 0;
 
-		this.sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
+		this._sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -29,7 +29,7 @@ export class SessionModalPart extends AbstractModalPart {
 		const sessionEl = contentEl.createDiv({cls: 'sessionContainer'});
 
 		this.addAdditionalElements();
-		this.addNewAdventureElements(sessionEl);
+		this._addNewAdventureElements(sessionEl);
 
 		this.modal.saver = this;
 		this.modal.enableButton();
@@ -46,23 +46,23 @@ export class SessionModalPart extends AbstractModalPart {
 		return true;
 	}
 
-	private addNewAdventureElements(
+	private _addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		this.sessions.forEach((session: SessionInterface) => {
+		this._sessions.forEach((session: SessionInterface) => {
 			if (this.modal.sessionId !== undefined && (session.id.sessionId ?? 0) >= (this.modal.sessionId.id ?? 0)) {
 				this.modal.sessionId.id = ((session.id.sessionId ?? 0) + 1);
 			}
 		});
 	}
 
-	private selectSession(
+	private _selectSession(
 	): void {
 		if (this.modal.sessionId !== undefined){
-			this.modal.sessionId.id = +this.sessionEl.value;
+			this.modal.sessionId.id = +this._sessionEl.value;
 		}
-		this.childEl.empty();
-		this.loadChild(this.childEl);
+		this._childEl.empty();
+		this.loadChild(this._childEl);
 	}
 
 	protected async addAdditionalElements(

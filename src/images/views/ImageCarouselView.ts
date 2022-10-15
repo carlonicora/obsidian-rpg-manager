@@ -6,19 +6,19 @@ export class ImageCarouselView extends AbstractRpgManager {
 	private _currentImage: number;
 	private _imagesCount: number;
 
-	private imageGroups: Array<HTMLDivElement>;
+	private _imageGroups: Array<HTMLDivElement>;
 
-	private imageCounterEl: HTMLDivElement;
+	private _imageCounterEl: HTMLDivElement;
 
 	constructor(
 		app: App,
-		private images: Array<ImageInterface>,
+		private _images: Array<ImageInterface>,
 	) {
 		super(app);
 
 		this._currentImage = 0;
-		this._imagesCount = this.images.length - 1;
-		this.imageGroups = [];
+		this._imagesCount = this._images.length;
+		this._imageGroups = [];
 	}
 
 	render(
@@ -28,12 +28,12 @@ export class ImageCarouselView extends AbstractRpgManager {
 		this._addImageNavigator(carouselContainerEl);
 		const imagesContainerEl = carouselContainerEl.createDiv({cls: 'images'});
 
-		this.images.forEach((image: ImageInterface, index:number) => {
+		this._images.forEach((image: ImageInterface, index:number) => {
 			this._addImageGroup(image, imagesContainerEl);
 		});
 
-		this.imageGroups[0].removeClass('invisible');
-		this.imageCounterEl.textContent = '1/' + (this._imagesCount + 1).toString()
+		this._imageGroups[0].removeClass('invisible');
+		this._imageCounterEl.textContent = '1/' + this._imagesCount.toString();
 	}
 
 	private _addImageGroup(
@@ -67,7 +67,7 @@ export class ImageCarouselView extends AbstractRpgManager {
 			);
 		}
 
-		this.imageGroups.push(imageGroupEl);
+		this._imageGroups.push(imageGroupEl);
 	}
 
 	private _addImageNavigator(
@@ -75,21 +75,21 @@ export class ImageCarouselView extends AbstractRpgManager {
 	): void {
 		const imageNavigatorContainerEl: HTMLDivElement = containerEl.createDiv({cls: 'navigator'});
 
-		if (this.images.length > 1) {
+		if (this._images.length > 0) {
 			const previousImageNavigatorEl: HTMLDivElement = imageNavigatorContainerEl.createDiv({cls: 'previous', text: '<<'});
 			previousImageNavigatorEl.addEventListener('click', this._movePrevious.bind(this))
 
 			const nextImageNavigatorEl: HTMLDivElement = imageNavigatorContainerEl.createDiv({cls: 'next', text: '>>'});
 			nextImageNavigatorEl.addEventListener('click', this._moveNext.bind(this))
 
-			this.imageCounterEl = imageNavigatorContainerEl.createDiv({cls: 'counter'});
+			this._imageCounterEl = imageNavigatorContainerEl.createDiv({cls: 'counter'});
 		}
 
 		imageNavigatorContainerEl.createDiv({cls: 'reset'});
 	}
 
 	private _movePrevious(): void {
-		this.imageGroups[this._currentImage].addClass('invisible');
+		this._imageGroups[this._currentImage].addClass('invisible');
 
 		if (this._currentImage === 0) {
 			this._currentImage = this._imagesCount;
@@ -97,12 +97,12 @@ export class ImageCarouselView extends AbstractRpgManager {
 			this._currentImage--;
 		}
 
-		this.imageGroups[this._currentImage].removeClass('invisible');
-		this.imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + (this._imagesCount + 1).toString();
+		this._imageGroups[this._currentImage].removeClass('invisible');
+		this._imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + (this._imagesCount + 1).toString();
 	}
 
 	private _moveNext(): void {
-		this.imageGroups[this._currentImage].addClass('invisible');
+		this._imageGroups[this._currentImage].addClass('invisible');
 
 		if (this._currentImage === this._imagesCount) {
 			this._currentImage = 0;
@@ -110,7 +110,7 @@ export class ImageCarouselView extends AbstractRpgManager {
 			this._currentImage++;
 		}
 
-		this.imageGroups[this._currentImage].removeClass('invisible');
-		this.imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + (this._imagesCount + 1).toString();
+		this._imageGroups[this._currentImage].removeClass('invisible');
+		this._imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + (this._imagesCount + 1).toString();
 	}
 }

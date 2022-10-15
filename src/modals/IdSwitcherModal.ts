@@ -7,15 +7,15 @@ import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 import {InvalidIdChecksumError} from "../errors/InvalidIdChecksumError";
 
 export class IdSwitcherModal extends AbstractModal {
-	private id: IdInterface;
-	private newId: IdInterface;
-	private updateButtonEl: HTMLButtonElement;
-	private newIdEl: HTMLInputElement;
-	private errorIdEl: HTMLSpanElement;
+	private _id: IdInterface;
+	private _newId: IdInterface;
+	private _updateButtonEl: HTMLButtonElement;
+	private _newIdEl: HTMLInputElement;
+	private _errorIdEl: HTMLSpanElement;
 
 	constructor(
 		app: App,
-		private file: TFile,
+		private _file: TFile,
 	) {
 		super(app);
 		this.title = 'Component ID Updater'
@@ -29,7 +29,7 @@ export class IdSwitcherModal extends AbstractModal {
 	onOpen() {
 		super.onOpen();
 
-		DatabaseInitialiser.readID(this.file)
+		DatabaseInitialiser.readID(this._file)
 			.then((id: IdInterface) => {
 				this._processId(id);
 			})
@@ -41,23 +41,23 @@ export class IdSwitcherModal extends AbstractModal {
 	private async _processId(
 		id: IdInterface,
 	): Promise<void> {
-		this.id = id;
+		this._id = id;
 
 		const descriptorEl = this.rpgmContainerEl.createDiv();
-		descriptorEl.textContent = 'Use this form to change the position of the ' + ComponentType[this.id.type] +
-			' "' + this.file.basename + '" in the Campaign hierarchy';
+		descriptorEl.textContent = 'Use this form to change the position of the ' + ComponentType[this._id.type] +
+			' "' + this._file.basename + '" in the Campaign hierarchy';
 
 		const formEl = this.rpgmContainerEl.createDiv();
 
 		const buttonContainerEl = this.rpgmContainerEl.createDiv();
-		this.updateButtonEl = buttonContainerEl.createEl('button', {text: 'Update the identifier'});
-		this.updateButtonEl.disabled = true;
+		this._updateButtonEl = buttonContainerEl.createEl('button', {text: 'Update the identifier'});
+		this._updateButtonEl.disabled = true;
 
-		this.updateButtonEl.addEventListener('click', this.save.bind(this));
+		this._updateButtonEl.addEventListener('click', this._save.bind(this));
 
-		if (this.id.type === ComponentType.Campaign){
+		if (this._id.type === ComponentType.Campaign){
 			const newCampaignId = this._proposeNewId(ComponentType.Campaign);
-			this.newId = this.factories.id.create(
+			this._newId = this.factories.id.create(
 				ComponentType.Campaign,
 				newCampaignId,
 				undefined,
@@ -65,12 +65,12 @@ export class IdSwitcherModal extends AbstractModal {
 				undefined,
 				undefined,
 				undefined,
-				this.id.campaignSettings,
+				this._id.campaignSettings,
 			);
 
 			this._addIdSelector(formEl, newCampaignId.toString());
 
-			this.updateButtonEl.disabled = false;
+			this._updateButtonEl.disabled = false;
 		} else {
 			this._addSelector(formEl, ComponentType.Campaign);
 		}
@@ -82,48 +82,48 @@ export class IdSwitcherModal extends AbstractModal {
 	): void {
 		containerId.createDiv({cls: 'input-title', text: 'New ID'})
 		containerId.createEl('div', {text: 'The proposed new ID is ' + newId + ' but you can change it if you want'});
-		this.newIdEl = containerId.createEl('input', {type: 'text'});
-		this.errorIdEl = containerId.createSpan({text: 'The selected ID is already in use. Please select a different one'});
-		this.errorIdEl.style.display = 'none';
-		this.newIdEl.value = newId;
-		this.newIdEl.addEventListener('keyup', this._validateNewId.bind(this));
+		this._newIdEl = containerId.createEl('input', {type: 'text'});
+		this._errorIdEl = containerId.createSpan({text: 'The selected ID is already in use. Please select a different one'});
+		this._errorIdEl.style.display = 'none';
+		this._newIdEl.value = newId;
+		this._newIdEl.addEventListener('keyup', this._validateNewId.bind(this));
 	}
 
 	private _validateNewId(
 	): void {
-		switch (this.newId.type){
+		switch (this._newId.type){
 			case ComponentType.Campaign:
-				this.newId = this.factories.id.create(ComponentType.Campaign, +this.newIdEl.value, undefined, undefined, undefined, undefined, undefined, this.id.campaignSettings);
+				this._newId = this.factories.id.create(ComponentType.Campaign, +this._newIdEl.value, undefined, undefined, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Adventure:
-				this.newId = this.factories.id.create(ComponentType.Adventure, this.newId.campaignId, +this.newIdEl.value, undefined, undefined, undefined, undefined, this.id.campaignSettings);
+				this._newId = this.factories.id.create(ComponentType.Adventure, this._newId.campaignId, +this._newIdEl.value, undefined, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Act:
-				this.newId = this.factories.id.create(ComponentType.Act, this.newId.campaignId, this.newId.adventureId, +this.newIdEl.value, undefined, undefined, undefined, this.id.campaignSettings);
+				this._newId = this.factories.id.create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, +this._newIdEl.value, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Scene:
-				this.newId = this.factories.id.create(ComponentType.Scene, this.newId.campaignId, this.newId.adventureId, this.newId.actId, +this.newIdEl.value, undefined, undefined, this.id.campaignSettings);
+				this._newId = this.factories.id.create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, +this._newIdEl.value, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Session:
-				this.newId = this.factories.id.create(ComponentType.Session, +this.newIdEl.value, undefined, undefined, undefined, +this.newIdEl.value, undefined, this.id.campaignSettings);
+				this._newId = this.factories.id.create(ComponentType.Session, +this._newIdEl.value, undefined, undefined, undefined, +this._newIdEl.value, undefined, this._id.campaignSettings);
 				break;
 			default:
 				return;
 		}
 
 		try {
-			this.database.readSingle<ComponentInterface>(this.newId.type, this.newId);
-			this.updateButtonEl.disabled = true;
-			this.errorIdEl.style.display = '';
+			this.database.readSingle<ComponentInterface>(this._newId.type, this._newId);
+			this._updateButtonEl.disabled = true;
+			this._errorIdEl.style.display = '';
 		} catch (e) {
-			this.updateButtonEl.disabled = false;
-			this.errorIdEl.style.display = 'none';
+			this._updateButtonEl.disabled = false;
+			this._errorIdEl.style.display = 'none';
 		}
 	}
 
-	private async save(
+	private async _save(
 	): Promise<void>{
-		this.manipulators.codeblock.replaceID(this.file, this.newId.stringID);
+		this.manipulators.codeblock.replaceID(this._file, this._newId.stringID);
 		this.close();
 	}
 
@@ -139,7 +139,7 @@ export class IdSwitcherModal extends AbstractModal {
 		selectorContainerEl.createDiv({
 			cls: 'input-title',
 			text: 'Select the ' + ComponentType[type] +
-				' the ' + ComponentType[this.id.type] + ' belongs to'
+				' the ' + ComponentType[this._id.type] + ' belongs to'
 		});
 
 		const typeSelectorEl: HTMLSelectElement = selectorContainerEl.createDiv().createEl('select');
@@ -189,48 +189,48 @@ export class IdSwitcherModal extends AbstractModal {
 
 				switch (type) {
 					case ComponentType.Campaign:
-						if (this.id.type === ComponentType.Adventure) {
+						if (this._id.type === ComponentType.Adventure) {
 							try {
-								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value, adventureId: this.id.adventureId};
+								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value, adventureId: this._id.adventureId};
 								if (!this._isExistingIdValid(ComponentType.Adventure, +selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
 								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value};
 								hasMissingValidId = true;
 							}
 
-						} else if (this.id.type === ComponentType.Session) {
+						} else if (this._id.type === ComponentType.Session) {
 							try {
-								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value, sessionId: this.id.sessionId};
+								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value, sessionId: this._id.sessionId};
 								if (!this._isExistingIdValid(ComponentType.Session, +selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
 								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value};
 								hasMissingValidId = true;
 							}
-						} else if (this.id.type === ComponentType.Act || this.id.type === ComponentType.Scene) {
+						} else if (this._id.type === ComponentType.Act || this._id.type === ComponentType.Scene) {
 							hasLoadedSomethingElse = true;
 							this._addSelector(subContainerEl, ComponentType.Adventure, +selectorEl.value);
 						} else {
-							idValues = {type: this.id.type, campaignId: +selectorEl.value};
+							idValues = {type: this._id.type, campaignId: +selectorEl.value};
 						}
 						break;
 					case ComponentType.Adventure:
-						if (this.id.type === ComponentType.Act) {
+						if (this._id.type === ComponentType.Act) {
 							try {
-								idValues = {type: ComponentType.Act, campaignId: campaignId ?? 0, adventureId: +selectorEl.value, actId: this.id.actId};
+								idValues = {type: ComponentType.Act, campaignId: campaignId ?? 0, adventureId: +selectorEl.value, actId: this._id.actId};
 								if (!this._isExistingIdValid(ComponentType.Act, campaignId, +selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
 								idValues = {type: ComponentType.Act, campaignId: campaignId ?? 0, adventureId: +selectorEl.value};
 								hasMissingValidId = true;
 							}
-						} else if (this.id.type === ComponentType.Scene) {
+						} else if (this._id.type === ComponentType.Scene) {
 							hasLoadedSomethingElse = true;
 							this._addSelector(subContainerEl, ComponentType.Act, campaignId, +selectorEl.value);
 						}
 						break;
 					case ComponentType.Act:
-						if (this.id.type === ComponentType.Scene) {
+						if (this._id.type === ComponentType.Scene) {
 							try {
-								idValues = {type: ComponentType.Scene, campaignId: campaignId ?? 0, adventureId: adventureId, actId: +selectorEl.value, sceneId: this.id.sceneId};
+								idValues = {type: ComponentType.Scene, campaignId: campaignId ?? 0, adventureId: adventureId, actId: +selectorEl.value, sceneId: this._id.sceneId};
 								if (!this._isExistingIdValid(ComponentType.Scene, campaignId, adventureId, +selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
 								idValues = {type: ComponentType.Scene, campaignId: campaignId ?? 0, adventureId: adventureId, actId: +selectorEl.value,};
@@ -290,7 +290,7 @@ export class IdSwitcherModal extends AbstractModal {
 							if (newId !== undefined) this._addIdSelector(subContainerEl, newId.toString());
 						}
 
-						this.newId = this.factories.id.create(
+						this._newId = this.factories.id.create(
 							idValues.type,
 							idValues.campaignId,
 							idValues.adventureId,
@@ -298,9 +298,9 @@ export class IdSwitcherModal extends AbstractModal {
 							idValues.sceneId,
 							idValues.sessionId,
 							undefined,
-							this.id.campaignSettings,
+							this._id.campaignSettings,
 						)
-						this.updateButtonEl.disabled = false;
+						this._updateButtonEl.disabled = false;
 					}
 				}
 			});
@@ -345,7 +345,7 @@ export class IdSwitcherModal extends AbstractModal {
 	): boolean {
 		const components = this._loadPossibleChildren(type, campaignId, adventureId, actId);
 
-		const match = components.filter((component: ComponentInterface) => this.id.id === component.id.id);
+		const match = components.filter((component: ComponentInterface) => this._id.id === component.id.id);
 
 		return match.length === 0;
 	}

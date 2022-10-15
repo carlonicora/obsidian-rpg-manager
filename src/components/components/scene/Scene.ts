@@ -13,7 +13,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	protected metadata: SceneMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
 
-	private activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
+	private _activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
 		[SceneType.Action, true],
 		[SceneType.Combat, true],
 		[SceneType.Encounter, true],
@@ -90,7 +90,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	get isActive(): boolean {
 		if (this.sceneType == undefined) return false;
 
-		return this.activeSceneTypes.get(this.sceneType) ?? false;
+		return this._activeSceneTypes.get(this.sceneType) ?? false;
 	}
 
 	get isCurrentlyRunning(): boolean {

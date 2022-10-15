@@ -7,31 +7,31 @@ import {MusicInterface} from "./interfaces/MusicInterface";
 export class Music extends AbstractMusicData implements MusicInterface {
 	protected metadata: MusicMetadataInterface;
 
-	private dynamicImage: string | null | undefined;
+	private _dynamicImage: string | null | undefined;
 
 	public get image(): string | undefined {
 		if (super.image !== undefined) return super.image;
 		if (this.url == undefined) return undefined;
 
-		if (this.dynamicImage === undefined) {
+		if (this._dynamicImage === undefined) {
 			this._fetchImage()
 				.then((image: string | null) => {
-					this.dynamicImage = image;
+					this._dynamicImage = image;
 				});
 			return undefined;
 		}
 
-		return (this.dynamicImage != null ? this.dynamicImage : undefined);
+		return (this._dynamicImage != null ? this._dynamicImage : undefined);
 	}
 
 	public async getThumbnail(): Promise<string | undefined> {
-		if (this.dynamicImage != null) return this.dynamicImage;
+		if (this._dynamicImage != null) return this._dynamicImage;
 
 		if (this.url === undefined) return undefined;
 
-		this.dynamicImage = await this._fetchImage();
+		this._dynamicImage = await this._fetchImage();
 
-		return (this.dynamicImage != null ? this.dynamicImage : undefined);
+		return (this._dynamicImage != null ? this._dynamicImage : undefined);
 	}
 
 	private async _fetchImage(

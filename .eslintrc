@@ -23,7 +23,6 @@
 		"no-fallthrough": "off",
 		"@typescript-eslint/no-var-requires": "off",
 		"@typescript-eslint/no-empty-interface": "off",
-		"@typescript-eslint/no-misused-new": "error",
 		"@typescript-eslint/naming-convention": [
 			"error",
 			{
@@ -34,6 +33,12 @@
 				"selector": ["variable", "function"],
 				"format": ["camelCase"],
 				"leadingUnderscore": "allow"
+			},
+			{
+				"selector": "memberLike",
+				"modifiers": ["private"],
+				"format": ["camelCase"],
+				"leadingUnderscore": "require",
 			}
 		]
 	}

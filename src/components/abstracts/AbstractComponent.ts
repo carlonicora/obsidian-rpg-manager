@@ -19,12 +19,12 @@ import {RelationshipType} from "../../relationships/enums/RelationshipType";
 
 
 export abstract class AbstractComponent extends AbstractComponentData implements ComponentInterface {
-	private relationships: RelationshipListInterface = new RelationshipList();
+	private _relationships: RelationshipListInterface = new RelationshipList();
 	protected fileManipulator: FileManipulatorInterface;
 
-	private previousMetadata: string|Int32Array|undefined;
-	private previousRelationships: string|Int32Array|undefined;
-	private previousRelationshipsStringified: Array<any>;
+	private _previousMetadata: string|Int32Array|undefined;
+	private _previousRelationships: string|Int32Array|undefined;
+	private _previousRelationshipsStringified: Array<any>;
 
 	public async readMetadata(
 	): Promise<void> {
@@ -63,10 +63,10 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	public async initialiseRelationships(
 	): Promise<void> {
-		if (this.metadata.relationships !== undefined){
-			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
+		if (this.metadata._relationships !== undefined){
+			await this.metadata._relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 				if (relationshipMetadata.path !== this.file.path) {
-					this.relationships.add(
+					this._relationships.add(
 						this.factories.relationship.createFromMetadata(relationshipMetadata),
 						false,
 					);
@@ -82,7 +82,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 	public getRelationships(
 		database: DatabaseInterface|undefined = undefined,
 	): RelationshipListInterface {
-		this.relationships
+		this._relationships
 			.filter((relationship: RelationshipInterface) => relationship.component === undefined)
 			.forEach((relationship: RelationshipInterface) => {
 				if (relationship.component === undefined) {
@@ -106,7 +106,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 				}
 			});
 
-		return this.relationships;
+		return this._relationships;
 	}
 
 	public get hasStoryCirclePlot(): boolean {
@@ -130,12 +130,12 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 		const md5 = new Md5();
 		md5.appendStr(JSON.stringify(this.metadata));
 		const metadataMd5 = md5.end();
-		const relationshipsMd5 = this.relationships.md5();
+		const relationshipsMd5 = this._relationships.md5();
 
-		if (this.previousMetadata !== metadataMd5 || this.previousRelationships !== relationshipsMd5){
-			this.previousMetadata = metadataMd5;
-			this.previousRelationships = relationshipsMd5;
-			this.previousRelationshipsStringified = structuredClone(this.relationships.stringified);
+		if (this._previousMetadata !== metadataMd5 || this._previousRelationships !== relationshipsMd5){
+			this._previousMetadata = metadataMd5;
+			this._previousRelationships = relationshipsMd5;
+			this._previousRelationshipsStringified = structuredClone(this._relationships.stringified);
 
 			if (this.version === undefined) this.version = 0;
 			this.version++;

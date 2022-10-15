@@ -9,7 +9,7 @@ export class ImageFactory extends AbstractFactory implements ImageFactoryInterfa
 		src: string,
 		caption?: string,
 	): ImageInterface|undefined {
-		const imageLocation = this.getImageLocation(src);
+		const imageLocation = this._getImageLocation(src);
 
 		if (imageLocation === undefined)
 			return undefined
@@ -21,7 +21,7 @@ export class ImageFactory extends AbstractFactory implements ImageFactoryInterfa
 		return response;
 	}
 
-	private getImageLocation(
+	private _getImageLocation(
 		src: string
 	): string|undefined {
 		if (src.startsWith('http'))

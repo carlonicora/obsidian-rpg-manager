@@ -8,14 +8,14 @@ import {Md5} from "ts-md5";
 import {CampaignSetting} from "../../components/components/campaign/enums/CampaignSetting";
 
 export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
-	private campaignSettings: Map<number, CampaignSetting>;
+	private _campaignSettings: Map<number, CampaignSetting>;
 
 	public async run(
 		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
 	): Promise<void> {
 		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v3.0');
 
-		this.campaignSettings = new Map<number, CampaignSetting>();
+		this._campaignSettings = new Map<number, CampaignSetting>();
 		this._loadCampaignSettings();
 
 		const files: Array<TFile> = await this.app.vault.getMarkdownFiles();
@@ -163,7 +163,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				if (!defaultTag.endsWith('/')) defaultTag += '/';
 				const tagIds = tagAndType.tag.substring(defaultTag.length);
 				const [campaignId] = tagIds.split('/');
-				let campaignSettings = this.campaignSettings.get(+campaignId);
+				let campaignSettings = this._campaignSettings.get(+campaignId);
 				if (campaignSettings === undefined) campaignSettings = CampaignSetting.Agnostic;
 
 				const validator = tagAndType.tag.substring(defaultTag.length).split('/');
@@ -716,7 +716,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 							const settings = metadata?.frontmatter?.settings != undefined ?
 								CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :
 								CampaignSetting.Agnostic;
-							this.campaignSettings.set(id.campaignId, settings);
+							this._campaignSettings.set(id.campaignId, settings);
 						} catch (e) {
 							//No need to trap the errors here
 						}

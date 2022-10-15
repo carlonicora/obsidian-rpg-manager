@@ -25,7 +25,7 @@ export class CharacterHeaderView extends AbstractHeaderView {
 					this.createContainerEl(element, this.addDateSelector.bind(this))
 					break;
 				case HeaderResponseType.Pronoun:
-					headlessTable.addRow(element, this.addPronoun.bind(this));
+					headlessTable.addRow(element, this._addPronoun.bind(this));
 					break;
 				default:
 					element.value.fillContent(
@@ -39,7 +39,7 @@ export class CharacterHeaderView extends AbstractHeaderView {
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 	}
 
-	private addPronoun(
+	private _addPronoun(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {

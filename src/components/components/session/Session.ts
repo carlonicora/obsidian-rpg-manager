@@ -9,22 +9,22 @@ export class Session extends AbstractSessionData implements SessionInterface {
 	protected metadata: SessionMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Run;
 
-	private sceneNoteListPattern: FilePatternPositionInterface|undefined = undefined;
+	private _sceneNoteListPattern: FilePatternPositionInterface|undefined = undefined;
 
 	public async initialiseData(
 	): Promise<void> {
 		const pattern: Array<string> = ['### Storyteller Diary','-', '', '###'];
-		this.sceneNoteListPattern = await this.fileManipulator.patternPosition(pattern);
+		this._sceneNoteListPattern = await this.fileManipulator.patternPosition(pattern);
 	}
 
 	get isSceneNoteListAvailable(): boolean {
-		return this.sceneNoteListPattern !== undefined;
+		return this._sceneNoteListPattern !== undefined;
 	}
 
 	public async replaceSceneNoteList(
 		content: Array<string>,
 	): Promise<void> {
-		if (this.sceneNoteListPattern !== undefined) this.fileManipulator.replacePattern(this.sceneNoteListPattern, content);
+		if (this._sceneNoteListPattern !== undefined) this.fileManipulator.replacePattern(this._sceneNoteListPattern, content);
 	}
 
 	get nextSession(): SessionInterface | null {

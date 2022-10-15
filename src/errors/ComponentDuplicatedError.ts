@@ -7,8 +7,8 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(
 		app: App,
 		idMap: IdInterface,
-		private duplication: Array<ComponentInterface>,
-		private duplicated: ComponentInterface|undefined=undefined,
+		private _duplication: Array<ComponentInterface>,
+		private _duplicated: ComponentInterface|undefined=undefined,
 	) {
 		super(app, idMap);
 	}
@@ -22,13 +22,13 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	): string {
 		let response = ''; //this.id.tag + '\n';
 
-		if (this.duplication.length > 1) {
-			this.duplication.forEach((component: ComponentInterface) => {
+		if (this._duplication.length > 1) {
+			this._duplication.forEach((component: ComponentInterface) => {
 				response += ' - ' + component.file.basename + '\n';
 			})
-		} else if (this.duplicated !== undefined) {
-			response += ' - ' + this.duplication[0].file.basename + '\n' +
-				' - ' + this.duplicated?.file.basename + '\n';
+		} else if (this._duplicated !== undefined) {
+			response += ' - ' + this._duplication[0].file.basename + '\n' +
+				' - ' + this._duplicated?.file.basename + '\n';
 		}
 
 		return response;
@@ -45,13 +45,13 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	): Array<string>|undefined {
 		const response: Array<string> = [];
 
-		if (this.duplication.length > 1) {
-			this.duplication.forEach((component: ComponentInterface) => {
+		if (this._duplication.length > 1) {
+			this._duplication.forEach((component: ComponentInterface) => {
 				response.push(component.file.path);
 			})
-		} else if (this.duplicated !== undefined) {
-			response.push(this.duplication[0].file.path);
-			response.push(this.duplicated?.file.path);
+		} else if (this._duplicated !== undefined) {
+			response.push(this._duplication[0].file.path);
+			response.push(this._duplicated?.file.path);
 		}
 
 		return response;

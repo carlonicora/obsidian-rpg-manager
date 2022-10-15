@@ -8,7 +8,7 @@ export class HeadlessTableView extends AbstractRpgManager{
 
 	constructor(
 		app: App,
-		private sourcePath: string,
+		private _sourcePath: string,
 	) {
 		super(app);
 		this.tableEl = document.createElement('table');
@@ -44,7 +44,7 @@ export class HeadlessTableView extends AbstractRpgManager{
 					subContent(subRowContentEl, ...additionalParams);
 				}
 			} else {
-				subContent.fillContent(subRowContentEl, this.sourcePath);
+				subContent.fillContent(subRowContentEl, this._sourcePath);
 			}
 		}
 	}

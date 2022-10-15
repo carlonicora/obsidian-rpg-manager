@@ -18,7 +18,7 @@ export class DiceRollerHelper {
 			response.push(
 				new DiceResult(
 					diceType,
-					this.genrateRandomNumber(diceType),
+					this._genrateRandomNumber(diceType),
 				),
 			);
 		}
@@ -26,7 +26,7 @@ export class DiceRollerHelper {
 		return response;
 	}
 
-	private static genrateRandomNumber(
+	private static _genrateRandomNumber(
 		max: number,
 	) {
 		Math.ceil(1);

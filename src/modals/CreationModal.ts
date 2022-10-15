@@ -34,13 +34,13 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 	public availableSpecificTemplates: Array<TFile> = [];
 	public availableGenericTemplates: Array<TFile> = [];
 
-	private internalTemplates: Map<ComponentType, ComponentNotesTemplateFactoryInterface>;
+	private _internalTemplates: Map<ComponentType, ComponentNotesTemplateFactoryInterface>;
 
 	constructor(
 		public app: App,
 		public type: ComponentType,
-		private create: boolean = true,
-		private name: string|null = null,
+		private _create: boolean = true,
+		private _name: string|null = null,
 		campaignId: number|undefined = undefined,
 		adventureId: number|undefined = undefined,
 		actId: number|undefined = undefined,
@@ -88,7 +88,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		contentEl.empty();
 		contentEl.addClass('rpgm-modal');
 
-		if (!this.create && this.app.workspace.getActiveViewOfType(MarkdownView) == null){
+		if (!this._create && this.app.workspace.getActiveViewOfType(MarkdownView) == null){
 			contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Error'});
 			contentEl.createSpan({cls: '', text: 'To fill a note with a RPG Manager element you must have a valid file opened.'});
 			return;
@@ -105,8 +105,8 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
 		titleEl.createEl('label', {text: 'Title of your new ' + ComponentType[this.type]});
 		this.title = titleEl.createEl('input', {type: 'text'});
-		if (this.name !== null) {
-			this.title.value = this.name;
+		if (this._name !== null) {
+			this.title.value = this._name;
 		}
 		this.titleError = navigationEl.createEl('p', {cls: 'error', text: 'Please specify a valid title'});
 
@@ -175,7 +175,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		}
 
 		this.button.addEventListener('click', (e: Event) => {
-			this.save();
+			this._save();
 		});
 
 		this.campaignModal.addElement(
@@ -193,7 +193,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		super.onClose();
 	}
 
-	private async save(
+	private async _save(
 	): Promise<void> {
 		if (this.title.value === ''){
 			this.titleError.style.display = 'block';
@@ -209,7 +209,7 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 		this.saver.save(
 			this.campaignSetting,
 			this.type,
-			this.create,
+			this._create,
 			this.templateEl.value,
 			this.title.value,
 			this.campaignId,

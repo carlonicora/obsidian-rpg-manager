@@ -5,7 +5,7 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {SceneInterface} from "../interfaces/SceneInterface";
 
 export class SceneModalPart extends AbstractModalPart {
-	private scenes: SceneInterface[];
+	private _scenes: SceneInterface[];
 
 	constructor(
 		app: App,
@@ -16,9 +16,9 @@ export class SceneModalPart extends AbstractModalPart {
 		this.modal.sceneId.id = 0;
 
 		if (this.modal.adventureId != null && this.modal.actId != null) {
-			this.scenes = this.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
+			this._scenes = this.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
 		} else {
-			this.scenes = [];
+			this._scenes = [];
 		}
 	}
 
@@ -27,7 +27,7 @@ export class SceneModalPart extends AbstractModalPart {
 	): Promise<void> {
 		contentEl.createDiv({cls: 'sceneContainer'});
 
-		this.scenes.forEach((scene: SceneInterface) => {
+		this._scenes.forEach((scene: SceneInterface) => {
 			if (this.modal.sceneId !== undefined && (scene.id.sceneId ?? 0) >= (this.modal.sceneId.id ?? 0)) {
 				this.modal.sceneId.id = ((scene.id.sceneId ?? 0) + 1);
 			}

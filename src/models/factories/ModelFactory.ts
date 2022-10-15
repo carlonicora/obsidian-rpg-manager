@@ -23,16 +23,15 @@ import {StoryCirclePlotSubModel} from "../../plots/models/StoryCirclePlotSubMode
 import {ListModel} from "../ListModel";
 
 export class ModelFactory extends AbstractFactory implements ModelFactoryInterface{
-	private modelTypeMap: Map<string,any>;
-
-	private subModels: Map<string, any>;
+	private _modelTypeMap: Map<string,any>;
+	private _subModels: Map<string, any>;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
 
-		this.subModels = new Map<string, any>([
+		this._subModels = new Map<string, any>([
 			[this._createSubModelIdentifier(CampaignSetting.Agnostic, ComponentType.Campaign, 'Header'), CampaignHeaderSubModel],
 			[this._createSubModelIdentifier(CampaignSetting.Agnostic, ComponentType.Adventure, 'Header'), AdventureHeaderSubModel],
 			[this._createSubModelIdentifier(CampaignSetting.Agnostic, ComponentType.Act, 'Header'), ActHeaderSubModel],
@@ -50,7 +49,7 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 			[this._createSubModelIdentifier(undefined, undefined, 'StoryCirclePlot'), StoryCirclePlotSubModel],
 		]);
 		
-		this.modelTypeMap = new Map([
+		this._modelTypeMap = new Map([
 			['AgnosticHeader', HeaderModel],
 			['AgnosticList', ListModel]
 		]);
@@ -65,10 +64,10 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		sourceMeta: any,
 	): ModelInterface {
 		let modelKey = CampaignSetting[settings] + modelName;
-		if (!this.modelTypeMap.has(modelKey)) modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName;
-		if (!this.modelTypeMap.has(modelKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + modelName + ' cannot be found');
+		if (!this._modelTypeMap.has(modelKey)) modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName;
+		if (!this._modelTypeMap.has(modelKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + modelName + ' cannot be found');
 
-		return new (this.modelTypeMap.get(modelKey))(this.app, currentComponent, source, sourcePath, sourceMeta);
+		return new (this._modelTypeMap.get(modelKey))(this.app, currentComponent, source, sourcePath, sourceMeta);
 	}
 
 	public createSubModel(
@@ -76,10 +75,10 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 		type: ComponentType,
 		subModelName: string,
 	): any {
-		if (this.subModels.has(this._createSubModelIdentifier(settings, type, subModelName))){
-			return this.subModels.get(this._createSubModelIdentifier(settings, type, subModelName));
+		if (this._subModels.has(this._createSubModelIdentifier(settings, type, subModelName))){
+			return this._subModels.get(this._createSubModelIdentifier(settings, type, subModelName));
 		} else {
-			return this.subModels.get(this._createSubModelIdentifier(CampaignSetting.Agnostic, type, subModelName));
+			return this._subModels.get(this._createSubModelIdentifier(CampaignSetting.Agnostic, type, subModelName));
 		}
 	}
 

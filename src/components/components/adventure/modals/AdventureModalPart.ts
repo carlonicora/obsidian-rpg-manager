@@ -5,12 +5,12 @@ import {ModalInterface} from "../../../../modals/interfaces/ModalInterface";
 import {AdventureInterface} from "../interfaces/AdventureInterface";
 
 export class AdventureModalPart extends AbstractModalPart {
-	private adventures: AdventureInterface[];
+	private _adventures: AdventureInterface[];
 
-	private adventureEl: HTMLSelectElement;
-	private adventureErrorEl: HTMLParagraphElement;
-	private childEl: HTMLDivElement;
-	private synopsisEl: HTMLTextAreaElement;
+	private _adventureEl: HTMLSelectElement;
+	private _adventureErrorEl: HTMLParagraphElement;
+	private _childEl: HTMLDivElement;
+	private _synopsisEl: HTMLTextAreaElement;
 
 	constructor(
 		app: App,
@@ -22,7 +22,7 @@ export class AdventureModalPart extends AbstractModalPart {
 			this.modal.adventureId.id = 0;
 		}
 
-		this.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
+		this._adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -32,18 +32,18 @@ export class AdventureModalPart extends AbstractModalPart {
 
 		if (this.modal.type === ComponentType.Adventure){
 			this.addAdditionalElements();
-			this.addNewAdventureElements(adventureEl);
+			this._addNewAdventureElements(adventureEl);
 		} else {
-			if (this.adventures.length === 0){
+			if (this._adventures.length === 0){
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Adventures missing'});
 				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Adventure for the selected campaign. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first adventure for the campaign.'});
 			} else {
-				this.childEl = contentEl.createDiv({cls: 'child'});
-				this.childEl.id = 'AdventureChild';
+				this._childEl = contentEl.createDiv({cls: 'child'});
+				this._childEl.id = 'AdventureChild';
 
-				this.selectAdventureElements(adventureEl);
+				this._selectAdventureElements(adventureEl);
 			}
 
 		}
@@ -75,17 +75,17 @@ export class AdventureModalPart extends AbstractModalPart {
 		return true;
 	}
 
-	private addNewAdventureElements(
+	private _addNewAdventureElements(
 		containerEl: HTMLElement,
 	): void {
-		this.adventures.forEach((adventure: AdventureInterface) => {
+		this._adventures.forEach((adventure: AdventureInterface) => {
 			if (this.modal.adventureId !== undefined && (adventure.id.adventureId ?? 0) >= (this.modal.adventureId.id ?? 0)) {
 				this.modal.adventureId.id = ((adventure.id.adventureId ?? 0) + 1);
 			}
 		});
 	}
 
-	private selectAdventureElements(
+	private _selectAdventureElements(
 		containerEl: HTMLElement
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'group'});
@@ -94,40 +94,40 @@ export class AdventureModalPart extends AbstractModalPart {
 		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
 		groupElement.createDiv({cls: 'clear'});
 
-		this.adventureEl = selectionContainerEl.createEl('select');
-		if (this.adventures.length > 1) {
-			this.adventureEl.createEl('option', {
+		this._adventureEl = selectionContainerEl.createEl('select');
+		if (this._adventures.length > 1) {
+			this._adventureEl.createEl('option', {
 				text: '',
 				value: '',
 			}).selected = true;
 		}
 
-		this.adventures.forEach((adventure: AdventureInterface) => {
-			const adventureOptionEl = this.adventureEl.createEl('option', {
+		this._adventures.forEach((adventure: AdventureInterface) => {
+			const adventureOptionEl = this._adventureEl.createEl('option', {
 				text: adventure.file.basename,
 				value: adventure.id.adventureId?.toString(),
 			});
 
-			if (this.adventures.length === 1 || this.modal.adventureId?.id === adventure.id.adventureId){
+			if (this._adventures.length === 1 || this.modal.adventureId?.id === adventure.id.adventureId){
 				adventureOptionEl.selected = true;
-				this.selectAdventure();
+				this._selectAdventure();
 			}
 		});
 
-		this.adventureEl.addEventListener('change', (e: Event) => {
-			this.selectAdventure();
+		this._adventureEl.addEventListener('change', (e: Event) => {
+			this._selectAdventure();
 		});
 
-		this.adventureErrorEl = containerEl.createEl('p', {cls: 'error'});
+		this._adventureErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
-	private selectAdventure(
+	private _selectAdventure(
 	): void {
 		if (this.modal.adventureId !== undefined){
-			this.modal.adventureId.id = +this.adventureEl.value;
+			this.modal.adventureId.id = +this._adventureEl.value;
 		}
-		this.childEl.empty();
-		this.loadChild(this.childEl);
+		this._childEl.empty();
+		this.loadChild(this._childEl);
 	}
 
 	protected async addAdditionalElements(

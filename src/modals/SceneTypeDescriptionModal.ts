@@ -60,7 +60,7 @@ const sceneTypeDescription: Array<SceneTypeInformation> = [
 ]
 
 export class SceneTypeDescriptionModal extends AbstractRpgManagerModal {
-	private sceneTypeDescriptionsEl: HTMLDivElement;
+	private _sceneTypeDescriptionsEl: HTMLDivElement;
 
 	onOpen() {
 		super.onOpen();
@@ -69,19 +69,19 @@ export class SceneTypeDescriptionModal extends AbstractRpgManagerModal {
 		contentEl.empty();
 		contentEl.addClass('rpgm-modal');
 
-		this.sceneTypeDescriptionsEl = contentEl.createDiv({cls: 'rpgm-modal-scene-descriptions'})
+		this._sceneTypeDescriptionsEl = contentEl.createDiv({cls: 'rpgm-modal-scene-descriptions'})
 
-		this.sceneTypeDescriptionsEl.createEl('h1', {text: 'Scene Types'});
+		this._sceneTypeDescriptionsEl.createEl('h1', {text: 'Scene Types'});
 
 		sceneTypeDescription.forEach((sceneTypeInformation: SceneTypeInformation) => {
-			this.displaySceneTypeInformation(sceneTypeInformation);
+			this._displaySceneTypeInformation(sceneTypeInformation);
 		});
 	}
 
-	private displaySceneTypeInformation(
+	private _displaySceneTypeInformation(
 		sceneTypeInformation: SceneTypeInformation,
 	): void {
-		const descriptionContainerEl = this.sceneTypeDescriptionsEl.createDiv('description-container');
+		const descriptionContainerEl = this._sceneTypeDescriptionsEl.createDiv('description-container');
 
 		descriptionContainerEl.createEl('h2', {text: sceneTypeInformation.title});
 		const descriptionEl = descriptionContainerEl.createDiv();

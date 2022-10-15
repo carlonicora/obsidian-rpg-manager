@@ -17,20 +17,20 @@ import {
 } from "./interfaces/ControllerMetadataInterface";
 
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
-	private isActive = false;
-	private data: ResponseDataInterface;
-	private models: Array<ModelInterface> = [];
+	private _isActive = false;
+	private _data: ResponseDataInterface;
+	private _models: Array<ModelInterface> = [];
 
-	private currentComponent: ComponentInterface;
+	private _currentComponent: ComponentInterface;
 
 	public componentVersion: number|undefined = undefined;
 
 	constructor(
 		app: App,
 		container: HTMLElement,
-		private source: string,
-		private component: Component | MarkdownPostProcessorContext,
-		private sourcePath: string,
+		private _source: string,
+		private _component: Component | MarkdownPostProcessorContext,
+		private _sourcePath: string,
 	) {
 		super(app, container);
 
@@ -46,23 +46,23 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		file: TFile,
 		oldPath: string,
 	): Promise<void>{
-		if (this.sourcePath === oldPath) this.sourcePath = file.path;
+		if (this._sourcePath === oldPath) this._sourcePath = file.path;
 		this._render();
 	}
 
 	private _generateModels(
 	): void {
-		this.models = [];
+		this._models = [];
 		try {
-			const configurations: ControllerMetadataInterface | any = parseYaml(this.source);
+			const configurations: ControllerMetadataInterface | any = parseYaml(this._source);
 
 			if (configurations.models.header !== undefined){
-				this.models.push(this._generateModel('Header'));
+				this._models.push(this._generateModel('Header'));
 			}
 
 
-			if (configurations.models.lists !== undefined){
-				this.models.push(this._generateModel('List', configurations.models.lists));
+			if (configurations._models.lists !== undefined){
+				this._models.push(this._generateModel('List', configurations._models.lists));
 			}
 		} catch (e) {
 			//No need to throw an exception... possibly saving before the data is ready
@@ -74,31 +74,31 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		sourceMeta: any|undefined = undefined,
 	): ModelInterface {
 		return this.factories.models.create(
-			this.currentComponent.campaignSettings,
+			this._currentComponent.campaignSettings,
 			modelName,
-			this.currentComponent,
-			this.source,
-			this.sourcePath,
+			this._currentComponent,
+			this._source,
+			this._sourcePath,
 			sourceMeta,
 		);
 	}
 
 	private async _initialise(
 	): Promise<boolean> {
-		if (this.componentVersion !== undefined && this.currentComponent.version === this.componentVersion) {
+		if (this.componentVersion !== undefined && this._currentComponent.version === this.componentVersion) {
 			return false;
 		}
 
-		this.componentVersion = this.currentComponent.version ?? 0 + 0;
+		this.componentVersion = this._currentComponent.version ?? 0 + 0;
 
 		this._generateModels();
 
 		return true;
 	}
 
-	private async waitForComponentToBeReady() {
+	private async _waitForComponentToBeReady() {
 		const poll = (resolve: any) => {
-			if(this.database.isReady && this.currentComponent.version !== undefined) {
+			if(this.database.isReady && this._currentComponent.version !== undefined) {
 				resolve();
 			} else {
 				setTimeout(callback => poll(resolve), 100);
@@ -118,13 +118,13 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	): Promise<void> {
 		if (this.database === undefined) return;
 
-		if (this.currentComponent === undefined){
-			const rpgmComponent: ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this.sourcePath);
+		if (this._currentComponent === undefined){
+			const rpgmComponent: ComponentInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readByPath<ComponentInterface>(this._sourcePath);
 			if (rpgmComponent === undefined) return;
-			this.currentComponent = rpgmComponent;
+			this._currentComponent = rpgmComponent;
 		}
 
-		await this.waitForComponentToBeReady();
+		await this._waitForComponentToBeReady();
 
 		//if (await !this.isComponentVisible()) return;
 
@@ -133,14 +133,14 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		if (await this._initialise()) {
 			this.container.empty();
 
-			for (let modelCounter = 0; modelCounter < this.models.length; modelCounter++) {
-				await this.models[modelCounter].generateData()
+			for (let modelCounter = 0; modelCounter < this._models.length; modelCounter++) {
+				await this._models[modelCounter].generateData()
 					.then((data: ResponseDataInterface) => {
 						data.elements.forEach((element: ResponseDataElementInterface) => {
 							const view: ViewInterface = this.factories.views.create(
-								this.currentComponent.campaignSettings,
+								this._currentComponent.campaignSettings,
 								element.responseType,
-								this.sourcePath,
+								this._sourcePath,
 							);
 
 							view.render(this.container, element);
@@ -152,13 +152,13 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		}
 	}
 
-	private async isComponentVisible(
+	private async _isComponentVisible(
 	): Promise<boolean> {
-		if (this.currentComponent === undefined) {
+		if (this._currentComponent === undefined) {
 			return false;
 		}
 
-		if (this.currentComponent.file === undefined) {
+		if (this._currentComponent.file === undefined) {
 			return false;
 		}
 
@@ -166,7 +166,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 			if (leaf.view instanceof MarkdownView) {
 				const file = leaf.view?.file;
 				if (file !== undefined){
-					if (file.path === this.currentComponent.file.path) return true;
+					if (file.path === this._currentComponent.file.path) return true;
 				}
 			}
 		});

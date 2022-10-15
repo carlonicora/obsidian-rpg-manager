@@ -13,7 +13,7 @@ export class AnalyserData implements AnalyserDataInterface {
 	public totalTargetDuration = 0;
 	public dataTypeUsed: Map<SceneType, number> = new Map<SceneType, number>();
 
-	private previousType: SceneType|undefined = undefined;
+	private _previousType: SceneType|undefined = undefined;
 
 	get isValid(): boolean {
 		return this.dataLength !== 0;
@@ -45,10 +45,10 @@ export class AnalyserData implements AnalyserDataInterface {
 	): void {
 		if (type !== undefined) {
 			this.dataTypeUsed.set(type, (this.dataTypeUsed.get(type) ?? 0) + 1);
-			if (this.previousType === type) {
+			if (this._previousType === type) {
 				this.totalRepetitiveScenes++;
 			} else {
-				this.previousType = type;
+				this._previousType = type;
 			}
 		}
 	}

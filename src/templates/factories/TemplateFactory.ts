@@ -19,26 +19,26 @@ import {SessionTemplateFactory} from "../../components/components/session/templa
 import {SubplotTemplateFactory} from "../../components/components/subplot/templates/SubplotTemplateFactory";
 
 export class TemplateFactory extends AbstractFactory implements TemplateFactoryInterface{
-	private templateTypeMap: Map<string,any>;
+	private _templateTypeMap: Map<string,any>;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
-		this.templateTypeMap = new Map();
-		this.templateTypeMap.set('AgnosticCampaign', CampaignTemplateFactory);
-		this.templateTypeMap.set('AgnosticAdventure', AdventureTemplateFactory);
-		this.templateTypeMap.set('AgnosticAct', ActTemplateFactory);
-		this.templateTypeMap.set('AgnosticScene', SceneTemplateFactory);
-		this.templateTypeMap.set('AgnosticSession', SessionTemplateFactory);
-		this.templateTypeMap.set('AgnosticCharacter', CharacterTemplateFactory);
-		this.templateTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterTemplateFactory);
-		this.templateTypeMap.set('AgnosticLocation', LocationTemplateFactory);
-		this.templateTypeMap.set('AgnosticEvent', EventTemplateFactory);
-		this.templateTypeMap.set('AgnosticClue', ClueTemplateFactory);
-		this.templateTypeMap.set('AgnosticFaction', FactionTemplateFactory);
-		this.templateTypeMap.set('AgnosticMusic', MusicTemplateFactory);
-		this.templateTypeMap.set('AgnosticSubplot', SubplotTemplateFactory);
+		this._templateTypeMap = new Map();
+		this._templateTypeMap.set('AgnosticCampaign', CampaignTemplateFactory);
+		this._templateTypeMap.set('AgnosticAdventure', AdventureTemplateFactory);
+		this._templateTypeMap.set('AgnosticAct', ActTemplateFactory);
+		this._templateTypeMap.set('AgnosticScene', SceneTemplateFactory);
+		this._templateTypeMap.set('AgnosticSession', SessionTemplateFactory);
+		this._templateTypeMap.set('AgnosticCharacter', CharacterTemplateFactory);
+		this._templateTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterTemplateFactory);
+		this._templateTypeMap.set('AgnosticLocation', LocationTemplateFactory);
+		this._templateTypeMap.set('AgnosticEvent', EventTemplateFactory);
+		this._templateTypeMap.set('AgnosticClue', ClueTemplateFactory);
+		this._templateTypeMap.set('AgnosticFaction', FactionTemplateFactory);
+		this._templateTypeMap.set('AgnosticMusic', MusicTemplateFactory);
+		this._templateTypeMap.set('AgnosticSubplot', SubplotTemplateFactory);
 	}
 
 	public create(
@@ -54,9 +54,9 @@ export class TemplateFactory extends AbstractFactory implements TemplateFactoryI
 		additionalInformation: any|null = null,
 	): ComponentTemplateFactoryInterface {
 		let templateKey = CampaignSetting[settings] + ComponentType[type];
-		if (!this.templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[type];
-		if (!this.templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
+		if (!this._templateTypeMap.has(templateKey)) templateKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[type];
+		if (!this._templateTypeMap.has(templateKey)) throw new Error('Type of template ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
 
-		return new (this.templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, actId, sceneId, sessionId, additionalInformation);
+		return new (this._templateTypeMap.get(templateKey))(this.app, templateName, name, campaignId, adventureId, actId, sceneId, sessionId, additionalInformation);
 	}
 }

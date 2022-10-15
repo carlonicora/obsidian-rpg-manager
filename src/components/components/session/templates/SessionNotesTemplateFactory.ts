@@ -25,10 +25,10 @@ export class SessionNotesTemplateFactory extends AbstractTemplate implements Com
 			'-\n\n' +
 			'### End of Session Feedbacks\n';
 
-			response += this.generateFeedback('Storyteller');
+			response += this._generateFeedback('Storyteller');
 
 			(characters || []).forEach((character: CharacterInterface) => {
-				response += this.generateFeedback(character.link);
+				response += this._generateFeedback(character.link);
 			});
 
 			response += '---\n';
@@ -36,7 +36,7 @@ export class SessionNotesTemplateFactory extends AbstractTemplate implements Com
 		return response;
 	}
 
-	private generateFeedback(
+	private _generateFeedback(
 		characterName: string,
 	): string {
 		return characterName + '\n' +

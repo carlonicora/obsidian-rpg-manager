@@ -4,7 +4,7 @@ import {App, CachedMetadata, parseYaml, stringifyYaml, TFile} from "obsidian";
 import {FilePatternPositionInterface} from "./interfaces/FilePatternPositionInterface";
 
 export class FileManipulator extends AbstractRpgManager implements FileManipulatorInterface {
-	private fileContent: string;
+	private _fileContent: string;
 	public cachedFile: CachedMetadata;
 
 	constructor(
@@ -14,17 +14,17 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 	) {
 		super(app);
 
-		if (fileContent !== undefined) this.fileContent = fileContent;
+		if (fileContent !== undefined) this._fileContent = fileContent;
 	}
 
 	public get arrayContent(
 	): Array<string> {
-		return this.fileContent.split('\n');
+		return this._fileContent.split('\n');
 	}
 
 	public get content(
 	): string {
-		return this.fileContent;
+		return this._fileContent;
 	}
 
 	public getCodeBlockMetadata(
@@ -82,7 +82,7 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 		}
 
 		const newContent: string = newArrayContent.join('\n');
-		if (newContent !== this.fileContent){
+		if (newContent !== this._fileContent){
 			await this.app.vault.modify(this.file, newContent);
 
 			await this.database.onSave(this.file)
@@ -112,7 +112,7 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 
 		this.cachedFile = cache;
 
-		if (this.fileContent === undefined) this.fileContent = await this.app.vault.read(this.file);
+		if (this._fileContent === undefined) this._fileContent = await this.app.vault.read(this.file);
 
 		return true;
 	}

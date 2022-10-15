@@ -4,7 +4,7 @@ import {ComponentType} from "../enums/ComponentType";
 import {LogMessageType} from "../../loggers/enums/LogMessageType";
 
 export class ComponentTypeFactory extends AbstractFactory implements ComponentTypeFactoryInterface {
-	private contentTypeMap: Map<ComponentType, string> = new Map<ComponentType, string>([
+	private _contentTypeMap: Map<ComponentType, string> = new Map<ComponentType, string>([
 		[ComponentType.Campaign, 'campaign'],
 		[ComponentType.Adventure, 'adventure'],
 		[ComponentType.Act, 'act'],
@@ -25,7 +25,7 @@ export class ComponentTypeFactory extends AbstractFactory implements ComponentTy
 	): ComponentType {
 		let response: ComponentType|undefined=undefined;
 
-		this.contentTypeMap.forEach((value: string, type: ComponentType) => {
+		this._contentTypeMap.forEach((value: string, type: ComponentType) => {
 			if (value === readableContentType.toLowerCase()) response = type;
 		});
 
@@ -40,7 +40,7 @@ export class ComponentTypeFactory extends AbstractFactory implements ComponentTy
 	createReadableComponentType(
 		type: ComponentType,
 	): string {
-		const response: string|undefined = this.contentTypeMap.get(type);
+		const response: string|undefined = this._contentTypeMap.get(type);
 
 		if (response === undefined) {
 			this.factories.logger.error(LogMessageType.ComponentInitialisation, 'Non existing component type: ' + type, this);

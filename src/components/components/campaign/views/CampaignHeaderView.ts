@@ -59,7 +59,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		if (data.metadata?.sourceMeta?.adventures !== undefined){
 			headlessTable.addRow(
 				'Current Adventure',
-				this.addCurrentComponentSelector.bind(this),
+				this._addCurrentComponentSelector.bind(this),
 				['adventure', this.currentComponent.currentAdventureId, data.metadata?.sourceMeta?.adventures]
 			);
 		}
@@ -67,7 +67,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		if (data.metadata?.sourceMeta?.acts !== undefined){
 			headlessTable.addRow(
 				'Current Act',
-				this.addCurrentComponentSelector.bind(this),
+				this._addCurrentComponentSelector.bind(this),
 				['act', this.currentComponent.currentActId, data.metadata?.sourceMeta?.acts]
 			);
 		}
@@ -75,7 +75,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		if (data.metadata?.sourceMeta?.sessions !== undefined){
 			headlessTable.addRow(
 				'Current Session',
-				this.addCurrentComponentSelector.bind(this),
+				this._addCurrentComponentSelector.bind(this),
 				['session', this.currentComponent.currentSessionId, data.metadata?.sourceMeta?.sessions]
 			);
 		}
@@ -91,7 +91,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 	}
 
-	private addCurrentComponentSelector(
+	private _addCurrentComponentSelector(
 		contentEl: HTMLDivElement,
 		type: string,
 		currentComponent: string|undefined,

@@ -23,15 +23,15 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 
 	constructor(
 		app: App,
-		private data: AnalyserDataInterface,
+		private _data: AnalyserDataInterface,
 	) {
 		super(app);
 
-		this.activity = new AnalyserReportActivityDetail(data);
-		this.duration = new AnalyserReportDurationDetail(data);
-		this.excitement = new AnalyserReportExcitementDetail(data);
-		this.interest = new AnalyserReportInterestDetail(data);
-		this.variety = new AnalyserReportVarietyDetail(data);
+		this.activity = new AnalyserReportActivityDetail(_data);
+		this.duration = new AnalyserReportDurationDetail(_data);
+		this.excitement = new AnalyserReportExcitementDetail(_data);
+		this.interest = new AnalyserReportInterestDetail(_data);
+		this.variety = new AnalyserReportVarietyDetail(_data);
 
 		this._reportDetails = new Map<AnalyserDetailType, AnalyserReportDetailInterface>([
 			[AnalyserDetailType.Activity, this.activity],
@@ -52,7 +52,7 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
     }
 
 	get isValid(): boolean {
-		return this.data.isValid;
+		return this._data.isValid;
 	}
 
 	get details(): Array<AnalyserReportDetailInterface> {
@@ -66,18 +66,18 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 	}
 
 	get actualDuration(): number|undefined {
-		return this.data.totalRunningTime;
+		return this._data.totalRunningTime;
 	}
 
 	get expectedDuration(): number|undefined {
-		return this.data.totalExpectedRunningTime;
+		return this._data.totalExpectedRunningTime;
 	}
 
 	get targetDuration(): number|undefined {
-		if (this.data.totalTargetDuration === undefined)
+		if (this._data.totalTargetDuration === undefined)
 			return undefined;
 
-		return this.data.totalTargetDuration * 60;
+		return this._data.totalTargetDuration * 60;
 	}
 
 	get durationThreshold(): AnalyserThresholdResult {

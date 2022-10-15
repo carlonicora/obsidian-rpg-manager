@@ -7,14 +7,14 @@ import {IdInterface} from "../../../../id/interfaces/IdInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
-	private campaigns: CampaignInterface[];
+	private _campaigns: CampaignInterface[];
 
-	private campaignSettingsEl: HTMLSelectElement;
-	private campaignEl: HTMLSelectElement;
-	private campaignErrorEl: HTMLParagraphElement;
-	private childEl: HTMLDivElement;
+	private _campaignSettingsEl: HTMLSelectElement;
+	private _campaignEl: HTMLSelectElement;
+	private _campaignErrorEl: HTMLParagraphElement;
+	private _childEl: HTMLDivElement;
 
-	private currentDateEl: HTMLInputElement;
+	private _currentDateEl: HTMLInputElement;
 
 	constructor(
 		app: App,
@@ -22,7 +22,7 @@ export class CampaignModalPart extends AbstractModalPart {
 	) {
 		super(app, modal);
 
-		this.campaigns = this.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
+		this._campaigns = this.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
 	}
 
 	public async addElement(
@@ -32,18 +32,18 @@ export class CampaignModalPart extends AbstractModalPart {
 
 		if (this.modal.type === ComponentType.Campaign){
 			this.addAdditionalElements();
-			this.addNewCampaignElements(campaignEl);
+			this._addNewCampaignElements(campaignEl);
 		} else {
-			if (this.campaigns.length === 0){
+			if (this._campaigns.length === 0){
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Main campaign missing'});
 				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first campaign.'});
 			} else {
-				this.childEl = contentEl.createDiv({cls: 'child'});
-				this.childEl.id = 'CampaignChild';
+				this._childEl = contentEl.createDiv({cls: 'child'});
+				this._childEl.id = 'CampaignChild';
 
-				this.selectCampaignElements(campaignEl);
+				this._selectCampaignElements(campaignEl);
 			}
 
 		}
@@ -95,24 +95,24 @@ export class CampaignModalPart extends AbstractModalPart {
 		return true;
 	}
 
-	private addNewCampaignElements(
+	private _addNewCampaignElements(
 		containerEl: HTMLElement,
 	): void {
 		if (this.modal.campaignId === undefined) {
 			this.modal.campaignId = this.factories.id.create(ComponentType.Campaign, 1);
 		}
 
-		this.campaigns.forEach((campaign: CampaignInterface) => {
+		this._campaigns.forEach((campaign: CampaignInterface) => {
 			if (this.modal.campaignId !== undefined && campaign.id.campaignId >= this.modal.campaignId.id) {
 				this.modal.campaignId.id = (campaign.id.campaignId + 1);
 			}
 		});
 
 		containerEl.createEl('label', {text: 'Select Campaign Settings'});
-		this.campaignSettingsEl = containerEl.createEl('select');
+		this._campaignSettingsEl = containerEl.createEl('select');
 
 		Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting: string) => {
-			const campaignSettingOption = this.campaignSettingsEl.createEl('option', {
+			const campaignSettingOption = this._campaignSettingsEl.createEl('option', {
 				text: setting,
 				value: setting,
 			})
@@ -122,14 +122,14 @@ export class CampaignModalPart extends AbstractModalPart {
 			}
 		});
 
-		this.selectSetting();
+		this._selectSetting();
 
-		this.campaignSettingsEl.addEventListener('change', (e: Event) => {
-			this.selectSetting();
+		this._campaignSettingsEl.addEventListener('change', (e: Event) => {
+			this._selectSetting();
 		});
 	}
 
-	private selectCampaignElements(
+	private _selectCampaignElements(
 		containerEl: HTMLElement
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'group'});
@@ -138,45 +138,45 @@ export class CampaignModalPart extends AbstractModalPart {
 		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
 		groupElement.createDiv({cls: 'clear'});
 
-		this.campaignEl = selectionContainerEl.createEl('select');
-		if (this.campaigns.length > 1) {
-			this.campaignEl.createEl('option', {
+		this._campaignEl = selectionContainerEl.createEl('select');
+		if (this._campaigns.length > 1) {
+			this._campaignEl.createEl('option', {
 				text: '',
 				value: '',
 			}).selected = true;
 		}
 
-		this.campaigns.forEach((campaign: CampaignInterface) => {
-			const campaignOptionEl = this.campaignEl.createEl('option', {
+		this._campaigns.forEach((campaign: CampaignInterface) => {
+			const campaignOptionEl = this._campaignEl.createEl('option', {
 				text: campaign.file.basename,
 				value: campaign.id.campaignId.toString(),
 			});
 
-			if (this.campaigns.length === 1){
+			if (this._campaigns.length === 1){
 				campaignOptionEl.selected = true;
-				this.selectCampaign();
+				this._selectCampaign();
 			}
 		});
 
-		this.campaignEl.addEventListener('change', (e: Event) => {
-			this.selectCampaign();
+		this._campaignEl.addEventListener('change', (e: Event) => {
+			this._selectCampaign();
 		});
 
-		this.campaignErrorEl = containerEl.createEl('p', {cls: 'error'});
+		this._campaignErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
-	private selectSetting(
+	private _selectSetting(
 	): void {
-		this.modal.campaignSetting = CampaignSetting[this.campaignSettingsEl.value as keyof typeof CampaignSetting];
+		this.modal.campaignSetting = CampaignSetting[this._campaignSettingsEl.value as keyof typeof CampaignSetting];
 	}
 
-	private selectCampaign(
+	private _selectCampaign(
 	): void {
-		const campaignId:IdInterface|undefined = this.factories.id.create(ComponentType.Campaign, this.campaignEl.value);
+		const campaignId:IdInterface|undefined = this.factories.id.create(ComponentType.Campaign, this._campaignEl.value);
 		if (campaignId !== undefined) this.modal.campaignId = campaignId;
 
-		this.childEl.empty();
-		this.loadChild(this.childEl);
+		this._childEl.empty();
+		this.loadChild(this._childEl);
 	}
 
 	protected async addAdditionalElements(
@@ -188,13 +188,13 @@ export class CampaignModalPart extends AbstractModalPart {
 				text: 'Additional Information for the ' + ComponentType[this.modal.type]
 			});
 			this.modal.additionalInformationEl.createEl('label', {text: 'Current Date'});
-			this.currentDateEl = this.modal.additionalInformationEl.createEl('input', {type: 'text'});
+			this._currentDateEl = this.modal.additionalInformationEl.createEl('input', {type: 'text'});
 		}
 	}
 
 	public prepareAdditionalInformation(): any {
 		return {
-			current: this.currentDateEl.value,
+			current: this._currentDateEl.value,
 		};
 	}
 }

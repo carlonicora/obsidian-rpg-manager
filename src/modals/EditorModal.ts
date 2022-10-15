@@ -1,18 +1,18 @@
 import {AbstractModal} from "./abstracts/AbstractModal";
 
 export class EditorModal extends AbstractModal {
-	private inputEl: HTMLInputElement;
+	private _inputEl: HTMLInputElement;
 
 	onOpen() {
 		super.onOpen();
 
-		this.inputEl = this.rpgmContainerEl.createEl('input', {type: 'text'});
-		this.inputEl.addEventListener('keyup', this._analyseKeyUp.bind(this));
+		this._inputEl = this.rpgmContainerEl.createEl('input', {type: 'text'});
+		this._inputEl.addEventListener('keyup', this._analyseKeyUp.bind(this));
 	}
 
 	private _analyseKeyUp(
 	): void {
-		if (this.inputEl.value.substring(this.inputEl.value.length) === '[['){
+		if (this._inputEl.value.substring(this._inputEl.value.length) === '[['){
 			/*
 			const matchingComponents = this.database.read<ComponentInterface>((component: ComponentInterface) =>
 				component.file.

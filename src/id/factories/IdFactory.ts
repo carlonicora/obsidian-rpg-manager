@@ -19,11 +19,11 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		const response = new Id(
 			this.app,
 			type,
-			this.convertIdElement(campaignId),
-			this.convertIdElement(adventureId),
-			this.convertIdElement(actId),
-			this.convertIdElement(sceneId),
-			this.convertIdElement(sessionId),
+			this._convertIdElement(campaignId),
+			this._convertIdElement(adventureId),
+			this._convertIdElement(actId),
+			this._convertIdElement(sceneId),
+			this._convertIdElement(sessionId),
 			existingTag,
 		);
 
@@ -59,7 +59,7 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 		return this.createFromTag(tag);
 	}
 
-	private convertIdElement(
+	private _convertIdElement(
 		id: string|number|undefined,
 	): string|undefined {
 		if (id === undefined) return undefined;

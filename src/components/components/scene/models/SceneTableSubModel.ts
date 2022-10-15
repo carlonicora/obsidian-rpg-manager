@@ -74,7 +74,7 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 		return super.generateContentElement(index, fieldType, component, relationship);
 	}
 
-	private formatTime(
+	private _formatTime(
 		date: Date|null
 	): string {
 		if (date == null) return '';

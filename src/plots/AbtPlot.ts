@@ -3,16 +3,16 @@ import {AbtPlotMetadataInterface} from "./interfaces/AbtPlotMetadataInterface";
 
 export class AbtPlot implements AbtInterface {
 	constructor(
-		private metadata: AbtPlotMetadataInterface
+		private _metadata: AbtPlotMetadataInterface
 	) {
 	}
 
 	get and(): string {
-		return this.metadata.plot?.abt?.and ?? '';
+		return this._metadata.plot?.abt?.and ?? '';
 	}
 
 	get but(): string {
-		return this.metadata.plot?.abt?.but ?? '';
+		return this._metadata.plot?.abt?.but ?? '';
 	}
 
 	get isEmpty(): boolean {
@@ -25,11 +25,11 @@ export class AbtPlot implements AbtInterface {
 	}
 
 	get need(): string {
-		return this.metadata.plot?.abt?.need ?? '';
+		return this._metadata.plot?.abt?.need ?? '';
 	}
 
 	get therefore(): string {
-		return this.metadata.plot?.abt?.therefore ?? '';
+		return this._metadata.plot?.abt?.therefore ?? '';
 	}
 
 }

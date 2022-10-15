@@ -119,7 +119,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		if (sortByLatestUsage){
 			data
 		}
-		return await this.add(type, undefined, data, undefined, sortByLatestUsage);
+		return await this._add(type, undefined, data, undefined, sortByLatestUsage);
 	}
 
 	protected async addRelationships(
@@ -128,10 +128,10 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		title: string|undefined=undefined,
 		sortByLatestUsage = false,
 	): Promise<void> {
-		return await this.add(type, requiredRelationshipType, undefined, title, sortByLatestUsage);
+		return await this._add(type, requiredRelationshipType, undefined, title, sortByLatestUsage);
 	}
 
-	private async add(
+	private async _add(
 		type: ComponentType,
 		requiredRelationshipType: RelationshipType|undefined,
 		component: ComponentInterface[]|ComponentInterface|RelationshipInterface[]|undefined=undefined,

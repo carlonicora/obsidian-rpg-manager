@@ -19,17 +19,17 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		actId: string|undefined,
 		sceneId: string|undefined,
 		sessionId: string|undefined,
-		private existingTag: string|undefined,
+		private _existingTag: string|undefined,
 	) {
 		super(app);
 
 		this.tagMap = new Map();
 
-		this.generateTagValue(ComponentType.Campaign, campaignId);
-		this.generateTagValue(ComponentType.Adventure, adventureId);
-		this.generateTagValue(ComponentType.Act, actId);
-		this.generateTagValue(ComponentType.Scene, sceneId);
-		this.generateTagValue(ComponentType.Session, sessionId);
+		this._generateTagValue(ComponentType.Campaign, campaignId);
+		this._generateTagValue(ComponentType.Adventure, adventureId);
+		this._generateTagValue(ComponentType.Act, actId);
+		this._generateTagValue(ComponentType.Scene, sceneId);
+		this._generateTagValue(ComponentType.Session, sessionId);
 	}
 
 	get stringID(
@@ -72,7 +72,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 
 	public get tag(
 	): string {
-		if (this.existingTag !== undefined) return this.existingTag;
+		if (this._existingTag !== undefined) return this._existingTag;
 
 		const tag = this.tagHelper.dataSettings.get(this.type);
 		if (tag === undefined) throw new Error('');
@@ -150,7 +150,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		return response;
 	}
 
-	private generateTagValue(
+	private _generateTagValue(
 		type: ComponentType,
 		value: string|undefined,
 	): void {

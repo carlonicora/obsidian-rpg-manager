@@ -4,16 +4,16 @@ import {DatabaseUpdater} from "../updaters/DatabaseUpdater";
 import {DatabaseUpdaterReporterInterface} from "../updaters/interfaces/DatabaseUpdaterReporterInterface";
 
 export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpdaterReporterInterface {
-	private infoEl: HTMLDivElement;
+	private _infoEl: HTMLDivElement;
 
-	private versionEl: HTMLDivElement;
-	private countEl: HTMLSpanElement;
-	private currentEl: HTMLSpanElement;
-	private currentCounter = 0;
+	private _versionEl: HTMLDivElement;
+	private _countEl: HTMLSpanElement;
+	private _currentEl: HTMLSpanElement;
+	private _currentCounter = 0;
 
 	constructor(
 		app: App,
-		private updater: DatabaseUpdater,
+		private _updater: DatabaseUpdater,
 	) {
 		super(app);
 	}
@@ -22,9 +22,9 @@ export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpd
 		super.onOpen();
 
 		this.contentEl.createEl('h2', {text: 'RPG Manager Needs to update the data structure'});
-		this.infoEl = this.contentEl.createDiv();
+		this._infoEl = this.contentEl.createDiv();
 
-		const infoMessage = 'RPG Manager has been updated to version **' + this.updater.newVersion + '**, ' +
+		const infoMessage = 'RPG Manager has been updated to version **' + this._updater.newVersion + '**, ' +
 			'that requires some updates to the structure of your notes.\n\n' +
 			'The process is automatic and has been tested, but there is always the possibility for some of your ' +
 			'customisations to have escaped what is believed to be the normal structure of the data.\n\n' +
@@ -47,12 +47,12 @@ export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpd
 
 		this._updateModalDescription(infoMessage);
 
-		const updateButtonEl = this.contentEl.createEl('button', {text: 'Update the data to v' + this.updater.newVersion + ' or RPG Manager'});
+		const updateButtonEl = this.contentEl.createEl('button', {text: 'Update the data to v' + this._updater.newVersion + ' or RPG Manager'});
 		updateButtonEl.addEventListener('click', () => {
 			this._updateModalDescription(waitMessage, true);
 			updateButtonEl.remove();
 
-			this.updater.update(this)
+			this._updater.update(this)
 				.then(() => {
 					this.app.plugins.getPlugin('rpg-manager').initialise();
 					this._updateModalDescription(successMessage);
@@ -65,23 +65,23 @@ export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpd
 		content: string,
 		addCounters: boolean|undefined = undefined,
 	): Promise<void> {
-		this.infoEl.empty();
+		this._infoEl.empty();
 		MarkdownRenderer.renderMarkdown(
 			content,
-			this.infoEl,
+			this._infoEl,
 			'',
 			null as unknown as Component,
 		);
 
 		if (addCounters) {
-			const updaterInfoContainerEl = this.infoEl.createDiv();
-			this.versionEl = updaterInfoContainerEl.createDiv({text: 'Updating'});
+			const updaterInfoContainerEl = this._infoEl.createDiv();
+			this._versionEl = updaterInfoContainerEl.createDiv({text: 'Updating'});
 			const countersContainerEl = updaterInfoContainerEl.createDiv();
-			this.currentEl = countersContainerEl.createSpan({text: '0'});
+			this._currentEl = countersContainerEl.createSpan({text: '0'});
 			countersContainerEl.createSpan({text: ' out of '});
-			this.countEl = countersContainerEl.createSpan({text: '0'});
+			this._countEl = countersContainerEl.createSpan({text: '0'});
 			countersContainerEl.createSpan({text: ' components updated'});
-			this.currentCounter = 0;
+			this._currentCounter = 0;
 		}
 	}
 
@@ -96,18 +96,18 @@ export class UpdaterModal extends AbstractRpgManagerModal implements DatabaseUpd
 		startVersion: string,
 		endVersion: string,
 	): Promise<void> {
-		if (this.versionEl !== undefined) this.versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
+		if (this._versionEl !== undefined) this._versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
 	}
 
 	public async setFileCount(
 		count: number
 	): Promise<void> {
-		if (this.countEl !== undefined) this.countEl.textContent = count.toString();
+		if (this._countEl !== undefined) this._countEl.textContent = count.toString();
 	}
 
 	public async addFileUpdated(
 	): Promise<void> {
-		this.currentCounter++;
-		if (this.currentEl !== undefined) this.currentEl.textContent = this.currentCounter.toString();
+		this._currentCounter++;
+		if (this._currentEl !== undefined) this._currentEl.textContent = this._currentCounter.toString();
 	}
 }

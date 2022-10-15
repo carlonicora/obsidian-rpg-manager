@@ -7,21 +7,21 @@ import {LogMessageType} from "../enums/LogMessageType";
 import {LogGroupInterface} from "../interfaces/LogGroupInterface";
 
 export class ConsoleLogger extends AbstractRpgManager implements LogWriterInterface {
-	private isDebug:boolean;
-	private debuggableTypes: LogType = LogType.Warning | LogType.Error;
+	private _isDebug:boolean;
+	private _debuggableTypes: LogType = LogType.Warning | LogType.Error;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
-		this.isDebug = (this.pluginVersion.indexOf('-') !== -1);
+		this._isDebug = (this.pluginVersion.indexOf('-') !== -1);
 	}
 
 	async maybeWriteLog(
 		log: LogMessageInterface,
 		duration: number|undefined=undefined,
 	): Promise<void> {
-		if (this.isDebug || (log.type & this.debuggableTypes) === log.type) {
+		if (this._isDebug || (log.type & this._debuggableTypes) === log.type) {
 
 			let messageContent = log.message;
 			let messageHeader: string | undefined;

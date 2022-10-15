@@ -20,27 +20,27 @@ import {SessionModalPart} from "../../components/components/session/modals/Sessi
 import {SubplotModalPart} from "../../components/components/subplot/modals/SubplotModalPart";
 
 export class ModalFactory extends AbstractFactory implements ModalFactoryInterface{
-	private modalTypeMap: Map<string,any>;
+	private _modalTypeMap: Map<string,any>;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
-		this.modalTypeMap = new Map();
-		this.modalTypeMap.set('AgnosticCampaign', CampaignModalPart);
-		this.modalTypeMap.set('AgnosticAdventure', AdventureModalPart);
-		this.modalTypeMap.set('AgnosticAct', ActModalPart);
-		this.modalTypeMap.set('AgnosticScene', SceneModalPart);
-		this.modalTypeMap.set('AgnosticCharacter', CharacterModalPart);
-		this.modalTypeMap.set('AgnosticClue', ClueModalPart);
-		this.modalTypeMap.set('AgnosticEvent', EventModalPart);
-		this.modalTypeMap.set('AgnosticFaction', FactionModalPart);
-		this.modalTypeMap.set('AgnosticLocation', LocationModalPart);
-		this.modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModalPart);
-		this.modalTypeMap.set('AgnosticMusic', MusicModalPart);
-		this.modalTypeMap.set('AgnosticSession', SessionModalPart);
-		this.modalTypeMap.set('AgnosticSubplot', SubplotModalPart);
-		this.modalTypeMap.set('AgnosticSceneTypeDescription', SubplotModalPart);
+		this._modalTypeMap = new Map();
+		this._modalTypeMap.set('AgnosticCampaign', CampaignModalPart);
+		this._modalTypeMap.set('AgnosticAdventure', AdventureModalPart);
+		this._modalTypeMap.set('AgnosticAct', ActModalPart);
+		this._modalTypeMap.set('AgnosticScene', SceneModalPart);
+		this._modalTypeMap.set('AgnosticCharacter', CharacterModalPart);
+		this._modalTypeMap.set('AgnosticClue', ClueModalPart);
+		this._modalTypeMap.set('AgnosticEvent', EventModalPart);
+		this._modalTypeMap.set('AgnosticFaction', FactionModalPart);
+		this._modalTypeMap.set('AgnosticLocation', LocationModalPart);
+		this._modalTypeMap.set('AgnosticNonPlayerCharacter', NonPlayerCharacterModalPart);
+		this._modalTypeMap.set('AgnosticMusic', MusicModalPart);
+		this._modalTypeMap.set('AgnosticSession', SessionModalPart);
+		this._modalTypeMap.set('AgnosticSubplot', SubplotModalPart);
+		this._modalTypeMap.set('AgnosticSceneTypeDescription', SubplotModalPart);
 
 	}
 	public create(
@@ -49,9 +49,9 @@ export class ModalFactory extends AbstractFactory implements ModalFactoryInterfa
 		modal: ModalInterface,
 	): ModalPartInterface {
 		let modalKey:string = CampaignSetting[settings] + ComponentType[type];
-		if (!this.modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[type];
-		if (!this.modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
+		if (!this._modalTypeMap.has(modalKey)) modalKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[type];
+		if (!this._modalTypeMap.has(modalKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
 
-		return new (this.modalTypeMap.get(modalKey))(this.app, modal);
+		return new (this._modalTypeMap.get(modalKey))(this.app, modal);
 	}
 }

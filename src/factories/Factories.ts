@@ -83,34 +83,34 @@ export class Factories implements FactoriesInterface{
 	public imageView: ImageViewFactoryInterface;
 
 	constructor(
-		private app: App,
+		private _app: App,
 	) {
-		this.subModels = new SubModelFactory(this.app);
-		this.contents = new ContentFactory(this.app);
-		this.component = new ComponentFactory(this.app);
-		this.files = new FileFactory(this.app);
-		this.modals = new ModalFactory(this.app);
-		this.models = new ModelFactory(this.app);
-		this.pronouns = new PronounFactory(this.app);
-		this.templates = new TemplateFactory(this.app);
-		this.views = new ViewFactory(this.app);
-		this.fetchers = new FetcherFactory(this.app);
-		this.database = new DatabaseFactory(this.app);
-		this.id = new IdFactory(this.app);
-		this.breadcrumb = new BreadcrumbFactory(this.app);
-		this.sorter = new SorterFactory(this.app);
-		this.componentType = new ComponentTypeFactory(this.app);
-		this.relationshipType = new RelationshipTypeFactory(this.app);
-		this.sceneType = new SceneTypeFactory(this.app);
-		this.storyCircleStage = new StoryCircleStageFactory(this.app);
-		this.abtStage = new AbtStageFactory(this.app);
-		this.relationship = new RelationshipFactory(this.app);
-		this.logger = new LogFactory(this.app, LogWriterType.Console);
-		this.fileManipulator = new FileManipulatorFactory(this.app);
-		this.analyser = new AnalyserFactory(this.app);
-		this.image = new ImageFactory(this.app);
-		this.imageView = new ImageViewFactory(this.app);
+		this.subModels = new SubModelFactory(this._app);
+		this.contents = new ContentFactory(this._app);
+		this.component = new ComponentFactory(this._app);
+		this.files = new FileFactory(this._app);
+		this.modals = new ModalFactory(this._app);
+		this.models = new ModelFactory(this._app);
+		this.pronouns = new PronounFactory(this._app);
+		this.templates = new TemplateFactory(this._app);
+		this.views = new ViewFactory(this._app);
+		this.fetchers = new FetcherFactory(this._app);
+		this.database = new DatabaseFactory(this._app);
+		this.id = new IdFactory(this._app);
+		this.breadcrumb = new BreadcrumbFactory(this._app);
+		this.sorter = new SorterFactory(this._app);
+		this.componentType = new ComponentTypeFactory(this._app);
+		this.relationshipType = new RelationshipTypeFactory(this._app);
+		this.sceneType = new SceneTypeFactory(this._app);
+		this.storyCircleStage = new StoryCircleStageFactory(this._app);
+		this.abtStage = new AbtStageFactory(this._app);
+		this.relationship = new RelationshipFactory(this._app);
+		this.logger = new LogFactory(this._app, LogWriterType.Console);
+		this.fileManipulator = new FileManipulatorFactory(this._app);
+		this.analyser = new AnalyserFactory(this._app);
+		this.image = new ImageFactory(this._app);
+		this.imageView = new ImageViewFactory(this._app);
 
-		this.runningTimeManager = new RunningTimeManager(this.app);
+		this.runningTimeManager = new RunningTimeManager(this._app);
 	}
 }

@@ -6,9 +6,9 @@ import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
 export class DatabaseErrorModal extends AbstractRpgManagerModal {
 	constructor(
 		app: App,
-		private misconfiguredTags: Map<TFile, RpgErrorInterface>|undefined,
-		private singleError: RpgErrorInterface|undefined = undefined,
-		private singleErrorFile: TFile|undefined = undefined,
+		private _misconfiguredTags: Map<TFile, RpgErrorInterface>|undefined,
+		private _singleError: RpgErrorInterface|undefined = undefined,
+		private _singleErrorFile: TFile|undefined = undefined,
 	) {
 		super(app);
 	}
@@ -21,17 +21,17 @@ export class DatabaseErrorModal extends AbstractRpgManagerModal {
 
 		contentEl.createEl('h1', {cls: 'error', text: 'RPG Manager Error'});
 
-		if (this.singleError !== undefined && this.singleErrorFile !== undefined && this.misconfiguredTags === undefined) {
-			this.misconfiguredTags = new Map();
-			this.misconfiguredTags.set(this.singleErrorFile, this.singleError);
+		if (this._singleError !== undefined && this._singleErrorFile !== undefined && this._misconfiguredTags === undefined) {
+			this._misconfiguredTags = new Map();
+			this._misconfiguredTags.set(this._singleErrorFile, this._singleError);
 		}
 
-		if (this.misconfiguredTags === undefined) this.misconfiguredTags = new Map<TFile, RpgErrorInterface>();
+		if (this._misconfiguredTags === undefined) this._misconfiguredTags = new Map<TFile, RpgErrorInterface>();
 
 		contentEl.createEl('p', {text: 'One or more of the tags that define an outline or an element are not correctly configured and can\'t be read!'});
 		contentEl.createEl('p', {text: 'Please double check the errors and correct them.'});
 
-		this.misconfiguredTags.forEach((error: RpgErrorInterface, file: TFile) => {
+		this._misconfiguredTags.forEach((error: RpgErrorInterface, file: TFile) => {
 			const errorEl = contentEl.createEl('div');
 
 			const title = error.getErrorTitle() ?? file.basename;
@@ -48,7 +48,7 @@ export class DatabaseErrorModal extends AbstractRpgManagerModal {
 		viewErrorsButtonEl.addEventListener("click", () => {
 			this.app.plugins.getPlugin('rpg-manager').factories.views.showObsidianView(
 				ViewType.Errors,
-				[this.misconfiguredTags],
+				[this._misconfiguredTags],
 			)
 			this.close();
 		});

@@ -4,21 +4,21 @@ import {IdInterface} from "../id/interfaces/IdInterface";
 import {SceneType, sceneTypeDescription} from "../components/enums/SceneType";
 
 export class SceneBuilderModal extends AbstractModal {
-	private scenesContainerEl: HTMLTableSectionElement;
-	private hasEmptyLine = false;
-	private emptyLines: Map<number, boolean>;
-	private idCounter: number;
+	private _scenesContainerEl: HTMLTableSectionElement;
+	private _hasEmptyLine = false;
+	private _emptyLines: Map<number, boolean>;
+	private _idCounter: number;
 
 	constructor(
 		app: App,
-		private actId: IdInterface,
+		private _actId: IdInterface,
 	) {
 		super(app);
 		this.maxWidth = true;
 		this.title = 'Scene Builder';
 
-		this.emptyLines = new Map<number, boolean>();
-		this.idCounter = 0;
+		this._emptyLines = new Map<number, boolean>();
+		this._idCounter = 0;
 	}
 
 	onOpen() {
@@ -33,36 +33,36 @@ export class SceneBuilderModal extends AbstractModal {
 		isEmpty: boolean,
 		deleteLine = false,
 	): void {
-		this.emptyLines.set(lineId, isEmpty);
+		this._emptyLines.set(lineId, isEmpty);
 
 		let emptyLines = 0;
-		this.emptyLines.forEach((empty: boolean, id: number) => {
+		this._emptyLines.forEach((empty: boolean, id: number) => {
 			if (empty === true) emptyLines++;
 		});
 
 		if (emptyLines > 1 && deleteLine){
-			this.emptyLines.delete(lineId);
-			for (let index=0; index<this.scenesContainerEl.rows.length; index++){
-				if (this.scenesContainerEl.rows[index].dataset.id === lineId.toString()){
-					this.scenesContainerEl.deleteRow(index);
+			this._emptyLines.delete(lineId);
+			for (let index=0; index<this._scenesContainerEl.rows.length; index++){
+				if (this._scenesContainerEl.rows[index].dataset.id === lineId.toString()){
+					this._scenesContainerEl.deleteRow(index);
 					emptyLines--;
 					break;
 				}
 			}
 		}
 
-		this.hasEmptyLine = emptyLines > 0;
+		this._hasEmptyLine = emptyLines > 0;
 
-		if (!this.hasEmptyLine) {
-			this.hasEmptyLine = true;
+		if (!this._hasEmptyLine) {
+			this._hasEmptyLine = true;
 			this._addSceneLine();
 		}
 	}
 
 	private _addSceneLine(
 	): void {
-		const id = this.idCounter++;
-		const rowEl = this.scenesContainerEl.insertRow();
+		const id = this._idCounter++;
+		const rowEl = this._scenesContainerEl.insertRow();
 		rowEl.dataset.id = id.toString();
 		this._updateEmptyLines(id, true);
 
@@ -176,7 +176,7 @@ export class SceneBuilderModal extends AbstractModal {
 		titleRowEl.insertCell().textContent = 'Type';
 		titleRowEl.insertCell().textContent = 'Exciting?';
 
-		this.scenesContainerEl = scenesTableEl.createTBody();
+		this._scenesContainerEl = scenesTableEl.createTBody();
 		this._addSceneLine();
 	}
 }

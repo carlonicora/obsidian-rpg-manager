@@ -9,18 +9,18 @@ export class ErrorView extends AbstractRpgManagerView {
 	protected displayText = 'RPG Manager Errors';
 	public icon = 'd20';
 
-	private errors: Map<TFile, RpgErrorInterface> = new Map();
+	private _errors: Map<TFile, RpgErrorInterface> = new Map();
 
 	public initialise(
 		params: Array<any>,
 	): void {
-		this.errors = params[0];
+		this._errors = params[0];
 	}
 
 	public async render(
 	): Promise<void> {
-		if (this.errors !== undefined && this.errors.size > 0) {
-			this.errors.forEach((error: RpgErrorInterface, file: TFile) => {
+		if (this._errors !== undefined && this._errors.size > 0) {
+			this._errors.forEach((error: RpgErrorInterface, file: TFile) => {
 				const errorEl = this.rpgmContentEl.createEl('div');
 
 				const errorTitle: string|undefined = error.getErrorTitle();
@@ -31,7 +31,7 @@ export class ErrorView extends AbstractRpgManagerView {
 					title.textContent = errorTitle;
 				} else {
 					title = errorEl.createEl('a');
-					this.addLink(title as HTMLAnchorElement, file.path)
+					this._addLink(title as HTMLAnchorElement, file.path)
 				}
 
 				title.style.fontWeight = 'bold';
@@ -72,7 +72,7 @@ export class ErrorView extends AbstractRpgManagerView {
 		});
 	}
 
-	private addLink(
+	private _addLink(
 		contentEl: HTMLAnchorElement,
 		linkOrFile: string|TFile,
 	): void {

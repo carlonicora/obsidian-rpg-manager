@@ -29,22 +29,22 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					headlessTable.addRow(element, this.addStoryCircleStageSelector.bind(this));
 					break;
 				case HeaderResponseType.SessionSelection:
-					headlessTable.addRow(element, this.addSessionSelector.bind(this));
+					headlessTable.addRow(element, this._addSessionSelector.bind(this));
 					break;
 				case HeaderResponseType.SceneTypeSelector:
-					headlessTable.addRow(element, this.addSceneTypeSelector.bind(this));
+					headlessTable.addRow(element, this._addSceneTypeSelector.bind(this));
 					break;
 				case HeaderResponseType.SceneExcitment:
 					headlessTable.addRow(element, this.addSceneExcitmentSelector.bind(this));
 					break;
 				case HeaderResponseType.SceneRun:
-					headlessTable.addRow(element, this.runScene.bind(this));
+					headlessTable.addRow(element, this._runScene.bind(this));
 					break;
 				case HeaderResponseType.SceneRunTime:
-					headlessTable.addRow(element, this.sceneRunTime.bind(this));
+					headlessTable.addRow(element, this._sceneRunTime.bind(this));
 					break;
 				case HeaderResponseType.DateSelector:
-					headlessTable.addRow(element, this.addSceneDateSelector.bind(this));
+					headlessTable.addRow(element, this._addSceneDateSelector.bind(this));
 					break;
 				default:
 					element.value.fillContent(
@@ -62,7 +62,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		}
 	}
 
-	private addSceneDateSelector(
+	private _addSceneDateSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
@@ -87,19 +87,19 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		flatpickr(flatpickrEl, options);
 	}
 
-	private sceneRunTime(
+	private _sceneRunTime(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
-		const durationEl = contentEl.createSpan({text: this.countOngoingDuration()});
+		const durationEl = contentEl.createSpan({text: this._countOngoingDuration()});
 		if (this.currentComponent.isCurrentlyRunning) {
 			setInterval(() => {
-				durationEl.textContent = this.countOngoingDuration();
+				durationEl.textContent = this._countOngoingDuration();
 			}, 1000);
 		}
 	}
 
-	private countOngoingDuration(
+	private _countOngoingDuration(
 	): string {
 		let duration: number = this.currentComponent.currentDuration ?? 0;
 		if (this.currentComponent.lastStart !== undefined && this.currentComponent.lastStart !== 0){
@@ -113,7 +113,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			(expectedMinutesDuration < 10 ? '0' + expectedMinutesDuration.toString() : expectedMinutesDuration.toString());
 	}
 
-	private runScene(
+	private _runScene(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
@@ -133,18 +133,18 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			if (this.currentComponent.isCurrentlyRunning){
 				this.factories.runningTimeManager.stopScene(this.currentComponent)
 					.then(() => {
-						setTimeout(() => {this.refreshEditorsPosition(editorPositions)},0);
+						setTimeout(() => {this._refreshEditorsPosition(editorPositions)},0);
 					});
 			} else {
 				this.factories.runningTimeManager.startScene(this.currentComponent)
 					.then(() => {
-						setTimeout(() => {this.refreshEditorsPosition(editorPositions)},0);
+						setTimeout(() => {this._refreshEditorsPosition(editorPositions)},0);
 					});
 			}
 		})
 	}
 
-	private async refreshEditorsPosition(
+	private async _refreshEditorsPosition(
 		editorsPosition: Map<Editor, number>,
 	): Promise<void> {
 		editorsPosition.forEach((position: number, editor: Editor) => {
@@ -180,7 +180,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		return undefined;
 	}
 
-	private addSceneTypeSelector(
+	private _addSceneTypeSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
@@ -220,7 +220,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		return undefined;
 	}
 
-	private addCurrentSessionLink(
+	private _addCurrentSessionLink(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
@@ -241,7 +241,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		}
 	}
 
-	private addSessionSelector(
+	private _addSessionSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {

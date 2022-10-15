@@ -45,6 +45,11 @@
 				"selector": ["variable", "function"],
 				"format": ["camelCase"],
 				"leadingUnderscore": "allow"
+			},
+			{
+				"selector": "memberLike",
+				"modifiers": ["protected"],
+				"format": ["camelCase"],
 			}
 		]
 	}

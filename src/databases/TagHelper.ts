@@ -17,10 +17,10 @@ export class TagHelper {
 	public static subplotTag ='rpgm/subplot';
 
 	public dataSettings: Map<ComponentType, string>;
-	private requiredIds: Map<ComponentType, Array<ComponentType>>;
+	private _requiredIds: Map<ComponentType, Array<ComponentType>>;
 
 	constructor(
-		private settings: RpgManagerSettingsInterface,
+		private _settings: RpgManagerSettingsInterface,
 	) {
 		this.dataSettings = new Map();
 		this.dataSettings.set(ComponentType.Campaign, TagHelper.campaignTag);
@@ -37,20 +37,20 @@ export class TagHelper {
 		this.dataSettings.set(ComponentType.Music, TagHelper.musicTag);
 		this.dataSettings.set(ComponentType.Subplot, TagHelper.subplotTag);
 
-		this.requiredIds = new Map();
-		this.requiredIds.set(ComponentType.Campaign, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Adventure, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Act, [ComponentType.Campaign, ComponentType.Adventure]);
-		this.requiredIds.set(ComponentType.Scene, [ComponentType.Campaign, ComponentType.Adventure, ComponentType.Act, ComponentType.Scene]);
-		this.requiredIds.set(ComponentType.Session, [ComponentType.Campaign, ComponentType.Session]);
-		this.requiredIds.set(ComponentType.Character, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Clue, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Event, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Faction, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Location, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.NonPlayerCharacter, [ComponentType.Campaign]);
-		this.requiredIds.set(ComponentType.Music, [ComponentType.Music]);
-		this.requiredIds.set(ComponentType.Subplot, [ComponentType.Subplot]);
+		this._requiredIds = new Map();
+		this._requiredIds.set(ComponentType.Campaign, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Adventure, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Act, [ComponentType.Campaign, ComponentType.Adventure]);
+		this._requiredIds.set(ComponentType.Scene, [ComponentType.Campaign, ComponentType.Adventure, ComponentType.Act, ComponentType.Scene]);
+		this._requiredIds.set(ComponentType.Session, [ComponentType.Campaign, ComponentType.Session]);
+		this._requiredIds.set(ComponentType.Character, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Clue, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Event, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Faction, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Location, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.NonPlayerCharacter, [ComponentType.Campaign]);
+		this._requiredIds.set(ComponentType.Music, [ComponentType.Music]);
+		this._requiredIds.set(ComponentType.Subplot, [ComponentType.Subplot]);
 	}
 
 	public sanitiseTags(
@@ -199,7 +199,7 @@ export class TagHelper {
 	): {tag: string, type: ComponentType}|undefined {
 		const response: string|undefined = undefined;
 
-		const settings: any = this.settings;
+		const settings: any = this._settings;
 		const oldCampaignTag: string|undefined = settings.campaignTag;
 		const oldAdventureTag: string|undefined = settings.adventureTag;
 		const oldActTag: string|undefined = settings.actTag;

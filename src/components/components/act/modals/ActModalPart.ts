@@ -5,12 +5,12 @@ import {ModalInterface} from "../../../../modals/interfaces/ModalInterface";
 import {ActInterface} from "../interfaces/ActInterface";
 
 export class ActModalPart extends AbstractModalPart {
-	private acts: ActInterface[];
-	private allAct:ActInterface[];
+	private _acts: ActInterface[];
+	private _allAct:ActInterface[];
 
-	private actEl: HTMLSelectElement;
-	private actErrorEl: HTMLParagraphElement;
-	private childEl: HTMLDivElement;
+	private _actEl: HTMLSelectElement;
+	private _actErrorEl: HTMLParagraphElement;
+	private _childEl: HTMLDivElement;
 
 	constructor(
 		app: App,
@@ -23,13 +23,13 @@ export class ActModalPart extends AbstractModalPart {
 			this.modal.actId.id = 0;
 		}
 
-		this.allAct = this.database.read<ActInterface>(
+		this._allAct = this.database.read<ActInterface>(
 			(component: ActInterface) =>
 				component.id.type === ComponentType.Act &&
 				component.id.campaignId === this.modal.campaignId.id
 		);
 
-		this.acts = this.database.read<ActInterface>(
+		this._acts = this.database.read<ActInterface>(
 			(component: ActInterface) =>
 				component.id.type === ComponentType.Act &&
 				component.id.campaignId === this.modal.campaignId.id &&
@@ -43,18 +43,18 @@ export class ActModalPart extends AbstractModalPart {
 		const actEl = contentEl.createDiv({cls: 'actContainer'});
 
 		if (this.modal.type === ComponentType.Act){
-			this.addNewActElements(actEl);
+			this._addNewActElements(actEl);
 		} else {
-			if (this.acts.length === 0){
+			if (this._acts.length === 0){
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Acts missing'});
 				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Act for the selected adventure. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first act for the adventure.'});
 			} else {
-				this.childEl = contentEl.createDiv({cls: 'child'});
-				this.childEl.id = 'ActChild';
+				this._childEl = contentEl.createDiv({cls: 'child'});
+				this._childEl.id = 'ActChild';
 
-				this.selectActElements(actEl);
+				this._selectActElements(actEl);
 			}
 
 		}
@@ -86,17 +86,17 @@ export class ActModalPart extends AbstractModalPart {
 		return true;
 	}
 
-	private addNewActElements(
+	private _addNewActElements(
 		containerEl: HTMLElement,
 	): void {
-		this.allAct.forEach((component: ActInterface) => {
+		this._allAct.forEach((component: ActInterface) => {
 			if (this.modal.actId !== undefined && (component.id.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
 				this.modal.actId.id = ((component.id.actId ?? 0) + 1);
 			}
 		});
 	}
 
-	private selectActElements(
+	private _selectActElements(
 		containerEl: HTMLElement
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'group'});
@@ -105,46 +105,46 @@ export class ActModalPart extends AbstractModalPart {
 		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
 		groupElement.createDiv({cls: 'clear'});
 
-		this.actEl = selectionContainerEl.createEl('select');
+		this._actEl = selectionContainerEl.createEl('select');
 
-		if (this.acts.length > 1) {
-			this.actEl.createEl('option', {
+		if (this._acts.length > 1) {
+			this._actEl.createEl('option', {
 				text: '',
 				value: '',
 			}).selected = true;
 		}
 
-		this.acts.forEach((act: ActInterface) => {
-			const actOptionEl = this.actEl.createEl('option', {
+		this._acts.forEach((act: ActInterface) => {
+			const actOptionEl = this._actEl.createEl('option', {
 				text: act.file.basename,
 				value: act.id.actId?.toString(),
 			});
 
-			if (this.acts.length === 1 || this.modal.actId?.id === act.id.actId){
+			if (this._acts.length === 1 || this.modal.actId?.id === act.id.actId){
 				actOptionEl.selected = true;
-				this.selectAct();
+				this._selectAct();
 			}
 		});
 
-		this.actEl.addEventListener('change', (e: Event) => {
-			this.selectAct();
+		this._actEl.addEventListener('change', (e: Event) => {
+			this._selectAct();
 		});
 
-		this.actErrorEl = containerEl.createEl('p', {cls: 'error'});
+		this._actErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
-	private selectAct(
+	private _selectAct(
 	): void {
 		if (this.modal.actId === undefined) {
 			this.modal.actId = this.factories.id.create(ComponentType.Adventure, this.modal.campaignId.id, this.modal.adventureId?.id);
 		}
 
 		if (this.modal.actId !== undefined){
-			this.modal.actId.id = +this.actEl.value;
+			this.modal.actId.id = +this._actEl.value;
 		}
 
-		this.childEl.empty();
-		this.loadChild(this.childEl);
+		this._childEl.empty();
+		this.loadChild(this._childEl);
 	}
 
 	protected async addAdditionalElements(

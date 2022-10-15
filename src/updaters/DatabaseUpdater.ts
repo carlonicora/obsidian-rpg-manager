@@ -18,34 +18,34 @@ interface VersionHistoryElementInterface {
 }
 
 export class DatabaseUpdater {
-	private versionsHistory: Map<string, VersionHistoryElementInterface>;
+	private _versionsHistory: Map<string, VersionHistoryElementInterface>;
 
 	constructor(
-		private app: App,
-		private rpgManager: RpgManagerInterface,
-		private previousVersion: string,
-		private currentVersion: string,
+		private _app: App,
+		private _rpgManager: RpgManagerInterface,
+		private _previousVersion: string,
+		private _currentVersion: string,
 	) {
-		this.versionsHistory = new Map<string, VersionHistoryElementInterface>();
-		this.versionsHistory.set('1.2', {previousVersion: '1.2', nextVersion: '1.3'});
-		this.versionsHistory.set('1.3', {previousVersion: '1.3', nextVersion: '2.0'});
-		this.versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '3.0'});
+		this._versionsHistory = new Map<string, VersionHistoryElementInterface>();
+		this._versionsHistory.set('1.2', {previousVersion: '1.2', nextVersion: '1.3'});
+		this._versionsHistory.set('1.3', {previousVersion: '1.3', nextVersion: '2.0'});
+		this._versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '3.0'});
 	}
 
 	public get newVersion(): string {
-		return this.currentVersion;
+		return this._currentVersion;
 	}
 
 	public get oldVersion(): string {
-		return this.previousVersion;
+		return this._previousVersion;
 	}
 
 	public async requiresDatabaseUpdate(
 	): Promise<boolean> {
-		if (this.previousVersion === '') this.previousVersion = '1.2';
+		if (this._previousVersion === '') this._previousVersion = '1.2';
 
-		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(this.previousVersion);
-		const currentVersionMajorMinor = this.getMajorMinor(this.currentVersion);
+		const previousVersionMajorMinor: string|undefined = this._getMajorMinor(this._previousVersion);
+		const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
 
 		if (
 			previousVersionMajorMinor === undefined ||
@@ -54,12 +54,12 @@ export class DatabaseUpdater {
 		) return false;
 
 		if (await this._isVaultEmptyOfRpgManagerComponents()) {
-			const currentVersionMajorMinor = this.getMajorMinor(this.currentVersion);
-			await this.rpgManager.updateSettings({previousVersion: currentVersionMajorMinor});
+			const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
+			await this._rpgManager.updateSettings({previousVersion: currentVersionMajorMinor});
 			return false;
 		}
 
-		return this.versionsHistory.get(previousVersionMajorMinor) !== undefined;
+		return this._versionsHistory.get(previousVersionMajorMinor) !== undefined;
 	}
 
 	public async update(
@@ -67,10 +67,10 @@ export class DatabaseUpdater {
 	): Promise<boolean> {
 		let response = false;
 
-		if (this.previousVersion === '') this.previousVersion = '1.2';
+		if (this._previousVersion === '') this._previousVersion = '1.2';
 
-		const previousVersionMajorMinor: string|undefined = this.getMajorMinor(this.previousVersion);
-		const currentVersionMajorMinor = this.getMajorMinor(this.currentVersion);
+		const previousVersionMajorMinor: string|undefined = this._getMajorMinor(this._previousVersion);
+		const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
 
 		if (
 			previousVersionMajorMinor === undefined ||
@@ -80,34 +80,34 @@ export class DatabaseUpdater {
 
 		const empty = await this._isVaultEmptyOfRpgManagerComponents();
 
-		let updater = await this.versionsHistory.get(previousVersionMajorMinor);
+		let updater = await this._versionsHistory.get(previousVersionMajorMinor);
 		while (updater !== undefined){
 			response = true;
 			if (!empty) {
-				const worker: DatabaseUpdateWorkerInterface = await new versionMap[updater.previousVersion as keyof typeof versionMap](this.app);
-				if (reporter !== undefined) reporter.setUpdater(this.previousVersion, this.currentVersion);
+				const worker: DatabaseUpdateWorkerInterface = await new versionMap[updater.previousVersion as keyof typeof versionMap](this._app);
+				if (reporter !== undefined) reporter.setUpdater(this._previousVersion, this._currentVersion);
 				await worker.run(reporter);
 			}
 
-			updater = await this.versionsHistory.get(updater.nextVersion);
+			updater = await this._versionsHistory.get(updater.nextVersion);
 		}
 
-		await this.rpgManager.updateSettings({previousVersion: currentVersionMajorMinor});
+		await this._rpgManager.updateSettings({previousVersion: currentVersionMajorMinor});
 
 		return response;
 	}
 
 	private async _isVaultEmptyOfRpgManagerComponents(
 	): Promise<boolean> {
-		const everyMarkdown = this.app.vault.getMarkdownFiles();
+		const everyMarkdown = this._app.vault.getMarkdownFiles();
 
 		for (let index=0; index<everyMarkdown.length; index++){
-			const cache = this.app.metadataCache.getFileCache(everyMarkdown[index]);
+			const cache = this._app.metadataCache.getFileCache(everyMarkdown[index]);
 			if (cache === undefined || cache?.sections == undefined) continue;
 
 			const validSections = cache.sections.filter((section: SectionCache) => section.type === 'code');
 			for (let sectionIndex=0; sectionIndex<validSections.length; sectionIndex++) {
-				const fileContent = await this.app.vault.read(everyMarkdown[index]);
+				const fileContent = await this._app.vault.read(everyMarkdown[index]);
 				const fileArray = fileContent.split('\n');
 				if (fileArray[validSections[sectionIndex].position.start.line].startsWith('```RpgManager')) return false;
 			}
@@ -116,7 +116,7 @@ export class DatabaseUpdater {
 		return true;
 	}
 
-	private getMajorMinor(
+	private _getMajorMinor(
 		version: string,
 	): string|undefined {
 		const versionParts = version.split('.');

@@ -45,19 +45,19 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			additionalInformation,
 		);
 
-		const fileName = await this.generateFilePath(type, folder, name);
+		const fileName = await this._generateFilePath(type, folder, name);
 
 		template.generateData()
 			.then((data: string) => {
 				if (create) {
-					this.createNewFile(data, fileName);
+					this._createNewFile(data, fileName);
 				} else {
-					this.editExistingFile(data, fileName);
+					this._editExistingFile(data, fileName);
 				}
 			});
 	}
 
-	private async createNewFile(
+	private async _createNewFile(
 		data: string,
 		fileName: string,
 	): Promise<void> {
@@ -67,7 +67,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		await leaf.openFile(newFile);
 	}
 
-	private async editExistingFile(
+	private async _editExistingFile(
 		data: string,
 		fileName: string,
 	): Promise<void> {
@@ -126,7 +126,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			additionalInformation,
 		);
 
-		const fileName = await this.generateFilePath(type, folder, name);
+		const fileName = await this._generateFilePath(type, folder, name);
 
 		const data: string = await template.generateData();
 		const newFile = await app.vault.create(fileName, data);
@@ -134,7 +134,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		await leaf.openFile(newFile);
 	}
 
-	private async generateFilePath(
+	private async _generateFilePath(
 		type: ComponentType,
 		folder: string,
 		name: string,

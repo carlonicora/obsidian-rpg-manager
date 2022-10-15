@@ -98,7 +98,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		};
 
 		this.addFrontmatterData(frontmatter);
-		this.mergeFrontmatters(frontmatter, templateFrontmatter);
+		this._mergeFrontmatters(frontmatter, templateFrontmatter);
 
 		const dataCodeblock: string = this.generateDataCodeBlock();
 		const initialCodeblock: string = this.generateInitialCodeBlock();
@@ -110,10 +110,10 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 
 		const idCodeBlock: string  = this.generateRpgManagerIDCodeBlock(this.generateID())
 
-		return this.generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock, idCodeBlock);
+		return this._generateResponse(frontmatter, dataCodeblock, initialCodeblock, templateContent, lastCodeblock, idCodeBlock);
 	}
 
-	private generateResponse(
+	private _generateResponse(
 		frontmatter: any,
 		dataCodebBlock: string|undefined,
 		initialCodeBlock: string|undefined,
@@ -135,7 +135,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		return response;
 	}
 
-	private mergeFrontmatters(
+	private _mergeFrontmatters(
 		frontmatter: any,
 		additionalFrontMatter: any|undefined,
 	): void {
@@ -145,9 +145,9 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 				if (typeof frontmatterElementValue !== 'object'){
 					if (additionalFrontMatter[frontmatterElementName] != null) frontmatter[frontmatterElementName] = additionalFrontMatter[frontmatterElementName];
 				} else {
-					if (this.isArray(frontmatterElementValue)) {
+					if (this._isArray(frontmatterElementValue)) {
 						if (additionalFrontMatter[frontmatterElementName] != null) {
-							if (this.isArray(additionalFrontMatter[frontmatterElementName])) {
+							if (this._isArray(additionalFrontMatter[frontmatterElementName])) {
 								Object.entries(additionalFrontMatter[frontmatterElementName]).forEach(([additionalFrontmatterElementName, additionalFrontmatterElementValue]: [string, any]) => {
 									let index: number | undefined;
 									Object.entries(frontmatterElementValue).forEach(([frontmatterSubElementName, frontmatterSubElementValue]: [string, any]) => {
@@ -164,11 +164,11 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 									}
 								});
 							} else {
-								this.mergeFrontmatters(frontmatterElementValue, additionalFrontMatter[frontmatterElementName]);
+								this._mergeFrontmatters(frontmatterElementValue, additionalFrontMatter[frontmatterElementName]);
 							}
 						}
 					} else {
-						this.mergeFrontmatters(frontmatterElementValue, additionalFrontMatter[frontmatterElementName]);
+						this._mergeFrontmatters(frontmatterElementValue, additionalFrontMatter[frontmatterElementName]);
 					}
 				}
 
@@ -189,7 +189,7 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		}
 	}
 
-	private isArray(
+	private _isArray(
 		list: object
 	): boolean{
 		let response = false;

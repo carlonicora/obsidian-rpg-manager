@@ -5,14 +5,14 @@ import {SettingInterface} from "../interfaces/SettingsInterface";
 
 export class SettingsFactory {
 	constructor(
-		private app: App,
-		private plugin: RpgManagerInterface,
-		private map: Map<SettingType, SettingInterface>,
-		private containerEl: HTMLElement,
+		private _app: App,
+		private _plugin: RpgManagerInterface,
+		private _map: Map<SettingType, SettingInterface>,
+		private _containerEl: HTMLElement,
 	) {
 	}
 
-	private generateFragment(
+	private _generateFragment(
 		text: string,
 	): DocumentFragment {
 		const lines = text.split('\n');
@@ -32,29 +32,29 @@ export class SettingsFactory {
 		additionalText: string|undefined=undefined,
 	): void {
 		const elementType = 'h' + level.toString();
-		this.containerEl.createEl(elementType as keyof HTMLElementTagNameMap, {text: text});
+		this._containerEl.createEl(elementType as keyof HTMLElementTagNameMap, {text: text});
 		if (additionalText !== undefined){
-			this.containerEl.createEl('span', {text: this.generateFragment(additionalText)});
+			this._containerEl.createEl('span', {text: this._generateFragment(additionalText)});
 		}
 	}
 
 	public createWarning(
 		text: string,
 	): void {
-		this.containerEl.createEl('p', {text: text}).style.color = 'var(--text-error)';
+		this._containerEl.createEl('p', {text: text}).style.color = 'var(--text-error)';
 	}
 
 	public createTextSetting(
 		type: SettingType,
 		description='',
 	): Setting {
-		const settings = this.map.get(type);
+		const settings = this._map.get(type);
 
 		if (settings === undefined) throw new Error('Setting type not found');
 
-		return new Setting(this.containerEl)
+		return new Setting(this._containerEl)
 			.setName(settings.title)
-			.setDesc(this.generateFragment(description))
+			.setDesc(this._generateFragment(description))
 			.addText(text =>
 				text.setPlaceholder(settings.placeholder ?? '')
 					.setValue(settings.value)
@@ -67,13 +67,13 @@ export class SettingsFactory {
 		description: string,
 		options: Map<string, string>,
 	): Setting {
-		const settings = this.map.get(type);
+		const settings = this._map.get(type);
 
 		if (settings === undefined) throw new Error('Setting type not found');
 
-		return new Setting(this.containerEl)
+		return new Setting(this._containerEl)
 			.setName(settings.title)
-			.setDesc(this.generateFragment(description))
+			.setDesc(this._generateFragment(description))
 			.addDropdown(dropdown => {
 				dropdown.addOption('', '');
 				options.forEach((value: string, display: string) => {
@@ -84,11 +84,11 @@ export class SettingsFactory {
 				dropdown.onChange(async value => {
 					switch (type) {
 						case SettingType.templateFolder:
-							await this.plugin.updateSettings({templateFolder: value});
+							await this._plugin.updateSettings({templateFolder: value});
 							settings.value = value;
 							break;
 						case SettingType.imagesFolder:
-							await this.plugin.updateSettings({imagesFolder: value});
+							await this._plugin.updateSettings({imagesFolder: value});
 							settings.value = value;
 							break;
 
@@ -101,32 +101,32 @@ export class SettingsFactory {
 		type: SettingType,
 		description: string,
 	): Setting {
-		const settings = this.map.get(type);
+		const settings = this._map.get(type);
 
 		if (settings === undefined) throw new Error('Setting type not found');
 
-		return new Setting(this.containerEl)
+		return new Setting(this._containerEl)
 			.setName(settings.title)
-			.setDesc(this.generateFragment(description))
+			.setDesc(this._generateFragment(description))
 			.addToggle(toggle =>
 				toggle
 					.setValue(settings.value)
 					.onChange(async value => {
 						switch (type){
 							case SettingType.automaticMove:
-								await this.plugin.updateSettings({ automaticMove: value })
+								await this._plugin.updateSettings({ automaticMove: value })
 								settings.value = value;
 								break;
 							case SettingType.usePlotStructures:
-								await this.plugin.updateSettings({ usePlotStructures: value })
+								await this._plugin.updateSettings({ usePlotStructures: value })
 								settings.value = value;
 								break;
 							case SettingType.useSceneAnalyser:
-								await this.plugin.updateSettings({ useSceneAnalyser: value })
+								await this._plugin.updateSettings({ useSceneAnalyser: value })
 								settings.value = value;
 								break;
 						}
-						this.app.workspace.trigger("rpgmanager:force-refresh-views");
+						this._app.workspace.trigger("rpgmanager:force-refresh-views");
 					})
 			);
 	}

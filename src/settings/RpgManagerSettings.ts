@@ -12,14 +12,14 @@ import {SettingInterface} from "./interfaces/SettingsInterface";
 import {tableFieldName} from "../views/enums/TableField";
 
 export class RpgManagerSettings extends PluginSettingTab {
-	private plugin: RpgManagerInterface;
-	private settingsFactory: SettingsFactory;
-	private settingsUpdater: SettingsUpdater;
-	private map: Map<SettingType, SettingInterface>;
+	private _plugin: RpgManagerInterface;
+	private _settingsFactory: SettingsFactory;
+	private _settingsUpdater: SettingsUpdater;
+	private _map: Map<SettingType, SettingInterface>;
 	public containerEl: HTMLElement;
-	private folderMap: Map<string, string>;
+	private _folderMap: Map<string, string>;
 
-	private advancedSettingsDescription: Map<string, {title: string, description: string}> = new Map<string, {title: string, description: string}>();
+	private _advancedSettingsDescription: Map<string, {title: string, description: string}> = new Map<string, {title: string, description: string}>();
 
 	constructor(
 		app: App,
@@ -29,98 +29,98 @@ export class RpgManagerSettings extends PluginSettingTab {
 			(<unknown>app.plugins.getPlugin('rpg-manager')) as Plugin_2,
 		);
 
-		this.plugin = app.plugins.getPlugin('rpg-manager');
+		this._plugin = app.plugins.getPlugin('rpg-manager');
 
 		const {containerEl} = this;
 		this.containerEl = containerEl;
 
-		this.map = new Map();
-		this.map.set(SettingType.YouTubeApiKey, {title: 'YouTube API Key', value: this.plugin.settings.YouTubeKey, placeholder: 'Your YouTube API Key'});
-		this.map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this.plugin.settings.automaticMove, placeholder: 'Organise new elements'});
-		this.map.set(SettingType.templateFolder, {title: 'Template folder', value: this.plugin.settings.templateFolder, placeholder: 'Template Folder'});
-		this.map.set(SettingType.imagesFolder, {title: 'Images folder', value: this.plugin.settings.imagesFolder, placeholder: 'Images Folder'});
-		this.map.set(SettingType.usePlotStructures, {title: 'Abt/Story Circle plot structure', value: this.plugin.settings.usePlotStructures, placeholder: ''});
-		this.map.set(SettingType.useSceneAnalyser, {title: 'Scene Analyser', value: this.plugin.settings.useSceneAnalyser, placeholder: ''});
+		this._map = new Map();
+		this._map.set(SettingType.YouTubeApiKey, {title: 'YouTube API Key', value: this._plugin.settings.YouTubeKey, placeholder: 'Your YouTube API Key'});
+		this._map.set(SettingType.automaticMove, {title: 'Automatically organise elements in folders', value: this._plugin.settings.automaticMove, placeholder: 'Organise new elements'});
+		this._map.set(SettingType.templateFolder, {title: 'Template folder', value: this._plugin.settings.templateFolder, placeholder: 'Template Folder'});
+		this._map.set(SettingType.imagesFolder, {title: 'Images folder', value: this._plugin.settings.imagesFolder, placeholder: 'Images Folder'});
+		this._map.set(SettingType.usePlotStructures, {title: 'Abt/Story Circle plot structure', value: this._plugin.settings.usePlotStructures, placeholder: ''});
+		this._map.set(SettingType.useSceneAnalyser, {title: 'Scene Analyser', value: this._plugin.settings.useSceneAnalyser, placeholder: ''});
 
-		this.advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
-		this.advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
-		this.advancedSettingsDescription.set('CharacterList', {title: 'Player Character List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
-		this.advancedSettingsDescription.set('ClueList', {title: 'Clue List', description: 'Select which fields you would like to see when displaying a list of Clues'});
-		this.advancedSettingsDescription.set('EventList', {title: 'Event List', description: 'Select which fields you would like to see when displaying a list of Events'});
-		this.advancedSettingsDescription.set('FactionList', {title: 'Faction List', description: 'Select which fields you would like to see when displaying a list of Factions'});
-		this.advancedSettingsDescription.set('LocationList', {title: 'Location List', description: 'Select which fields you would like to see when displaying a list of Locations'});
-		this.advancedSettingsDescription.set('MusicList', {title: 'Music List', description: 'Select which fields you would like to see when displaying a list of Musics'});
-		this.advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player Character List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
-		this.advancedSettingsDescription.set('SceneList', {title: 'Scene List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
-		this.advancedSettingsDescription.set('SessionList', {title: 'Session List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
-		this.advancedSettingsDescription.set('SubplotList', {title: 'Subplot List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
+		this._advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
+		this._advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
+		this._advancedSettingsDescription.set('CharacterList', {title: 'Player Character List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
+		this._advancedSettingsDescription.set('ClueList', {title: 'Clue List', description: 'Select which fields you would like to see when displaying a list of Clues'});
+		this._advancedSettingsDescription.set('EventList', {title: 'Event List', description: 'Select which fields you would like to see when displaying a list of Events'});
+		this._advancedSettingsDescription.set('FactionList', {title: 'Faction List', description: 'Select which fields you would like to see when displaying a list of Factions'});
+		this._advancedSettingsDescription.set('LocationList', {title: 'Location List', description: 'Select which fields you would like to see when displaying a list of Locations'});
+		this._advancedSettingsDescription.set('MusicList', {title: 'Music List', description: 'Select which fields you would like to see when displaying a list of Musics'});
+		this._advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player Character List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
+		this._advancedSettingsDescription.set('SceneList', {title: 'Scene List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
+		this._advancedSettingsDescription.set('SessionList', {title: 'Session List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
+		this._advancedSettingsDescription.set('SubplotList', {title: 'Subplot List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
 
-		this.settingsUpdater = new SettingsUpdater(this.app);
-		this.settingsFactory = new SettingsFactory(this.app, this.plugin, this.map, this.containerEl);
+		this._settingsUpdater = new SettingsUpdater(this.app);
+		this._settingsFactory = new SettingsFactory(this.app, this._plugin, this._map, this.containerEl);
 	}
 
 	display(): void {
 		this.containerEl.empty();
 
-		this.createFolderMap();
+		this._createFolderMap();
 
-		this.settingsFactory.createHeader('CampaignSetting for Role Playing Game Manager');
+		this._settingsFactory.createHeader('CampaignSetting for Role Playing Game Manager');
 
-		this.loadTemplatesSettings();
-		this.loadImagesSettings();
-		this.loadExternalServicesSettings();
-		this.loadAdvancedSettings();
+		this._loadTemplatesSettings();
+		this._loadImagesSettings();
+		this._loadExternalServicesSettings();
+		this._loadAdvancedSettings();
 	}
 
-	private loadExternalServicesSettings(
+	private _loadExternalServicesSettings(
 	): void {
-		this.settingsFactory.createHeader('External Services', 3);
-		this.settingsFactory.createWarning(`Configurations are saved in a file in your vault. If you share your vault, you share your key!`);
+		this._settingsFactory.createHeader('External Services', 3);
+		this._settingsFactory.createWarning(`Configurations are saved in a file in your vault. If you share your vault, you share your key!`);
 
-		this.settingsFactory.createTextSetting(
+		this._settingsFactory.createTextSetting(
 			SettingType.YouTubeApiKey,
 			`Used to access YouTube-specific information`,
 		);
 	}
 
-	private loadTemplatesSettings(
+	private _loadTemplatesSettings(
 	): void {
-		this.settingsFactory.createHeader('Component creations', 3, 'Manage how new subModels are created');
+		this._settingsFactory.createHeader('Component creations', 3, 'Manage how new subModels are created');
 
-		this.settingsFactory.createDropdownSetting(
+		this._settingsFactory.createDropdownSetting(
 			SettingType.templateFolder,
 			`Select the folder in which you keep the templates for RPG Manager.`,
-			this.folderMap,
+			this._folderMap,
 		)
 
-		this.settingsFactory.createToggleSetting(
+		this._settingsFactory.createToggleSetting(
 			SettingType.automaticMove,
 			`Keeps your structure organised by creating subfolders for your Outlines and Elements`,
 		);
 
-		this.settingsFactory.createToggleSetting(
+		this._settingsFactory.createToggleSetting(
 			SettingType.usePlotStructures,
 			`Use ABT/Story Circle plot structures`,
 		);
 
-		this.settingsFactory.createToggleSetting(
+		this._settingsFactory.createToggleSetting(
 			SettingType.useSceneAnalyser,
 			`Analyses the scenes inside acts or sessions to provide running time estimations and act or session balance`,
 		);
 	}
 
-	private loadImagesSettings(
+	private _loadImagesSettings(
 	): void {
-		this.settingsFactory.createHeader('Images Management', 3, 'Manage where you store the images for all your campaigns');
+		this._settingsFactory.createHeader('Images Management', 3, 'Manage where you store the images for all your campaigns');
 
-		this.settingsFactory.createDropdownSetting(
+		this._settingsFactory.createDropdownSetting(
 			SettingType.imagesFolder,
 			`Select the folder in which you keep the images for RPG Manager. Leave it empty if you want to use the default Obsidian Attachment folder. RPG Manager scans every subfolder in the one you selected`,
-			this.folderMap,
+			this._folderMap,
 		)
 	}
 
-	private createFolderMap(
+	private _createFolderMap(
 		parent: TFolder|undefined = undefined,
 		indent = 0,
 	): void {
@@ -128,35 +128,35 @@ export class RpgManagerSettings extends PluginSettingTab {
 		if (parent != undefined) {
 			folderList = parent.children.filter((file: TAbstractFile) => file instanceof TFolder);
 		} else {
-			this.folderMap = new Map();
+			this._folderMap = new Map();
 			folderList = this.app.vault.getRoot().children.filter((file: TAbstractFile) => file instanceof TFolder);
 		}
 
 		folderList.forEach((folder: TFolder) => {
-			this.folderMap.set(folder.path, folder.path);
-			this.createFolderMap(folder, indent + 1);
+			this._folderMap.set(folder.path, folder.path);
+			this._createFolderMap(folder, indent + 1);
 		});
 	}
 
-	private loadAdvancedSettings(
+	private _loadAdvancedSettings(
 	): void {
-		this.settingsFactory.createHeader('Lists', 3);
+		this._settingsFactory.createHeader('Lists', 3);
 
-		Object.keys(this.plugin.settings.advanced.Agnostic).forEach((name: string, index: number) => {
-			const advancedSetting = this.plugin.settings.advanced.Agnostic[name as keyof RpgManagerAdvancedSettingsInterface];
-			this.addSettingsItem(name, advancedSetting);
+		Object.keys(this._plugin.settings.advanced.Agnostic).forEach((name: string, index: number) => {
+			const advancedSetting = this._plugin.settings.advanced.Agnostic[name as keyof RpgManagerAdvancedSettingsInterface];
+			this._addSettingsItem(name, advancedSetting);
 		});
 	}
 
-	private addSettingsItem(
+	private _addSettingsItem(
 		type: string,
 		settings: RpgManagerAdvancedSettingsListsInterface,
 	): void {
 		const settingItemEl: HTMLDivElement = this.containerEl.createDiv({cls: 'setting-item'});
 
 		const settingItemInfoEl: HTMLDivElement = settingItemEl.createDiv({cls: 'setting-item-info'});
-		settingItemInfoEl.createDiv({cls: 'setting-item-name', text: this.advancedSettingsDescription.get(type)?.title ?? ''});
-		settingItemInfoEl.createDiv({cls: 'setting-item-description', text: this.advancedSettingsDescription.get(type)?.description ?? ''}).createEl('br');
+		settingItemInfoEl.createDiv({cls: 'setting-item-name', text: this._advancedSettingsDescription.get(type)?.title ?? ''});
+		settingItemInfoEl.createDiv({cls: 'setting-item-description', text: this._advancedSettingsDescription.get(type)?.description ?? ''}).createEl('br');
 
 		const settingItemControlEl: HTMLDivElement = settingItemEl.createDiv({cls: 'setting-item-control'});
 
@@ -186,7 +186,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			if (defaultSettings.fields[index].required) listSettingFieldCheckboxEl.disabled = true;
 
 			listSettingFieldCheckboxEl.addEventListener('change', () => {
-				this.updateAdvancedListSettings(
+				this._updateAdvancedListSettings(
 					index,
 					type,
 					listSettingFieldCheckboxEl.checked,
@@ -195,7 +195,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		}
 	}
 
-	private async updateAdvancedListSettings(
+	private async _updateAdvancedListSettings(
 		index: number,
 		type: string,
 		checked: boolean,
@@ -203,7 +203,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		const name = type as keyof RpgManagerAdvancedSettingsInterface;
 		const partialSettings: Partial<RpgManagerSettingsInterface> = {
 			advanced: {
-				Agnostic: this.plugin.settings.advanced.Agnostic
+				Agnostic: this._plugin.settings.advanced.Agnostic
 			}
 		};
 
@@ -215,7 +215,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			}
 
 			partialSettings.advanced.Agnostic[name].fields[index].checked = checked;
-			await this.plugin.updateSettings(partialSettings);
+			await this._plugin.updateSettings(partialSettings);
 		}
 
 		this.app.workspace.trigger("rpgmanager:refresh-views");

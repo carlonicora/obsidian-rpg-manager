@@ -17,7 +17,7 @@ export class ListModel extends AbstractModel {
 
 	public async generateData(
 	): Promise<ResponseDataInterface> {
-		if (this.currentComponent.id.type === ComponentType.Session) this.updateRelationshipsList();
+		if (this.currentComponent.id.type === ComponentType.Session) this._updateRelationshipsList();
 		for (let listCounter=0; listCounter<Object.keys(this.sourceMeta).length; listCounter++){
 			const name = Object.keys(this.sourceMeta)[listCounter];
 			const componentType = this.factories.componentType.createComponentType(name.slice(0, -1));
@@ -38,7 +38,7 @@ export class ListModel extends AbstractModel {
 					if (relationshipType === RelationshipType.Hierarchy && (this.currentComponent.id.type !== ComponentType.Session || componentType === ComponentType.Scene)) {
 						await this.addList(
 							componentType,
-							this.generateComponentList(componentType),
+							this._generateComponentList(componentType),
 						);
 					} else {
 						await this.addRelationships(
@@ -54,7 +54,7 @@ export class ListModel extends AbstractModel {
 		return this.response;
 	}
 
-	private generateComponentList(
+	private _generateComponentList(
 		type: ComponentType,
 	): Array<ComponentInterface> {
 		if (this.currentComponent.id.type !== ComponentType.Session) return this.database.readList<ComponentInterface>(type, this.currentComponent.id)
@@ -71,7 +71,7 @@ export class ListModel extends AbstractModel {
 		]));
 	}
 
-	private updateRelationshipsList(
+	private _updateRelationshipsList(
 	): void {
 		if (this.currentComponent.id.type === ComponentType.Session) {
 			const scenes = this.database.read<SceneInterface>(

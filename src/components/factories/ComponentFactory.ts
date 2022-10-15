@@ -19,27 +19,27 @@ import {Music} from "../components/music/Music";
 import {Subplot} from "../components/subplot/Subplot";
 
 export class ComponentFactory extends AbstractFactory implements ComponentFactoryInterface{
-	private componentTypeMap: Map<string,any>;
+	private _componentTypeMap: Map<string,any>;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
 
-		this.componentTypeMap = new Map<string, any>();
-		this.componentTypeMap.set('AgnosticCampaign', Campaign);
-		this.componentTypeMap.set('AgnosticAdventure', Adventure);
-		this.componentTypeMap.set('AgnosticAct', Act);
-		this.componentTypeMap.set('AgnosticScene', Scene);
-		this.componentTypeMap.set('AgnosticSession', Session);
-		this.componentTypeMap.set('AgnosticCharacter', Character);
-		this.componentTypeMap.set('AgnosticNonPlayerCharacter', Character);
-		this.componentTypeMap.set('AgnosticFaction', Faction);
-		this.componentTypeMap.set('AgnosticClue', Clue);
-		this.componentTypeMap.set('AgnosticLocation', Location);
-		this.componentTypeMap.set('AgnosticEvent', Event);
-		this.componentTypeMap.set('AgnosticMusic', Music);
-		this.componentTypeMap.set('AgnosticSubplot', Subplot);
+		this._componentTypeMap = new Map<string, any>();
+		this._componentTypeMap.set('AgnosticCampaign', Campaign);
+		this._componentTypeMap.set('AgnosticAdventure', Adventure);
+		this._componentTypeMap.set('AgnosticAct', Act);
+		this._componentTypeMap.set('AgnosticScene', Scene);
+		this._componentTypeMap.set('AgnosticSession', Session);
+		this._componentTypeMap.set('AgnosticCharacter', Character);
+		this._componentTypeMap.set('AgnosticNonPlayerCharacter', Character);
+		this._componentTypeMap.set('AgnosticFaction', Faction);
+		this._componentTypeMap.set('AgnosticClue', Clue);
+		this._componentTypeMap.set('AgnosticLocation', Location);
+		this._componentTypeMap.set('AgnosticEvent', Event);
+		this._componentTypeMap.set('AgnosticMusic', Music);
+		this._componentTypeMap.set('AgnosticSubplot', Subplot);
 	}
 
 	public create(
@@ -48,9 +48,9 @@ export class ComponentFactory extends AbstractFactory implements ComponentFactor
 		id: IdInterface,
 	): ComponentInterface {
 		let dataKey = CampaignSetting[settings] + ComponentType[id.type];
-		if (!this.componentTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[id.type];
-		if (!this.componentTypeMap.has(dataKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + ComponentType[id.type] + ' cannot be found');
+		if (!this._componentTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[id.type];
+		if (!this._componentTypeMap.has(dataKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + ComponentType[id.type] + ' cannot be found');
 
-		return new (this.componentTypeMap.get(dataKey))(this.app, settings, id, file);
+		return new (this._componentTypeMap.get(dataKey))(this.app, settings, id, file);
 	}
 }

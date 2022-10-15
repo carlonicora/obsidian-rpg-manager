@@ -5,15 +5,15 @@ export class FileContentManager {
 	public templateFrontMatter: any|undefined;
 
 	constructor(
-		private app: App,
-		private templateFileName: string,
+		private _app: App,
+		private _templateFileName: string,
 	) {
 	}
 
 	public async parse(
 	): Promise<void> {
-		const templateFile = this.app.vault.getAbstractFileByPath(this.templateFileName) as TFile;
-		const content = await this.app.vault.read(templateFile);
+		const templateFile = this._app.vault.getAbstractFileByPath(this._templateFileName) as TFile;
+		const content = await this._app.vault.read(templateFile);
 		const templateContentLines = content.split('\n').map(String);
 
 		let frontmatterContent = '';
