@@ -70,10 +70,10 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 	}
 
 	createFromID(
-		ID: string,
+		id: string,
 		checksum?: string,
 	): IdInterface {
-		const [typeString, campaignSettings, ids] = ID.split('-');
+		const [typeString, campaignSettings, ids] = id.split('-');
 		const [campaignId, adventureIdOrSessionId, actId, sceneId] = ids.split('/');
 		const type: ComponentType = +typeString;
 

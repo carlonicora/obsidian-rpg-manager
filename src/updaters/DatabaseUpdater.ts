@@ -6,7 +6,7 @@ import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
 import {V2_0_to_3_0_worker} from "./workers/V2_0_to_3_0_worker";
 import {DatabaseUpdaterReporterInterface} from "./interfaces/DatabaseUpdaterReporterInterface";
 
-const VersionMap = {
+const versionMap = {
 	'1.2': V1_2_to_1_3_worker,
 	'1.3': V1_3_to_2_0_worker,
 	'2.0': V2_0_to_3_0_worker,
@@ -79,13 +79,12 @@ export class DatabaseUpdater {
 		) return false;
 
 		const empty = await this._isVaultEmptyOfRpgManagerComponents();
-		console.warn(empty)
 
 		let updater = await this.versionsHistory.get(previousVersionMajorMinor);
 		while (updater !== undefined){
 			response = true;
 			if (!empty) {
-				const worker: DatabaseUpdateWorkerInterface = await new VersionMap[updater.previousVersion as keyof typeof VersionMap](this.app);
+				const worker: DatabaseUpdateWorkerInterface = await new versionMap[updater.previousVersion as keyof typeof versionMap](this.app);
 				if (reporter !== undefined) reporter.setUpdater(this.previousVersion, this.currentVersion);
 				await worker.run(reporter);
 			}

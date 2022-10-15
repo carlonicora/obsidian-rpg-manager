@@ -13,7 +13,7 @@ import {RelationshipType} from "../../relationships/enums/RelationshipType";
 import {ImageContent} from "../../responses/contents/ImageContent";
 
 export class TableView extends AbstractSubModelView {
-	private tableEl: HTMLTableElement;
+	private _tableEl: HTMLTableElement;
 
 	public render(
 		container: HTMLElement,
@@ -35,11 +35,11 @@ export class TableView extends AbstractSubModelView {
 			headerEl.createSpan({text: data.title});
 
 			headerEl.addEventListener('click', () => {
-				if (this.tableEl.style.display === 'none'){
-					this.tableEl.style.display = '';
+				if (this._tableEl.style.display === 'none'){
+					this._tableEl.style.display = '';
 					arrowIconEl.style.transform = 'rotate(90deg)';
 				} else {
-					this.tableEl.style.display = 'none';
+					this._tableEl.style.display = 'none';
 					arrowIconEl.style.transform = 'rotate(0deg)';
 				}
 			});
@@ -111,17 +111,17 @@ export class TableView extends AbstractSubModelView {
 			}
 		}
 
-		this.tableEl = divContainer.createEl('table');
-		this.tableEl.addClass('rpgm-table');
+		this._tableEl = divContainer.createEl('table');
+		this._tableEl.addClass('rpgm-table');
 
-		this.tableEl.style.display = data.open ? '' : 'none';
+		this._tableEl.style.display = data.open ? '' : 'none';
 
 		if (data.class != null){
-			this.tableEl.addClass(data.class);
+			this._tableEl.addClass(data.class);
 		}
 
 		if (data.headers != null && data.headers.length > 0) {
-			const header = this.tableEl.createEl('tr');
+			const header = this._tableEl.createEl('tr');
 			data.headers.forEach((content: ContentInterface) => {
 				const cell = header.createEl('th');
 				content.fillContent(cell, this.sourcePath);
@@ -131,7 +131,7 @@ export class TableView extends AbstractSubModelView {
 			});
 		}
 
-		const tableBodyElement = this.tableEl.createTBody();
+		const tableBodyElement = this._tableEl.createTBody();
 		data.content.forEach((element: TableResponseElementInterface) => {
 			const row = tableBodyElement.insertRow();
 			row.addClass('hoverable');

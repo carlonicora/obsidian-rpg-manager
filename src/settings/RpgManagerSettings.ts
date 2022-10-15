@@ -4,7 +4,7 @@ import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {SettingsFactory} from "./factories/SettingsFactory";
 import {
 	RpgManagerAdvancedSettingsInterface,
-	RpgManagerAdvancedSettingsListsInterface, RpgManagerDefaultSettings,
+	RpgManagerAdvancedSettingsListsInterface, rpgManagerDefaultSettings,
 	RpgManagerSettingsInterface
 } from "./RpgManagerSettingsInterface";
 import {SettingType} from "./enums/SettingType";
@@ -162,7 +162,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		const listSettingTableEl: HTMLTableElement = settingItemControlEl.createEl('table', {cls: 'rpgm-advanced-settings-table'});
 
-		const defaultSettings = RpgManagerDefaultSettings.advanced.Agnostic[type as keyof RpgManagerAdvancedSettingsInterface];
+		const defaultSettings = rpgManagerDefaultSettings.advanced.Agnostic[type as keyof RpgManagerAdvancedSettingsInterface];
 
 		for (let index=0; index<defaultSettings.fields.length; index++) {
 			const listSettingTableRowEl: HTMLTableRowElement = listSettingTableEl.createEl('tr');
@@ -208,9 +208,9 @@ export class RpgManagerSettings extends PluginSettingTab {
 		};
 
 		if (partialSettings.advanced !== undefined) {
-			for (let defaultIndex=0; defaultIndex<RpgManagerDefaultSettings.advanced.Agnostic[name].fields.length; defaultIndex++){
+			for (let defaultIndex=0; defaultIndex<rpgManagerDefaultSettings.advanced.Agnostic[name].fields.length; defaultIndex++){
 				if (partialSettings.advanced.Agnostic[name].fields[defaultIndex] === undefined) {
-					partialSettings.advanced.Agnostic[name].fields.push(RpgManagerDefaultSettings.advanced.Agnostic[name].fields[defaultIndex]);
+					partialSettings.advanced.Agnostic[name].fields.push(rpgManagerDefaultSettings.advanced.Agnostic[name].fields[defaultIndex]);
 				}
 			}
 

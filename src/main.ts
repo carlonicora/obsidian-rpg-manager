@@ -11,7 +11,7 @@ import {Controller} from "./controller/Controller";
 import {ComponentType} from "./components/enums/ComponentType";
 import {Factories} from "./factories/Factories";
 import {CreationModal} from "./modals/CreationModal";
-import {RpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
+import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./interfaces/RpgManagerInterface";
 import {ErrorView} from "./views/ErrorView";
@@ -189,7 +189,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, RpgManagerDefaultSettings, await this.loadData());
+		this.settings = Object.assign({}, rpgManagerDefaultSettings, await this.loadData());
 	}
 
 	public async updateSettings(

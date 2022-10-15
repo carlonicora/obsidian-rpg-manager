@@ -23,12 +23,23 @@
 		"no-fallthrough": "off",
 		"@typescript-eslint/no-var-requires": "off",
 		"@typescript-eslint/no-empty-interface": "off",
-		"@typescript-eslint/no-misused-new": "error",
 		"@typescript-eslint/naming-convention": [
 			"error",
 			{
+				"selector": "memberLike",
+				"modifiers": ["private"],
+				"format": ["camelCase"],
+				"leadingUnderscore": "require",
+			},
+			{
 				"selector": "variableLike",
 				"format": ["camelCase"]
+			},
+			{
+				"selector": "variable",
+				"types": ["boolean"],
+				"format": ["PascalCase"],
+				"prefix": ["is", "should", "has", "can", "did", "will"]
 			},
 			{
 				"selector": ["variable", "function"],

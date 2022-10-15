@@ -5,7 +5,7 @@ import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderR
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
 import flatpickr from "flatpickr";
-import {ImageCarouselView} from "../ImageCarouselView";
+import {ImageCarouselView} from "../../images/views/ImageCarouselView";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -16,24 +16,24 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected imageContainterEl: HTMLDivElement;
 	protected infoTableEl: HTMLTableSectionElement;
 
-	private isInternalRender = false;
+	private _isInternalRender = false;
 
 	public internalRender(
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
-		this.isInternalRender = true;
-		this.executeRender(container, data);
+		this._isInternalRender = true;
+		this._executeRender(container, data);
 	}
 
 	public render(
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
-		this.executeRender(container, data);
+		this._executeRender(container, data);
 	}
 
-	private executeRender(
+	private _executeRender(
 		container: HTMLElement,
 		data: HeaderResponseInterface,
 	): void {
@@ -63,8 +63,6 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		this.headerInfoEl = this.headerContainerEl.createDiv({cls: 'info'});
 		this.infoTableEl = this.headerInfoEl.createEl('table', {cls: 'rpgm-headless-table'}).createTBody();
 
-		console.log(data.images.length);
-
 		if (data.images.length > 0){
 			new ImageCarouselView(this.app, data.images).render(this.headerContainerEl);
 		}
@@ -88,7 +86,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		}
 		*/
 
-		if (!this.isInternalRender){
+		if (!this._isInternalRender){
 			data.elements.forEach((element: HeaderResponseElementInterface) => {
 				const containerEl = this.createContainerEl(element);
 				element.value.fillContent(containerEl, this.sourcePath);

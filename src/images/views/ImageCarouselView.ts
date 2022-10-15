@@ -1,5 +1,5 @@
-import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
-import {ImageInterface} from "../images/interfaces/ImageInterface";
+import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
+import {ImageInterface} from "../interfaces/ImageInterface";
 import {App, Component, MarkdownRenderer} from "obsidian";
 
 export class ImageCarouselView extends AbstractRpgManager {

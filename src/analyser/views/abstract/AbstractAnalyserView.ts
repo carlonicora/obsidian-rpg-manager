@@ -4,7 +4,6 @@ import {AnalyserReportInterface} from "../../interfaces/AnalyserReportInterface"
 import {AnalyserDetailType} from "../../enums/AnalyserDetailType";
 import {AnalyserThresholdResult} from "../../enums/AnalyserThresholdResult";
 import {AnalyserViewInterface} from "../../interfaces/AnalyserViewInterface";
-import {AnalyserReportDetailInterface} from "../../interfaces/AnalyserReportDetailInterface";
 import {ComponentType} from "../../../components/enums/ComponentType";
 
 export abstract class AbstractAnalyserView extends AbstractRpgManager implements AnalyserViewInterface {

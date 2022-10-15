@@ -2,7 +2,6 @@ import {AbstractAnalyserReportDetail} from "../../abstracts/AbstractAnalyserRepo
 import {AnalyserScoreType} from "../../enums/AnalyserScoreType";
 import {AnalyserDataInterface} from "../../interfaces/AnalyserDataInterface";
 import {AnalyserDetailType} from "../../enums/AnalyserDetailType";
-import {AnalyserThresholdResult} from "../../enums/AnalyserThresholdResult";
 
 export class AnalyserReportDurationDetail extends AbstractAnalyserReportDetail {
 	protected _type:AnalyserScoreType = AnalyserScoreType.Time;

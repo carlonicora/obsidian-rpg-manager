@@ -1,0 +1,5 @@
+.rpgm-modal .gallery {
+  border: solid 1px var(--background-modifier-border);
+  width: 100%;
+  min-height: 400px;
+}

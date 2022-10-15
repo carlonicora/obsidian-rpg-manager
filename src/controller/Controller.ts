@@ -101,7 +101,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 			if(this.database.isReady && this.currentComponent.version !== undefined) {
 				resolve();
 			} else {
-				setTimeout(_ => poll(resolve), 100);
+				setTimeout(callback => poll(resolve), 100);
 			}
 		}
 

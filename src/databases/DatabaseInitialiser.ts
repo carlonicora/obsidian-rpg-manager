@@ -126,12 +126,12 @@ export class DatabaseInitialiser {
 		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
 			const section = metadata.sections[sectionIndex];
 			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
-				const RpgManagerIdContent: Array<string> = contentArray.slice(section.position.start.line + 1, section.position.end.line);
-				const RpgManagerID: {id: string, checksum: string} = parseYaml(RpgManagerIdContent.join('\n'));
+				const rpgManagerIdContent: Array<string> = contentArray.slice(section.position.start.line + 1, section.position.end.line);
+				const rpgManagerID: {id: string, checksum: string} = parseYaml(rpgManagerIdContent.join('\n'));
 
-				const response = this.factories.id.createFromID(RpgManagerID.id);
+				const response = this.factories.id.createFromID(rpgManagerID.id);
 
-				if (Md5.hashStr(RpgManagerID.id) !== RpgManagerID.checksum) throw new InvalidIdChecksumError(this.app, response)
+				if (Md5.hashStr(rpgManagerID.id) !== rpgManagerID.checksum) throw new InvalidIdChecksumError(this.app, response)
 
 				return response;
 			}

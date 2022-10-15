@@ -1,0 +1,147 @@
+*{
+	box-sizing:border-box;
+}
+
+.rpgm-modal {
+	.gallery {
+		border: solid 1px var(--background-modifier-border);
+		width: 100%;
+		min-height: 400px;
+
+		.gallery-navigation {
+			width: 100%;
+			padding: 20px;
+			border-bottom: solid 1px var(--background-modifier-border);
+			display: flex;
+			gap: 25px;
+
+			.separator, .link {
+				float: left;
+			}
+
+			.clearfix::after {
+				content: "";
+				clear: both;
+				display: table;
+			}
+		}
+
+		.gallery-operations {
+			width: 100%;
+			padding: 20px;
+
+			.gallery-operations-masonry {
+				display: flex;
+				flex-wrap: wrap;
+				column-gap: 1em;
+				flex-direction: row;
+
+				&:hover{
+					img {
+						opacity:0.5;
+					}
+				}
+
+				.gallery-operations-masonry-item {
+					position:relative;
+					width: calc(33.33% - 1em);
+
+					.gallery-operations-masonry-item-container {
+						background-color: var(--background-modifier-cover);
+					}
+
+					.image{
+						padding: 10px;
+						width: 100%;
+						display: block;
+						transition:all .8s;
+						cursor: pointer;
+					}
+
+					&:hover{
+						.image{
+							opacity:1;
+						}
+					}
+
+					.caption {
+						font-size: 0.9em;
+						color: var(--text-muted);
+						padding: 10px;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media ( max-width : 860px ){
+	// set to 2 column
+	.gallery-operations-masonry{
+		height:220vw;
+		.gallery-operations-masonry-item{
+			width:50%;
+		}
+	}
+}
+@media ( max-width : 667px ){
+	// set to 1 column
+	.gallery-operations-masonry{
+		height:auto;
+		.gallery-operations-masonry-item{
+			width:100%;
+		}
+	}
+}
+
+.rpgm-image-carousel {
+	width: 300px;
+	float: right;
+	margin: 10px;
+	padding: 10px;
+	border: solid 1px var(--background-modifier-border);
+	background-color: var(--background-modifier-cover);
+
+	.images {
+		.group {
+			width: 100%;
+
+			.container {
+				width: 100%;
+				font-size: 0.9em;
+				color: var(--text-muted);
+
+				image {
+					width: 280px;
+				}
+			}
+		}
+		.invisible {
+			display: none;
+		}
+	}
+	.navigator {
+		padding: 0px 50px 10px 50px;
+
+		.counter {
+			font-size: 0.8em;
+			color: var(--text-faint);
+			margin: 0 auto;
+			width: 100px;
+			text-align: center;
+		}
+
+		.previous, .next {
+			font-size: 0.9em;
+			cursor: pointer;
+			color: var(--text-accent);
+		}
+
+		.previous {
+			float: left;
+		}
+		.next {
+			float: right;
+		}
+	}
+}

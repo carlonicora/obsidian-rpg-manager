@@ -23,36 +23,36 @@ import {SessionHeaderView} from "../../components/components/session/views/Sessi
 import {SubplotHeaderView} from "../../components/components/subplot/views/SubplotHeaderView";
 
 export class ViewFactory extends AbstractFactory implements ViewFactoryInterface{
-	private viewTypeMap: Map<string,any>;
-	private showInRightLeaf: Map<ViewType, boolean>;
+	private _viewTypeMap: Map<string,any>;
+	private _showInRightLeaf: Map<ViewType, boolean>;
 
 	constructor(
 		app: App,
 	) {
 		super(app);
-		this.viewTypeMap = new Map();
-		this.viewTypeMap.set('AgnosticTable', TableView);
-		this.viewTypeMap.set('AgnosticBreadcrumb', BreadcrumbView);
+		this._viewTypeMap = new Map();
+		this._viewTypeMap.set('AgnosticTable', TableView);
+		this._viewTypeMap.set('AgnosticBreadcrumb', BreadcrumbView);
 
-		this.viewTypeMap.set('AgnosticActHeader', ActHeaderView);
-		this.viewTypeMap.set('AgnosticAdventureHeader', AdventureHeaderView);
-		this.viewTypeMap.set('AgnosticCampaignHeader', CampaignHeaderView);
-		this.viewTypeMap.set('AgnosticCharacterHeader', CharacterHeaderView);
-		this.viewTypeMap.set('AgnosticClueHeader', ClueHeaderView);
-		this.viewTypeMap.set('AgnosticEventHeader', EventHeaderView);
-		this.viewTypeMap.set('AgnosticFactionHeader', FactionHeaderView);
-		this.viewTypeMap.set('AgnosticLocationHeader', LocationHeaderView);
-		this.viewTypeMap.set('AgnosticMusicHeader', MusicHeaderView);
-		this.viewTypeMap.set('AgnosticSceneHeader', SceneHeaderView);
-		this.viewTypeMap.set('AgnosticSessionHeader', SessionHeaderView);
-		this.viewTypeMap.set('AgnosticSubplotHeader', SubplotHeaderView);
+		this._viewTypeMap.set('AgnosticActHeader', ActHeaderView);
+		this._viewTypeMap.set('AgnosticAdventureHeader', AdventureHeaderView);
+		this._viewTypeMap.set('AgnosticCampaignHeader', CampaignHeaderView);
+		this._viewTypeMap.set('AgnosticCharacterHeader', CharacterHeaderView);
+		this._viewTypeMap.set('AgnosticClueHeader', ClueHeaderView);
+		this._viewTypeMap.set('AgnosticEventHeader', EventHeaderView);
+		this._viewTypeMap.set('AgnosticFactionHeader', FactionHeaderView);
+		this._viewTypeMap.set('AgnosticLocationHeader', LocationHeaderView);
+		this._viewTypeMap.set('AgnosticMusicHeader', MusicHeaderView);
+		this._viewTypeMap.set('AgnosticSceneHeader', SceneHeaderView);
+		this._viewTypeMap.set('AgnosticSessionHeader', SessionHeaderView);
+		this._viewTypeMap.set('AgnosticSubplotHeader', SubplotHeaderView);
 
 
-		this.showInRightLeaf = new Map<ViewType, boolean>();
-		this.showInRightLeaf.set(ViewType.RPGManager, true);
-		this.showInRightLeaf.set(ViewType.Errors, true);
-		this.showInRightLeaf.set(ViewType.ReleaseNote, false);
-		this.showInRightLeaf.set(ViewType.Timeline, false);
+		this._showInRightLeaf = new Map<ViewType, boolean>();
+		this._showInRightLeaf.set(ViewType.RPGManager, true);
+		this._showInRightLeaf.set(ViewType.Errors, true);
+		this._showInRightLeaf.set(ViewType.ReleaseNote, false);
+		this._showInRightLeaf.set(ViewType.Timeline, false);
 	}
 	
 	public create(
@@ -61,10 +61,10 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		sourcePath: string,
 	): ViewInterface {
 		let viewKey:string = CampaignSetting[settings] + ResponseType[type];
-		if (!this.viewTypeMap.has(viewKey)) viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type];
-		if (!this.viewTypeMap.has(viewKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
+		if (!this._viewTypeMap.has(viewKey)) viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type];
+		if (!this._viewTypeMap.has(viewKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');
 
-		return new (this.viewTypeMap.get(viewKey))(this.app, sourcePath);
+		return new (this._viewTypeMap.get(viewKey))(this.app, sourcePath);
 	}
 
 	public async showObsidianView(
@@ -73,7 +73,7 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 	): Promise<void> {
 		this.app.workspace.detachLeavesOfType(viewType.toString());
 
-		const showInRightLeaf: boolean|undefined = this.showInRightLeaf.get(viewType);
+		const showInRightLeaf: boolean|undefined = this._showInRightLeaf.get(viewType);
 
 		if (showInRightLeaf === true || showInRightLeaf === undefined) {
 			await this.app.workspace.getRightLeaf(false).setViewState({

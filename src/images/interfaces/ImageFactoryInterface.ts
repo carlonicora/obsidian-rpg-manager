@@ -1,4 +1,4 @@
-import {ImageInterface} from "../../interfaces/ImageInterface";
+import {ImageInterface} from "./ImageInterface";
 
 export interface ImageFactoryInterface {
 	create(

@@ -1,3 +1,123 @@
+* {
+  box-sizing: border-box;
+}
+
+.rpgm-modal .gallery {
+  border: solid 1px var(--background-modifier-border);
+  width: 100%;
+  min-height: 400px;
+}
+.rpgm-modal .gallery .gallery-navigation {
+  width: 100%;
+  padding: 20px;
+  border-bottom: solid 1px var(--background-modifier-border);
+  display: flex;
+  gap: 25px;
+}
+.rpgm-modal .gallery .gallery-navigation .separator, .rpgm-modal .gallery .gallery-navigation .link {
+  float: left;
+}
+.rpgm-modal .gallery .gallery-navigation .clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+.rpgm-modal .gallery .gallery-operations {
+  width: 100%;
+  padding: 20px;
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+  flex-direction: row;
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry:hover img {
+  opacity: 0.5;
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item {
+  position: relative;
+  width: calc(33.33% - 1em);
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item .gallery-operations-masonry-item-container {
+  background-color: var(--background-modifier-cover);
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item .image {
+  padding: 10px;
+  width: 100%;
+  display: block;
+  transition: all 0.8s;
+  cursor: pointer;
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item:hover .image {
+  opacity: 1;
+}
+.rpgm-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item .caption {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  padding: 10px;
+}
+
+@media (max-width: 860px) {
+  .gallery-operations-masonry {
+    height: 220vw;
+  }
+  .gallery-operations-masonry .gallery-operations-masonry-item {
+    width: 50%;
+  }
+}
+@media (max-width: 667px) {
+  .gallery-operations-masonry {
+    height: auto;
+  }
+  .gallery-operations-masonry .gallery-operations-masonry-item {
+    width: 100%;
+  }
+}
+.rpgm-image-carousel {
+  width: 300px;
+  float: right;
+  margin: 10px;
+  padding: 10px;
+  border: solid 1px var(--background-modifier-border);
+  background-color: var(--background-modifier-cover);
+}
+.rpgm-image-carousel .images .group {
+  width: 100%;
+}
+.rpgm-image-carousel .images .group .container {
+  width: 100%;
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+.rpgm-image-carousel .images .group .container image {
+  width: 280px;
+}
+.rpgm-image-carousel .images .invisible {
+  display: none;
+}
+.rpgm-image-carousel .navigator {
+  padding: 0px 50px 10px 50px;
+}
+.rpgm-image-carousel .navigator .counter {
+  font-size: 0.8em;
+  color: var(--text-faint);
+  margin: 0 auto;
+  width: 100px;
+  text-align: center;
+}
+.rpgm-image-carousel .navigator .previous, .rpgm-image-carousel .navigator .next {
+  font-size: 0.9em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+.rpgm-image-carousel .navigator .previous {
+  float: left;
+}
+.rpgm-image-carousel .navigator .next {
+  float: right;
+}
+
 .rpgm-missing {
   font-weight: 100;
   font-style: italic;
@@ -842,50 +962,6 @@
 .rpgm-new-analyser ul li span.description {
   font-size: 0.9em;
   font-style: italic;
-}
-
-.rpgm-image-carousel {
-  width: 300px;
-  float: right;
-  margin: 10px;
-  padding: 10px;
-  border: solid 1px var(--background-modifier-border);
-  background-color: var(--background-modifier-cover);
-}
-.rpgm-image-carousel .images .group {
-  width: 100%;
-}
-.rpgm-image-carousel .images .group .container {
-  width: 100%;
-  font-size: 0.9em;
-  color: var(--text-muted);
-}
-.rpgm-image-carousel .images .group .container image {
-  width: 280px;
-}
-.rpgm-image-carousel .images .invisible {
-  display: none;
-}
-.rpgm-image-carousel .navigator {
-  padding: 0px 50px 10px 50px;
-}
-.rpgm-image-carousel .navigator .counter {
-  font-size: 0.8em;
-  color: var(--text-faint);
-  margin: 0 auto;
-  width: 100px;
-  text-align: center;
-}
-.rpgm-image-carousel .navigator .previous, .rpgm-image-carousel .navigator .next {
-  font-size: 0.9em;
-  cursor: pointer;
-  color: var(--text-accent);
-}
-.rpgm-image-carousel .navigator .previous {
-  float: left;
-}
-.rpgm-image-carousel .navigator .next {
-  float: right;
 }
 
 .flatpickr-calendar {

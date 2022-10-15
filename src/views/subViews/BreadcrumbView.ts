@@ -5,57 +5,68 @@ import {RelationshipsSelectionModal} from "../../modals/RelationshipsSelectionMo
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {IdSwitcherModal} from "../../modals/IdSwitcherModal";
+import {ImageManagementModal} from "../../images/modals/ImageManagementModal";
 
 export class BreadcrumbView extends AbstractSubModelView {
-	private currentComponent: ComponentInterface;
+	private _currentComponent: ComponentInterface;
 
 	render(
 		container: HTMLElement,
 		data: BreadcrumbResponseInterface,
 	): void {
 		if (data.component === undefined) return;
-		this.currentComponent = data.component;
+		this._currentComponent = data.component;
 
 		const breadcrumbContainer = container.createDiv({cls: 'rpgm-breadcrumb'});
 		breadcrumbContainer.createEl('h2').textContent = data.mainTitle;
 		const breadcrumbLine = breadcrumbContainer.createDiv({cls:'line'});
 
-		this.renderBreadcrumb(breadcrumbContainer, breadcrumbLine, data);
+		this._renderBreadcrumb(breadcrumbContainer, breadcrumbLine, data);
 
 		breadcrumbContainer.createDiv({cls: 'reset'});
 		const relationshipAdderContainerEl = breadcrumbContainer.createDiv({cls:'line spaced-line'});
 
-		const crumb = relationshipAdderContainerEl.createDiv({cls: 'crumb'})
-		crumb.createDiv({cls: 'title', text: 'Relationships'});
-		const value = crumb.createDiv({cls: 'value'});
-		const relationshipsAdderEl = value.createEl('span', {cls: 'rpgm-edit-icon', text: 'Manage Relationship'});
-		relationshipsAdderEl.addEventListener("click", () => {
-			new RelationshipsSelectionModal(this.app, this.currentComponent).open();
-		});
+		this._addFunctionality(relationshipAdderContainerEl, 'Relationships', 'Manage Relationship')
+			.addEventListener("click", () => {
+				new RelationshipsSelectionModal(this.app, this._currentComponent).open();
+			});
 
-		const separator = relationshipAdderContainerEl.createDiv({cls: 'separator'});
+		this._addSeparator(relationshipAdderContainerEl);
+
+		this._addFunctionality(relationshipAdderContainerEl,'Move', 'Move your ' + ComponentType[this._currentComponent.id.type])
+			.addEventListener("click", () => {
+				new IdSwitcherModal(this.app, this._currentComponent.file).open();
+			});
+
+		this._addSeparator(relationshipAdderContainerEl);
+
+		this._addFunctionality(relationshipAdderContainerEl, 'Images', 'Gallery Manager')
+			.addEventListener("click", () => {
+				new ImageManagementModal(this.app, this._currentComponent).open();
+			});
+	}
+
+	private _addFunctionality(
+		containerEl: HTMLDivElement,
+		title: string,
+		description: string,
+	): HTMLSpanElement {
+		const crumb = containerEl.createDiv({cls: 'crumb'})
+		crumb.createDiv({cls: 'title', text: title});
+		const value = crumb.createDiv({cls: 'value'});
+		return value.createSpan({cls: 'rpgm-edit-icon', text: description});
+	}
+
+	private _addSeparator(
+		containerEl: HTMLDivElement,
+	): void {
+		const separator = containerEl.createDiv({cls: 'separator'});
 		separator.createDiv({cls: 'title', text: ' '});
 		const separatorText = separator.createDiv({cls: 'value'});
 		separatorText.createEl('p').textContent = '|';
-
-		const idChangerCrumbEl = relationshipAdderContainerEl.createDiv({cls: 'crumb'})
-		idChangerCrumbEl.createDiv({cls: 'title', text: 'Move'});
-		const idChangerValueEl = idChangerCrumbEl.createDiv({cls: 'value'});
-		const idChangerAdderEl = idChangerValueEl.createEl('span', {cls: 'rpgm-edit-icon', text: 'Move your ' + ComponentType[this.currentComponent.id.type]});
-		idChangerAdderEl.addEventListener("click", () => {
-			new IdSwitcherModal(this.app, this.currentComponent.file).open();
-		});
-
-		//TODO: add image manager
-		/*
-		imageManagementNavigatorEl = containerEl.createDiv({cls: 'manager'});
-		imageManagementNavigatorEl?.addEventListener('click', () => {
-			//open image manager
-		});
-		 */
 	}
 
-	private renderBreadcrumb(
+	private _renderBreadcrumb(
 		breadcrumb: HTMLElement,
 		line: HTMLElement,
 		data: BreadcrumbResponseInterface,
@@ -109,7 +120,7 @@ export class BreadcrumbView extends AbstractSubModelView {
 				separatorText.createEl('p').textContent = isFirstLine ? '>' : '|';
 			}
 
-			this.renderBreadcrumb(breadcrumb, lineToUse, data.nextBreadcrumb, isFirstLine);
+			this._renderBreadcrumb(breadcrumb, lineToUse, data.nextBreadcrumb, isFirstLine);
 		} else {
 			breadcrumb.createDiv({cls: 'reset'});
 		}

@@ -43,7 +43,7 @@ export interface RpgManagerAdvancedSettingsListElementInterface {
 }
 
 
-export const RpgManagerDefaultSettings: RpgManagerSettingsInterface = {
+export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	automaticMove: true,
 	templateFolder: '',
 	imagesFolder: '',

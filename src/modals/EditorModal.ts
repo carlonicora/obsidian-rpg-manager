@@ -1,5 +1,4 @@
 import {AbstractModal} from "./abstracts/AbstractModal";
-import {fuzzySearch} from "obsidian";
 
 export class EditorModal extends AbstractModal {
 	private inputEl: HTMLInputElement;

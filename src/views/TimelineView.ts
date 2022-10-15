@@ -18,31 +18,31 @@ export class TimelineView extends AbstractRpgManagerView {
 	protected displayText = 'RPG Manager Timeline';
 	public icon = 'd20';
 
-	private campaignId: IdInterface;
-	private campaign: CampaignInterface;
+	private _campaignId: IdInterface;
+	private _campaign: CampaignInterface;
 
-	private elements: Array<TimelineElementResponseInterface>;
+	private _elements: Array<TimelineElementResponseInterface>;
 
 	public initialise(
 		params: Array<any>,
 	): void {
-		this.campaignId = params[0];
-		this.campaign = this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.campaignId);
+		this._campaignId = params[0];
+		this._campaign = this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this._campaignId);
 
 		super.initialise([]);
 
-		this.elements = [];
+		this._elements = [];
 
 		this.database.read<EventInterface>(
 			(event: EventInterface) =>
 				event.id.type === ComponentType.Event &&
-				event.id.campaignId === this.campaignId.id &&
+				event.id.campaignId === this._campaignId.id &&
 				event.date != null,
 		).forEach((event: EventInterface) => {
 			if (event.date !== undefined) {
 				let time = (<Date>event.date).toLocaleTimeString();
 				time = time.substring(0, time.length - 3);
-				this.elements.push(
+				this._elements.push(
 					new ResponseTimelineElement(
 						event.date,
 						(<Date>event.date).toDateString(),
@@ -58,11 +58,11 @@ export class TimelineView extends AbstractRpgManagerView {
 		this.database.read<ClueInterface>(
 			(clue: ClueInterface) =>
 				clue.id.type === ComponentType.Clue &&
-				clue.id.campaignId === this.campaignId.id &&
+				clue.id.campaignId === this._campaignId.id &&
 				clue.found != null,
 		).forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
-				this.elements.push(
+				this._elements.push(
 					new ResponseTimelineElement(
 						clue.found,
 						(<Date>clue.found).toDateString(),
@@ -78,11 +78,11 @@ export class TimelineView extends AbstractRpgManagerView {
 		this.database.read<CharacterInterface>(
 			(character: CharacterInterface) =>
 				((ComponentType.Character | ComponentType.NonPlayerCharacter) & character.id.type) === character.id.type &&
-				character.id.campaignId === this.campaignId.id &&
+				character.id.campaignId === this._campaignId.id &&
 				character.death != null,
 		).forEach((character: CharacterInterface) => {
 			if (character.death !== undefined) {
-				this.elements.push(
+				this._elements.push(
 					new ResponseTimelineElement(
 						character.death,
 						(<Date>character.death).toDateString(),
@@ -98,14 +98,14 @@ export class TimelineView extends AbstractRpgManagerView {
 		const sessions = this.database.read<SessionInterface>(
 			(session: SessionInterface) =>
 				ComponentType.Session === session.id.type &&
-				session.id.campaignId === this.campaignId.id
+				session.id.campaignId === this._campaignId.id
 		);
 
 		sessions.forEach((session: SessionInterface) => {
 			const scenes = this.database.read<SceneInterface>(
 				(scene: SceneInterface) =>
 					scene.id.type === ComponentType.Scene &&
-					scene.id.campaignId === this.campaignId.id &&
+					scene.id.campaignId === this._campaignId.id &&
 					scene.id.sessionId === session.id.sessionId &&
 					scene.date != null
 			).sort(
@@ -116,7 +116,7 @@ export class TimelineView extends AbstractRpgManagerView {
 
 			const sessionDate = scenes[0]?.date;
 			if (sessionDate != null){
-				this.elements.push(
+				this._elements.push(
 					new ResponseTimelineElement(
 						sessionDate,
 						(<Date>sessionDate).toDateString(),
@@ -129,7 +129,7 @@ export class TimelineView extends AbstractRpgManagerView {
 			}
 		});
 
-		this.elements.sort(this.factories.sorter.create<TimelineElementResponseInterface>([
+		this._elements.sort(this.factories.sorter.create<TimelineElementResponseInterface>([
 			new SorterComparisonElement((data: TimelineElementResponseInterface) => data.fullDate)
 		]));
 	}
@@ -138,25 +138,25 @@ export class TimelineView extends AbstractRpgManagerView {
 	): Promise<void> {
 		this.rpgmContentEl.empty();
 
-		if (this.campaign.image !== null) {
+		if (this._campaign.image !== null) {
 			const bannerContainer = this.rpgmContentEl.createDiv({cls: 'rpg-container'});
 
 			const header = bannerContainer.createDiv({cls: 'rpgm-header'});
-			header.style.backgroundImage = 'url(\'' + this.campaign.image + '\')';
+			header.style.backgroundImage = 'url(\'' + this._campaign.image + '\')';
 
 			const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
 			overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
 
-			overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.file.basename});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (this.campaign.date !== undefined ? this.campaign.date.toDateString() : '')});
+			overlay.createDiv({cls: 'rpgm-campaign-name', text: this._campaign.file.basename});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (this._campaign.date !== undefined ? this._campaign.date.toDateString() : '')});
 		} else {
-			this.rpgmContentEl.createEl('h1', {text: this.campaign.file.basename});
+			this.rpgmContentEl.createEl('h1', {text: this._campaign.file.basename});
 		}
 
 		const timelineEl = this.rpgmContentEl.createDiv({cls: 'rpgm-new-timeline'});
 		const listEl = timelineEl.createEl('ul');
 
-		this.elements.forEach((timeline: TimelineElementResponseInterface) => {
+		this._elements.forEach((timeline: TimelineElementResponseInterface) => {
 			const itemEl = listEl.createEl('li', {cls: timeline.type});
 			const contentEl = itemEl.createDiv({cls: 'content'})
 

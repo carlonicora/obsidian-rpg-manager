@@ -249,11 +249,11 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 	}
 
 	protected generateRpgManagerIDCodeBlock(
-		ID: string,
+		id: string,
 	): string {
 		const metadata = {
-			id: ID,
-			checksum: Md5.hashStr(ID),
+			id: id,
+			checksum: Md5.hashStr(id),
 		};
 
 		let response = '```RpgManagerID\n';

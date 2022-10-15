@@ -1,8 +1,7 @@
 import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
-import {ImageFactoryInterface} from "./interfaces/ImageFactoryInterface";
+import {ImageFactoryInterface} from "../interfaces/ImageFactoryInterface";
 import {ImageInterface} from "../interfaces/ImageInterface";
-import {Image} from "../Image";
-import {TAbstractFile, TFile, TFolder} from "obsidian";
+import {Image} from "../data/Image";
 import {AbstractComponentData} from "../../components/abstracts/AbstractComponentData";
 
 export class ImageFactory extends AbstractFactory implements ImageFactoryInterface {
@@ -10,8 +9,6 @@ export class ImageFactory extends AbstractFactory implements ImageFactoryInterfa
 		src: string,
 		caption?: string,
 	): ImageInterface|undefined {
-		console.warn(src);
-		console.warn(caption)
 		const imageLocation = this.getImageLocation(src);
 
 		if (imageLocation === undefined)

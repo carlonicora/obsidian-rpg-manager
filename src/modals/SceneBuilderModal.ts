@@ -80,7 +80,7 @@ export class SceneBuilderModal extends AbstractModal {
 		typeSelectionEl.createEl('option', {text: '', value: ''}).selected = true;
 
 		Object.keys(SceneType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
-			const sceneTypeOptionEl = typeSelectionEl.createEl("option", {
+			typeSelectionEl.createEl("option", {
 				text: sceneTypeDescription.get(SceneType[type as keyof typeof SceneType]) ?? type,
 				value: type,
 			});

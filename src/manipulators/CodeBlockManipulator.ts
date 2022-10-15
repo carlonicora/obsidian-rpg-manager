@@ -18,14 +18,14 @@ import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async replaceID(
 		file: TFile,
-		ID: string,
+		id: string,
 	): Promise<void> {
 		const fileEditor = new FileManipulator(this.app, file);
 		if (!await fileEditor.read()) return;
 
 		const metadata = {
-			id: ID,
-			checksum: Md5.hashStr(ID),
+			id: id,
+			checksum: Md5.hashStr(id),
 		};
 
 		const newIdCodeBlock: Array<string> = [];

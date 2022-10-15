@@ -1,5 +1,4 @@
-import {ImageInterface} from "./interfaces/ImageInterface";
-import {ImageDimensionInterface} from "./interfaces/ImageDimensionInterface";
+import {ImageInterface} from "../interfaces/ImageInterface";
 
 export class Image implements ImageInterface {
 	private _caption: string;
