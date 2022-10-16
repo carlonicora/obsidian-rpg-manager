@@ -12,7 +12,7 @@ import {ImageMetadataInterface} from "../interfaces/ImageMetadataInterface";
 
 export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
 	public static root: string|undefined;
-	private static _imageExtensions: Array<string> = ["jpeg", "jpg", "png", "webp"];
+	private static _imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
 
 	public static initialiseRoots(
 		app: App,
@@ -56,12 +56,12 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 		return this._getImage(this.file.basename);
 	}
 
-	public get images(): Array<ImageInterface> {
-		const response: Array<ImageInterface> = [];
+	public get images(): ImageInterface[] {
+		const response: ImageInterface[] = [];
 
 		if (this.metadata?.data?.images != undefined && Array.isArray(this.metadata?.data?.images)){
 			this.metadata.data.images.forEach((imageMetadata: ImageMetadataInterface) => {
-				const image: ImageInterface|undefined = this.factories.image.create(imageMetadata.source, imageMetadata.caption);
+				const image: ImageInterface|undefined = this.factories.image.create(imageMetadata.path, imageMetadata.caption);
 
 				if (image !== undefined)
 					response.push(image);

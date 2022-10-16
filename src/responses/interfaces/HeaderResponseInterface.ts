@@ -13,8 +13,8 @@ export interface HeaderResponseInterface extends ResponseDataElementInterface {
 	imgHeight: number;
 	metadata: any|null;
 
-	elements: Array<HeaderResponseElementInterface>;
-	images: Array<ImageInterface>;
+	elements: HeaderResponseElementInterface[];
+	images: ImageInterface[];
 
 	addElement(element: HeaderResponseElementInterface): void;
 }

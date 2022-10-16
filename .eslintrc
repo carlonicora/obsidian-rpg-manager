@@ -17,6 +17,7 @@
 		"no-unused-vars": "off",
 		"@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
 		"@typescript-eslint/ban-ts-comment": "off",
+		"@typescript-eslint/array-type": "warn",
 		"no-prototype-builtins": "off",
 		"@typescript-eslint/no-empty-function": "off",
 		"@typescript-eslint/no-explicit-any": "off",
@@ -39,6 +40,11 @@
 				"modifiers": ["private"],
 				"format": ["camelCase"],
 				"leadingUnderscore": "require",
+			},
+			{
+				"selector": "memberLike",
+				"modifiers": ["protected"],
+				"format": ["camelCase"],
 			}
 		]
 	}

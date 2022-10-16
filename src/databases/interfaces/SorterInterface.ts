@@ -1,7 +1,7 @@
 import {SorterComparisonElementInterface} from "./SorterComparisonElementInterface";
 
 export interface SorterInterface {
-	comparisonElements: Array<SorterComparisonElementInterface>;
+	comparisonElements: SorterComparisonElementInterface[];
 
 	getSortingFunction(
 		leftData: any,

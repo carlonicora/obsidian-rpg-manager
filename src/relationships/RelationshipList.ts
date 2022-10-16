@@ -5,7 +5,7 @@ import {RelationshipType} from "./enums/RelationshipType";
 import {Md5} from "ts-md5";
 
 export class RelationshipList implements RelationshipListInterface {
-	public relationships: Array<RelationshipInterface> = [];
+	public relationships: RelationshipInterface[] = [];
 
 	private _getIndexOfExistingRelationship(
 		path: string,
@@ -57,7 +57,7 @@ export class RelationshipList implements RelationshipListInterface {
 	public getByPath(
 		path: string,
 	): RelationshipInterface|undefined {
-		const matchingRelationships: Array<RelationshipInterface> =
+		const matchingRelationships: RelationshipInterface[] =
 			this.relationships.filter((searchedRelationship: RelationshipInterface) =>
 				searchedRelationship.path === path
 			);
@@ -69,7 +69,7 @@ export class RelationshipList implements RelationshipListInterface {
 
 	public filter(
 		predicate: (value: RelationshipInterface) => boolean, thisArg?: any
-	): Array<RelationshipInterface> {
+	): RelationshipInterface[] {
 		return this.relationships.filter(predicate);
 	}
 
@@ -79,8 +79,8 @@ export class RelationshipList implements RelationshipListInterface {
 		return this.relationships.forEach(callbackfn);
 	}
 
-	get stringified(): Array<any> {
-		const response: Array<any> = [];
+	get stringified(): any[] {
+		const response: any[] = [];
 
 		for (let index=0; index<this.relationships.length; index++){
 			const relationship = this.relationships[index];

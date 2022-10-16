@@ -1,7 +1,7 @@
 import {LogMessageInterface} from "./LogMessageInterface";
 
 export interface LogGroupInterface {
-	logs: Array<LogMessageInterface>;
+	logs: LogMessageInterface[];
 	start: number;
 
 	add(

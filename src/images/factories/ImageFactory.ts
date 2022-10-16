@@ -6,15 +6,15 @@ import {AbstractComponentData} from "../../components/abstracts/AbstractComponen
 
 export class ImageFactory extends AbstractFactory implements ImageFactoryInterface {
 	public create(
-		src: string,
+		path: string,
 		caption?: string,
 	): ImageInterface|undefined {
-		const imageLocation = this._getImageLocation(src);
+		const imageLocation = this._getImageLocation(path);
 
 		if (imageLocation === undefined)
 			return undefined
 
-		const response = new Image(imageLocation);
+		const response = new Image(path, imageLocation);
 		if (caption !== undefined)
 			response.caption = caption;
 
@@ -22,17 +22,17 @@ export class ImageFactory extends AbstractFactory implements ImageFactoryInterfa
 	}
 
 	private _getImageLocation(
-		src: string
+		path: string
 	): string|undefined {
-		if (src.startsWith('http'))
-			return src;
+		if (path.startsWith('http'))
+			return path;
 
-		if (this.app.vault.getAbstractFileByPath(src) === undefined)
+		if (this.app.vault.getAbstractFileByPath(path) === undefined)
 			return undefined;
 
 		if (AbstractComponentData.root === undefined)
 			AbstractComponentData.initialiseRoots(this.app);
 
-		return  AbstractComponentData.root + src;
+		return  AbstractComponentData.root + path;
 	}
 }

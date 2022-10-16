@@ -25,7 +25,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	}
 
 	initialise(
-		params: Array<any>,
+		params: any[],
 	): void {
 		super.initialise([])
 		const campaigns = this.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.id.type === ComponentType.Campaign);
@@ -102,7 +102,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async _addIncompleteComponentList(
 	): Promise<void> {
 		this._incompleteListEl.empty();
-		const components: Array<ComponentInterface> = this.database.read<ComponentInterface>((component: ComponentInterface) => component.isComplete === false);
+		const components: ComponentInterface[] = this.database.read<ComponentInterface>((component: ComponentInterface) => component.isComplete === false);
 		components.forEach((component: ComponentInterface) => {
 			const itemEl = this._incompleteListEl.createDiv({cls: 'vertical-tab-nav-item', text: component.file.basename});
 
@@ -177,14 +177,14 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async _loadToDo(
 		containerEl: HTMLDivElement
 	): Promise<void> {
-		const components: Array<ComponentInterface> = this.database.read<ComponentInterface>((component: ComponentInterface) => true);
+		const components: ComponentInterface[] = this.database.read<ComponentInterface>((component: ComponentInterface) => true);
 
 		let firstToDoFound = false;
 
 		components.forEach((component: ComponentInterface) => {
 			this.app.vault.read(component.file)
 				.then((content: string) => {
-					const contentArray: Array<string> = content.split('\n');
+					const contentArray: string[] = content.split('\n');
 					contentArray.forEach((line: string) => {
 						if (line.trimStart().startsWith('- [ ]')) {
 							if (!firstToDoFound){

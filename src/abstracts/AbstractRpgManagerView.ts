@@ -58,7 +58,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 	}
 
 	public initialise(
-		params: Array<any>,
+		params: any[],
 	): void {
 		this.onOpenOrResize();
 	}

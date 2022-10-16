@@ -18,7 +18,7 @@ import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
-	public recordset: Array<ComponentInterface> = [];
+	public recordset: ComponentInterface[] = [];
 	private _basenameIndex: Map<string, string>;
 	private _isDatabaseReady = false;
 
@@ -36,8 +36,8 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	): Promise<void> {
 		this._isDatabaseReady = true;
 		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
-		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
-		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this.onDelete(file)));
+		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
+		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
@@ -68,8 +68,8 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 	public read<T>(
 		query: any,
-	): Array<T> {
-		return (<unknown>this.recordset.filter((query !== null ? query : true))) as Array<T>;
+	): T[] {
+		return (<unknown>this.recordset.filter((query !== null ? query : true))) as T[];
 	}
 
 	public update(
@@ -102,7 +102,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public readByPath<T extends ComponentInterface>(
 		path: string,
 	): T|undefined {
-		const response:Array<ComponentInterface> = this.recordset
+		const response:ComponentInterface[] = this.recordset
 			.filter((component: ComponentInterface) => component.file.path === path);
 
 		return ((response.length) === 1 ? <T>response[0] : undefined);
@@ -111,7 +111,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public readByBaseName<T extends ComponentInterface>(
 		basename: string,
 	): T|undefined {
-		const response:Array<ComponentInterface> = this.recordset
+		const response:ComponentInterface[] = this.recordset
 			.filter((component: ComponentInterface) => component.file.basename === basename);
 
 		return ((response.length) === 1 ? <T>response[0] : undefined);
@@ -133,8 +133,8 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		type: ComponentType,
 		id: IdInterface|undefined,
 		overloadId: number|undefined = undefined,
-	): Array<T> {
-		return <Array<T>>this.read(
+	): T[] {
+		return <T[]>this.read(
 			this._generateQuery(type, id, true, overloadId),
 		);
 	}
@@ -198,7 +198,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		}
 	}
 
-	private async replaceFileContent(
+	private async _replaceFileContent(
 		file: TFile,
 		oldBaseName: string,
 		newBaseName: string,
@@ -219,7 +219,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	/**
 	 * EVENTS
 	 */
-	private async onDelete(
+	private async _onDelete(
 		file: TFile,
 	): Promise<void> {
 		if (this.delete(file.path)){
@@ -227,7 +227,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		}
 	}
 
-	private async onRename(
+	private async _onRename(
 		file: TFile,
 		oldPath: string,
 	): Promise<void> {
@@ -241,7 +241,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		if (component !== undefined) await this._basenameIndex.set(file.path, file.basename);
 
 		if (oldBaseName !== undefined && component !== undefined && metadata != null) {
-			await this.replaceFileContent(file, oldBaseName, newBaseName);
+			await this._replaceFileContent(file, oldBaseName, newBaseName);
 			await component.readMetadata();
 
 			DatabaseInitialiser.reinitialiseRelationships(component, this)

@@ -51,7 +51,7 @@ export class IdFactory extends AbstractFactory implements IdFactoryInterface {
 	}
 
 	public createFromTags(
-		tags: Array<string>,
+		tags: string[],
 	): IdInterface {
 		const tag: string|undefined = this.tagHelper.getTag(tags);
 		if (tag === undefined) throw new Error('');

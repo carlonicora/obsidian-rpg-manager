@@ -35,7 +35,7 @@ export class DatabaseInitialiser {
 		const response: DatabaseInterface = await this._factories.database.create();
 		group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
-		const components: Array<ComponentInterface> = [];
+		const components: ComponentInterface[] = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 
 		let componentCounter = 0;
@@ -70,7 +70,7 @@ export class DatabaseInitialiser {
 
 		await Promise.all(components);
 
-		const metadata: Array<Promise<void>> = [];
+		const metadata: Promise<void>[] = [];
 		await components.forEach((component: ComponentInterface) => {
 			try {
 				metadata.push(component.readMetadata());
@@ -122,11 +122,11 @@ export class DatabaseInitialiser {
 		if (metadata.sections == undefined || metadata.sections.length === 0) return undefined;
 
 		const content: string = await this._app.vault.read(file);
-		const contentArray: Array<string> = content.split('\n');
+		const contentArray: string[] = content.split('\n');
 		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
 			const section = metadata.sections[sectionIndex];
 			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
-				const rpgManagerIdContent: Array<string> = contentArray.slice(section.position.start.line + 1, section.position.end.line);
+				const rpgManagerIdContent: string[] = contentArray.slice(section.position.start.line + 1, section.position.end.line);
 				const rpgManagerID: {id: string, checksum: string} = parseYaml(rpgManagerIdContent.join('\n'));
 
 				const response = this._factories.id.createFromID(rpgManagerID.id);
@@ -164,7 +164,7 @@ export class DatabaseInitialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		const relationshipsInitialisation: Array<Promise<void>> = [];
+		const relationshipsInitialisation: Promise<void>[] = [];
 
 		database.recordset.forEach((component: ComponentInterface) => {
 			relationshipsInitialisation.push(component.initialiseRelationships());

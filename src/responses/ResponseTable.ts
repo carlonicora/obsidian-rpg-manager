@@ -9,8 +9,8 @@ import {TableResponseElementInterface} from "./interfaces/TableResponseElementIn
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
 	public class: string|null;
-	public headers: Array<ContentInterface>;
-	public content: Array<TableResponseElementInterface>;
+	public headers: ContentInterface[];
+	public content: TableResponseElementInterface[];
 	public create: ComponentType|undefined;
 	public campaignId: number|undefined;
 	public adventureId: number|undefined;
@@ -30,7 +30,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 	}
 
 	public addHeaders(
-		headers: Array<ContentInterface>,
+		headers: ContentInterface[],
 	): void {
 		this.headers = headers;
 	}

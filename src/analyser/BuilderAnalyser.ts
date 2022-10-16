@@ -9,12 +9,12 @@ export class BuilderAnalyser extends AbstractAnalyser {
 
 	constructor(
 		app: App,
-		dataList: Array<AnalyserDataImportInterface>,
+		dataList: AnalyserDataImportInterface[],
 		abtStage: AbtStage|undefined,
 	) {
 		super(app, abtStage);
 
 		this.rawData = dataList;
-		super._ingestData();
+		super.ingestData();
 	}
 }

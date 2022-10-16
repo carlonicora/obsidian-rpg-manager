@@ -7,7 +7,7 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(
 		app: App,
 		idMap: IdInterface,
-		private _duplication: Array<ComponentInterface>,
+		private _duplication: ComponentInterface[],
 		private _duplicated: ComponentInterface|undefined=undefined,
 	) {
 		super(app, idMap);
@@ -42,8 +42,8 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	}
 
 	public getErrorLinks(
-	): Array<string>|undefined {
-		const response: Array<string> = [];
+	): string[]|undefined {
+		const response: string[] = [];
 
 		if (this._duplication.length > 1) {
 			this._duplication.forEach((component: ComponentInterface) => {

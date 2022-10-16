@@ -32,8 +32,8 @@ import {RelationshipType} from "../../relationships/enums/RelationshipType";
 export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
 	protected response:ResponseDataInterface;
 	protected subModelsMap: Map<ComponentType, any> = new Map<ComponentType, any>();
-	protected componentSortingMap: Map<ComponentType, Array<SorterComparisonElementInterface>> = new Map<ComponentType, Array<SorterComparisonElementInterface>>();
-	protected relationshipSortingMap: Map<ComponentType, Array<SorterComparisonElementInterface>> = new Map<ComponentType, Array<SorterComparisonElementInterface>>();
+	protected componentSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
+	protected relationshipSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
 
 	constructor(
 		app: App,
@@ -151,9 +151,9 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 		}
 
 		if (Array.isArray(component)) {
-			let sorter: Array<any> | undefined = undefined;
+			let sorter: any[] | undefined = undefined;
 
-			if ((<Array<any>>component)[0]?.component !== undefined) {
+			if ((<any[]>component)[0]?.component !== undefined) {
 				if (sortByLatestUsage){
 					sorter = [
 						new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentInterface>relationship.component).file.stat.mtime, SorterType.Descending)
@@ -173,7 +173,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 				}
 			}
 
-			if (sorter !== undefined) component = (<Array<any>>component).sort(this.factories.sorter.create<any>(sorter))
+			if (sorter !== undefined) component = (<any[]>component).sort(this.factories.sorter.create<any>(sorter))
 		}
 
 

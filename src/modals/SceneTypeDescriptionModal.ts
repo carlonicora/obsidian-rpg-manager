@@ -7,7 +7,7 @@ interface SceneTypeInformation {
 	isActive: boolean,
 }
 
-const sceneTypeDescription: Array<SceneTypeInformation> = [
+const sceneTypeDescription: SceneTypeInformation[] = [
 	{title: 'Action',
 		description: '*The player characters DO something*\n' +
 			'An **Action** scene type is a scene in which the player characters need to **DO** something.' + '' +

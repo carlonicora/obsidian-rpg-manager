@@ -65,6 +65,8 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 
 		if (data.images.length > 0){
 			new ImageCarouselView(this.app, data.images).render(this.headerContainerEl);
+		} else {
+			this.headerInfoEl.addClass('info-large');
 		}
 
 		/*
@@ -99,7 +101,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected createContainerEl(
 		element: HeaderResponseElementInterface,
 		fn: any|undefined = undefined,
-		additionalParams: Array<any>|undefined=undefined,
+		additionalParams: any[]|undefined=undefined,
 	): HTMLTableCellElement|undefined {
 		let tableRowEl = this.infoTableEl.insertRow();
 		const titleCellEl = tableRowEl.insertCell();

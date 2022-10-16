@@ -13,7 +13,7 @@ export class Session extends AbstractSessionData implements SessionInterface {
 
 	public async initialiseData(
 	): Promise<void> {
-		const pattern: Array<string> = ['### Storyteller Diary','-', '', '###'];
+		const pattern: string[] = ['### Storyteller Diary','-', '', '###'];
 		this._sceneNoteListPattern = await this.fileManipulator.patternPosition(pattern);
 	}
 
@@ -22,7 +22,7 @@ export class Session extends AbstractSessionData implements SessionInterface {
 	}
 
 	public async replaceSceneNoteList(
-		content: Array<string>,
+		content: string[],
 	): Promise<void> {
 		if (this._sceneNoteListPattern !== undefined) this.fileManipulator.replacePattern(this._sceneNoteListPattern, content);
 	}

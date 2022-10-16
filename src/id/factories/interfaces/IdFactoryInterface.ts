@@ -19,7 +19,7 @@ export interface IdFactoryInterface {
 	): IdInterface;
 
 	createFromTags(
-		tags: Array<string>,
+		tags: string[],
 	): IdInterface;
 
 	createFromID(

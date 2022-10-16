@@ -37,6 +37,15 @@ export interface CodeBlockManipulatorInterface {
 		path: string,
 	): Promise<void>;
 
+	removeImage(
+		path: string,
+	): Promise<void>;
+
+	addOrUpdateImage(
+		source: string,
+		caption: string,
+	): Promise<void>;
+
 	selectData(
 	): void;
 

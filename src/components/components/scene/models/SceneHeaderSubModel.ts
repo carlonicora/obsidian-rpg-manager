@@ -26,7 +26,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 
 		this.synopsisTitle = 'Scene Goal';
 
-		const sessions: Array<SessionInterface> = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
+		const sessions: SessionInterface[] = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
 			.sort(this.factories.sorter.create<SessionInterface>([
 				new SorterComparisonElement((session: SessionInterface) => session.id.sessionId, SorterType.Descending)
 			]));

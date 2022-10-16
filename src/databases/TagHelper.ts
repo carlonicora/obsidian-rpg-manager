@@ -17,7 +17,7 @@ export class TagHelper {
 	public static subplotTag ='rpgm/subplot';
 
 	public dataSettings: Map<ComponentType, string>;
-	private _requiredIds: Map<ComponentType, Array<ComponentType>>;
+	private _requiredIds: Map<ComponentType, ComponentType[]>;
 
 	constructor(
 		private _settings: RpgManagerSettingsInterface,
@@ -54,11 +54,11 @@ export class TagHelper {
 	}
 
 	public sanitiseTags(
-		tags: string|Array<string>|undefined,
-	): Array<string> {
+		tags: string|string[]|undefined,
+	): string[] {
 		if (tags == null) return [];
 
-		let temporaryResponse: Array<string> = [];
+		let temporaryResponse: string[] = [];
 
 		if (typeof tags === 'string'){
 			temporaryResponse = tags.split(',');
@@ -69,7 +69,7 @@ export class TagHelper {
 			temporaryResponse = tags;
 		}
 
-		const response: Array<string> = [];
+		const response: string[] = [];
 
 		temporaryResponse.forEach((tag: string|null) => {
 			if (tag != null) response.push(tag);
@@ -99,7 +99,7 @@ export class TagHelper {
 	}
 
 	public hasRpgManagerTags(
-		tags: Array<string>,
+		tags: string[],
 	): boolean {
 		for (let tagIndex = 0; tagIndex < tags.length; tagIndex++) {
 			if (this.isRpgManagerTag(tags[tagIndex])) return true;
@@ -143,7 +143,7 @@ export class TagHelper {
 		const ids = tag.substring(settings.length + 1);
 		if (ids === '') return undefined;
 
-		const tagIds: Array<string> = ids.split('/');
+		const tagIds: string[] = ids.split('/');
 
 		switch (type) {
 			case ComponentType.Campaign:
@@ -167,7 +167,7 @@ export class TagHelper {
 	}
 
 	public getTag(
-		tags: Array<string>,
+		tags: string[],
 	): string|undefined {
 		if (tags == null) return undefined;
 
@@ -260,7 +260,7 @@ export class TagHelper {
 	}
 
 	public fuzzyTagsGuesser(
-		tags: Array<string>,
+		tags: string[],
 	): {tag: string, type: ComponentType}|undefined {
 		if (tags == null) return undefined;
 
@@ -281,7 +281,7 @@ export class TagHelper {
 	}
 
 	public getTemplateDataType(
-		tags: Array<string>|null,
+		tags: string[]|null,
 	): ComponentType|undefined {
 		if (tags == null) return undefined;
 

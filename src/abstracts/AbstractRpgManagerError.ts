@@ -64,7 +64,7 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 	): string;
 
 	public getErrorLinks(
-	): Array<string>|undefined {
+	): string[]|undefined {
 		return undefined;
 	}
 }

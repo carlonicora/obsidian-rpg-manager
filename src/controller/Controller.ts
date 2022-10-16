@@ -19,7 +19,7 @@ import {
 export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	private _isActive = false;
 	private _data: ResponseDataInterface;
-	private _models: Array<ModelInterface> = [];
+	private _models: ModelInterface[] = [];
 
 	private _currentComponent: ComponentInterface;
 
@@ -34,7 +34,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 	) {
 		super(app, container);
 
-		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this.onRename(file, oldPath)));
+		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
 
 		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
 		this.registerEvent(this.app.workspace.on("rpgmanager:force-refresh-views", (() => {
@@ -42,7 +42,7 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 		}).bind(this)));
 	}
 
-	private async onRename(
+	private async _onRename(
 		file: TFile,
 		oldPath: string,
 	): Promise<void>{
@@ -60,9 +60,8 @@ export class Controller extends AbstractRpgManagerMarkdownRenderChild {
 				this._models.push(this._generateModel('Header'));
 			}
 
-
-			if (configurations._models.lists !== undefined){
-				this._models.push(this._generateModel('List', configurations._models.lists));
+			if (configurations.models.lists !== undefined){
+				this._models.push(this._generateModel('List', configurations.models.lists));
 			}
 		} catch (e) {
 			//No need to throw an exception... possibly saving before the data is ready

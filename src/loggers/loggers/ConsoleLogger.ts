@@ -57,7 +57,7 @@ export class ConsoleLogger extends AbstractRpgManager implements LogWriterInterf
 	): Promise<void> {
 		let maxLogType: LogType = LogType.Info;
 		if (group.logs.length > 0) {
-			const messageContent: Array<any> = [];
+			const messageContent: any[] = [];
 
 			const messageType = group.logs[0].messageType;
 			const totalDuration = Date.now() - group.start;

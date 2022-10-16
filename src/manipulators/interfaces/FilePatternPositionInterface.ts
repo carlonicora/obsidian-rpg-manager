@@ -1,5 +1,5 @@
 export interface FilePatternPositionInterface {
-	content: Array<string>,
+	content: string[],
 	start: number,
 	end: number,
 	partialStart: boolean,

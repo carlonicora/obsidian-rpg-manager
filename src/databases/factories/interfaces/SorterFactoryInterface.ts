@@ -2,6 +2,6 @@ import {SorterComparisonElementInterface} from "../../interfaces/SorterCompariso
 
 export interface SorterFactoryInterface {
 	create<T>(
-		comparisonElements: Array<SorterComparisonElementInterface>,
+		comparisonElements: SorterComparisonElementInterface[],
 	): (a: T, b: T) => number;
 }

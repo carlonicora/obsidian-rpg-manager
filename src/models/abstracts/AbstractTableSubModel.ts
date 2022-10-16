@@ -47,9 +47,9 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 	}
 
 	protected generateHeader(
-		fields: Array<RpgManagerAdvancedSettingsListElementInterface>,
-	): Array<ContentInterface> {
-		const response: Array<ContentInterface> = []
+		fields: RpgManagerAdvancedSettingsListElementInterface[],
+	): ContentInterface[] {
+		const response: ContentInterface[] = []
 
 		fields.forEach((listElement: RpgManagerAdvancedSettingsListElementInterface) => {
 			if (listElement.checked) {
@@ -84,7 +84,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 
 	protected generateContent<T extends ComponentInterface>(
 		index: number,
-		fields: Array<RpgManagerAdvancedSettingsListElementInterface>,
+		fields: RpgManagerAdvancedSettingsListElementInterface[],
 		component: T,
 		relationship: RelationshipInterface,
 	): TableResponseElementInterface {
@@ -115,7 +115,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 			case  TableField.Name:
 				return this.factories.contents.create(component.link, ContentType.Link);
 			case  TableField.Image:
-				return this.factories.contents.create(component.image, ContentType.Image, true);
+				return this.factories.contents.create(component.images, ContentType.Image, true);
 			case  TableField.Synopsis:
 				return this.factories.contents.create((relationship.description !== '' && relationship.description != undefined) ? relationship.description : component.synopsis, ContentType.Markdown, false, undefined, true);
 		}

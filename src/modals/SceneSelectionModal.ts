@@ -9,7 +9,7 @@ import {ActInterface} from "../components/components/act/interfaces/ActInterface
 import {SorterType} from "../databases/enums/SorterType";
 
 export class SceneSelectionModal extends AbstractRpgManagerModal {
-	private _availableScenes:Array<SceneInterface>;
+	private _availableScenes:SceneInterface[];
 	private _scenesEls: Map<string, HTMLInputElement>;
 	private _initialScenesEls: Map<string, boolean>;
 	private _actSelectorEl: HTMLSelectElement;
@@ -119,7 +119,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 		}
 
 		if(this._sessionContainerEl.childNodes.length > 0){
-			const keysToRemove: Array<number> = [];
+			const keysToRemove: number[] = [];
 			this._sessionContainerEl.childNodes.forEach((value: ChildNode, key: number, parent: NodeListOf<ChildNode>) => {
 				const option = value.childNodes[0];
 				if (!(<HTMLInputElement>option).checked) {

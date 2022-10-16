@@ -4,7 +4,7 @@ import {RelationshipInterface} from "../relationships/interfaces/RelationshipInt
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 
 export class ResponseTableElement implements TableResponseElementInterface {
-	public elements: Array<ContentInterface>;
+	public elements: ContentInterface[];
 
 	constructor(
 		public component: ComponentInterface|undefined = undefined,

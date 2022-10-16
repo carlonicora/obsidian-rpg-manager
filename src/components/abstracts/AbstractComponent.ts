@@ -24,7 +24,7 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	private _previousMetadata: string|Int32Array|undefined;
 	private _previousRelationships: string|Int32Array|undefined;
-	private _previousRelationshipsStringified: Array<any>;
+	private _previousRelationshipsStringified: any[];
 
 	public async readMetadata(
 	): Promise<void> {

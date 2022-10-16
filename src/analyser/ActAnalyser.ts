@@ -25,7 +25,7 @@ export class ActAnalyser extends AbstractAnalyser {
 					new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
 				]));
 
-		super._addScenesList(sceneList);
-		super._ingestData();
+		super.addScenesList(sceneList);
+		super.ingestData();
 	}
 }

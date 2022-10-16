@@ -10,7 +10,7 @@ export class ReleaseNoteView extends AbstractRpgManagerView {
 	public icon = 'd20';
 
 	public initialise(
-		params: Array<any>,
+		params: any[],
 	): void {
 	}
 

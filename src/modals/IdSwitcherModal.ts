@@ -315,7 +315,7 @@ export class IdSwitcherModal extends AbstractModal {
 	): number {
 		let response = 1;
 
-		let components: Array<ComponentInterface>;
+		let components: ComponentInterface[];
 		if (type === ComponentType.Scene){
 			components = this.database.read<ComponentInterface>((component: ComponentInterface) =>
 				component.id.type === type &&
@@ -355,7 +355,7 @@ export class IdSwitcherModal extends AbstractModal {
 		campaignId: number|undefined = undefined,
 		adventureId: number|undefined = undefined,
 		actId: number|undefined = undefined,
-	): Array<ComponentInterface>{
+	): ComponentInterface[]{
 		return this.database.read<ComponentInterface>((component: ComponentInterface) =>
 			component.id.type === type &&
 			(campaignId !== undefined ? component.id.campaignId === campaignId : true) &&

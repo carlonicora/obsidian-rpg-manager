@@ -10,7 +10,7 @@ import {RelationshipType} from "../relationships/enums/RelationshipType";
 export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	private _relationshipsEl: HTMLDivElement;
 
-	private _availableRelationships: Map<ComponentType, Array<ComponentType>> = new Map<ComponentType, Array<ComponentType>>([
+	private _availableRelationships: Map<ComponentType, ComponentType[]> = new Map<ComponentType, ComponentType[]>([
 		[ComponentType.Campaign, []],
 		[ComponentType.Adventure, [ComponentType.NonPlayerCharacter, ComponentType.Faction, ComponentType.Location, ComponentType.Clue, ComponentType.Event, ComponentType.Character]],
 		[ComponentType.Act, [ComponentType.NonPlayerCharacter, ComponentType.Faction, ComponentType.Location, ComponentType.Clue, ComponentType.Event, ComponentType.Character]],
@@ -89,7 +89,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this._relationshipsEl.createEl('table').createTBody();
 
-		let components: Array<ComponentInterface> = [];
+		let components: ComponentInterface[] = [];
 		if (type !== undefined) {
 			components = this.database.readList<ComponentInterface>(type, this._currentComponent.id)
 				.sort(
@@ -110,7 +110,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 		components.forEach((component: ComponentInterface) => {
 			if (component.id !== this._currentComponent.id) {
-				const relationships: Array<RelationshipInterface> = this._currentComponent.getRelationships()
+				const relationships: RelationshipInterface[] = this._currentComponent.getRelationships()
 					.filter((relationship: RelationshipInterface) =>
 						relationship.component?.file.basename === component.file.basename
 					);

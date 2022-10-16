@@ -55,8 +55,8 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 		return this._data.isValid;
 	}
 
-	get details(): Array<AnalyserReportDetailInterface> {
-		const response: Array<AnalyserReportDetailInterface> = [];
+	get details(): AnalyserReportDetailInterface[] {
+		const response: AnalyserReportDetailInterface[] = [];
 
 		this._reportDetails.forEach((detail: AnalyserReportDetailInterface) => {
 			if (detail.isRelevant) response.push(detail);

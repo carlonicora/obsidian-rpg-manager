@@ -3,5 +3,5 @@ import {ControllerMetadataRelationshipInterface} from "../../controller/interfac
 
 export interface ComponentMetadataInterface {
 	data?: ComponentDataMetadataInterface|any;
-	relationships?: Array<ControllerMetadataRelationshipInterface> | undefined;
+	relationships?: ControllerMetadataRelationshipInterface[] | undefined;
 }

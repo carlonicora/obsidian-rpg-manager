@@ -2,7 +2,7 @@ import {RelationshipInterface} from "./RelationshipInterface";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
 export interface RelationshipListInterface {
-	relationships: Array<RelationshipInterface>;
+	relationships: RelationshipInterface[];
 
 	existsAlready(
 		component: ComponentInterface,
@@ -19,7 +19,7 @@ export interface RelationshipListInterface {
 
 	filter(
 		predicate: (value: RelationshipInterface) => boolean, thisArg?: any
-	): Array<RelationshipInterface>;
+	): RelationshipInterface[];
 
 	forEach(
 		callbackfn: any,
@@ -27,5 +27,5 @@ export interface RelationshipListInterface {
 
 	md5(): string|Int32Array|undefined;
 
-	get stringified(): Array<any>;
+	get stringified(): any[];
 }

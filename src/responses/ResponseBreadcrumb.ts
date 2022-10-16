@@ -13,7 +13,7 @@ export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbRe
 	public isInNewLine = false;
 	public mainTitle: string|null = null;
 	public function: any|null = null;
-	public functionParameters: Array<any>|null;
+	public functionParameters: any[]|null;
 
 	constructor(
 		app: App,

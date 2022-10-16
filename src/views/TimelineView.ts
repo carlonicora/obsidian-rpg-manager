@@ -21,10 +21,10 @@ export class TimelineView extends AbstractRpgManagerView {
 	private _campaignId: IdInterface;
 	private _campaign: CampaignInterface;
 
-	private _elements: Array<TimelineElementResponseInterface>;
+	private _elements: TimelineElementResponseInterface[];
 
 	public initialise(
-		params: Array<any>,
+		params: any[],
 	): void {
 		this._campaignId = params[0];
 		this._campaign = this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this._campaignId);

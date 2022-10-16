@@ -4,7 +4,7 @@ import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
 
 export interface AnalyserReportInterface extends AnalyserReportScoreInterface{
 	get isValid(): boolean;
-	get details(): Array<AnalyserReportDetailInterface>;
+	get details(): AnalyserReportDetailInterface[];
 
 	get actualDuration(): number|undefined;
 	get expectedDuration(): number|undefined;

@@ -14,14 +14,16 @@ import {FactionMetadataInterface} from "../../components/components/faction/inte
 import {LocationMetadataInterface} from "../../components/components/location/interfaces/LocationMetadataInterface";
 import {MusicMetadataInterface} from "../../components/components/music/interfaces/MusicMetadataInterface";
 import {ComponentDataMetadataInterface} from "../../components/interfaces/ComponentDataMetadataInterface";
+import {ComponentMetadataInterface} from "../../components/interfaces/ComponentMetadataInterface";
 
 export interface ControllerMetadataDataInterface {
 	plot?: {
 		abt?: AbtMetadataInterface;
 		storycircle?: StoryCircleMetadataInterface;
 	}
-	relationships?: Array<ControllerMetadataRelationshipInterface>;
-	data?: CampaignMetadataInterface |
+	relationships?: ControllerMetadataRelationshipInterface[];
+	data?: ComponentMetadataInterface |
+		CampaignMetadataInterface |
 		AdventureMetadataInterface |
 		ActMetadataInterface |
 		SceneMetadataInterface |

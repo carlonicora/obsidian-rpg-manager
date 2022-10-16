@@ -14,6 +14,9 @@ import {ComponentStage} from "../components/enums/ComponentStage";
 import {Md5} from "ts-md5";
 import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
+import {ComponentDataMetadataInterface} from "../components/interfaces/ComponentDataMetadataInterface";
+import {ImageMetadataInterface} from "../components/interfaces/ImageMetadataInterface";
+import {ComponentMetadataInterface} from "../components/interfaces/ComponentMetadataInterface";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async replaceID(
@@ -28,7 +31,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 			checksum: Md5.hashStr(id),
 		};
 
-		const newIdCodeBlock: Array<string> = [];
+		const newIdCodeBlock: string[] = [];
 		newIdCodeBlock.push('```RpgManagerID');
 		newIdCodeBlock.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
 		newIdCodeBlock.push(stringifyYaml(metadata));
@@ -59,7 +62,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		const metadata = await fileEditor.getCodeBlockMetadata();
 		if (metadata === undefined || metadata.data.durations === undefined) return;
 
-		const durations: Array<string> = metadata.data.durations;
+		const durations: string[] = metadata.data.durations;
 		let endDurationAdded=false;
 
 		for (let index=0; index<durations.length; index++){
@@ -99,7 +102,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		}
 
 		if (metadata.data.durations === undefined) metadata.data.durations = [];
-		const durations: Array<string> = metadata.data.durations;
+		const durations: string[] = metadata.data.durations;
 
 		for (let index = 0; index < durations.length; index++) {
 			if (durations[index].indexOf('-') === -1) {
@@ -178,31 +181,10 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		}
 	}
 
-	private _updateYamlElement(
-		yaml: Partial<any>,
-		key: Array<string>,
-		value: string|number|boolean|undefined,
-	): void {
-		if (key == null || key.length === 0) return;
-
-		const initialKeyPart: string|undefined = key.shift();
-		if (initialKeyPart === undefined) return;
-
-		if (yaml[initialKeyPart] === undefined) {
-			yaml[initialKeyPart] = {};
-		}
-
-		if (key.length > 0) {
-			return this._updateYamlElement(yaml[initialKeyPart], key, value);
-		} else {
-			yaml[initialKeyPart] = value;
-		}
-	}
-
 	public async addOrUpdateRelationship(
 		relationship: RelationshipInterface,
 	): Promise<void> {
-		return this._executeRelationshipChange(
+		return this._executeCodeBlockChange(
 			this._addOrUpdateRelationship.bind(this),
 			relationship,
 		)
@@ -211,13 +193,80 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	public async removeRelationship(
 		path: string,
 	): Promise<void> {
-		return this._executeRelationshipChange(
+		return this._executeCodeBlockChange(
 			this._removeRelationship.bind(this),
 			path,
 		)
 	}
 
-	private async _executeRelationshipChange(
+	public async removeImage(
+		path: string,
+	): Promise<void> {
+		return this._executeCodeBlockChange(
+			this._removeImage.bind(this),
+			path,
+		);
+	}
+
+	public async addOrUpdateImage(
+		path: string,
+		caption: string,
+	): Promise<void> {
+		return this._executeCodeBlockChange(
+			this._addOrUpdateImage.bind(this),
+			{path: path, caption: caption},
+		);
+	}
+
+	private _removeImage(
+		yaml: ComponentMetadataInterface,
+		path: string,
+	): void {
+		if (yaml.relationships === undefined) return;
+
+		let found: number|undefined;
+		for (let index=0; index<yaml.data.images.length; index++){
+			if (path === yaml.data.images[index].path){
+				found = index;
+				break;
+			}
+		}
+
+		if (found !== undefined){
+			yaml.data.images.splice(found, 1);
+		}
+	}
+
+	private _addOrUpdateImage(
+		yaml: ComponentMetadataInterface,
+		image: {path: string, caption: string},
+	): void {
+		console.log(yaml, image);
+
+		if (yaml.data === undefined) yaml.data = {};
+		if (yaml.data.images === undefined) yaml.data.images = [];
+
+		let found: number|undefined;
+		for (let index=0; index<yaml.data.images.length; index++){
+			if (image.path === yaml.data.images[index].path){
+				found = index;
+				break;
+			}
+		}
+
+		const metadataImage: ImageMetadataInterface = {
+			path: image.path,
+			caption: image.caption,
+		}
+
+		if (found !== undefined){
+			yaml.data.images.splice(found, 1, metadataImage);
+		} else {
+			yaml.data.images.push(metadataImage);
+		}
+	}
+
+	private async _executeCodeBlockChange(
 		fn: any,
 		variable: any,
 	): Promise<void> {
@@ -415,8 +464,8 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 			relationships: [],
 		};
 
-		const arrayContent: Array<string> = fileContent.split('\n');
-		const sections: Array<SectionCache>|undefined = fileCacheMetadata.sections;
+		const arrayContent: string[] = fileContent.split('\n');
+		const sections: SectionCache[]|undefined = fileCacheMetadata.sections;
 
 		if (sections !== undefined) {
 			for (let index = 0; index < sections.length; index++) {
@@ -442,5 +491,26 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		}
 
 		return response;
+	}
+
+	private _updateYamlElement(
+		yaml: Partial<any>,
+		key: string[],
+		value: string|number|boolean|undefined,
+	): void {
+		if (key == null || key.length === 0) return;
+
+		const initialKeyPart: string|undefined = key.shift();
+		if (initialKeyPart === undefined) return;
+
+		if (yaml[initialKeyPart] === undefined) {
+			yaml[initialKeyPart] = {};
+		}
+
+		if (key.length > 0) {
+			return this._updateYamlElement(yaml[initialKeyPart], key, value);
+		} else {
+			yaml[initialKeyPart] = value;
+		}
 	}
 }

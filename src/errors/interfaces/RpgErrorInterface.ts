@@ -13,5 +13,5 @@ export interface RpgErrorInterface {
 	): string
 
 	getErrorLinks(
-	): Array<string>|undefined;
+	): string[]|undefined;
 }

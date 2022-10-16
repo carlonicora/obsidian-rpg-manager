@@ -31,8 +31,8 @@ export class CreationModal extends AbstractRpgManagerModal implements ModalInter
 	public sessionModal: ModalPartInterface;
 	public elementModal: ModalPartInterface;
 
-	public availableSpecificTemplates: Array<TFile> = [];
-	public availableGenericTemplates: Array<TFile> = [];
+	public availableSpecificTemplates: TFile[] = [];
+	public availableGenericTemplates: TFile[] = [];
 
 	private _internalTemplates: Map<ComponentType, ComponentNotesTemplateFactoryInterface>;
 

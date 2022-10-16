@@ -18,7 +18,7 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 	}
 
 	public get arrayContent(
-	): Array<string> {
+	): string[] {
 		return this._fileContent.split('\n');
 	}
 
@@ -30,7 +30,7 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 	public getCodeBlockMetadata(
 		requestString = false,
 	): any|undefined {
-		const arrayContent: Array<string> = this.arrayContent;
+		const arrayContent: string[] = this.arrayContent;
 
 		for (let index=0; index<(this.cachedFile.sections?.length ?? 0); index++) {
 			const section = (this.cachedFile.sections !== undefined ? this.cachedFile.sections[index] : undefined);
@@ -58,9 +58,9 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 	public async maybeReplaceCodeBlockMetadata(
 		newMetadata: any,
 	): Promise<void> {
-		const arrayContent: Array<string> = this.arrayContent;
+		const arrayContent: string[] = this.arrayContent;
 
-		const newArrayContent: Array<string> = [];
+		const newArrayContent: string[] = [];
 		let inCorrectCodeBlock = false;
 		let correctBlockProcessed = false;
 		for (let index=0; index<arrayContent.length; index++) {
@@ -118,9 +118,9 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 	}
 
 	public patternPosition(
-		pattern: Array<string>,
+		pattern: string[],
 	): FilePatternPositionInterface|undefined {
-		const arrayContent: Array<string> = this.arrayContent;
+		const arrayContent: string[] = this.arrayContent;
 
 		let startLine: number|undefined = undefined;
 		let endLine: number|undefined = undefined;
@@ -180,9 +180,9 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 
 	public async replacePattern(
 		patternPosition: FilePatternPositionInterface,
-		content: Array<string>,
+		content: string[],
 	): Promise<void> {
-		const arrayContent: Array<string> = this.arrayContent;
+		const arrayContent: string[] = this.arrayContent;
 
 		if (patternPosition.partialStart){
 			arrayContent[patternPosition.start].replace(patternPosition.content[0], content[0]);

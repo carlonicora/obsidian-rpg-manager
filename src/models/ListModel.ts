@@ -21,7 +21,7 @@ export class ListModel extends AbstractModel {
 		for (let listCounter=0; listCounter<Object.keys(this.sourceMeta).length; listCounter++){
 			const name = Object.keys(this.sourceMeta)[listCounter];
 			const componentType = this.factories.componentType.createComponentType(name.slice(0, -1));
-			let elements: ControllerMetadataModelElementInterface|Array<ControllerMetadataModelElementInterface>|undefined|null = this.sourceMeta[name as keyof ControllerMetadataModelListsInterface];
+			let elements: ControllerMetadataModelElementInterface|ControllerMetadataModelElementInterface[]|undefined|null = this.sourceMeta[name as keyof ControllerMetadataModelListsInterface];
 
 			if (elements == undefined) elements = {
 				relationship: undefined,
@@ -56,7 +56,7 @@ export class ListModel extends AbstractModel {
 
 	private _generateComponentList(
 		type: ComponentType,
-	): Array<ComponentInterface> {
+	): ComponentInterface[] {
 		if (this.currentComponent.id.type !== ComponentType.Session) return this.database.readList<ComponentInterface>(type, this.currentComponent.id)
 
 		return this.database.read<ComponentInterface>(

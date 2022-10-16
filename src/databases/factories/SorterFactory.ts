@@ -5,7 +5,7 @@ import {SorterComparisonElementInterface} from "../interfaces/SorterComparisonEl
 
 export class SorterFactory extends AbstractFactory implements SorterFactoryInterface {
 	create<T>(
-		comparisonElements: Array<SorterComparisonElementInterface>
+		comparisonElements: SorterComparisonElementInterface[]
 	): (a: T, b: T) => number {
 		const sorter = new Sorter(comparisonElements);
 

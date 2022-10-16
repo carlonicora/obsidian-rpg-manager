@@ -1,5 +1,18 @@
 @use "src/images/views/styles";
 
+button {
+	cursor: pointer;
+
+	&.danger {
+		background-color: var(--background-modifier-error);
+
+		&:hover {
+			background-color: var(--text-error);
+			color: var(--text-on-accent);
+		}
+	}
+}
+
 .rpgm-missing {
 	font-weight: 100;
 	font-style: italic;

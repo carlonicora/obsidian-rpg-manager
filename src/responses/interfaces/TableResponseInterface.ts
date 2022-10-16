@@ -5,8 +5,8 @@ import {TableResponseElementInterface} from "./TableResponseElementInterface";
 
 export interface TableResponseInterface extends ResponseDataElementInterface {
 	class: string|null;
-	headers: Array<ContentInterface>;
-	content: Array<TableResponseElementInterface>;
+	headers: ContentInterface[];
+	content: TableResponseElementInterface[];
 	create: ComponentType|undefined;
 	campaignId: number|undefined;
 	adventureId: number|undefined;
@@ -14,7 +14,7 @@ export interface TableResponseInterface extends ResponseDataElementInterface {
 	open: boolean;
 
 	addHeaders(
-		headers: Array<ContentInterface>,
+		headers: ContentInterface[],
 	): void;
 
 	addContent(

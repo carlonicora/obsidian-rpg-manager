@@ -12,6 +12,6 @@ export interface ViewFactoryInterface {
 
 	showObsidianView(
 		viewType: ViewType,
-		params?: Array<any>,
+		params?: any[],
 	): Promise<void>;
 }

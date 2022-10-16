@@ -14,10 +14,10 @@ import {AnalyserViewInterface} from "../interfaces/AnalyserViewInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
 
 export abstract class AbstractAnalyser extends AbstractRpgManager implements AnalyserInterface {
-	protected rawData: Array<AnalyserDataImportInterface>;
+	protected rawData: AnalyserDataImportInterface[];
 	protected isSingleScene = false;
 
-	private analyserData: AnalyserDataInterface;
+	private _analyserData: AnalyserDataInterface;
 	protected type: ComponentType;
 
 	constructor(
@@ -26,8 +26,8 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 	) {
 		super(app);
 		this.rawData = [];
-		this.analyserData = new AnalyserData();
-		this.analyserData.abtStage = abtStage;
+		this._analyserData = new AnalyserData();
+		this._analyserData.abtStage = abtStage;
 	}
 
 	get scenesCount(): number {
@@ -35,14 +35,14 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 	}
 
 	public set targetDuration(duration: number) {
-		this.analyserData.totalTargetDuration = duration;
+		this._analyserData.totalTargetDuration = duration;
 	}
 
 	public render(
 		type: AnalyserReportType,
 		containerEl: HTMLDivElement,
 	): void {
-		const report = new AnalyserReport(this.app, this.analyserData);
+		const report = new AnalyserReport(this.app, this._analyserData);
 		let view: AnalyserViewInterface|undefined = undefined;
 
 		switch(type){
@@ -59,25 +59,25 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 		view.render(report, containerEl);
 	}
 
-	protected _ingestData(
+	protected ingestData(
 	): void {
 		if (this.rawData.length > 0) {
-			this.analyserData.dataLength = this.rawData.length;
+			this._analyserData.dataLength = this.rawData.length;
 			this.rawData.forEach((data: AnalyserDataImportInterface) => {
-				this.analyserData.totalRunningTime += data.currentDuration ?? 0;
-				this.analyserData.addExpectedRunningTime(data.expectedDuration);
+				this._analyserData.totalRunningTime += data.currentDuration ?? 0;
+				this._analyserData.addExpectedRunningTime(data.expectedDuration);
 				if (data.isExciting)
-					this.analyserData.addExpectedExcitmentDuration(data.expectedDuration);
+					this._analyserData.addExpectedExcitmentDuration(data.expectedDuration);
 
 				if (data.isActive)
-					this.analyserData.addActiveScene();
+					this._analyserData.addActiveScene();
 
-				this.analyserData.addSceneType(data.type);
+				this._analyserData.addSceneType(data.type);
 			});
 		}
 	}
 
-	protected _convertScene(
+	protected convertScene(
 		scene: SceneInterface,
 	): AnalyserDataImportInterface {
 		const response: AnalyserDataImportInterface = {
@@ -95,17 +95,17 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 		return response;
 	}
 
-	protected _addScene(
+	protected addScene(
 		scene: SceneInterface,
 	): void {
-		this.rawData.push(this._convertScene(scene));
+		this.rawData.push(this.convertScene(scene));
 	}
 
-	protected _addScenesList(
-		scenes: Array<SceneInterface>,
+	protected addScenesList(
+		scenes: SceneInterface[],
 	): void {
 		scenes.forEach((scene: SceneInterface) => {
-			this._addScene(scene);
+			this.addScene(scene);
 		});
 	}
 }

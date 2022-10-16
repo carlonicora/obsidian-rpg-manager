@@ -7,7 +7,7 @@ import {AbtStage} from "../../../plots/enums/AbtStage";
 
 export interface AnalyserFactoryInterface {
 	createBuilder(
-		data: Array<AnalyserDataImportInterface>,
+		data: AnalyserDataImportInterface[],
 		abtStage?: AbtStage,
 	): AnalyserInterface;
 

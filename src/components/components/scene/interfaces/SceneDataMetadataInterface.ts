@@ -8,6 +8,6 @@ export interface SceneDataMetadataInterface extends ComponentDataMetadataInterfa
 	sceneType?: 'action' | 'combat' | 'encounter' | 'exposition' | 'investigation' | 'planning' | 'preparation' | 'recap' | 'socialcombat' | string | undefined;
 	isActedUpon?: boolean | undefined;
 	duration?: number | undefined;
-	durations?: Array<string> | undefined;
+	durations?: string[] | undefined;
 	storyCircleStage?: 'you' | 'need' | 'go' | 'search' | 'find' | 'take' | 'return' | 'change' | string | undefined;
 }

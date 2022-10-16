@@ -20,14 +20,14 @@ export interface FileManipulatorInterface {
 	): Promise<void>;
 
 	patternPosition(
-		pattern: Array<string>,
+		pattern: string[],
 	): FilePatternPositionInterface|undefined;
 
 	replacePattern(
 		patternPosition: FilePatternPositionInterface,
-		content: Array<string>,
+		content: string[],
 	): Promise<void>;
 
 	get content(): string;
-	get arrayContent(): Array<string>;
+	get arrayContent(): string[];
 }

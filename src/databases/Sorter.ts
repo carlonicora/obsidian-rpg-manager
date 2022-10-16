@@ -4,10 +4,10 @@ import {SorterInterface} from "./interfaces/SorterInterface";
 import {ComponentInterface} from "../components/interfaces/ComponentInterface";
 
 export class Sorter implements SorterInterface {
-	public comparisonElements: Array<SorterComparisonElementInterface>;
+	public comparisonElements: SorterComparisonElementInterface[];
 
 	constructor(
-		comparisonElements: Array<SorterComparisonElementInterface>|undefined,
+		comparisonElements: SorterComparisonElementInterface[]|undefined,
 	) {
 		if (comparisonElements !== undefined){
 			this.comparisonElements = comparisonElements;

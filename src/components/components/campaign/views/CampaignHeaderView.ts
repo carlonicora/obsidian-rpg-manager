@@ -22,7 +22,9 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			this.headerTitleEl.empty();
 			this.headerTitleEl.addClass('rpgm-header');
 			this.headerInfoEl.addClass('info-large');
-			this.headerContainerEl.removeChild(this.imageContainterEl);
+
+			if (this.imageContainterEl !== undefined)
+				this.headerContainerEl.removeChild(this.imageContainterEl);
 
 			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentComponent.image + '\')';
 
@@ -95,7 +97,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		contentEl: HTMLDivElement,
 		type: string,
 		currentComponent: string|undefined,
-		components: Array<ComponentInterface>,
+		components: ComponentInterface[],
 	): any|ContentInterface|undefined {
 		const componentSelectorEl = contentEl.createEl("select");
 		componentSelectorEl.id = type;
@@ -124,7 +126,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			}
 		});
 
-		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: Array<ComponentInterface>) => {
+		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: ComponentInterface[]) => {
 			let link: string|undefined = undefined;
 			components.forEach((component: ComponentInterface) => {
 				if (currentComponent === component.id.stringValue) link = component.link;

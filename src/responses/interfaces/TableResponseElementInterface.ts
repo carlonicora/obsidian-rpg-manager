@@ -5,7 +5,7 @@ import {ContentInterface} from "../contents/interfaces/ContentInterface";
 export interface TableResponseElementInterface {
 	component?: ComponentInterface;
 	relationship: RelationshipInterface;
-	elements: Array<ContentInterface>;
+	elements: ContentInterface[];
 
 	addElement(
 		content: ContentInterface,

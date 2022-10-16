@@ -12,7 +12,7 @@ export class ErrorView extends AbstractRpgManagerView {
 	private _errors: Map<TFile, RpgErrorInterface> = new Map();
 
 	public initialise(
-		params: Array<any>,
+		params: any[],
 	): void {
 		this._errors = params[0];
 	}

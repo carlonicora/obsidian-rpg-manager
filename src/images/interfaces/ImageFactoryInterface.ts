@@ -2,7 +2,7 @@ import {ImageInterface} from "./ImageInterface";
 
 export interface ImageFactoryInterface {
 	create(
-		src: string,
+		path: string,
 		caption?: string,
 	): ImageInterface|undefined;
 }

@@ -69,7 +69,7 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 
 	public async showObsidianView(
 		viewType: ViewType,
-		params: Array<any> = [],
+		params: any[] = [],
 	): Promise<void> {
 		this.app.workspace.detachLeavesOfType(viewType.toString());
 

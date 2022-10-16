@@ -18,7 +18,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		this._campaignSettings = new Map<number, CampaignSetting>();
 		this._loadCampaignSettings();
 
-		const files: Array<TFile> = await this.app.vault.getMarkdownFiles();
+		const files: TFile[] = await this.app.vault.getMarkdownFiles();
 
 		if (reporter !== undefined) reporter.setFileCount(files.length);
 
@@ -61,14 +61,14 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			let frontmatterMetadataStartLine: number|undefined = undefined;
 			let frontmatterMetadataEndLine: number|undefined = undefined;
 			const frontmatterMetadata: any = cachedMetadata.frontmatter;
-			let frontmatterMetadataContentArray: Array<string>|undefined = undefined;
+			let frontmatterMetadataContentArray: string[]|undefined = undefined;
 
 			let firstCodeblockStartLine: number|undefined = undefined;
 			let firstCodeblockEndLine: number|undefined = undefined;
 			let firstCodeblockMetadata: any|undefined = undefined;
 			let firstCodeblockMetadataType: string|undefined;
 			let firstCodeblockMetadataContent: string|undefined = undefined;
-			let firstCodeblockMetadataContentArray: Array<string>|undefined = undefined;
+			let firstCodeblockMetadataContentArray: string[]|undefined = undefined;
 			let firstCodeblockNewMetadata: any|undefined=undefined;
 			let firstCodeblockNewMetadataContent: string|undefined = undefined;
 
@@ -106,7 +106,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				}
 			}
 
-			let metadataRelationships: Array<any> = [];
+			let metadataRelationships: any[] = [];
 			if (frontmatterMetadataContentArray !== undefined){
 				metadataRelationships = await this._readRelationshipsFromFrontmatter(frontmatterMetadataContentArray);
 			}
@@ -134,13 +134,13 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			}
 
 			if (secondCodeblockNewMetadataContent !== undefined && secondCodeblockMetadataStartLine !== undefined && secondCodeblockMetadataEndLine !== undefined){
-				const listNewMetadataContentArray: Array<string> = secondCodeblockNewMetadataContent.split('\n');
+				const listNewMetadataContentArray: string[] = secondCodeblockNewMetadataContent.split('\n');
 				listNewMetadataContentArray[listNewMetadataContentArray.length - 1] = '```';
 				fileContentArray.splice(secondCodeblockMetadataStartLine, secondCodeblockMetadataEndLine  - secondCodeblockMetadataStartLine + 1, ...listNewMetadataContentArray)
 			}
 
 			if (firstCodeblockNewMetadataContent !== undefined && firstCodeblockStartLine !== undefined && firstCodeblockEndLine !== undefined){
-				const dataNewMetadataContentArray: Array<string> = firstCodeblockNewMetadataContent.split('\n');
+				const dataNewMetadataContentArray: string[] = firstCodeblockNewMetadataContent.split('\n');
 				dataNewMetadataContentArray[dataNewMetadataContentArray.length-1] = '```';
 				fileContentArray.splice(firstCodeblockStartLine, firstCodeblockEndLine - firstCodeblockStartLine + 1, ...dataNewMetadataContentArray)
 			}
@@ -211,7 +211,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 	}
 
 	private _getTagAndType(
-		tags: Array<string>,
+		tags: string[],
 	): {tag: string, fuzzyGuessedTag: string, type: ComponentType, updated: boolean}|undefined{
 		let type: ComponentType|undefined = undefined;
 		let tag = this.tagHelper.getTag(tags);
@@ -238,7 +238,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 					parameterCount = 4;
 					break;
 			}
-			const tagElements: Array<string> = fuzzyGuessedTag.tag.split('/');
+			const tagElements: string[] = fuzzyGuessedTag.tag.split('/');
 			const remainingTagElements = tagElements.slice(tagElements.length - parameterCount);
 			if (!tag.endsWith('/')) tag += '/';
 			tag += remainingTagElements.join('/');
@@ -253,7 +253,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 	}
 
 	private _cleanFrontmatter(
-		frontmatterMetadataContentArray: Array<string>,
+		frontmatterMetadataContentArray: string[],
 	): any {
 		let frontmatterContent = '';
 		for (let index=0; index<frontmatterMetadataContentArray.length; index++){
@@ -299,10 +299,10 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 	}
 
 	private _readRelationshipsFromFrontmatter(
-		frontmatterMetadataContentArray: Array<string>,
-	): Array<any> {
-		const response: Array<any> = [];
-		let fileContentArray: Array<string> = [];
+		frontmatterMetadataContentArray: string[],
+	): any[] {
+		const response: any[] = [];
+		let fileContentArray: string[] = [];
 
 		for (let index=0; index<frontmatterMetadataContentArray.length; index++){
 			const frontmatterLine: string = frontmatterMetadataContentArray[index];
@@ -346,8 +346,8 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 	private _readContentRelationships(
 		content: string,
-	): Array<string> {
-		const response: Array<string> = [];
+	): string[] {
+		const response: string[] = [];
 
 		let indexStart: number = content.indexOf('[[');
 
@@ -376,9 +376,9 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 	}
 
 	private _addRelationshipsFromContent(
-		frontmatterRelationships: Array<any>,
-		fileContentArray: Array<string>,
-	): Array<any> {
+		frontmatterRelationships: any[],
+		fileContentArray: string[],
+	): any[] {
 		for (let index=0; index<fileContentArray.length; index++){
 			const path = this._getPathFromBasename(fileContentArray[index]);
 			if (path === undefined) continue;
@@ -398,9 +398,9 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 	private _pathExistsInRelationships(
 		path: string,
-		relationships: Array<any>,
+		relationships: any[],
 	): boolean {
-		const existingRelationships: Array<any> = relationships.filter((relationship: any) => relationship.path === path);
+		const existingRelationships: any[] = relationships.filter((relationship: any) => relationship.path === path);
 		if (existingRelationships.length !== 1) return false;
 
 		return true;
@@ -409,7 +409,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 	private _getPathFromBasename(
 		basename: string,
 	): string|undefined {
-		const files: Array<TFile> = this.app.vault.getMarkdownFiles().filter((file: TFile) => file.basename === basename);
+		const files: TFile[] = this.app.vault.getMarkdownFiles().filter((file: TFile) => file.basename === basename);
 		if (files.length !== 1) return undefined;
 
 		return files[0].path;
@@ -420,7 +420,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 		metadata: any,
 		frontmatterMetadata: any,
 		codeblockMetadata: any,
-		relationships: Array<any>,
+		relationships: any[],
 	): string {
 		switch (type) {
 			case ComponentType.Campaign:
@@ -534,7 +534,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			const duration: number = (endTime-startTime) * 60;
 
 			if (duration !== undefined && duration > 0){
-				const durations: Array<string> = [];
+				const durations: string[] = [];
 				metadata.data.durations = [];
 				let singleDuration = '0';
 				singleDuration += '-';

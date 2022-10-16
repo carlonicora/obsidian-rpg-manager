@@ -20,7 +20,7 @@ export class AnalyserFactory extends AbstractFactory implements AnalyserFactoryI
 	}
 
 	public createBuilder(
-		data: Array<AnalyserDataImportInterface>,
+		data: AnalyserDataImportInterface[],
 		abtStage: AbtStage|undefined=undefined,
 	): AnalyserInterface {
 		return new BuilderAnalyser(this.app, data, abtStage);

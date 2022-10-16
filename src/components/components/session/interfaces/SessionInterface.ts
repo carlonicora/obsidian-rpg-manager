@@ -8,6 +8,6 @@ export interface SessionInterface extends ComponentInterface, PlotsInterface, Se
 	get isSceneNoteListAvailable(): boolean;
 
 	replaceSceneNoteList(
-		content: Array<string>,
+		content: string[],
 	): Promise<void>;
 }

@@ -24,5 +24,5 @@ export interface ComponentDataInterface {
 	 */
 	get image(): string | undefined;
 
-	get images(): Array<ImageInterface>;
+	get images(): ImageInterface[];
 }

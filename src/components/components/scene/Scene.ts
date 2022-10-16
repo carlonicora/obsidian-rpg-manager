@@ -68,7 +68,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	get expectedDuration(): number {
 		if (this.sceneType == undefined) return 0;
 
-		const previousDurations: Array<number> = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
+		const previousDurations: number[] = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
 		previousDurations.sort((left: number, right: number) => {
 			if (left > right) return +1;
 			if (left < right) return -1;

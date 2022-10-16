@@ -11,8 +11,8 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 	): Promise<void> {
 		this.factories.logger.warning(LogMessageType.Updater, 'Updating RPG Manager from v1.3 to v2.0');
 
-		const campaigns: Array<TFile> = [];
-		const sessions: Array<TFile> = [];
+		const campaigns: TFile[] = [];
+		const sessions: TFile[] = [];
 
 		const files: TFile[] = await this.app.vault.getMarkdownFiles();
 		const fileMap: Map<TFile, string> = new Map<TFile, string>();

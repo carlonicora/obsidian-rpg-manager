@@ -47,7 +47,7 @@ export class ImageNavigationModalView extends AbstractImageModalView {
 	): void {
 		this._operationsEl.empty();
 
-		const view = this.factories.imageView.create(type, this._component);
+		const view = this.factories.imageView.create(type, this.component);
 		view.render(this._operationsEl);
 	}
 }

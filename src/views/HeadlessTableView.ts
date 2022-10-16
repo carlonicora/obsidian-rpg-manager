@@ -18,7 +18,7 @@ export class HeadlessTableView extends AbstractRpgManager{
 	public addRow(
 		element: HeaderResponseElementInterface|string,
 		fn: any,
-		additionalParams: Array<any>|undefined=undefined,
+		additionalParams: any[]|undefined=undefined,
 	): void {
 		const rowEl = this.tableEl.createEl('tr');
 		rowEl.createEl('td', {cls: 'header', text: (typeof element === 'string' ? element : element.title)});

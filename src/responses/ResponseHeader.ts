@@ -15,9 +15,9 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 	public imgSrc: string|null|undefined;
 	public imgWidth: number;
 	public imgHeight: number;
-	public elements: Array<HeaderResponseElementInterface>;
+	public elements: HeaderResponseElementInterface[];
 	public metadata: any|null;
-	public images: Array<ImageInterface>;
+	public images: ImageInterface[];
 
 	constructor(
 		app: App,

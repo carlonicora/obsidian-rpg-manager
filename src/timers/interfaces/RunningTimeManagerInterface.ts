@@ -3,7 +3,7 @@ import {SceneInterface} from "../../components/components/scene/interfaces/Scene
 
 export interface RunningTimeManagerInterface{
 	currentlyRunningScene: SceneInterface|undefined;
-	medianTimes: Map<number, Map<SceneType, Array<number>>>;
+	medianTimes: Map<number, Map<SceneType, number[]>>;
 
 	get isTimerRunning(): boolean;
 

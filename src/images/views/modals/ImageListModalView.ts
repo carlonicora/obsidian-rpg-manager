@@ -15,7 +15,7 @@ export class ImageListModalView extends AbstractImageModalView implements ImageV
 
 		this._masonryEl = containerEl.createDiv({cls: 'gallery-operations-masonry'});
 
-		this._component.images.forEach((image: ImageInterface) => {
+		this.component.images.forEach((image: ImageInterface) => {
 			const masonryItemEl = this._masonryEl.createDiv({cls: 'gallery-operations-masonry-item'});
 
 			const imageContainerEl = masonryItemEl.createDiv({cls: 'gallery-operations-masonry-item-container'});
@@ -37,7 +37,7 @@ export class ImageListModalView extends AbstractImageModalView implements ImageV
 			}
 
 			imageEl.addEventListener('click', () => {
-				const view = this.factories.imageView.create(ImageViewType.ModalEdit, this._component);
+				const view = this.factories.imageView.create(ImageViewType.ModalEdit, this.component);
 				(<ImageEditModalView>view).image = image;
 				view.render(containerEl);
 			});

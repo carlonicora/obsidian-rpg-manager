@@ -17,7 +17,7 @@ export interface DatabaseInterface {
 
 	read<T>(
 		query: any,
-	): Array<T>;
+	): T[];
 
 	update(
 		data: ComponentInterface,
@@ -45,7 +45,7 @@ export interface DatabaseInterface {
 		type: ComponentType,
 		id: IdInterface|undefined,
 		overloadId?: number|undefined,
-	): Array<T>;
+	): T[];
 
 	onSave(
 		file: TFile,

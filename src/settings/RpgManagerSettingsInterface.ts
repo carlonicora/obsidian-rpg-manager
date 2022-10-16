@@ -33,7 +33,7 @@ export interface RpgManagerAdvancedSettingsInterface {
 export interface RpgManagerAdvancedSettingsListsInterface {
 	title: string;
 	defaultVisible: boolean;
-	fields: Array<RpgManagerAdvancedSettingsListElementInterface>;
+	fields: RpgManagerAdvancedSettingsListElementInterface[];
 }
 
 export interface RpgManagerAdvancedSettingsListElementInterface {

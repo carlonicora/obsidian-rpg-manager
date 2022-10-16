@@ -1,4 +1,4 @@
 export interface ImageMetadataInterface {
-	source: string,
+	path: string,
 	caption?: string,
 }

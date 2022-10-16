@@ -6,13 +6,13 @@ export class ImageCarouselView extends AbstractRpgManager {
 	private _currentImage: number;
 	private _imagesCount: number;
 
-	private _imageGroups: Array<HTMLDivElement>;
+	private _imageGroups: HTMLDivElement[];
 
 	private _imageCounterEl: HTMLDivElement;
 
 	constructor(
 		app: App,
-		private _images: Array<ImageInterface>,
+		private _images: ImageInterface[],
 	) {
 		super(app);
 
@@ -92,25 +92,25 @@ export class ImageCarouselView extends AbstractRpgManager {
 		this._imageGroups[this._currentImage].addClass('invisible');
 
 		if (this._currentImage === 0) {
-			this._currentImage = this._imagesCount;
+			this._currentImage = this._imagesCount-1;
 		} else {
 			this._currentImage--;
 		}
 
 		this._imageGroups[this._currentImage].removeClass('invisible');
-		this._imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + (this._imagesCount + 1).toString();
+		this._imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + this._imagesCount.toString();
 	}
 
 	private _moveNext(): void {
 		this._imageGroups[this._currentImage].addClass('invisible');
 
-		if (this._currentImage === this._imagesCount) {
+		if (this._currentImage === this._imagesCount -1) {
 			this._currentImage = 0;
 		} else {
 			this._currentImage++;
 		}
 
 		this._imageGroups[this._currentImage].removeClass('invisible');
-		this._imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + (this._imagesCount + 1).toString();
+		this._imageCounterEl.textContent = (this._currentImage + 1).toString() + '/' + this._imagesCount.toString();
 	}
 }

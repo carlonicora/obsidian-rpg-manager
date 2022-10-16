@@ -60,7 +60,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 				createEl('button', {cls: 'actionButton', text: 'Add scene list to Storyteller Diary'});
 
 			sceneNoteReplacerButtonEl.addEventListener('click', () => {
-				const content: Array<string> = [];
+				const content: string[] = [];
 				content.push('### Storyteller Diary');
 				data.metadata.scenes.forEach((scene: SceneInterface) => {
 					content.push(scene.link);

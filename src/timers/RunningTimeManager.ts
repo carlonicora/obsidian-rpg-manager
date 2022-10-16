@@ -7,7 +7,7 @@ import {CampaignInterface} from "../components/components/campaign/interfaces/Ca
 
 export class RunningTimeManager extends AbstractRpgManager implements RunningTimeManagerInterface {
 	public currentlyRunningScene: SceneInterface|undefined = undefined;
-	public medianDefaultTimes: Map<SceneType, Array<number>> = new Map<SceneType, Array<number>>([
+	public medianDefaultTimes: Map<SceneType, number[]> = new Map<SceneType, number[]>([
 		[SceneType.Action, [15*60]],
 		[SceneType.Combat, [15*60]],
 		[SceneType.Encounter, [15*60]],
@@ -19,7 +19,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 		[SceneType.SocialCombat, [15*60]],
 	]);
 
-	public medianTimes: Map<number, Map<SceneType, Array<number>>> = new Map<number, Map<SceneType, Array<number>>>([
+	public medianTimes: Map<number, Map<SceneType, number[]>> = new Map<number, Map<SceneType, number[]>>([
 		[
 			0,
 			this.medianDefaultTimes,
@@ -60,7 +60,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 	public async updateMedianTimes(
 		isStartup=false,
 	): Promise<void> {
-		const campaigns: Array<CampaignInterface> = this.database.read<CampaignInterface>((campaign: CampaignInterface) =>
+		const campaigns: CampaignInterface[] = this.database.read<CampaignInterface>((campaign: CampaignInterface) =>
 			campaign.id.type === ComponentType.Campaign
 		);
 
@@ -68,7 +68,7 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 			this.medianTimes.set(campaigns[index].id.campaignId, structuredClone(this.medianDefaultTimes));
 		}
 
-		const scenes: Array<SceneInterface> = this.database.read<SceneInterface>((scene: SceneInterface) =>
+		const scenes: SceneInterface[] = this.database.read<SceneInterface>((scene: SceneInterface) =>
 			scene.id.type === ComponentType.Scene
 		);
 
@@ -78,9 +78,9 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 				this.stopScene(scene);
 			}
 			if (scene.sceneType !== undefined && scene.currentDuration !== undefined && scene.currentDuration !== 0) {
-				const campaignMedians: Map<SceneType, Array<number>> | undefined = this.medianTimes.get(scene.id.campaignId);
+				const campaignMedians: Map<SceneType, number[]> | undefined = this.medianTimes.get(scene.id.campaignId);
 				if (campaignMedians !== undefined) {
-					const sessionTypeTimes: Array<number>|undefined = campaignMedians.get(scene.sceneType);
+					const sessionTypeTimes: number[]|undefined = campaignMedians.get(scene.sceneType);
 					if (sessionTypeTimes !== undefined) sessionTypeTimes.push(scene.currentDuration);
 				}
 			}

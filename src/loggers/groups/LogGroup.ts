@@ -2,7 +2,7 @@ import {LogGroupInterface} from "../interfaces/LogGroupInterface";
 import {LogMessageInterface} from "../interfaces/LogMessageInterface";
 
 export class LogGroup implements LogGroupInterface{
-	public logs: Array<LogMessageInterface>;
+	public logs: LogMessageInterface[];
 	public start: number;
 
 	constructor(
