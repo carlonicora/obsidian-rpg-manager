@@ -241,8 +241,6 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		yaml: ComponentMetadataInterface,
 		image: {path: string, caption: string},
 	): void {
-		console.log(yaml, image);
-
 		if (yaml.data === undefined) yaml.data = {};
 		if (yaml.data.images === undefined) yaml.data.images = [];
 

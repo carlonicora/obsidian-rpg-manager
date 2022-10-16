@@ -63,8 +63,8 @@ export abstract class AbstractComponent extends AbstractComponentData implements
 
 	public async initialiseRelationships(
 	): Promise<void> {
-		if (this.metadata._relationships !== undefined){
-			await this.metadata._relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
+		if (this.metadata.relationships !== undefined){
+			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 				if (relationshipMetadata.path !== this.file.path) {
 					this._relationships.add(
 						this.factories.relationship.createFromMetadata(relationshipMetadata),

@@ -1,7 +1,8 @@
 import {AbstractContent} from "../abstracts/AbstractContent";
+import {ImageInterface} from "../../images/interfaces/ImageInterface";
 
 export class ImageContent extends AbstractContent {
-	public content: string;
+	public content: Array<ImageInterface>;
 
 	public fillContent(
 		container: HTMLElement|undefined,
@@ -9,7 +10,7 @@ export class ImageContent extends AbstractContent {
 	): void {
 		if (container === undefined) return;
 
-		if (this.content != null){
+		if (this.content != null && this.content.length > 0){
 			const image = new Image(75, 75);
 
 			image.onerror = (evt: Event|string) => {
@@ -24,7 +25,7 @@ export class ImageContent extends AbstractContent {
 				container.style.width = image.style.width;
 			};
 
-			image.src = this.content;
+			image.src = this.content[0].src;
 		} else {
 			container.textContent = '';
 		}
