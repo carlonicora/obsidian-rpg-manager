@@ -34,6 +34,15 @@
 				margin-bottom: 20px;
 			}
 
+			.image-container {
+				max-width: 300px;
+				margin-top: 20px;
+
+				img {
+					width: 100%;
+				}
+			}
+
 			.gallery-operations-edit {
 				.gallery-operations-edit-deleted {
 					display: none;

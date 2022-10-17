@@ -2,11 +2,15 @@ import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {GalleryViewType} from "../../enums/GalleryViewType";
+import fetch, {Response} from "node-fetch";
+import {TFile, TFolder} from "obsidian";
+import {Event} from "../../../components/components/event/Event";
 
 export class GalleryEditModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _image: ImageInterface;
 
 	private _captionEl: HTMLTextAreaElement;
+	private _imageEl: HTMLImageElement;
 
 	set image(image: ImageInterface) {
 		this._image = image;
@@ -29,11 +33,11 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 		const editorImageContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-image'});
 		const editorEditorContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-editor clearfix'});
 
-		const imageEl = new Image();
-		imageEl.addClass('image');
-		imageEl.src = this._image.src;
+		this._imageEl = new Image();
+		this._imageEl.addClass('image');
+		this._imageEl.src = this._image.src;
 
-		editorImageContainerEl.append(imageEl);
+		editorImageContainerEl.append(this._imageEl);
 
 		editorEditorContainerEl.createEl('h3', {text: 'Edit Image'});
 		editorEditorContainerEl.createEl('label', {text: 'Caption'});
@@ -52,16 +56,31 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 					});
 			});
 
-		if (this._image.src.startsWith('http')) {
-			editorEditorContainerEl.createEl('button', {
-				text: 'Import the image to your Vault'
-			})
-		} else {
+		if (!this._image.src.startsWith('http')) {
 			const deleteImageEl: HTMLButtonElement = editorEditorContainerEl.createEl('button', {
 				cls: 'danger',
 				text: 'Delete Image from Vault'
 			})
 		}
+	}
+
+	private getBase64Image(
+		img: HTMLImageElement,
+	): string|undefined {
+		var canvas = document.createElement("canvas");
+		canvas.width = img.width;
+		canvas.height = img.height;
+
+		img.crossOrigin = 'anonmous'
+		var ctx = canvas.getContext("2d");
+		if (ctx == null)
+			return;
+
+		ctx.drawImage(img, 0, 0);
+
+		var dataURL = canvas.toDataURL("image/png");
+
+		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 	}
 
 	private async _saveCaption(

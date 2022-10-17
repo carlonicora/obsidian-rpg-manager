@@ -30,6 +30,13 @@
 .rpgm-modal .gallery .gallery-operations input {
   margin-bottom: 20px;
 }
+.rpgm-modal .gallery .gallery-operations .image-container {
+  max-width: 300px;
+  margin-top: 20px;
+}
+.rpgm-modal .gallery .gallery-operations .image-container img {
+  width: 100%;
+}
 .rpgm-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-deleted {
   display: none;
   position: absolute;
@@ -193,6 +200,9 @@ button.danger {
 button.danger:hover {
   background-color: var(--text-error);
   color: var(--text-on-accent);
+}
+button:disabled {
+  background-color: var(--background-primary-alt);
 }
 
 .rpgm-missing {
