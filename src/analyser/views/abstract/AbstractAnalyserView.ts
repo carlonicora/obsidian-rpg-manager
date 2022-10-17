@@ -23,64 +23,6 @@ export abstract class AbstractAnalyserView extends AbstractRpgManager implements
 		containerEl: HTMLDivElement,
 	): void;
 
-	/*
-	public render(
-		report: AnalyserReportInterface,
-		containerEl: HTMLDivElement,
-	): void {
-		if (!report.isValid) return;
-
-		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-analyser'});
-
-		if (report.actualDuration !== undefined && report.actualDuration !== 0){
-			const actualDuration = this.transformTime(report.actualDuration);
-			const actualDurationDescription = 'Actual ' + ComponentType[this.type] + ' duration: ' + actualDuration;
-			analyserEl.createDiv().createSpan({cls: 'header', text: actualDurationDescription})
-		}
-
-		if (report.expectedDuration !== undefined && report.expectedDuration !== 0){
-			const expectedDuration = this.transformTime(report.expectedDuration);
-			let expectedDurationDescription = 'Expected ' + ComponentType[this.type] + ' duration: ' + expectedDuration;
-
-			if (report.targetDuration !== undefined && report.targetDuration !== 0){
-				const targetDuration = this.transformTime(report.targetDuration);
-				expectedDurationDescription += ' (Your target is ' + targetDuration + ')';
-			}
-
-			analyserEl.createDiv().createSpan({cls: 'header', text: expectedDurationDescription})
-		}
-
-		const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
-		const description = this.descriptions.get(undefined)?.get(report.thresholdType);
-		if (description !== undefined) {
-			analyserHeadlineEl.textContent = this.prepareDescription(
-				report.percentage,
-				report.score,
-				report.maximumScore,
-				description[0],
-				report.ideal,
-				this.type,
-			)
-		}
-		this.addThresholdClass(report.thresholdType, analyserHeadlineEl);
-
-		const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
-
-		report.details.forEach((reportDetail: AnalyserReportDetailInterface) => {
-			const descriptionTemplate: Array<string>|undefined = this.descriptions.get(reportDetail.detailType)?.get(reportDetail.thresholdType);
-
-			if (descriptionTemplate !== undefined){
-				const description = this.prepareDescription(reportDetail.percentage, reportDetail.score, reportDetail.maximumScore, descriptionTemplate[0], reportDetail.ideal);
-				const analyserElementEl: HTMLLIElement = analyserListEl.createEl('li', {text: description});
-
-				const extendedDescription = this.prepareDescription(reportDetail.percentage, reportDetail.score, reportDetail.maximumScore, descriptionTemplate[1], reportDetail.ideal);
-				this.addThresholdErrorClass(reportDetail.thresholdType, analyserElementEl);
-				analyserElementEl.createSpan({cls: 'description', text: extendedDescription});
-			}
-		});
-	}
-	*/
-
 	protected transformTime(
 		duration: number|undefined,
 	): string {
