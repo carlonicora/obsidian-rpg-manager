@@ -121,7 +121,11 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 
 		if (title !== undefined) {
 			const subtitleEl = analyserListElementEl.createSpan({cls: 'subtitle', text: title});
-			this.addThresholdErrorClass(reportDetail.thresholdType, subtitleEl);
+			if (reportDetail.isHighBetter){
+				this.addThresholdClass(reportDetail.thresholdType, subtitleEl);
+			} else {
+				this.addThresholdErrorClass(reportDetail.thresholdType, subtitleEl);
+			}
 		}
 
 		const subtitle = this.prepareDescription(
@@ -167,7 +171,7 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 	): void {
 		const analyserListTimingElementEl: HTMLLIElement = containerEl.createEl('li');
 
-		if (report.durationPercentage !== 0) {
+		if (report.durationPercentage !== 0 && !isNaN(report.durationPercentage)) {
 			const detail = this.prepareDescription(
 				report.durationPercentage,
 				0,

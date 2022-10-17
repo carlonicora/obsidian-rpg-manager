@@ -23,4 +23,8 @@ export class AnalyserReportVarietyDetail extends AbstractAnalyserReportDetail {
 		if (this._score >= this._idealScore) return 100;
 		return Math.floor(this._score * 100 / this._idealScore);
 	}
+
+	get isHighBetter(): boolean {
+		return true;
+	}
 }

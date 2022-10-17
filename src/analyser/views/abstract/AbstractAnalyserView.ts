@@ -86,7 +86,7 @@ export abstract class AbstractAnalyserView extends AbstractRpgManager implements
 	): void {
 		switch (threshold){
 			case AnalyserThresholdResult.Correct:
-				containerEl.addClass('balanced');
+				containerEl.addClass('perfect');
 				break;
 			case AnalyserThresholdResult.CriticallyHigh:
 				containerEl.addClass('error');

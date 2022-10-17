@@ -16,4 +16,8 @@ export class AnalyserReportInterestDetail extends AbstractAnalyserReportDetail {
 		this._maximumScore = this.data.dataLength;
 		this._idealScore = this.data.dataLength;
 	}
+
+	get isHighBetter(): boolean {
+		return true;
+	}
 }
