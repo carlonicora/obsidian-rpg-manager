@@ -28,7 +28,6 @@ export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 			},
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				abtStage: ''
 			}

@@ -10,7 +10,6 @@ export class NonPlayerCharacterTemplateFactory extends AbstractComponentTemplate
 		const metadata: CharacterMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				death: '',
 				dob: '',
 				goals: '',

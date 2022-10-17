@@ -10,7 +10,6 @@ export class FactionTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: FactionMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false
 			}
 		};

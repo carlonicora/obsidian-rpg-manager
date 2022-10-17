@@ -10,7 +10,6 @@ export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: LocationMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				address: ''
 			}

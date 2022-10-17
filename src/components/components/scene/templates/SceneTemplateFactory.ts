@@ -11,7 +11,6 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: SceneMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				sessionId: 0,
 				action: '',
