@@ -29,7 +29,6 @@ export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 			data: {
 				date: '',
 				synopsis: '',
-				image: '',
 				complete: false,
 				currentAdventureId: '',
 				currentActId: '',

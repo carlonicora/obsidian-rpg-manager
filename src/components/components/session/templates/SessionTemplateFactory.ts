@@ -10,7 +10,6 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: SessionMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				irl: undefined,
 				abtStage: undefined

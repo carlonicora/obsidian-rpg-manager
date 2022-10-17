@@ -10,7 +10,6 @@ export class EventTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: EventMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				date: ''
 			}

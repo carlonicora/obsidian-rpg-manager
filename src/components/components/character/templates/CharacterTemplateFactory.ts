@@ -10,7 +10,6 @@ export class CharacterTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: CharacterMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				dob: '',
 				death: '',

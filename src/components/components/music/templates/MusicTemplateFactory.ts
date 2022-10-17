@@ -10,7 +10,6 @@ export class MusicTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: MusicMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				url: ''
 			}

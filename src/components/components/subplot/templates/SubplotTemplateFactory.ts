@@ -28,7 +28,6 @@ export class SubplotTemplateFactory extends AbstractComponentTemplateFactory {
 			},
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false
 			}
 		};

@@ -10,7 +10,6 @@ export class ClueTemplateFactory extends AbstractComponentTemplateFactory {
 		const metadata: ClueMetadataInterface = {
 			data: {
 				synopsis: '',
-				image: '',
 				complete: false,
 				found: ''
 			}
