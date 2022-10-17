@@ -35,8 +35,9 @@ export class AnalyserReportActivityDetail extends AbstractAnalyserReportDetail {
 		if (this._idealScore === undefined) return 0;
 
 		if (this._score === this._idealScore) return 100;
-		if ((this._score * 2) > this._idealScore) return 0;
+		if (this._score > (this._idealScore * 2)) return 0;
 		if (this._score > this._idealScore) return Math.floor((this._idealScore - (this._score - this._idealScore)) * 100 / this._idealScore);
+
 		return Math.floor(this._score * 100 / this._idealScore);
 	}
 
