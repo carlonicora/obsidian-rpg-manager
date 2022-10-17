@@ -1,6 +1,7 @@
 import {CharacterInterface} from "./interfaces/CharacterInterface";
 import {CharacterMetadataInterface} from "./interfaces/CharacterMetadataInterface";
 import {AbstractCharacterData} from "./abstracts/AbstractCharacterData";
+import {DateHelper} from "../../../helpers/DateHelper";
 
 export class Character extends AbstractCharacterData implements CharacterInterface {
 	protected metadata: CharacterMetadataInterface;
@@ -13,10 +14,7 @@ export class Character extends AbstractCharacterData implements CharacterInterfa
 		const end = this.death ? this.death : this.campaign.date;
 		if (end === undefined) return undefined;
 
-		const ageDifMs = end.valueOf() - this.dob.valueOf();
-		const ageDate = new Date(ageDifMs);
-
-		return (Math.abs(ageDate.getUTCFullYear() - 1970));
+		return DateHelper.age(this.dob, end);
 	}
 
 	get isDead(): boolean {

@@ -3,6 +3,7 @@ import {SceneDataInterface} from "../interfaces/SceneDataInterface";
 import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
 import {SceneType} from "../../../enums/SceneType";
 import {StoryCircleStage} from "../../../../plots/enums/StoryCircleStage";
+import {DateHelper} from "../../../../helpers/DateHelper";
 
 export abstract class AbstractSceneData extends AbstractComponent implements SceneDataInterface {
 	protected metadata: SceneMetadataInterface;
@@ -16,7 +17,7 @@ export abstract class AbstractSceneData extends AbstractComponent implements Sce
 	}
 
 	get date(): Date | undefined {
-		return (this.metadata.data?.date ? new Date(this.metadata.data?.date) : undefined);
+		return (this.metadata.data?.date ? DateHelper.create(this.metadata.data?.date) : undefined);
 	}
 
 	get isExciting(): boolean {

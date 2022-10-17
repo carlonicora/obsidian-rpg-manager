@@ -2,16 +2,17 @@ import {AbstractComponent} from "../../../abstracts/AbstractComponent";
 import {Pronoun} from "../../../enums/Pronoun";
 import {CharacterDataInterface} from "../interfaces/CharacterDataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
+import {DateHelper} from "../../../../helpers/DateHelper";
 
 export class AbstractCharacterData extends AbstractComponent implements CharacterDataInterface {
 	protected metadata: CharacterMetadataInterface;
 
 	public get death(): Date | undefined {
-		return (this.metadata.data?.death ? new Date(this.metadata.data.death) : undefined);
+		return (this.metadata.data?.death ? DateHelper.create(this.metadata.data.death) : undefined);
 	}
 
 	public get dob(): Date | undefined {
-		return (this.metadata.data?.dob ? new Date(this.metadata.data.dob) : undefined);
+		return (this.metadata.data?.dob ? DateHelper.create(this.metadata.data.dob) : undefined);
 	}
 
 	public get goals(): string | undefined {

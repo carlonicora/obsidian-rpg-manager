@@ -1,12 +1,13 @@
 import {CampaignDataInterface} from "../interfaces/CampaignDataInterface";
 import {CampaignMetadataInterface} from "../interfaces/CampaignMetadataInterface";
 import {PlotsAbtOnly} from "../../../../plots/PlotsAbtOnly";
+import {DateHelper} from "../../../../helpers/DateHelper";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;
 
 	public get date(): Date|undefined {
-		return (this.metadata.data?.date ? new Date(this.metadata.data.date) : undefined);
+		return (this.metadata.data?.date ? DateHelper.create(this.metadata.data.date) : undefined);
 	}
 
 	get currentAdventureId(): string|undefined {

@@ -31,6 +31,7 @@ import {SceneInterface} from "./components/components/scene/interfaces/SceneInte
 import {UpdaterModal} from "./modals/UpdaterModal";
 import {LogMessageType} from "./loggers/enums/LogMessageType";
 import {YamlHelper} from "./helpers/YamlHelper";
+import {DateHelper} from "./helpers/DateHelper";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private _isVersionUpdated=false;
