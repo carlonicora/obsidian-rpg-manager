@@ -1,6 +1,5 @@
 import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
-import {AbstractComponent} from "../../../components/abstracts/AbstractComponent";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {GalleryViewType} from "../../enums/GalleryViewType";
 import {GalleryEditModalView} from "./GalleryEditModalView";

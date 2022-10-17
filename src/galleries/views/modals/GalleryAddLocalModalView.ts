@@ -1,7 +1,7 @@
 import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
-import {Component, MarkdownRenderer, TAbstractFile} from "obsidian";
+import {TAbstractFile} from "obsidian";
 import {GalleryViewType} from "../../enums/GalleryViewType";
 import {GalleryEditModalView} from "./GalleryEditModalView";
 import {AbstractComponent} from "../../../components/abstracts/AbstractComponent";

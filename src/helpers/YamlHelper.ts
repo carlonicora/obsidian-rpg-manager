@@ -19,7 +19,7 @@ export class YamlHelper {
 		yaml: any|any[],
 		indent: number,
 		isArray = false,
-	): string[] {
+	): Array<string> {
 		const response: string[] = [];
 
 		if (isArray) {
@@ -55,8 +55,7 @@ export class YamlHelper {
 
 					switch (yamlDataType) {
 						case YamlDataType.Basic:
-							const basicArrayReponse: Array<string> = this._stringify(value, 0, true);
-							response.push(yamlKey + '[' + basicArrayReponse.join(',') + ']');
+							response.push(yamlKey + '[' + this._stringify(value, 0, true).join(',') + ']');
 							break;
 						case YamlDataType.Object:
 							response.push(yamlKey);
