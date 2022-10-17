@@ -41,8 +41,8 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 			[AnalyserThresholdResult.CriticallyLow, 'Not enough excitement'],
 		])],
 		[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
-			[AnalyserThresholdResult.CriticallyHigh, 'Repetitive'],
-			[AnalyserThresholdResult.High, 'Maybe a bit repetitive'],
+			[AnalyserThresholdResult.CriticallyLow, 'Repetitive'],
+			[AnalyserThresholdResult.Low, 'Maybe a bit repetitive'],
 			[AnalyserThresholdResult.Correct, 'The scenes are not repetitive'],
 		])],
 		[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
@@ -75,8 +75,8 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 				[AnalyserThresholdResult.CriticallyLow, 'Just %score% are exciting, you should aim for %ideal%'],
 			])],
 			[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Really, %score% scenes type repeated in %maximumScore% scenes. Keep it below %ideal%.'],
-				[AnalyserThresholdResult.High, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
+				[AnalyserThresholdResult.CriticallyLow, 'Really, %score% scenes type repeated in %maximumScore% scenes. Keep it below %ideal%.'],
+				[AnalyserThresholdResult.Low, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
 				[AnalyserThresholdResult.Correct, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
 			])],
 			[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
@@ -180,7 +180,8 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 				0,
 			);
 			const timingTitleEl = analyserListTimingElementEl.createSpan({cls: 'subtitle', text: detail})
-			this.addThresholdErrorClass(report.durationThreshold, timingTitleEl);
+			this.addThresholdClass(report.durationThreshold, timingTitleEl);
+			//this.addThresholdErrorClass(report.durationThreshold, timingTitleEl);
 		} else {
 			analyserListTimingElementEl.createSpan({cls: 'subtitle', text: 'Time Analysis'})
 		}

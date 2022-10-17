@@ -46,10 +46,16 @@ export abstract class AbstractAnalyserView extends AbstractRpgManager implements
 	): string {
 		if (descriptionTemplate === undefined || descriptionTemplate === '') return '';
 
-		let response = descriptionTemplate
-			.replace('%percentage%', percentage.toString())
-			.replace('%score%', score.toString())
-			.replace('%maximumScore%', maximumScore.toString())
+		let response = descriptionTemplate;
+
+		if (percentage !== undefined)
+			response = response.replace('%percentage%', percentage.toString());
+
+		if (score !== undefined)
+			response = response.replace('%score%', score.toString());
+
+		if(maximumScore !== undefined)
+			response = response.replace('%maximumScore%', maximumScore.toString());
 
 		if (type !== undefined)
 			response = response.replace('%type%', ComponentType[type]);

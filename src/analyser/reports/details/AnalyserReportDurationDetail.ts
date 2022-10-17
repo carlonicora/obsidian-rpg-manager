@@ -2,6 +2,7 @@ import {AbstractAnalyserReportDetail} from "../../abstracts/AbstractAnalyserRepo
 import {AnalyserScoreType} from "../../enums/AnalyserScoreType";
 import {AnalyserDataInterface} from "../../interfaces/AnalyserDataInterface";
 import {AnalyserDetailType} from "../../enums/AnalyserDetailType";
+import {AnalyserThresholdResult} from "../../enums/AnalyserThresholdResult";
 
 export class AnalyserReportDurationDetail extends AbstractAnalyserReportDetail {
 	protected _type:AnalyserScoreType = AnalyserScoreType.Time;
@@ -18,6 +19,7 @@ export class AnalyserReportDurationDetail extends AbstractAnalyserReportDetail {
 		}
 
 		this._maximumScore = this.data.totalTargetDuration;
+		this._idealScore = this._maximumScore;
 		this._score = Math.floor(this.data.totalExpectedRunningTime / 60);
 	}
 
@@ -31,5 +33,9 @@ export class AnalyserReportDurationDetail extends AbstractAnalyserReportDetail {
 			return Math.floor((this._maximumScore -  (this._score - this._maximumScore)) * 100 / this._maximumScore);
 
 		return Math.floor(this._score * 100 / this._maximumScore);
+	}
+
+	get thresholdType(): AnalyserThresholdResult {
+		return this.percentageThresholdScore;
 	}
 }
