@@ -1,11 +1,11 @@
-import {ImageViewInterface} from "../../interfaces/ImageViewInterface";
-import {AbstractImageModalView} from "../../abstracts/AbstractImageModalView";
+import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
+import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {Component, MarkdownRenderer} from "obsidian";
-import {ImageViewType} from "../../enums/ImageViewType";
-import {ImageEditModalView} from "./ImageEditModalView";
+import {GalleryViewType} from "../../enums/GalleryViewType";
+import {GalleryEditModalView} from "./GalleryEditModalView";
 
-export class ImageListModalView extends AbstractImageModalView implements ImageViewInterface {
+export class GalleryListModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _masonryEl: HTMLDivElement;
 
 	public render(
@@ -37,8 +37,8 @@ export class ImageListModalView extends AbstractImageModalView implements ImageV
 			}
 
 			imageEl.addEventListener('click', () => {
-				const view = this.factories.imageView.create(ImageViewType.ModalEdit, this.component);
-				(<ImageEditModalView>view).image = image;
+				const view = this.factories.imageView.create(GalleryViewType.ModalEdit, this.component);
+				(<GalleryEditModalView>view).image = image;
 				view.render(containerEl);
 			});
 		});

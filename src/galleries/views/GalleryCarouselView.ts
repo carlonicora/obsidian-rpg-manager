@@ -2,7 +2,7 @@ import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {ImageInterface} from "../interfaces/ImageInterface";
 import {App, Component, MarkdownRenderer} from "obsidian";
 
-export class ImageCarouselView extends AbstractRpgManager {
+export class GalleryCarouselView extends AbstractRpgManager {
 	private _currentImage: number;
 	private _imagesCount: number;
 

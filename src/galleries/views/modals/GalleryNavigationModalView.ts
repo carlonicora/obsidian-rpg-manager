@@ -1,7 +1,7 @@
-import {AbstractImageModalView} from "../../abstracts/AbstractImageModalView";
-import {ImageViewType} from "../../enums/ImageViewType";
+import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
+import {GalleryViewType} from "../../enums/GalleryViewType";
 
-export class ImageNavigationModalView extends AbstractImageModalView {
+export class GalleryNavigationModalView extends AbstractGalleryModalView {
 	private _operationsEl: HTMLDivElement;
 
 	public render(
@@ -14,7 +14,7 @@ export class ImageNavigationModalView extends AbstractImageModalView {
 			navigationEl,
 			'Current Images',
 			() => {
-				this._loadView(ImageViewType.ModalList);
+				this._loadView(GalleryViewType.ModalList);
 			}
 		);
 
@@ -24,7 +24,7 @@ export class ImageNavigationModalView extends AbstractImageModalView {
 			navigationEl,
 			'Add Local Image',
 			() => {
-				this._loadView(ImageViewType.ModalAddLocal);
+				this._loadView(GalleryViewType.ModalAddLocal);
 			}
 		);
 
@@ -34,16 +34,16 @@ export class ImageNavigationModalView extends AbstractImageModalView {
 			navigationEl,
 			'Add Online Image',
 			() => {
-				this._loadView(ImageViewType.ModalAddRemote);
+				this._loadView(GalleryViewType.ModalAddRemote);
 			},
 			true,
 		);
 
-		this._loadView(ImageViewType.ModalList);
+		this._loadView(GalleryViewType.ModalList);
 	}
 
 	private _loadView(
-		type: ImageViewType,
+		type: GalleryViewType,
 	): void {
 		this._operationsEl.empty();
 

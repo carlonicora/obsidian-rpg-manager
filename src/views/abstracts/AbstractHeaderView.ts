@@ -5,7 +5,7 @@ import {HeaderResponseElementInterface} from "../../responses/interfaces/HeaderR
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
 import flatpickr from "flatpickr";
-import {ImageCarouselView} from "../../images/views/ImageCarouselView";
+import {GalleryCarouselView} from "../../galleries/views/GalleryCarouselView";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -64,7 +64,7 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		this.infoTableEl = this.headerInfoEl.createEl('table', {cls: 'rpgm-headless-table'}).createTBody();
 
 		if (data.images.length > 0){
-			new ImageCarouselView(this.app, data.images).render(this.headerContainerEl);
+			new GalleryCarouselView(this.app, data.images).render(this.headerContainerEl);
 		} else {
 			this.headerInfoEl.addClass('info-large');
 		}

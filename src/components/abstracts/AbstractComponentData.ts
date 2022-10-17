@@ -7,7 +7,7 @@ import {CampaignSetting} from "../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../id/interfaces/IdInterface";
 import {ComponentMetadataInterface} from "../interfaces/ComponentMetadataInterface";
 import {ComponentStage} from "../enums/ComponentStage";
-import {ImageInterface} from "../../images/interfaces/ImageInterface";
+import {ImageInterface} from "../../galleries/interfaces/ImageInterface";
 import {ImageMetadataInterface} from "../interfaces/ImageMetadataInterface";
 
 export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {

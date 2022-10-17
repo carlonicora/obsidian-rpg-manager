@@ -49,10 +49,10 @@ import {LogFactory} from "../loggers/factories/LogFactory";
 import {LogWriterType} from "../loggers/enums/LogWriterType";
 import {AnalyserFactoryInterface} from "../analyser/factories/interfaces/AnalyserFactoryInterface";
 import {AnalyserFactory} from "../analyser/factories/AnalyserFactory";
-import {ImageFactoryInterface} from "../images/interfaces/ImageFactoryInterface";
-import {ImageFactory} from "../images/factories/ImageFactory";
-import {ImageViewFactoryInterface} from "../images/interfaces/ImageViewFactoryInterface";
-import {ImageViewFactory} from "../images/factories/ImageViewFactory";
+import {ImageFactoryInterface} from "../galleries/interfaces/ImageFactoryInterface";
+import {ImageFactory} from "../galleries/factories/ImageFactory";
+import {GalleryViewFactoryInterface} from "../galleries/interfaces/GalleryViewFactoryInterface";
+import {GalleryViewFactory} from "../galleries/factories/GalleryViewFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -80,7 +80,7 @@ export class Factories implements FactoriesInterface{
 	public fileManipulator: FileManipulatorFactoryInterface;
 	public analyser: AnalyserFactoryInterface;
 	public image: ImageFactoryInterface;
-	public imageView: ImageViewFactoryInterface;
+	public imageView: GalleryViewFactoryInterface;
 
 	constructor(
 		private _app: App,
@@ -109,7 +109,7 @@ export class Factories implements FactoriesInterface{
 		this.fileManipulator = new FileManipulatorFactory(this._app);
 		this.analyser = new AnalyserFactory(this._app);
 		this.image = new ImageFactory(this._app);
-		this.imageView = new ImageViewFactory(this._app);
+		this.imageView = new GalleryViewFactory(this._app);
 
 		this.runningTimeManager = new RunningTimeManager(this._app);
 	}

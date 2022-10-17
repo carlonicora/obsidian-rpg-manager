@@ -17,6 +17,7 @@ import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 import {ImageMetadataInterface} from "../components/interfaces/ImageMetadataInterface";
 import {ComponentMetadataInterface} from "../components/interfaces/ComponentMetadataInterface";
 import {YamlHelper} from "../helpers/YamlHelper";
+import {ImageInterface} from "../galleries/interfaces/ImageInterface";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async replaceID(
@@ -213,11 +214,13 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	public async addOrUpdateImage(
 		path: string,
 		caption: string,
-	): Promise<void> {
+	): Promise<ImageInterface|undefined> {
 		return this._executeCodeBlockChange(
 			this._addOrUpdateImage.bind(this),
 			{path: path, caption: caption},
-		);
+		).then(() => {
+			return this.factories.image.create(path, caption);
+		})
 	}
 
 	private _removeImage(

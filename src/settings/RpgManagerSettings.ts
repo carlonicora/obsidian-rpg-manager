@@ -111,7 +111,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 	private _loadImagesSettings(
 	): void {
-		this._settingsFactory.createHeader('Images Management', 3, 'Manage where you store the images for all your campaigns');
+		this._settingsFactory.createHeader('Images Management', 3, 'Manage where you store the galleries for all your campaigns');
 
 		this._settingsFactory.createDropdownSetting(
 			SettingType.imagesFolder,

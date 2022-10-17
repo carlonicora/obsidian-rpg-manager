@@ -3,6 +3,7 @@ import {RelationshipInterface} from "../../relationships/interfaces/Relationship
 import {FileManipulatorInterface} from "./FileManipulatorInterface";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {ControllerMetadataDataInterface} from "../../controller/interfaces/ControllerMetadataDataInterface";
+import {ImageInterface} from "../../galleries/interfaces/ImageInterface";
 
 export interface CodeBlockManipulatorInterface {
 	read(
@@ -44,7 +45,7 @@ export interface CodeBlockManipulatorInterface {
 	addOrUpdateImage(
 		source: string,
 		caption: string,
-	): Promise<void>;
+	): Promise<ImageInterface|undefined>;
 
 	selectData(
 	): void;

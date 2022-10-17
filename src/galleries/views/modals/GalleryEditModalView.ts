@@ -1,9 +1,9 @@
-import {AbstractImageModalView} from "../../abstracts/AbstractImageModalView";
-import {ImageViewInterface} from "../../interfaces/ImageViewInterface";
+import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
+import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
-import {ImageViewType} from "../../enums/ImageViewType";
+import {GalleryViewType} from "../../enums/GalleryViewType";
 
-export class ImageEditModalView extends AbstractImageModalView implements ImageViewInterface {
+export class GalleryEditModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _image: ImageInterface;
 
 	private _captionEl: HTMLTextAreaElement;
@@ -19,9 +19,9 @@ export class ImageEditModalView extends AbstractImageModalView implements ImageV
 		containerEl.empty();
 
 		const editorContainerEl = containerEl.createDiv({cls: 'gallery-operations-edit'});
-		const editorDeletedContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-deleted', text: 'The image has been removed. Click to return to the list of images for ' + this.component.file.basename});
+		const editorDeletedContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-deleted', text: 'The image has been removed. Click to return to the list of galleries for ' + this.component.file.basename});
 		editorDeletedContainerEl.addEventListener('click', () => {
-			const view = this.factories.imageView.create(ImageViewType.ModalList, this.component);
+			const view = this.factories.imageView.create(GalleryViewType.ModalList, this.component);
 			view.render(containerEl);
 		});
 

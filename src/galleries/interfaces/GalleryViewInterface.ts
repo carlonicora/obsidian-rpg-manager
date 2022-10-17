@@ -1,6 +1,6 @@
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
-export interface ImageViewInterface {
+export interface GalleryViewInterface {
 	get component(): ComponentInterface;
 	set component(component: ComponentInterface);
 

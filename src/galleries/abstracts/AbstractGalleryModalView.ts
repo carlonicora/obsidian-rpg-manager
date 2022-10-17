@@ -1,8 +1,8 @@
-import {ImageViewInterface} from "../interfaces/ImageViewInterface";
+import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {AbstractView} from "../../views/abstracts/AbstractView";
 
-export abstract class AbstractImageModalView extends AbstractView implements ImageViewInterface {
+export abstract class AbstractGalleryModalView extends AbstractView implements GalleryViewInterface {
 	private _component: ComponentInterface;
 
 	get component(): ComponentInterface {

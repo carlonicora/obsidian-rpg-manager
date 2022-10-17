@@ -1,4 +1,4 @@
-export enum ImageViewType {
+export enum GalleryViewType {
 	Carousel,
 	ModalNavigation,
 	ModalList,
