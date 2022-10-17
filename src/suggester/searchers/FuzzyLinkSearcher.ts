@@ -1,6 +1,6 @@
 import {App, fuzzySearch, prepareQuery, TFile} from "obsidian";
-import {SearchResultInterface} from "./interfaces/SearchResultInterface";
-import {SearchInterface} from "./interfaces/SearchInterface";
+import {SearchResultInterface} from "../interfaces/SearchResultInterface";
+import {SearchInterface} from "../interfaces/SearchInterface";
 
 export class FuzzyLinkSearcher implements SearchInterface{
 	constructor(
