@@ -1,5 +1,5 @@
 import {ComponentTemplateFactoryInterface} from "../factories/interfaces/ComponentTemplateFactoryInterface";
-import {App, stringifyYaml} from "obsidian";
+import {App} from "obsidian";
 import {FileContentManager} from "../../helpers/FileContentManager";
 import {ComponentNotesTemplateFactoryInterface} from "../factories/interfaces/ComponentNotesTemplateFactoryInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
@@ -19,6 +19,7 @@ import {SubplotNotesTemplateFactory} from "../../components/components/subplot/t
 import {ControllerMetadataDataInterface} from "../../controller/interfaces/ControllerMetadataDataInterface";
 import {ControllerMetadataInterface} from "../../controller/interfaces/ControllerMetadataInterface";
 import {Md5} from "ts-md5";
+import {YamlHelper} from "../../helpers/YamlHelper";
 
 export abstract class AbstractComponentTemplateFactory extends AbstractRpgManager implements ComponentTemplateFactoryInterface {
 	protected internalTemplate: ComponentNotesTemplateFactoryInterface|undefined;
@@ -123,7 +124,8 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 	): string {
 		let response: string;
 
-		const frontmatterString = stringifyYaml(frontmatter);
+		//const frontmatterString = stringifyYaml(frontmatter);
+		const frontmatterString = YamlHelper.stringify(frontmatter);
 		const frontmatterParsedString = frontmatterString.replaceAll('{}', '');
 		response = '---\n' + frontmatterParsedString + '---\n';
 		response += dataCodebBlock;
@@ -232,7 +234,8 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		metadata: ControllerMetadataDataInterface,
 	): string {
 		let response = '```RpgManagerData\n';
-		response += stringifyYaml(metadata);
+		//response += stringifyYaml(metadata);
+		response += YamlHelper.stringify(metadata);
 		response += '```\n';
 
 		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');
@@ -242,7 +245,8 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		metadata: ControllerMetadataInterface,
 	): string {
 		let response = '```RpgManager\n';
-		response += stringifyYaml(metadata);
+		//response += stringifyYaml(metadata);
+		response += YamlHelper.stringify(metadata);
 		response += '```\n';
 
 		return response.replaceAll("''", "").replaceAll('""', '').replaceAll('{}', '');
@@ -258,7 +262,8 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 
 		let response = '```RpgManagerID\n';
 		response += '### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###\n';
-		response += stringifyYaml(metadata);
+		//response += stringifyYaml(metadata);
+		response += YamlHelper.stringify(metadata);
 		response += '```\n';
 
 		return response;

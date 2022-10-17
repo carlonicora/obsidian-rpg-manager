@@ -11,8 +11,8 @@ export class DateHelper {
 		birth: Date,
 		deathOrNow: Date,
 	): number {
-		var end = DateTime.fromISO(deathOrNow.toISOString());
-		var start = DateTime.fromISO(birth.toISOString());
+		const end = DateTime.fromISO(deathOrNow.toISOString());
+		const start = DateTime.fromISO(birth.toISOString());
 
 		return Math.floor(end.diff(start, "years").values.years);
 	}

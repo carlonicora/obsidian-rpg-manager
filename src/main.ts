@@ -30,8 +30,6 @@ import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./components/components/scene/interfaces/SceneInterface";
 import {UpdaterModal} from "./modals/UpdaterModal";
 import {LogMessageType} from "./loggers/enums/LogMessageType";
-import {YamlHelper} from "./helpers/YamlHelper";
-import {DateHelper} from "./helpers/DateHelper";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private _isVersionUpdated=false;
@@ -45,43 +43,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	ready = false;
 
 	async onload() {
-		const yaml: any = {
-			string: 'string',
-			number: 1,
-			boolean: true,
-			undefined: null,
-			undefined2: undefined,
-			object: {
-				string: 'string [[link]]',
-				object2: {
-					boolean: false,
-				}
-			},
-			array: [
-				"one",
-				"two",
-				3
-			],
-			arrayOfObjects: [
-				{
-					string: "one",
-					number: 1,
-					boolean: true,
-					undefined: null,
-				},{
-					string: "two",
-					number: 2,
-					boolean: false,
-					undefined: undefined,
-				},
-			]
-		};
-
-		console.warn(YamlHelper.stringify(yaml));
-
-
-
-
 		this.version = this.manifest.version;
 		this.factories = await new Factories(this.app);
 		this.manipulators = await new Manipulators(this.app);

@@ -1,7 +1,8 @@
 import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
-import {App, CachedMetadata, parseYaml, stringifyYaml, TFile} from "obsidian";
+import {App, CachedMetadata, parseYaml, TFile} from "obsidian";
 import {FilePatternPositionInterface} from "./interfaces/FilePatternPositionInterface";
+import {YamlHelper} from "../helpers/YamlHelper";
 
 export class FileManipulator extends AbstractRpgManager implements FileManipulatorInterface {
 	private _fileContent: string;
@@ -68,7 +69,8 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 				if (arrayContent[index] === '```'){
 					correctBlockProcessed = true;
 					inCorrectCodeBlock = false;
-					const newCodeBlock = stringifyYaml(newMetadata);
+					//const newCodeBlock = stringifyYaml(newMetadata);
+					const newCodeBlock = YamlHelper.stringify(newMetadata);
 					const newCodeBlockArray = newCodeBlock.split('\n');
 					newArrayContent.push(...newCodeBlockArray);
 					newArrayContent.push('```');

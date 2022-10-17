@@ -2,7 +2,7 @@ import {AbstractContent} from "../abstracts/AbstractContent";
 import {ImageInterface} from "../../images/interfaces/ImageInterface";
 
 export class ImageContent extends AbstractContent {
-	public content: Array<ImageInterface>;
+	public content: ImageInterface[];
 
 	public fillContent(
 		container: HTMLElement|undefined,

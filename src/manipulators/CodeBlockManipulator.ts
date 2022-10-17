@@ -1,6 +1,6 @@
 import {AbstractFactory} from "../factories/abstracts/AbstractFactory";
 import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorInterface";
-import {CachedMetadata, MarkdownView, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
+import {CachedMetadata, MarkdownView, parseYaml, SectionCache, TFile} from "obsidian";
 import {FileManipulator} from "./FileManipulator";
 import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
 import {
@@ -14,9 +14,9 @@ import {ComponentStage} from "../components/enums/ComponentStage";
 import {Md5} from "ts-md5";
 import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
-import {ComponentDataMetadataInterface} from "../components/interfaces/ComponentDataMetadataInterface";
 import {ImageMetadataInterface} from "../components/interfaces/ImageMetadataInterface";
 import {ComponentMetadataInterface} from "../components/interfaces/ComponentMetadataInterface";
+import {YamlHelper} from "../helpers/YamlHelper";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async replaceID(
@@ -34,7 +34,8 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		const newIdCodeBlock: string[] = [];
 		newIdCodeBlock.push('```RpgManagerID');
 		newIdCodeBlock.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
-		newIdCodeBlock.push(stringifyYaml(metadata));
+		//newIdCodeBlock.push(stringifyYaml(metadata));
+		newIdCodeBlock.push(YamlHelper.stringify(metadata));
 		newIdCodeBlock.push('```');
 
 		fileEditor.cachedFile.sections?.forEach((section: SectionCache) => {
@@ -167,7 +168,8 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 						value,
 					);
 
-					editor.replaceRange(stringifyYaml(yaml), start, end)
+					//editor.replaceRange(stringifyYaml(yaml), start, end)
+					editor.replaceRange(YamlHelper.stringify(yaml), start, end)
 					this.app.vault.modify(file, editor.getValue())
 						.then(() => {
 							this.database.readByPath(file.path)?.touch()
@@ -294,7 +296,8 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 
 					fn(yaml, variable);
 
-					editor.replaceRange(stringifyYaml(yaml), start, end)
+					//editor.replaceRange(stringifyYaml(yaml), start, end)
+					editor.replaceRange(YamlHelper.stringify(yaml), start, end)
 					this.app.vault.modify(file, editor.getValue())
 						.then(() => {
 							this.database.onSave(file);

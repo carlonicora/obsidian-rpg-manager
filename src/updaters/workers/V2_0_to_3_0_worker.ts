@@ -1,11 +1,12 @@
 import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerInterface";
 import {AbstractDatabaseWorker} from "../abstracts/AbstractDatabaseWorker";
 import {LogMessageType} from "../../loggers/enums/LogMessageType";
-import {CachedMetadata, parseYaml, SectionCache, stringifyYaml, TFile} from "obsidian";
+import {CachedMetadata, parseYaml, SectionCache, TFile} from "obsidian";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {DatabaseUpdaterReporterInterface} from "../interfaces/DatabaseUpdaterReporterInterface";
 import {Md5} from "ts-md5";
 import {CampaignSetting} from "../../components/components/campaign/enums/CampaignSetting";
+import {YamlHelper} from "../../helpers/YamlHelper";
 
 export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	private _campaignSettings: Map<number, CampaignSetting>;
@@ -117,7 +118,8 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 			if (firstCodeblockMetadataType !== undefined){
 				firstCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(firstCodeblockMetadataType.toLowerCase());
-				firstCodeblockNewMetadataContent = stringifyYaml(firstCodeblockNewMetadata);
+				//firstCodeblockNewMetadataContent = stringifyYaml(firstCodeblockNewMetadata);
+				firstCodeblockNewMetadataContent = YamlHelper.stringify(firstCodeblockNewMetadata);
 
 				dataCodeblockMetadataContent = await this._updateMetadata(
 					tagAndType.type,
@@ -130,7 +132,8 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 			if (secondCodeblockMetadataType !== undefined){
 				secondCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(secondCodeblockMetadataType.toLowerCase());
-				secondCodeblockNewMetadataContent = stringifyYaml(secondCodeblockNewMetadata);
+				//secondCodeblockNewMetadataContent = stringifyYaml(secondCodeblockNewMetadata);
+				secondCodeblockNewMetadataContent = YamlHelper.stringify(secondCodeblockNewMetadata);
 			}
 
 			if (secondCodeblockNewMetadataContent !== undefined && secondCodeblockMetadataStartLine !== undefined && secondCodeblockMetadataEndLine !== undefined){
@@ -148,7 +151,8 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			if (frontmatterMetadataContentArray !== undefined && frontmatterMetadataStartLine !== undefined && frontmatterMetadataEndLine !== undefined) {
 				const frontmatter: any = this._cleanFrontmatter(frontmatterMetadataContentArray);
 				const frontmatterContent: string = '---\n' +
-					stringifyYaml(frontmatter) +
+					//stringifyYaml(frontmatter) +
+					YamlHelper.stringify(frontmatter) +
 					'---\n' +
 					'```RpgManagerData\n' +
 					dataCodeblockMetadataContent +
@@ -507,7 +511,8 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 		if (relationships.length > 0) metadata.relationships = relationships;
 
-		let response: string = stringifyYaml(metadata);
+		//let response: string = stringifyYaml(metadata);
+		let response: string = YamlHelper.stringify(metadata);
 		response = response
 			.replaceAll('0,', ',')
 			.replaceAll("'',", ',')
