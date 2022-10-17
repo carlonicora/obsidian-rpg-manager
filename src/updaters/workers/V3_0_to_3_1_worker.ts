@@ -48,6 +48,14 @@ export class V3_0_to_3_1_worker extends AbstractDatabaseWorker implements Databa
 
 			const yaml: ComponentMetadataInterface = parseYaml(data.join('\n'));
 
+			if (yaml == undefined){
+				if (reporter !== undefined) reporter.addFileUpdated();
+				continue;
+			}
+
+			if (yaml.data === undefined)
+				yaml.data = {};
+
 			if (yaml.data.images === undefined)
 				yaml.data.images = [];
 
