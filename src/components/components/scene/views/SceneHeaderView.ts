@@ -11,6 +11,8 @@ import {SceneTypeDescriptionModal} from "../../../../modals/SceneTypeDescription
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import flatpickr from "flatpickr";
+import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../../analyser/enums/AnalyserReportType";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SceneInterface;
@@ -58,7 +60,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
 		if (data.metadata?.sourceMeta?.analyser !== undefined){
-			data.metadata.sourceMeta.analyser.render(this.headerContainerEl)
+			(<AnalyserInterface>data.metadata.sourceMeta.analyser).render(AnalyserReportType.Scene, this.headerContainerEl)
 		}
 	}
 
