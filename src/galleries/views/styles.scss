@@ -30,6 +30,15 @@
 			width: 100%;
 			padding: 20px;
 
+			.dropzone {
+				border: dashed 2px var(--background-modifier-border);
+				width: calc(100% - 100px);
+				min-height: 200px;
+				margin: 50px;
+				text-align: center;
+				padding-top: 80px;
+			}
+
 			input {
 				margin-bottom: 20px;
 			}

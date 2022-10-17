@@ -13,6 +13,11 @@ declare module "obsidian" {
 		config: {
 			attachmentFolderPath: string;
 		};
+		adapter: DataAdapter;
+	}
+
+	interface DataAdapter {
+		basePath: string;
 	}
 
 	interface App {

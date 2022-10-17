@@ -8,6 +8,7 @@ import {GalleryNavigationModalView} from "../views/modals/GalleryNavigationModal
 import {GalleryEditModalView} from "../views/modals/GalleryEditModalView";
 import {GalleryAddLocalModalView} from "../views/modals/GalleryAddLocalModalView";
 import {GalleryAddRemoteModalView} from "../views/modals/GalleryAddRemoteModalView";
+import {GalleryUploadModalView} from "../views/modals/GalleryUploadModalView";
 
 export class GalleryViewFactory extends AbstractFactory implements GalleryViewFactoryInterface {
 	private _views: Map<GalleryViewType, any> = new Map<GalleryViewType, any>([
@@ -16,6 +17,7 @@ export class GalleryViewFactory extends AbstractFactory implements GalleryViewFa
 		[GalleryViewType.ModalEdit, GalleryEditModalView],
 		[GalleryViewType.ModalAddLocal, GalleryAddLocalModalView],
 		[GalleryViewType.ModalAddRemote, GalleryAddRemoteModalView],
+		[GalleryViewType.ModalUpload, GalleryUploadModalView],
 	]);
 
 	public create(

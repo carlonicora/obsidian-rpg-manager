@@ -32,6 +32,16 @@ export class GalleryNavigationModalView extends AbstractGalleryModalView {
 
 		this.addLinkWithFunction(
 			navigationEl,
+			'Upload Image',
+			() => {
+				this._loadView(GalleryViewType.ModalUpload);
+			}
+		);
+
+		this.addSeparator(navigationEl);
+
+		this.addLinkWithFunction(
+			navigationEl,
 			'Add Online Image',
 			() => {
 				this._loadView(GalleryViewType.ModalAddRemote);

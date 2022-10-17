@@ -11,7 +11,8 @@ import {ImageInterface} from "../../galleries/interfaces/ImageInterface";
 import {ImageMetadataInterface} from "../interfaces/ImageMetadataInterface";
 
 export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
-	public static root: string|undefined;
+	public static
+	root: string|undefined;
 	private static _imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
 
 	public static initialiseRoots(

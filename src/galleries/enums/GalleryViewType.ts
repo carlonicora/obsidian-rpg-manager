@@ -5,4 +5,5 @@ export enum GalleryViewType {
 	ModalAddLocal,
 	ModalEdit,
 	ModalAddRemote,
+	ModalUpload,
 }
