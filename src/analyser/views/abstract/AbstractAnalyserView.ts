@@ -5,11 +5,46 @@ import {AnalyserDetailType} from "../../enums/AnalyserDetailType";
 import {AnalyserThresholdResult} from "../../enums/AnalyserThresholdResult";
 import {AnalyserViewInterface} from "../../interfaces/AnalyserViewInterface";
 import {ComponentType} from "../../../components/enums/ComponentType";
+import {AnalyserInterface} from "../../interfaces/AnalyserInterface";
 
 export abstract class AbstractAnalyserView extends AbstractRpgManager implements AnalyserViewInterface {
 	protected titles: Map<AnalyserDetailType|undefined, string>;
-	protected subtitles: Map<AnalyserDetailType|undefined, Map<AnalyserThresholdResult, string|undefined>>;
 	protected descriptions: Map<AnalyserDetailType|undefined, Map<AnalyserThresholdResult, string|undefined>>;
+
+	protected subtitles: Map<AnalyserDetailType, Map<AnalyserThresholdResult, string|undefined>> =
+		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([
+			[AnalyserDetailType.Activity, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyHigh, 'Too many active scenes'],
+				[AnalyserThresholdResult.High, 'Maybe too many active scenes'],
+				[AnalyserThresholdResult.Correct, 'The amount of active scenes is balanced'],
+				[AnalyserThresholdResult.Low, 'Maybe not enough active scenes'],
+				[AnalyserThresholdResult.CriticallyLow, 'Not enough active scenes'],
+			])],
+			[AnalyserDetailType.Duration, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyHigh, 'The session is going to be too long'],
+				[AnalyserThresholdResult.High, 'The session might be too long'],
+				[AnalyserThresholdResult.Correct, 'The expected duration is in line with your target session duration'],
+				[AnalyserThresholdResult.Low, 'The session might be short'],
+				[AnalyserThresholdResult.CriticallyLow, 'The session is too short'],
+			])],
+			[AnalyserDetailType.Excitement, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyHigh, 'Too much excitement'],
+				[AnalyserThresholdResult.High, 'Maybe too much excitement'],
+				[AnalyserThresholdResult.Correct, 'The amount of exciting time is balanced'],
+				[AnalyserThresholdResult.Low, 'Maybe not enough excitement'],
+				[AnalyserThresholdResult.CriticallyLow, 'Not enough excitement'],
+			])],
+			[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyLow, 'Repetitive'],
+				[AnalyserThresholdResult.Low, 'Maybe a bit repetitive'],
+				[AnalyserThresholdResult.Correct, 'The scenes are not repetitive'],
+			])],
+			[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.Correct, 'There is a good variety of scenes'],
+				[AnalyserThresholdResult.Low, 'Maybe not enough variety'],
+				[AnalyserThresholdResult.CriticallyLow, 'Not enough variety'],
+			])],
+		]);
 
 	constructor(
 		app: App,

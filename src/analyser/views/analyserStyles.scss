@@ -1,0 +1,80 @@
+$circle-width: 0.09em;
+$circle-width-hover: 0.07em;
+
+.rpgm-new-analyser {
+	&.centred{
+		text-align: center;
+	}
+
+	.analyser-container{
+		display: inline-block;
+	}
+
+	.circle-container {
+		position: relative;
+		float: left;
+		margin: 0px 10px;
+
+		&:hover {
+			cursor: pointer;
+
+			.description.error {
+				color: var(--text-error);
+			}
+			.description.warning {
+				color: var(--code-important);
+			}
+			.description.balanced {
+				color: var(--code-property);
+			}
+			.description.perfect {
+				color: var(--text-success);
+			}
+		}
+
+		.description {
+			font-size: 0.9em;
+		}
+
+		.c100 {
+			float: none;
+			display: inline-block;
+			margin: 0px;
+		}
+
+		.c100 .bar, .c100 .fill {
+			border-color: var(--text-faint) !important;
+		}
+		.c100:hover > span {
+			color: var(--text-faint);
+		}
+
+		.c100.error .bar, .c100.error .fill {
+			border-color: var(--text-error) !important;
+		}
+		.c100.error:hover > span {
+			color: var(--text-error);
+		}
+
+		.c100.warning .bar, .c100.warning .fill {
+			border-color: var(--code-important) !important;
+		}
+		.c100.warning:hover > span {
+			color: var(--code-important);
+		}
+
+		.c100.balanced .bar, .c100.balanced .fill {
+			border-color: var(--code-property) !important;
+		}
+		.c100.balanced:hover > span {
+			color: var(--code-property);
+		}
+
+		.c100.perfect .bar, .c100.perfect .fill {
+			border-color: var(--text-success) !important;
+		}
+		.c100.perfect:hover > span {
+			color: var(--text-success);
+		}
+	}
+}
