@@ -4,7 +4,6 @@ import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType
 import {AbstractPlotHeaderView} from "../../../../views/abstracts/AbstractPlotHeaderView";
 import {HeadlessTableView} from "../../../../views/HeadlessTableView";
 import {ActInterface} from "../interfaces/ActInterface";
-import {SceneBuilderModal} from "../../../../modals/SceneBuilderModal";
 import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
 import {AnalyserReportType} from "../../../../analyser/enums/AnalyserReportType";
 
@@ -21,11 +20,13 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
+		/*
 		const sceneBuilderContinerEl = this.headerTitleEl.createDiv();
 		const sceneBuilderButtonEl = sceneBuilderContinerEl.createEl('button', {cls: 'actionButton', text: 'Scene Builder'});
 		sceneBuilderButtonEl.addEventListener('click', () => {
 			new SceneBuilderModal(this.app, data.currentComponent.id).open();
 		});
+		*/
 
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
 			switch (element.type){

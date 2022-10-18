@@ -1,5 +1,17 @@
 # RPG Manager Change Log
 
+## Version 3.1
+_2022-10-18_
+
+Version 3.1 is a minor upgrade to RPG Manager, focusing on providing support for **multiple images per 
+component**.
+
+- Added support for multiple images
+- Updated Scene Analyser to show better analysis
+- Enhanced the metadata writer to avoid issues with links in text
+- Fixed a bug that showed incorrect dates based on users' timezone 
+- Fixed a bug that prevented new component being created on mobile platforms
+
 ## Version 3.0
 _2022-10-12_
 
