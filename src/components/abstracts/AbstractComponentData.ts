@@ -2,7 +2,7 @@ import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {ComponentDataInterface} from "../interfaces/ComponentDataInterface";
 import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {App, TAbstractFile, TFile, TFolder} from "obsidian";
+import {App, CachedMetadata, TAbstractFile, TFile, TFolder} from "obsidian";
 import {CampaignSetting} from "../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../id/interfaces/IdInterface";
 import {ComponentMetadataInterface} from "../interfaces/ComponentMetadataInterface";
@@ -42,6 +42,22 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 	public get campaign(): CampaignInterface {
 		if (this.id.type === ComponentType.Campaign) return <unknown>this as CampaignInterface;
 		return this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
+	}
+
+	public get alias(): Array<string> {
+		const response: Array<string> = [];
+
+		const metadata:CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
+		if (metadata == null)
+			return response;
+
+		if (metadata.frontmatter?.alias != undefined) {
+			metadata.frontmatter.alias.forEach((alias: string) => {
+				response.push(alias);
+			})
+		}
+
+		return response;
 	}
 
 	public get synopsis(): string|undefined {

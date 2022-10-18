@@ -102,6 +102,7 @@ button {
 
 .modal-content {
 	.rpgm-modal-relationships {
+		min-height: var(--modal-max-height);
 
 		.relationship-select {
 			position: relative;

@@ -34,7 +34,7 @@ export class AllComponentManipulator extends AbstractFactory implements AllCompo
 	private async _updatePath(
 		oldPath: string,
 		newPath: string,
-		callbackFunction?: (file: TFile) => {},
+		callbackFunction?: (file: TFile) => Promise<void>,
 	): Promise<void> {
 		const allFiles = this.app.vault.getMarkdownFiles();
 		allFiles.forEach((file: TFile) => {

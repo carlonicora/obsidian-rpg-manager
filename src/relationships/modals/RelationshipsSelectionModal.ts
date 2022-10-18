@@ -1,12 +1,12 @@
 import {AbstractRpgManagerModal} from "../../abstracts/AbstractRpgManagerModal";
-import {App, Component, MarkdownRenderer} from "obsidian";
+import {App, Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {SorterComparisonElement} from "../../databases/SorterComparisonElement";
 import {SorterType} from "../../databases/enums/SorterType";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
-import {key} from "flatpickr/dist/types/locale";
+import {IdInterface} from "../../id/interfaces/IdInterface";
 
 export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	private _relationshipsEl: HTMLDivElement;
@@ -117,24 +117,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this._relationshipsEl.createEl('table').createTBody();
 
-		let components: ComponentInterface[] = [];
-		if (type !== undefined) {
-			components = this.database.readList<ComponentInterface>(type, this._currentComponent.id)
-				.sort(
-					this.factories.sorter.create<ComponentInterface>([
-						new SorterComparisonElement((component: ComponentInterface) => this._currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
-						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
-					])
-				);
-		} else {
-			components = this.database.recordset
-				.filter((component: ComponentInterface) => this._currentComponent.getRelationships().existsAlready(component))
-				.sort(
-					this.factories.sorter.create<ComponentInterface>([
-						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
-					])
-				);
-		}
+		const components: Array<ComponentInterface> = this.search(type, searchTerm);
 
 		components.forEach((component: ComponentInterface) => {
 			if (component.id !== this._currentComponent.id) {
@@ -311,5 +294,78 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 	onClose() {
 		super.onClose();
+	}
+
+	public search(
+		type?: ComponentType,
+		term?: string,
+	):  Array<ComponentInterface> {
+
+		let components: ComponentInterface[] = [];
+		if (type !== undefined) {
+			components = this.database.readList<ComponentInterface>(type, this._currentComponent.id)
+				.sort(
+					this.factories.sorter.create<ComponentInterface>([
+						new SorterComparisonElement((component: ComponentInterface) => this._currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
+						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
+					])
+				);
+		} else {
+			components = this.database.recordset
+				.filter((component: ComponentInterface) => this._currentComponent.getRelationships().existsAlready(component))
+				.sort(
+					this.factories.sorter.create<ComponentInterface>([
+						new SorterComparisonElement((component: ComponentInterface) => component.file.stat.mtime, SorterType.Descending),
+					])
+				);
+		}
+
+		if (term === undefined)
+			return components;
+
+
+		const matches: Map<IdInterface, {component: ComponentInterface, result?: SearchResult}> = new Map<IdInterface, {component: ComponentInterface; result?: SearchResult}>();
+
+		const query = prepareQuery(term);
+		components.forEach((component: ComponentInterface) => {
+			component.alias.forEach((alias: string) => {
+				if (alias.toLowerCase().startsWith(term.toLowerCase()))
+					matches.set(component.id, {component: component});
+			});
+
+			if (!matches.has(component.id)) {
+
+				const fuzzySearchResult = fuzzySearch(query, component.file.basename + ' ' + component.synopsis);
+				if (fuzzySearchResult != null && fuzzySearchResult.matches !== null)
+					matches.set(component.id, {component: component, result: fuzzySearchResult});
+			}
+		});
+
+		if (matches.size === 0)
+			return [];
+
+		const resultArray: Array<{component: ComponentInterface, result?: SearchResult}> = [];
+		matches.forEach((value: {component: ComponentInterface, result?: SearchResult}) => {
+			resultArray.push(value);
+		});
+
+		resultArray.sort((a: {component: ComponentInterface, result?: SearchResult}, b: {component: ComponentInterface, result?: SearchResult}) => {
+			if (a.result === undefined && b.result !== undefined) return -1;
+			if (a.result !== undefined && b.result === undefined) return 1;
+			if (a.result === undefined && b.result === undefined) return 0;
+			if (a.result !== undefined && b.result !== undefined) {
+				if (a.result?.score !== undefined && b.result?.score === undefined) return -1;
+				if (a.result?.score === undefined && b.result?.score !== undefined) return +1;
+				return b.result.score - a.result.score
+			}
+			return 0;
+		});
+
+		const response: Array<ComponentInterface> = []
+		resultArray.forEach((value: {component: ComponentInterface, result?: SearchResult}) => {
+			response.push(value.component);
+		})
+
+		return  response;
 	}
 }

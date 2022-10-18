@@ -2196,6 +2196,9 @@ button:disabled {
   font-weight: 400;
 }
 
+.modal-content .rpgm-modal-relationships {
+  min-height: var(--modal-max-height);
+}
 .modal-content .rpgm-modal-relationships .relationship-select {
   position: relative;
   margin: 20px;

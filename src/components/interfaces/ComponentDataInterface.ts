@@ -20,4 +20,5 @@ export interface ComponentDataInterface {
 	get isComplete(): boolean;
 
 	get images(): ImageInterface[];
+	get alias(): Array<string>;
 }
