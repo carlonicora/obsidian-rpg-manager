@@ -1146,7 +1146,7 @@ select:focus {
 .rpgm-modal .gallery .gallery-operations .image-container img {
   width: 100%;
 }
-.rpgm-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-deleted {
+.rpgm-modal .gallery .gallery-operations .gallery-operations-edit-deleted {
   display: none;
   position: absolute;
   z-index: 1;
