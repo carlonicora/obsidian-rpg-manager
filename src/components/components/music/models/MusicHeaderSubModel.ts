@@ -26,10 +26,10 @@ export class MusicHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Music;
 		response.responseType = ResponseType.MusicHeader;
 
-		if (this.data.image === undefined) {
+		if (this.data.images.length === 0) {
 			response.imgSrc = await this.data.getThumbnail();
-		} else if (this.data.image !== null) {
-			response.imgSrc = this.data.image;
+		} else if (this.data.images.length > 0) {
+			response.imgSrc = this.data.images[0].src;
 		}
 
 		if (this.data.url !== undefined) response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'link', this.data.url, HeaderResponseType.Long, {editableField: 'data.url'}));

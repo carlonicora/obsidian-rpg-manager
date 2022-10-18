@@ -5,7 +5,6 @@ import {AnalyserDetailType} from "../../enums/AnalyserDetailType";
 import {AnalyserThresholdResult} from "../../enums/AnalyserThresholdResult";
 import {AnalyserViewInterface} from "../../interfaces/AnalyserViewInterface";
 import {ComponentType} from "../../../components/enums/ComponentType";
-import {AnalyserInterface} from "../../interfaces/AnalyserInterface";
 
 export abstract class AbstractAnalyserView extends AbstractRpgManager implements AnalyserViewInterface {
 	protected titles: Map<AnalyserDetailType|undefined, string>;

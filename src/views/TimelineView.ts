@@ -138,11 +138,11 @@ export class TimelineView extends AbstractRpgManagerView {
 	): Promise<void> {
 		this.rpgmContentEl.empty();
 
-		if (this._campaign.image !== null) {
+		if (this._campaign.images.length > 0) {
 			const bannerContainer = this.rpgmContentEl.createDiv({cls: 'rpg-container'});
 
 			const header = bannerContainer.createDiv({cls: 'rpgm-header'});
-			header.style.backgroundImage = 'url(\'' + this._campaign.image + '\')';
+			header.style.backgroundImage = 'url(\'' + this._campaign.images[0].src + '\')';
 
 			const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
 			overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});

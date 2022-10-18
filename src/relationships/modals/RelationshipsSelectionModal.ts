@@ -1,11 +1,11 @@
-import {AbstractRpgManagerModal} from "../abstracts/AbstractRpgManagerModal";
+import {AbstractRpgManagerModal} from "../../abstracts/AbstractRpgManagerModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {ComponentType} from "../components/enums/ComponentType";
-import {SorterComparisonElement} from "../databases/SorterComparisonElement";
-import {SorterType} from "../databases/enums/SorterType";
-import {ComponentInterface} from "../components/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../relationships/enums/RelationshipType";
+import {ComponentType} from "../../components/enums/ComponentType";
+import {SorterComparisonElement} from "../../databases/SorterComparisonElement";
+import {SorterType} from "../../databases/enums/SorterType";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {RelationshipInterface} from "../interfaces/RelationshipInterface";
+import {RelationshipType} from "../enums/RelationshipType";
 
 export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	private _relationshipsEl: HTMLDivElement;
@@ -133,22 +133,17 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 				if (relationship !== undefined) checkboxEl.checked = true;
 
 				/** IMAGE */
-				if (component.image != null) {
-					const img = new Image(40, 40);
+				const imageCellEl: HTMLTableCellElement = rowEl.insertCell();
 
-					img.onerror = (evt: Event|string) => {
-						rowEl.insertCell();
-					};
+				if (component.images.length > 0) {
+					const img = new Image(40, 40);
 
 					img.onload = (evt: Event) => {
 						img.style.objectFit = 'cover';
-						rowEl.insertCell().append(img as Node);
+						imageCellEl.append(img as Node);
 					};
 
-					img.src = component.image;
-
-				} else {
-					rowEl.insertCell();
+					img.src = component.images[0].src;
 				}
 
 				/** TYPE SELECTOR */

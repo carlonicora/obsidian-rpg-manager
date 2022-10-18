@@ -3,7 +3,6 @@ import {AbstractAnalyserView} from "./abstract/AbstractAnalyserView";
 import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
 import {AnalyserReportDetailInterface} from "../interfaces/AnalyserReportDetailInterface";
 import {AnalyserDetailType} from "../enums/AnalyserDetailType";
-import {AnalyserInterface} from "../interfaces/AnalyserInterface";
 
 export class AnalyserMinimalView extends AbstractAnalyserView {
 	private _description: Map<AnalyserDetailType|undefined, string> = new Map<AnalyserDetailType | undefined, string>([

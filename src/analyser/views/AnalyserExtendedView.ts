@@ -5,7 +5,6 @@ import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {AnalyserReportDetailInterface} from "../interfaces/AnalyserReportDetailInterface";
 import {AnalyserScoreType} from "../enums/AnalyserScoreType";
-import {AnalyserInterface} from "../interfaces/AnalyserInterface";
 
 export class AnalyserExtendedView extends AbstractAnalyserView {
 	protected titles: Map<AnalyserDetailType|undefined,string> = new Map<AnalyserDetailType | undefined, string>([

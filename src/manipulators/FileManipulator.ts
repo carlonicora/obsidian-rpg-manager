@@ -98,13 +98,15 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 
 	public async maybeWrite(
 		newContent: string,
-	): Promise<void> {
-		if (newContent !== this.content){
-			this.app.vault.modify(this.file, newContent)
-				.then(() => {
-					this.database.onSave(this.file);
-				});
-		}
+	): Promise<boolean> {
+		if (newContent === this.content)
+			return false;
+
+		return this.app.vault.modify(this.file, newContent)
+			.then(() => {
+				this.database.onSave(this.file);
+				return true;
+			});
 	}
 
 	public async read(

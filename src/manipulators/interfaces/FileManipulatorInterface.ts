@@ -17,7 +17,7 @@ export interface FileManipulatorInterface {
 
 	maybeWrite(
 		newContent: string,
-	): Promise<void>;
+	): Promise<boolean>;
 
 	patternPosition(
 		pattern: string[],

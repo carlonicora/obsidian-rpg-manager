@@ -16,6 +16,7 @@ import {ComponentStage} from "../components/enums/ComponentStage";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {DatabaseErrorModal} from "../modals/DatabaseErrorModal";
 import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
+import {AbstractComponentData} from "../components/abstracts/AbstractComponentData";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public recordset: ComponentInterface[] = [];
@@ -239,6 +240,12 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 		await this._basenameIndex.delete(oldPath);
 		if (component !== undefined) await this._basenameIndex.set(file.path, file.basename);
+
+		if (AbstractComponentData.imageExtensions.contains(file.extension)) {
+			this.manipulators.allComponents.updateImagePath(oldPath, file.path);
+		} else {
+			this.manipulators.allComponents.updateRelationshipPath(oldPath, file.path);
+		}
 
 		if (oldBaseName !== undefined && component !== undefined && metadata != null) {
 			await this._replaceFileContent(file, oldBaseName, newBaseName);

@@ -13,7 +13,7 @@ import {ImageMetadataInterface} from "../interfaces/ImageMetadataInterface";
 export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
 	public static
 	root: string|undefined;
-	private static _imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
+	public static imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
 
 	public static initialiseRoots(
 		app: App,
@@ -46,15 +46,6 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 
 	public get synopsis(): string|undefined {
 		return this.metadata?.data?.synopsis;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public get image(): string | undefined {
-		if (this.metadata?.data?.image != undefined && this.metadata?.data?.image !== '') return this.metadata.data.image;
-
-		return this._getImage(this.file.basename);
 	}
 
 	public get images(): ImageInterface[] {
@@ -102,7 +93,7 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 		basename: string,
 		folder: TFolder,
 	): string|undefined {
-		const filesInFolder = this.app.vault.getFiles().filter((file: TFile) => file.parent === folder && file.basename.toLowerCase() === basename.toLowerCase() && AbstractComponentData._imageExtensions.includes(file.extension));
+		const filesInFolder = this.app.vault.getFiles().filter((file: TFile) => file.parent === folder && file.basename.toLowerCase() === basename.toLowerCase() && AbstractComponentData.imageExtensions.includes(file.extension));
 		if (filesInFolder.length !== 0)
 			return filesInFolder[0].path;
 

@@ -10,7 +10,7 @@ export class Music extends AbstractMusicData implements MusicInterface {
 	private _dynamicImage: string | null | undefined;
 
 	public get image(): string | undefined {
-		if (super.image !== undefined) return super.image;
+		if (super.images.length > 0) return super.images[0].src;
 		if (this.url == undefined) return undefined;
 
 		if (this._dynamicImage === undefined) {
