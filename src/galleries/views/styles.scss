@@ -52,23 +52,23 @@
 				}
 			}
 
-			.gallery-operations-edit {
-				.gallery-operations-edit-deleted {
-					display: none;
-					position: absolute;
-					z-index: 1;
-					background-color: rgba(0, 0, 0, 0.6);
-					top: 0px;
-					left: 0px;
-					width: 100%;
-					height: 100%;
-					color: var(--text-on-accent);
-					text-align: center;
-					padding-top: calc(50% / 2);
-					font-size: 2em;
-					font-weight: 200;
-				}
+			.gallery-operations-edit-deleted {
+				display: none;
+				position: absolute;
+				z-index: 1;
+				background-color: rgba(0, 0, 0, 0.6);
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 100%;
+				color: var(--text-on-accent);
+				text-align: center;
+				padding-top: calc(50% / 2);
+				font-size: 2em;
+				font-weight: 200;
+			}
 
+			.gallery-operations-edit {
 				.gallery-operations-edit-image {
 					width: 50%;
 					float: left;

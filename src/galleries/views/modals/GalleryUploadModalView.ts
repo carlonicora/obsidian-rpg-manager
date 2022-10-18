@@ -1,20 +1,18 @@
-import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {setIcon} from "obsidian";
 import {ImageInterface} from "../../interfaces/ImageInterface";
-import {GalleryViewType} from "../../enums/GalleryViewType";
-import {GalleryEditModalView} from "./GalleryEditModalView";
+import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
 const fs = require("fs");
 
-export class GalleryUploadModalView extends AbstractGalleryModalView implements GalleryViewInterface {
+export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 	private _dropZoneEl: HTMLDivElement;
 
 	public render(
 		containerEl: HTMLDivElement,
 	): void {
-		containerEl.empty();
+		super.render(containerEl);
 
-		this._dropZoneEl = containerEl.createDiv({cls: 'dropzone'})
+		this._dropZoneEl = this.containerEl.createDiv({cls: 'dropzone'})
 		this._dropZoneEl.createDiv();
 		setIcon(this._dropZoneEl, 'download');
 		this._dropZoneEl.createDiv({text: 'Drag and drop your image here to add it to your Vault'});
@@ -71,9 +69,8 @@ export class GalleryUploadModalView extends AbstractGalleryModalView implements 
 								this.manipulators.codeblock.addOrUpdateImage(folder + '/' + fileName, '')
 									.then((image: ImageInterface|undefined) => {
 										if (image !== undefined) {
-											const view = this.factories.imageView.create(GalleryViewType.ModalEdit, this.component);
-											(<GalleryEditModalView>view).image = image;
-											view.render(containerEl);
+											this.selectedImage = image;
+											this.confirmationOverlayEl.style.display = 'block';
 										}
 									});
 							}

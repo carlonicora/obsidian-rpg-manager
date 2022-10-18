@@ -22,7 +22,15 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		sessionId: IdInterface|undefined=undefined,
 		additionalInformation: any|null=null,
 	): Promise<void> {
-		let folder = path.sep;
+		let pathSeparator = '';
+
+		try {
+			pathSeparator = path.sep;
+		} catch (e) {
+			pathSeparator = '/';
+		}
+
+		let folder = pathSeparator;
 
 		try {
 			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
@@ -45,7 +53,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			additionalInformation,
 		);
 
-		const fileName = await this._generateFilePath(type, folder, name);
+		const fileName = await this._generateFilePath(type, folder, name, pathSeparator);
 
 		template.generateData()
 			.then((data: string) => {
@@ -126,7 +134,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 			additionalInformation,
 		);
 
-		const fileName = await this._generateFilePath(type, folder, name);
+		const fileName = await this._generateFilePath(type, folder, name, '/');
 
 		const data: string = await template.generateData();
 		const newFile = await app.vault.create(fileName, data);
@@ -138,17 +146,18 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		type: ComponentType,
 		folder: string,
 		name: string,
+		pathSeparator: string,
 	): Promise<string> {
-		if (folder.startsWith(path.sep)) folder = folder.substring(path.sep.length);
-		if (folder.endsWith(path.sep)) folder = folder.substring(0, folder.length - path.sep.length);
+		if (folder.startsWith(pathSeparator)) folder = folder.substring(pathSeparator.length);
+		if (folder.endsWith(pathSeparator)) folder = folder.substring(0, folder.length - pathSeparator.length);
 		let response = name + '.md';
 
 		if (this.settings.automaticMove){
 			let fullPath: string;
 			if (type !== ComponentType.Campaign) {
-				fullPath = folder + path.sep + ComponentType[type] + 's';
+				fullPath = folder + pathSeparator + ComponentType[type] + 's';
 
-				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(path.sep.length);
+				if (fullPath.startsWith(pathSeparator)) fullPath = fullPath.substring(pathSeparator.length);
 
 				const fileOrFolder = await this.app.vault.getAbstractFileByPath(fullPath);
 				if (fileOrFolder == null) {
@@ -160,10 +169,10 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 				}
 			} else {
 				fullPath = folder;
-				if (fullPath.startsWith(path.sep)) fullPath = fullPath.substring(1);
+				if (fullPath.startsWith(pathSeparator)) fullPath = fullPath.substring(1);
 			}
 
-			response = fullPath + path.sep + response;
+			response = fullPath + pathSeparator + response;
 		}
 
 		return response;

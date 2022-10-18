@@ -19,10 +19,6 @@ export interface ComponentDataInterface {
 	get synopsis(): string | undefined;
 	get isComplete(): boolean;
 
-	/**
-	 * @deprecated
-	 */
-	get image(): string | undefined;
-
 	get images(): ImageInterface[];
+	get alias(): Array<string>;
 }

@@ -19,13 +19,15 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 	): void {
 		containerEl.empty();
 
-		const editorContainerEl = containerEl.createDiv({cls: 'gallery-operations-edit'});
-		const editorDeletedContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-deleted', text: 'The image has been removed. Click to return to the list of galleries for ' + this.component.file.basename});
+		const editorDeletedContainerEl = containerEl.createDiv({cls: 'gallery-operations-edit-deleted'});
+		editorDeletedContainerEl.createDiv({text: 'The image has been removed from ' + this.component.file.basename});
+		editorDeletedContainerEl.createDiv({text: 'Click to return to its gallery'});
 		editorDeletedContainerEl.addEventListener('click', () => {
 			const view = this.factories.imageView.create(GalleryViewType.ModalList, this.component);
 			view.render(containerEl);
 		});
 
+		const editorContainerEl = containerEl.createDiv({cls: 'gallery-operations-edit'});
 
 		const editorImageContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-image'});
 		const editorEditorContainerEl = editorContainerEl.createDiv({cls: 'gallery-operations-edit-editor clearfix'});

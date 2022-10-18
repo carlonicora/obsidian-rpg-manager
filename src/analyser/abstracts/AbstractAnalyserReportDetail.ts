@@ -43,18 +43,22 @@ export abstract class AbstractAnalyserReportDetail implements AnalyserReportDeta
 		return this._score;
 	}
 
+	get isHighBetter(): boolean {
+		return false;
+	}
+
 	get percentage(): number {
 		if (this.maximumScore === 0) return 0;
 		return Math.floor(this.score * 100 / this.maximumScore);
 	}
 
 	get thresholdType(): AnalyserThresholdResult {
-		if (this.data.totalTargetDuration === 0 || this.data.totalExpectedRunningTime === 0) return 0;
+		if (this.percentage < 30) return AnalyserThresholdResult.CriticallyLow;
+		if (this.percentage < 60) return AnalyserThresholdResult.Low;
+		if (this.percentage < 75) return AnalyserThresholdResult.Correct;
+		if (this.percentage < 90) return AnalyserThresholdResult.High;
 
-		if (this.percentage < 50) return AnalyserThresholdResult.CriticallyLow;
-		if (this.percentage < 80) return AnalyserThresholdResult.Low;
-
-		return AnalyserThresholdResult.Correct;
+		return AnalyserThresholdResult.CriticallyHigh;
 	}
 
 	protected get percentageThresholdScore(): AnalyserThresholdResult {

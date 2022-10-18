@@ -86,9 +86,9 @@ export class AnalyserReport extends AbstractRpgManager implements AnalyserReport
 		if (this.durationPercentage < 30) return AnalyserThresholdResult.CriticallyLow;
 		if (this.durationPercentage < 60) return AnalyserThresholdResult.Low;
 		if (this.durationPercentage < 75) return AnalyserThresholdResult.Correct;
-		if (this.durationPercentage < 90) return AnalyserThresholdResult.Correct;
+		if (this.durationPercentage < 90) return AnalyserThresholdResult.High;
 
-		return AnalyserThresholdResult.Correct;
+		return AnalyserThresholdResult.CriticallyHigh;
 	}
 
 	get score(): number {

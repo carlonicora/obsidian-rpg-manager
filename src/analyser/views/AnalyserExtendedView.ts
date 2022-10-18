@@ -17,40 +17,7 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 		[AnalyserDetailType.Timing, 'Timing accuracy: %percentage%%'],
 	]);
 
-	protected subtitles: Map<AnalyserDetailType, Map<AnalyserThresholdResult, string|undefined>> =
-		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([
-		[AnalyserDetailType.Activity, new Map<AnalyserThresholdResult, string|undefined>([
-			[AnalyserThresholdResult.CriticallyHigh, 'Too many active scenes'],
-			[AnalyserThresholdResult.High, 'Maybe too many active scenes'],
-			[AnalyserThresholdResult.Correct, 'The amount of active scenes is balanced'],
-			[AnalyserThresholdResult.Low, 'Maybe not enough active scenes'],
-			[AnalyserThresholdResult.CriticallyLow, 'Not enough active scenes'],
-		])],
-		[AnalyserDetailType.Duration, new Map<AnalyserThresholdResult, string|undefined>([
-			[AnalyserThresholdResult.CriticallyHigh, 'The session is going to be too long'],
-			[AnalyserThresholdResult.High, 'The session might be too long'],
-			[AnalyserThresholdResult.Correct, 'The expected duration is in line with your target session duration'],
-			[AnalyserThresholdResult.Low, 'The session might be short'],
-			[AnalyserThresholdResult.CriticallyLow, 'The session is too short'],
-		])],
-		[AnalyserDetailType.Excitement, new Map<AnalyserThresholdResult, string|undefined>([
-			[AnalyserThresholdResult.CriticallyHigh, 'Too much excitement'],
-			[AnalyserThresholdResult.High, 'Maybe too much excitement'],
-			[AnalyserThresholdResult.Correct, 'The amount of exciting time is balanced'],
-			[AnalyserThresholdResult.Low, 'Maybe not enough excitement'],
-			[AnalyserThresholdResult.CriticallyLow, 'Not enough excitement'],
-		])],
-		[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
-			[AnalyserThresholdResult.CriticallyHigh, 'Repetitive'],
-			[AnalyserThresholdResult.High, 'Maybe a bit repetitive'],
-			[AnalyserThresholdResult.Correct, 'The scenes are not repetitive'],
-		])],
-		[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
-			[AnalyserThresholdResult.Correct, 'There is a good variety of scenes'],
-			[AnalyserThresholdResult.Low, 'Maybe not enough variety'],
-			[AnalyserThresholdResult.CriticallyLow, 'Not enough variety'],
-		])],
-	]);
+
 	protected descriptions: Map<AnalyserDetailType|undefined, Map<AnalyserThresholdResult, string|undefined>> =
 		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([
 			[AnalyserDetailType.Activity, new Map<AnalyserThresholdResult, string|undefined>([
@@ -75,8 +42,8 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 				[AnalyserThresholdResult.CriticallyLow, 'Just %score% are exciting, you should aim for %ideal%'],
 			])],
 			[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Really, %score% scenes type repeated in %maximumScore% scenes. Keep it below %ideal%.'],
-				[AnalyserThresholdResult.High, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
+				[AnalyserThresholdResult.CriticallyLow, 'Really, %score% scenes type repeated in %maximumScore% scenes. Keep it below %ideal%.'],
+				[AnalyserThresholdResult.Low, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
 				[AnalyserThresholdResult.Correct, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
 			])],
 			[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
@@ -121,7 +88,11 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 
 		if (title !== undefined) {
 			const subtitleEl = analyserListElementEl.createSpan({cls: 'subtitle', text: title});
-			this.addThresholdErrorClass(reportDetail.thresholdType, subtitleEl);
+			if (reportDetail.isHighBetter){
+				this.addThresholdClass(reportDetail.thresholdType, subtitleEl);
+			} else {
+				this.addThresholdErrorClass(reportDetail.thresholdType, subtitleEl);
+			}
 		}
 
 		const subtitle = this.prepareDescription(
@@ -167,7 +138,7 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 	): void {
 		const analyserListTimingElementEl: HTMLLIElement = containerEl.createEl('li');
 
-		if (report.durationPercentage !== 0) {
+		if (report.durationPercentage !== 0 && !isNaN(report.durationPercentage)) {
 			const detail = this.prepareDescription(
 				report.durationPercentage,
 				0,
@@ -176,7 +147,8 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 				0,
 			);
 			const timingTitleEl = analyserListTimingElementEl.createSpan({cls: 'subtitle', text: detail})
-			this.addThresholdErrorClass(report.durationThreshold, timingTitleEl);
+			this.addThresholdClass(report.durationThreshold, timingTitleEl);
+			//this.addThresholdErrorClass(report.durationThreshold, timingTitleEl);
 		} else {
 			analyserListTimingElementEl.createSpan({cls: 'subtitle', text: 'Time Analysis'})
 		}

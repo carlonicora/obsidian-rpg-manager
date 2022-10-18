@@ -2,7 +2,7 @@ import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {ComponentDataInterface} from "../interfaces/ComponentDataInterface";
 import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {App, TAbstractFile, TFile, TFolder} from "obsidian";
+import {App, CachedMetadata, TAbstractFile, TFile, TFolder} from "obsidian";
 import {CampaignSetting} from "../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../id/interfaces/IdInterface";
 import {ComponentMetadataInterface} from "../interfaces/ComponentMetadataInterface";
@@ -13,7 +13,7 @@ import {ImageMetadataInterface} from "../interfaces/ImageMetadataInterface";
 export abstract class AbstractComponentData extends AbstractRpgManager implements ComponentDataInterface {
 	public static
 	root: string|undefined;
-	private static _imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
+	public static imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
 
 	public static initialiseRoots(
 		app: App,
@@ -44,17 +44,24 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 		return this.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
 	}
 
-	public get synopsis(): string|undefined {
-		return this.metadata?.data?.synopsis;
+	public get alias(): Array<string> {
+		const response: Array<string> = [];
+
+		const metadata:CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
+		if (metadata == null)
+			return response;
+
+		if (metadata.frontmatter?.alias != undefined) {
+			metadata.frontmatter.alias.forEach((alias: string) => {
+				response.push(alias);
+			})
+		}
+
+		return response;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public get image(): string | undefined {
-		if (this.metadata?.data?.image != undefined && this.metadata?.data?.image !== '') return this.metadata.data.image;
-
-		return this._getImage(this.file.basename);
+	public get synopsis(): string|undefined {
+		return this.metadata?.data?.synopsis;
 	}
 
 	public get images(): ImageInterface[] {
@@ -102,7 +109,7 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 		basename: string,
 		folder: TFolder,
 	): string|undefined {
-		const filesInFolder = this.app.vault.getFiles().filter((file: TFile) => file.parent === folder && file.basename.toLowerCase() === basename.toLowerCase() && AbstractComponentData._imageExtensions.includes(file.extension));
+		const filesInFolder = this.app.vault.getFiles().filter((file: TFile) => file.parent === folder && file.basename.toLowerCase() === basename.toLowerCase() && AbstractComponentData.imageExtensions.includes(file.extension));
 		if (filesInFolder.length !== 0)
 			return filesInFolder[0].path;
 

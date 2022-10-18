@@ -1,7 +1,7 @@
 import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {BreadcrumbResponseInterface} from "../../responses/interfaces/BreadcrumbResponseInterface";
 import {Component, MarkdownRenderer} from "obsidian";
-import {RelationshipsSelectionModal} from "../../modals/RelationshipsSelectionModal";
+import {RelationshipsSelectionModal} from "../../relationships/modals/RelationshipsSelectionModal";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {IdSwitcherModal} from "../../modals/IdSwitcherModal";

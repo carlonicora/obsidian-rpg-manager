@@ -18,7 +18,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 	): void {
 		super.internalRender(container, data);
 
-		if (this.currentComponent.image != null){
+		if (this.currentComponent.images.length > 0){
 			this.headerTitleEl.empty();
 			this.headerTitleEl.addClass('rpgm-header');
 			this.headerInfoEl.addClass('info-large');
@@ -26,7 +26,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			if (this.imageContainterEl !== undefined)
 				this.headerContainerEl.removeChild(this.imageContainterEl);
 
-			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentComponent.image + '\')';
+			this.headerTitleEl.style.backgroundImage = 'url(\'' + this.currentComponent.images[0].src + '\')';
 
 			const overlay = this.headerTitleEl.createDiv({cls: 'rpgm-header-overlay'});
 			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentComponent.file.basename});

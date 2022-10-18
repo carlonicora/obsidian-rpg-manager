@@ -1,139 +1,63 @@
-import {AnalyserDetailType} from "../enums/AnalyserDetailType";
 import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
 import {AbstractAnalyserView} from "./abstract/AbstractAnalyserView";
 import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
+import {AnalyserReportDetailInterface} from "../interfaces/AnalyserReportDetailInterface";
+import {AnalyserDetailType} from "../enums/AnalyserDetailType";
 
 export class AnalyserMinimalView extends AbstractAnalyserView {
-	protected titles: Map<AnalyserDetailType|undefined,string> = new Map<AnalyserDetailType | undefined, string>([
-		[undefined, 'Analysis score %percentage%%'],
-		[AnalyserDetailType.Activity, 'Activity accuracy: %percentage%%'],
-		[AnalyserDetailType.Duration, 'Duration accuracy: %percentage%%'],
-		[AnalyserDetailType.Excitement, 'Excitement accuracy: %percentage%%'],
-		[AnalyserDetailType.Interest, 'Interest accuracy: %percentage%%'],
-		[AnalyserDetailType.Variety, 'Variety accuracy: %percentage%%'],
-	]);
-
-	protected subtitles: Map<AnalyserDetailType, Map<AnalyserThresholdResult, string|undefined>> =
-		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([
-			[AnalyserDetailType.Activity, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Too many active scenes'],
-				[AnalyserThresholdResult.High, 'Maybe too many active scenes'],
-				[AnalyserThresholdResult.Correct, 'The amount of active scenes is balanced'],
-				[AnalyserThresholdResult.Low, 'Maybe not enough active scenes'],
-				[AnalyserThresholdResult.CriticallyLow, 'Not enough active scenes'],
-			])],
-			[AnalyserDetailType.Duration, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'The session is going to be too long'],
-				[AnalyserThresholdResult.High, 'The session might be too long'],
-				[AnalyserThresholdResult.Correct, 'The expected duration is in line with your target session duration'],
-				[AnalyserThresholdResult.Low, 'The session might be short'],
-				[AnalyserThresholdResult.CriticallyLow, 'The session is too short'],
-			])],
-			[AnalyserDetailType.Excitement, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Too much excitement'],
-				[AnalyserThresholdResult.High, 'Maybe too much excitement'],
-				[AnalyserThresholdResult.Correct, 'The amount of exciting time is balanced'],
-				[AnalyserThresholdResult.Low, 'Maybe not enough excitement'],
-				[AnalyserThresholdResult.CriticallyLow, 'Not enough excitement'],
-			])],
-			[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Repetitive'],
-				[AnalyserThresholdResult.High, 'Maybe a bit repetitive'],
-				[AnalyserThresholdResult.Correct, 'The scenes are not repetitive'],
-			])],
-			[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.Correct, 'There is a good variety of scenes'],
-				[AnalyserThresholdResult.Low, 'Maybe not enough variety'],
-				[AnalyserThresholdResult.CriticallyLow, 'Not enough variety'],
-			])],
-		]);
-	protected descriptions: Map<AnalyserDetailType|undefined, Map<AnalyserThresholdResult, string|undefined>> =
-		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([
-			[AnalyserDetailType.Activity, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Really, %score% scenes out of %maximumScore% are active. Ideally you should have around %ideal% active scenes'],
-				[AnalyserThresholdResult.High, '%score% scenes out of %maximumScore% are active. Ideally you should have around %ideal% active scenes'],
-				[AnalyserThresholdResult.Low, 'Only  %score% scenes out of %maximumScore% are active. Ideally you should have around %ideal% active scenes'],
-				[AnalyserThresholdResult.CriticallyLow, 'Just %score% scenes out of %maximumScore% are active. Ideally you should have around %ideal% active scenes'],
-			])],
-			[AnalyserDetailType.Duration, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Really, %percentage%% longer than your target'],
-				[AnalyserThresholdResult.High, '%percentage%% longer than your target'],
-				[AnalyserThresholdResult.Low, '%percentage%% shorter than your target'],
-				[AnalyserThresholdResult.CriticallyLow, '%percentage%% shorter than your target'],
-			])],
-			[AnalyserDetailType.Excitement, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, '%percentage%% of the running time (%score% scenes) is exciting. Ideally you should target the %ideal%%'],
-				[AnalyserThresholdResult.High, '%percentage%% of the running time (%score% scenes) is exciting. Ideally you should target the %ideal%%'],
-				[AnalyserThresholdResult.Low, 'only %percentage%% of the running time (%score% scenes) is exciting. Ideally you should target the %ideal%%'],
-				[AnalyserThresholdResult.CriticallyLow, 'Just %percentage%% of the running time (%score% scenes) is exciting. Ideally you should target the %ideal%%'],
-			])],
-			[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.CriticallyHigh, 'Really, %score% scenes type repeated in %maximumScore% scenes. Keep it below %ideal%.'],
-				[AnalyserThresholdResult.High, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
-			])],
-			[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
-				[AnalyserThresholdResult.Low, 'Only %score% different type of scenes are used. Aim for %ideal%'],
-				[AnalyserThresholdResult.CriticallyLow, 'Just %score% different type of scenes are used. Aim for %ideal%'],
-			])],
-		]);
-
+	private _description: Map<AnalyserDetailType|undefined, string> = new Map<AnalyserDetailType | undefined, string>([
+		[undefined, 'Score'],
+		[AnalyserDetailType.Activity, 'Activity'],
+		[AnalyserDetailType.Duration, 'Duration'],
+		[AnalyserDetailType.Excitement, 'Excitement'],
+		[AnalyserDetailType.Interest, 'Interest'],
+		[AnalyserDetailType.Variety, 'Variety'],
+		[AnalyserDetailType.Timing, 'Timing'],
+	])
 	public render(
 		report: AnalyserReportInterface,
 		containerEl: HTMLDivElement,
 	): void {
 		if (!report.isValid) return;
 
-		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-analyser'});
+		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyser centred'});
 
-		const analyserHeadlineEl: HTMLSpanElement = analyserEl.createSpan({cls: 'header'});
-		const description = this.descriptions.get(undefined)?.get(report.thresholdType);
-		if (description !== undefined) {
-			analyserHeadlineEl.textContent = this.prepareDescription(
-				report.percentage,
-				report.score,
-				report.maximumScore,
-				this.titles.get(undefined),
-				report.ideal,
-				this.type,
-			)
-		}
+		const analyserContainerEl: HTMLDivElement = analyserEl.createDiv({cls: 'analyser-container clearfix'});
 
-		/*
-		if (report.actualDuration !== undefined && report.actualDuration !== 0){
-			const actualDuration = this.transformTime(report.actualDuration);
-			const actualDurationDescription = 'Actual ' + ComponentType[this.type] + ' duration: ' + actualDuration;
-			analyserEl.createDiv().createSpan({cls: 'header', text: actualDurationDescription})
-		}
+		this._addCircle(analyserContainerEl, report.percentage, report.thresholdType, true, 'Score');
 
-		if (report.expectedDuration !== undefined && report.expectedDuration !== 0){
-			const expectedDuration = this.transformTime(report.expectedDuration);
-			let expectedDurationDescription = 'Expected ' + ComponentType[this.type] + ' duration: ' + expectedDuration;
-
-			if (report.targetDuration !== undefined && report.targetDuration !== 0){
-				const targetDuration = this.transformTime(report.targetDuration);
-				expectedDurationDescription += ' (Your target is ' + targetDuration + ')';
-			}
-
-			analyserEl.createDiv().createSpan({cls: 'header', text: expectedDurationDescription})
-		}
-
-
-		this.addThresholdClass(report.thresholdType, analyserHeadlineEl);
-
-		const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
+		if (report.durationPercentage === 0 && isNaN(report.durationPercentage))
+			this._addCircle(analyserContainerEl, report.durationPercentage, report.durationThreshold, true, this._description.get(undefined) ?? '');
 
 		report.details.forEach((reportDetail: AnalyserReportDetailInterface) => {
-			const descriptionTemplate: Array<string>|undefined = this.descriptions.get(reportDetail.detailType)?.get(reportDetail.thresholdType);
-
-			if (descriptionTemplate !== undefined){
-				const description = this.prepareDescription(reportDetail.percentage, reportDetail.score, reportDetail.maximumScore, descriptionTemplate[0], reportDetail.ideal);
-				const analyserElementEl: HTMLLIElement = analyserListEl.createEl('li', {text: description});
-
-				const extendedDescription = this.prepareDescription(reportDetail.percentage, reportDetail.score, reportDetail.maximumScore, descriptionTemplate[1], reportDetail.ideal);
-				this.addThresholdErrorClass(reportDetail.thresholdType, analyserElementEl);
-				analyserElementEl.createSpan({cls: 'description', text: extendedDescription});
-			}
+			if (reportDetail.isRelevant === false) return;
+			this._addCircle(analyserContainerEl, reportDetail.percentage, reportDetail.thresholdType, reportDetail.isHighBetter, this._description.get(reportDetail.detailType) ?? '');
 		});
-		*/
+	}
+
+	private _addCircle(
+		containerEl: HTMLDivElement,
+		percentage: number,
+		threshold: AnalyserThresholdResult,
+		isHigerBetter: boolean,
+		description: string,
+	): void {
+		const circleContainerEl = containerEl.createDiv({cls: 'circle-container'});
+
+		const circleEl = circleContainerEl.createDiv({cls:' c100 p' + percentage.toString() + ' small'});
+		circleEl.createSpan({text: percentage.toString() + '%'});
+
+		const sliceEl = circleEl.createDiv({cls: 'slice'});
+		sliceEl.createDiv({cls: 'bar'});
+		sliceEl.createDiv({cls: 'fill'});
+
+		const circleDescriptionEl: HTMLDivElement = circleContainerEl.createDiv({cls: 'description', text:description});
+		if (isHigerBetter) {
+			this.addThresholdClass(threshold, circleEl);
+			this.addThresholdClass(threshold, circleDescriptionEl);
+		} else {
+			this.addThresholdErrorClass(threshold, circleEl);
+			this.addThresholdErrorClass(threshold, circleDescriptionEl);
+		}
 	}
 }

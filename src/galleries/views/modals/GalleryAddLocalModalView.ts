@@ -1,30 +1,26 @@
-import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {TAbstractFile} from "obsidian";
-import {GalleryViewType} from "../../enums/GalleryViewType";
-import {GalleryEditModalView} from "./GalleryEditModalView";
 import {AbstractComponent} from "../../../components/abstracts/AbstractComponent";
+import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
 
-export class GalleryAddLocalModalView extends AbstractGalleryModalView implements GalleryViewInterface {
+export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 	private _masonryEl: HTMLDivElement;
 	private _attachmentFolder: string;
 	private _allImages: Array<TAbstractFile>;
-	private _containerEl: HTMLDivElement;
 
 	public render(
 		containerEl: HTMLDivElement,
 	): void {
-		this._containerEl = containerEl;
-		this._containerEl.empty();
+		super.render(containerEl);
 
-		this._containerEl.createEl('label', {text: 'Search your image'})
-		const searchEl = this._containerEl.createEl('input', {type: 'text'})
+		this.containerEl.createEl('label', {text: 'Search your image'})
+		const searchEl = this.containerEl.createEl('input', {type: 'text'})
 		searchEl.addEventListener('keyup', () => {
 			this._populateGrid(searchEl.value);
 		});
 
-		this._masonryEl = this._containerEl.createDiv({cls: 'gallery-operations-masonry-x'});
+		this._masonryEl = this.containerEl.createDiv({cls: 'gallery-operations-masonry-x'});
 
 		if (AbstractComponent.root == undefined)
 			AbstractComponent.initialiseRoots(this.app);
@@ -71,9 +67,8 @@ export class GalleryAddLocalModalView extends AbstractGalleryModalView implement
 					this.manipulators.codeblock.addOrUpdateImage(imageEl.dataset.id, '')
 						.then((image: ImageInterface|undefined) => {
 							if (image !== undefined) {
-								const view = this.factories.imageView.create(GalleryViewType.ModalEdit, this.component);
-								(<GalleryEditModalView>view).image = image;
-								view.render(this._containerEl);
+								this.selectedImage = image;
+								this.confirmationOverlayEl.style.display = 'block';
 							}
 						});
 				}

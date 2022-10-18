@@ -12,6 +12,7 @@ import {AnalyserExtendedView} from "../views/AnalyserExtendedView";
 import {AnalyserReport} from "../reports/AnalyserReport";
 import {AnalyserViewInterface} from "../interfaces/AnalyserViewInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
+import {AnalyserSceneView} from "../views/AnalyserSceneView";
 
 export abstract class AbstractAnalyser extends AbstractRpgManager implements AnalyserInterface {
 	protected rawData: AnalyserDataImportInterface[];
@@ -46,6 +47,9 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 		let view: AnalyserViewInterface|undefined = undefined;
 
 		switch(type){
+			case AnalyserReportType.Scene:
+				view = new AnalyserSceneView(this.app, this.type);
+				break;
 			case AnalyserReportType.Minimal:
 				view = new AnalyserMinimalView(this.app, this.type);
 				break;

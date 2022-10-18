@@ -1,28 +1,26 @@
-import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
-import {GalleryViewType} from "../../enums/GalleryViewType";
-import {GalleryEditModalView} from "./GalleryEditModalView";
+import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
 
-export class GalleryAddRemoteModalView extends AbstractGalleryModalView implements GalleryViewInterface {
-	private _containerEl: HTMLDivElement;
+export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
+
 	private _errorEl: HTMLDivElement;
 	private _imageContainerEl: HTMLDivElement;
 	private _addButtonEl: HTMLButtonElement;
 	private _urlEl: HTMLInputElement;
+	private _confirmationOverlayEl: HTMLDivElement;
 
 	public render(
 		containerEl: HTMLDivElement,
 	): void {
-		this._containerEl = containerEl;
-		this._containerEl.empty();
+		super.render(containerEl);
 
-		this._containerEl.createEl('label', {text: 'Add the URL of the online image'})
-		this._urlEl = this._containerEl.createEl('input', {type: 'text'})
-		this._addButtonEl = this._containerEl.createEl('button', {text: 'Add image'});
+		this.containerEl.createEl('label', {text: 'Add the URL of the online image'})
+		this._urlEl = this.containerEl.createEl('input', {type: 'text'})
+		this._addButtonEl = this.containerEl.createEl('button', {text: 'Add image'});
 		this._addButtonEl.disabled = true;
-		this._errorEl = this._containerEl.createDiv({cls: 'error'});
-		this._imageContainerEl = this._containerEl.createDiv({cls: 'image-container'});
+		this._errorEl = this.containerEl.createDiv({cls: 'error'});
+		this._imageContainerEl = this.containerEl.createDiv({cls: 'image-container'});
 
 		this._urlEl.addEventListener('paste', this._showPreview.bind(this));
 		this._urlEl.addEventListener('keyup', this._showPreview.bind(this));
@@ -48,9 +46,8 @@ export class GalleryAddRemoteModalView extends AbstractGalleryModalView implemen
 				this.manipulators.codeblock.addOrUpdateImage(this._urlEl.value.toLowerCase(), '')
 					.then((image: ImageInterface|undefined) => {
 						if (image !== undefined) {
-							const view = this.factories.imageView.create(GalleryViewType.ModalEdit, this.component);
-							(<GalleryEditModalView>view).image = image;
-							view.render(this._containerEl);
+							this.selectedImage = image;
+							this.confirmationOverlayEl.style.display = 'block';
 						}
 					});
 			};
