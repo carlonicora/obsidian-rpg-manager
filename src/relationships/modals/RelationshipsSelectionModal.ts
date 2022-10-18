@@ -6,9 +6,11 @@ import {SorterType} from "../../databases/enums/SorterType";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
+import {key} from "flatpickr/dist/types/locale";
 
 export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	private _relationshipsEl: HTMLDivElement;
+	private _relationshipTypeSelectorEl: HTMLSelectElement;
 
 	private _availableRelationships: Map<ComponentType, ComponentType[]> = new Map<ComponentType, ComponentType[]>([
 		[ComponentType.Campaign, []],
@@ -51,9 +53,12 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 		const relationshipsModalEl = contentEl.createDiv({cls: 'rpgm-modal-relationships'})
 
 		relationshipsModalEl.createEl('h2', {text: 'Relationship Selector'});
-		relationshipsModalEl.createDiv({text: 'Select the type of component'});
 
-		this._requiredRelationshipType(relationshipsModalEl);
+		const relationshipShortlistenersContainerEl: HTMLDivElement = relationshipsModalEl.createDiv({cls: 'clearfix'});
+
+		this._requiredRelationshipType(relationshipShortlistenersContainerEl);
+		this._componentSearcher(relationshipShortlistenersContainerEl);
+
 		this._relationshipsEl = relationshipsModalEl.createDiv({cls:'relationships', text: ''});
 		this._addElementsToList();
 	}
@@ -61,31 +66,54 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	private _requiredRelationshipType(
 		contentEl: HTMLElement,
 	): void {
-		const relationshipTypeSelectorEl: HTMLSelectElement = contentEl.createEl('select');
-		relationshipTypeSelectorEl.createEl("option", {
+		const relationshipSelectorEl: HTMLDivElement = contentEl.createDiv({cls: 'relationship-select'});
+
+
+		relationshipSelectorEl.createDiv().createEl('label', {text: 'Select the type of component'});
+		this._relationshipTypeSelectorEl = relationshipSelectorEl.createEl('select');
+		this._relationshipTypeSelectorEl.createEl("option", {
 			text: 'Existing Relationships',
 			value: '',
 		});
 		const availableRelationships = this._availableRelationships.get(this._currentComponent.id.type);
 		if (availableRelationships !== undefined && availableRelationships.length > 0) {
 			availableRelationships.forEach((type: ComponentType) => {
-				relationshipTypeSelectorEl.createEl("option", {
+				this._relationshipTypeSelectorEl.createEl("option", {
 					text: ComponentType[type] + 's',
 					value: type.toString(),
 				});
 			});
-			relationshipTypeSelectorEl.addEventListener('change', () => {
+			this._relationshipTypeSelectorEl.addEventListener('change', () => {
 				this._relationshipsEl.empty();
 				let value: ComponentType|undefined = undefined;
 
-				if (relationshipTypeSelectorEl.value !== '') value = (+relationshipTypeSelectorEl.value);
+				if (this._relationshipTypeSelectorEl.value !== '') value = (+this._relationshipTypeSelectorEl.value);
 				this._addElementsToList(value);
 			});
 		}
 	}
 
+	private _componentSearcher(
+		contentEl: HTMLElement,
+	): void {
+		const componentSearchContainerEl: HTMLDivElement = contentEl.createDiv({cls: 'relationship-select'});
+
+		const searchTitle = this._relationshipTypeSelectorEl.value === '' ? 'Search a specific Component' : 'Search a specific ' + ComponentType[this._relationshipTypeSelectorEl.value as keyof typeof ComponentType] ;
+		componentSearchContainerEl.createDiv().createEl('label', {text: searchTitle});
+
+		const searchTermEl: HTMLInputElement = componentSearchContainerEl.createEl('input', {type: 'text'});
+		searchTermEl.addEventListener('keyup', () => {
+			this._relationshipsEl.empty();
+			let value: ComponentType|undefined = undefined;
+
+			if (this._relationshipTypeSelectorEl.value !== '') value = (+this._relationshipTypeSelectorEl.value);
+			this._addElementsToList(value, searchTermEl.value);
+		});
+	}
+
 	private _addElementsToList(
-		type: ComponentType|undefined = undefined,
+		type?: ComponentType,
+		searchTerm?: string,
 	): void {
 		const relationshipsTableEl: HTMLTableSectionElement = this._relationshipsEl.createEl('table').createTBody();
 

@@ -1,3 +1,40 @@
+input[type=text], input[type=text]:focus {
+  border: none;
+  border-bottom: solid 1px var(--text-normal);
+  border-radius: 0px;
+  width: 100%;
+  margin-top: 2px;
+  box-shadow: 0 0 0 0 transparent;
+}
+
+input[type=checkbox] {
+  margin: 0;
+}
+
+select, inputt[type=text] {
+  border: none;
+  background-color: var(--background-secondary);
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+select:hover, input:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
+}
+
+select,
+select:focus {
+  border: none;
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0px;
+  width: 100%;
+  margin-top: 10px;
+  box-shadow: 0 0 0 0 transparent;
+}
+
 /****************************************************************
  *
  * CSS Percentage Circle
@@ -1263,866 +1300,6 @@
   float: right;
 }
 
-button {
-  cursor: pointer;
-}
-button.danger {
-  background-color: var(--background-modifier-error);
-}
-button.danger:hover {
-  background-color: var(--text-error);
-  color: var(--text-on-accent);
-}
-button:disabled {
-  background-color: var(--background-primary-alt);
-}
-
-.rpgm-missing {
-  font-weight: 100;
-  font-style: italic;
-  color: var(--text-faint);
-  font-size: 0.9em;
-}
-
-.rpgm-header {
-  background-size: cover;
-  color: var(--background-primary);
-  position: relative;
-  min-height: 350px;
-  height: 350px;
-}
-
-.rpgm-plot {
-  margin: 30px;
-  color: var(--text-muted);
-  margin-bottom: 60px;
-}
-.rpgm-plot p {
-  margin: 0px;
-}
-
-.rpgm-header-overlay {
-  margin-bottom: -50px;
-  box-sizing: border-box;
-  background: rgba(128, 128, 128, 0.5);
-  min-height: 350px;
-}
-.rpgm-header-overlay .rpgm-header-title {
-  font-size: 4em;
-  display: inline-block;
-  padding-left: 30px;
-  width: 100%;
-  margin-top: 50px;
-}
-.rpgm-header-overlay .rpgm-campaign-name {
-  display: inline-block;
-  padding-left: 55px;
-  width: 100%;
-  font-size: 1.6em;
-}
-.rpgm-header-overlay .rpgm-current-date-timeline {
-  display: inline-block;
-  padding-left: 55px;
-  text-transform: uppercase;
-  font-weight: 300;
-  font-size: 0.6em;
-  letter-spacing: 2px;
-  width: 100%;
-  margin-top: 2px;
-}
-.rpgm-header-overlay .rpgm-current-date {
-  display: inline-block;
-  text-transform: uppercase;
-  font-weight: 300;
-  font-size: 0.6em;
-  letter-spacing: 2px;
-  width: 100%;
-}
-
-.rpg-error {
-  border: solid 1px var(--text-error);
-  background-color: var(--background-secondary);
-  padding: 10px 25px;
-}
-.rpg-error h3 {
-  color: var(--text-error);
-  font-size: 1.1em;
-  font-weight: 400;
-}
-
-.rpgm-modal {
-  display: block;
-  padding: 20px;
-}
-.rpgm-modal .input-title {
-  font-weight: 100;
-  font-size: 0.9em;
-  font-variant-caps: small-caps;
-  color: var(--text-muted);
-  border: none;
-  text-align: left;
-  margin-top: 20px;
-}
-.rpgm-modal .rpgm-modal-scene-descriptions .description-container {
-  margin-top: 20px;
-  border-top: solid 1px var(--background-modifier-border);
-}
-.rpgm-modal .rpgm-modal-scene-descriptions .description-container div, .rpgm-modal .rpgm-modal-scene-descriptions .description-container span {
-  margin-left: 20px;
-}
-.rpgm-modal .rpgm-modal-scene-descriptions .description-container span {
-  font-style: italic;
-  font-size: 0.9em;
-}
-.rpgm-modal .rpgm-modal-relationships select {
-  background-color: var(--background-secondary);
-  border-bottom: solid 1px var(--background-modifier-border);
-  border-radius: 0;
-  min-width: 150px;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: none;
-}
-.rpgm-modal .rpgm-modal-relationships select:hover {
-  box-shadow: none;
-  background-color: var(--interactive-hover);
-  cursor: pointer;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships {
-  margin-top: 20px;
-  min-height: 400px;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table {
-  width: 100%;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr:nth-child(odd) {
-  background-color: var(--background-primary-alt);
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td {
-  height: 30px;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td input {
-  margin: 0px 15px;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td input:disabled, .rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td select:disabled {
-  background-color: var(--background-modifier-border);
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.label {
-  padding: 0px 10px;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.label span {
-  font-size: 0.8em;
-  font-style: italic;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.description {
-  max-width: 50%;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.description p {
-  font-size: 0.8em;
-}
-.rpgm-modal .rpgm-modal-relationships .relationships table > tbody > tr td.selector select {
-  background-color: var(--background-secondary);
-  min-width: 10px;
-  width: 100%;
-}
-.rpgm-modal h2.rpgm-modal-title {
-  text-align: center;
-}
-.rpgm-modal .rpgm-grid {
-  display: flex;
-  gap: 20px;
-}
-.rpgm-modal .navigation {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  flex: 1 0.5 auto;
-}
-.rpgm-modal .additionalElements {
-  border: solid 1px var(--background-modifier-border);
-  display: none;
-  padding: 25px;
-  padding-top: 0;
-  min-width: 250px;
-}
-.rpgm-modal .group {
-  display: flex;
-}
-.rpgm-modal .container {
-  width: 100%;
-}
-.rpgm-modal .title {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  display: inline-block;
-  overflow: visible;
-  margin-right: 10px;
-  padding: 10px;
-  padding-right: 0;
-  border-left: solid 1px var(--background-modifier-border);
-}
-.rpgm-modal label {
-  color: var(--text-muted);
-}
-.rpgm-modal input[type=text],
-.rpgm-modal input[type=text]:focus {
-  border: none;
-  border-bottom: solid 1px var(--text-normal);
-  border-radius: 0px;
-  width: 100%;
-  margin-top: 2px;
-  box-shadow: 0 0 0 0 transparent;
-}
-.rpgm-modal .navigation > .createFrontMatterOnly {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.rpgm-modal .navigation > .createFrontMatterOnly input[type=checkbox] {
-  margin: 0;
-}
-.rpgm-modal p.error {
-  color: var(--text-error);
-  display: none;
-  font-size: 0.9em;
-  font-weight: 200;
-  margin: 0px;
-  padding: 0px;
-  margin-top: -10px;
-}
-.rpgm-modal select {
-  background-color: var(--background-secondary);
-}
-.rpgm-modal select:hover {
-  box-shadow: none;
-  background-color: var(--interactive-hover);
-  cursor: pointer;
-}
-.rpgm-modal select,
-.rpgm-modal select:focus {
-  border: none;
-  border-bottom: solid 1px var(--background-modifier-border);
-  border-radius: 0px;
-  width: 100%;
-  margin-top: 10px;
-  box-shadow: 0 0 0 0 transparent;
-}
-.rpgm-modal button {
-  display: block;
-  margin-top: 10px;
-}
-.rpgm-modal div.selector {
-  margin-bottom: 30px;
-}
-
-.modal-content h1.error {
-  color: var(--text-error);
-}
-
-.markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block > div .rpgm-table {
-  margin-left: 0px !important;
-  margin-right: 0px;
-  width: 100%;
-  max-width: 100%;
-}
-
-.create-button {
-  font-size: var(--font-settings-small);
-  display: block;
-  margin-top: 10px;
-  background-color: var(--interactive-normal);
-  color: var(--text-normal);
-  border: 1px solid var(--background-modifier-border);
-  box-shadow: 0 1px 1px 0 var(--btn-shadow-color);
-  cursor: var(--cursor);
-  height: var(--input-height);
-  line-height: 0;
-  white-space: nowrap;
-  transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
-}
-
-.rpgm-table {
-  width: 100%;
-  max-width: 100%;
-}
-.rpgm-table .inline {
-  white-space: nowrap;
-}
-.rpgm-table tr > td.image {
-  width: 75px;
-}
-.rpgm-table tr.hoverable:hover:nth-child(odd), .rpgm-table tr.hoverable:hover:nth-child(even) {
-  background-color: var(--background-primary-alt);
-}
-.rpgm-table tr > th {
-  white-space: nowrap;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  text-align: left;
-}
-.rpgm-table tr > td {
-  border: none;
-  text-align: left;
-}
-.rpgm-table tr > td.header {
-  font-size: 1.1em;
-  font-weight: bold;
-}
-.rpgm-table tr > td .inline {
-  white-space: nowrap;
-}
-
-.rpgm-headless-table tr > td > span.editorIcon, .rpgm-table tr > td > span.editorIcon {
-  position: relative;
-  right: 0;
-  float: right;
-  font-size: 0.8em;
-  color: var(--text-accent);
-  z-index: 1;
-  cursor: pointer;
-}
-.rpgm-headless-table tr:hover > td > span.editorIcon, .rpgm-table tr:hover > td > span.editorIcon {
-  display: block;
-}
-.rpgm-headless-table tr > td > span.editorIcon, .rpgm-table tr > td > span.editorIcon {
-  display: none;
-}
-.rpgm-headless-table tr:hover > td.editable, .rpgm-table tr:hover > td.editable {
-  font-style: italic;
-  background-color: var(--background-primary-alt);
-}
-.rpgm-headless-table tr > td.editable, .rpgm-table tr > td.editable {
-  font-style: normal;
-}
-
-.rpgm-breadcrumb {
-  width: 100%;
-  font-size: 0.9em;
-  text-align: center;
-  padding-bottom: 20px;
-  margin-bottom: 10px;
-}
-.rpgm-breadcrumb h2 {
-  margin-bottom: 0px;
-}
-.rpgm-breadcrumb .line, .rpgm-breadcrumb .spaced-line {
-  margin-left: 0%;
-  margin-right: 0%;
-}
-.rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .separator {
-  padding-right: 10px;
-  padding-left: 10px;
-}
-.rpgm-breadcrumb .line .crumb, .rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .crumb, .rpgm-breadcrumb .spaced-line .separator {
-  display: inline-block;
-}
-.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .title, .rpgm-breadcrumb .spaced-line .separator .value {
-  text-align: left;
-}
-.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .separator .title {
-  font-weight: 100;
-  font-size: 0.7em;
-  font-variant-caps: small-caps;
-  color: var(--text-muted);
-}
-.rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .value {
-  font-weight: 300;
-  font-size: 0.9em;
-  text-align: left;
-}
-.rpgm-breadcrumb .line .crumb .value p, .rpgm-breadcrumb .line .separator .value p, .rpgm-breadcrumb .spaced-line .crumb .value p, .rpgm-breadcrumb .spaced-line .separator .value p {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.rpgm-breadcrumb .spaced-line {
-  margin-top: 20px;
-}
-.rpgm-breadcrumb .spaced-line .crumb > .title {
-  text-align: center;
-}
-
-.reset {
-  clear: both;
-}
-
-.rpgm-header-info {
-  width: 100%;
-  border: 1px solid var(--background-modifier-border);
-  margin-bottom: 40px;
-}
-.rpgm-header-info .title {
-  width: 100%;
-  font-weight: 400;
-  font-size: 2em;
-  border-bottom: 1px solid var(--background-modifier-border);
-  text-align: center;
-}
-.rpgm-header-info .title .subtitle {
-  font-weight: 300;
-  font-size: 0.5em;
-}
-.rpgm-header-info .title p {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.rpgm-header-info .rpgm-header {
-  margin-top: -40px;
-  font-size: 1em;
-}
-.rpgm-header-info .rpgm-header .adder {
-  color: var(--background-primary);
-}
-.rpgm-header-info .rpgm-header .subtitle {
-  color: var(--background-primary);
-  font-size: 1em;
-}
-.rpgm-header-info .adder {
-  position: relative;
-  right: 10px;
-  font-size: 0.75em;
-  top: 10px;
-  z-index: 1;
-}
-.rpgm-header-info .adder span {
-  display: block;
-  text-align: right;
-}
-.rpgm-header-info .container > div > .actionButton, .rpgm-header-info .title > div > .actionButton {
-  margin: 10px;
-}
-.rpgm-header-info .container {
-  width: 100%;
-}
-.rpgm-header-info .container .info, .rpgm-header-info .container .image {
-  padding: 10px;
-}
-.rpgm-header-info .container .info {
-  width: calc(100% - 320px);
-  float: left;
-}
-.rpgm-header-info .container .info .longTitle {
-  width: 100%;
-  font-variant: small-caps;
-  font-size: 0.8em;
-  color: var(--text-muted);
-}
-.rpgm-header-info .container .info .longText {
-  width: 100%;
-}
-.rpgm-header-info .container .info .short .shortTitle {
-  width: 100px;
-  font-variant: small-caps;
-  font-size: 0.8em;
-  color: var(--text-muted);
-  float: left;
-}
-.rpgm-header-info .container .info .short .shortText {
-  width: calc(100% - 100px);
-  float: left;
-}
-.rpgm-header-info .container .info .short .shortText p {
-  margin: 0px;
-}
-.rpgm-header-info .container .info .half .halfTitle {
-  width: 50%;
-  font-variant: small-caps;
-  font-size: 0.8em;
-  color: var(--text-muted);
-  float: left;
-}
-.rpgm-header-info .container .info .half .halfText {
-  width: 50%;
-  float: left;
-}
-.rpgm-header-info .container .info .half .halfText p {
-  margin: 0px;
-}
-.rpgm-header-info .container .info .reset {
-  clear: both;
-}
-.rpgm-header-info .container .info select {
-  background-color: var(--background-secondary);
-  border-bottom: solid 1px var(--background-modifier-border);
-  border-radius: 0;
-  width: 100%;
-  box-shadow: none;
-}
-.rpgm-header-info .container .info select:hover {
-  box-shadow: none;
-  background-color: var(--interactive-hover);
-  cursor: pointer;
-}
-.rpgm-header-info .container .info-large {
-  width: 100%;
-}
-.rpgm-header-info .container .image {
-  width: 320px;
-  float: right;
-}
-.rpgm-header-info .container .invisible {
-  width: 0px;
-}
-.rpgm-header-info .container .reset {
-  clear: both;
-}
-
-.markdown-embed .rpgm-breadcrumb {
-  display: none;
-}
-.markdown-embed .rpgm-header-info .container .info {
-  width: calc(100% - 120px);
-}
-.markdown-embed .rpgm-header-info .container .info-large {
-  width: 100%;
-}
-.markdown-embed .rpgm-header-info .container .image {
-  width: 120px;
-}
-.markdown-embed .rpgm-header-info .container .image img {
-  width: 100px;
-  height: 100px;
-}
-.markdown-embed .rpgm-header-info .container .invisible {
-  width: 0px;
-}
-
-.markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {
-  font-weight: 700;
-  color: var(--text-normal);
-}
-
-.rpgm-raw-character-record-shet-container {
-  border: solid 1px var(--background-modifier-border);
-  padding: 20px;
-}
-.rpgm-raw-character-record-shet-container table {
-  font-size: 0.8em;
-}
-.rpgm-raw-character-record-shet-container table tr > th {
-  font-weight: 700;
-  color: var(--text-normal);
-}
-.rpgm-raw-character-record-shet-container table tr > td.untrained {
-  color: var(--text-muted);
-}
-
-.rpgm-view {
-  padding: 10px;
-}
-
-.rpgm-right-view {
-  background: var(--background-secondary);
-  padding-top: 5px;
-  font-size: 1em;
-  height: 100%;
-}
-.rpgm-right-view .vertical-tab-header {
-  background: var(--background-secondary);
-}
-.rpgm-right-view .vertical-tab-header .title {
-  font-size: 1.2em;
-}
-.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title {
-  margin-bottom: 10px;
-  text-transform: none;
-}
-.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item {
-  padding: 5px 0px;
-  margin: 0 8px 0;
-  font-size: 1em;
-}
-.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item:hover {
-  cursor: pointer;
-}
-
-.rpgm-new-timeline {
-  padding: 30px 20px;
-}
-.rpgm-new-timeline ul {
-  list-style-type: none;
-  border-left: 1px solid var(--background-modifier-border);
-  padding: 10px 5px;
-  margin-top: -30px;
-}
-.rpgm-new-timeline ul li {
-  padding-top: 22px;
-  padding-left: 15px;
-  position: relative;
-}
-.rpgm-new-timeline ul li .content span {
-  display: inline-block;
-  text-align: left;
-  font-weight: 300;
-  font-size: 0.9em;
-  font-variant: all-small-caps;
-}
-.rpgm-new-timeline ul li .content h3 {
-  color: #34ace0;
-  margin-top: 0px;
-}
-.rpgm-new-timeline ul li .content p {
-  padding-bottom: 10px;
-}
-.rpgm-new-timeline ul li:before {
-  position: absolute;
-  content: "";
-  width: 15px;
-  height: 15px;
-  background-color: var(--interactive-success);
-  border-radius: 50%;
-  left: -13px;
-  top: 28px;
-  transition: 0.5s;
-}
-.rpgm-new-timeline ul span.clue {
-  color: var(--interactive-success);
-}
-.rpgm-new-timeline ul span.death {
-  color: var(--text-error);
-}
-.rpgm-new-timeline ul span.session {
-  color: var(--background-modifier-success);
-}
-.rpgm-new-timeline ul span.event {
-  color: var(--interactive-accent);
-}
-.rpgm-new-timeline ul li.death::before {
-  background-color: var(--text-error);
-}
-.rpgm-new-timeline ul li.session::before {
-  background-color: var(--background-modifier-success);
-}
-.rpgm-new-timeline ul li.event::before {
-  background-color: var(--interactive-accent);
-}
-
-.rpgm-table-header {
-  margin-bottom: 0px;
-  padding-top: 15px;
-  cursor: pointer;
-  float: left;
-  width: 100%;
-}
-.rpgm-table-header .rpgm-td-edit {
-  padding-left: 20px;
-  font-size: 0.7em;
-  cursor: pointer;
-  color: var(--text-accent);
-}
-
-.rpgm-advanced-settings-table {
-  border: solid 1px var(--background-modifier-border);
-  min-width: 200px;
-}
-.rpgm-advanced-settings-table th {
-  text-align: left;
-  font-size: 0.8em;
-}
-.rpgm-advanced-settings-table td {
-  text-align: left;
-  font-size: 0.8em;
-}
-
-.markdown-preview-view table.rpgm-headless-table,
-.markdown-source-view.mod-cm6 table.rpgm-headless-table,
-.markdown-source-view.mod-cm6.is-readable-line-width table.rpgm-headless-table {
-  margin-left: 0px !important;
-  margin-right: 0px !important;
-  max-width: 100%;
-}
-
-.rpgm-headless-table {
-  border: none;
-  width: 100%;
-}
-.rpgm-headless-table td.title {
-  font-weight: 100;
-  font-size: 0.7em;
-  font-variant-caps: small-caps;
-  color: var(--text-muted);
-  border: none;
-  text-align: left;
-  width: 0;
-}
-.rpgm-headless-table td.content > p {
-  margin: 0px;
-}
-.rpgm-headless-table td.contentShort > p {
-  margin: 0px;
-}
-.rpgm-headless-table td {
-  border: none;
-}
-.rpgm-headless-table td select, .rpgm-headless-table td inputt[type=text] {
-  background-color: var(--background-secondary);
-  border: none;
-  border-bottom: solid 1px var(--background-modifier-border);
-  border-radius: 0;
-  box-shadow: none;
-}
-.rpgm-headless-table td select {
-  min-width: 150px;
-  max-width: 500px;
-  width: 100%;
-}
-.rpgm-headless-table td select:hover, .rpgm-headless-table td input:hover {
-  box-shadow: none;
-  background-color: var(--interactive-hover);
-  cursor: pointer;
-}
-.rpgm-headless-table td.header {
-  font-variant: small-caps;
-  font-size: 0.8em;
-  color: var(--text-muted);
-  text-align: right;
-  width: 165px;
-}
-.rpgm-headless-table td.content, .rpgm-headless-table td.subcontent {
-  width: calc(100% - 165px);
-}
-.rpgm-headless-table td.subcontent {
-  font-size: 0.7em;
-}
-.rpgm-headless-table td.subcontent p {
-  padding: 0px;
-  margin: 0px;
-  margin-left: 12px;
-}
-
-.rpgm-plot-container {
-  width: 100%;
-  border-top: solid 1px var(--background-modifier-border);
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 20px;
-  color: var(--text-muted);
-}
-.rpgm-plot-container h3 {
-  margin: 0px;
-  float: left;
-  width: 100%;
-}
-.rpgm-plot-container h3 .rpgm-td-edit {
-  font-weight: 100;
-  padding-left: 20px;
-  font-size: 0.7em;
-  cursor: pointer;
-  color: var(--text-accent);
-}
-.rpgm-plot-container table {
-  width: 100%;
-  max-width: 100%;
-  margin-top: 10px;
-}
-.rpgm-plot-container table .inline {
-  white-space: nowrap;
-}
-.rpgm-plot-container table tr > td {
-  border: none;
-  text-align: left;
-}
-.rpgm-plot-container table tr > td p {
-  margin: 0px;
-}
-.rpgm-plot-container table tr > td:hover {
-  background-color: var(--background-primary-alt);
-}
-.rpgm-plot-container table tr > td.header {
-  font-variant: small-caps;
-  font-size: 0.8em;
-  text-align: right;
-  font-weight: normal;
-  width: 100px;
-}
-.rpgm-plot-container table tr > td .inline {
-  white-space: nowrap;
-}
-
-.rpgm-edit-icon {
-  font-weight: 100;
-  font-size: 1em;
-  cursor: pointer;
-  color: var(--text-accent);
-}
-
-.rpgm-analyser {
-  padding: 20px;
-  color: var(--text-muted);
-  border-top: solid 1px var(--background-modifier-border);
-}
-.rpgm-analyser span.header {
-  font-weight: 300;
-  font-size: 0.9em;
-}
-.rpgm-analyser span.header.error {
-  color: var(--text-error);
-}
-.rpgm-analyser span.header.warning {
-  color: var(--code-important);
-}
-.rpgm-analyser span.header.balanced {
-  color: var(--code-property);
-}
-.rpgm-analyser span.header.perfect {
-  color: var(--text-success);
-}
-.rpgm-analyser ul {
-  margin: 0px;
-}
-.rpgm-analyser ul li {
-  font-size: 0.8em;
-}
-.rpgm-analyser ul li span.description {
-  font-size: 0.9em;
-  font-style: italic;
-}
-.rpgm-analyser ul li.error {
-  color: var(--text-error);
-}
-.rpgm-analyser ul li.warning {
-  font-weight: 300;
-  color: var(--text-error);
-}
-
-.rpgm-new-analyser {
-  padding: 20px;
-  color: var(--text-muted);
-  border-top: solid 1px var(--background-modifier-border);
-}
-.rpgm-new-analyser span.header, .rpgm-new-analyser ul > li > span.subtitle {
-  font-weight: 400;
-  font-size: 1em;
-}
-.rpgm-new-analyser span.header.error, .rpgm-new-analyser ul > li > span.subtitle.error {
-  color: var(--text-error);
-}
-.rpgm-new-analyser span.header.warning, .rpgm-new-analyser ul > li > span.subtitle.warning {
-  color: var(--code-important);
-}
-.rpgm-new-analyser span.header.balanced, .rpgm-new-analyser ul > li > span.subtitle.balanced {
-  color: var(--code-property);
-}
-.rpgm-new-analyser span.header.perfect, .rpgm-new-analyser ul > li > span.subtitle.perfect {
-  color: var(--text-success);
-}
-.rpgm-new-analyser ul {
-  margin: 0px;
-}
-.rpgm-new-analyser ul li {
-  list-style: none;
-  font-size: 0.8em;
-}
-.rpgm-new-analyser ul li span.subtitle {
-  font-weight: 300;
-  font-size: 1em;
-}
-.rpgm-new-analyser ul li span.description {
-  font-size: 0.9em;
-  font-style: italic;
-}
-
 .flatpickr-calendar {
   background: transparent;
   opacity: 0;
@@ -2931,4 +2108,828 @@ span.flatpickr-weekday {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
+}
+button {
+  cursor: pointer;
+}
+button.danger {
+  background-color: var(--background-modifier-error);
+}
+button.danger:hover {
+  background-color: var(--text-error);
+  color: var(--text-on-accent);
+}
+button:disabled {
+  background-color: var(--background-primary-alt);
+}
+
+.rpgm-missing {
+  font-weight: 100;
+  font-style: italic;
+  color: var(--text-faint);
+  font-size: 0.9em;
+}
+
+.rpgm-header {
+  background-size: cover;
+  color: var(--background-primary);
+  position: relative;
+  min-height: 350px;
+  height: 350px;
+}
+
+.rpgm-plot {
+  margin: 30px;
+  color: var(--text-muted);
+  margin-bottom: 60px;
+}
+.rpgm-plot p {
+  margin: 0px;
+}
+
+.rpgm-header-overlay {
+  margin-bottom: -50px;
+  box-sizing: border-box;
+  background: rgba(128, 128, 128, 0.5);
+  min-height: 350px;
+}
+.rpgm-header-overlay .rpgm-header-title {
+  font-size: 4em;
+  display: inline-block;
+  padding-left: 30px;
+  width: 100%;
+  margin-top: 50px;
+}
+.rpgm-header-overlay .rpgm-campaign-name {
+  display: inline-block;
+  padding-left: 55px;
+  width: 100%;
+  font-size: 1.6em;
+}
+.rpgm-header-overlay .rpgm-current-date-timeline {
+  display: inline-block;
+  padding-left: 55px;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.6em;
+  letter-spacing: 2px;
+  width: 100%;
+  margin-top: 2px;
+}
+.rpgm-header-overlay .rpgm-current-date {
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.6em;
+  letter-spacing: 2px;
+  width: 100%;
+}
+
+.rpg-error {
+  border: solid 1px var(--text-error);
+  background-color: var(--background-secondary);
+  padding: 10px 25px;
+}
+.rpg-error h3 {
+  color: var(--text-error);
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+.modal-content .rpgm-modal-relationships .relationship-select {
+  position: relative;
+  margin: 20px;
+  float: left;
+}
+.modal-content .rpgm-modal-relationships .relationship-select select {
+  background-color: var(--background-secondary);
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0;
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: none;
+}
+.modal-content .rpgm-modal-relationships .relationship-select select:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
+}
+.modal-content .rpgm-modal-relationships .relationships {
+  margin-top: 20px;
+  min-height: 400px;
+}
+.modal-content .rpgm-modal-relationships .relationships table {
+  width: 100%;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr:nth-child(odd) {
+  background-color: var(--background-primary-alt);
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td {
+  height: 30px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input {
+  margin: 0px 15px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td input:disabled, .modal-content .rpgm-modal-relationships .relationships table > tbody > tr td select:disabled {
+  background-color: var(--background-modifier-border);
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label {
+  padding: 0px 10px;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.label span {
+  font-size: 0.8em;
+  font-style: italic;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description {
+  max-width: 50%;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.description p {
+  font-size: 0.8em;
+}
+.modal-content .rpgm-modal-relationships .relationships table > tbody > tr td.selector select {
+  background-color: var(--background-secondary);
+  min-width: 10px;
+  width: 100%;
+}
+
+.rpgm-modal {
+  display: block;
+  padding: 20px;
+}
+.rpgm-modal .input-title {
+  font-weight: 100;
+  font-size: 0.9em;
+  font-variant-caps: small-caps;
+  color: var(--text-muted);
+  border: none;
+  text-align: left;
+  margin-top: 20px;
+}
+.rpgm-modal .rpgm-modal-scene-descriptions .description-container {
+  margin-top: 20px;
+  border-top: solid 1px var(--background-modifier-border);
+}
+.rpgm-modal .rpgm-modal-scene-descriptions .description-container div, .rpgm-modal .rpgm-modal-scene-descriptions .description-container span {
+  margin-left: 20px;
+}
+.rpgm-modal .rpgm-modal-scene-descriptions .description-container span {
+  font-style: italic;
+  font-size: 0.9em;
+}
+.rpgm-modal h2.rpgm-modal-title {
+  text-align: center;
+}
+.rpgm-modal .rpgm-grid {
+  display: flex;
+  gap: 20px;
+}
+.rpgm-modal .navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1 0.5 auto;
+}
+.rpgm-modal .additionalElements {
+  border: solid 1px var(--background-modifier-border);
+  display: none;
+  padding: 25px;
+  padding-top: 0;
+  min-width: 250px;
+}
+.rpgm-modal .group {
+  display: flex;
+}
+.rpgm-modal .container {
+  width: 100%;
+}
+.rpgm-modal .title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  display: inline-block;
+  overflow: visible;
+  margin-right: 10px;
+  padding: 10px;
+  padding-right: 0;
+  border-left: solid 1px var(--background-modifier-border);
+}
+.rpgm-modal label {
+  color: var(--text-muted);
+}
+.rpgm-modal .navigation > .createFrontMatterOnly {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rpgm-modal p.error {
+  color: var(--text-error);
+  display: none;
+  font-size: 0.9em;
+  font-weight: 200;
+  margin: 0px;
+  padding: 0px;
+  margin-top: -10px;
+}
+.rpgm-modal button {
+  display: block;
+  margin-top: 10px;
+}
+.rpgm-modal div.selector {
+  margin-bottom: 30px;
+}
+
+.modal-content h1.error {
+  color: var(--text-error);
+}
+
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block > div .rpgm-table {
+  margin-left: 0px !important;
+  margin-right: 0px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.create-button {
+  font-size: var(--font-settings-small);
+  display: block;
+  margin-top: 10px;
+  background-color: var(--interactive-normal);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  box-shadow: 0 1px 1px 0 var(--btn-shadow-color);
+  cursor: var(--cursor);
+  height: var(--input-height);
+  line-height: 0;
+  white-space: nowrap;
+  transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.rpgm-table {
+  width: 100%;
+  max-width: 100%;
+}
+.rpgm-table .inline {
+  white-space: nowrap;
+}
+.rpgm-table tr > td.image {
+  width: 75px;
+}
+.rpgm-table tr.hoverable:hover:nth-child(odd), .rpgm-table tr.hoverable:hover:nth-child(even) {
+  background-color: var(--background-primary-alt);
+}
+.rpgm-table tr > th {
+  white-space: nowrap;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  text-align: left;
+}
+.rpgm-table tr > td {
+  border: none;
+  text-align: left;
+}
+.rpgm-table tr > td.header {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+.rpgm-table tr > td .inline {
+  white-space: nowrap;
+}
+
+.rpgm-headless-table tr > td > span.editorIcon, .rpgm-table tr > td > span.editorIcon {
+  position: relative;
+  right: 0;
+  float: right;
+  font-size: 0.8em;
+  color: var(--text-accent);
+  z-index: 1;
+  cursor: pointer;
+}
+.rpgm-headless-table tr:hover > td > span.editorIcon, .rpgm-table tr:hover > td > span.editorIcon {
+  display: block;
+}
+.rpgm-headless-table tr > td > span.editorIcon, .rpgm-table tr > td > span.editorIcon {
+  display: none;
+}
+.rpgm-headless-table tr:hover > td.editable, .rpgm-table tr:hover > td.editable {
+  font-style: italic;
+  background-color: var(--background-primary-alt);
+}
+.rpgm-headless-table tr > td.editable, .rpgm-table tr > td.editable {
+  font-style: normal;
+}
+
+.rpgm-breadcrumb {
+  width: 100%;
+  font-size: 0.9em;
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+}
+.rpgm-breadcrumb h2 {
+  margin-bottom: 0px;
+}
+.rpgm-breadcrumb .line, .rpgm-breadcrumb .spaced-line {
+  margin-left: 0%;
+  margin-right: 0%;
+}
+.rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .separator {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.rpgm-breadcrumb .line .crumb, .rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .crumb, .rpgm-breadcrumb .spaced-line .separator {
+  display: inline-block;
+}
+.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .title, .rpgm-breadcrumb .spaced-line .separator .value {
+  text-align: left;
+}
+.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .separator .title {
+  font-weight: 100;
+  font-size: 0.7em;
+  font-variant-caps: small-caps;
+  color: var(--text-muted);
+}
+.rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .value {
+  font-weight: 300;
+  font-size: 0.9em;
+  text-align: left;
+}
+.rpgm-breadcrumb .line .crumb .value p, .rpgm-breadcrumb .line .separator .value p, .rpgm-breadcrumb .spaced-line .crumb .value p, .rpgm-breadcrumb .spaced-line .separator .value p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.rpgm-breadcrumb .spaced-line {
+  margin-top: 20px;
+}
+.rpgm-breadcrumb .spaced-line .crumb > .title {
+  text-align: center;
+}
+
+.reset {
+  clear: both;
+}
+
+.rpgm-header-info {
+  width: 100%;
+  border: 1px solid var(--background-modifier-border);
+  margin-bottom: 40px;
+}
+.rpgm-header-info .title {
+  width: 100%;
+  font-weight: 400;
+  font-size: 2em;
+  border-bottom: 1px solid var(--background-modifier-border);
+  text-align: center;
+}
+.rpgm-header-info .title .subtitle {
+  font-weight: 300;
+  font-size: 0.5em;
+}
+.rpgm-header-info .title p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.rpgm-header-info .rpgm-header {
+  margin-top: -40px;
+  font-size: 1em;
+}
+.rpgm-header-info .rpgm-header .adder {
+  color: var(--background-primary);
+}
+.rpgm-header-info .rpgm-header .subtitle {
+  color: var(--background-primary);
+  font-size: 1em;
+}
+.rpgm-header-info .adder {
+  position: relative;
+  right: 10px;
+  font-size: 0.75em;
+  top: 10px;
+  z-index: 1;
+}
+.rpgm-header-info .adder span {
+  display: block;
+  text-align: right;
+}
+.rpgm-header-info .container > div > .actionButton, .rpgm-header-info .title > div > .actionButton {
+  margin: 10px;
+}
+.rpgm-header-info .container {
+  width: 100%;
+}
+.rpgm-header-info .container .info, .rpgm-header-info .container .image {
+  padding: 10px;
+}
+.rpgm-header-info .container .info {
+  width: calc(100% - 320px);
+  float: left;
+}
+.rpgm-header-info .container .info .longTitle {
+  width: 100%;
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: var(--text-muted);
+}
+.rpgm-header-info .container .info .longText {
+  width: 100%;
+}
+.rpgm-header-info .container .info .short .shortTitle {
+  width: 100px;
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: var(--text-muted);
+  float: left;
+}
+.rpgm-header-info .container .info .short .shortText {
+  width: calc(100% - 100px);
+  float: left;
+}
+.rpgm-header-info .container .info .short .shortText p {
+  margin: 0px;
+}
+.rpgm-header-info .container .info .half .halfTitle {
+  width: 50%;
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: var(--text-muted);
+  float: left;
+}
+.rpgm-header-info .container .info .half .halfText {
+  width: 50%;
+  float: left;
+}
+.rpgm-header-info .container .info .half .halfText p {
+  margin: 0px;
+}
+.rpgm-header-info .container .info .reset {
+  clear: both;
+}
+.rpgm-header-info .container .info select {
+  background-color: var(--background-secondary);
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0;
+  width: 100%;
+  box-shadow: none;
+}
+.rpgm-header-info .container .info select:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
+}
+.rpgm-header-info .container .info-large {
+  width: 100%;
+}
+.rpgm-header-info .container .image {
+  width: 320px;
+  float: right;
+}
+.rpgm-header-info .container .invisible {
+  width: 0px;
+}
+.rpgm-header-info .container .reset {
+  clear: both;
+}
+
+.markdown-embed .rpgm-breadcrumb {
+  display: none;
+}
+.markdown-embed .rpgm-header-info .container .info {
+  width: calc(100% - 120px);
+}
+.markdown-embed .rpgm-header-info .container .info-large {
+  width: 100%;
+}
+.markdown-embed .rpgm-header-info .container .image {
+  width: 120px;
+}
+.markdown-embed .rpgm-header-info .container .image img {
+  width: 100px;
+  height: 100px;
+}
+.markdown-embed .rpgm-header-info .container .invisible {
+  width: 0px;
+}
+
+.markdown-preview-view th.raw, .markdown-source-view.mod-cm6 th.raw {
+  font-weight: 700;
+  color: var(--text-normal);
+}
+
+.rpgm-raw-character-record-shet-container {
+  border: solid 1px var(--background-modifier-border);
+  padding: 20px;
+}
+.rpgm-raw-character-record-shet-container table {
+  font-size: 0.8em;
+}
+.rpgm-raw-character-record-shet-container table tr > th {
+  font-weight: 700;
+  color: var(--text-normal);
+}
+.rpgm-raw-character-record-shet-container table tr > td.untrained {
+  color: var(--text-muted);
+}
+
+.rpgm-view {
+  padding: 10px;
+}
+
+.rpgm-right-view {
+  background: var(--background-secondary);
+  padding-top: 5px;
+  font-size: 1em;
+  height: 100%;
+}
+.rpgm-right-view .vertical-tab-header {
+  background: var(--background-secondary);
+}
+.rpgm-right-view .vertical-tab-header .title {
+  font-size: 1.2em;
+}
+.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title {
+  margin-bottom: 10px;
+  text-transform: none;
+}
+.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item {
+  padding: 5px 0px;
+  margin: 0 8px 0;
+  font-size: 1em;
+}
+.rpgm-right-view .vertical-tab-header .vertical-tab-header-group-title .vertical-tab-header-group-items .vertical-tab-nav-item:hover {
+  cursor: pointer;
+}
+
+.rpgm-new-timeline {
+  padding: 30px 20px;
+}
+.rpgm-new-timeline ul {
+  list-style-type: none;
+  border-left: 1px solid var(--background-modifier-border);
+  padding: 10px 5px;
+  margin-top: -30px;
+}
+.rpgm-new-timeline ul li {
+  padding-top: 22px;
+  padding-left: 15px;
+  position: relative;
+}
+.rpgm-new-timeline ul li .content span {
+  display: inline-block;
+  text-align: left;
+  font-weight: 300;
+  font-size: 0.9em;
+  font-variant: all-small-caps;
+}
+.rpgm-new-timeline ul li .content h3 {
+  color: #34ace0;
+  margin-top: 0px;
+}
+.rpgm-new-timeline ul li .content p {
+  padding-bottom: 10px;
+}
+.rpgm-new-timeline ul li:before {
+  position: absolute;
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color: var(--interactive-success);
+  border-radius: 50%;
+  left: -13px;
+  top: 28px;
+  transition: 0.5s;
+}
+.rpgm-new-timeline ul span.clue {
+  color: var(--interactive-success);
+}
+.rpgm-new-timeline ul span.death {
+  color: var(--text-error);
+}
+.rpgm-new-timeline ul span.session {
+  color: var(--background-modifier-success);
+}
+.rpgm-new-timeline ul span.event {
+  color: var(--interactive-accent);
+}
+.rpgm-new-timeline ul li.death::before {
+  background-color: var(--text-error);
+}
+.rpgm-new-timeline ul li.session::before {
+  background-color: var(--background-modifier-success);
+}
+.rpgm-new-timeline ul li.event::before {
+  background-color: var(--interactive-accent);
+}
+
+.rpgm-table-header {
+  margin-bottom: 0px;
+  padding-top: 15px;
+  cursor: pointer;
+  float: left;
+  width: 100%;
+}
+.rpgm-table-header .rpgm-td-edit {
+  padding-left: 20px;
+  font-size: 0.7em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+
+.rpgm-advanced-settings-table {
+  border: solid 1px var(--background-modifier-border);
+  min-width: 200px;
+}
+.rpgm-advanced-settings-table th {
+  text-align: left;
+  font-size: 0.8em;
+}
+.rpgm-advanced-settings-table td {
+  text-align: left;
+  font-size: 0.8em;
+}
+
+.markdown-preview-view table.rpgm-headless-table,
+.markdown-source-view.mod-cm6 table.rpgm-headless-table,
+.markdown-source-view.mod-cm6.is-readable-line-width table.rpgm-headless-table {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  max-width: 100%;
+}
+
+.rpgm-headless-table {
+  border: none;
+  width: 100%;
+}
+.rpgm-headless-table td.title {
+  font-weight: 100;
+  font-size: 0.7em;
+  font-variant-caps: small-caps;
+  color: var(--text-muted);
+  border: none;
+  text-align: left;
+  width: 0;
+}
+.rpgm-headless-table td.content > p {
+  margin: 0px;
+}
+.rpgm-headless-table td.contentShort > p {
+  margin: 0px;
+}
+.rpgm-headless-table td {
+  border: none;
+}
+.rpgm-headless-table td select {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+.rpgm-headless-table td.header {
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: var(--text-muted);
+  text-align: right;
+  width: 165px;
+}
+.rpgm-headless-table td.content, .rpgm-headless-table td.subcontent {
+  width: calc(100% - 165px);
+}
+.rpgm-headless-table td.subcontent {
+  font-size: 0.7em;
+}
+.rpgm-headless-table td.subcontent p {
+  padding: 0px;
+  margin: 0px;
+  margin-left: 12px;
+}
+
+.rpgm-plot-container {
+  width: 100%;
+  border-top: solid 1px var(--background-modifier-border);
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  color: var(--text-muted);
+}
+.rpgm-plot-container h3 {
+  margin: 0px;
+  float: left;
+  width: 100%;
+}
+.rpgm-plot-container h3 .rpgm-td-edit {
+  font-weight: 100;
+  padding-left: 20px;
+  font-size: 0.7em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+.rpgm-plot-container table {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 10px;
+}
+.rpgm-plot-container table .inline {
+  white-space: nowrap;
+}
+.rpgm-plot-container table tr > td {
+  border: none;
+  text-align: left;
+}
+.rpgm-plot-container table tr > td p {
+  margin: 0px;
+}
+.rpgm-plot-container table tr > td:hover {
+  background-color: var(--background-primary-alt);
+}
+.rpgm-plot-container table tr > td.header {
+  font-variant: small-caps;
+  font-size: 0.8em;
+  text-align: right;
+  font-weight: normal;
+  width: 100px;
+}
+.rpgm-plot-container table tr > td .inline {
+  white-space: nowrap;
+}
+
+.rpgm-edit-icon {
+  font-weight: 100;
+  font-size: 1em;
+  cursor: pointer;
+  color: var(--text-accent);
+}
+
+.rpgm-analyser {
+  padding: 20px;
+  color: var(--text-muted);
+  border-top: solid 1px var(--background-modifier-border);
+}
+.rpgm-analyser span.header {
+  font-weight: 300;
+  font-size: 0.9em;
+}
+.rpgm-analyser span.header.error {
+  color: var(--text-error);
+}
+.rpgm-analyser span.header.warning {
+  color: var(--code-important);
+}
+.rpgm-analyser span.header.balanced {
+  color: var(--code-property);
+}
+.rpgm-analyser span.header.perfect {
+  color: var(--text-success);
+}
+.rpgm-analyser ul {
+  margin: 0px;
+}
+.rpgm-analyser ul li {
+  font-size: 0.8em;
+}
+.rpgm-analyser ul li span.description {
+  font-size: 0.9em;
+  font-style: italic;
+}
+.rpgm-analyser ul li.error {
+  color: var(--text-error);
+}
+.rpgm-analyser ul li.warning {
+  font-weight: 300;
+  color: var(--text-error);
+}
+
+.rpgm-new-analyser {
+  padding: 20px;
+  color: var(--text-muted);
+  border-top: solid 1px var(--background-modifier-border);
+}
+.rpgm-new-analyser span.header, .rpgm-new-analyser ul > li > span.subtitle {
+  font-weight: 400;
+  font-size: 1em;
+}
+.rpgm-new-analyser span.header.error, .rpgm-new-analyser ul > li > span.subtitle.error {
+  color: var(--text-error);
+}
+.rpgm-new-analyser span.header.warning, .rpgm-new-analyser ul > li > span.subtitle.warning {
+  color: var(--code-important);
+}
+.rpgm-new-analyser span.header.balanced, .rpgm-new-analyser ul > li > span.subtitle.balanced {
+  color: var(--code-property);
+}
+.rpgm-new-analyser span.header.perfect, .rpgm-new-analyser ul > li > span.subtitle.perfect {
+  color: var(--text-success);
+}
+.rpgm-new-analyser ul {
+  margin: 0px;
+}
+.rpgm-new-analyser ul li {
+  list-style: none;
+  font-size: 0.8em;
+}
+.rpgm-new-analyser ul li span.subtitle {
+  font-weight: 300;
+  font-size: 1em;
+}
+.rpgm-new-analyser ul li span.description {
+  font-size: 0.9em;
+  font-style: italic;
 }
