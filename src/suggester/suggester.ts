@@ -6,21 +6,24 @@ export interface SearchResultInterface {
 	result?: SearchResult,
 }
 
-export interface TextStatusInterface {
-	positionInSearch?: number,
-	cursorPosition: number,
-	linkText?: string,
-	fullText: string,
-	searchTerm?: string,
+export interface TextAnalyserInterface {
+	positionInSearch?: number;
+	cursorPosition: number;
+	linkText?: string;
+	fullText: string;
+	searchTerm?: string;
+
+	analyse(fullText: string, cursorPosition: number): void;
+	get isInSearch(): boolean;
 }
 
-export interface TextAnalyserInterface{
-	analyse(status: TextStatusInterface): void;
+export interface QueryInterface{
+	search(term: string): Array<SearchResultInterface>;
 }
 
 export interface InputHandlerInterface {
 	/** handles the input keypress **/
-	new(container: HTMLInputElement): InputHandler;
+	new(container: HTMLInputElement): InputHandlerInterface;
 	confirmSelection(result: SearchResultInterface): Promise<void>;
 	cancelSearch(): Promise<void>;
 }
@@ -38,8 +41,4 @@ export interface KeyboardEventListenerInterface{
 	new(handler: InputHandlerInterface, displayer: ResultDisplayer):KeyboardEventListenerInterface;
 	/** handles the document keypress **/
 	listener: EventListener;
-}
-
-export interface QueryInterface{
-	search(term: string): Array<SearchResultInterface>;
 }
