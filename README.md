@@ -1,4 +1,7 @@
-# Role Playing Game Manager Obsidian Plugin 
+# Role Playing Game Manager Obsidian Plugin
+
+> RPG Manager is a tool to simplify the plot, run and track of role playing game campaigns, 
+> helping storytellers to be plot better campaigns in less time.
 
 Obsidian Role Playing Game Manager is an Obsidian plugin that helps you plot and manage your tabletop role playing game 
 campaigns. The plugin revolves around three main types of components: 
