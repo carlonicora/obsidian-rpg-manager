@@ -10,19 +10,16 @@ export class InputTextAnalyser implements TextAnalyserInterface {
 		status.fullText = containerEl.value;
 
 		if (status.cursorPosition == null) return;
-		if (status.positionInSearch === undefined || status.positionInSearch < 2) return;
+		if (status.positionInSearch === undefined && status.fullText.length < 2) return;
 
 		if (status.positionInSearch === undefined){
-			if (status.fullText.substring(status.cursorPosition - 2, 2) === '[[') {
+			if (this._isSearchJustStarted(status)) {
 				status.positionInSearch = 2;
 			} else {
 				return;
 			}
 		} else {
-			if (
-				status.fullText[status.cursorPosition - 1] === '[' &&
-				status.fullText[status.cursorPosition - 2] !== '['
-			) {
+			if (this._isNotInSearchAnyLonger(status)) {
 				status.positionInSearch = undefined;
 				return;
 			} else {
@@ -33,5 +30,17 @@ export class InputTextAnalyser implements TextAnalyserInterface {
 
 		if (status.searchTerm !== undefined !== undefined && status.searchTerm === status.fullText.substring(status.positionInSearch)) return;
 		status.searchTerm = status.fullText.substring(status.positionInSearch);
+	}
+
+	private _isSearchJustStarted(
+		status: TextStatusInterface,
+	): boolean {
+		return status.fullText.substring(status.cursorPosition - 2, 2) === '[[';
+	}
+
+	private _isNotInSearchAnyLonger(
+		status: TextStatusInterface,
+	): boolean {
+		return status.fullText[status.cursorPosition - 1] === '[' && status.fullText[status.cursorPosition - 2] !== '['
 	}
 }

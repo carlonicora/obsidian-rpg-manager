@@ -2,17 +2,21 @@ export class KeyboardEventManager {
 	public listener: EventListener;
 
 	constructor(
-		private _containerEl: HTMLInputElement|HTMLDivElement|HTMLTextAreaElement
 	) {
 		this.listener = (evt: KeyboardEvent) => this._handleKeyPress(evt);
 	}
 
-	listen(
-
-	): void {
-
+	private _handleKeyPress(
+		evt: KeyboardEvent,
+	) {
+		console.log('aaa')
+		if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown' || evt.key === 'Enter' || evt.key === 'Escape') {
+			evt.preventDefault();
+			console.log(evt.key);
+		}
 	}
 
+	/*
 	private _handleKeyPress(evt: KeyboardEvent) {
 		if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown' || evt.key === 'Enter' || evt.key === 'Escape') {
 			evt.preventDefault();
@@ -55,4 +59,5 @@ export class KeyboardEventManager {
 			}
 		}
 	}
+	*/
 }

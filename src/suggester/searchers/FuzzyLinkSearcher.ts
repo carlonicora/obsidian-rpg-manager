@@ -43,7 +43,7 @@ export class FuzzyLinkSearcher implements SearchInterface{
 			if (a.result !== undefined && b.result !== undefined) {
 				if (a.result?.score !== undefined && b.result?.score === undefined) return -1;
 				if (a.result?.score === undefined && b.result?.score !== undefined) return 1;
-				return a.result.score - b.result.score
+				return b.result.score - a.result.score
 			}
 			return 0;
 		});

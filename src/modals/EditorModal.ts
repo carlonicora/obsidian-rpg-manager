@@ -1,9 +1,7 @@
 import {AbstractModal} from "./abstracts/AbstractModal";
 import {App} from "obsidian";
-import {InputLinkSuggester} from "../suggester/InputLinkSuggester";
+import {InputLinkSuggester} from "../suggester/linkSuggesters/InputLinkSuggester";
 import {LinkSuggesterInterface} from "../suggester/interfaces/LinkSuggesterInterface";
-
-
 
 export class EditorModal extends AbstractModal {
 	private _inputEl: HTMLInputElement;
@@ -18,8 +16,6 @@ export class EditorModal extends AbstractModal {
 	onClose() {
 		super.onClose();
 		this.rpgmContainerEl.empty();
-
-		app.workspace.editorSuggest.suggests
 	}
 
 	onOpen() {

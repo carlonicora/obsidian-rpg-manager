@@ -1,27 +1,20 @@
-import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
+import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
 import {App, fuzzySearch, prepareQuery, SearchResult, setIcon, TFile} from "obsidian";
-import {SearchInterface} from "./interfaces/SearchInterface";
-import {FuzzyLinkSearcher} from "./searchers/FuzzyLinkSearcher";
-import {SearchResultInterface} from "./interfaces/SearchResultInterface";
-import {LinkSuggesterInterface} from "./interfaces/LinkSuggesterInterface";
-import {TextAnalyserInterface} from "./interfaces/TextAnalyserInterface";
-import {InputTextAnalyser} from "./textAnalysers/InputTextAnalyser";
-import {TextStatusInterface} from "./interfaces/TextStatusInterface";
-import {KeyboardEventManager} from "./eventManagers/KeyboardEventManager";
+import {SearchInterface} from "../interfaces/SearchInterface";
+import {FuzzyLinkSearcher} from "../searchers/FuzzyLinkSearcher";
+import {SearchResultInterface} from "../interfaces/SearchResultInterface";
+import {LinkSuggesterInterface} from "../interfaces/LinkSuggesterInterface";
+import {TextAnalyserInterface} from "../interfaces/TextAnalyserInterface";
+import {InputTextAnalyser} from "../textAnalysers/InputTextAnalyser";
+import {TextStatusInterface} from "../interfaces/TextStatusInterface";
+import {KeyboardEventManager} from "../eventManagers/KeyboardEventManager";
+import {LinkSuggesterResult} from "../results/LinkSuggesterResult";
 
 export class InputLinkSuggester extends AbstractRpgManager implements LinkSuggesterInterface{
-	protected _inSearch: number|undefined = undefined;
-	private _currentlySelectedSearchResult: number|undefined = undefined;
-	private _eventListenerInitialised = false;
-	private _searchTerm: string|undefined = undefined;
-	private _results: Array<SearchResultInterface>|undefined;
-	private _suggestionEl: HTMLDivElement;
-
-
-	private _searcher: SearchInterface;
 	private _textAnalyser: TextAnalyserInterface;
 	private _textStatus: TextStatusInterface;
-	private _eventManager: KeyboardEventManager;
+
+	private _results: LinkSuggesterResult;
 	
 	constructor(
 		app: App,
@@ -30,7 +23,8 @@ export class InputLinkSuggester extends AbstractRpgManager implements LinkSugges
 		super(app);
 
 		this._containerEl.addEventListener('keyup', this._analyseKeyUp.bind(this));
-		this._searcher = new FuzzyLinkSearcher(this.app);
+		this._results = new LinkSuggesterResult(this.app);
+
 		this._textAnalyser = new InputTextAnalyser();
 		this._textStatus = {
 			positionInSearch: undefined,
@@ -42,7 +36,7 @@ export class InputLinkSuggester extends AbstractRpgManager implements LinkSugges
 
 	public unload(
 	): void {
-		this._removeSearchResults();
+		this._results.cancel();
 	}
 
 	private _analyseKeyUp(
@@ -54,11 +48,9 @@ export class InputLinkSuggester extends AbstractRpgManager implements LinkSugges
 			return;
 		}
 
-		this._results = this._searcher.search(this._textStatus.searchTerm);
-		if (this._results === undefined){
-			this._removeSearchResults();
-			return;
-		}
+		this._results.search(this._textStatus.searchTerm);
+
+
 
 		this._currentlySelectedSearchResult = 0;
 		let suggestionContainerEl: HTMLDivElement|undefined = this._getSuggestionContainer();
@@ -123,11 +115,5 @@ export class InputLinkSuggester extends AbstractRpgManager implements LinkSugges
 		return suggestionContainerElememts[0] as HTMLDivElement;
 	}
 
-	private _removeSearchResults(
-	): void {
-		document.removeEventListener('keydown', this._keyboardEventListener);
-		const suggestionContainer = this._getSuggestionContainer();
-		if (suggestionContainer !== undefined) suggestionContainer.remove();
-		this._eventListenerInitialised = false;
-	}
+
 }
