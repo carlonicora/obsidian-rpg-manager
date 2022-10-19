@@ -1,6 +1,6 @@
 import {LinkSuggesterTextAnalyserInterface} from "../interfaces/LinkSuggesterTextAnalyserInterface";
 
-export class LinkSuggesterInputTextAnalyser implements LinkSuggesterTextAnalyserInterface {
+export class LinkSuggesterTextAnalyser implements LinkSuggesterTextAnalyserInterface {
 	public _cursorPosition: number;
 	public fullText: string;
 	public linkText?: string;

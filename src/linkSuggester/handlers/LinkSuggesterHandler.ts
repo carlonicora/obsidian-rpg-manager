@@ -3,12 +3,12 @@ import {LinkSuggesterTextAnalyserInterface} from "../interfaces/LinkSuggesterTex
 import {SearchInterface} from "../../search/interfaces/SearchInterface";
 import {LinkSuggesterSearchResultPopUpInterface} from "../interfaces/LinkSuggesterSearchResultPopUpInterface";
 import {App} from "obsidian";
-import {LinkSuggesterInputTextAnalyser} from "../textAnalysers/LinkSuggesterInputTextAnalyser";
+import {LinkSuggesterTextAnalyser} from "../textAnalysers/LinkSuggesterTextAnalyser";
 import {FuzzyFileSearch} from "../../search/FuzzyFileSearch";
 import {LinkSuggesterPopUp} from "../popUps/LinkSuggesterPopUp";
 import {SearchResultInterface} from "../../search/interfaces/SearchResultInterface";
 
-export class LinkSuggesterInputHandler implements LinkSuggesterHandlerInterface {
+export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
 	private _analyser: LinkSuggesterTextAnalyserInterface;
 	private _searcher: SearchInterface;
 	private _displayer: LinkSuggesterSearchResultPopUpInterface;
@@ -16,10 +16,10 @@ export class LinkSuggesterInputHandler implements LinkSuggesterHandlerInterface 
 
 	constructor(
 		private _app: App,
-		private _containerEl: HTMLInputElement,
+		private _containerEl: HTMLInputElement|HTMLTextAreaElement,
 	) {
 		this._containerEl.addEventListener('keyup', this._inputEvent.bind(this));
-		this._analyser = new LinkSuggesterInputTextAnalyser();
+		this._analyser = new LinkSuggesterTextAnalyser();
 		this._searcher = new FuzzyFileSearch(this._app);
 		this._displayer = new LinkSuggesterPopUp(this._app, this);
 	}
@@ -30,12 +30,28 @@ export class LinkSuggesterInputHandler implements LinkSuggesterHandlerInterface 
 		if (this._analyser.isInSearch(this._containerEl.value, this._containerEl.selectionStart)) {
 			if (this._analyser.searchTerm !== this._previousSearch) {
 				this._previousSearch = this._analyser.searchTerm;
-				this._displayer.fill(this._searcher.search(this._analyser.searchTerm), 200, 200);
+
+				var getCaretCoordinates = require('./pixelFinder.js');
+				var caret = getCaretCoordinates(this._containerEl);
+				const x = this.offset(this._containerEl)
+
+				const top: number = x.top + caret.top;
+				const left: number = x.left + caret.left;
+
+				this._displayer.fill(this._searcher.search(this._analyser.searchTerm), top, left);
 			}
 		} else {
 			this._displayer.clear();
 		}
 	}
+
+	private offset(el: HTMLInputElement|HTMLTextAreaElement) {
+		var rect = el.getBoundingClientRect(),
+			scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+			scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+		return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+	}
+
 
 	public async confirmSelection(
 		result: SearchResultInterface,

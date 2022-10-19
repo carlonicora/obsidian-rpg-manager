@@ -107,8 +107,8 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 		});
 
 		document.body.append(suggestionContainerEl as Node);
-		suggestionContainerEl.style.left = '455px';
-		suggestionContainerEl.style.top = '457px';
+		suggestionContainerEl.style.left = left + 'px';
+		suggestionContainerEl.style.top = top - suggestionContainerEl.clientHeight + 'px';
 
 		(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
 	}
