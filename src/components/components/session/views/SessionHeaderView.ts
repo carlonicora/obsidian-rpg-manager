@@ -76,7 +76,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 
 		if (this._analyser !== undefined){
 			//this._analyser.render(AnalyserReportType.Extended, this.headerContainerEl);
-			this._analyser.render(AnalyserReportType.Minimal, this.headerContainerEl);
+			this._analyser.render(AnalyserReportType.Visual, this.headerContainerEl);
 			this._analyser.render(AnalyserReportType.Extended, this.headerContainerEl);
 		}
 	}

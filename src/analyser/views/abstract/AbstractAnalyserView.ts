@@ -8,7 +8,40 @@ import {ComponentType} from "../../../components/enums/ComponentType";
 
 export abstract class AbstractAnalyserView extends AbstractRpgManager implements AnalyserViewInterface {
 	protected titles: Map<AnalyserDetailType|undefined, string>;
-	protected descriptions: Map<AnalyserDetailType|undefined, Map<AnalyserThresholdResult, string|undefined>>;
+	protected descriptions: Map<AnalyserDetailType|undefined, Map<AnalyserThresholdResult, string|undefined>> =
+		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([
+			[AnalyserDetailType.Activity, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyHigh, 'Really, %score% scenes out of %maximumScore% are active, you should aim for %ideal%'],
+				[AnalyserThresholdResult.High, '%score% scenes out of %maximumScore% are active, you should aim for %ideal%'],
+				[AnalyserThresholdResult.Correct, '%score% scenes out of %maximumScore% are active, you should aim for %ideal%'],
+				[AnalyserThresholdResult.Low, 'Only  %score% scenes out of %maximumScore% are active, you should aim for %ideal%'],
+				[AnalyserThresholdResult.CriticallyLow, 'Just %score% scenes out of %maximumScore% are active, you should aim for %ideal%'],
+			])],
+			[AnalyserDetailType.Duration, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyHigh, 'Really, %percentage%% longer than your target'],
+				[AnalyserThresholdResult.High, '%percentage%% longer than your target'],
+				[AnalyserThresholdResult.Correct, '%percentage%% longer or shorter than your target'],
+				[AnalyserThresholdResult.Low, '%percentage%% shorter than your target'],
+				[AnalyserThresholdResult.CriticallyLow, '%percentage%% shorter than your target'],
+			])],
+			[AnalyserDetailType.Excitement, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyHigh, '%score% are exciting, you should aim for %ideal%'],
+				[AnalyserThresholdResult.High, '%score% are exciting, you should aim for %ideal%'],
+				[AnalyserThresholdResult.Correct, '%score% are exciting, you should aim for %ideal%'],
+				[AnalyserThresholdResult.Low, 'Only %score% are exciting, you should aim for %ideal%'],
+				[AnalyserThresholdResult.CriticallyLow, 'Just %score% are exciting, you should aim for %ideal%'],
+			])],
+			[AnalyserDetailType.Interest, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.CriticallyLow, 'Really, %score% scenes type repeated in %maximumScore% scenes. Keep it below %ideal%.'],
+				[AnalyserThresholdResult.Low, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
+				[AnalyserThresholdResult.Correct, '%score% scenes type repeated in %maximumScore% scenes. Try to keep it below %ideal%'],
+			])],
+			[AnalyserDetailType.Variety, new Map<AnalyserThresholdResult, string|undefined>([
+				[AnalyserThresholdResult.Correct, '%score% different type of scenes are used, you should aim for %ideal%'],
+				[AnalyserThresholdResult.Low, 'Only %score% different type of scenes are used, you should aim for %ideal%'],
+				[AnalyserThresholdResult.CriticallyLow, 'Just %score% different type of scenes are used, you should aim for %ideal%'],
+			])],
+		]);
 
 	protected subtitles: Map<AnalyserDetailType, Map<AnalyserThresholdResult, string|undefined>> =
 		new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string | undefined>>([

@@ -16,5 +16,4 @@ export class SceneTypeFactory extends AbstractFactory implements SceneTypeFactor
 		readableContentType = readableContentType.replaceAll('combat', 'Combat');
 		return SceneType[readableContentType as keyof typeof SceneType];
 	}
-
 }

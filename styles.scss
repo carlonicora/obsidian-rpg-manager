@@ -3,23 +3,9 @@
 @use "src/analyser/views/analyserStyles";
 @use "src/galleries/views/styles";
 @use "src/styles/flatpickr";
+@use "src/sceneBuilder/styles/sceneBuilder";
 
-button {
-	cursor: pointer;
 
-	&.danger {
-		background-color: var(--background-modifier-error);
-
-		&:hover {
-			background-color: var(--text-error);
-			color: var(--text-on-accent);
-		}
-	}
-
-	&:disabled {
-		background-color: var(--background-primary-alt);
-	}
-}
 
 .suggestion-container {
 	padding: 6px 0px;

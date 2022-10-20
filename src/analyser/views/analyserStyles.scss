@@ -1,6 +1,10 @@
 $circle-width: 0.09em;
 $circle-width-hover: 0.07em;
 
+.rpgm-modal-main-container > .rpgm-scene-builder > .rpgm-scene-builder-analyser {
+	border-bottom: solid 1px var(--background-modifier-border);
+}
+
 .rpgm-new-analyser {
 	&.centred{
 		text-align: center;
@@ -8,6 +12,23 @@ $circle-width-hover: 0.07em;
 
 	.analyser-container{
 		display: inline-block;
+	}
+
+	.analyser-container-fix{
+		min-height: 20px;
+
+		&.error {
+			color: var(--text-error);
+		}
+		&.warning {
+			color: var(--code-important);
+		}
+		&.balanced {
+			color: var(--code-property);
+		}
+		&.perfect {
+			color: var(--text-success);
+		}
 	}
 
 	.circle-container {

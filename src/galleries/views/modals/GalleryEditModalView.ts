@@ -54,14 +54,5 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 						editorDeletedContainerEl.style.display = 'block';
 					});
 			});
-
-		/*
-		if (!this._image.src.startsWith('http')) {
-			const deleteImageEl: HTMLButtonElement = editorEditorContainerEl.createEl('button', {
-				cls: 'danger',
-				text: 'Delete Image from Vault'
-			})
-		}
-		*/
 	}
 }

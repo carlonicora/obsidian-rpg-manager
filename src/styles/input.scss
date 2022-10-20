@@ -1,36 +1,49 @@
-input[type=text], input[type=text]:focus {
-	border: none;
-	border-bottom: solid 1px var(--text-normal);
-	border-radius: 0px;
+input[type=text] {
 	width: 100%;
-	margin-top: 2px;
-	box-shadow: 0 0 0 0 transparent;
 }
 
 input[type=checkbox] {
 	margin: 0;
 }
 
-select, inputt[type=text] {
+select, input[type=text] {
 	border: none;
-	background-color: var(--background-secondary);
 	border-bottom: solid 1px var(--background-modifier-border);
 	border-radius: 0;
 	box-shadow: none;
+	margin-top: 10px;
+	box-shadow: 0 0 0 0 transparent;
 }
 
 select:hover, input:hover {
 	box-shadow: none;
 	background-color: var(--interactive-hover);
 	cursor: pointer;
+	background-color: var(--background-secondary);
 }
 
-select,
-select:focus {
+select, select:focus, input[type=text]:focus {
 	border: none;
 	border-bottom: solid 1px var(--background-modifier-border);
 	border-radius: 0px;
 	width: 100%;
-	margin-top: 10px;
 	box-shadow: 0 0 0 0 transparent;
+}
+
+button {
+	cursor: pointer;
+
+	&.danger {
+		background-color: var(--background-modifier-error);
+
+		&:hover {
+			background-color: var(--text-error);
+			color: var(--text-on-accent);
+		}
+	}
+
+	&:disabled {
+		background-color: var(--background-primary-alt);
+		cursor: not-allowed;
+	}
 }

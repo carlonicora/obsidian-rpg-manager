@@ -6,24 +6,12 @@ import {SessionInterface} from "../session/interfaces/SessionInterface";
 import {AdventureInterface} from "../adventure/interfaces/AdventureInterface";
 import {ComponentType} from "../../enums/ComponentType";
 import {AbstractSceneData} from "./abstracts/AbstractSceneData";
-import {SceneType} from "../../enums/SceneType";
 import {ComponentNotFoundError} from "../../../errors/ComponentNotFoundError";
+import {activeSceneTypes} from "../../enums/SceneType";
 
 export class Scene extends AbstractSceneData implements SceneInterface {
 	protected metadata: SceneMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
-
-	private _activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
-		[SceneType.Action, true],
-		[SceneType.Combat, true],
-		[SceneType.Encounter, true],
-		[SceneType.Exposition, false],
-		[SceneType.Investigation, true],
-		[SceneType.Planning, false],
-		[SceneType.Preparation, true],
-		[SceneType.Recap, false],
-		[SceneType.SocialCombat, true],
-	]);
 
 	public validateHierarchy(
 	): void {
@@ -90,7 +78,7 @@ export class Scene extends AbstractSceneData implements SceneInterface {
 	get isActive(): boolean {
 		if (this.sceneType == undefined) return false;
 
-		return this._activeSceneTypes.get(this.sceneType) ?? false;
+		return activeSceneTypes.get(this.sceneType) ?? false;
 	}
 
 	get isCurrentlyRunning(): boolean {

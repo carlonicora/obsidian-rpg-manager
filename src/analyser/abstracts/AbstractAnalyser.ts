@@ -6,13 +6,14 @@ import {AnalyserDataImportInterface} from "../interfaces/AnalyserDataImportInter
 import {SceneInterface} from "../../components/components/scene/interfaces/SceneInterface";
 import {AnalyserDataInterface} from "../interfaces/AnalyserDataInterface";
 import {AnalyserData} from "../AnalyserData";
-import {AnalyserMinimalView} from "../views/AnalyserMinimalView";
+import {AnalyserVisualView} from "../views/AnalyserVisualView";
 import {AnalyserReportType} from "../enums/AnalyserReportType";
 import {AnalyserExtendedView} from "../views/AnalyserExtendedView";
 import {AnalyserReport} from "../reports/AnalyserReport";
 import {AnalyserViewInterface} from "../interfaces/AnalyserViewInterface";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {AnalyserSceneView} from "../views/AnalyserSceneView";
+import {AnalyserSceneBuilderView} from "../views/AnalyserSceneBuilderView";
 
 export abstract class AbstractAnalyser extends AbstractRpgManager implements AnalyserInterface {
 	protected rawData: AnalyserDataImportInterface[];
@@ -50,11 +51,14 @@ export abstract class AbstractAnalyser extends AbstractRpgManager implements Ana
 			case AnalyserReportType.Scene:
 				view = new AnalyserSceneView(this.app, this.type);
 				break;
-			case AnalyserReportType.Minimal:
-				view = new AnalyserMinimalView(this.app, this.type);
+			case AnalyserReportType.Visual:
+				view = new AnalyserVisualView(this.app, this.type);
 				break;
 			case AnalyserReportType.Extended:
 				view = new AnalyserExtendedView(this.app, this.type);
+				break;
+			case AnalyserReportType.SceneBuilder:
+				view = new AnalyserSceneBuilderView(this.app, this.type);
 				break;
 			default:
 				return;

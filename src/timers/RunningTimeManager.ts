@@ -86,4 +86,28 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 			}
 		});
 	}
+
+	public getTypeExpectedDuration(
+		campaignId: number,
+		type: SceneType,
+	): number {
+		const previousDurations: number[] = this.factories.runningTimeManager.medianTimes.get(campaignId)?.get(type) ?? [];
+
+		if (previousDurations.length === 0) return 0;
+		if (previousDurations.length === 1) return previousDurations[0];
+
+		previousDurations.sort((left: number, right: number) => {
+			if (left > right) return +1;
+			if (left < right) return -1;
+			return 0;
+		});
+
+		if (previousDurations.length % 2 === 0){
+			const previous = previousDurations[previousDurations.length/2];
+			const next = previousDurations[(previousDurations.length/2)-1];
+			return Math.floor((previous+next)/2);
+		} else {
+			return previousDurations[(previousDurations.length-1)/2];
+		}
+	}
 }

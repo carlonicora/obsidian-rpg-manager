@@ -1,0 +1,6 @@
+.rpgm-scene-builder .scenes-container table {
+  width: 100%;
+}
+.rpgm-scene-builder .scenes-container table tbody > tr > td > input[type=select] {
+  max-width: 100px;
+}

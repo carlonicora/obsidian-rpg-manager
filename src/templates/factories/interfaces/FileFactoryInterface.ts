@@ -26,5 +26,6 @@ export interface FileFactoryInterface {
 		sceneId?: number|undefined,
 		sessionId?: number|undefined,
 		additionalInformation?: any|undefined,
+		openView?: boolean,
 	): Promise<void>;
 }

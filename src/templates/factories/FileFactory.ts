@@ -101,6 +101,7 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 		sceneId: number|undefined=undefined,
 		sessionId: number|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
+		openView?: boolean,
 	): Promise<void> {
 		let folder = '';
 		let settings = CampaignSetting.Agnostic;
@@ -138,8 +139,11 @@ export class FileFactory extends AbstractFactory implements FileFactoryInterface
 
 		const data: string = await template.generateData();
 		const newFile = await app.vault.create(fileName, data);
-		const leaf = app.workspace.getLeaf(true);
-		await leaf.openFile(newFile);
+
+		if (openView) {
+			const leaf = app.workspace.getLeaf(true);
+			await leaf.openFile(newFile);
+		}
 	}
 
 	private async _generateFilePath(

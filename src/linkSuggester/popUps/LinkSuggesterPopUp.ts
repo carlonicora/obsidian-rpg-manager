@@ -5,7 +5,6 @@ import {LinkSuggesterEventListenerInterface} from "../interfaces/LinkSuggesterEv
 import {App, setIcon} from "obsidian";
 import {LinkSuggesterHandlerInterface} from "../interfaces/LinkSuggesterHandlerInterface";
 import {LinkSuggesterKeyboardEventListener} from "../eventListeners/LinkSuggesterKeyboardEventListener";
-import {Event} from "../../components/components/event/Event";
 
 export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterface, LinkSuggesterPopUpInterface {
 	private _results: Array<SearchResultInterface>;

@@ -1,5 +1,6 @@
 export enum AnalyserReportType {
 	Extended,
-	Minimal,
+	Visual,
 	Scene,
+	SceneBuilder,
 }

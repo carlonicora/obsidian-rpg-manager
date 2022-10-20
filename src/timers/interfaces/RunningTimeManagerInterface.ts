@@ -22,4 +22,9 @@ export interface RunningTimeManagerInterface{
 	updateMedianTimes(
 		isStartup?: boolean,
 	): Promise<void>;
+
+	getTypeExpectedDuration(
+		campaignId: number,
+		type: SceneType,
+	): number;
 }

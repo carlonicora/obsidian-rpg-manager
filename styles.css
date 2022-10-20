@@ -1,38 +1,48 @@
-input[type=text], input[type=text]:focus {
-  border: none;
-  border-bottom: solid 1px var(--text-normal);
-  border-radius: 0px;
+input[type=text] {
   width: 100%;
-  margin-top: 2px;
-  box-shadow: 0 0 0 0 transparent;
 }
 
 input[type=checkbox] {
   margin: 0;
 }
 
-select, inputt[type=text] {
+select, input[type=text] {
   border: none;
-  background-color: var(--background-secondary);
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0;
   box-shadow: none;
+  margin-top: 10px;
+  box-shadow: 0 0 0 0 transparent;
 }
 
 select:hover, input:hover {
   box-shadow: none;
   background-color: var(--interactive-hover);
   cursor: pointer;
+  background-color: var(--background-secondary);
 }
 
-select,
-select:focus {
+select, select:focus, input[type=text]:focus {
   border: none;
   border-bottom: solid 1px var(--background-modifier-border);
   border-radius: 0px;
   width: 100%;
-  margin-top: 10px;
   box-shadow: 0 0 0 0 transparent;
+}
+
+button {
+  cursor: pointer;
+}
+button.danger {
+  background-color: var(--background-modifier-error);
+}
+button.danger:hover {
+  background-color: var(--text-error);
+  color: var(--text-on-accent);
+}
+button:disabled {
+  background-color: var(--background-primary-alt);
+  cursor: not-allowed;
 }
 
 /****************************************************************
@@ -1034,11 +1044,30 @@ select:focus {
   color: #e08833;
 }
 
+.rpgm-modal-main-container > .rpgm-scene-builder > .rpgm-scene-builder-analyser {
+  border-bottom: solid 1px var(--background-modifier-border);
+}
+
 .rpgm-new-analyser.centred {
   text-align: center;
 }
 .rpgm-new-analyser .analyser-container {
   display: inline-block;
+}
+.rpgm-new-analyser .analyser-container-fix {
+  min-height: 20px;
+}
+.rpgm-new-analyser .analyser-container-fix.error {
+  color: var(--text-error);
+}
+.rpgm-new-analyser .analyser-container-fix.warning {
+  color: var(--code-important);
+}
+.rpgm-new-analyser .analyser-container-fix.balanced {
+  color: var(--code-property);
+}
+.rpgm-new-analyser .analyser-container-fix.perfect {
+  color: var(--text-success);
 }
 .rpgm-new-analyser .circle-container {
   position: relative;
@@ -2109,18 +2138,41 @@ span.flatpickr-weekday {
     transform: translate3d(0, 0, 0);
   }
 }
-button {
-  cursor: pointer;
-}
-button.danger {
-  background-color: var(--background-modifier-error);
-}
-button.danger:hover {
-  background-color: var(--text-error);
+.rpgm-scene-builder-confirmation {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
   color: var(--text-on-accent);
+  text-align: center;
+  padding-top: 25%;
+  font-size: 2em;
+  font-weight: 200;
 }
-button:disabled {
-  background-color: var(--background-primary-alt);
+
+.rpgm-scene-builder .scenes-container table {
+  width: 100%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-title {
+  width: 20%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-goal {
+  width: 50%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-type {
+  width: 20%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-exciting {
+  width: 10%;
+  text-align: center;
+}
+.rpgm-scene-builder .rpgm-scene-builder-confirmation-button {
+  margin-top: 30px;
+  float: right;
 }
 
 .suggestion-container {

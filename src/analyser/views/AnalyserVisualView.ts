@@ -3,8 +3,9 @@ import {AbstractAnalyserView} from "./abstract/AbstractAnalyserView";
 import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
 import {AnalyserReportDetailInterface} from "../interfaces/AnalyserReportDetailInterface";
 import {AnalyserDetailType} from "../enums/AnalyserDetailType";
+import {Component, MarkdownRenderer} from "obsidian";
 
-export class AnalyserMinimalView extends AbstractAnalyserView {
+export class AnalyserVisualView extends AbstractAnalyserView {
 	private _description: Map<AnalyserDetailType|undefined, string> = new Map<AnalyserDetailType | undefined, string>([
 		[undefined, 'Score'],
 		[AnalyserDetailType.Activity, 'Activity'],
@@ -14,6 +15,7 @@ export class AnalyserMinimalView extends AbstractAnalyserView {
 		[AnalyserDetailType.Variety, 'Variety'],
 		[AnalyserDetailType.Timing, 'Timing'],
 	])
+
 	public render(
 		report: AnalyserReportInterface,
 		containerEl: HTMLDivElement,
@@ -24,34 +26,43 @@ export class AnalyserMinimalView extends AbstractAnalyserView {
 
 		const analyserContainerEl: HTMLDivElement = analyserEl.createDiv({cls: 'analyser-container clearfix'});
 
-		this._addCircle(analyserContainerEl, report.percentage, report.thresholdType, true, 'Score');
+		this.addCircle(analyserContainerEl, report.percentage, report.thresholdType, true, 'Score');
 
 		if (report.durationPercentage === 0 && isNaN(report.durationPercentage))
-			this._addCircle(analyserContainerEl, report.durationPercentage, report.durationThreshold, true, this._description.get(undefined) ?? '');
+			this.addCircle(analyserContainerEl, report.durationPercentage, report.durationThreshold, true, this._description.get(undefined) ?? '');
 
 		report.details.forEach((reportDetail: AnalyserReportDetailInterface) => {
 			if (reportDetail.isRelevant === false) return;
-			this._addCircle(analyserContainerEl, reportDetail.percentage, reportDetail.thresholdType, reportDetail.isHighBetter, this._description.get(reportDetail.detailType) ?? '');
+			this.addCircle(analyserContainerEl, reportDetail.percentage, reportDetail.thresholdType, reportDetail.isHighBetter, this._description.get(reportDetail.detailType) ?? '');
 		});
 	}
 
-	private _addCircle(
+	protected addCircle(
 		containerEl: HTMLDivElement,
 		percentage: number,
 		threshold: AnalyserThresholdResult,
 		isHigerBetter: boolean,
 		description: string,
-	): void {
-		const circleContainerEl = containerEl.createDiv({cls: 'circle-container'});
+	): HTMLDivElement {
+		const response = containerEl.createDiv({cls: 'circle-container'});
 
-		const circleEl = circleContainerEl.createDiv({cls:' c100 p' + percentage.toString() + ' small'});
+		const circleEl = response.createDiv({cls:' c100 p' + percentage.toString() + ' small'});
 		circleEl.createSpan({text: percentage.toString() + '%'});
 
 		const sliceEl = circleEl.createDiv({cls: 'slice'});
 		sliceEl.createDiv({cls: 'bar'});
 		sliceEl.createDiv({cls: 'fill'});
 
-		const circleDescriptionEl: HTMLDivElement = circleContainerEl.createDiv({cls: 'description', text:description});
+		//const circleDescriptionEl: HTMLDivElement = circleContainerEl.createDiv({cls: 'description', text:description});
+		const circleDescriptionEl: HTMLDivElement = response.createDiv({cls: 'description'});
+
+		MarkdownRenderer.renderMarkdown(
+			description,
+			circleDescriptionEl,
+			'',
+			null as unknown as Component,
+		);
+
 		if (isHigerBetter) {
 			this.addThresholdClass(threshold, circleEl);
 			this.addThresholdClass(threshold, circleDescriptionEl);
@@ -59,5 +70,7 @@ export class AnalyserMinimalView extends AbstractAnalyserView {
 			this.addThresholdErrorClass(threshold, circleEl);
 			this.addThresholdErrorClass(threshold, circleDescriptionEl);
 		}
+
+		return response;
 	}
 }

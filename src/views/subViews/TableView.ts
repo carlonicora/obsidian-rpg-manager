@@ -96,7 +96,8 @@ export class TableView extends AbstractSubModelView {
 											undefined,
 											{
 												synopsis: content.content,
-											}
+											},
+											true
 										);
 									}
 									nextActId++;

@@ -17,6 +17,5 @@ export class AbstractModal extends AbstractRpgManagerModal {
 		const mainContainer: HTMLDivElement = contentEl.createDiv({cls: 'rpgm-modal-container'});
 		mainContainer.createEl('h2', {text: this.title ?? 'RPG Manager'});
 		this.rpgmContainerEl = mainContainer.createDiv({cls: 'rpgm-modal-main-container'});
-
 	}
 }

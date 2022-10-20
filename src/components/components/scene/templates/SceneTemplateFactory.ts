@@ -8,16 +8,31 @@ import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 	protected generateDataCodeBlock(
 	): string {
+		let synopsis = '';
+		let sceneType = '';
+		let isActedUpon = false;
+
+		if (this.additionalInformation !== undefined){
+			if (this.additionalInformation.synopsis !== undefined)
+				synopsis = this.additionalInformation.synopsis;
+
+			if (this.additionalInformation.sceneType !== undefined)
+				sceneType = this.additionalInformation.sceneType;
+
+			if (this.additionalInformation.isActedUpon !== undefined)
+				isActedUpon = this.additionalInformation.isActedUpon;
+		}
+
 		const metadata: SceneMetadataInterface = {
 			data: {
-				synopsis: '',
+				synopsis: synopsis,
 				complete: false,
 				sessionId: 0,
 				action: '',
 				trigger: '',
 				date: '',
-				sceneType: '',
-				isActedUpon: false,
+				sceneType: sceneType,
+				isActedUpon: isActedUpon,
 				duration: 0,
 				durations: [],
 				storyCircleStage: ''

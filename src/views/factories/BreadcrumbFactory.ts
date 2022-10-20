@@ -77,6 +77,9 @@ export class BreadcrumbFactory extends AbstractFactory implements BreadcrumbFact
 			scene.adventure.id.adventureId,
 			scene.act.id.actId,
 			newSceneId,
+			undefined,
+			undefined,
+			true,
 		);
 	}
 

@@ -31,9 +31,9 @@ export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
 			if (this._analyser.searchTerm !== this._previousSearch) {
 				this._previousSearch = this._analyser.searchTerm;
 
-				var getCaretCoordinates = require('./pixelFinder.js');
-				var caret = getCaretCoordinates(this._containerEl);
-				const x = this.offset(this._containerEl)
+				const getCaretCoordinates = require('./pixelFinder.js');
+				const caret = getCaretCoordinates(this._containerEl);
+				const x = this._offset(this._containerEl)
 
 				const top: number = x.top + caret.top;
 				const left: number = x.left + caret.left;
@@ -45,8 +45,8 @@ export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
 		}
 	}
 
-	private offset(el: HTMLInputElement|HTMLTextAreaElement) {
-		var rect = el.getBoundingClientRect(),
+	private _offset(el: HTMLInputElement|HTMLTextAreaElement) {
+		const rect = el.getBoundingClientRect(),
 			scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
 			scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 		return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
