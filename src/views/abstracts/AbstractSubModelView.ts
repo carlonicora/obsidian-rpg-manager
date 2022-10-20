@@ -25,7 +25,11 @@ export abstract class AbstractSubModelView extends AbstractRpgManager implements
 	): void {
 
 		this._createEditorButton(cellEl).addEventListener('click', () => {
-			EditorSelector.focusOnDataKey(this.app, currentComponent, identifier);
+			this.factories.editableContent.open(currentComponent, identifier)
+				.then((opened: boolean) => {
+					if (!opened)
+						EditorSelector.focusOnDataKey(this.app, currentComponent, identifier);
+				});
 		});
 	}
 

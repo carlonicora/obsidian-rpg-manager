@@ -6,7 +6,7 @@ import {ComponentInterface} from "../../components/interfaces/ComponentInterface
 import {ComponentType} from "../../components/enums/ComponentType";
 import {IdSwitcherModal} from "../../modals/IdSwitcherModal";
 import {GalleryManagementModal} from "../../galleries/modals/GalleryManagementModal";
-import {EditorModal} from "../../modals/EditorModal";
+import {ContentEditorModal} from "../../services/contentEditor/modals/ContentEditorModal";
 
 export class BreadcrumbView extends AbstractSubModelView {
 	private _currentComponent: ComponentInterface;
@@ -44,13 +44,6 @@ export class BreadcrumbView extends AbstractSubModelView {
 		this._addFunctionality(relationshipAdderContainerEl, 'Images', 'Gallery Manager')
 			.addEventListener("click", () => {
 				new GalleryManagementModal(this.app, this._currentComponent).open();
-			});
-
-		this._addSeparator(relationshipAdderContainerEl);
-
-		this._addFunctionality(relationshipAdderContainerEl, 'Images', 'TEST')
-			.addEventListener("click", () => {
-				new EditorModal(this.app).open();
 			});
 	}
 

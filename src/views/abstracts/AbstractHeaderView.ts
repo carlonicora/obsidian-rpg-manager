@@ -69,25 +69,6 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			this.headerInfoEl.addClass('info-large');
 		}
 
-		/*
-		if (data.imgSrc == null) {
-			this.headerInfoEl.addClass('info-large');
-		} else {
-			this.imageContainterEl = this.headerContainerEl.createDiv({cls: 'image'});
-			const image = new Image();
-			image.src = data.imgSrc;
-
-			image.onload = (evt: Event) => {
-				if (image.src.startsWith('http')) {
-					const crsImageLink = this.imageContainterEl.createEl('a', {href: image.src});
-					crsImageLink.append(image);
-				} else {
-					this.imageContainterEl.append(image);
-				}
-			}
-		}
-		*/
-
 		if (!this._isInternalRender){
 			data.elements.forEach((element: HeaderResponseElementInterface) => {
 				const containerEl = this.createContainerEl(element);

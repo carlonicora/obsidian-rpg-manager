@@ -4,8 +4,7 @@
 @use "src/galleries/views/styles";
 @use "src/styles/flatpickr";
 @use "src/sceneBuilder/styles/sceneBuilder";
-
-
+@use "src/services/contentEditor/styles/ContentEditor";
 
 .suggestion-container {
 	padding: 6px 0px;

@@ -24,6 +24,13 @@ import {LogFactoryInterface} from "../../loggers/interfaces/LogFactoryInterface"
 import {AnalyserFactoryInterface} from "../../analyser/factories/interfaces/AnalyserFactoryInterface";
 import {ImageFactoryInterface} from "../../galleries/interfaces/ImageFactoryInterface";
 import {GalleryViewFactoryInterface} from "../../galleries/interfaces/GalleryViewFactoryInterface";
+import {EditableContentFactoryInterface} from "../../services/contentEditor/interfaces/EditableContentFactoryInterface";
+import {
+	EditableContentTypeFactoryInterface
+} from "../../services/contentEditor/interfaces/EditableContentTypeFactoryInterface";
+import {
+	EditableContentValueFactoryInterface
+} from "../../services/contentEditor/interfaces/EditableContentValueFactoryInterface";
 
 export interface FactoriesInterface {
 	subModels: SubModelFactoryInterface;
@@ -51,6 +58,9 @@ export interface FactoriesInterface {
 	analyser: AnalyserFactoryInterface;
 	image: ImageFactoryInterface;
 	imageView: GalleryViewFactoryInterface;
+	editableContent: EditableContentFactoryInterface;
+	editableContentField: EditableContentTypeFactoryInterface;
+	editableContentValue: EditableContentValueFactoryInterface;
 
 	runningTimeManager: RunningTimeManagerInterface;
 }

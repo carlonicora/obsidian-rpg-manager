@@ -1,4 +1,4 @@
-input[type=text] {
+input[type=text], textarea {
 	width: 100%;
 }
 
@@ -15,19 +15,31 @@ select, input[type=text] {
 	box-shadow: 0 0 0 0 transparent;
 }
 
-select:hover, input:hover {
+select:hover, input:hover, textarea:hover {
 	box-shadow: none;
 	background-color: var(--interactive-hover);
 	cursor: pointer;
 	background-color: var(--background-secondary);
 }
 
-select, select:focus, input[type=text]:focus {
+select, select:focus, input[type=text]:focus, textarea:focus {
 	border: none;
 	border-bottom: solid 1px var(--background-modifier-border);
 	border-radius: 0px;
 	width: 100%;
 	box-shadow: 0 0 0 0 transparent;
+}
+
+textarea {
+	border: solid 1px var(--background-modifier-border);
+	border-radius: 0;
+	box-shadow: none;
+	margin-top: 10px;
+	box-shadow: 0 0 0 0 transparent;
+}
+
+textarea:focus {
+	border: solid 1px var(--background-modifier-border);
 }
 
 button {

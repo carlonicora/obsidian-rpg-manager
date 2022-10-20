@@ -53,6 +53,16 @@ import {ImageFactoryInterface} from "../galleries/interfaces/ImageFactoryInterfa
 import {ImageFactory} from "../galleries/factories/ImageFactory";
 import {GalleryViewFactoryInterface} from "../galleries/interfaces/GalleryViewFactoryInterface";
 import {GalleryViewFactory} from "../galleries/factories/GalleryViewFactory";
+import {EditableContentFactoryInterface} from "../services/contentEditor/interfaces/EditableContentFactoryInterface";
+import {EditableContentFactory} from "../services/contentEditor/factories/EditableContentFactory";
+import {
+	EditableContentTypeFactoryInterface
+} from "../services/contentEditor/interfaces/EditableContentTypeFactoryInterface";
+import {EditableContentTypeFactory} from "../services/contentEditor/factories/EditableContentTypeFactory";
+import {
+	EditableContentValueFactoryInterface
+} from "../services/contentEditor/interfaces/EditableContentValueFactoryInterface";
+import {EditableContentValueFactory} from "../services/contentEditor/factories/EditableContentValueFactory";
 
 export class Factories implements FactoriesInterface{
 	public subModels: SubModelFactoryInterface;
@@ -81,6 +91,9 @@ export class Factories implements FactoriesInterface{
 	public analyser: AnalyserFactoryInterface;
 	public image: ImageFactoryInterface;
 	public imageView: GalleryViewFactoryInterface;
+	public editableContent: EditableContentFactoryInterface;
+	public editableContentField: EditableContentTypeFactoryInterface;
+	public editableContentValue: EditableContentValueFactoryInterface;
 
 	constructor(
 		private _app: App,
@@ -110,6 +123,9 @@ export class Factories implements FactoriesInterface{
 		this.analyser = new AnalyserFactory(this._app);
 		this.image = new ImageFactory(this._app);
 		this.imageView = new GalleryViewFactory(this._app);
+		this.editableContent = new EditableContentFactory(this._app);
+		this.editableContentField = new EditableContentTypeFactory(this._app);
+		this.editableContentValue = new EditableContentValueFactory(this._app);
 
 		this.runningTimeManager = new RunningTimeManager(this._app);
 	}
