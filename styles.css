@@ -1081,6 +1081,9 @@ button:disabled {
 .rpgm-new-analyser .analyser-container-fix.perfect {
   color: var(--text-success);
 }
+.rpgm-new-analyser .analyser-container-fix.normal {
+  color: var(--text-muted);
+}
 .rpgm-new-analyser .circle-container {
   position: relative;
   float: left;

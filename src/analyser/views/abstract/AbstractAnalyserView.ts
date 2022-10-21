@@ -150,6 +150,9 @@ export abstract class AbstractAnalyserView extends AbstractRpgManager implements
 			case AnalyserThresholdResult.CriticallyLow:
 				containerEl.addClass('error');
 				break;
+			case AnalyserThresholdResult.Correct:
+				containerEl.addClass('normal');
+				break;
 		}
 	}
 
