@@ -1,11 +1,13 @@
 import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
 import {App, fuzzySearch, prepareQuery, SearchResult, TFile} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
+import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
 
-export class FuzzyFileSearchWorker implements SearchWorkerInterface {
+export class FuzzyFileSearchWorker extends AbstractSearchWorker implements SearchWorkerInterface {
 	constructor(
-		private _app: App,
+		app: App,
 	) {
+		super(app);
 	}
 
 	public search(
@@ -17,9 +19,9 @@ export class FuzzyFileSearchWorker implements SearchWorkerInterface {
 
 		const matches: Map<string, SearchResultInterface> = new Map<string, SearchResultInterface>();
 
-		const files = this._app.vault.getMarkdownFiles();
+		const files = this.app.vault.getMarkdownFiles();
 		files.forEach((file: TFile) => {
-			const metadata = this._app.metadataCache.getFileCache(file);
+			const metadata = this.app.metadataCache.getFileCache(file);
 			if (metadata !== undefined && metadata?.frontmatter?.alias !== undefined && metadata.frontmatter.alias.length >0){
 				metadata.frontmatter.alias.forEach((alias: string) => {
 					const fuzzySearchResult = fuzzySearch(query, alias);
@@ -28,8 +30,8 @@ export class FuzzyFileSearchWorker implements SearchWorkerInterface {
 							title: alias,
 							file: file,
 							alias: alias,
-							fancyTitle: this._setFancyName(alias, fuzzySearchResult, true),
-							fancySubtitle: this._setFancyName(file.path, fuzzySearch(query, file.path), false),
+							fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
+							fancySubtitle: this.setFancyName(file.path, fuzzySearch(query, file.path), false),
 							resultScoring: fuzzySearchResult,
 						});
 					}
@@ -42,8 +44,8 @@ export class FuzzyFileSearchWorker implements SearchWorkerInterface {
 					matches.set(file.path, {
 						title: file.basename,
 						file: file,
-						fancyTitle: this._setFancyName(file.basename, fuzzySearchResult, true),
-						fancySubtitle: this._setFancyName(file.path, fuzzySearch(query, file.path), false),
+						fancyTitle: this.setFancyName(file.basename, fuzzySearchResult, true),
+						fancySubtitle: this.setFancyName(file.path, fuzzySearch(query, file.path), false),
 						resultScoring: fuzzySearchResult,
 					});
 
@@ -61,41 +63,5 @@ export class FuzzyFileSearchWorker implements SearchWorkerInterface {
 		response.sort((a: SearchResultInterface, b: SearchResultInterface) => b.resultScoring.score - a.resultScoring.score);
 
 		return  response;
-	}
-
-	private _setFancyName(
-		text: string,
-		fuzzySearchResult: SearchResult|null,
-		isTitle = true,
-	): HTMLDivElement {
-		const response = document.createElement('div');
-		response.addClass(isTitle ? 'suggestion-title' : 'suggestion-note');
-
-		if (fuzzySearchResult == null || fuzzySearchResult.matches == null) {
-			response.textContent = text;
-			return response;
-		}
-
-		let currentTextIndex = 0;
-		for(let index=0; index<fuzzySearchResult.matches.length; index++){
-			const matchingPart: Array<number> = fuzzySearchResult.matches[index];
-			const start = matchingPart[0];
-			const end = matchingPart[1];
-
-			if (start > currentTextIndex)
-				response.appendChild(document.createTextNode(text.substring(currentTextIndex, start)));
-
-			const responseSpanEl = document.createElement('span');
-			responseSpanEl.addClass('suggestion-highlight');
-			responseSpanEl.textContent = text.substring(start, end);
-			response.appendChild(responseSpanEl as Node)
-
-			currentTextIndex = end;
-		}
-
-		if (text.length > currentTextIndex)
-			response.appendChild(document.createTextNode(text.substring(currentTextIndex)));
-
-		return response;
 	}
 }

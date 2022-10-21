@@ -4,8 +4,9 @@ import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 import {AbstractRpgManager} from "../../../abstracts/AbstractRpgManager";
 import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
 import {element} from "svelte/internal";
+import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
 
-export class FuzzyElementSearchWorker extends AbstractRpgManager implements SearchWorkerInterface {
+export class FuzzyElementSearchWorker extends AbstractSearchWorker implements SearchWorkerInterface {
 	constructor(
 		app: App,
 		private _element: ComponentInterface,
@@ -35,8 +36,8 @@ export class FuzzyElementSearchWorker extends AbstractRpgManager implements Sear
 							title: alias,
 							file: element.file,
 							alias: alias,
-							fancyTitle: this._setFancyName(alias, fuzzySearchResult, true),
-							fancySubtitle: this._setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
+							fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
+							fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
 							resultScoring: fuzzySearchResult,
 						});
 					}
@@ -49,8 +50,8 @@ export class FuzzyElementSearchWorker extends AbstractRpgManager implements Sear
 					matches.set(element.file.path, {
 						title: element.file.basename,
 						file: element.file,
-						fancyTitle: this._setFancyName(element.file.basename, fuzzySearchResult, true),
-						fancySubtitle: this._setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
+						fancyTitle: this.setFancyName(element.file.basename, fuzzySearchResult, true),
+						fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
 						resultScoring: fuzzySearchResult,
 					});
 				}
@@ -67,41 +68,5 @@ export class FuzzyElementSearchWorker extends AbstractRpgManager implements Sear
 		response.sort((a: SearchResultInterface, b: SearchResultInterface) => b.resultScoring.score - a.resultScoring.score);
 
 		return  response;
-	}
-
-	private _setFancyName(
-		text: string,
-		fuzzySearchResult: SearchResult|null,
-		isTitle = true,
-	): HTMLDivElement {
-		const response = document.createElement('div');
-		response.addClass(isTitle ? 'suggestion-title' : 'suggestion-note');
-
-		if (fuzzySearchResult == null || fuzzySearchResult.matches == null) {
-			response.textContent = text;
-			return response;
-		}
-
-		let currentTextIndex = 0;
-		for(let index=0; index<fuzzySearchResult.matches.length; index++){
-			const matchingPart: Array<number> = fuzzySearchResult.matches[index];
-			const start = matchingPart[0];
-			const end = matchingPart[1];
-
-			if (start > currentTextIndex)
-				response.appendChild(document.createTextNode(text.substring(currentTextIndex, start)));
-
-			const responseSpanEl = document.createElement('span');
-			responseSpanEl.addClass('suggestion-highlight');
-			responseSpanEl.textContent = text.substring(start, end);
-			response.appendChild(responseSpanEl as Node)
-
-			currentTextIndex = end;
-		}
-
-		if (text.length > currentTextIndex)
-			response.appendChild(document.createTextNode(text.substring(currentTextIndex)));
-
-		return response;
 	}
 }
