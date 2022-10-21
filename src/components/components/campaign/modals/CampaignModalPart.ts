@@ -181,6 +181,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 	protected async addAdditionalElements(
 	): Promise<void> {
+		/*
 		if (this.modal.additionalInformationEl.style.display !== 'block') {
 			this.modal.additionalInformationEl.style.display = 'block';
 			this.modal.additionalInformationEl.createEl('h2', {
@@ -190,6 +191,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			this.modal.additionalInformationEl.createEl('label', {text: 'Current Date'});
 			this._currentDateEl = this.modal.additionalInformationEl.createEl('input', {type: 'text'});
 		}
+		 */
 	}
 
 	public prepareAdditionalInformation(): any {
