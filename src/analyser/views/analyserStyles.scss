@@ -29,6 +29,9 @@ $circle-width-hover: 0.07em;
 		&.perfect {
 			color: var(--text-success);
 		}
+		&.normal {
+			color: var(--text-muted);
+		}
 	}
 
 	.circle-container {

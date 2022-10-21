@@ -4,6 +4,7 @@ import {AnalyserReportDetailInterface} from "../interfaces/AnalyserReportDetailI
 import {AnalyserDetailType} from "../enums/AnalyserDetailType";
 import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
 import {AnalyserScoreType} from "../enums/AnalyserScoreType";
+import {ComponentType} from "../../components/enums/ComponentType";
 
 export class AnalyserSceneBuilderView extends AnalyserVisualView {
 	private _extendedDescription: Map<AnalyserDetailType, Map<AnalyserThresholdResult, string>> = new Map<AnalyserDetailType, Map<AnalyserThresholdResult, string>>([
@@ -74,16 +75,34 @@ export class AnalyserSceneBuilderView extends AnalyserVisualView {
 			})
 
 			circleEl.addEventListener('mouseout', () => {
-				this._fixEl.empty();
-			})
+				this._showExpectedDuration(report);
+			});
 		});
 
 		this._fixEl = analyserEl.createDiv({cls: 'analyser-container-fix'})
+		this._showExpectedDuration(report);
+	}
+
+	private async _showExpectedDuration(
+		report: AnalyserReportInterface,
+	): Promise<void> {
+		this._fixEl.removeClasses(['error', 'warning', 'balanced', 'perfect', 'normal']);
+		if (report.expectedDuration !== undefined && report.expectedDuration !== 0) {
+			const expectedDuration = this.transformTime(report.expectedDuration);
+			this._fixEl.textContent = 'Expected duration: ' + expectedDuration;
+		} else {
+			this._fixEl.textContent = '';
+		}
+
+
+
+		this.addThresholdClass(AnalyserThresholdResult.Correct, this._fixEl);
 	}
 
 	private async _showFix(
 		reportDetail: AnalyserReportDetailInterface,
 	): Promise<void> {
+		this._fixEl.removeClasses(['error', 'warning', 'balanced', 'perfect', 'normal']);
 		let description = '';
 		if (reportDetail.scoreType === AnalyserScoreType.Percentage)
 			description = this.prepareDescription(
