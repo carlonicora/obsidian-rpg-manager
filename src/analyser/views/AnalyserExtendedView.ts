@@ -1,5 +1,4 @@
 import {AnalyserDetailType} from "../enums/AnalyserDetailType";
-import {AnalyserThresholdResult} from "../enums/AnalyserThresholdResult";
 import {AbstractAnalyserView} from "./abstract/AbstractAnalyserView";
 import {AnalyserReportInterface} from "../interfaces/AnalyserReportInterface";
 import {ComponentType} from "../../components/enums/ComponentType";

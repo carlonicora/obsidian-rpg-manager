@@ -1,60 +1,47 @@
-import {AbstractModal} from "../../../modals/abstracts/AbstractModal";
 import {App} from "obsidian";
 import {LinkSuggesterHandler} from "../../../linkSuggester/handlers/LinkSuggesterHandler";
-import {LinkSuggesterHandlerInterface} from "../../../linkSuggester/interfaces/LinkSuggesterHandlerInterface";
 import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
 import {EditableContentType} from "../enums/EditableContentType";
+import {AbstractEditorModal} from "../abstracts/AbstractEditorModal";
 
-export class ContentEditorModal extends AbstractModal {
-	private _inputEl: HTMLInputElement;
-	private _autocompletionHelper: LinkSuggesterHandlerInterface;
-	private _contentEditorEl: HTMLTextAreaElement;
-
+export class ContentEditorModal extends AbstractEditorModal {
 	constructor(
 		app: App,
-		private _component: ComponentInterface,
-		private _editableContentType: EditableContentType,
-		private _editableField: string,
+		component: ComponentInterface,
+		editableContentType: EditableContentType,
+		editableField: string,
+		isLongText: boolean,
 	) {
-		super(app);
+		super(app, component, editableContentType, editableField, isLongText);
 
-		this.title = 'Edit the ' + EditableContentType[this._editableContentType] + ' for ' + this._component.file.basename;
-	}
+		let title = '';
+		switch (this.editableContentType){
+			case EditableContentType.AbtNeed:
+				title = 'Need';
+				break;
+			case EditableContentType.AbtAnd:
+				title = 'And';
+				break;
+			case EditableContentType.AbtBut:
+				title = 'But';
+				break;
+			case EditableContentType.AbtTherefore:
+				title = 'Therefore';
+				break;
+			default:
+				if (this.editableContentType !== undefined)
+					title = EditableContentType[this.editableContentType];
 
-	onClose() {
-		super.onClose();
-		this._autocompletionHelper.close();
-		this.rpgmContainerEl.empty();
+				break
+		}
+
+		this.title = 'Edit the ' + title + ' for ' + this.component.file.basename;
 	}
 
 	onOpen() {
 		super.onOpen();
 
-		const contentValue = this.factories.editableContentValue.read(this._component, this._editableContentType);
-
-		const contentEditorContainerEl: HTMLDivElement = this.rpgmContainerEl.createDiv({cls: 'rpgm-content-editor'});
-		this._contentEditorEl = contentEditorContainerEl.createEl('textarea', {cls: 'rpgm-content-editor-input'});
-		if (contentValue !== undefined) {
-			const contentTextualValue: string = contentValue.toString().replaceAll('\"', '"');
-			this._contentEditorEl.textContent = contentTextualValue;
-			this._contentEditorEl.selectionStart = contentTextualValue.length;
-		}
-
-		this._autocompletionHelper = new LinkSuggesterHandler(this.app, this._contentEditorEl);
-
-		const contentEditorButtonContainerEl: HTMLDivElement = this.rpgmContainerEl.createDiv({cls: 'rpgm-content-editor-button'});
-		const contentEditorButtonEl: HTMLButtonElement = contentEditorButtonContainerEl.createEl('button', {text: 'Save'});
-		contentEditorButtonEl.addEventListener('click', this._saveContent.bind(this));
-	}
-
-	private async _saveContent(
-	): Promise<void> {
-		const value = this._contentEditorEl.value.replaceAll('"', '\"');
-		this.manipulators.codeblock.update(
-			this._editableField,
-			this._contentEditorEl.value,
-		);
-
-		this.close();
+		this.addElements(this.contentEditorContainerEl);
+		this.autocompletionHelper = new LinkSuggesterHandler(this.app, this.contentEditorEl);
 	}
 }

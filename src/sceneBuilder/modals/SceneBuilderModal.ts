@@ -8,7 +8,6 @@ import {ActInterface} from "../../components/components/act/interfaces/ActInterf
 import {AnalyserReportType} from "../../analyser/enums/AnalyserReportType";
 import {ComponentType} from "../../components/enums/ComponentType";
 import {SceneInterface} from "../../components/components/scene/interfaces/SceneInterface";
-import {GalleryViewType} from "../../galleries/enums/GalleryViewType";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -89,12 +88,6 @@ export class SceneBuilderModal extends AbstractModal {
 			if (type !== '')
 				sceneType = this.factories.sceneType.createSceneType(type);
 
-			const metadata = {
-				synopsis: (<HTMLInputElement>line.cells[1].childNodes[0]).value,
-				type: sceneType,
-				exciting: (<HTMLInputElement>line.cells[3].childNodes[0]).checked,
-			};
-
 			const title = 'a' + this._act.id.id + 's' + sceneId.toString() + ' - ' + (<HTMLInputElement>line.cells[0].childNodes[0]).value
 
 			this.factories.files.silentCreate(
@@ -126,7 +119,7 @@ export class SceneBuilderModal extends AbstractModal {
 			const cells: HTMLCollectionOf<HTMLTableCellElement> = this._scenesContainerEl.rows[index].cells;
 			const type = (<HTMLSelectElement>cells[2].childNodes[0]).value;
 			if (type !== '') {
-				let sceneType: SceneType = this.factories.sceneType.createSceneType(type);
+				const sceneType: SceneType = this.factories.sceneType.createSceneType(type);
 
 				data.push({
 					isExciting: (<HTMLInputElement>cells[3].childNodes[0]).checked,

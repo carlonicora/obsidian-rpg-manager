@@ -26,9 +26,7 @@ export class LocationHeaderSubModel extends AbstractHeaderSubModel {
 		response.type = ComponentType.Location;
 		response.responseType = ResponseType.LocationHeader;
 
-		if (this.data.address != null && this.data.address != ''){
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Address', this.data.address, HeaderResponseType.Short, {editableField: 'data.address'}));
-		}
+		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Address', this.data.address, HeaderResponseType.Short, {editableField: 'data.address'}));
 
 		return this.completeData(response);
 	}

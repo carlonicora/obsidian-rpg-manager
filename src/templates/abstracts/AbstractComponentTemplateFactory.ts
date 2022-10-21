@@ -124,7 +124,6 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 	): string {
 		let response: string;
 
-		//const frontmatterString = stringifyYaml(frontmatter);
 		const frontmatterString = YamlHelper.stringify(frontmatter);
 		const frontmatterParsedString = frontmatterString.replaceAll('{}', '');
 		response = '---\n' + frontmatterParsedString + '---\n';
@@ -234,7 +233,6 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		metadata: ControllerMetadataDataInterface,
 	): string {
 		let response = '```RpgManagerData\n';
-		//response += stringifyYaml(metadata);
 		response += YamlHelper.stringify(metadata);
 		response += '```\n';
 
@@ -245,7 +243,6 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 		metadata: ControllerMetadataInterface,
 	): string {
 		let response = '```RpgManager\n';
-		//response += stringifyYaml(metadata);
 		response += YamlHelper.stringify(metadata);
 		response += '```\n';
 
@@ -262,7 +259,6 @@ export abstract class AbstractComponentTemplateFactory extends AbstractRpgManage
 
 		let response = '```RpgManagerID\n';
 		response += '### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###\n';
-		//response += stringifyYaml(metadata);
 		response += YamlHelper.stringify(metadata);
 		response += '```\n';
 

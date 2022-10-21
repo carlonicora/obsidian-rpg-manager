@@ -23,7 +23,6 @@ export abstract class AbstractSubModelView extends AbstractRpgManager implements
 		currentComponent: ComponentInterface,
 		identifier: string,
 	): void {
-
 		this._createEditorButton(cellEl).addEventListener('click', () => {
 			this.factories.editableContent.open(currentComponent, identifier)
 				.then((opened: boolean) => {
@@ -39,7 +38,12 @@ export abstract class AbstractSubModelView extends AbstractRpgManager implements
 		identifier: string,
 	): void {
 		this._createEditorButton(cellEl).addEventListener('click', () => {
-			EditorSelector.focusOnDataRelationshipDescription(this.app, currentComponent, identifier);
+			this.factories.editableContent.open(currentComponent, identifier)
+				.then((modalOpened: boolean) => {
+					if (!modalOpened)
+						EditorSelector.focusOnDataRelationshipDescription(this.app, currentComponent, identifier);
+
+				});
 		});
 	}
 

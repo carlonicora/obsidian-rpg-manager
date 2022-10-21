@@ -35,7 +35,6 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		const newIdCodeBlock: string[] = [];
 		newIdCodeBlock.push('```RpgManagerID');
 		newIdCodeBlock.push('### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###');
-		//newIdCodeBlock.push(stringifyYaml(metadata));
 		newIdCodeBlock.push(YamlHelper.stringify(metadata));
 		newIdCodeBlock.push('```');
 
@@ -169,7 +168,6 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 						value,
 					);
 
-					//editor.replaceRange(stringifyYaml(yaml), start, end)
 					editor.replaceRange(YamlHelper.stringify(yaml), start, end)
 					this.app.vault.modify(file, editor.getValue())
 						.then(() => {
@@ -299,7 +297,6 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 
 					fn(yaml, variable);
 
-					//editor.replaceRange(stringifyYaml(yaml), start, end)
 					editor.replaceRange(YamlHelper.stringify(yaml), start, end)
 					this.app.vault.modify(file, editor.getValue())
 						.then(() => {

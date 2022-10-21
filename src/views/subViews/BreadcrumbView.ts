@@ -6,7 +6,6 @@ import {ComponentInterface} from "../../components/interfaces/ComponentInterface
 import {ComponentType} from "../../components/enums/ComponentType";
 import {IdSwitcherModal} from "../../modals/IdSwitcherModal";
 import {GalleryManagementModal} from "../../galleries/modals/GalleryManagementModal";
-import {ContentEditorModal} from "../../services/contentEditor/modals/ContentEditorModal";
 
 export class BreadcrumbView extends AbstractSubModelView {
 	private _currentComponent: ComponentInterface;

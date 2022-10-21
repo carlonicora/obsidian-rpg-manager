@@ -118,7 +118,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 			if (firstCodeblockMetadataType !== undefined){
 				firstCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(firstCodeblockMetadataType.toLowerCase());
-				//firstCodeblockNewMetadataContent = stringifyYaml(firstCodeblockNewMetadata);
 				firstCodeblockNewMetadataContent = YamlHelper.stringify(firstCodeblockNewMetadata);
 
 				dataCodeblockMetadataContent = await this._updateMetadata(
@@ -132,7 +131,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 			if (secondCodeblockMetadataType !== undefined){
 				secondCodeblockNewMetadata = this._getComponentRpgManagerCodeBlockMetadata(secondCodeblockMetadataType.toLowerCase());
-				//secondCodeblockNewMetadataContent = stringifyYaml(secondCodeblockNewMetadata);
 				secondCodeblockNewMetadataContent = YamlHelper.stringify(secondCodeblockNewMetadata);
 			}
 
@@ -151,7 +149,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 			if (frontmatterMetadataContentArray !== undefined && frontmatterMetadataStartLine !== undefined && frontmatterMetadataEndLine !== undefined) {
 				const frontmatter: any = this._cleanFrontmatter(frontmatterMetadataContentArray);
 				const frontmatterContent: string = '---\n' +
-					//stringifyYaml(frontmatter) +
 					YamlHelper.stringify(frontmatter) +
 					'---\n' +
 					'```RpgManagerData\n' +
@@ -511,7 +508,6 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 
 		if (relationships.length > 0) metadata.relationships = relationships;
 
-		//let response: string = stringifyYaml(metadata);
 		let response: string = YamlHelper.stringify(metadata);
 		response = response
 			.replaceAll('0,', ',')

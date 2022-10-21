@@ -69,7 +69,6 @@ export class FileManipulator extends AbstractRpgManager implements FileManipulat
 				if (arrayContent[index] === '```'){
 					correctBlockProcessed = true;
 					inCorrectCodeBlock = false;
-					//const newCodeBlock = stringifyYaml(newMetadata);
 					const newCodeBlock = YamlHelper.stringify(newMetadata);
 					const newCodeBlockArray = newCodeBlock.split('\n');
 					newArrayContent.push(...newCodeBlockArray);
