@@ -71,6 +71,6 @@ export class StoryCircleContentEditorModal extends AbstractEditorModal {
 			this.addElements(this.contentEditorContainerEl);
 		}
 
-		this.autocompletionHelper = new LinkSuggesterHandler(this.app, this.contentEditorEl);
+		this.autocompletionHelper = new LinkSuggesterHandler(this.app, this.contentEditorEl, this.component);
 	}
 }

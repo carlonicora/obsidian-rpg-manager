@@ -1,26 +1,29 @@
 import {LinkSuggesterHandlerInterface} from "../interfaces/LinkSuggesterHandlerInterface";
 import {LinkSuggesterTextAnalyserInterface} from "../interfaces/LinkSuggesterTextAnalyserInterface";
-import {SearchInterface} from "../../search/interfaces/SearchInterface";
 import {LinkSuggesterSearchResultPopUpInterface} from "../interfaces/LinkSuggesterSearchResultPopUpInterface";
 import {App} from "obsidian";
 import {LinkSuggesterTextAnalyser} from "../textAnalysers/LinkSuggesterTextAnalyser";
-import {FuzzyFileSearch} from "../../search/FuzzyFileSearch";
 import {LinkSuggesterPopUp} from "../popUps/LinkSuggesterPopUp";
-import {SearchResultInterface} from "../../search/interfaces/SearchResultInterface";
+import {SearchResultInterface} from "../../services/search/interfaces/SearchResultInterface";
+import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
+import {SearchService} from "../../services/search/SearchService";
+import {SearchType} from "../../services/search/enums/SearchType";
+import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 
-export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
+export class LinkSuggesterHandler extends AbstractRpgManager implements LinkSuggesterHandlerInterface {
 	private _analyser: LinkSuggesterTextAnalyserInterface;
-	private _searcher: SearchInterface;
 	private _displayer: LinkSuggesterSearchResultPopUpInterface;
 	private _previousSearch: string|undefined;
 
 	constructor(
 		private _app: App,
 		private _containerEl: HTMLInputElement|HTMLTextAreaElement,
+		private _component: ComponentInterface,
 	) {
+		super(app);
+
 		this._containerEl.addEventListener('keyup', this._inputEvent.bind(this));
 		this._analyser = new LinkSuggesterTextAnalyser();
-		this._searcher = new FuzzyFileSearch(this._app);
 		this._displayer = new LinkSuggesterPopUp(this._app, this);
 	}
 
@@ -38,7 +41,12 @@ export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
 				const top: number = x.top + caret.top;
 				const left: number = x.left + caret.left;
 
-				this._displayer.fill(this._searcher.search(this._analyser.searchTerm), top, left);
+				this._displayer.fill(
+					this.services.get(SearchService)?.search(this._analyser.searchTerm, SearchType.FuzzyElementSearch, this._component) ?? [],
+					//this._searcher.search(this._analyser.searchTerm),
+					top,
+					left,
+				);
 			}
 		} else {
 			this._displayer.clear();

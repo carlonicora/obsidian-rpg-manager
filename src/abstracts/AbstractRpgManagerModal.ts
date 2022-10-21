@@ -5,6 +5,7 @@ import {App, Modal} from "obsidian";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
+import {ServiceManagerInterface} from "../servicesManager/interfaces/ServiceManagerInterface";
 
 export abstract class AbstractRpgManagerModal extends Modal implements RpgManagerHelperInterface {
 	constructor(
@@ -40,6 +41,11 @@ export abstract class AbstractRpgManagerModal extends Modal implements RpgManage
 	public get tagHelper(
 	): TagHelper {
 		return this.app.plugins.getPlugin('rpg-manager').tagHelper;
+	}
+
+	public get services(
+	): ServiceManagerInterface {
+		return this.app.plugins.getPlugin("rpg-manager").services;
 	}
 
 	public updateSettings(

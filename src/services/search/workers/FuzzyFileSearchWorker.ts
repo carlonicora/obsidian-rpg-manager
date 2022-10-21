@@ -1,8 +1,8 @@
-import {SearchInterface} from "./interfaces/SearchInterface";
+import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
 import {App, fuzzySearch, prepareQuery, SearchResult, TFile} from "obsidian";
-import {SearchResultInterface} from "./interfaces/SearchResultInterface";
+import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 
-export class FuzzyFileSearch implements SearchInterface {
+export class FuzzyFileSearchWorker implements SearchWorkerInterface {
 	constructor(
 		private _app: App,
 	) {

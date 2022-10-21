@@ -1,4 +1,4 @@
-import {SearchResultInterface} from "../../search/interfaces/SearchResultInterface";
+import {SearchResultInterface} from "../../services/search/interfaces/SearchResultInterface";
 
 export interface LinkSuggesterHandlerInterface {
 	confirmSelection(selectedResult: SearchResultInterface): void;

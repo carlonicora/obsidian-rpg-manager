@@ -1,6 +1,6 @@
 import {LinkSuggesterSearchResultPopUpInterface} from "../interfaces/LinkSuggesterSearchResultPopUpInterface";
 import {LinkSuggesterPopUpInterface} from "../interfaces/LinkSuggesterPopUpInterface";
-import {SearchResultInterface} from "../../search/interfaces/SearchResultInterface";
+import {SearchResultInterface} from "../../services/search/interfaces/SearchResultInterface";
 import {LinkSuggesterEventListenerInterface} from "../interfaces/LinkSuggesterEventListenerInterface";
 import {App, setIcon} from "obsidian";
 import {LinkSuggesterHandlerInterface} from "../interfaces/LinkSuggesterHandlerInterface";

@@ -30,6 +30,10 @@ import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./components/components/scene/interfaces/SceneInterface";
 import {UpdaterModal} from "./modals/UpdaterModal";
 import {LogMessageType} from "./loggers/enums/LogMessageType";
+import {ServiceManagerInterface} from "./servicesManager/interfaces/ServiceManagerInterface";
+import {ServicesManager} from "./servicesManager/ServicesManager";
+import {FantasyCalendarService} from "./services/fantasyCalendar/FantasyCalendarService";
+import {SearchService} from "./services/search/SearchService";
 
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
@@ -39,11 +43,13 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	factories: FactoriesInterface;
 	manipulators: ManipulatorsInterface;
 	tagHelper: TagHelper;
+	services: ServiceManagerInterface;
 	version: string;
 
 	ready = false;
 
 	async onload() {
+		this.services = new ServicesManager(this.app);
 		this.version = this.manifest.version;
 		this.factories = await new Factories(this.app);
 		this.manipulators = await new Manipulators(this.app);
@@ -73,6 +79,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async onLayoutReady(){
+		this.services.register(SearchService);
+
+		if (this.app.plugins.enabledPlugins.has("fantasy-calendar"))
+			this.services.register(FantasyCalendarService);
+
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.RPGManager.toString());

@@ -7,6 +7,7 @@ import {TagHelper} from "../databases/TagHelper";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
+import {ServiceManagerInterface} from "../servicesManager/interfaces/ServiceManagerInterface";
 
 export abstract class AbstractRpgManagerError extends Error implements RpgErrorInterface, RpgManagerHelperInterface {
 	constructor(
@@ -38,6 +39,11 @@ export abstract class AbstractRpgManagerError extends Error implements RpgErrorI
 	public get manipulators(
 	): ManipulatorsInterface {
 		return this.app.plugins.getPlugin('rpg-manager').manipulators;
+	}
+
+	public get services(
+	): ServiceManagerInterface {
+		return this.app.plugins.getPlugin("rpg-manager").services;
 	}
 
 	public get tagHelper(

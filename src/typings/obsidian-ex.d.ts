@@ -1,5 +1,6 @@
 import "obsidian";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import "obsidian-fantasy-calendar";
 
 declare module "obsidian" {
 	function getIcon(iconId: string, size?: number): SVGSVGElement|null;
@@ -24,6 +25,7 @@ declare module "obsidian" {
 		appId?: string;
 		plugins: {
 			getPlugin(plugin: "rpg-manager"): RpgManagerInterface;
+			getPlugin(plugin: "fantasy-calendar"): any;
 			enabledPlugins: Set<string>;
 		};
 	}

@@ -1,7 +1,6 @@
 import {AbstractEditorModal} from "../abstracts/AbstractEditorModal";
 import {App} from "obsidian";
 import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
-import {EditableContentType} from "../enums/EditableContentType";
 import {LinkSuggesterHandler} from "../../../linkSuggester/handlers/LinkSuggesterHandler";
 import {RelationshipInterface} from "../../../relationships/interfaces/RelationshipInterface";
 import {RelationshipType} from "../../../relationships/enums/RelationshipType";
@@ -28,7 +27,7 @@ export class RelationshipEditorModal extends AbstractEditorModal {
 		super.onOpen();
 
 		this.addElements(this.contentEditorContainerEl);
-		this.autocompletionHelper = new LinkSuggesterHandler(this.app, this.contentEditorEl);
+		this.autocompletionHelper = new LinkSuggesterHandler(this.app, this.contentEditorEl, this.component);
 	}
 
 	protected async saveContent(

@@ -159,7 +159,7 @@ export class SceneBuilderModal extends AbstractModal {
 		const typeSelectionEl: HTMLSelectElement = typeCellEl.createEl('select');
 		const excitementCheckboxEl: HTMLInputElement = excitingCellEl.createEl('input');
 
-		new LinkSuggesterHandler(this.app, goalInputEl);
+		new LinkSuggesterHandler(this.app, goalInputEl, this._act);
 
 		/** TYPE */
 		typeSelectionEl.createEl('option', {text: '', value: ''}).selected = true;
