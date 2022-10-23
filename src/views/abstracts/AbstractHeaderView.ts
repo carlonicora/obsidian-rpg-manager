@@ -140,7 +140,6 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		containerEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
 	): void {
-		console.warn(data)
 		containerEl.textContent = data.value.content;
 	}
 
