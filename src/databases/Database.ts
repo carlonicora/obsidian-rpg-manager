@@ -42,6 +42,8 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 		this.app.workspace.trigger("rpgmanager:index-complete");
 		this.app.workspace.trigger("rpgmanager:refresh-views");
+
+		this.factories.runningTimeManager.updateMedianTimes(true);
 	}
 
 	get isReady(
