@@ -21,6 +21,9 @@ export class ClueHeaderView extends AbstractHeaderView {
 				case HeaderResponseType.DateSelector:
 					this.createContainerEl(element, this.addDateSelector.bind(this))
 					break;
+				case HeaderResponseType.FantasyDateSelector:
+					this.createContainerEl(element, this.addFantasyDateSelector.bind(this))
+					break;
 				default:
 					element.value.fillContent(
 						this.createContainerEl(element),

@@ -88,14 +88,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 		(window["RpgManagerAPI"] = this.api) &&
 		this.register(() => delete window["RpgManagerAPI"]);
-		this.services.register(SearchService);
-
-		if (this.app.plugins.enabledPlugins.has("fantasy-calendar")) {
-			this.services.register(FantasyCalendarService);
-			const service: FantasyCalendarService|undefined = this.services.get(FantasyCalendarService);
-			if (service !== undefined)
-				console.log(service.calendars);
-		}
 
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());

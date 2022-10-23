@@ -37,6 +37,10 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 	) {
 		super(app);
 
+		const metadataCache: CachedMetadata|null = this.app.metadataCache.getFileCache(this.file);
+		if (metadataCache !== null)
+			this.frontmatter = metadataCache.frontmatter;
+
 		AbstractComponentData.initialiseRoots(this.app);
 	}
 

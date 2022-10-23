@@ -13,6 +13,7 @@ import {AbtStage} from "../../../../plots/enums/AbtStage";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SceneInterface;
@@ -46,7 +47,15 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		if (this.data.action == null || this.data.action === '') action = '<span class="rpgm-missing">Scene action missing</span>';
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Action', action, HeaderResponseType.Long, {editableField: 'data.action'}));
 
-		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Date', this.data.date, HeaderResponseType.DateSelector));
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Scene Date',
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.date, this.data),
+				(this.data.campaign.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector)
+			)
+		);
 
 		if (sessions.length > 0) {
 			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Session', (this.data.session === undefined ? '' : this.data.session?.id?.sessionId?.toString()), HeaderResponseType.SessionSelection, {

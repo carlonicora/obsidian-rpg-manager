@@ -14,4 +14,5 @@ export enum HeaderResponseType {
 	Pronoun,
 	DateSelector,
 	DurationSelector,
+	FantasyDateSelector,
 }

@@ -3,6 +3,9 @@ import {App} from "obsidian";
 import {ServiceManagerInterface} from "./servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "./servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import {SearchService} from "../services/search/SearchService";
+import {FantasyCalendarService} from "../services/fantasyCalendar/FantasyCalendarService";
+import {DateService} from "../services/date/DateService";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	public static bootstrap(
@@ -10,6 +13,13 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		plugin: RpgManagerInterface,
 	): RpgManagerApiInterface {
 		const response = new RpgManagerApi(app, plugin);
+
+		response.service.register(SearchService);
+
+		if (app.plugins.enabledPlugins.has("fantasy-calendar"))
+			response.service.register(FantasyCalendarService);
+
+		response.service.register(DateService);
 
 		return response;
 	}

@@ -62,7 +62,7 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 				this.currentComponent,
 				'Current Date',
 				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.date, this.data),
-				HeaderResponseType.DateSelector,
+				(this.data.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector),
 				{
 					yamlIdentifier: 'data.date',
 					date: this.data.date,

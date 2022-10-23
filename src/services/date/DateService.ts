@@ -14,7 +14,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 		frontmatterDate: FantasyCalendarDateInterface|undefined,
 		component: ComponentInterface,
 	): DateInterface|undefined {
-		if (metadataDate === undefined && frontmatterDate === undefined)
+		if ((metadataDate == undefined || metadataDate === '') && frontmatterDate === undefined)
 			return undefined;
 
 		const isFantasyCalendar: boolean = (component.campaign.calendar === CalendarType.FantasyCalendar);
@@ -30,7 +30,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 
 			responseDate = frontmatterDate as FantasyCalendarDateInterface;
 		} else {
-			if (metadataDate === undefined)
+			if (metadataDate == undefined || metadataDate === '')
 				return undefined;
 
 			responseDate = DateTime.fromISO(metadataDate.toString()).toJSDate();

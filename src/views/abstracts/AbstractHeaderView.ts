@@ -6,6 +6,7 @@ import {ComponentInterface} from "../../components/interfaces/ComponentInterface
 import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
 import flatpickr from "flatpickr";
 import {GalleryCarouselView} from "../../galleries/views/GalleryCarouselView";
+import {DateInterface} from "../../services/date/interfaces/DateInterface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
 	protected currentComponent: ComponentInterface;
@@ -135,6 +136,14 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 		return response;
 	}
 
+	protected addFantasyDateSelector(
+		containerEl: HTMLDivElement,
+		data: HeaderResponseElementInterface,
+	): void {
+		console.warn(data)
+		containerEl.textContent = data.value.content;
+	}
+
 	protected addDateSelector(
 		contentEl: HTMLDivElement,
 		data: HeaderResponseElementInterface,
@@ -154,7 +163,8 @@ export abstract class AbstractHeaderView extends AbstractSubModelView {
 			}
 		};
 
-		if (data.additionalInformation.date !== undefined) options.defaultDate = data.additionalInformation.date;
+		if (data.additionalInformation.date !== undefined)
+			options.defaultDate = (<DateInterface>data.additionalInformation.date).date;
 
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
 		flatpickrEl.placeholder = data.additionalInformation.placeholder;

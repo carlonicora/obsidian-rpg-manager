@@ -51,7 +51,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 				this.currentComponent,
 				'Birth',
 				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.dob, this.data),
-				HeaderResponseType.DateSelector,
+				(this.data.campaign.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector),
 				{
 					yamlIdentifier: 'data.dob',
 					date: this.data.dob,
@@ -66,7 +66,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 				this.currentComponent,
 				'Death',
 				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.death, this.data),
-				HeaderResponseType.DateSelector,
+				(this.data.campaign.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector),
 				{
 					yamlIdentifier: 'data.death',
 					date: this.data.death,

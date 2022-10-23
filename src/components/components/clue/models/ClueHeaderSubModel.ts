@@ -35,7 +35,7 @@ export class ClueHeaderSubModel extends AbstractHeaderSubModel {
 				this.currentComponent,
 				'Discovery date',
 				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.found, this.data),
-				HeaderResponseType.DateSelector,
+				(this.data.campaign.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector),
 				{
 					yamlIdentifier: 'data.found',
 					date: this.data.found,

@@ -13,6 +13,7 @@ import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import flatpickr from "flatpickr";
 import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
 import {AnalyserReportType} from "../../../../analyser/enums/AnalyserReportType";
+import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SceneInterface;
@@ -48,6 +49,9 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 				case HeaderResponseType.DateSelector:
 					headlessTable.addRow(element, this._addSceneDateSelector.bind(this));
 					break;
+				case HeaderResponseType.FantasyDateSelector:
+					headlessTable.addRow(element, this.addFantasyDateSelector.bind(this))
+					break;
 				default:
 					element.value.fillContent(
 						this.createContainerEl(element),
@@ -80,7 +84,8 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			}
 		};
 
-		if (this.currentComponent.date !== undefined) options.defaultDate = this.currentComponent.date
+		if (this.currentComponent.date !== undefined)
+			options.defaultDate = (<DateInterface>this.currentComponent.date).date;
 
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
 		flatpickrEl.placeholder = 'Select the Scene Date';

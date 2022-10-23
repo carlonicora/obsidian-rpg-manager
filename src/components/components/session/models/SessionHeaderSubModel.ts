@@ -13,6 +13,7 @@ import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../../../databases/SorterComparisonElement";
 import {AnalyserInterface} from "../../../../analyser/interfaces/AnalyserInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SessionInterface;
@@ -40,7 +41,15 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 			}));
 		}
 
-		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Session Date', this.data.irl, HeaderResponseType.DateSelector));
+		response.addElement(
+			new ResponseHeaderElement(
+				this.app,
+				this.currentComponent,
+				'Session Date',
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.irl, this.data),
+				HeaderResponseType.DateSelector
+			)
+		);
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Target Duration', this.data.targetDuration, HeaderResponseType.DurationSelector));
 
 		if (response.metadata === undefined) response.metadata = {};
