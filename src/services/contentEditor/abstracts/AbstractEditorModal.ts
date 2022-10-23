@@ -24,7 +24,9 @@ export abstract class AbstractEditorModal extends AbstractModal {
 		if (this.editableContentType !== undefined) {
 			const contentValue = this.factories.editableContentValue.read(this.component, this.editableContentType);
 			if (contentValue != null)
-				this.contentValue = contentValue.toString().replaceAll('\\"', '"');
+				this.contentValue = contentValue.toString()
+					.replaceAll('\\"', '"')
+					.replaceAll('\\n', '\n');
 			else
 				this.contentValue = '';
 
@@ -69,7 +71,9 @@ export abstract class AbstractEditorModal extends AbstractModal {
 
 	protected async saveContent(
 	): Promise<void> {
-		const value = this.contentEditorEl.value.replaceAll('"', '\\"');
+		const value = this.contentEditorEl.value
+			.replaceAll('"', '\\"')
+			.replaceAll('\n', '\\n');
 		this.manipulators.codeblock.update(
 			this.editableField,
 			value,

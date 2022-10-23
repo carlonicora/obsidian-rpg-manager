@@ -39,7 +39,9 @@ export class YamlHelper {
 						case "undefined":
 							break;
 						default:
-							response.push('"' + value + '"');
+							const replacedValue: string = value;
+
+							response.push('"' + replacedValue.replaceAll('\n', '\\n') + '"');
 							break;
 					}
 				}
@@ -84,7 +86,8 @@ export class YamlHelper {
 							response.push(yamlKey + value);
 							break;
 						default:
-							response.push(yamlKey + '"' + value + '"');
+							const replacedValue: string = (<unknown>value) as string;
+							response.push(yamlKey + '"' + replacedValue.replaceAll('\n', '\\n') + '"');
 							break;
 					}
 				}
