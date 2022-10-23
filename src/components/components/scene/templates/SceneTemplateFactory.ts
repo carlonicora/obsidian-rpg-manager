@@ -13,13 +13,13 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 		let isActedUpon = false;
 
 		if (this.additionalInformation !== undefined){
-			if (this.additionalInformation.synopsis !== undefined)
+			if (this.additionalInformation?.synopsis !== undefined)
 				synopsis = this.additionalInformation.synopsis;
 
-			if (this.additionalInformation.sceneType !== undefined)
+			if (this.additionalInformation?.sceneType !== undefined)
 				sceneType = this.additionalInformation.sceneType;
 
-			if (this.additionalInformation.isActedUpon !== undefined)
+			if (this.additionalInformation?.isActedUpon !== undefined)
 				isActedUpon = this.additionalInformation.isActedUpon;
 		}
 

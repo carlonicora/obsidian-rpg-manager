@@ -81,7 +81,9 @@ export class RunningTimeManager extends AbstractRpgManager implements RunningTim
 				const campaignMedians: Map<SceneType, number[]> | undefined = this.medianTimes.get(scene.id.campaignId);
 				if (campaignMedians !== undefined) {
 					const sessionTypeTimes: number[]|undefined = campaignMedians.get(scene.sceneType);
-					if (sessionTypeTimes !== undefined) sessionTypeTimes.push(scene.currentDuration);
+					if (sessionTypeTimes !== undefined)
+						sessionTypeTimes.push(scene.currentDuration);
+
 				}
 			}
 		});
