@@ -32,7 +32,7 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 				element.alias.forEach((alias: string) => {
 					const fuzzySearchResult = fuzzySearch(query, alias);
 					if (fuzzySearchResult != null && fuzzySearchResult.matches != null && fuzzySearchResult.score < 0){
-						matches.set(element.file.path, {
+						matches.set(element.file.path + alias, {
 							title: alias,
 							file: element.file,
 							alias: alias,
@@ -44,17 +44,15 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 				})
 			}
 
-			if (!matches.has(element.file.path)) {
-				const fuzzySearchResult = fuzzySearch(query, element.file.basename);
-				if (fuzzySearchResult != null && fuzzySearchResult.matches !== null && fuzzySearchResult.score < 0) {
-					matches.set(element.file.path, {
-						title: element.file.basename,
-						file: element.file,
-						fancyTitle: this.setFancyName(element.file.basename, fuzzySearchResult, true),
-						fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
-						resultScoring: fuzzySearchResult,
-					});
-				}
+			const fuzzySearchResult = fuzzySearch(query, element.file.basename);
+			if (fuzzySearchResult != null && fuzzySearchResult.matches !== null && fuzzySearchResult.score < 0) {
+				matches.set(element.file.path, {
+					title: element.file.basename,
+					file: element.file,
+					fancyTitle: this.setFancyName(element.file.basename, fuzzySearchResult, true),
+					fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
+					resultScoring: fuzzySearchResult,
+				});
 			}
 		})
 
