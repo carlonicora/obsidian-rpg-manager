@@ -26,7 +26,7 @@ export class FuzzyFileSearchWorker extends AbstractSearchWorker implements Searc
 				metadata.frontmatter.alias.forEach((alias: string) => {
 					const fuzzySearchResult = fuzzySearch(query, alias);
 					if (fuzzySearchResult != null && fuzzySearchResult.matches != null && fuzzySearchResult.score < 0){
-						matches.set(file.path, {
+						matches.set(file.path + alias, {
 							title: alias,
 							file: file,
 							alias: alias,
@@ -38,18 +38,16 @@ export class FuzzyFileSearchWorker extends AbstractSearchWorker implements Searc
 				})
 			}
 
-			if (!matches.has(file.path)) {
-				const fuzzySearchResult = fuzzySearch(query, file.basename);
-				if (fuzzySearchResult != null && fuzzySearchResult.matches !== null && fuzzySearchResult.score < 0) {
-					matches.set(file.path, {
-						title: file.basename,
-						file: file,
-						fancyTitle: this.setFancyName(file.basename, fuzzySearchResult, true),
-						fancySubtitle: this.setFancyName(file.path, fuzzySearch(query, file.path), false),
-						resultScoring: fuzzySearchResult,
-					});
+			const fuzzySearchResult = fuzzySearch(query, file.basename);
+			if (fuzzySearchResult != null && fuzzySearchResult.matches !== null && fuzzySearchResult.score < 0) {
+				matches.set(file.path, {
+					title: file.basename,
+					file: file,
+					fancyTitle: this.setFancyName(file.basename, fuzzySearchResult, true),
+					fancySubtitle: this.setFancyName(file.path, fuzzySearch(query, file.path), false),
+					resultScoring: fuzzySearchResult,
+				});
 
-				}
 			}
 		})
 
