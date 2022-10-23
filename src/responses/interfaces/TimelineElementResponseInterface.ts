@@ -1,5 +1,7 @@
+import {FantasyCalendarDateInterface} from "../../services/fantasyCalendar/interfaces/FantasyCalendarDateInterface";
+
 export class TimelineElementResponseInterface {
-	fullDate: Date;
+	fullDate: Date|FantasyCalendarDateInterface;
 	date: string;
 	time: string;
 	type: string;

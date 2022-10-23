@@ -8,6 +8,7 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
 import {ClueInterface} from "../interfaces/ClueInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class ClueHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: ClueInterface;
@@ -33,7 +34,7 @@ export class ClueHeaderSubModel extends AbstractHeaderSubModel {
 				this.app,
 				this.currentComponent,
 				'Discovery date',
-				(this.data.found != null ? this.data.found.toDateString() : undefined),
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.found, this.data),
 				HeaderResponseType.DateSelector,
 				{
 					yamlIdentifier: 'data.found',

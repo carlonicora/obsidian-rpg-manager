@@ -1,4 +1,6 @@
+import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
+
 export interface EventDataInterface {
-	get date(): Date | undefined;
+	get date(): DateInterface | undefined;
 }
 

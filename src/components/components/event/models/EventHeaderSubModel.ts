@@ -8,6 +8,7 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
 import {EventInterface} from "../interfaces/EventInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class EventHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: EventInterface;
@@ -31,7 +32,7 @@ export class EventHeaderSubModel extends AbstractHeaderSubModel {
 				this.app,
 				this.currentComponent,
 				'Event date',
-				(this.data.date != null ? this.data.date.toDateString() : undefined),
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.date, this.data),
 				HeaderResponseType.DateSelector,
 				{
 					yamlIdentifier: 'data.date',

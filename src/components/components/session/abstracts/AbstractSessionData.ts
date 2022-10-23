@@ -3,12 +3,18 @@ import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
 import {AbtStage} from "../../../../plots/enums/AbtStage";
 import {Plots} from "../../../../plots/Plots";
 import {DateHelper} from "../../../../helpers/DateHelper";
+import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class AbstractSessionData extends Plots implements SessionDataInterface {
 	protected metadata: SessionMetadataInterface;
 
-	public get irl(): Date | undefined {
-		return (this.metadata.data?.irl ? DateHelper.create(this.metadata.data?.irl) : undefined);
+	public get irl(): DateInterface | undefined {
+		return this.api.service.get(DateService)?.getDate(
+			this.metadata.data?.irl,
+			undefined,
+			this,
+		);
 	}
 
 	public get abtStage(): AbtStage|undefined {

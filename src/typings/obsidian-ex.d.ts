@@ -1,7 +1,7 @@
 import "obsidian";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
-import API = require("obsidian-fantasy-calendar/src/@types/api");
+import {API} from "obsidian-fantasy-calendar";
 
 declare global {
 	interface Window {

@@ -8,6 +8,7 @@ import {ComponentType} from "../../../enums/ComponentType";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
 import {CharacterInterface} from "../interfaces/CharacterInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: CharacterInterface;
@@ -49,7 +50,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 				this.app,
 				this.currentComponent,
 				'Birth',
-				(this.data.dob != null ? this.data.dob.toDateString() : undefined),
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.dob, this.data),
 				HeaderResponseType.DateSelector,
 				{
 					yamlIdentifier: 'data.dob',
@@ -64,7 +65,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 				this.app,
 				this.currentComponent,
 				'Death',
-				(this.data.death != null ? this.data.death.toDateString() : undefined),
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.death, this.data),
 				HeaderResponseType.DateSelector,
 				{
 					yamlIdentifier: 'data.death',
@@ -79,7 +80,7 @@ export class CharacterHeaderSubModel extends AbstractHeaderSubModel {
 		}
 
 		if (this.data.death != null){
-			let death = this.data.death.toDateString();
+			let death = this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.death, this.data);
 			if (this.data.age != null){
 				death += ' at age ' + this.data.age;
 			}

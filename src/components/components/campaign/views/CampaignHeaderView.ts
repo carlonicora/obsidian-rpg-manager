@@ -8,6 +8,7 @@ import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {HeaderResponseElementInterface} from "../../../../responses/interfaces/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
+import {DateService} from "../../../../services/date/DateService";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: CampaignInterface;
@@ -32,7 +33,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentComponent.file.basename});
 
 			//overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (this.currentComponent.date !== null ? this.currentComponent.date?.toDateString() : '')});
+			overlay.createDiv({cls: 'rpgm-current-date', text: (this.api.service.get<DateService>(DateService)?.getReadableDate(this.currentComponent.date, this.currentComponent) ?? '')});
 		}
 
 		if (this.currentComponent.date !== undefined) {

@@ -1,6 +1,6 @@
 import {CalendarType} from "../../../../services/date/enums/CalendarType";
 import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
-import {Calendar} from "obsidian-fantasy-calendar/src/@types";
+import {Calendar} from "obsidian-fantasy-calendar";
 
 export interface CampaignDataInterface {
 	get date(): DateInterface|undefined;

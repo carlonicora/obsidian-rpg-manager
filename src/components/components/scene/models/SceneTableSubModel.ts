@@ -7,6 +7,7 @@ import {SceneType} from "../../../enums/SceneType";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class SceneTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;
@@ -51,7 +52,8 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(scene.link + (scene.isComplete ? '' : ' _(incomplete)_'), ContentType.Link);
 				break;
 			case TableField.Date:
-				return this.factories.contents.create((scene.date != null ? scene.date.toDateString() : ''), ContentType.Date, true);
+				let sceneDate = this.api.service.get<DateService>(DateService)?.getReadableDate(scene.date, scene);
+				return this.factories.contents.create((sceneDate != null ? sceneDate : ''), ContentType.Date, true);
 				break;
 			case TableField.Duration:
 				return this.factories.contents.create((scene.duration === '00:00' ? undefined : scene.duration), ContentType.Date, true);

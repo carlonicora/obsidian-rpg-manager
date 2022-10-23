@@ -6,6 +6,7 @@ import {TableField} from "../../../../views/enums/TableField";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class SessionTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SessionList;
@@ -22,7 +23,8 @@ export class SessionTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(session.id.sessionId, ContentType.String, true);
 				break;
 			case TableField.Date:
-				return this.factories.contents.create(session.irl?.toDateString(), ContentType.Date, true);
+				let irl = this.api.service.get<DateService>(DateService)?.getReadableDate(session.irl, session);
+				return this.factories.contents.create(irl, ContentType.Date, true);
 				break;
 		}
 

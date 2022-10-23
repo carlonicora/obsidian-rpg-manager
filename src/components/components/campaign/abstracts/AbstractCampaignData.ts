@@ -9,7 +9,7 @@ import {
 	FantasyCalendarDateInterface
 } from "../../../../services/fantasyCalendar/interfaces/FantasyCalendarDateInterface";
 import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
-import {Calendar} from "obsidian-fantasy-calendar/src/@types";
+import {Calendar} from "obsidian-fantasy-calendar";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;

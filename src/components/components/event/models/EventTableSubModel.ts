@@ -6,6 +6,7 @@ import {TableField} from "../../../../views/enums/TableField";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {EventInterface} from "../interfaces/EventInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class EventTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.EventList;
@@ -19,7 +20,7 @@ export class EventTableSubModel extends AbstractTableSubModel {
 		const event: EventInterface = <unknown>component as EventInterface;
 		switch (fieldType) {
 			case TableField.Date:
-				return this.factories.contents.create(event.date?.toDateString(), ContentType.Date, true);
+				return this.factories.contents.create(this.api.service.get<DateService>(DateService)?.getReadableDate((<EventInterface>(<unknown>component)).date, component), ContentType.Date, true);
 				break;
 		}
 

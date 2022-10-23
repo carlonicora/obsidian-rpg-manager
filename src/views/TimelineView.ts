@@ -12,6 +12,7 @@ import {ClueInterface} from "../components/components/clue/interfaces/ClueInterf
 import {CharacterInterface} from "../components/components/character/interfaces/CharacterInterface";
 import {SessionInterface} from "../components/components/session/interfaces/SessionInterface";
 import {SceneInterface} from "../components/components/scene/interfaces/SceneInterface";
+import {DateService} from "../services/date/DateService";
 
 export class TimelineView extends AbstractRpgManagerView {
 	protected viewType: string = ViewType.Timeline.toString();
@@ -40,12 +41,15 @@ export class TimelineView extends AbstractRpgManagerView {
 				event.date != null,
 		).forEach((event: EventInterface) => {
 			if (event.date !== undefined) {
-				let time = (<Date>event.date).toLocaleTimeString();
-				time = time.substring(0, time.length - 3);
+				let time = '';
+				if (!event.date.isFantasyCalendar) {
+					time = ((<Date>event.date.date)).toLocaleTimeString();
+					time = time.substring(0, time.length - 3);
+				}
 				this._elements.push(
 					new ResponseTimelineElement(
-						event.date,
-						(<Date>event.date).toDateString(),
+						event.date.date,
+						this.api.service.get(DateService)?.getReadableDate(event.date, event) ?? '',
 						time,
 						'event',
 						event.synopsis ?? '',
@@ -62,10 +66,11 @@ export class TimelineView extends AbstractRpgManagerView {
 				clue.found != null,
 		).forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
+				const clueFound = clue.found.date;
 				this._elements.push(
 					new ResponseTimelineElement(
-						clue.found,
-						(<Date>clue.found).toDateString(),
+						clueFound,
+						this.api.service.get(DateService)?.getReadableDate(clue.found, clue) ?? '',
 						'00:00',
 						'clue',
 						clue.synopsis ?? '',
@@ -84,8 +89,8 @@ export class TimelineView extends AbstractRpgManagerView {
 			if (character.death !== undefined) {
 				this._elements.push(
 					new ResponseTimelineElement(
-						character.death,
-						(<Date>character.death).toDateString(),
+						character.death.date,
+						this.api.service.get(DateService)?.getReadableDate(character.death, character) ?? '',
 						'00:00',
 						'death',
 						character.synopsis ?? '',
@@ -118,8 +123,8 @@ export class TimelineView extends AbstractRpgManagerView {
 			if (sessionDate != null){
 				this._elements.push(
 					new ResponseTimelineElement(
-						sessionDate,
-						(<Date>sessionDate).toDateString(),
+						sessionDate.date,
+						this.api.service.get(DateService)?.getReadableDate(sessionDate, session) ?? '',
 						'00:00',
 						'session',
 						session.synopsis ?? '',
@@ -148,7 +153,8 @@ export class TimelineView extends AbstractRpgManagerView {
 			overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
 
 			overlay.createDiv({cls: 'rpgm-campaign-name', text: this._campaign.file.basename});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (this._campaign.date !== undefined ? this._campaign.date.toDateString() : '')});
+			const campaignDate = this.api.service.get(DateService)?.getReadableDate(this._campaign.date, this._campaign) ?? '';
+			overlay.createDiv({cls: 'rpgm-current-date', text: (campaignDate !== undefined ? campaignDate : '')});
 		} else {
 			this.rpgmContentEl.createEl('h1', {text: this._campaign.file.basename});
 		}

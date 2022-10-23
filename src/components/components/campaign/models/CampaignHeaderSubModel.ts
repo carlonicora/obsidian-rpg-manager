@@ -14,6 +14,7 @@ import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {ResponseHeaderElement} from "../../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../../responses/enums/HeaderResponseType";
+import {DateService} from "../../../../services/date/DateService";
 
 export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: CampaignInterface;
@@ -60,7 +61,7 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 				this.app,
 				this.currentComponent,
 				'Current Date',
-				(this.data.date != null ? this.data.date.toDateString() : undefined),
+				this.api.service.get<DateService>(DateService)?.getReadableDate(this.data.date, this.data),
 				HeaderResponseType.DateSelector,
 				{
 					yamlIdentifier: 'data.date',

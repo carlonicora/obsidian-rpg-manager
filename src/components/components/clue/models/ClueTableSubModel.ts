@@ -6,6 +6,7 @@ import {TableField} from "../../../../views/enums/TableField";
 import {ComponentInterface} from "../../../interfaces/ComponentInterface";
 import {ClueInterface} from "../interfaces/ClueInterface";
 import {RelationshipInterface} from "../../../../relationships/interfaces/RelationshipInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class ClueTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ClueList;
@@ -31,7 +32,14 @@ export class ClueTableSubModel extends AbstractTableSubModel {
 		const clue: ClueInterface = <unknown>component as ClueInterface;
 		switch (fieldType) {
 			case TableField.Found:
-				return this.factories.contents.create((clue.found !== undefined ? clue.found?.toDateString() : '<span class="rpgm-missing">no</span>'), ContentType.Date);
+				let foundDate = this.api.service.get<DateService>(DateService)?.getReadableDate(clue.found, clue);
+				return this.factories.contents.create(
+					(foundDate !== undefined
+						? foundDate
+						: '<span class="rpgm-missing">no</span>'
+					),
+					ContentType.Date
+				);
 				break;
 		}
 

@@ -3,16 +3,26 @@ import {Pronoun} from "../../../enums/Pronoun";
 import {CharacterDataInterface} from "../interfaces/CharacterDataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
 import {DateHelper} from "../../../../helpers/DateHelper";
+import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
+import {DateService} from "../../../../services/date/DateService";
 
 export class AbstractCharacterData extends AbstractComponent implements CharacterDataInterface {
 	protected metadata: CharacterMetadataInterface;
 
-	public get death(): Date | undefined {
-		return (this.metadata.data?.death ? DateHelper.create(this.metadata.data.death) : undefined);
+	public get death(): DateInterface | undefined {
+		return this.api.service.get(DateService)?.getDate(
+			this.metadata.data?.death,
+			this.frontmatter['fc-date'],
+			this,
+		);
 	}
 
-	public get dob(): Date | undefined {
-		return (this.metadata.data?.dob ? DateHelper.create(this.metadata.data.dob) : undefined);
+	public get dob(): DateInterface | undefined {
+		return this.api.service.get(DateService)?.getDate(
+			this.metadata.data?.dob,
+			this.frontmatter['fc-date'],
+			this,
+		);
 	}
 
 	public get goals(): string | undefined {

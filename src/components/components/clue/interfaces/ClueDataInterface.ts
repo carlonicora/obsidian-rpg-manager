@@ -1,3 +1,5 @@
+import {DateInterface} from "../../../../services/date/interfaces/DateInterface";
+
 export interface ClueDataInterface {
-	get found(): Date | undefined;
+	get found(): DateInterface | undefined;
 }
