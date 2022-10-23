@@ -41,7 +41,7 @@ export class YamlHelper {
 						default:
 							const replacedValue: string = value;
 
-							response.push('"' + replacedValue.replaceAll('\n', '\\n') + '"');
+							response.push('"' + replacedValue.replaceAll('\n', '\\n').replaceAll('"', '\"') + '"');
 							break;
 					}
 				}
@@ -87,7 +87,7 @@ export class YamlHelper {
 							break;
 						default:
 							const replacedValue: string = (<unknown>value) as string;
-							response.push(yamlKey + '"' + replacedValue.replaceAll('\n', '\\n') + '"');
+							response.push(yamlKey + '"' + replacedValue.replaceAll('\n', '\\n').replaceAll('"', '\"') + '"');
 							break;
 					}
 				}
