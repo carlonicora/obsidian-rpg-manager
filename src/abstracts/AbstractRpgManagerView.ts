@@ -7,7 +7,8 @@ import {base} from "w3c-keyname";
 import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
 import {ComponentInterface} from "../components/interfaces/ComponentInterface";
-import {ServiceManagerInterface} from "../servicesManager/interfaces/ServiceManagerInterface";
+import {ServiceManagerInterface} from "../api/servicesManager/interfaces/ServiceManagerInterface";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 
 export abstract class AbstractRpgManagerView extends ItemView implements View, RpgManagerHelperInterface {
 	protected viewType: string;
@@ -20,6 +21,10 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		leaf: WorkspaceLeaf,
 	) {
 		super(leaf);
+	}
+
+	public get api(): RpgManagerApiInterface {
+		return this.app.plugins.getPlugin('rpg-manager').api;
 	}
 
 	public get pluginVersion(): string {

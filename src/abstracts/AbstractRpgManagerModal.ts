@@ -5,13 +5,18 @@ import {App, Modal} from "obsidian";
 import {RpgManagerHelperInterface} from "../interfaces/RpgManagerHelperInterface";
 import {ManipulatorsInterface} from "../manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
-import {ServiceManagerInterface} from "../servicesManager/interfaces/ServiceManagerInterface";
+import {ServiceManagerInterface} from "../api/servicesManager/interfaces/ServiceManagerInterface";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 
 export abstract class AbstractRpgManagerModal extends Modal implements RpgManagerHelperInterface {
 	constructor(
 		public app: App,
 	) {
 		super(app);
+	}
+
+	public get api(): RpgManagerApiInterface {
+		return this.app.plugins.getPlugin('rpg-manager').api;
 	}
 
 	public get pluginVersion(): string {

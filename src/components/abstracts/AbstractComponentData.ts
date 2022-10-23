@@ -25,6 +25,7 @@ export abstract class AbstractComponentData extends AbstractRpgManager implement
 	}
 
 	protected metadata: ComponentMetadataInterface|any = {};
+	protected frontmatter: any = {};
 	public stage: ComponentStage = ComponentStage.Element;
 	public version: number|undefined=undefined;
 

@@ -1,6 +1,14 @@
 import "obsidian";
 import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
-import "obsidian-fantasy-calendar";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
+import API = require("obsidian-fantasy-calendar/src/@types/api");
+
+declare global {
+	interface Window {
+		RpgManagerAPI?: RpgManagerApiInterface,
+		FantasyCalendarAPI: API,
+	}
+}
 
 declare module "obsidian" {
 	function getIcon(iconId: string, size?: number): SVGSVGElement|null;
@@ -34,5 +42,6 @@ declare module "obsidian" {
 		on(name: "rpgmanager:refresh-views", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:force-refresh-views", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:index-complete", callback: () => void, ctx?: any): EventRef;
+		on(name: "fantasy-calendars-settings-loaded", callback: () => void, ctx?: any): EventRef;
 	}
 }

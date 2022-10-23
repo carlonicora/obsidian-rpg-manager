@@ -22,6 +22,7 @@
 		"esbuild-svelte": "^0.6.1",
 		"madge": "^5.0.1",
 		"obsidian": "latest",
+		"obsidian-fantasy-calendar": "github:fantasycalendar/obsidian-fantasy-calendar",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
 	},

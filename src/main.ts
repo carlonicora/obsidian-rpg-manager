@@ -30,10 +30,12 @@ import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
 import {SceneInterface} from "./components/components/scene/interfaces/SceneInterface";
 import {UpdaterModal} from "./modals/UpdaterModal";
 import {LogMessageType} from "./loggers/enums/LogMessageType";
-import {ServiceManagerInterface} from "./servicesManager/interfaces/ServiceManagerInterface";
-import {ServicesManager} from "./servicesManager/ServicesManager";
+import {ServiceManagerInterface} from "./api/servicesManager/interfaces/ServiceManagerInterface";
+import {ServicesManager} from "./api/servicesManager/ServicesManager";
 import {FantasyCalendarService} from "./services/fantasyCalendar/FantasyCalendarService";
 import {SearchService} from "./services/search/SearchService";
+import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
+import {RpgManagerApi} from "./api/RpgManagerApi";
 
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
@@ -45,10 +47,13 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	tagHelper: TagHelper;
 	services: ServiceManagerInterface;
 	version: string;
+	api: RpgManagerApiInterface;
 
 	ready = false;
 
 	async onload() {
+
+
 		this.services = new ServicesManager(this.app);
 		this.version = this.manifest.version;
 		this.factories = await new Factories(this.app);
@@ -79,10 +84,18 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async onLayoutReady(){
+		this.api = RpgManagerApi.bootstrap(this.app, this);
+
+		(window["RpgManagerAPI"] = this.api) &&
+		this.register(() => delete window["RpgManagerAPI"]);
 		this.services.register(SearchService);
 
-		if (this.app.plugins.enabledPlugins.has("fantasy-calendar"))
+		if (this.app.plugins.enabledPlugins.has("fantasy-calendar")) {
 			this.services.register(FantasyCalendarService);
+			const service: FantasyCalendarService|undefined = this.services.get(FantasyCalendarService);
+			if (service !== undefined)
+				console.log(service.calendars);
+		}
 
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());

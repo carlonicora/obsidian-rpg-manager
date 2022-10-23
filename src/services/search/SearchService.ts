@@ -1,6 +1,6 @@
 import {SearchServiceInterface} from "./interfaces/SearchServiceInterface";
-import {ServiceInterface} from "../../servicesManager/interfaces/ServiceInterface";
-import {AbstractService} from "../../servicesManager/abstracts/AbstractService";
+import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
 import {SearchType} from "./enums/SearchType";
 import {SearchResultInterface} from "./interfaces/SearchResultInterface";
 import {SearchWorkerInterface} from "./interfaces/SearchWorkerInterface";
@@ -8,7 +8,7 @@ import {FuzzyFileSearchWorker} from "./workers/FuzzyFileSearchWorker";
 import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
 import {FuzzyElementSearchWorker} from "./workers/FuzzyElementSearchWorker";
 
-export class SearchService extends AbstractService implements SearchServiceInterface {
+export class SearchService extends AbstractService implements SearchServiceInterface, ServiceInterface {
 	public search(
 		term: string,
 		type: SearchType = SearchType.FuzzyFileSearch,
