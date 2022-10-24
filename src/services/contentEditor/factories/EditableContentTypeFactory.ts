@@ -1,4 +1,4 @@
-import {AbstractFactory} from "../../../factories/abstracts/AbstractFactory";
+import {AbstractFactory} from "../../../core/abstracts/AbstractFactory";
 import {EditableContentTypeFactoryInterface} from "../interfaces/EditableContentTypeFactoryInterface";
 import {EditableContentType} from "../enums/EditableContentType";
 

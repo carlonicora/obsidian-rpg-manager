@@ -7,35 +7,36 @@ import {
 	setIcon,
 	WorkspaceLeaf
 } from 'obsidian';
-import {Controller} from "./controller/Controller";
-import {ComponentType} from "./components/enums/ComponentType";
-import {Factories} from "./factories/Factories";
-import {CreationModal} from "./modals/CreationModal";
+import {Controller} from "./core/controller/Controller";
+import {ComponentType} from "./core/enums/ComponentType";
+import {Factories} from "./core/factories/Factories";
+import {CreationModal} from "./core/modals/CreationModal";
 import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
-import {RpgManagerInterface} from "./interfaces/RpgManagerInterface";
-import {ErrorView} from "./views/ErrorView";
-import {ViewType} from "./views/enums/ViewType";
-import {DatabaseUpdater} from "./updaters/DatabaseUpdater";
-import {ReleaseNoteView} from "./views/ReleaseNoteView";
-import {FactoriesInterface} from "./factories/interfaces/FactoriesInterface";
-import {TagHelper} from "./databases/TagHelper";
-import {RPGManagerView} from "./views/RPGManagerView";
-import {TimelineView} from "./views/TimelineView";
-import {ManipulatorsInterface} from "./manipulators/interfaces/ManipulatorsInterface";
-import {Manipulators} from "./manipulators/Manipulators";
-import {DatabaseInterface} from "./databases/interfaces/DatabaseInterface";
-import {ComponentInterface} from "./components/interfaces/ComponentInterface";
-import {DatabaseInitialiser} from "./databases/DatabaseInitialiser";
-import {SceneInterface} from "./components/components/scene/interfaces/SceneInterface";
-import {UpdaterModal} from "./modals/UpdaterModal";
-import {LogMessageType} from "./loggers/enums/LogMessageType";
+import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
+import {ErrorView} from "./REFACTOR/views/ErrorView";
+import {ViewType} from "./REFACTOR/views/enums/ViewType";
+import {DatabaseUpdater} from "./services/updaters/DatabaseUpdater";
+import {ReleaseNoteView} from "./REFACTOR/views/ReleaseNoteView";
+import {FactoriesInterface} from "./core/interfaces/FactoriesInterface";
+import {TagHelper} from "./database/TagHelper";
+import {RPGManagerView} from "./REFACTOR/views/RPGManagerView";
+import {TimelineView} from "./REFACTOR/views/TimelineView";
+import {ManipulatorsInterface} from "./services/manipulators/interfaces/ManipulatorsInterface";
+import {Manipulators} from "./services/manipulators/Manipulators";
+import {DatabaseInterface} from "./database/interfaces/DatabaseInterface";
+import {ComponentModelInterface} from "./api/componentManager/interfaces/ComponentModelInterface";
+import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
+import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
+import {UpdaterModal} from "./services/updaters/modals/UpdaterModal";
+import {LogMessageType} from "./services/loggers/enums/LogMessageType";
 import {ServiceManagerInterface} from "./api/servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "./api/servicesManager/ServicesManager";
 import {FantasyCalendarService} from "./services/fantasyCalendar/FantasyCalendarService";
 import {SearchService} from "./services/search/SearchService";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
+import {Bootstrap} from "./api/Bootstrap";
 
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
@@ -84,10 +85,9 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async onLayoutReady(){
-		this.api = RpgManagerApi.bootstrap(this.app, this);
+		this.api = Bootstrap.api(this.app, this);
 
-		(window["RpgManagerAPI"] = this.api) &&
-		this.register(() => delete window["RpgManagerAPI"]);
+		(window["RpgManagerAPI"] = this.api) && this.register(() => delete window["RpgManagerAPI"]);
 
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
@@ -128,7 +128,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							if (leaf.view instanceof MarkdownView) {
 								const file = leaf.view?.file;
 								if (file !== undefined) {
-									const component: ComponentInterface|undefined = this.database.readByPath(file.path);
+									const component: ComponentModelInterface|undefined = this.database.readByPath(file.path);
 									if (
 										component !== undefined &&
 										component.id.type === ComponentType.Scene &&

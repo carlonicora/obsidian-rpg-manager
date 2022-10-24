@@ -1,5 +1,5 @@
 import {SearchResultInterface} from "./SearchResultInterface";
-import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
+import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
 
 export interface SearchWorkerInterface {
 	search(

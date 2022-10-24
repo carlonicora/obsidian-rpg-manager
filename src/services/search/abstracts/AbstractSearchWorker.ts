@@ -1,4 +1,4 @@
-import {AbstractRpgManager} from "../../../abstracts/AbstractRpgManager";
+import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
 import {fuzzySearch, SearchResult, TFile} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 

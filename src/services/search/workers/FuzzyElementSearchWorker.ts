@@ -1,15 +1,14 @@
 import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
 import {App, fuzzySearch, prepareQuery, SearchResult, TFile} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
-import {AbstractRpgManager} from "../../../abstracts/AbstractRpgManager";
-import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
-import {element} from "svelte/internal";
+import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
+import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
 import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
 
 export class FuzzyElementSearchWorker extends AbstractSearchWorker implements SearchWorkerInterface {
 	constructor(
 		app: App,
-		private _element: ComponentInterface,
+		private _element: ComponentModelInterface,
 	) {
 		super(app);
 	}
@@ -25,9 +24,9 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 
 
 		this.database.read(
-			(element: ComponentInterface) =>
+			(element: ComponentModelInterface) =>
 				element.id.campaignId === this._element.id.campaignId
-		).forEach((element: ComponentInterface) => {
+		).forEach((element: ComponentModelInterface) => {
 			if (element.alias.length > 0){
 				element.alias.forEach((alias: string) => {
 					const fuzzySearchResult = fuzzySearch(query, alias);

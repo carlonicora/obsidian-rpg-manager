@@ -1,18 +1,18 @@
 import {ResponseDataInterface} from "./interfaces/ResponseDataInterface";
 import {ResponseDataElementInterface} from "./interfaces/ResponseDataElementInterface";
-import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
-import {ComponentInterface} from "../components/interfaces/ComponentInterface";
-import {AbstractComponent} from "../components/abstracts/AbstractComponent";
-import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../relationships/enums/RelationshipType";
+import {AbstractRpgManager} from "../core/abstracts/AbstractRpgManager";
+import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {AbstractComponent} from "../core/abstracts/AbstractComponent";
+import {RelationshipInterface} from "../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipType} from "../services/relationships/enums/RelationshipType";
 
 export class ResponseData extends AbstractRpgManager implements ResponseDataInterface {
 	public elements: ResponseDataElementInterface[] = [];
 
 	public async addSubModel(
 		type: any,
-		currentComponent: ComponentInterface,
-		data: ComponentInterface[]|ComponentInterface|RelationshipInterface[],
+		currentComponent: ComponentModelInterface,
+		data: ComponentModelInterface[]|ComponentModelInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 		position: number|undefined=undefined,

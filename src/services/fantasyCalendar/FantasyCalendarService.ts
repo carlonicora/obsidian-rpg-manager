@@ -2,7 +2,6 @@ import {App} from "obsidian";
 import {FantasyCalendarServiceInterface} from "./interfaces/FantasyCalendarServiceInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
-import {bind} from "svelte/internal";
 import {Calendar} from "obsidian-fantasy-calendar";
 
 export class FantasyCalendarService extends AbstractService implements FantasyCalendarServiceInterface, ServiceInterface{

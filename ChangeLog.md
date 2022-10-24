@@ -108,7 +108,7 @@ The supported types are:
 - NonPlayerCharacter
 - Location
 - Event
-- Clue
+- ClueModel
 - Faction
 - Music
 - Subplot

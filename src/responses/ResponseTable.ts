@@ -3,8 +3,8 @@ import {ResponseType} from "./enums/ResponseType";
 import {TableResponseInterface} from "./interfaces/TableResponseInterface";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {App} from "obsidian";
-import {ComponentType} from "../components/enums/ComponentType";
-import {ComponentInterface} from "../components/interfaces/ComponentInterface";
+import {ComponentType} from "../core/enums/ComponentType";
+import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
 import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
@@ -19,7 +19,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 
 	constructor(
 		app: App,
-		currentComponent: ComponentInterface,
+		currentComponent: ComponentModelInterface,
 	) {
 		super(app, currentComponent);
 		this.responseType = ResponseType.Table;

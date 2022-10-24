@@ -1,6 +1,6 @@
 import {App, Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
-import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {SettingsFactory} from "./factories/SettingsFactory";
 import {
 	RpgManagerAdvancedSettingsInterface,
@@ -9,7 +9,7 @@ import {
 } from "./RpgManagerSettingsInterface";
 import {SettingType} from "./enums/SettingType";
 import {SettingInterface} from "./interfaces/SettingsInterface";
-import {tableFieldName} from "../views/enums/TableField";
+import {tableFieldName} from "../REFACTOR/views/enums/TableField";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private _plugin: RpgManagerInterface;
@@ -45,7 +45,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this._advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
 		this._advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
 		this._advancedSettingsDescription.set('CharacterList', {title: 'Player Character List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
-		this._advancedSettingsDescription.set('ClueList', {title: 'Clue List', description: 'Select which fields you would like to see when displaying a list of Clues'});
+		this._advancedSettingsDescription.set('ClueList', {title: 'ClueModel List', description: 'Select which fields you would like to see when displaying a list of Clues'});
 		this._advancedSettingsDescription.set('EventList', {title: 'Event List', description: 'Select which fields you would like to see when displaying a list of Events'});
 		this._advancedSettingsDescription.set('FactionList', {title: 'Faction List', description: 'Select which fields you would like to see when displaying a list of Factions'});
 		this._advancedSettingsDescription.set('LocationList', {title: 'Location List', description: 'Select which fields you would like to see when displaying a list of Locations'});

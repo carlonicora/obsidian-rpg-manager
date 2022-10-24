@@ -1,16 +1,16 @@
-import {AbstractFactory} from "../../../factories/abstracts/AbstractFactory";
+import {AbstractFactory} from "../../../core/abstracts/AbstractFactory";
 import {EditableContentValueFactoryInterface} from "../interfaces/EditableContentValueFactoryInterface";
-import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
+import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
 import {EditableContentType} from "../enums/EditableContentType";
-import {CharacterInterface} from "../../../components/components/character/interfaces/CharacterInterface";
-import {LocationInterface} from "../../../components/components/location/interfaces/LocationInterface";
-import {SceneInterface} from "../../../components/components/scene/interfaces/SceneInterface";
-import {MusicInterface} from "../../../components/components/music/interfaces/MusicInterface";
-import {PlotsInterface} from "../../../plots/interfaces/PlotsInterface";
+import {CharacterInterface} from "../../../components/character/interfaces/CharacterInterface";
+import {LocationInterface} from "../../../components/location/interfaces/LocationInterface";
+import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
+import {MusicInterface} from "../../../components/music/interfaces/MusicInterface";
+import {PlotsInterface} from "../../plots/interfaces/PlotsInterface";
 
 export class EditableContentValueFactory extends AbstractFactory implements EditableContentValueFactoryInterface {
 	read(
-		component: ComponentInterface,
+		component: ComponentModelInterface,
 		type: EditableContentType,
 	): string|boolean|number|undefined {
 		let response: string|boolean|number|undefined = undefined;
@@ -76,7 +76,7 @@ export class EditableContentValueFactory extends AbstractFactory implements Edit
 	}
 
 	public readRelatedPlot(
-		component: ComponentInterface,
+		component: ComponentModelInterface,
 		type: EditableContentType.StoryCircleYou |
 			EditableContentType.StoryCircleNeed |
 			EditableContentType.StoryCircleGo |

@@ -1,9 +1,9 @@
-import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {RelationshipInterface} from "../../services/relationships/interfaces/RelationshipInterface";
 import {ContentInterface} from "../contents/interfaces/ContentInterface";
 
 export interface TableResponseElementInterface {
-	component?: ComponentInterface;
+	component?: ComponentModelInterface;
 	relationship: RelationshipInterface;
 	elements: ContentInterface[];
 

@@ -1,5 +1,5 @@
 import {App, Setting} from "obsidian";
-import {RpgManagerInterface} from "../../interfaces/RpgManagerInterface";
+import {RpgManagerInterface} from "../../core/interfaces/RpgManagerInterface";
 import {SettingType} from "../enums/SettingType";
 import {SettingInterface} from "../interfaces/SettingsInterface";
 

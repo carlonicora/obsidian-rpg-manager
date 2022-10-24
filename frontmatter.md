@@ -36,7 +36,7 @@ use the same type of structure.
 | **Player Character**     | rpgm/pc        | {campaignId}                                 |
 | **Non Player Character** | rpgm/npc       | {campaignId}                                 |
 | **Event**                | rpgm/event     | {campaignId}                                 |
-| **Clue**                 | rpgm/clue      | {campaignId}                                 |
+| **ClueModel**                 | rpgm/clue      | {campaignId}                                 |
 | **Faction**              | rpgm/faction   | {campaignId}                                 |
 | **Location**             | rpgm/location  | {campaignId}                                 |
 | **Music**                | rpgm/music     | {campaignId}                                 |

@@ -6,7 +6,7 @@ import {NumberContent} from "../contents/NumberContent";
 import {ObjectContent} from "../contents/ObjectContent";
 import {MarkdownContent} from "../contents/MarkdownContent";
 import {ImageContent} from "../contents/ImageContent";
-import {AbstractFactory} from "../../factories/abstracts/AbstractFactory";
+import {AbstractFactory} from "../../core/abstracts/AbstractFactory";
 import {ContentFactoryInterface} from "./interfaces/ContentFactoryInterface";
 import {SVGContent} from "../contents/SVGContent";
 import {DateContent} from "../contents/DateContent";

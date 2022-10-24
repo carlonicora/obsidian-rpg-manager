@@ -1,6 +1,6 @@
 import {AbstractContent} from "../abstracts/AbstractContent";
 import {setIcon} from "obsidian";
-import {StoryCircleStage} from "../../plots/enums/StoryCircleStage";
+import {StoryCircleStage} from "../../services/plots/enums/StoryCircleStage";
 
 export class SVGContent extends AbstractContent {
 	public content: string;

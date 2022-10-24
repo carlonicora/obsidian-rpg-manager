@@ -1,5 +1,5 @@
 import "obsidian";
-import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 import {API} from "obsidian-fantasy-calendar";
 

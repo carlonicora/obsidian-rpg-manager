@@ -1,9 +1,9 @@
 import {HeaderResponseType} from "../enums/HeaderResponseType";
 import {ContentInterface} from "../contents/interfaces/ContentInterface";
-import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
 
 export interface HeaderResponseElementInterface {
-	currentComponent: ComponentInterface;
+	currentComponent: ComponentModelInterface;
 	title: string;
 	value: ContentInterface;
 	type:HeaderResponseType;

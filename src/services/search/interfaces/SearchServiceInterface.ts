@@ -1,11 +1,11 @@
 import {SearchResultInterface} from "./SearchResultInterface";
 import {SearchType} from "../enums/SearchType";
-import {ComponentInterface} from "../../../components/interfaces/ComponentInterface";
+import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
 
 export interface SearchServiceInterface {
 	search(
 		term: string,
 		type: SearchType,
-		element?: ComponentInterface,
+		element?: ComponentModelInterface,
 	): Array<SearchResultInterface>;
 }

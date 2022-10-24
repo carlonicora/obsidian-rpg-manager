@@ -1,8 +1,8 @@
 import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
-import {ComponentInterface} from "../../components/interfaces/ComponentInterface";
+import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
 
 export interface BreadcrumbResponseInterface extends ResponseDataElementInterface {
-	component: ComponentInterface|undefined,
+	component: ComponentModelInterface|undefined,
 	link: string;
 	linkText: string|null;
 	nextBreadcrumb: BreadcrumbResponseInterface|null;

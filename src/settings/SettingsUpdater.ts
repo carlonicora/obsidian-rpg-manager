@@ -1,8 +1,8 @@
 import {TFile} from "obsidian";
-import {AbstractRpgManager} from "../abstracts/AbstractRpgManager";
-import {DatabaseInterface} from "../databases/interfaces/DatabaseInterface";
-import {DatabaseInitialiser} from "../databases/DatabaseInitialiser";
-import {LogMessageType} from "../loggers/enums/LogMessageType";
+import {AbstractRpgManager} from "../core/abstracts/AbstractRpgManager";
+import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
+import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
+import {LogMessageType} from "../services/loggers/enums/LogMessageType";
 
 export class SettingsUpdater extends AbstractRpgManager {
 	public async updateTags(
@@ -27,7 +27,7 @@ export class SettingsUpdater extends AbstractRpgManager {
 			}
 		}
 
-		this.factories.logger.info(LogMessageType.TagUpdates, 'Re-initialising databases');
+		this.factories.logger.info(LogMessageType.TagUpdates, 'Re-initialising database');
 		return await DatabaseInitialiser.initialise(this.app)
 			.then((database: DatabaseInterface) => {
 				this.database = database;

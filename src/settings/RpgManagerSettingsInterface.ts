@@ -1,4 +1,4 @@
-import {TableField} from "../views/enums/TableField";
+import {TableField} from "../REFACTOR/views/enums/TableField";
 
 export interface RpgManagerSettingsInterface {
 	templateFolder: string;

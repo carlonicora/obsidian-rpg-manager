@@ -4,9 +4,9 @@ import {App} from "obsidian";
 import {ResponseType} from "./enums/ResponseType";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {HeaderResponseElementInterface} from "./interfaces/HeaderResponseElementInterface";
-import {ComponentType} from "../components/enums/ComponentType";
-import {ComponentInterface} from "../components/interfaces/ComponentInterface";
-import {ImageInterface} from "../galleries/interfaces/ImageInterface";
+import {ComponentType} from "../core/enums/ComponentType";
+import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {ImageInterface} from "../services/galleries/interfaces/ImageInterface";
 
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public type: ComponentType;
@@ -21,7 +21,7 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 
 	constructor(
 		app: App,
-		currentComponent: ComponentInterface,
+		currentComponent: ComponentModelInterface,
 	) {
 		super(app, currentComponent);
 		this.responseType = ResponseType.Header;

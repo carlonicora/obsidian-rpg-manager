@@ -12,17 +12,15 @@ export class ServicesManager implements ServiceManagerInterface{
 	) {
 	}
 
-	public register<T extends ServiceInterface>(
-		serviceClass: ServiceClassInterface<T>
-	): void {
-		const service: T = new serviceClass(this._app);
-
-		this._services.set(serviceClass, service)
-	}
-
 	public get<T extends ServiceInterface>(
 		service: ServiceClassInterface<T>
 	): T|undefined {
 		return this._services.get(service) as T;
+	}
+
+	public register<T extends ServiceInterface>(
+		serviceClass: ServiceClassInterface<T>
+	): void {
+		this._services.set(serviceClass, new serviceClass(this._app))
 	}
 }
