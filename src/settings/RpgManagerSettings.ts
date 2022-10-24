@@ -40,20 +40,20 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this._map.set(SettingType.templateFolder, {title: 'Template folder', value: this._plugin.settings.templateFolder, placeholder: 'Template Folder'});
 		this._map.set(SettingType.imagesFolder, {title: 'Images folder', value: this._plugin.settings.imagesFolder, placeholder: 'Images Folder'});
 		this._map.set(SettingType.usePlotStructures, {title: 'Abt/Story Circle plot structure', value: this._plugin.settings.usePlotStructures, placeholder: ''});
-		this._map.set(SettingType.useSceneAnalyser, {title: 'Scene Analyser', value: this._plugin.settings.useSceneAnalyser, placeholder: ''});
+		this._map.set(SettingType.useSceneAnalyser, {title: 'SceneModel Analyser', value: this._plugin.settings.useSceneAnalyser, placeholder: ''});
 
-		this._advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
-		this._advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
-		this._advancedSettingsDescription.set('CharacterList', {title: 'Player Character List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
+		this._advancedSettingsDescription.set('ActList', {title: 'ActModel List', description: 'Select which fields you would like to see when displaying a list of Acts'});
+		this._advancedSettingsDescription.set('AdventureList', {title: 'AdventureModel List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
+		this._advancedSettingsDescription.set('CharacterList', {title: 'Player CharacterModel List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
 		this._advancedSettingsDescription.set('ClueList', {title: 'ClueModel List', description: 'Select which fields you would like to see when displaying a list of Clues'});
-		this._advancedSettingsDescription.set('EventList', {title: 'Event List', description: 'Select which fields you would like to see when displaying a list of Events'});
-		this._advancedSettingsDescription.set('FactionList', {title: 'Faction List', description: 'Select which fields you would like to see when displaying a list of Factions'});
-		this._advancedSettingsDescription.set('LocationList', {title: 'Location List', description: 'Select which fields you would like to see when displaying a list of Locations'});
-		this._advancedSettingsDescription.set('MusicList', {title: 'Music List', description: 'Select which fields you would like to see when displaying a list of Musics'});
-		this._advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player Character List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
-		this._advancedSettingsDescription.set('SceneList', {title: 'Scene List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
-		this._advancedSettingsDescription.set('SessionList', {title: 'Session List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
-		this._advancedSettingsDescription.set('SubplotList', {title: 'Subplot List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
+		this._advancedSettingsDescription.set('EventList', {title: 'EventModel List', description: 'Select which fields you would like to see when displaying a list of Events'});
+		this._advancedSettingsDescription.set('FactionList', {title: 'FactionModel List', description: 'Select which fields you would like to see when displaying a list of Factions'});
+		this._advancedSettingsDescription.set('LocationList', {title: 'LocationModel List', description: 'Select which fields you would like to see when displaying a list of Locations'});
+		this._advancedSettingsDescription.set('MusicList', {title: 'MusicModel List', description: 'Select which fields you would like to see when displaying a list of Musics'});
+		this._advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player CharacterModel List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
+		this._advancedSettingsDescription.set('SceneList', {title: 'SceneModel List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
+		this._advancedSettingsDescription.set('SessionList', {title: 'SessionModel List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
+		this._advancedSettingsDescription.set('SubplotList', {title: 'SubplotModel List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
 
 		this._settingsUpdater = new SettingsUpdater(this.app);
 		this._settingsFactory = new SettingsFactory(this.app, this._plugin, this._map, this.containerEl);

@@ -45,7 +45,7 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 			new ResponseHeaderElement(
 				this.app,
 				this.currentComponent,
-				'Session Date',
+				'SessionModel Date',
 				this.api.services.get<DateService>(DateService)?.getReadableDate(this.data.irl, this.data),
 				HeaderResponseType.DateSelector
 			)
@@ -75,7 +75,7 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 			);
 
 			if (analyser.scenesCount > 0) {
-				response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
+				response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'SceneModel Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
 					id: this.data.id,
 					file: this.data.file,
 					sceneAnalyser: analyser,

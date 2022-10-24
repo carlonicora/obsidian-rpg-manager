@@ -3,20 +3,20 @@ import {App, TFile} from "obsidian";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../services/id/interfaces/IdInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {Campaign} from "../../components/campaign/Campaign";
+import {CampaignModel} from "../../components/campaign/models/CampaignModel";
 import {ComponentFactoryInterface} from "../interfaces/ComponentFactoryInterface";
 import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
-import {Adventure} from "../../components/adventure/Adventure";
-import {Act} from "../../components/act/Act";
-import {Scene} from "../../components/scene/Scene";
-import {Session} from "../../components/session/Session";
-import {Character} from "../../components/character/Character";
-import {Faction} from "../../components/faction/Faction";
+import {AdventureModel} from "../../components/adventure/models/AdventureModel";
+import {ActModel} from "../../components/act/models/ActModel";
+import {SceneModel} from "../../components/scene/models/SceneModel";
+import {SessionModel} from "../../components/session/models/SessionModel";
+import {CharacterModel} from "../../components/character/models/CharacterModel";
+import {FactionModel} from "../../components/faction/models/FactionModel";
 import {ClueModel} from "../../components/clue/models/ClueModel";
-import {Location} from "../../components/location/Location";
-import {Event} from "../../components/event/Event";
-import {Music} from "../../components/music/Music";
-import {Subplot} from "../../components/subplot/Subplot";
+import {LocationModel} from "../../components/location/models/LocationModel";
+import {EventModel} from "../../components/event/models/EventModel";
+import {MusicModel} from "../../components/music/models/MusicModel";
+import {SubplotModel} from "../../components/subplot/models/SubplotModel";
 
 export class ComponentFactory extends AbstractFactory implements ComponentFactoryInterface{
 	private _componentTypeMap: Map<string,any>;
@@ -27,19 +27,19 @@ export class ComponentFactory extends AbstractFactory implements ComponentFactor
 		super(app);
 
 		this._componentTypeMap = new Map<string, any>();
-		this._componentTypeMap.set('AgnosticCampaign', Campaign);
-		this._componentTypeMap.set('AgnosticAdventure', Adventure);
-		this._componentTypeMap.set('AgnosticAct', Act);
-		this._componentTypeMap.set('AgnosticScene', Scene);
-		this._componentTypeMap.set('AgnosticSession', Session);
-		this._componentTypeMap.set('AgnosticCharacter', Character);
-		this._componentTypeMap.set('AgnosticNonPlayerCharacter', Character);
-		this._componentTypeMap.set('AgnosticFaction', Faction);
+		this._componentTypeMap.set('AgnosticCampaign', CampaignModel);
+		this._componentTypeMap.set('AgnosticAdventure', AdventureModel);
+		this._componentTypeMap.set('AgnosticAct', ActModel);
+		this._componentTypeMap.set('AgnosticScene', SceneModel);
+		this._componentTypeMap.set('AgnosticSession', SessionModel);
+		this._componentTypeMap.set('AgnosticCharacter', CharacterModel);
+		this._componentTypeMap.set('AgnosticNonPlayerCharacter', CharacterModel);
+		this._componentTypeMap.set('AgnosticFaction', FactionModel);
 		this._componentTypeMap.set('AgnosticClue', ClueModel);
-		this._componentTypeMap.set('AgnosticLocation', Location);
-		this._componentTypeMap.set('AgnosticEvent', Event);
-		this._componentTypeMap.set('AgnosticMusic', Music);
-		this._componentTypeMap.set('AgnosticSubplot', Subplot);
+		this._componentTypeMap.set('AgnosticLocation', LocationModel);
+		this._componentTypeMap.set('AgnosticEvent', EventModel);
+		this._componentTypeMap.set('AgnosticMusic', MusicModel);
+		this._componentTypeMap.set('AgnosticSubplot', SubplotModel);
 	}
 
 	public create(

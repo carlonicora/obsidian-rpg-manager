@@ -108,7 +108,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			}
 		});
 
-		containerEl.createEl('label', {text: 'Select Campaign Settings'});
+		containerEl.createEl('label', {text: 'Select CampaignModel Settings'});
 		this._campaignSettingsEl = containerEl.createEl('select');
 
 		Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting: string) => {

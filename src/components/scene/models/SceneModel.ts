@@ -1,15 +1,15 @@
-import {SceneInterface} from "./interfaces/SceneInterface";
-import {SceneMetadataInterface} from "./interfaces/SceneMetadataInterface";
-import {ComponentStage} from "../../core/enums/ComponentStage";
-import {ActInterface} from "../act/interfaces/ActInterface";
-import {SessionInterface} from "../session/interfaces/SessionInterface";
-import {AdventureInterface} from "../adventure/interfaces/AdventureInterface";
-import {ComponentType} from "../../core/enums/ComponentType";
-import {AbstractSceneData} from "./abstracts/AbstractSceneData";
-import {ComponentNotFoundError} from "../../core/errors/ComponentNotFoundError";
-import {activeSceneTypes} from "./enums/SceneType";
+import {SceneInterface} from "../interfaces/SceneInterface";
+import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
+import {ComponentStage} from "../../../core/enums/ComponentStage";
+import {ActInterface} from "../../act/interfaces/ActInterface";
+import {SessionInterface} from "../../session/interfaces/SessionInterface";
+import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
+import {AbstractSceneData} from "../abstracts/AbstractSceneData";
+import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
+import {activeSceneTypes} from "../enums/SceneType";
 
-export class Scene extends AbstractSceneData implements SceneInterface {
+export class SceneModel extends AbstractSceneData implements SceneInterface {
 	protected metadata: SceneMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
 

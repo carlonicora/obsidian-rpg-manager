@@ -37,6 +37,7 @@ import {SearchService} from "./services/search/SearchService";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
 import {Bootstrap} from "./api/Bootstrap";
+import {NewController} from "./core/controller/NewController";
 
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
@@ -87,7 +88,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	async onLayoutReady(){
 		this.api = Bootstrap.api(this.app, this);
 
-		(window["RpgManagerAPI"] = this.api) && this.register(() => delete window["RpgManagerAPI"]);
+		this.register(() => delete window["RpgManagerAPI"]);
 
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
@@ -179,6 +180,16 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		sourcePath: string
 	) {
 		component.addChild(
+			new NewController(
+				this.app,
+				el,
+				source,
+				component,
+				sourcePath,
+			)
+		);
+		/*
+		component.addChild(
 			new Controller(
 				this.app,
 				el,
@@ -187,6 +198,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 				sourcePath,
 			)
 		);
+		*/
 	}
 
 	public async createRpgDataView(

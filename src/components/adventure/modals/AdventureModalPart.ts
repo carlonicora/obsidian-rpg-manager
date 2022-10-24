@@ -38,7 +38,7 @@ export class AdventureModalPart extends AbstractModalPart {
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Adventures missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Adventure for the selected campaign. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first adventure for the campaign.'});
+				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager AdventureModel for the selected campaign. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first adventure for the campaign.'});
 			} else {
 				this._childEl = contentEl.createDiv({cls: 'child'});
 				this._childEl.id = 'AdventureChild';

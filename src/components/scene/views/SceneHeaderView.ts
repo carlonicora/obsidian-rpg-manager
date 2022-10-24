@@ -88,7 +88,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			options.defaultDate = (<DateInterface>this.currentComponent.date).date;
 
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
-		flatpickrEl.placeholder = 'Select the Scene Date';
+		flatpickrEl.placeholder = 'Select the SceneModel Date';
 		flatpickrEl.readOnly = true;
 
 		flatpickr(flatpickrEl, options);

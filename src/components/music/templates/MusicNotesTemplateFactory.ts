@@ -4,7 +4,7 @@ import {ComponentNotesTemplateFactoryInterface} from "../../../core/interfaces/C
 export class MusicNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### Music Details\n' +
+			'### MusicModel Details\n' +
 			' - \n\n' +
 			'---\n';
 	}

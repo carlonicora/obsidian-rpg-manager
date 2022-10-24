@@ -22,7 +22,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
 		const sceneBuilderContinerEl = this.headerTitleEl.createDiv();
-		const sceneBuilderButtonEl = sceneBuilderContinerEl.createEl('button', {cls: 'actionButton', text: 'Scene Builder'});
+		const sceneBuilderButtonEl = sceneBuilderContinerEl.createEl('button', {cls: 'actionButton', text: 'SceneModel Builder'});
 		sceneBuilderButtonEl.addEventListener('click', () => {
 			new SceneBuilderModal(this.app, this.currentComponent).open();
 		});

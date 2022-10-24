@@ -154,16 +154,7 @@ export class DatabaseInitialiser {
 
 		if (!id.isValid) throw new TagMisconfiguredError(this._app, id);
 
-		const response = await window.RpgManagerAPI?.models.create(id.type, id.campaignSettings);
-
-		if (response === undefined)
-			return undefined;
-
-		await response.initialise(
-			id.campaignSettings,
-			id,
-			file,
-		);
+		const response = await window.RpgManagerAPI?.models.create(id, id.campaignSettings, file);
 
 		return response;
 	}

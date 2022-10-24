@@ -9,7 +9,7 @@ export interface NewViewFactoryInterface {
 		viewType: NewViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
-	): NewViewInterface;
+	): NewViewClassInterface<NewViewInterface>;
 
 	register<T extends NewViewInterface>(
 		view: NewViewClassInterface<T>,

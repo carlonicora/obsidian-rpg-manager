@@ -23,7 +23,7 @@ export class SceneBuilderModal extends AbstractModal {
 	) {
 		super(app);
 		this.maxWidth = true;
-		this.title = 'Scene Builder';
+		this.title = 'SceneModel Builder';
 
 		this._emptyLines = new Map<number, boolean>();
 		this._idCounter = 0;

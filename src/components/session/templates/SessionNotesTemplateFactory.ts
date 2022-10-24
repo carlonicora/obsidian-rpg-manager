@@ -19,11 +19,11 @@ export class SessionNotesTemplateFactory extends AbstractTemplate implements Com
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
 
 		let response = '---\n' +
-			'### Session Notes\n\n' +
-			'Previous Session Recap: ' + possibleRecappers + '\n\n' +
+			'### SessionModel Notes\n\n' +
+			'Previous SessionModel Recap: ' + possibleRecappers + '\n\n' +
 			'### Storyteller Diary\n' +
 			'-\n\n' +
-			'### End of Session Feedbacks\n';
+			'### End of SessionModel Feedbacks\n';
 
 			response += this._generateFeedback('Storyteller');
 

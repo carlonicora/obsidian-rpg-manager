@@ -5,16 +5,13 @@ import {NewRelationshipsViewInterface} from "../interfaces/NewRelationshipsViewI
 import {NewViewType} from "../../core/enums/NewViewType";
 
 export abstract class NewAbstractRelationshipView implements NewRelationshipsViewInterface {
+	public relatedComponentType: ComponentType;
+	public relationshipType: RelationshipType;
+
 	constructor(
 		public model: ComponentModelInterface,
-		public relatedType: ComponentType,
-		public relationshipType: RelationshipType,
 		public containerEl: HTMLDivElement,
 	) {
-	}
-
-	get type(): NewViewType {
-		return NewViewType.Relationships;
 	}
 
 	public abstract render(): void;

@@ -1,12 +1,12 @@
-import {ActInterface} from "./interfaces/ActInterface";
-import {ComponentStage} from "../../core/enums/ComponentStage";
-import {AdventureInterface} from "../adventure/interfaces/AdventureInterface";
-import {ComponentType} from "../../core/enums/ComponentType";
-import {ActMetadataInterface} from "./interfaces/ActMetadataInterface";
-import {AbstractActData} from "./abstracts/AbstractActData";
-import {ComponentNotFoundError} from "../../core/errors/ComponentNotFoundError";
+import {ActInterface} from "../interfaces/ActInterface";
+import {ComponentStage} from "../../../core/enums/ComponentStage";
+import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
+import {ActMetadataInterface} from "../interfaces/ActMetadataInterface";
+import {AbstractActData} from "../abstracts/AbstractActData";
+import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
 
-export class Act extends AbstractActData implements ActInterface {
+export class ActModel extends AbstractActData implements ActInterface {
 	protected metadata: ActMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Plot;
 

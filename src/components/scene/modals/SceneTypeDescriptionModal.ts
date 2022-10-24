@@ -71,7 +71,7 @@ export class SceneTypeDescriptionModal extends AbstractRpgManagerModal {
 
 		this._sceneTypeDescriptionsEl = contentEl.createDiv({cls: 'rpgm-modal-scene-descriptions'})
 
-		this._sceneTypeDescriptionsEl.createEl('h1', {text: 'Scene Types'});
+		this._sceneTypeDescriptionsEl.createEl('h1', {text: 'SceneModel Types'});
 
 		sceneTypeDescription.forEach((sceneTypeInformation: SceneTypeInformation) => {
 			this._displaySceneTypeInformation(sceneTypeInformation);

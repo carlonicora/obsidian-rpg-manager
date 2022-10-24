@@ -60,7 +60,7 @@ export class TableView extends AbstractSubModelView {
 
 			switch(data.create){
 				case ComponentType.Adventure:
-					createButtonEl.textContent = 'Create act from Adventure Plot';
+					createButtonEl.textContent = 'Create act from AdventureModel Plot';
 					createButtonEl.addEventListener("click", () => {
 						if (data.campaignId !== undefined && data.adventureId !== undefined) {
 							id = this.factories.id.create(ComponentType.Adventure, data.campaignId, data.adventureId);
@@ -88,7 +88,7 @@ export class TableView extends AbstractSubModelView {
 									if (data.campaignId != null) {
 										this.factories.files.silentCreate(
 											ComponentType.Act,
-											'Act ' + nextActId,
+											'ActModel ' + nextActId,
 											data.campaignId,
 											data.adventureId,
 											nextActId,

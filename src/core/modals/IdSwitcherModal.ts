@@ -45,7 +45,7 @@ export class IdSwitcherModal extends AbstractModal {
 
 		const descriptorEl = this.rpgmContainerEl.createDiv();
 		descriptorEl.textContent = 'Use this form to change the position of the ' + ComponentType[this._id.type] +
-			' "' + this._file.basename + '" in the Campaign hierarchy';
+			' "' + this._file.basename + '" in the CampaignModel hierarchy';
 
 		const formEl = this.rpgmContainerEl.createDiv();
 

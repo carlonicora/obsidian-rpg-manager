@@ -1,10 +1,10 @@
-import {MusicMetadataInterface} from "./interfaces/MusicMetadataInterface";
-import {YouTubeImageFetcherInterface} from "../../services/fetchers/YouTubeImageFetcherInterface";
-import {YouTubeImageFetcher} from "../../services/fetchers/YouTubeImageFetcher";
-import {AbstractMusicData} from "./abstracts/AbstractMusicData";
-import {MusicInterface} from "./interfaces/MusicInterface";
+import {MusicMetadataInterface} from "../interfaces/MusicMetadataInterface";
+import {YouTubeImageFetcherInterface} from "../../../services/fetchers/YouTubeImageFetcherInterface";
+import {YouTubeImageFetcher} from "../../../services/fetchers/YouTubeImageFetcher";
+import {AbstractMusicData} from "../abstracts/AbstractMusicData";
+import {MusicInterface} from "../interfaces/MusicInterface";
 
-export class Music extends AbstractMusicData implements MusicInterface {
+export class MusicModel extends AbstractMusicData implements MusicInterface {
 	protected metadata: MusicMetadataInterface;
 
 	private _dynamicImage: string | null | undefined;

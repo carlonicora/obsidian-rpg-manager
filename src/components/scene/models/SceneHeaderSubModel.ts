@@ -25,7 +25,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 	): Promise<ResponseDataElementInterface|null> {
 		if (!this.initialiseData(relationship)) return null;
 
-		this.synopsisTitle = 'Scene Goal';
+		this.synopsisTitle = 'SceneModel Goal';
 
 		const sessions: SessionInterface[] = this.database.read<SessionInterface>((session: SessionInterface) => session.id.type === ComponentType.Session && session.id.campaignId === this.data.id.campaignId)
 			.sort(this.factories.sorter.create<SessionInterface>([
@@ -40,18 +40,18 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 		response.responseType = ResponseType.SceneHeader;
 
 		let trigger = this.data?.trigger;
-		if (this.data.trigger == null || this.data.trigger === '') trigger = '<span class="rpgm-missing">Scene trigger missing</span>';
+		if (this.data.trigger == null || this.data.trigger === '') trigger = '<span class="rpgm-missing">SceneModel trigger missing</span>';
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Trigger', trigger, HeaderResponseType.Long, {editableField: 'data.trigger'}));
 
 		let action = this.data?.action;
-		if (this.data.action == null || this.data.action === '') action = '<span class="rpgm-missing">Scene action missing</span>';
+		if (this.data.action == null || this.data.action === '') action = '<span class="rpgm-missing">SceneModel action missing</span>';
 		response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Action', action, HeaderResponseType.Long, {editableField: 'data.action'}));
 
 		response.addElement(
 			new ResponseHeaderElement(
 				this.app,
 				this.currentComponent,
-				'Scene Date',
+				'SceneModel Date',
 				this.api.services.get<DateService>(DateService)?.getReadableDate(this.data.date, this.data),
 				(this.data.campaign.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector)
 			)
@@ -73,7 +73,7 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 
 		}
 		if (this.settings.useSceneAnalyser) {
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Type', (this.data.sceneType !== undefined ?this.data.sceneType : ''), HeaderResponseType.SceneTypeSelector, {
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'SceneModel Type', (this.data.sceneType !== undefined ?this.data.sceneType : ''), HeaderResponseType.SceneTypeSelector, {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
@@ -81,8 +81,8 @@ export class SceneHeaderSubModel extends AbstractHeaderSubModel {
 				sceneId: this.data.id,
 				file: this.data.file
 			}));
-			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Run', this.data.isCurrentlyRunning, HeaderResponseType.SceneRun));
-			if (this.data.isCurrentlyRunning || this.data.currentDuration > 0) response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Duration', '', HeaderResponseType.SceneRunTime));
+			response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'SceneModel Run', this.data.isCurrentlyRunning, HeaderResponseType.SceneRun));
+			if (this.data.isCurrentlyRunning || this.data.currentDuration > 0) response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'SceneModel Duration', '', HeaderResponseType.SceneRunTime));
 		}
 
 		if (this.settings.useSceneAnalyser && this.data.sceneType !== undefined && this.data.storyCircleStage !== undefined) {

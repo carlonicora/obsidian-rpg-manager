@@ -37,7 +37,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		}
 
 		if (this.currentComponent.date !== undefined) {
-			this.headerTitleEl.createEl('a', {cls: 'subtitle', text: 'View Campaign Timeline', href: '#'})
+			this.headerTitleEl.createEl('a', {cls: 'subtitle', text: 'View CampaignModel Timeline', href: '#'})
 				.addEventListener("click", () => {
 					this.factories.views.showObsidianView(ViewType.Timeline, [data.metadata.campaignId]);
 				});
@@ -64,7 +64,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 
 		if (data.metadata?.sourceMeta?.adventures !== undefined){
 			headlessTable.addRow(
-				'Current Adventure',
+				'Current AdventureModel',
 				this._addCurrentComponentSelector.bind(this),
 				['adventure', this.currentComponent.currentAdventureId, data.metadata?.sourceMeta?.adventures]
 			);
@@ -72,7 +72,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 
 		if (data.metadata?.sourceMeta?.acts !== undefined){
 			headlessTable.addRow(
-				'Current Act',
+				'Current ActModel',
 				this._addCurrentComponentSelector.bind(this),
 				['act', this.currentComponent.currentActId, data.metadata?.sourceMeta?.acts]
 			);
@@ -80,7 +80,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 
 		if (data.metadata?.sourceMeta?.sessions !== undefined){
 			headlessTable.addRow(
-				'Current Session',
+				'Current SessionModel',
 				this._addCurrentComponentSelector.bind(this),
 				['session', this.currentComponent.currentSessionId, data.metadata?.sourceMeta?.sessions]
 			);

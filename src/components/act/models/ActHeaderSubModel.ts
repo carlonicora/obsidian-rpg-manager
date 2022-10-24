@@ -42,7 +42,7 @@ export class ActHeaderSubModel extends AbstractHeaderSubModel {
 			);
 
 			if (analyser.scenesCount > 0) {
-				response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'Scene Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
+				response.addElement(new ResponseHeaderElement(this.app, this.currentComponent, 'SceneModel Analyser', (this.data.abtStage !== undefined ? AbtStage[this.data.abtStage] : ''), HeaderResponseType.SceneAnalyser, {
 					id: this.data.id,
 					file: this.data.file,
 					sceneAnalyser: analyser,

@@ -2,12 +2,15 @@ import {CampaignSetting} from "../../../components/campaign/enums/CampaignSettin
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {NewModelClassInterface} from "./NewModelClassInterface";
 import {ComponentModelInterface} from "../../componentManager/interfaces/ComponentModelInterface";
+import {IdInterface} from "../../../services/id/interfaces/IdInterface";
+import {TFile} from "obsidian";
 
 export interface NewModelFactoryInterface {
 	create(
-		type: ComponentType,
+		id: IdInterface,
 		campaignSettings: CampaignSetting,
-	): ComponentModelInterface;
+		file: TFile,
+	): ComponentModelInterface|undefined;
 
 	register<T extends ComponentModelInterface>(
 		model: NewModelClassInterface<T>,

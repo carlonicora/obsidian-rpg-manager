@@ -7,8 +7,8 @@ import {App} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 
 export class NewViewFactory implements NewViewFactoryInterface {
-	private _factories: Map<{viewType: NewViewType, componentType: ComponentType, campaignSettings: CampaignSetting}, NewViewInterface>
-		= new Map<{viewType: NewViewType, componentType: ComponentType, campaignSettings: CampaignSetting}, NewViewInterface>();
+	private _factories: Map<{viewType: NewViewType, componentType: ComponentType, campaignSettings: CampaignSetting}, NewViewClassInterface<NewViewInterface>>
+		= new Map<{viewType: NewViewType, componentType: ComponentType, campaignSettings: CampaignSetting}, NewViewClassInterface<NewViewInterface>>();
 
 	constructor(
 		private _app: App,
@@ -19,7 +19,7 @@ export class NewViewFactory implements NewViewFactoryInterface {
 		viewType: NewViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
-	): NewViewInterface {
+	): NewViewClassInterface<NewViewInterface> {
 		let response = this._factories.get({viewType: viewType, componentType: componentType, campaignSettings: campaignSettings});
 
 		if (response !== undefined)
@@ -44,6 +44,6 @@ export class NewViewFactory implements NewViewFactoryInterface {
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting
 	): void {
-		this._factories.set({viewType: viewType, componentType: componentType, campaignSettings: campaignSettings}, new view(this._app));
+		this._factories.set({viewType: viewType, componentType: componentType, campaignSettings: campaignSettings}, view);
 	}
 }

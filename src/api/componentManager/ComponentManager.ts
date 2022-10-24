@@ -5,7 +5,6 @@ import {ComponentInterface} from "./interfaces/ComponentInterface";
 import {NewViewClassInterface} from "../factories/interfaces/NewViewClassInterface";
 import {NewViewInterface} from "../../views/interfaces/NewViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
-import {NewModelClassInterface} from "../factories/interfaces/NewModelClassInterface";
 import {ComponentModelInterface} from "./interfaces/ComponentModelInterface";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {ComponentType} from "../../core/enums/ComponentType";
@@ -33,7 +32,7 @@ export class ComponentManager implements ComponentManagerInterface {
 	public register<T extends ComponentInterface>(
 		componentClass: ComponentClassInterface<T>,
 	): void {
-		const component = new componentClass(this._app);
+		const component: ComponentInterface = new componentClass(this._app);
 		this._components.set(componentClass, component);
 
 		window.RpgManagerAPI?.models.register(component.model, component.type, component.campaignSettings);

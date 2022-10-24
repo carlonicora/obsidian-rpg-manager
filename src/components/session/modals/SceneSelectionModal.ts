@@ -34,7 +34,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 		contentEl.empty();
 		contentEl.addClass('rpgm-modal');
 
-		contentEl.createEl('h2', {text: 'Scene Selector'});
+		contentEl.createEl('h2', {text: 'SceneModel Selector'});
 		contentEl.createEl('p', {text: 'Select the scenes to add to the session "' + this._session.file.basename + '"'});
 
 		const actSelectorContainerEl = contentEl.createDiv('selector');

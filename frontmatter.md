@@ -27,25 +27,25 @@ use the same type of structure.
 
 | Component                | Default Tag    | Required id(s)                               |
 |--------------------------|----------------|----------------------------------------------|
-| **Campaign**             | rpgm/campaign  | {campaignId}                                 |   
-| **Adventure**            | rpgm/adventure | {campaignId}/{adventureId}                   |
-| **Act**                  | rpgm/act       | {campaignId}/{adventureId}/{actId}           |
-| **Scene**                | rpgm/scene     | {campaignId}/{adventureId}/{actId}/{sceneId} |
-| **Session**              | rpgm/session   | {campaignId}                                 |
-| **Subplot**              | rpgm/subplot   | {campaignId}                                 |
-| **Player Character**     | rpgm/pc        | {campaignId}                                 |
-| **Non Player Character** | rpgm/npc       | {campaignId}                                 |
-| **Event**                | rpgm/event     | {campaignId}                                 |
+| **CampaignModel**             | rpgm/campaign  | {campaignId}                                 |   
+| **AdventureModel**            | rpgm/adventure | {campaignId}/{adventureId}                   |
+| **ActModel**                  | rpgm/act       | {campaignId}/{adventureId}/{actId}           |
+| **SceneModel**                | rpgm/scene     | {campaignId}/{adventureId}/{actId}/{sceneId} |
+| **SessionModel**              | rpgm/session   | {campaignId}                                 |
+| **SubplotModel**              | rpgm/subplot   | {campaignId}                                 |
+| **Player CharacterModel**     | rpgm/pc        | {campaignId}                                 |
+| **Non Player CharacterModel** | rpgm/npc       | {campaignId}                                 |
+| **EventModel**                | rpgm/event     | {campaignId}                                 |
 | **ClueModel**                 | rpgm/clue      | {campaignId}                                 |
-| **Faction**              | rpgm/faction   | {campaignId}                                 |
-| **Location**             | rpgm/location  | {campaignId}                                 |
-| **Music**                | rpgm/music     | {campaignId}                                 |
+| **FactionModel**              | rpgm/faction   | {campaignId}                                 |
+| **LocationModel**             | rpgm/location  | {campaignId}                                 |
+| **MusicModel**                | rpgm/music     | {campaignId}                                 |
 
 
 ### Additional frontmatter metadata
 
 RPG Manager stores all its metadata inside its first [codeblock](codeblocks.md) in every component. The only additional 
 metadata stored inside the frontmatter is relative to the type of Role Playing Game Setting, that is stored in the 
-frontmatter of each Campaign.
+frontmatter of each CampaignModel.
 
 Currently some additional settings are being developed, but only the `Agnostic` type is fully supported.

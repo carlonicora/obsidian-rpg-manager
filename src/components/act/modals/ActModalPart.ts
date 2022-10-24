@@ -49,7 +49,7 @@ export class ActModalPart extends AbstractModalPart {
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
 				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Acts missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager Act for the selected adventure. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first act for the adventure.'});
+				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager ActModel for the selected adventure. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first act for the adventure.'});
 			} else {
 				this._childEl = contentEl.createDiv({cls: 'child'});
 				this._childEl.id = 'ActChild';

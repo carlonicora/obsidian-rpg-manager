@@ -4,7 +4,7 @@ import {ComponentNotesTemplateFactoryInterface} from "../../../core/interfaces/C
 export class SubplotNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### Subplot Notes\n' +
+			'### SubplotModel Notes\n' +
 			' - \n\n' +
 			'---\n';
 	}

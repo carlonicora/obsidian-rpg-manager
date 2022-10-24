@@ -140,7 +140,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		}
 
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
-		flatpickrEl.placeholder = 'Select the Session Date';
+		flatpickrEl.placeholder = 'Select the SessionModel Date';
 		flatpickrEl.readOnly = true;
 
 		flatpickr(flatpickrEl, options);

@@ -1,13 +1,14 @@
 import {NewModelFactoryInterface} from "./interfaces/NewModelFactoryInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {App} from "obsidian";
+import {App, TFile} from "obsidian";
 import {NewModelClassInterface} from "./interfaces/NewModelClassInterface";
 import {ComponentModelInterface} from "../componentManager/interfaces/ComponentModelInterface";
+import {IdInterface} from "../../services/id/interfaces/IdInterface";
 
 export class NewModelFactory implements NewModelFactoryInterface {
-	private _models: Map<{type: ComponentType, campaignSettings: CampaignSetting}, ComponentModelInterface>
-		= new Map<{type: ComponentType; campaignSettings: CampaignSetting}, ComponentModelInterface>();
+	private _models: Map<string, NewModelClassInterface<ComponentModelInterface>>
+		= new Map<string, NewModelClassInterface<ComponentModelInterface>>();
 
 	constructor(
 		private _app: App,
@@ -15,25 +16,24 @@ export class NewModelFactory implements NewModelFactoryInterface {
 	}
 
 	public create(
-		type: ComponentType,
+		id: IdInterface,
 		campaignSettings: CampaignSetting,
-	): ComponentModelInterface {
-		let response = this._models.get({type: type, campaignSettings: campaignSettings});
+		file: TFile,
+	): ComponentModelInterface|undefined {
+		let modelClass = this._models.get(this._getIdentifier(id.type, campaignSettings));
 
-		if (response !== undefined)
-			return response;
+		if (modelClass !== undefined)
+			return this._initialiseComponentModel(modelClass, id, campaignSettings, file);
 
-		//TODO replace empty error
 		if (campaignSettings === CampaignSetting.Agnostic)
-			throw new Error('');
+			return undefined
 
-		response = this._models.get({type: type, campaignSettings: CampaignSetting.Agnostic});
+		modelClass = this._models.get(this._getIdentifier(id.type, CampaignSetting.Agnostic));
 
-		//TODO replace empty error
-		if (response === undefined)
-			throw new Error('');
+		if (modelClass === undefined)
+			return undefined
 
-		return response;
+		return this._initialiseComponentModel(modelClass, id, campaignSettings, file);;
 	}
 
 	public register<T extends ComponentModelInterface>(
@@ -41,8 +41,26 @@ export class NewModelFactory implements NewModelFactoryInterface {
 		type: ComponentType,
 		campaignSettings: CampaignSetting,
 	): void {
-		this._models.set({type: type, campaignSettings: campaignSettings}, new model(this._app));
+		this._models.set(this._getIdentifier(type, campaignSettings), model);
 	}
 
+	private _getIdentifier(
+		type: ComponentType,
+		campaignSettings: CampaignSetting,
+	): string {
+		return type.toString() + '-' + campaignSettings.toString();
+	}
+
+	private _initialiseComponentModel(
+		modelClass: NewModelClassInterface<ComponentModelInterface>,
+		id: IdInterface,
+		campaignSettings: CampaignSetting,
+		file: TFile,
+	): ComponentModelInterface {
+		const response = new modelClass(this._app);
+		response.initialise(campaignSettings, id, file);
+
+		return response;
+	}
 
 }

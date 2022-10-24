@@ -1,11 +1,11 @@
-import {SessionInterface} from "./interfaces/SessionInterface";
-import {ComponentType} from "../../core/enums/ComponentType";
-import {SessionMetadataInterface} from "./interfaces/SessionMetadataInterface";
-import {ComponentStage} from "../../core/enums/ComponentStage";
-import {AbstractSessionData} from "./abstracts/AbstractSessionData";
-import {FilePatternPositionInterface} from "../../services/manipulators/interfaces/FilePatternPositionInterface";
+import {SessionInterface} from "../interfaces/SessionInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
+import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
+import {ComponentStage} from "../../../core/enums/ComponentStage";
+import {AbstractSessionData} from "../abstracts/AbstractSessionData";
+import {FilePatternPositionInterface} from "../../../services/manipulators/interfaces/FilePatternPositionInterface";
 
-export class Session extends AbstractSessionData implements SessionInterface {
+export class SessionModel extends AbstractSessionData implements SessionInterface {
 	protected metadata: SessionMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Run;
 

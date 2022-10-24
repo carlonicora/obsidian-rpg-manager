@@ -6,13 +6,13 @@ import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {SearchService} from "../services/search/SearchService";
 import {FantasyCalendarService} from "../services/fantasyCalendar/FantasyCalendarService";
 import {DateService} from "../services/date/DateService";
-import {NewModelFactoryInterface} from "./factories/interfaces/NewModelFactoryInterface";
 import {NewViewFactoryInterface} from "./factories/interfaces/NewViewFactoryInterface";
-import {NewModelFactory} from "./factories/NewModelFactory";
 import {NewViewFactory} from "./factories/NewViewFactory";
 import {ComponentManagerInterface} from "./componentManager/interfaces/ComponentManagerInterface";
 import {ComponentManager} from "./componentManager/ComponentManager";
 import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
+import {NewModelFactoryInterface} from "./factories/interfaces/NewModelFactoryInterface";
+import {NewModelFactory} from "./factories/NewModelFactory";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _components: ComponentManagerInterface;
