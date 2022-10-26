@@ -1,12 +1,12 @@
 import {TableView} from "../subViews/TableView";
-import {BreadcrumbView} from "../subViews/BreadcrumbView";
+import {BreadcrumbView} from "../../../services/breadcrumb/views/BreadcrumbView";
 import {AbstractFactory} from "../../../core/abstracts/AbstractFactory";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {ViewType} from "../enums/ViewType";
 import {App, WorkspaceLeaf} from "obsidian";
 import {ViewFactoryInterface} from "./interfaces/ViewFactoryInterface";
-import {ViewInterface} from "../interfaces/ViewInterface";
+import {OldViewInterface} from "../interfaces/OldViewInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {AbstractRpgManagerView} from "../../../core/abstracts/AbstractRpgManagerView";
 import {ActHeaderView} from "../../../components/act/views/ActHeaderView";
@@ -59,7 +59,7 @@ export class ViewFactory extends AbstractFactory implements ViewFactoryInterface
 		settings: CampaignSetting,
 		type: ResponseType,
 		sourcePath: string,
-	): ViewInterface {
+	): OldViewInterface {
 		let viewKey:string = CampaignSetting[settings] + ResponseType[type];
 		if (!this._viewTypeMap.has(viewKey)) viewKey = CampaignSetting[CampaignSetting.Agnostic] + ResponseType[type];
 		if (!this._viewTypeMap.has(viewKey)) throw new Error('Type of modal ' + CampaignSetting[settings] + ComponentType[type] + ' cannot be found');

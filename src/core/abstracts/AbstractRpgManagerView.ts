@@ -6,7 +6,7 @@ import {TagHelper} from "../../database/TagHelper";
 import {base} from "w3c-keyname";
 import {ManipulatorsInterface} from "../../services/manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../../database/interfaces/DatabaseInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {ServiceManagerInterface} from "../../api/servicesManager/interfaces/ServiceManagerInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
@@ -126,7 +126,7 @@ export abstract class AbstractRpgManagerView extends ItemView implements View, R
 		const basename: string|undefined = element.dataset.href;
 		if (base == undefined) return;
 
-		const component: ComponentModelInterface|undefined = this.database.read<ComponentModelInterface>((data: ComponentModelInterface) => data.file.basename === basename)[0];
+		const component: ModelInterface|undefined = this.database.read<ModelInterface>((data: ModelInterface) => data.file.basename === basename)[0];
 		if (component === undefined) return;
 
 		const file: TFile = component.file;

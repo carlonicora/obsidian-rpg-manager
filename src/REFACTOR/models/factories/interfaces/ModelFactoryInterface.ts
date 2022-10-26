@@ -1,17 +1,17 @@
 import {CampaignSetting} from "../../../../components/campaign/enums/CampaignSetting";
-import {ModelInterface} from "../../interfaces/ModelInterface";
-import {ComponentModelInterface} from "../../../../api/componentManager/interfaces/ComponentModelInterface";
+import {OldModelInterface} from "../../interfaces/OldModelInterface";
+import {ModelInterface} from "../../../../api/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../../../core/enums/ComponentType";
 
 export interface ModelFactoryInterface {
 	create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,
-	): ModelInterface;
+	): OldModelInterface;
 
 	createSubModel(
 		settings: CampaignSetting|undefined,

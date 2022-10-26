@@ -1,6 +1,6 @@
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {PlotsInterface} from "../../../services/plots/interfaces/PlotsInterface";
 import {AdventureDataInterface} from "./AdventureDataInterface";
 
-export interface AdventureInterface extends ComponentModelInterface, PlotsInterface, AdventureDataInterface{
+export interface AdventureInterface extends ModelInterface, PlotsInterface, AdventureDataInterface{
 }

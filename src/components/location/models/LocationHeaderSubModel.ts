@@ -7,7 +7,7 @@ import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {LocationInterface} from "../interfaces/LocationInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class LocationHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: LocationInterface;

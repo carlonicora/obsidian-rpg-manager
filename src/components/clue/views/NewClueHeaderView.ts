@@ -1,6 +1,6 @@
 import {NewHeaderViewInterface} from "../../../views/interfaces/NewHeaderViewInterface";
 import {NewViewType} from "../../../core/enums/NewViewType";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {NewAbstractHeaderView} from "../../../views/abstracts/NewAbstractHeaderView";
 import {ClueInterface} from "../interfaces/ClueInterface";
 

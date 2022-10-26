@@ -1,6 +1,6 @@
 import {AbstractEditorModal} from "../abstracts/AbstractEditorModal";
 import {App, Component, MarkdownRenderer} from "obsidian";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {EditableContentType} from "../enums/EditableContentType";
 import {LinkSuggesterHandler} from "../../linkSuggester/handlers/LinkSuggesterHandler";
 
@@ -8,7 +8,7 @@ export class StoryCircleContentEditorModal extends AbstractEditorModal {
 
 	constructor(
 		app: App,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		editableContentType: EditableContentType,
 		editableField: string,
 		private _relatedAbtValue: string,

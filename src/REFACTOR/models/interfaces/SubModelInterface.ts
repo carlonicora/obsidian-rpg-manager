@@ -1,5 +1,5 @@
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export interface SubModelInterface {
 	generateData(

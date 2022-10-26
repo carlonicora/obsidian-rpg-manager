@@ -1,7 +1,7 @@
 import {NewRelationshipsViewInterface} from "../../../views/interfaces/NewRelationshipsViewInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {RelationshipType} from "../../../services/relationships/enums/RelationshipType";
+import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {NewViewType} from "../../../core/enums/NewViewType";
 import {NewAbstractRelationshipView} from "../../../views/abstracts/NewAbstractRelationshipView";
 

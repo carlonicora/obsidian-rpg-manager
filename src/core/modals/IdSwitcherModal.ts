@@ -3,7 +3,7 @@ import {App, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../../services/id/interfaces/IdInterface";
 import {DatabaseInitialiser} from "../../database/DatabaseInitialiser";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {InvalidIdChecksumError} from "../errors/InvalidIdChecksumError";
 
 export class IdSwitcherModal extends AbstractModal {
@@ -112,7 +112,7 @@ export class IdSwitcherModal extends AbstractModal {
 		}
 
 		try {
-			this.database.readSingle<ComponentModelInterface>(this._newId.type, this._newId);
+			this.database.readSingle<ModelInterface>(this._newId.type, this._newId);
 			this._updateButtonEl.disabled = true;
 			this._errorIdEl.style.display = '';
 		} catch (e) {
@@ -168,7 +168,7 @@ export class IdSwitcherModal extends AbstractModal {
 
 		const subContainerEl: HTMLDivElement|undefined = selectorEl.parentElement?.createDiv();
 
-		components.forEach((component: ComponentModelInterface) => {
+		components.forEach((component: ModelInterface) => {
 			selectorEl.createEl('option', {text: component.file.basename, value: component.id.id.toString()});
 		});
 
@@ -315,22 +315,22 @@ export class IdSwitcherModal extends AbstractModal {
 	): number {
 		let response = 1;
 
-		let components: ComponentModelInterface[];
+		let components: ModelInterface[];
 		if (type === ComponentType.Scene){
-			components = this.database.read<ComponentModelInterface>((component: ComponentModelInterface) =>
+			components = this.database.read<ModelInterface>((component: ModelInterface) =>
 				component.id.type === type &&
 				component.id.campaignId === campaignId &&
 				component.id.adventureId === adventureId &&
 				component.id.actId === actId
 			);
 		} else {
-			components = this.database.read<ComponentModelInterface>((component: ComponentModelInterface) =>
+			components = this.database.read<ModelInterface>((component: ModelInterface) =>
 				component.id.type === type &&
 				(campaignId !== undefined ? component.id.campaignId === campaignId : true)
 			);
 		}
 
-		components.forEach((component: ComponentModelInterface) => {
+		components.forEach((component: ModelInterface) => {
 			if (component.id.id >= response) response = component.id.id + 1;
 		});
 
@@ -345,7 +345,7 @@ export class IdSwitcherModal extends AbstractModal {
 	): boolean {
 		const components = this._loadPossibleChildren(type, campaignId, adventureId, actId);
 
-		const match = components.filter((component: ComponentModelInterface) => this._id.id === component.id.id);
+		const match = components.filter((component: ModelInterface) => this._id.id === component.id.id);
 
 		return match.length === 0;
 	}
@@ -355,8 +355,8 @@ export class IdSwitcherModal extends AbstractModal {
 		campaignId: number|undefined = undefined,
 		adventureId: number|undefined = undefined,
 		actId: number|undefined = undefined,
-	): ComponentModelInterface[]{
-		return this.database.read<ComponentModelInterface>((component: ComponentModelInterface) =>
+	): ModelInterface[]{
+		return this.database.read<ModelInterface>((component: ModelInterface) =>
 			component.id.type === type &&
 			(campaignId !== undefined ? component.id.campaignId === campaignId : true) &&
 			(adventureId !== undefined ? component.id.adventureId === adventureId : true) &&

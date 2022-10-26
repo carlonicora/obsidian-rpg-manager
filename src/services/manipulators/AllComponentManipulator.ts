@@ -1,7 +1,7 @@
 import {AbstractFactory} from "../../core/abstracts/AbstractFactory";
 import {AllComponentManipulatorInterface} from "./interfaces/AllComponentManipulatorInterface";
 import {TFile} from "obsidian";
-import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
+import {OldFileManipulatorInterface} from "../fileManipulatorService/interfaces/OldFileManipulatorInterface";
 
 export class AllComponentManipulator extends AbstractFactory implements AllComponentManipulatorInterface {
 	public async updateImagePath(
@@ -39,7 +39,7 @@ export class AllComponentManipulator extends AbstractFactory implements AllCompo
 		const allFiles = this.app.vault.getMarkdownFiles();
 		allFiles.forEach((file: TFile) => {
 			this.factories.fileManipulator.create(file)
-				.then((fileManipulator: FileManipulatorInterface) => {
+				.then((fileManipulator: OldFileManipulatorInterface) => {
 					fileManipulator.read()
 						.then((isReady: boolean) => {
 							if (!isReady)

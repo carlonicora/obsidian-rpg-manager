@@ -1,11 +1,11 @@
 import {AbstractResponse} from "./abstracts/AbstractResponse";
-import {BreadcrumbResponseInterface} from "./interfaces/BreadcrumbResponseInterface";
+import {BreadcrumbResponseInterface} from "../services/breadcrumb/interfaces/BreadcrumbResponseInterface";
 import {ResponseType} from "./enums/ResponseType";
 import {App} from "obsidian";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
 
 export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbResponseInterface {
-	public component: ComponentModelInterface|undefined = undefined;
+	public component: ModelInterface|undefined = undefined;
 	public link: string;
 	public linkText: string|null;
 	public nextBreadcrumb: BreadcrumbResponseInterface|null;
@@ -17,7 +17,7 @@ export class ResponseBreadcrumb extends AbstractResponse implements BreadcrumbRe
 
 	constructor(
 		app: App,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 	) {
 		super(app, currentComponent);
 		this.responseType = ResponseType.Breadcrumb;

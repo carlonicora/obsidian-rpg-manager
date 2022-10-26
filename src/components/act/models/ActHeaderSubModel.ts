@@ -8,7 +8,7 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {ActInterface} from "../interfaces/ActInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {AnalyserInterface} from "../../../services/analyser/interfaces/AnalyserInterface";
 
 export class ActHeaderSubModel extends AbstractHeaderSubModel {

@@ -1,10 +1,10 @@
-import {ComponentInterface} from "../../api/componentManager/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../api/componentsManager/interfaces/ComponentInterface";
 import {CampaignSetting} from "./enums/CampaignSetting";
-import {NewModelClassInterface} from "../../api/factories/interfaces/NewModelClassInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelClassInterface} from "../../api/modelsManager/interfaces/ModelClassInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {NewViewClassInterface} from "../../api/factories/interfaces/NewViewClassInterface";
-import {NewViewInterface} from "../../views/interfaces/NewViewInterface";
+import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
+import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {CampaignModel} from "./models/CampaignModel";
 import {NewCampaignHeaderView} from "./views/NewCampaignHeaderView";
@@ -14,7 +14,7 @@ export class CampaignComponent implements ComponentInterface {
 		return CampaignSetting.Agnostic;
 	}
 
-	public get model(): NewModelClassInterface<ComponentModelInterface>{
+	public get model(): ModelClassInterface<ModelInterface>{
 		return CampaignModel;
 	}
 
@@ -22,8 +22,8 @@ export class CampaignComponent implements ComponentInterface {
 		return ComponentType.Campaign;
 	}
 
-	public get views(): Map<NewViewClassInterface<NewViewInterface>, NewViewType> {
-		return new Map<NewViewClassInterface<NewViewInterface>, NewViewType>([
+	public get views(): Map<ViewClassInterface<ViewInterface>, NewViewType> {
+		return new Map<ViewClassInterface<ViewInterface>, NewViewType>([
 			[NewCampaignHeaderView, NewViewType.Header],
 		]);
 	}

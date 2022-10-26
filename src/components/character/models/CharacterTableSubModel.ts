@@ -3,9 +3,9 @@ import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/Abstract
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../REFACTOR/views/enums/TableField";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {CharacterInterface} from "../interfaces/CharacterInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class CharacterTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.CharacterList;
@@ -21,7 +21,7 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		return super.generateHeaderElement(fieldType);
 	}
 
-	protected generateContentElement<T extends ComponentModelInterface>(
+	protected generateContentElement<T extends ModelInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,

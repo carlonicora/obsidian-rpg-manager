@@ -1,5 +1,5 @@
 import {ComponentDataMetadataInterface} from "./ComponentDataMetadataInterface";
-import {ControllerMetadataRelationshipInterface} from "../controller/interfaces/ControllerMetadataRelationshipInterface";
+import {ControllerMetadataRelationshipInterface} from "../../api/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 
 export interface ComponentMetadataInterface {
 	data?: ComponentDataMetadataInterface|any;

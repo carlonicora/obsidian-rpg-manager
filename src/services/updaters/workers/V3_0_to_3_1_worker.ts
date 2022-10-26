@@ -6,7 +6,7 @@ import {CachedMetadata, parseYaml, SectionCache, TFile} from "obsidian";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
 import {ImageMetadataInterface} from "../../../core/interfaces/ImageMetadataInterface";
 import {YamlHelper} from "../../../core/helpers/YamlHelper";
-import {AbstractComponent} from "../../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 
 export class V3_0_to_3_1_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	public async run(
@@ -63,8 +63,8 @@ export class V3_0_to_3_1_worker extends AbstractDatabaseWorker implements Databa
 
 			let imagePath = imageSrc;
 			if (imagePath == undefined || imagePath === '') {
-				if (AbstractComponent.root == undefined)
-					AbstractComponent.initialiseRoots(this.app);
+				if (AbstractModel.root == undefined)
+					AbstractModel.initialiseRoots(this.app);
 
 				const attachmentFolder = (this.settings.imagesFolder !== undefined && this.settings.imagesFolder !== '') ? this.settings.imagesFolder : this.app.vault.config.attachmentFolderPath;
 

@@ -1,4 +1,4 @@
-import {AbstractComponent} from "../../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 import {Pronoun} from "../enums/Pronoun";
 import {CharacterDataInterface} from "../interfaces/CharacterDataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
@@ -6,7 +6,7 @@ import {DateHelper} from "../../../core/helpers/DateHelper";
 import {DateInterface} from "../../../services/date/interfaces/DateInterface";
 import {DateService} from "../../../services/date/DateService";
 
-export class AbstractCharacterData extends AbstractComponent implements CharacterDataInterface {
+export class AbstractCharacterData extends AbstractModel implements CharacterDataInterface {
 	protected metadata: CharacterMetadataInterface;
 
 	public get death(): DateInterface | undefined {

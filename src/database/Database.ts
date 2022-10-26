@@ -4,7 +4,7 @@ import {ComponentType} from "../core/enums/ComponentType";
 import {IdInterface} from "../services/id/interfaces/IdInterface";
 import {ComponentNotFoundError} from "../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
 import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
 import {AdventureInterface} from "../components/adventure/interfaces/AdventureInterface";
 import {SessionInterface} from "../components/session/interfaces/SessionInterface";
@@ -19,7 +19,7 @@ import {RpgErrorInterface} from "../core/errors/interfaces/RpgErrorInterface";
 import {AbstractComponentData} from "../core/abstracts/AbstractComponentData";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
-	public recordset: ComponentModelInterface[] = [];
+	public recordset: ModelInterface[] = [];
 	private _basenameIndex: Map<string, string>;
 	private _isDatabaseReady = false;
 
@@ -52,7 +52,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public create(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 	): void {
 		let isNew = true;
 
@@ -76,13 +76,13 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	}
 
 	public update(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 	): void {
 		this.create(component);
 	}
 
 	public delete(
-		component: ComponentModelInterface|string,
+		component: ModelInterface|string,
 	): boolean {
 		const key = (typeof component === 'string') ? component : component.file.path;
 
@@ -102,25 +102,25 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		return index !== undefined;
 	}
 
-	public readByPath<T extends ComponentModelInterface>(
+	public readByPath<T extends ModelInterface>(
 		path: string,
 	): T|undefined {
-		const response:ComponentModelInterface[] = this.recordset
-			.filter((component: ComponentModelInterface) => component.file.path === path);
+		const response:ModelInterface[] = this.recordset
+			.filter((component: ModelInterface) => component.file.path === path);
 
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
-	public readByBaseName<T extends ComponentModelInterface>(
+	public readByBaseName<T extends ModelInterface>(
 		basename: string,
 	): T|undefined {
-		const response:ComponentModelInterface[] = this.recordset
-			.filter((component: ComponentModelInterface) => component.file.basename === basename);
+		const response:ModelInterface[] = this.recordset
+			.filter((component: ModelInterface) => component.file.basename === basename);
 
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
-	public readSingle<T extends ComponentModelInterface>(
+	public readSingle<T extends ModelInterface>(
 		type: ComponentType,
 		id: IdInterface,
 		overloadId: number|undefined=undefined,
@@ -132,7 +132,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		return <T>result[0];
 	}
 
-	public readList<T extends ComponentModelInterface>(
+	public readList<T extends ModelInterface>(
 		type: ComponentType,
 		id: IdInterface|undefined,
 		overloadId: number|undefined = undefined,
@@ -194,7 +194,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 				break;
 			default:
 				if (overloadId !== undefined) campaignId = overloadId;
-				return (component: ComponentModelInterface) =>
+				return (component: ModelInterface) =>
 					(type & component.id.type) === component.id.type &&
 					component.id.campaignId === campaignId
 				break;
@@ -238,7 +238,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		const newBaseName = file.path;
 
 		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
-		const component: ComponentModelInterface|undefined = this.readByPath(file.path);
+		const component: ModelInterface|undefined = this.readByPath(file.path);
 
 		await this._basenameIndex.delete(oldPath);
 		if (component !== undefined) await this._basenameIndex.set(file.path, file.basename);
@@ -267,7 +267,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public async onSave(
 		file: TFile,
 	): Promise<void> {
-		let component:ComponentModelInterface|undefined = this.readByPath(file.path);
+		let component:ModelInterface|undefined = this.readByPath(file.path);
 
 		try {
 			const isNewComponent = component === undefined;

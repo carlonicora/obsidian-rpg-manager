@@ -16,8 +16,8 @@ import {ActNotesTemplateFactory} from "../../components/act/templates/ActNotesTe
 import {SceneNotesTemplateFactory} from "../../components/scene/templates/SceneNotesTemplateFactory";
 import {SessionNotesTemplateFactory} from "../../components/session/templates/SessionNotesTemplateFactory";
 import {SubplotNotesTemplateFactory} from "../../components/subplot/templates/SubplotNotesTemplateFactory";
-import {ControllerMetadataDataInterface} from "../controller/interfaces/ControllerMetadataDataInterface";
-import {ControllerMetadataInterface} from "../controller/interfaces/ControllerMetadataInterface";
+import {ControllerMetadataDataInterface} from "../../api/controllerManager/interfaces/ControllerMetadataDataInterface";
+import {ControllerMetadataInterface} from "../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {Md5} from "ts-md5";
 import {YamlHelper} from "../helpers/YamlHelper";
 

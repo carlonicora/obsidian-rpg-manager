@@ -2,7 +2,7 @@ import {AbstractSubModel} from "../../../REFACTOR/models/abstracts/AbstractSubMo
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseTable} from "../../../responses/ResponseTable";
 import {ContentType} from "../../../responses/enums/ContentType";
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
 import {PlotsInterface} from "../interfaces/PlotsInterface";
 import {ResponseTableElement} from "../../../responses/ResponseTableElement";
 

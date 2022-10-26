@@ -1,13 +1,13 @@
 import {ComponentType} from "../../core/enums/ComponentType";
 import {IdInterface} from "../../services/id/interfaces/IdInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {TFile} from "obsidian";
 
 export interface DatabaseInterface {
-	recordset: ComponentModelInterface[];
+	recordset: ModelInterface[];
 
 	create(
-		data: ComponentModelInterface,
+		data: ModelInterface,
 	): void;
 
 	ready(
@@ -20,28 +20,28 @@ export interface DatabaseInterface {
 	): T[];
 
 	update(
-		data: ComponentModelInterface,
+		data: ModelInterface,
 	): void;
 
 	delete(
-		data: ComponentModelInterface|string,
+		data: ModelInterface|string,
 	): boolean;
 
-	readByPath<T extends ComponentModelInterface>(
+	readByPath<T extends ModelInterface>(
 		name: string,
 	): T|undefined;
 
-	readByBaseName<T extends ComponentModelInterface>(
+	readByBaseName<T extends ModelInterface>(
 		basename: string,
 	): T|undefined;
 
-	readSingle<T extends ComponentModelInterface>(
+	readSingle<T extends ModelInterface>(
 		type: ComponentType,
 		id: IdInterface,
 		overloadId?: number|undefined,
 	): T;
 
-	readList<T extends ComponentModelInterface>(
+	readList<T extends ModelInterface>(
 		type: ComponentType,
 		id: IdInterface|undefined,
 		overloadId?: number|undefined,

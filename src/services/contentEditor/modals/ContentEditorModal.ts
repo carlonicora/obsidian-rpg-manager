@@ -1,13 +1,13 @@
 import {App} from "obsidian";
 import {LinkSuggesterHandler} from "../../linkSuggester/handlers/LinkSuggesterHandler";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {EditableContentType} from "../enums/EditableContentType";
 import {AbstractEditorModal} from "../abstracts/AbstractEditorModal";
 
 export class ContentEditorModal extends AbstractEditorModal {
 	constructor(
 		app: App,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		editableContentType: EditableContentType,
 		editableField: string,
 		isLongText: boolean,

@@ -1,4 +1,4 @@
-import {AbstractComponent} from "../../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 import {SceneDataInterface} from "../interfaces/SceneDataInterface";
 import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
 import {SceneType} from "../enums/SceneType";
@@ -7,7 +7,7 @@ import {DateHelper} from "../../../core/helpers/DateHelper";
 import {DateInterface} from "../../../services/date/interfaces/DateInterface";
 import {DateService} from "../../../services/date/DateService";
 
-export abstract class AbstractSceneData extends AbstractComponent implements SceneDataInterface {
+export abstract class AbstractSceneData extends AbstractModel implements SceneDataInterface {
 	protected metadata: SceneMetadataInterface;
 
 	public get action(): string | undefined {

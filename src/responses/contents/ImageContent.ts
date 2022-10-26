@@ -1,5 +1,5 @@
 import {AbstractContent} from "../abstracts/AbstractContent";
-import {ImageInterface} from "../../services/galleries/interfaces/ImageInterface";
+import {ImageInterface} from "../../services/galleryService/interfaces/ImageInterface";
 
 export class ImageContent extends AbstractContent {
 	public content: ImageInterface[];

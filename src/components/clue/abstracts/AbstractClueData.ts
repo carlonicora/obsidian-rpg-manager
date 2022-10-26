@@ -1,11 +1,11 @@
-import {AbstractComponent} from "../../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 import {ClueDataInterface} from "../interfaces/ClueDataInterface";
 import {ClueMetadataInterface} from "../interfaces/ClueMetadataInterface";
 import {DateHelper} from "../../../core/helpers/DateHelper";
 import {DateInterface} from "../../../services/date/interfaces/DateInterface";
 import {DateService} from "../../../services/date/DateService";
 
-export abstract class AbstractClueData extends AbstractComponent implements ClueDataInterface {
+export abstract class AbstractClueData extends AbstractModel implements ClueDataInterface {
 	protected metadata: ClueMetadataInterface;
 
 	public get found(): DateInterface | undefined {

@@ -1,14 +1,14 @@
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {EditableContentType} from "../enums/EditableContentType";
 
 export interface EditableContentValueFactoryInterface {
 	read(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		type: EditableContentType,
 	): string|boolean|number|undefined;
 
 	readRelatedPlot(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		type: EditableContentType.StoryCircleYou |
 			EditableContentType.StoryCircleNeed |
 			EditableContentType.StoryCircleGo |

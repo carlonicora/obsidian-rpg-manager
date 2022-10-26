@@ -1,6 +1,5 @@
-export interface FantasyCalendarServiceInterface {
-	/*
-	get calendars(): any;
+import {Calendar} from "obsidian-fantasy-calendar";
 
-	 */
+export interface FantasyCalendarServiceInterface {
+	get calendars(): Calendar[];
 }

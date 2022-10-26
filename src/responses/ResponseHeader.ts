@@ -5,8 +5,8 @@ import {ResponseType} from "./enums/ResponseType";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {HeaderResponseElementInterface} from "./interfaces/HeaderResponseElementInterface";
 import {ComponentType} from "../core/enums/ComponentType";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
-import {ImageInterface} from "../services/galleries/interfaces/ImageInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
+import {ImageInterface} from "../services/galleryService/interfaces/ImageInterface";
 
 export class ResponseHeader extends AbstractResponse implements HeaderResponseInterface {
 	public type: ComponentType;
@@ -21,7 +21,7 @@ export class ResponseHeader extends AbstractResponse implements HeaderResponseIn
 
 	constructor(
 		app: App,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 	) {
 		super(app, currentComponent);
 		this.responseType = ResponseType.Header;

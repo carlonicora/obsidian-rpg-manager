@@ -1,4 +1,4 @@
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {NewHeaderViewInterface} from "../interfaces/NewHeaderViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {Component, MarkdownRenderer} from "obsidian";
@@ -13,7 +13,7 @@ export abstract class NewAbstractHeaderView implements NewHeaderViewInterface {
 	private _analyserContainerEl: HTMLDivElement;
 
 	constructor(
-		public model: ComponentModelInterface,
+		public model: ModelInterface,
 		public containerEl: HTMLElement,
 		public sourcePath: string,
 	) {
@@ -37,7 +37,7 @@ export abstract class NewAbstractHeaderView implements NewHeaderViewInterface {
 	protected addTitle(
 	): void {
 		MarkdownRenderer.renderMarkdown(
-			this.sourcePath,
+			'[[' + this.model.file.basename + ']]',
 			this._titleContainerEl,
 			this.sourcePath,
 			null as unknown as Component,

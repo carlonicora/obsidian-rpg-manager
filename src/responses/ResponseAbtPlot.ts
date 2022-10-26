@@ -3,7 +3,7 @@ import {AbtPlotResponseInterface} from "./interfaces/AbtPlotResponseInterface";
 import {App} from "obsidian";
 import {ResponseType} from "./enums/ResponseType";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
 
 export class ResponseAbtPlot extends AbstractResponse implements AbtPlotResponseInterface {
 	public need: ContentInterface;
@@ -13,7 +13,7 @@ export class ResponseAbtPlot extends AbstractResponse implements AbtPlotResponse
 
 	constructor(
 		app: App,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 	) {
 		super(app, currentComponent);
 		this.responseType = ResponseType.AbtPlot;

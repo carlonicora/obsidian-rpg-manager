@@ -1,14 +1,14 @@
 import {AbstractEditorModal} from "../abstracts/AbstractEditorModal";
 import {App} from "obsidian";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterHandler} from "../../linkSuggester/handlers/LinkSuggesterHandler";
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../../relationships/enums/RelationshipType";
+import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
+import {RelationshipType} from "../../relationshipsService/enums/RelationshipType";
 
 export class RelationshipEditorModal extends AbstractEditorModal {
 	constructor(
 		app: App,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		editableField: string,
 		private _relationship: RelationshipInterface,
 	) {

@@ -1,15 +1,15 @@
 import {AbstractFactory} from "../../core/abstracts/AbstractFactory";
 import {CodeBlockManipulatorInterface} from "./interfaces/CodeBlockManipulatorInterface";
 import {CachedMetadata, MarkdownView, parseYaml, SectionCache, TFile} from "obsidian";
-import {FileManipulator} from "./FileManipulator";
-import {RelationshipInterface} from "../relationships/interfaces/RelationshipInterface";
+import {OldFileManipulator} from "../fileManipulatorService/OldFileManipulator";
+import {RelationshipInterface} from "../relationshipsService/interfaces/RelationshipInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../../core/controller/interfaces/ControllerMetadataRelationshipInterface";
-import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
-import {ControllerMetadataDataInterface} from "../../core/controller/interfaces/ControllerMetadataDataInterface";
-import {RelationshipType} from "../relationships/enums/RelationshipType";
+} from "../../api/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
+import {OldFileManipulatorInterface} from "../fileManipulatorService/interfaces/OldFileManipulatorInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ControllerMetadataDataInterface} from "../../api/controllerManager/interfaces/ControllerMetadataDataInterface";
+import {RelationshipType} from "../relationshipsService/enums/RelationshipType";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 import {Md5} from "ts-md5";
 import {DatabaseInitialiser} from "../../database/DatabaseInitialiser";
@@ -17,14 +17,14 @@ import {DatabaseInterface} from "../../database/interfaces/DatabaseInterface";
 import {ImageMetadataInterface} from "../../core/interfaces/ImageMetadataInterface";
 import {ComponentMetadataInterface} from "../../core/interfaces/ComponentMetadataInterface";
 import {YamlHelper} from "../../core/helpers/YamlHelper";
-import {ImageInterface} from "../galleries/interfaces/ImageInterface";
+import {ImageInterface} from "../galleryService/interfaces/ImageInterface";
 
 export class CodeBlockManipulator extends AbstractFactory implements CodeBlockManipulatorInterface {
 	public async replaceID(
 		file: TFile,
 		id: string,
 	): Promise<void> {
-		const fileEditor = new FileManipulator(this.app, file);
+		const fileEditor = new OldFileManipulator(this.app, file);
 		if (!await fileEditor.read()) return;
 
 		const metadata = {
@@ -57,7 +57,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	public async stopCurrentDuration(
 		file: TFile,
 	): Promise<void> {
-		const fileEditor = new FileManipulator(this.app, file);
+		const fileEditor = new OldFileManipulator(this.app, file);
 		if (!await fileEditor.read()) return;
 
 		const metadata = await fileEditor.getCodeBlockMetadata();
@@ -92,7 +92,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	public async startNewDuration(
 		file: TFile,
 	): Promise<void> {
-		const fileEditor = new FileManipulator(this.app, file);
+		const fileEditor = new OldFileManipulator(this.app, file);
 		if (!await fileEditor.read()) return;
 
 		let metadata = await fileEditor.getCodeBlockMetadata();
@@ -120,7 +120,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 		identifier: string,
 		value: string|boolean|number|undefined,
 	): Promise<void> {
-		const fileEditor = new FileManipulator(this.app, file);
+		const fileEditor = new OldFileManipulator(this.app, file);
 		if (!await fileEditor.read()) return;
 
 		const metadata = await fileEditor.getCodeBlockMetadata();
@@ -376,8 +376,8 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	}
 
 	public async read(
-		fileManipulator: FileManipulatorInterface,
-		component: ComponentModelInterface,
+		fileManipulator: OldFileManipulatorInterface,
+		component: ModelInterface,
 	): Promise<ControllerMetadataDataInterface> {
 		return this._addRelationshipsFromContent(
 			fileManipulator.content,
@@ -389,7 +389,7 @@ export class CodeBlockManipulator extends AbstractFactory implements CodeBlockMa
 	private _addRelationshipsFromContent(
 		fileContent: string,
 		metadata: ControllerMetadataDataInterface,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 	): ControllerMetadataDataInterface {
 		if (metadata.relationships == undefined) metadata.relationships = [];
 

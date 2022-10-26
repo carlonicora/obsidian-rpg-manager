@@ -2,7 +2,7 @@ import {AbstractSubModel} from "../../../REFACTOR/models/abstracts/AbstractSubMo
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ContentType} from "../../../responses/enums/ContentType";
 import {ResponseTable} from "../../../responses/ResponseTable";
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
 import {ResponseTableElement} from "../../../responses/ResponseTableElement";
 
 export class StoryCirclePlotSubModel extends AbstractSubModel {

@@ -1,9 +1,9 @@
 import {AbstractFactory} from "../../../core/abstracts/AbstractFactory";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {App} from "obsidian";
-import {ModelInterface} from "../interfaces/ModelInterface";
+import {OldModelInterface} from "../interfaces/OldModelInterface";
 import {ModelFactoryInterface} from "./interfaces/ModelFactoryInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ActHeaderSubModel} from "../../../components/act/models/ActHeaderSubModel";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {HeaderModel} from "../HeaderModel";
@@ -58,11 +58,11 @@ export class ModelFactory extends AbstractFactory implements ModelFactoryInterfa
 	public create(
 		settings: CampaignSetting,
 		modelName: string,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 		source: string,
 		sourcePath: string,
 		sourceMeta: any,
-	): ModelInterface {
+	): OldModelInterface {
 		let modelKey = CampaignSetting[settings] + modelName;
 		if (!this._modelTypeMap.has(modelKey)) modelKey = CampaignSetting[CampaignSetting.Agnostic] + modelName;
 		if (!this._modelTypeMap.has(modelKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + modelName + ' cannot be found');

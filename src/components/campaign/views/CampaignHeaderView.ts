@@ -5,7 +5,7 @@ import {AbstractPlotHeaderView} from "../../../REFACTOR/views/abstracts/Abstract
 import {HeadlessTableView} from "../../../REFACTOR/views/HeadlessTableView";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {DateService} from "../../../services/date/DateService";
@@ -101,7 +101,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		contentEl: HTMLDivElement,
 		type: string,
 		currentComponent: string|undefined,
-		components: ComponentModelInterface[],
+		components: ModelInterface[],
 	): any|ContentInterface|undefined {
 		const componentSelectorEl = contentEl.createEl("select");
 		componentSelectorEl.id = type;
@@ -111,7 +111,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			value: ""
 		}).selected = true;
 
-		components.forEach((component: ComponentModelInterface) => {
+		components.forEach((component: ModelInterface) => {
 			const componentOptionEl = componentSelectorEl.createEl("option", {
 				text: component.file.basename,
 				value: component.id.stringValue,
@@ -130,9 +130,9 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			}
 		});
 
-		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: ComponentModelInterface[]) => {
+		return ((contentEl: HTMLDivElement, type: string, currentComponent: string|undefined, components: ModelInterface[]) => {
 			let link: string|undefined = undefined;
-			components.forEach((component: ComponentModelInterface) => {
+			components.forEach((component: ModelInterface) => {
 				if (currentComponent === component.id.stringValue) link = component.link;
 			});
 

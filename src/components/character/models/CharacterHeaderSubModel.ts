@@ -7,7 +7,7 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {CharacterInterface} from "../interfaces/CharacterInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {DateService} from "../../../services/date/DateService";
 
 export class CharacterHeaderSubModel extends AbstractHeaderSubModel {

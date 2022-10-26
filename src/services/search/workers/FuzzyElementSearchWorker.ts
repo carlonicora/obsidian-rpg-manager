@@ -2,13 +2,13 @@ import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
 import {App, fuzzySearch, prepareQuery, SearchResult, TFile} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
 
 export class FuzzyElementSearchWorker extends AbstractSearchWorker implements SearchWorkerInterface {
 	constructor(
 		app: App,
-		private _element: ComponentModelInterface,
+		private _element: ModelInterface,
 	) {
 		super(app);
 	}
@@ -24,9 +24,9 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 
 
 		this.database.read(
-			(element: ComponentModelInterface) =>
+			(element: ModelInterface) =>
 				element.id.campaignId === this._element.id.campaignId
-		).forEach((element: ComponentModelInterface) => {
+		).forEach((element: ModelInterface) => {
 			if (element.alias.length > 0){
 				element.alias.forEach((alias: string) => {
 					const fuzzySearchResult = fuzzySearch(query, alias);

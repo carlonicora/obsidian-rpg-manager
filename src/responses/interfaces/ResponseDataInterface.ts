@@ -1,14 +1,14 @@
 import {ResponseDataElementInterface} from "./ResponseDataElementInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
-import {RelationshipInterface} from "../../services/relationships/interfaces/RelationshipInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {RelationshipInterface} from "../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export interface ResponseDataInterface {
 	elements: ResponseDataElementInterface[];
 
 	addSubModel<T>(
 		type: T,
-		currentComponent: ComponentModelInterface,
-		data: ComponentModelInterface[]|ComponentModelInterface|RelationshipInterface[],
+		currentComponent: ModelInterface,
+		data: ModelInterface[]|ModelInterface|RelationshipInterface[],
 		title?: string|undefined,
 		additionalInformation?: any|undefined,
 		position?: number|undefined,

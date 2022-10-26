@@ -5,7 +5,7 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {SubplotInterface} from "../interfaces/SubplotInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class SubplotHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: SubplotInterface;

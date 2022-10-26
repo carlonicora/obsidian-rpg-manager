@@ -3,14 +3,16 @@ import {FantasyCalendarServiceInterface} from "./interfaces/FantasyCalendarServi
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
 import {Calendar} from "obsidian-fantasy-calendar";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class FantasyCalendarService extends AbstractService implements FantasyCalendarServiceInterface, ServiceInterface{
 	private _isReady: boolean;
 
 	constructor(
 		app: App,
+		api: RpgManagerApiInterface,
 	) {
-		super(app);
+		super(app, api);
 		this._isReady = false;
 
 		this.registerEvent(

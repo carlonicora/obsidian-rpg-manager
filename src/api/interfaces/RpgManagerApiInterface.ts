@@ -1,14 +1,19 @@
 import {ServiceManagerInterface} from "../servicesManager/interfaces/ServiceManagerInterface";
-import {NewModelFactoryInterface} from "../factories/interfaces/NewModelFactoryInterface";
-import {NewViewFactoryInterface} from "../factories/interfaces/NewViewFactoryInterface";
-import {ComponentManagerInterface} from "../componentManager/interfaces/ComponentManagerInterface";
+import {ModelsManagerInterface} from "../modelsManager/interfaces/ModelsManagerInterface";
+import {ViewsManagerInterface} from "../viewsManager/interfaces/ViewsManagerInterface";
+import {ComponentsManagerInterface} from "../componentsManager/interfaces/ComponentsManagerInterface";
 import {DatabaseInterface} from "../../database/interfaces/DatabaseInterface";
+import {ControllerManagerInterface} from "../controllerManager/interfaces/ControllerManagerInterface";
 
 export interface RpgManagerApiInterface {
-	get components(): ComponentManagerInterface;
+	get controllers(): ControllerManagerInterface;
+	get components(): ComponentsManagerInterface;
 	get database(): DatabaseInterface;
 	set database(database: DatabaseInterface);
-	get models(): NewModelFactoryInterface;
+	get models(): ModelsManagerInterface;
 	get services(): ServiceManagerInterface;
-	get views(): NewViewFactoryInterface;
+	get views(): ViewsManagerInterface;
+
+	bootstrap(
+	): void;
 }

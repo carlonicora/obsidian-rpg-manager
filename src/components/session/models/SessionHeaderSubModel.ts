@@ -8,8 +8,8 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {SessionInterface} from "../interfaces/SessionInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
 import {AnalyserInterface} from "../../../services/analyser/interfaces/AnalyserInterface";
@@ -56,7 +56,7 @@ export class SessionHeaderSubModel extends AbstractHeaderSubModel {
 		response.metadata.isSceneNoteListAvailable = this.data.isSceneNoteListAvailable;
 
 		if (this.data.isSceneNoteListAvailable){
-			response.metadata.scenes = this.database.read<ComponentModelInterface>(
+			response.metadata.scenes = this.database.read<ModelInterface>(
 				(scene: SceneInterface) =>
 					scene.id.type === ComponentType.Scene &&
 					scene.id.campaignId === this.currentComponent.campaign.id.campaignId &&

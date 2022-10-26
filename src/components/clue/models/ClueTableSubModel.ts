@@ -3,9 +3,9 @@ import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/Abstract
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../REFACTOR/views/enums/TableField";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ClueInterface} from "../interfaces/ClueInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {DateService} from "../../../services/date/DateService";
 
 export class ClueTableSubModel extends AbstractTableSubModel {
@@ -23,7 +23,7 @@ export class ClueTableSubModel extends AbstractTableSubModel {
 		return super.generateHeaderElement(fieldType);
 	}
 
-	protected generateContentElement<T extends ComponentModelInterface>(
+	protected generateContentElement<T extends ModelInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,

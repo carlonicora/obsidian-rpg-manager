@@ -1,15 +1,15 @@
 import {AbstractModel} from "./abstracts/AbstractModel";
 import {ResponseDataInterface} from "../../responses/interfaces/ResponseDataInterface";
-import {ControllerMetadataModelListsInterface} from "../../core/controller/interfaces/ControllerMetadataModelListsInterface";
+import {ControllerMetadataModelListsInterface} from "../../api/controllerManager/interfaces/ControllerMetadataModelListsInterface";
 import {
 	ControllerMetadataModelElementInterface
-} from "../../core/controller/interfaces/ControllerMetadataModelElementInterface";
-import {RelationshipType} from "../../services/relationships/enums/RelationshipType";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+} from "../../api/controllerManager/interfaces/ControllerMetadataModelElementInterface";
+import {RelationshipType} from "../../services/relationshipsService/enums/RelationshipType";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../database/SorterComparisonElement";
-import {RelationshipInterface} from "../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../services/relationshipsService/interfaces/RelationshipInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 
 export class ListModel extends AbstractModel {
@@ -56,10 +56,10 @@ export class ListModel extends AbstractModel {
 
 	private _generateComponentList(
 		type: ComponentType,
-	): ComponentModelInterface[] {
-		if (this.currentComponent.id.type !== ComponentType.Session) return this.database.readList<ComponentModelInterface>(type, this.currentComponent.id)
+	): ModelInterface[] {
+		if (this.currentComponent.id.type !== ComponentType.Session) return this.database.readList<ModelInterface>(type, this.currentComponent.id)
 
-		return this.database.read<ComponentModelInterface>(
+		return this.database.read<ModelInterface>(
 			(scene: SceneInterface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === this.currentComponent.campaign.id.campaignId &&

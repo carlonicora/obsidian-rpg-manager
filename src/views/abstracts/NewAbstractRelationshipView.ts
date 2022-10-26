@@ -1,6 +1,6 @@
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {RelationshipType} from "../../services/relationships/enums/RelationshipType";
+import {RelationshipType} from "../../services/relationshipsService/enums/RelationshipType";
 import {NewRelationshipsViewInterface} from "../interfaces/NewRelationshipsViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 
@@ -9,7 +9,7 @@ export abstract class NewAbstractRelationshipView implements NewRelationshipsVie
 	public relationshipType: RelationshipType;
 
 	constructor(
-		public model: ComponentModelInterface,
+		public model: ModelInterface,
 		public containerEl: HTMLDivElement,
 	) {
 	}

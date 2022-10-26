@@ -1,14 +1,14 @@
 import {TFile} from "obsidian";
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
-import {FileManipulatorInterface} from "./FileManipulatorInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
-import {ControllerMetadataDataInterface} from "../../../core/controller/interfaces/ControllerMetadataDataInterface";
-import {ImageInterface} from "../../galleries/interfaces/ImageInterface";
+import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
+import {OldFileManipulatorInterface} from "../../fileManipulatorService/interfaces/OldFileManipulatorInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ControllerMetadataDataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataDataInterface";
+import {ImageInterface} from "../../galleryService/interfaces/ImageInterface";
 
 export interface CodeBlockManipulatorInterface {
 	read(
-		fileManipulator: FileManipulatorInterface,
-		component: ComponentModelInterface,
+		fileManipulator: OldFileManipulatorInterface,
+		component: ModelInterface,
 	): Promise<ControllerMetadataDataInterface>;
 	
 	update(
@@ -30,28 +30,6 @@ export interface CodeBlockManipulatorInterface {
 		file: TFile,
 	): Promise<void>;
 
-	addOrUpdateRelationship(
-		relationship: RelationshipInterface,
-	): Promise<void>;
-
-	removeRelationship(
-		path: string,
-	): Promise<void>;
-
-	removeImage(
-		path: string,
-	): Promise<void>;
-
-	addOrUpdateImage(
-		source: string,
-		caption: string,
-	): Promise<ImageInterface|undefined>;
-
 	selectData(
 	): void;
-
-	replaceID(
-		file: TFile,
-		ID: string,
-	): Promise<void>;
 }

@@ -1,5 +1,5 @@
 import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
-import {ControllerMetadataInterface} from "../../../core/controller/interfaces/ControllerMetadataInterface";
+import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
 import {ActDataInterface} from "../../act/interfaces/ActDataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";

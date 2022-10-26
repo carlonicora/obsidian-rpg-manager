@@ -2,7 +2,7 @@ import {AbstractService} from "../../api/servicesManager/abstracts/AbstractServi
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
 import {DateServiceInterface} from "./interfaces/DateServiceInterface";
 import {DateInterface} from "./interfaces/DateInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {CalendarType} from "./enums/CalendarType";
 import {DateTime} from "luxon";
 import {FantasyCalendarDateInterface} from "../fantasyCalendar/interfaces/FantasyCalendarDateInterface";
@@ -12,7 +12,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 	public getDate(
 		metadataDate: string|undefined,
 		frontmatterDate: FantasyCalendarDateInterface|undefined,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 	): DateInterface|undefined {
 		if ((metadataDate == undefined || metadataDate === '') && frontmatterDate === undefined)
 			return undefined;
@@ -41,7 +41,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 
 	public getReadableDate(
 		date: DateInterface|undefined,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 	): string {
 		if (date === undefined)
 			return '';
@@ -64,7 +64,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 		dob: DateInterface|undefined,
 		death: DateInterface|undefined,
 		currentDate: DateInterface|undefined,
-		component: ComponentModelInterface,
+		component: ModelInterface,
 	): number|undefined {
 		if (dob === undefined)
 			return undefined;

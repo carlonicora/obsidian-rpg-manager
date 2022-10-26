@@ -3,14 +3,14 @@ import {ContentInterface} from "../../../responses/contents/interfaces/ContentIn
 import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {TableField} from "../../../REFACTOR/views/enums/TableField";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ActInterface} from "../interfaces/ActInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class ActTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ActList;
 
-	protected generateContentElement<T extends ComponentModelInterface>(
+	protected generateContentElement<T extends ModelInterface>(
 		index: number,
 		fieldType:  TableField,
 		component: T,

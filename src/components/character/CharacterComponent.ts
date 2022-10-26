@@ -1,11 +1,11 @@
-import {ComponentInterface} from "../../api/componentManager/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../api/componentsManager/interfaces/ComponentInterface";
 import {CampaignSetting} from "../campaign/enums/CampaignSetting";
-import {NewModelClassInterface} from "../../api/factories/interfaces/NewModelClassInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelClassInterface} from "../../api/modelsManager/interfaces/ModelClassInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {ActModel} from "../act/models/ActModel";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {NewViewClassInterface} from "../../api/factories/interfaces/NewViewClassInterface";
-import {NewViewInterface} from "../../views/interfaces/NewViewInterface";
+import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
+import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {NewActHeaderView} from "../act/views/NewActHeaderView";
 import {CharacterModel} from "./models/CharacterModel";
@@ -16,7 +16,7 @@ export class CharacterComponent implements ComponentInterface {
 		return CampaignSetting.Agnostic;
 	}
 
-	public get model(): NewModelClassInterface<ComponentModelInterface>{
+	public get model(): ModelClassInterface<ModelInterface>{
 		return CharacterModel;
 	}
 
@@ -24,8 +24,8 @@ export class CharacterComponent implements ComponentInterface {
 		return ComponentType.Character;
 	}
 
-	public get views(): Map<NewViewClassInterface<NewViewInterface>, NewViewType> {
-		return new Map<NewViewClassInterface<NewViewInterface>, NewViewType>([
+	public get views(): Map<ViewClassInterface<ViewInterface>, NewViewType> {
+		return new Map<ViewClassInterface<ViewInterface>, NewViewType>([
 			[NewCharacterHeaderView, NewViewType.Header],
 		]);
 	}

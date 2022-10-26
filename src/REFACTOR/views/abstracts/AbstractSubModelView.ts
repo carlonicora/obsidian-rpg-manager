@@ -1,11 +1,11 @@
-import {ViewInterface} from "../interfaces/ViewInterface";
+import {OldViewInterface} from "../interfaces/OldViewInterface";
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {App} from "obsidian";
 import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
 import {EditorSelector} from "../../../core/helpers/EditorSelector";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 
-export abstract class AbstractSubModelView extends AbstractRpgManager implements ViewInterface {
+export abstract class AbstractSubModelView extends AbstractRpgManager implements OldViewInterface {
 	constructor(
 		app: App,
 		protected sourcePath: string,
@@ -20,7 +20,7 @@ export abstract class AbstractSubModelView extends AbstractRpgManager implements
 
 	public addEditorIcon(
 		cellEl: HTMLTableCellElement,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 		identifier: string,
 	): void {
 		this._createEditorButton(cellEl).addEventListener('click', () => {
@@ -34,7 +34,7 @@ export abstract class AbstractSubModelView extends AbstractRpgManager implements
 
 	public addRelationshipEditorIcon(
 		cellEl: HTMLTableCellElement,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 		identifier: string,
 	): void {
 		this._createEditorButton(cellEl).addEventListener('click', () => {

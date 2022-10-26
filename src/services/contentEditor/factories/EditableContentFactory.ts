@@ -1,15 +1,15 @@
 import {AbstractFactory} from "../../../core/abstracts/AbstractFactory";
 import {EditableContentFactoryInterface} from "../interfaces/EditableContentFactoryInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ContentEditorModal} from "../modals/ContentEditorModal";
 import {EditableContentType} from "../enums/EditableContentType";
 import {StoryCircleContentEditorModal} from "../modals/StoryCircleContentEditorModal";
-import {RelationshipInterface} from "../../relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
 import {RelationshipEditorModal} from "../modals/RelationshipEditorModal";
 
 export class EditableContentFactory extends AbstractFactory implements EditableContentFactoryInterface {
 	public async open(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		editableField: string,
 	): Promise<boolean> {
 		const type: EditableContentType|undefined = await this.factories.editableContentField.create(editableField);

@@ -5,7 +5,7 @@ import {IdInterface} from "../../services/id/interfaces/IdInterface";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignModel} from "../../components/campaign/models/CampaignModel";
 import {ComponentFactoryInterface} from "../interfaces/ComponentFactoryInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {AdventureModel} from "../../components/adventure/models/AdventureModel";
 import {ActModel} from "../../components/act/models/ActModel";
 import {SceneModel} from "../../components/scene/models/SceneModel";
@@ -46,7 +46,7 @@ export class ComponentFactory extends AbstractFactory implements ComponentFactor
 		settings: CampaignSetting,
 		file: TFile,
 		id: IdInterface,
-	): ComponentModelInterface {
+	): ModelInterface {
 		let dataKey = CampaignSetting[settings] + ComponentType[id.type];
 		if (!this._componentTypeMap.has(dataKey)) dataKey = CampaignSetting[CampaignSetting.Agnostic] + ComponentType[id.type];
 		if (!this._componentTypeMap.has(dataKey)) throw new Error('Type of interfaces ' + CampaignSetting[settings] + ComponentType[id.type] + ' cannot be found');

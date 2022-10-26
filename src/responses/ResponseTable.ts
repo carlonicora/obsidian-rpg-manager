@@ -4,7 +4,7 @@ import {TableResponseInterface} from "./interfaces/TableResponseInterface";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 import {App} from "obsidian";
 import {ComponentType} from "../core/enums/ComponentType";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
 import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
 
 export class ResponseTable extends AbstractResponse implements TableResponseInterface {
@@ -19,7 +19,7 @@ export class ResponseTable extends AbstractResponse implements TableResponseInte
 
 	constructor(
 		app: App,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 	) {
 		super(app, currentComponent);
 		this.responseType = ResponseType.Table;

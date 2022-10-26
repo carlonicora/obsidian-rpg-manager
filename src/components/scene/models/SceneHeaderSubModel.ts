@@ -12,7 +12,7 @@ import {SorterType} from "../../../database/enums/SorterType";
 import {AbtStage} from "../../../services/plots/enums/AbtStage";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {DateService} from "../../../services/date/DateService";
 
 export class SceneHeaderSubModel extends AbstractHeaderSubModel {

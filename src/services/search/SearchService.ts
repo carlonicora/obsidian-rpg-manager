@@ -5,14 +5,14 @@ import {SearchType} from "./enums/SearchType";
 import {SearchResultInterface} from "./interfaces/SearchResultInterface";
 import {SearchWorkerInterface} from "./interfaces/SearchWorkerInterface";
 import {FuzzyFileSearchWorker} from "./workers/FuzzyFileSearchWorker";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {FuzzyElementSearchWorker} from "./workers/FuzzyElementSearchWorker";
 
 export class SearchService extends AbstractService implements SearchServiceInterface, ServiceInterface {
 	public search(
 		term: string,
 		type: SearchType = SearchType.FuzzyFileSearch,
-		element?: ComponentModelInterface,
+		element?: ModelInterface,
 	): Array<SearchResultInterface> {
 		let worker: SearchWorkerInterface;
 

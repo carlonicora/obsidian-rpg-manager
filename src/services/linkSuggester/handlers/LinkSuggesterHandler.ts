@@ -8,7 +8,7 @@ import {SearchResultInterface} from "../../search/interfaces/SearchResultInterfa
 import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
 import {SearchService} from "../../search/SearchService";
 import {SearchType} from "../../search/enums/SearchType";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 
 export class LinkSuggesterHandler extends AbstractRpgManager implements LinkSuggesterHandlerInterface {
 	private _analyser: LinkSuggesterTextAnalyserInterface;
@@ -18,7 +18,7 @@ export class LinkSuggesterHandler extends AbstractRpgManager implements LinkSugg
 	constructor(
 		private _app: App,
 		private _containerEl: HTMLInputElement|HTMLTextAreaElement,
-		private _component: ComponentModelInterface,
+		private _component: ModelInterface,
 	) {
 		super(app);
 

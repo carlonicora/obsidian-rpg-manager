@@ -1,5 +1,5 @@
 import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
-import {ControllerMetadataInterface} from "../../../core/controller/interfaces/ControllerMetadataInterface";
+import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {FactionMetadataInterface} from "../interfaces/FactionMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignSetting} from "../../campaign/enums/CampaignSetting";

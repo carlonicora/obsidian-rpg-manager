@@ -1,10 +1,10 @@
 import {App, CachedMetadata, Editor, EditorPosition, EditorRange, MarkdownView} from "obsidian";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 
 export class EditorSelector {
 	public static focusOnDataKey(
 		app: App,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 		dataId: string|undefined=undefined,
 	): void {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
@@ -45,7 +45,7 @@ export class EditorSelector {
 
 	public static focusOnDataRelationshipDescription(
 		app: App,
-		currentComponent: ComponentModelInterface,
+		currentComponent: ModelInterface,
 		path: string,
 	): void {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
@@ -68,7 +68,7 @@ export class EditorSelector {
 				} else {
 					let relationshipsStarted = false
 					for (let lineIndex=dataYaml.position.start.line+1; lineIndex<dataYaml.position.end.line; lineIndex++) {
-						if (editor.getLine(lineIndex).trim().toLowerCase() === 'relationships:') {
+						if (editor.getLine(lineIndex).trim().toLowerCase() === 'relationshipsService:') {
 							relationshipsStarted = true
 							continue;
 						}
@@ -92,7 +92,7 @@ export class EditorSelector {
 					}
 
 					let newRelationship = '';
-					if (!relationshipsStarted) newRelationship += 'relationships:\n';
+					if (!relationshipsStarted) newRelationship += 'relationshipsService:\n';
 					newRelationship += '  - type: unidirectional\n' +
 						'    path: ' + path + '\n'+
 						'    description: \n' +

@@ -1,13 +1,13 @@
 import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
-import {RelationshipInterface} from "../services/relationships/interfaces/RelationshipInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
+import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
 import {ContentInterface} from "./contents/interfaces/ContentInterface";
 
 export class ResponseTableElement implements TableResponseElementInterface {
 	public elements: ContentInterface[];
 
 	constructor(
-		public component: ComponentModelInterface|undefined = undefined,
+		public component: ModelInterface|undefined = undefined,
 		public relationship: RelationshipInterface,
 	) {
 		this.elements = [];

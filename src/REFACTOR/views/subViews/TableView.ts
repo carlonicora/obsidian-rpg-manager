@@ -9,7 +9,7 @@ import {setIcon} from "obsidian";
 import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {TableResponseElementInterface} from "../../../responses/interfaces/TableResponseElementInterface";
-import {RelationshipType} from "../../../services/relationships/enums/RelationshipType";
+import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {ImageContent} from "../../../responses/contents/ImageContent";
 
 export class TableView extends AbstractSubModelView {

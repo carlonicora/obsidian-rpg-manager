@@ -1,8 +1,8 @@
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 
 export interface EditableContentFactoryInterface {
 	open(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		editableField: string,
 	): Promise<boolean>;
 }

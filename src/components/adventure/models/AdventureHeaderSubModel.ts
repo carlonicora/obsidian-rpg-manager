@@ -5,7 +5,7 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {AdventureInterface} from "../interfaces/AdventureInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class AdventureHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: AdventureInterface;

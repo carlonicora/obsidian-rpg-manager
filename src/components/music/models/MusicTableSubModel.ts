@@ -3,14 +3,14 @@ import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/Abstract
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {TableField} from "../../../REFACTOR/views/enums/TableField";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {MusicInterface} from "../interfaces/MusicInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class MusicTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.MusicList;
 
-	protected generateContentElement<T extends ComponentModelInterface>(
+	protected generateContentElement<T extends ModelInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,

@@ -4,11 +4,11 @@ import {ResponseHeader} from "../../../responses/ResponseHeader";
 import {ContentType} from "../../../responses/enums/ContentType";
 import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export abstract class AbstractHeaderSubModel extends AbstractSubModel {
-	protected data: ComponentModelInterface;
+	protected data: ModelInterface;
 	protected synopsis: string;
 	protected synopsisTitle: string;
 

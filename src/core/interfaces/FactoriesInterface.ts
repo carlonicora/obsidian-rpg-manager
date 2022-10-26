@@ -8,22 +8,22 @@ import {TemplateFactoryInterface} from "./TemplateFactoryInterface";
 import {ViewFactoryInterface} from "../../REFACTOR/views/factories/interfaces/ViewFactoryInterface";
 import {FetcherFactoryInterface} from "../../services/fetchers/factories/interfaces/FetcherFactoryInterface";
 import {IdFactoryInterface} from "../../services/id/factories/interfaces/IdFactoryInterface";
-import {BreadcrumbFactoryInterface} from "../../REFACTOR/views/factories/interfaces/BreadcrumbFactoryInterface";
+import {BreadcrumbFactoryInterface} from "../../services/breadcrumb/interfaces/BreadcrumbFactoryInterface";
 import {SorterFactoryInterface} from "../../database/factories/interfaces/SorterFactoryInterface";
-import {RunningTimeManagerInterface} from "../../services/timers/interfaces/RunningTimeManagerInterface";
+import {RunningTimeServiceInterface} from "../../services/runningTimeService/interfaces/RunningTimeServiceInterface";
 import {DatabaseFactoryInterface} from "../../database/factories/interfaces/DatabaseFactoryInterface";
 import {ComponentFactoryInterface} from "./ComponentFactoryInterface";
 import {ComponentTypeFactoryInterface} from "./ComponentTypeFactoryInterface";
-import {RelationshipTypeFactoryInterface} from "../../services/relationships/factories/interfaces/RelationshipTypeFactoryInterface";
+import {RelationshipTypeFactoryInterface} from "../../services/relationshipsService/factories/interfaces/RelationshipTypeFactoryInterface";
 import {SceneTypeFactoryInterface} from "../../components/scene/factory/interfaces/SceneTypeFactoryInterface";
 import {StoryCircleStageFactoryInterface} from "../../services/plots/factories/interfaces/StoryCircleStageFactoryInterface";
 import {AbtStageFactoryInterface} from "../../services/plots/factories/interfaces/AbtStageFactoryInterface";
-import {RelationshipFactoryInterface} from "../../services/relationships/factories/interfaces/RelationshipFactoryInterface";
+import {RelationshipFactoryInterface} from "../../services/relationshipsService/factories/interfaces/RelationshipFactoryInterface";
 import {FileManipulatorFactoryInterface} from "../../services/manipulators/factories/interfaces/FileManipulatorFactoryInterface";
 import {LogFactoryInterface} from "../../services/loggers/interfaces/LogFactoryInterface";
 import {AnalyserFactoryInterface} from "../../services/analyser/factories/interfaces/AnalyserFactoryInterface";
-import {ImageFactoryInterface} from "../../services/galleries/interfaces/ImageFactoryInterface";
-import {GalleryViewFactoryInterface} from "../../services/galleries/interfaces/GalleryViewFactoryInterface";
+import {ImageFactoryInterface} from "../../services/galleryService/interfaces/ImageFactoryInterface";
+import {GalleryViewFactoryInterface} from "../../services/galleryService/interfaces/GalleryViewFactoryInterface";
 import {EditableContentFactoryInterface} from "../../services/contentEditor/interfaces/EditableContentFactoryInterface";
 import {
 	EditableContentTypeFactoryInterface
@@ -62,5 +62,5 @@ export interface FactoriesInterface {
 	editableContentField: EditableContentTypeFactoryInterface;
 	editableContentValue: EditableContentValueFactoryInterface;
 
-	runningTimeManager: RunningTimeManagerInterface;
+	runningTimeManager: RunningTimeServiceInterface;
 }

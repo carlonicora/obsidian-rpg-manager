@@ -1,10 +1,10 @@
-import {AbstractComponent} from "../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../api/modelsManager/abstracts/AbstractModel";
 import {PlotAbtInterface} from "./interfaces/PlotAbtInterface";
 import {AbtInterface} from "./interfaces/AbtInterface";
 import {AbtPlotMetadataInterface} from "./interfaces/AbtPlotMetadataInterface";
 import {AbtPlot} from "./AbtPlot";
 
-export class PlotsAbtOnly extends AbstractComponent implements PlotAbtInterface {
+export class PlotsAbtOnly extends AbstractModel implements PlotAbtInterface {
 	protected metadata: AbtPlotMetadataInterface|any;
 
 	public get abt(): AbtInterface{

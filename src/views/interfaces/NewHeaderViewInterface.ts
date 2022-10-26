@@ -1,9 +1,9 @@
-import {NewViewInterface} from "./NewViewInterface";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 
-export interface NewHeaderViewInterface extends NewViewInterface {
-	model: ComponentModelInterface;
+export interface NewHeaderViewInterface extends ViewInterface {
+	model: ModelInterface;
 	containerEl: HTMLElement;
 	sourcePath: string;
 }

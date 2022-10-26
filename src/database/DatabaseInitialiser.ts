@@ -5,14 +5,15 @@ import {TagHelper} from "./TagHelper";
 import {DatabaseErrorModal} from "../core/modals/DatabaseErrorModal";
 import {IdInterface} from "../services/id/interfaces/IdInterface";
 import {TagMisconfiguredError} from "../core/errors/TagMisconfiguredError";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {RelationshipInterface} from "../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
 import {ComponentStage} from "../core/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../core/errors/ComponentDuplicatedError";
 import {LogMessageType} from "../services/loggers/enums/LogMessageType";
 import {Md5} from "ts-md5";
 import {InvalidIdChecksumError} from "../core/errors/InvalidIdChecksumError";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 
 export class DatabaseInitialiser {
 	private static _misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
@@ -23,6 +24,7 @@ export class DatabaseInitialiser {
 
 	public static async initialise(
 		app: App,
+		api: RpgManagerApiInterface,
 	): Promise<DatabaseInterface> {
 		this._app = app;
 		this._misconfiguredTags = await new Map();
@@ -35,14 +37,14 @@ export class DatabaseInitialiser {
 		const response: DatabaseInterface = await this._factories.database.create();
 		group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
-		const components: ComponentModelInterface[] = [];
+		const components: ModelInterface[] = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
 
 		let componentCounter = 0;
 		for (let index=0; index<markdownFiles.length; index++){
 			try {
-				await this.createComponent(markdownFiles[index])
-					.then((component: ComponentModelInterface | undefined) => {
+				await this.createComponent(api, markdownFiles[index])
+					.then((component: ModelInterface | undefined) => {
 						if (component === undefined) return undefined;
 
 						if (component.stage == ComponentStage.Plot || component.stage === ComponentStage.Run) {
@@ -71,7 +73,7 @@ export class DatabaseInitialiser {
 		await Promise.all(components);
 
 		const metadata: Promise<void>[] = [];
-		await components.forEach((component: ComponentModelInterface) => {
+		await components.forEach((component: ModelInterface) => {
 			try {
 				metadata.push(component.readMetadata());
 			} catch (e) {
@@ -104,7 +106,7 @@ export class DatabaseInitialiser {
 	private static async _validateComponents(
 		database: DatabaseInterface,
 	) {
-		database.recordset.forEach((component: ComponentModelInterface) => {
+		database.recordset.forEach((component: ModelInterface) => {
 			try {
 				component.validateHierarchy();
 			} catch (e) {
@@ -147,14 +149,15 @@ export class DatabaseInitialiser {
 	 * @private
 	 */
 	public static async createComponent(
+		api: RpgManagerApiInterface,
 		file: TFile,
-	): Promise<ComponentModelInterface|undefined> {
+	): Promise<ModelInterface|undefined> {
 		const id: IdInterface|undefined = await this.readID(file);
 		if (id === undefined) return undefined;
 
 		if (!id.isValid) throw new TagMisconfiguredError(this._app, id);
 
-		const response = await window.RpgManagerAPI?.models.create(id, id.campaignSettings, file);
+		const response = await api.models.get(id, id.campaignSettings, file);
 
 		return response;
 	}
@@ -164,7 +167,7 @@ export class DatabaseInitialiser {
 	): Promise<void> {
 		const relationshipsInitialisation: Promise<void>[] = [];
 
-		database.recordset.forEach((component: ComponentModelInterface) => {
+		database.recordset.forEach((component: ModelInterface) => {
 			relationshipsInitialisation.push(component.initialiseRelationships());
 		});
 
@@ -188,7 +191,7 @@ export class DatabaseInitialiser {
 	}
 
 	public static async reinitialiseRelationships(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		database: DatabaseInterface,
 	): Promise<void> {
 		return component.initialiseRelationships()
@@ -199,7 +202,7 @@ export class DatabaseInitialiser {
 						if (relationship.component === undefined) this._factories.relationship.createFromReverse(component, relationship);
 					});
 
-					database.recordset.forEach((component: ComponentModelInterface) => {
+					database.recordset.forEach((component: ModelInterface) => {
 						component.getRelationships(database);
 						component.touch();
 					});

@@ -1,6 +1,6 @@
 import {AbstractFactory} from "../../../core/abstracts/AbstractFactory";
 import {EditableContentValueFactoryInterface} from "../interfaces/EditableContentValueFactoryInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {EditableContentType} from "../enums/EditableContentType";
 import {CharacterInterface} from "../../../components/character/interfaces/CharacterInterface";
 import {LocationInterface} from "../../../components/location/interfaces/LocationInterface";
@@ -10,7 +10,7 @@ import {PlotsInterface} from "../../plots/interfaces/PlotsInterface";
 
 export class EditableContentValueFactory extends AbstractFactory implements EditableContentValueFactoryInterface {
 	read(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		type: EditableContentType,
 	): string|boolean|number|undefined {
 		let response: string|boolean|number|undefined = undefined;
@@ -76,7 +76,7 @@ export class EditableContentValueFactory extends AbstractFactory implements Edit
 	}
 
 	public readRelatedPlot(
-		component: ComponentModelInterface,
+		component: ModelInterface,
 		type: EditableContentType.StoryCircleYou |
 			EditableContentType.StoryCircleNeed |
 			EditableContentType.StoryCircleGo |

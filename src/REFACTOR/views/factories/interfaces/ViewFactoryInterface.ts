@@ -1,6 +1,6 @@
 import {CampaignSetting} from "../../../../components/campaign/enums/CampaignSetting";
 import {ResponseType} from "../../../../responses/enums/ResponseType";
-import {ViewInterface} from "../../interfaces/ViewInterface";
+import {OldViewInterface} from "../../interfaces/OldViewInterface";
 import {ViewType} from "../../enums/ViewType";
 
 export interface ViewFactoryInterface {
@@ -8,7 +8,7 @@ export interface ViewFactoryInterface {
 		settings: CampaignSetting,
 		type: ResponseType,
 		sourcePath: string,
-	): ViewInterface;
+	): OldViewInterface;
 
 	showObsidianView(
 		viewType: ViewType,

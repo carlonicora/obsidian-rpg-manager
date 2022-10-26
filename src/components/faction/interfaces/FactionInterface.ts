@@ -1,6 +1,6 @@
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {FactionDataInterface} from "./FactionDataInterface";
 
-export interface FactionInterface extends ComponentModelInterface, FactionDataInterface{
+export interface FactionInterface extends ModelInterface, FactionDataInterface{
 
 }

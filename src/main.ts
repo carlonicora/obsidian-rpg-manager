@@ -7,7 +7,6 @@ import {
 	setIcon,
 	WorkspaceLeaf
 } from 'obsidian';
-import {Controller} from "./core/controller/Controller";
 import {ComponentType} from "./core/enums/ComponentType";
 import {Factories} from "./core/factories/Factories";
 import {CreationModal} from "./core/modals/CreationModal";
@@ -25,7 +24,7 @@ import {TimelineView} from "./REFACTOR/views/TimelineView";
 import {ManipulatorsInterface} from "./services/manipulators/interfaces/ManipulatorsInterface";
 import {Manipulators} from "./services/manipulators/Manipulators";
 import {DatabaseInterface} from "./database/interfaces/DatabaseInterface";
-import {ComponentModelInterface} from "./api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "./api/modelsManager/interfaces/ModelInterface";
 import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
 import {UpdaterModal} from "./services/updaters/modals/UpdaterModal";
@@ -36,9 +35,6 @@ import {FantasyCalendarService} from "./services/fantasyCalendar/FantasyCalendar
 import {SearchService} from "./services/search/SearchService";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
-import {Bootstrap} from "./api/Bootstrap";
-import {NewController} from "./core/controller/NewController";
-
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private _isVersionUpdated=false;
@@ -86,9 +82,10 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	async onLayoutReady(){
-		this.api = Bootstrap.api(this.app, this);
+		this.api = new RpgManagerApi(this.app, this);
+		this.api.bootstrap();
 
-		this.register(() => delete window["RpgManagerAPI"]);
+		(window["RpgManagerAPI"] = this.api) && this.register(() => delete window["RpgManagerAPI"]);
 
 		this.app.workspace.detachLeavesOfType(ViewType.Errors.toString());
 		this.app.workspace.detachLeavesOfType(ViewType.ReleaseNote.toString());
@@ -113,8 +110,10 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		this._registerCodeBlock();
 		this._registerCommands();
 
-		DatabaseInitialiser.initialise(this.app)
+		DatabaseInitialiser.initialise(this.app, this.api)
 			.then((database: DatabaseInterface) => {
+				this.api.database = database;
+
 				this.database = database;
 				this.factories.logger.info(LogMessageType.Database, 'Database Initialised', this.database)
 
@@ -129,7 +128,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							if (leaf.view instanceof MarkdownView) {
 								const file = leaf.view?.file;
 								if (file !== undefined) {
-									const component: ComponentModelInterface|undefined = this.database.readByPath(file.path);
+									const component: ModelInterface|undefined = this.database.readByPath(file.path);
 									if (
 										component !== undefined &&
 										component.id.type === ComponentType.Scene &&
@@ -180,25 +179,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		sourcePath: string
 	) {
 		component.addChild(
-			new NewController(
-				this.app,
-				el,
-				source,
-				component,
-				sourcePath,
-			)
+			this.api.controllers.create(el, source, component, sourcePath)
 		);
-		/*
-		component.addChild(
-			new Controller(
-				this.app,
-				el,
-				source,
-				component,
-				sourcePath,
-			)
-		);
-		*/
 	}
 
 	public async createRpgDataView(

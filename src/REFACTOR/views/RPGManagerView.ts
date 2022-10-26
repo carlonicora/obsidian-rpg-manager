@@ -3,7 +3,7 @@ import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewType} from "./enums/ViewType";
 import {CreationModal} from "../../core/modals/CreationModal";
 import {setIcon, TFile} from "obsidian";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
 
 export class RPGManagerView extends AbstractRpgManagerView {
@@ -13,7 +13,7 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private _hasCampaigns: boolean;
 
 	private _currentCampaign: CampaignInterface|undefined;
-	private _currentComponent: ComponentModelInterface|undefined;
+	private _currentComponent: ModelInterface|undefined;
 
 	private _verticalTabHeaderEl: HTMLDivElement;
 	private _incompleteListEl: HTMLDivElement;
@@ -102,8 +102,8 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async _addIncompleteComponentList(
 	): Promise<void> {
 		this._incompleteListEl.empty();
-		const components: ComponentModelInterface[] = this.database.read<ComponentModelInterface>((component: ComponentModelInterface) => component.isComplete === false);
-		components.forEach((component: ComponentModelInterface) => {
+		const components: ModelInterface[] = this.database.read<ModelInterface>((component: ModelInterface) => component.isComplete === false);
+		components.forEach((component: ModelInterface) => {
 			const itemEl = this._incompleteListEl.createDiv({cls: 'vertical-tab-nav-item', text: component.file.basename});
 
 			itemEl.addEventListener('click', () => {
@@ -177,11 +177,11 @@ export class RPGManagerView extends AbstractRpgManagerView {
 	private async _loadToDo(
 		containerEl: HTMLDivElement
 	): Promise<void> {
-		const components: ComponentModelInterface[] = this.database.read<ComponentModelInterface>((component: ComponentModelInterface) => true);
+		const components: ModelInterface[] = this.database.read<ModelInterface>((component: ModelInterface) => true);
 
 		let firstToDoFound = false;
 
-		components.forEach((component: ComponentModelInterface) => {
+		components.forEach((component: ModelInterface) => {
 			this.app.vault.read(component.file)
 				.then((content: string) => {
 					const contentArray: string[] = content.split('\n');

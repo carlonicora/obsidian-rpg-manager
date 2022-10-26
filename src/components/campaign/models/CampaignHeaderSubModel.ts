@@ -5,9 +5,9 @@ import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderRespo
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
 import {SorterType} from "../../../database/enums/SorterType";
 import {ActInterface} from "../../act/interfaces/ActInterface";
@@ -29,8 +29,8 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 		if (additionalInformation === undefined) additionalInformation = {};
 
 		additionalInformation.adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.currentComponent.id)
-			.sort(this.factories.sorter.create<ComponentModelInterface>([
-				new SorterComparisonElement((component: ComponentModelInterface) => component.file.stat.mtime, SorterType.Descending),
+			.sort(this.factories.sorter.create<ModelInterface>([
+				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
 		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentComponent.id);
@@ -39,13 +39,13 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 			additionalInformation.acts = additionalInformation.acts.filter((act: ActInterface) => act.id.adventureId === currentAdventureId)
 		}
 
-		additionalInformation.acts.sort(this.factories.sorter.create<ComponentModelInterface>([
-				new SorterComparisonElement((component: ComponentModelInterface) => component.file.stat.mtime, SorterType.Descending),
+		additionalInformation.acts.sort(this.factories.sorter.create<ModelInterface>([
+				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
 		additionalInformation.sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.currentComponent.id)
-			.sort(this.factories.sorter.create<ComponentModelInterface>([
-				new SorterComparisonElement((component: ComponentModelInterface) => component.file.stat.mtime, SorterType.Descending),
+			.sort(this.factories.sorter.create<ModelInterface>([
+				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 
 		let response = await super.generateData(relationship, title, additionalInformation) as HeaderResponseInterface;

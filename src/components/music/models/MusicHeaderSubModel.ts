@@ -7,7 +7,7 @@ import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {ResponseType} from "../../../responses/enums/ResponseType";
 import {MusicInterface} from "../interfaces/MusicInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class MusicHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: MusicInterface;

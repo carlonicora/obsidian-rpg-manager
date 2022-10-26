@@ -1,18 +1,18 @@
 import {ResponseDataInterface} from "./interfaces/ResponseDataInterface";
 import {ResponseDataElementInterface} from "./interfaces/ResponseDataElementInterface";
 import {AbstractRpgManager} from "../core/abstracts/AbstractRpgManager";
-import {ComponentModelInterface} from "../api/componentManager/interfaces/ComponentModelInterface";
-import {AbstractComponent} from "../core/abstracts/AbstractComponent";
-import {RelationshipInterface} from "../services/relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../services/relationships/enums/RelationshipType";
+import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
+import {AbstractModel} from "../api/modelsManager/abstracts/AbstractModel";
+import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
+import {RelationshipType} from "../services/relationshipsService/enums/RelationshipType";
 
 export class ResponseData extends AbstractRpgManager implements ResponseDataInterface {
 	public elements: ResponseDataElementInterface[] = [];
 
 	public async addSubModel(
 		type: any,
-		currentComponent: ComponentModelInterface,
-		data: ComponentModelInterface[]|ComponentModelInterface|RelationshipInterface[],
+		currentComponent: ModelInterface,
+		data: ModelInterface[]|ModelInterface|RelationshipInterface[],
 		title: string|undefined=undefined,
 		additionalInformation: any|undefined=undefined,
 		position: number|undefined=undefined,
@@ -20,12 +20,12 @@ export class ResponseData extends AbstractRpgManager implements ResponseDataInte
 		let relationships: RelationshipInterface[] = [];
 		let relationship: RelationshipInterface|undefined;
 
-		if (data instanceof AbstractComponent){
+		if (data instanceof AbstractModel){
 			relationship = this.factories.relationship.create(RelationshipType.Hierarchy, data.file.path, undefined, data, true);
 		} else if (data instanceof Array){
 			relationships = [];
 			if (data.length > 0){
-				if (data[0] instanceof AbstractComponent){
+				if (data[0] instanceof AbstractModel){
 					data.forEach((component: any) => {
 						relationships.push(
 							this.factories.relationship.create(RelationshipType.Hierarchy, component.file.path, undefined, component, true)

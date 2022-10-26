@@ -1,10 +1,10 @@
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {SceneDataInterface} from "./SceneDataInterface";
 
-export interface SceneInterface extends ComponentModelInterface, SceneDataInterface {
+export interface SceneInterface extends ModelInterface, SceneDataInterface {
 	get adventure(): AdventureInterface;
 	get act(): ActInterface;
 	get session(): SessionInterface|undefined;

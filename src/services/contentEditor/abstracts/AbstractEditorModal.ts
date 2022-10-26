@@ -1,7 +1,7 @@
 import {AbstractModal} from "../../../core/abstracts/AbstractModal";
 import {LinkSuggesterHandlerInterface} from "../../linkSuggester/interfaces/LinkSuggesterHandlerInterface";
 import {App} from "obsidian";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {EditableContentType} from "../enums/EditableContentType";
 
 export abstract class AbstractEditorModal extends AbstractModal {
@@ -14,7 +14,7 @@ export abstract class AbstractEditorModal extends AbstractModal {
 
 	constructor(
 		app: App,
-		protected component: ComponentModelInterface,
+		protected component: ModelInterface,
 		protected editableContentType: EditableContentType|undefined,
 		protected editableField: string,
 		protected isLongText: boolean,

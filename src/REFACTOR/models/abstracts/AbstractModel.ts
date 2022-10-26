@@ -1,5 +1,5 @@
 import {ResponseDataInterface} from "../../../responses/interfaces/ResponseDataInterface";
-import {ModelInterface} from "../interfaces/ModelInterface";
+import {OldModelInterface} from "../interfaces/OldModelInterface";
 import {App} from "obsidian";
 import {ResponseData} from "../../../responses/ResponseData";
 import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
@@ -19,17 +19,17 @@ import {SorterComparisonElementInterface} from "../../../database/interfaces/Sor
 import {SubplotTableSubModel} from "../../../components/subplot/models/SubplotTableSubModel";
 import {NonPlayerCharacterTableSubModel} from "../../../components/character/models/NonPlayerCharacterTableSubModel";
 import {SorterType} from "../../../database/enums/SorterType";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {EventInterface} from "../../../components/event/interfaces/EventInterface";
 import {CampaignInterface} from "../../../components/campaign/interfaces/CampaignInterface";
 import {SessionInterface} from "../../../components/session/interfaces/SessionInterface";
 import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
-import {RelationshipType} from "../../../services/relationships/enums/RelationshipType";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
+import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 
-export abstract class AbstractModel extends AbstractRpgManager implements ModelInterface {
+export abstract class AbstractModel extends AbstractRpgManager implements OldModelInterface {
 	protected response:ResponseDataInterface;
 	protected subModelsMap: Map<ComponentType, any> = new Map<ComponentType, any>();
 	protected componentSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
@@ -37,7 +37,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	constructor(
 		app: App,
-		protected currentComponent: ComponentModelInterface,
+		protected currentComponent: ModelInterface,
 		protected source: string,
 		protected sourcePath: string,
 		protected sourceMeta: any,
@@ -113,7 +113,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 
 	protected async addList(
 		type: ComponentType,
-		data: ComponentModelInterface[],
+		data: ModelInterface[],
 		sortByLatestUsage = false,
 	): Promise<void> {
 		if (sortByLatestUsage){
@@ -134,7 +134,7 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 	private async _add(
 		type: ComponentType,
 		requiredRelationshipType: RelationshipType|undefined,
-		component: ComponentModelInterface[]|ComponentModelInterface|RelationshipInterface[]|undefined=undefined,
+		component: ModelInterface[]|ModelInterface|RelationshipInterface[]|undefined=undefined,
 		title: string|undefined=undefined,
 		sortByLatestUsage: boolean,
 	): Promise<void>{
@@ -156,20 +156,20 @@ export abstract class AbstractModel extends AbstractRpgManager implements ModelI
 			if ((<any[]>component)[0]?.component !== undefined) {
 				if (sortByLatestUsage){
 					sorter = [
-						new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentModelInterface>relationship.component).file.stat.mtime, SorterType.Descending)
+						new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.stat.mtime, SorterType.Descending)
 					];
 				} else {
 					sorter = this.relationshipSortingMap.get(type);
-					if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ComponentModelInterface>relationship.component).file.basename)];
+					if (sorter === undefined) sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename)];
 				}
 			} else {
 				if (sortByLatestUsage){
 					sorter = [
-						new SorterComparisonElement((component: ComponentModelInterface) => component.file.stat.mtime, SorterType.Descending)
+						new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending)
 					];
 				} else {
 					sorter = this.componentSortingMap.get(type);
-					if (sorter === undefined) sorter = [new SorterComparisonElement((component: ComponentModelInterface) => component.file.basename)];
+					if (sorter === undefined) sorter = [new SorterComparisonElement((component: ModelInterface) => component.file.basename)];
 				}
 			}
 

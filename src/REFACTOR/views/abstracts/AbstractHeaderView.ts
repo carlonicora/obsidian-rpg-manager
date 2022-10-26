@@ -2,14 +2,14 @@ import {AbstractSubModelView} from "./AbstractSubModelView";
 import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
 import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import flatpickr from "flatpickr";
-import {GalleryCarouselView} from "../../../services/galleries/views/GalleryCarouselView";
+import {GalleryCarouselView} from "../../../services/galleryService/views/GalleryCarouselView";
 import {DateInterface} from "../../../services/date/interfaces/DateInterface";
 
 export abstract class AbstractHeaderView extends AbstractSubModelView {
-	protected currentComponent: ComponentModelInterface;
+	protected currentComponent: ModelInterface;
 
 	protected headerTitleEl: HTMLDivElement;
 	protected headerInfoEl: HTMLDivElement;

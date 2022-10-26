@@ -8,8 +8,8 @@ import {ContentInterface} from "../../../responses/contents/interfaces/ContentIn
 import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
 import {ResponseTable} from "../../../responses/ResponseTable";
 import {TableField} from "../../views/enums/TableField";
-import {ComponentModelInterface} from "../../../api/componentManager/interfaces/ComponentModelInterface";
-import {RelationshipInterface} from "../../../services/relationships/interfaces/RelationshipInterface";
+import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {ResponseTableElement} from "../../../responses/ResponseTableElement";
 import {TableResponseElementInterface} from "../../../responses/interfaces/TableResponseElementInterface";
 
@@ -34,11 +34,11 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 
 		let index=0;
 		relationships.forEach((relationship: RelationshipInterface) => {
-			const component: ComponentModelInterface|undefined = relationship.component;
+			const component: ModelInterface|undefined = relationship.component;
 			if (component !== undefined) {
 				index++;
 				response.addContent(
-					this.generateContent<ComponentModelInterface>(index, this.advancedSettings.fields, component, relationship),
+					this.generateContent<ModelInterface>(index, this.advancedSettings.fields, component, relationship),
 				);
 			}
 		});
@@ -82,7 +82,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		return this.factories.contents.create('', ContentType.String);
 	}
 
-	protected generateContent<T extends ComponentModelInterface>(
+	protected generateContent<T extends ModelInterface>(
 		index: number,
 		fields: RpgManagerAdvancedSettingsListElementInterface[],
 		component: T,
@@ -105,7 +105,7 @@ export abstract class AbstractTableSubModel extends AbstractSubModel {
 		return response;
 	}
 
-	protected generateContentElement<T extends ComponentModelInterface>(
+	protected generateContentElement<T extends ModelInterface>(
 		index: number,
 		fieldType: TableField,
 		component: T,

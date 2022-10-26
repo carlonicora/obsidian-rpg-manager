@@ -1,8 +1,8 @@
-import {AbstractComponent} from "../../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 import {LocationDataInterface} from "../interfaces/LocationDataInterface";
 import {LocationMetadataInterface} from "../interfaces/LocationMetadataInterface";
 
-export abstract class AbstractLocationData extends AbstractComponent implements LocationDataInterface {
+export abstract class AbstractLocationData extends AbstractModel implements LocationDataInterface {
 	protected metadata: LocationMetadataInterface;
 
 	public get address(): string | undefined {

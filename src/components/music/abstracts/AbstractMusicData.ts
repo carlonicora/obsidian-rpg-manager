@@ -1,7 +1,7 @@
-import {AbstractComponent} from "../../../core/abstracts/AbstractComponent";
+import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 import {MusicMetadataInterface} from "../interfaces/MusicMetadataInterface";
 
-export abstract class AbstractMusicData extends AbstractComponent {
+export abstract class AbstractMusicData extends AbstractModel {
 	protected metadata: MusicMetadataInterface;
 
 	public get url(): string | undefined {

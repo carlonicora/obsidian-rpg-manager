@@ -1,8 +1,8 @@
 import {ResponseType} from "../enums/ResponseType";
-import {ComponentModelInterface} from "../../api/componentManager/interfaces/ComponentModelInterface";
+import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 
 export interface ResponseDataElementInterface {
-	currentComponent: ComponentModelInterface;
+	currentComponent: ModelInterface;
 	responseType: ResponseType;
 	title: string|null;
 
