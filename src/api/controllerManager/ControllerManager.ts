@@ -1,11 +1,10 @@
 import {ControllerManagerInterface} from "./interfaces/ControllerManagerInterface";
-import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
+import {Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
 import {RpgManagerApiInterface} from "../interfaces/RpgManagerApiInterface";
 import {Controller} from "./Controller";
 
 export class ControllerManager implements ControllerManagerInterface {
 	constructor(
-		private _app: App,
 		private _api: RpgManagerApiInterface,
 	) {
 	}
@@ -16,6 +15,6 @@ export class ControllerManager implements ControllerManagerInterface {
 		component: Component | MarkdownPostProcessorContext,
 		sourcePath: string,
 	): MarkdownRenderChild {
-		return new Controller(this._app, this._api, container, source, component, sourcePath);
+		return new Controller(this._api, container, source, component, sourcePath);
 	}
 }

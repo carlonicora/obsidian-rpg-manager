@@ -9,7 +9,7 @@ export class FileManipulatorService extends AbstractService implements FileManip
 	public async read(
 		file: TFile,
 	): Promise<FileManipulatorInterface|undefined> {
-		const response = new FileManipulator(this.app, this.api, file);
+		const response = new FileManipulator(this.api, file);
 		return response.read()
 			.then((loaded: boolean) => {
 				if (!loaded)

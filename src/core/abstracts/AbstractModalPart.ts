@@ -1,10 +1,10 @@
-import {ModalPartInterface} from "../../src/core/interfaces/ModalPartInterface";
+import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {App} from "obsidian";
-import {CampaignSetting} from "../../src/components/campaign/enums/CampaignSetting";
-import {ComponentType} from "../../src/core/enums/ComponentType";
-import {ModalInterface} from "../../src/core/interfaces/ModalInterface";
-import {AbstractRpgManager} from "./AbstractRpgManager";
-import {IdInterface} from "../../src/services/idService/interfaces/IdInterface";
+import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
+import {ComponentType} from "../enums/ComponentType";
+import {ModalInterface} from "../interfaces/ModalInterface";
+import {AbstractRpgManager} from "../../../REFACTOR/abstracts/AbstractRpgManager";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 
 export abstract class AbstractModalPart extends AbstractRpgManager implements ModalPartInterface {
 	constructor(

@@ -1,5 +1,5 @@
 import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
-import {App, fuzzySearch, prepareQuery} from "obsidian";
+import {fuzzySearch, prepareQuery} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
@@ -7,7 +7,6 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 
 export class FuzzyElementSearchWorker extends AbstractSearchWorker implements SearchWorkerInterface {
 	constructor(
-		private _app: App,
 		private _api: RpgManagerApiInterface,
 		private _element: ModelInterface,
 	) {

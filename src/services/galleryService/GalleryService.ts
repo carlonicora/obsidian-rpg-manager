@@ -1,7 +1,7 @@
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
 import {GalleryServiceInterface} from "./interfaces/GalleryServiceInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {ImageInterface} from "./interfaces/ImageInterface";
 import {Image} from "./data/Image";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
@@ -11,10 +11,9 @@ export class GalleryService extends AbstractService implements GalleryServiceInt
 	private _imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
 
 	constructor(
-		app: App,
 		api: RpgManagerApiInterface,
 	) {
-		super(app, api);
+		super(api);
 
 		const file = app.vault.getAbstractFileByPath('/');
 		this._root = app.vault.getResourcePath(file as TFile);
@@ -55,7 +54,7 @@ export class GalleryService extends AbstractService implements GalleryServiceInt
 		if (path.startsWith('http'))
 			return path;
 
-		if (this.app.vault.getAbstractFileByPath(path) === undefined)
+		if (this.api.app.vault.getAbstractFileByPath(path) === undefined)
 			return undefined;
 
 		return  this._root + path;

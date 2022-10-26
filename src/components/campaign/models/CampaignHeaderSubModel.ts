@@ -4,7 +4,7 @@ import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterType} from "../../../database/enums/SorterType";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";

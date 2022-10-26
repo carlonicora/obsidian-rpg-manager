@@ -1,16 +1,17 @@
-import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {App} from "obsidian";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		idMap: IdInterface,
 		private _duplication: ModelInterface[],
 		private _duplicated: ModelInterface|undefined=undefined,
 	) {
-		super(app, idMap);
+		super(api, idMap);
 	}
 
 	public getErrorTitle(

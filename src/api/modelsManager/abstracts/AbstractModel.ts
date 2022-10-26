@@ -18,7 +18,7 @@ import {RelationshipType} from "../../../services/relationshipsService/enums/Rel
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
 import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
-import {App, CachedMetadata, TFile} from "obsidian";
+import {CachedMetadata, TFile} from "obsidian";
 import {ComponentStage} from "../../../core/enums/ComponentStage";
 import {CampaignInterface} from "../../../components/campaign/interfaces/CampaignInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -46,7 +46,6 @@ export abstract class AbstractModel implements ModelInterface {
 	private _campaignSettings: CampaignSetting;
 
 	constructor(
-		private _app: App,
 		protected api: RpgManagerApiInterface,
 	) {
 	}
@@ -58,7 +57,7 @@ export abstract class AbstractModel implements ModelInterface {
 	public get alias(): Array<string> {
 		const response: Array<string> = [];
 
-		const metadata:CachedMetadata|null = this._app.metadataCache.getFileCache(this.file);
+		const metadata:CachedMetadata|null = this.api.app.metadataCache.getFileCache(this.file);
 		if (metadata == null)
 			return response;
 
@@ -158,7 +157,7 @@ export abstract class AbstractModel implements ModelInterface {
 		this.id = id;
 		this.file = file;
 
-		const metadataCache: CachedMetadata|null = this._app.metadataCache.getFileCache(this.file);
+		const metadataCache: CachedMetadata|null = this.api.app.metadataCache.getFileCache(this.file);
 		if (metadataCache !== null)
 			this.frontmatter = metadataCache.frontmatter;
 
@@ -229,7 +228,7 @@ export abstract class AbstractModel implements ModelInterface {
 		try {
 			this.campaign;
 		} catch (e) {
-			throw new ComponentNotFoundError(this._app, this.id);
+			throw new ComponentNotFoundError(this.api.app, this.id);
 		}
 	}
 }

@@ -1,4 +1,3 @@
-import {App} from "obsidian";
 import {FantasyCalendarServiceInterface} from "./interfaces/FantasyCalendarServiceInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
@@ -9,14 +8,13 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 	private _isReady: boolean;
 
 	constructor(
-		app: App,
 		api: RpgManagerApiInterface,
 	) {
-		super(app, api);
+		super(api);
 		this._isReady = false;
 
 		this.registerEvent(
-			this.app.workspace.on(
+			this.api.app.workspace.on(
 				"fantasy-calendars-settings-loaded",
 				this.ready.bind(this),
 			)

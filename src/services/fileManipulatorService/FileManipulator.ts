@@ -1,5 +1,5 @@
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
-import {App, CachedMetadata, TFile} from "obsidian";
+import {CachedMetadata, TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {RunningTimeService} from "../runningTimeService/RunningTimeService";
@@ -9,7 +9,6 @@ export class FileManipulator implements FileManipulatorInterface {
 	public cachedFile: CachedMetadata;
 
 	constructor(
-		private _app: App,
 		private _api: RpgManagerApiInterface,
 		private _file: TFile,
 		fileContent?: string,
@@ -33,7 +32,7 @@ export class FileManipulator implements FileManipulatorInterface {
 		if (content === this._fileContent)
 			return true;
 
-		return this._app.vault.modify(this._file, content)
+		return this._api.app.vault.modify(this._file, content)
 			.then(() => {
 				return this._api.database.onSave(this._file)
 					.then(() => {
@@ -45,7 +44,7 @@ export class FileManipulator implements FileManipulatorInterface {
 								this._api.service(RunningTimeService).updateMedianTimes();
 						}
 
-						this._app.workspace.trigger("rpgmanager:force-refresh-views");
+						this._api.app.workspace.trigger("rpgmanager:force-refresh-views");
 						return true;
 					});
 			});
@@ -53,7 +52,7 @@ export class FileManipulator implements FileManipulatorInterface {
 
 	public async read(
 	): Promise<boolean> {
-		const cache: CachedMetadata|null = await this._app.metadataCache.getFileCache(this._file);
+		const cache: CachedMetadata|null = await this._api.app.metadataCache.getFileCache(this._file);
 
 		if (cache === null)
 			return false;
@@ -61,7 +60,7 @@ export class FileManipulator implements FileManipulatorInterface {
 		this.cachedFile = cache;
 
 		if (this._fileContent === undefined)
-			this._fileContent = await this._app.vault.read(this._file);
+			this._fileContent = await this._api.app.vault.read(this._file);
 
 		return true;
 	}

@@ -2,15 +2,15 @@ import {ViewsManagerInterface} from "./interfaces/ViewsManagerInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {ViewClassInterface} from "./interfaces/ViewClassInterface";
-import {App} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
+import {RpgManagerApiInterface} from "../interfaces/RpgManagerApiInterface";
 
 export class ViewsManager implements ViewsManagerInterface {
 	private _factories: Map<string, ViewClassInterface>
 		= new Map<string, ViewClassInterface>();
 
 	constructor(
-		private _app: App,
+		private _api: RpgManagerApiInterface,
 	) {
 	}
 

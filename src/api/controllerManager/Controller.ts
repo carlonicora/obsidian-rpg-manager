@@ -1,5 +1,4 @@
 import {
-	App,
 	Component,
 	MarkdownPostProcessorContext,
 	MarkdownRenderChild,
@@ -28,7 +27,6 @@ export class Controller extends MarkdownRenderChild {
 	private _views: Map<ViewClassInterface, {type: NewViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}>;
 
 	constructor(
-		private _app: App,
 		private _api: RpgManagerApiInterface,
 		container: HTMLElement,
 		private _source: string,
@@ -39,10 +37,10 @@ export class Controller extends MarkdownRenderChild {
 
 		this._views = new Map<ViewClassInterface, {type: NewViewType, relatedType?: ComponentType; relationshipType?: RelationshipType}>();
 
-		this.registerEvent(this._app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
+		this.registerEvent(this._api.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
 
-		this.registerEvent(this._app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
-		this.registerEvent(this._app.workspace.on("rpgmanager:force-refresh-views", (() => {
+		this.registerEvent(this._api.app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
+		this.registerEvent(this._api.app.workspace.on("rpgmanager:force-refresh-views", (() => {
 			this._render(true);
 		}).bind(this)));
 	}
@@ -178,7 +176,7 @@ export class Controller extends MarkdownRenderChild {
 			return false;
 		}
 
-		await this._app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
+		await this._api.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
 			if (leaf.view instanceof MarkdownView) {
 				const file = leaf.view?.file;
 				if (file !== undefined){

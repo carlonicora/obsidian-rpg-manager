@@ -1,7 +1,7 @@
 import {ModelsManagerInterface} from "./interfaces/ModelsManagerInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {ModelClassInterface} from "./interfaces/ModelClassInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
@@ -12,7 +12,6 @@ export class ModelsManager implements ModelsManagerInterface {
 		= new Map<string, ModelClassInterface<ModelInterface>>();
 
 	constructor(
-		private _app: App,
 		private _api: RpgManagerApiInterface,
 	) {
 	}
@@ -59,7 +58,7 @@ export class ModelsManager implements ModelsManagerInterface {
 		campaignSettings: CampaignSetting,
 		file: TFile,
 	): ModelInterface {
-		const response = new modelClass(this._app, this._api);
+		const response = new modelClass(this._api);
 		response.initialise(campaignSettings, id, file);
 
 		return response;

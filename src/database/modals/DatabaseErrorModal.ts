@@ -1,16 +1,17 @@
-import {App, Component, MarkdownRenderer, TFile} from "obsidian";
+import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../../core/interfaces/RpgErrorInterface";
-import {ViewType} from "../../../REFACTOR/views/enums/ViewType";
-import {AbstractRpgManagerModal} from "../../../REFACTOR/abstracts/AbstractRpgManagerModal";
+import {AbstractModal} from "../../core/abstracts/AbstractModal";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {ViewType} from "../../core/enums/ViewType";
 
-export class DatabaseErrorModal extends AbstractRpgManagerModal {
+export class DatabaseErrorModal extends AbstractModal {
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		private _misconfiguredTags: Map<TFile, RpgErrorInterface>|undefined,
 		private _singleError: RpgErrorInterface|undefined = undefined,
 		private _singleErrorFile: TFile|undefined = undefined,
 	) {
-		super(app);
+		super(api);
 	}
 
 	onOpen() {
@@ -49,7 +50,7 @@ export class DatabaseErrorModal extends AbstractRpgManagerModal {
 			this.app.plugins.getPlugin('rpg-manager').factories.views.showObsidianView(
 				ViewType.Errors,
 				[this._misconfiguredTags],
-			)
+			);
 			this.close();
 		});
 	}

@@ -1,10 +1,8 @@
-import {RpgManagerSettingsInterface} from "../../settings/RpgManagerSettingsInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
 import {TagServiceInterface} from "./interfaces/TagServiceInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {App} from "obsidian";
 
 export class TagService extends AbstractService implements TagServiceInterface, ServiceInterface{
 	public static campaignTag = 'rpgm/campaign';
@@ -25,10 +23,9 @@ export class TagService extends AbstractService implements TagServiceInterface, 
 	private _requiredIds: Map<ComponentType, ComponentType[]>;
 
 	constructor(
-		app: App,
 		api: RpgManagerApiInterface,
 	) {
-		super(app, api);
+		super(api);
 		this.dataSettings = new Map();
 		this.dataSettings.set(ComponentType.Campaign, TagService.campaignTag);
 		this.dataSettings.set(ComponentType.Adventure, TagService.adventureTag);
@@ -80,7 +77,7 @@ export class TagService extends AbstractService implements TagServiceInterface, 
 
 		temporaryResponse.forEach((tag: string|null) => {
 			if (tag != null) response.push(tag);
-		})
+		});
 
 		return response;
 	}
@@ -206,19 +203,19 @@ export class TagService extends AbstractService implements TagServiceInterface, 
 	): {tag: string, type: ComponentType}|undefined {
 		const response: string|undefined = undefined;
 
-		const oldCampaignTag: string|undefined = this.api.settings.campaignTag;
-		const oldAdventureTag: string|undefined = this.api.settings.adventureTag;
-		const oldActTag: string|undefined = this.api.settings.actTag;
-		const oldSceneTag: string|undefined = this.api.settings.sceneTag;
-		const oldSessionTag: string|undefined = this.api.settings.sessionTag;
-		const oldSubplotTag: string|undefined = this.api.settings.subplotTag;
-		const oldPcTag: string|undefined = this.api.settings.pcTag;
-		const oldNpcTag: string|undefined = this.api.settings.npcTag;
-		const oldClueTag: string|undefined = this.api.settings.clueTag;
-		const oldEventTag: string|undefined = this.api.settings.eventTag;
-		const oldLocationTag: string|undefined = this.api.settings.locationTag;
-		const oldFactionTag: string|undefined = this.api.settings.factionTag;
-		const oldMusicTag: string|undefined = this.api.settings.musicTag;
+		const oldCampaignTag: string|undefined = (<any>this.api.settings).campaignTag;
+		const oldAdventureTag: string|undefined = (<any>this.api.settings).adventureTag;
+		const oldActTag: string|undefined = (<any>this.api.settings).actTag;
+		const oldSceneTag: string|undefined = (<any>this.api.settings).sceneTag;
+		const oldSessionTag: string|undefined = (<any>this.api.settings).sessionTag;
+		const oldSubplotTag: string|undefined = (<any>this.api.settings).subplotTag;
+		const oldPcTag: string|undefined = (<any>this.api.settings).pcTag;
+		const oldNpcTag: string|undefined = (<any>this.api.settings).npcTag;
+		const oldClueTag: string|undefined = (<any>this.api.settings).clueTag;
+		const oldEventTag: string|undefined = (<any>this.api.settings).eventTag;
+		const oldLocationTag: string|undefined = (<any>this.api.settings).locationTag;
+		const oldFactionTag: string|undefined = (<any>this.api.settings).factionTag;
+		const oldMusicTag: string|undefined = (<any>this.api.settings).musicTag;
 
 		if (oldCampaignTag !== undefined && tag.startsWith(oldCampaignTag)) return {tag: oldCampaignTag, type: ComponentType.Campaign};
 		if (oldAdventureTag !== undefined && tag.startsWith(oldAdventureTag)) return {tag: oldAdventureTag, type: ComponentType.Adventure};

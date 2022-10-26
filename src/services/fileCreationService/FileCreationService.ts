@@ -35,14 +35,14 @@ export class FileCreationService extends AbstractService implements FileCreation
 		let folder = pathSeparator;
 
 		try {
-			const campaign: CampaignInterface|undefined = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
+			const campaign: CampaignInterface|undefined = this.api.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
 			settings = campaign.campaignSettings;
 			folder = campaign.folder;
 		} catch (e) {
 			//no need to catch it here
 		}
 
-		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
+		const template = this.api.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
 			templateName,
@@ -87,7 +87,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			editor.setValue(data + '\n' + editor.getValue());
 
 			let file = activeView.file;
-			await this.app.fileManager.renameFile(file, fileName);
+			await this.api.app.fileManager.renameFile(file, fileName);
 			file = activeView.file;
 
 			app.workspace.getLeaf().openFile(file);
@@ -113,7 +113,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 
 		if (id !== undefined){
 			try {
-				campaign = this.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
+				campaign = this.api.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}
@@ -124,7 +124,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			folder = campaign.folder;
 		}
 
-		const template = this.app.plugins.getPlugin('rpg-manager').factories.templates.create(
+		const template = this.api.app.plugins.getPlugin('rpg-manager').factories.templates.create(
 			settings,
 			type,
 			'internal' + ComponentType[type],
@@ -165,10 +165,10 @@ export class FileCreationService extends AbstractService implements FileCreation
 
 				if (fullPath.startsWith(pathSeparator)) fullPath = fullPath.substring(pathSeparator.length);
 
-				const fileOrFolder = await this.app.vault.getAbstractFileByPath(fullPath);
+				const fileOrFolder = await this.api.app.vault.getAbstractFileByPath(fullPath);
 				if (fileOrFolder == null) {
 					try {
-						await this.app.vault.createFolder(fullPath);
+						await this.api.app.vault.createFolder(fullPath);
 					} catch (e) {
 						//no need to catch any error here
 					}

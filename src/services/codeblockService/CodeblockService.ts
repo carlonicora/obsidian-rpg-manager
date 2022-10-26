@@ -1,6 +1,6 @@
 import {CodeblockServiceInterface} from "./interfaces/CodeblockServiceInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ImageInterface} from "../galleryService/interfaces/ImageInterface";
 import {RelationshipInterface} from "../relationshipsService/interfaces/RelationshipInterface";
@@ -16,11 +16,10 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 	private _worker: CodeblockWorkerInterface;
 
 	constructor(
-		app: App,
 		api: RpgManagerApiInterface,
 	) {
-		super(app, api);
-		this._worker = new CodeblockWorker(this.app, this.api);
+		super(api);
+		this._worker = new CodeblockWorker(this.api);
 	}
 
 	public async addOrUpdateImage(

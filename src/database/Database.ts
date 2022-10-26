@@ -1,5 +1,4 @@
-import {AbstractRpgManagerComponent} from "../../REFACTOR/abstracts/AbstractRpgManagerComponent";
-import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
+import {CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../core/enums/ComponentType";
 import {IdInterface} from "../services/idService/interfaces/IdInterface";
 import {ComponentNotFoundError} from "../core/errors/ComponentNotFoundError";
@@ -13,20 +12,25 @@ import {SceneInterface} from "../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {ComponentDuplicatedError} from "../core/errors/ComponentDuplicatedError";
 import {ComponentStage} from "../core/enums/ComponentStage";
-import {AbstractRpgManagerError} from "../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
 import {RpgErrorInterface} from "../core/interfaces/RpgErrorInterface";
-import {AbstractComponentData} from "../../REFACTOR/abstracts/AbstractComponentData";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
+import {RunningTimeService} from "../services/runningTimeService/RunningTimeService";
+import {AbstractRpgManagerError} from "../core/abstracts/AbstractRpgManagerError";
+import {GalleryService} from "../services/galleryService/GalleryService";
+import {
+	AllComponentManipulatorService
+} from "../services/allComponentManipulatorService/AllComponentManipulatorService";
 
-export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
+export class Database extends Component implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];
 	private _basenameIndex: Map<string, string>;
 	private _isDatabaseReady = false;
 
 	constructor(
-		app: App,
+		private _api: RpgManagerApiInterface,
 	) {
-		super(app);
+		super();
 		this._basenameIndex = new Map();
 	}
 
@@ -36,14 +40,14 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	public async ready(
 	): Promise<void> {
 		this._isDatabaseReady = true;
-		this.registerEvent(this.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
-		this.registerEvent(this.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
-		this.registerEvent(this.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
+		this.registerEvent(this._api.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
+		this.registerEvent(this._api.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
+		this.registerEvent(this._api.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
 
-		this.app.workspace.trigger("rpgmanager:index-complete");
-		this.app.workspace.trigger("rpgmanager:refresh-views");
+		this._api.app.workspace.trigger("rpgmanager:index-complete");
+		this._api.app.workspace.trigger("rpgmanager:refresh-views");
 
-		this.factories.runningTimeManager.updateMedianTimes(true);
+		this._api.service(RunningTimeService).updateMedianTimes(true);
 	}
 
 	get isReady(
@@ -127,7 +131,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 	): T {
 		const result = this.read(this._generateQuery(type, id, false, overloadId));
 
-		if (result.length === 0) throw new ComponentNotFoundError(this.app, id);
+		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
 
 		return <T>result[0];
 	}
@@ -196,7 +200,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 				if (overloadId !== undefined) campaignId = overloadId;
 				return (component: ModelInterface) =>
 					(type & component.id.type) === component.id.type &&
-					component.id.campaignId === campaignId
+					component.id.campaignId === campaignId;
 				break;
 		}
 	}
@@ -206,13 +210,13 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		oldBaseName: string,
 		newBaseName: string,
 	): Promise<void> {
-		const content = await this.app.vault.read(file);
+		const content = await this._api.app.vault.read(file);
 		const newFileContent = content
 			.replaceAll('[[' +  oldBaseName + ']]', '[[' + newBaseName + ']]')
-			.replaceAll('[[' + oldBaseName + '|', '[[' + newBaseName + '|')
+			.replaceAll('[[' + oldBaseName + '|', '[[' + newBaseName + '|');
 
 		if (content !== newFileContent) {
-			return this.app.vault.modify(file, newFileContent)
+			return this._api.app.vault.modify(file, newFileContent)
 				.then(() => {
 					return;
 				});
@@ -226,7 +230,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		file: TFile,
 	): Promise<void> {
 		if (this.delete(file.path)){
-			this.app.workspace.trigger("rpgmanager:refresh-views");
+			this._api.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
 
@@ -237,16 +241,16 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 		const oldBaseName: string|undefined = this._basenameIndex.get(oldPath);
 		const newBaseName = file.path;
 
-		const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
+		const metadata: CachedMetadata|null = this._api.app.metadataCache.getFileCache(file);
 		const component: ModelInterface|undefined = this.readByPath(file.path);
 
 		await this._basenameIndex.delete(oldPath);
 		if (component !== undefined) await this._basenameIndex.set(file.path, file.basename);
 
-		if (AbstractComponentData.imageExtensions.contains(file.extension)) {
-			this.manipulators.allComponents.updateImagePath(oldPath, file.path);
+		if (this._api.service(GalleryService).imageExtensions.contains(file.extension)) {
+			this._api.service(AllComponentManipulatorService).updateImagePath(oldPath, file.path);
 		} else {
-			this.manipulators.allComponents.updateRelationshipPath(oldPath, file.path);
+			this._api.service(AllComponentManipulatorService).updateRelationshipPath(oldPath, file.path);
 		}
 
 		if (oldBaseName !== undefined && component !== undefined && metadata != null) {
@@ -255,11 +259,11 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 			DatabaseInitialiser.reinitialiseRelationships(component, this)
 				.then(() => {
-					if (this.app.workspace.getActiveFile()?.path === file.path){
-						this.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
+					if (this._api.app.workspace.getActiveFile()?.path === file.path){
+						this._api.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
 					}
 
-					this.app.workspace.trigger("rpgmanager:refresh-views");
+					this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				});
 		}
 	}
@@ -273,7 +277,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 			const isNewComponent = component === undefined;
 
 			if (component === undefined) {
-				component = await DatabaseInitialiser.createComponent(file);
+				component = await DatabaseInitialiser.createComponent(this._api, file);
 			}
 
 			if (component === undefined) return;
@@ -285,7 +289,7 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 				let error: RpgErrorInterface | undefined = undefined;
 				try {
 					const duplicate = this.readSingle(component.id.type, component.id);
-					error = new ComponentDuplicatedError(this.app, component.id, [duplicate], component);
+					error = new ComponentDuplicatedError(this._api, component.id, [duplicate], component);
 				} catch (e) {
 					//no need to trap an error here
 				}
@@ -299,11 +303,11 @@ export class Database extends AbstractRpgManagerComponent implements DatabaseInt
 
 			DatabaseInitialiser.reinitialiseRelationships(component, this)
 				.then(() => {
-					this.app.workspace.trigger("rpgmanager:refresh-views");
+					this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				});
 		} catch (e) {
 			if (e instanceof AbstractRpgManagerError) {
-				new DatabaseErrorModal(this.app, undefined, e, file).open();
+				new DatabaseErrorModal(this._api, undefined, e, file).open();
 			} else {
 				throw e;
 			}

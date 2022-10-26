@@ -37,6 +37,16 @@ import {ServiceClassInterface} from "./servicesManager/interfaces/ServiceClassIn
 import {YamlService} from "../services/yamlService/YamlService";
 import {SearchService} from "../services/searchService/SearchService";
 import {DateService} from "../services/dateService/DateService";
+import {CodeblockService} from "../services/codeblockService/CodeblockService";
+import {ComponentOptionsService} from "../services/componentOptionsService/ComponentOptionsService";
+import {FileCreationService} from "../services/fileCreationService/FileCreationService";
+import {FileManipulatorService} from "../services/fileManipulatorService/FileManipulatorService";
+import {GalleryService} from "../services/galleryService/GalleryService";
+import {IdService} from "../services/idService/IdService";
+import {SorterService} from "../services/sorterService/SorterService";
+import {
+	AllComponentManipulatorService
+} from "../services/allComponentManipulatorService/AllComponentManipulatorService";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -47,14 +57,14 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	private _views: ViewsManagerInterface;
 
 	constructor(
-		private _app: App,
+		public app: App,
 		private _plugin: RpgManagerInterface,
 	) {
-		this._controllers = new ControllerManager(this._app, this);
-		this._components = new ComponentsManager(this._app);
-		this._models = new ModelsManager(this._app, this);
-		this._services = new ServicesManager(this._app, this);
-		this._views = new ViewsManager(this._app);
+		this._controllers = new ControllerManager(this);
+		this._components = new ComponentsManager(this);
+		this._models = new ModelsManager(this);
+		this._services = new ServicesManager(this);
+		this._views = new ViewsManager(this);
 	}
 
 	public get controllers(): ControllerManagerInterface {
@@ -75,6 +85,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	public get models(): ModelsManagerInterface {
 		return this._models;
+	}
+
+	public get plugin(): RpgManagerInterface {
+		return this._plugin;
 	}
 
 	public get settings(): RpgManagerSettingsInterface {
@@ -122,15 +136,23 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	private _addServices(
 	): void {
-		this._services.register(TagService);
-		this._services.register(RelationshipService);
-		this._services.register(SearchService);
+		this._services.register(AllComponentManipulatorService);
 		this._services.register(BreadcrumbService);
-		this._services.register(RunningTimeService);
+		this._services.register(CodeblockService);
+		this._services.register(ComponentOptionsService);
+		this._services.register(FileCreationService);
+		this._services.register(FileManipulatorService);
+		this._services.register(GalleryService);
+		this._services.register(IdService);
 		this._services.register(PronounService);
+		this._services.register(RelationshipService);
+		this._services.register(RunningTimeService);
+		this._services.register(SearchService);
+		this._services.register(SorterService);
+		this._services.register(TagService);
 		this._services.register(YamlService);
 
-		if (this._app.plugins.enabledPlugins.has("fantasy-calendar"))
+		if (this.app.plugins.enabledPlugins.has("fantasy-calendar"))
 			this._services.register(FantasyCalendarService);
 
 		this._services.register(DateService);

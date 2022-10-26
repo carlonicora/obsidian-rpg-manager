@@ -91,7 +91,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			SettingType.templateFolder,
 			`Select the folder in which you keep the templates for RPG Manager.`,
 			this._folderMap,
-		)
+		);
 
 		this._settingsFactory.createToggleSetting(
 			SettingType.automaticMove,
@@ -117,7 +117,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			SettingType.imagesFolder,
 			`Select the folder in which you keep the images for RPG Manager. Leave it empty if you want to use the default Obsidian Attachment folder. RPG Manager scans every subfolder in the one you selected`,
 			this._folderMap,
-		)
+		);
 	}
 
 	private _createFolderMap(
@@ -190,8 +190,8 @@ export class RpgManagerSettings extends PluginSettingTab {
 					index,
 					type,
 					listSettingFieldCheckboxEl.checked,
-				)
-			})
+				);
+			});
 		}
 	}
 

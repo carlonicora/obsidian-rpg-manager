@@ -1,6 +1,6 @@
-import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {ComponentType} from "../enums/ComponentType";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 
 export class ComponentNotFoundError extends AbstractRpgManagerError {
 	public id: IdInterface;

@@ -1,7 +1,7 @@
 import {AbstractRpgManagerModal} from "../../../../REFACTOR/abstracts/AbstractRpgManagerModal";
 import {App, TAbstractFile, TFile} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";

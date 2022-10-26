@@ -90,7 +90,7 @@ export class RelationshipList implements RelationshipListInterface {
 				type: relationship.type.toString(),
 				isInContent: relationship.isInContent.valueOf(),
 				componentVersion: relationship.component !== undefined ? relationship.component.version : 0
-			})
+			});
 		}
 
 		return response;

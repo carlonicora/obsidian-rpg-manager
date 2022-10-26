@@ -173,4 +173,4 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 			}
 		}
 	}
-}
+};

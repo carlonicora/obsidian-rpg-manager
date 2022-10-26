@@ -11,7 +11,7 @@ import {SessionInterface} from "../interfaces/SessionInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {AnalyserInterface} from "../../../../REFACTOR/services/analyser/interfaces/AnalyserInterface";
 import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 

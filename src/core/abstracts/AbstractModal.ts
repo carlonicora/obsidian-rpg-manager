@@ -1,9 +1,16 @@
-import {Modal} from "obsidian";
+import {App, Modal} from "obsidian";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class AbstractModal extends Modal {
 	protected maxWidth = false;
 	protected title: string;
 	protected rpgmContainerEl: HTMLDivElement;
+
+	constructor(
+		protected api: RpgManagerApiInterface,
+	) {
+		super(api.app);
+	}
 
 	onOpen() {
 		super.onOpen();

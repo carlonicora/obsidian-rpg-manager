@@ -18,13 +18,13 @@ export class SearchService extends AbstractService implements SearchServiceInter
 
 		switch (type){
 			case SearchType.FuzzyFileSearch:
-				worker = new FuzzyFileSearchWorker(this.app, this.api);
+				worker = new FuzzyFileSearchWorker(this.api);
 				break;
 			case SearchType.FuzzyElementSearch:
 				if (element !== undefined)
-					worker = new FuzzyElementSearchWorker(this.app, this.api, element);
+					worker = new FuzzyElementSearchWorker(this.api, element);
 				else
-					worker = new FuzzyFileSearchWorker(this.app, this.api);
+					worker = new FuzzyFileSearchWorker(this.api);
 
 				break;
 		}

@@ -93,7 +93,7 @@ export class SettingsFactory {
 							break;
 
 					}
-				})
+				});
 			});
 	}
 
@@ -114,15 +114,15 @@ export class SettingsFactory {
 					.onChange(async value => {
 						switch (type){
 							case SettingType.automaticMove:
-								await this._plugin.updateSettings({ automaticMove: value })
+								await this._plugin.updateSettings({ automaticMove: value });
 								settings.value = value;
 								break;
 							case SettingType.usePlotStructures:
-								await this._plugin.updateSettings({ usePlotStructures: value })
+								await this._plugin.updateSettings({ usePlotStructures: value });
 								settings.value = value;
 								break;
 							case SettingType.useSceneAnalyser:
-								await this._plugin.updateSettings({ useSceneAnalyser: value })
+								await this._plugin.updateSettings({ useSceneAnalyser: value });
 								settings.value = value;
 								break;
 						}

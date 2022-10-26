@@ -1,14 +1,18 @@
-import {AbstractRpgManagerModal} from "../../../../REFACTOR/abstracts/AbstractRpgManagerModal";
-import {App, Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
+import {Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
+import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
 import {SorterType} from "../../../database/enums/SorterType";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {AbstractModal} from "../../../core/abstracts/AbstractModal";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {RelationshipService} from "../RelationshipService";
+import {CodeblockService} from "../../codeblockService/CodeblockService";
+import {SorterService} from "../../sorterService/SorterService";
 
-export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
+export class RelationshipsSelectionModal extends AbstractModal {
 	private _relationshipsEl: HTMLDivElement;
 	private _relationshipTypeSelectorEl: HTMLSelectElement;
 
@@ -37,10 +41,10 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	]);
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		private _currentComponent: ModelInterface,
 	) {
-		super(app);
+		super(api);
 	}
 
 	onOpen() {
@@ -50,7 +54,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 		contentEl.empty();
 		this.modalEl.style.width = 'var(--modal-max-width)';
 
-		const relationshipsModalEl = contentEl.createDiv({cls: 'rpgm-modal-relationshipsService'})
+		const relationshipsModalEl = contentEl.createDiv({cls: 'rpgm-modal-relationshipsService'});
 
 		relationshipsModalEl.createEl('h2', {text: 'Relationship Selector'});
 
@@ -163,7 +167,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 					relationship,
 					rowEl.insertCell(),
 					checkboxEl,
-				)
+				);
 
 				/** DESCRIPTION */
 				const titleCell = rowEl.insertCell();
@@ -187,7 +191,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 				/** SYNOPSIS */
 				const synopsisEl = rowEl.insertCell();
-				synopsisEl.addClass('description')
+				synopsisEl.addClass('description');
 				MarkdownRenderer.renderMarkdown(
 					(relationship !== undefined && relationship.description != undefined && relationship.description !== '')
 						? relationship.description
@@ -195,7 +199,7 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 					synopsisEl,
 					'',
 					null as unknown as Component,
-				)
+				);
 
 				checkboxEl.addEventListener('change', () => {
 					this._addOrRemoveElementRelationship(
@@ -218,9 +222,14 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 		containerEl.addClass('selector');
 		const availableRelationshipsType: Map<RelationshipType, string> = new Map<RelationshipType, string>();
 
-		if (this._currentComponent.id.type !== component.id.type) availableRelationshipsType.set(RelationshipType.Bidirectional, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Bidirectional));
-		availableRelationshipsType.set(RelationshipType.Unidirectional, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Unidirectional));
-		if (this._currentComponent.id.type === component.id.type && this._relationshipTypeAllowedChildren.has(component.id.type)) availableRelationshipsType.set(RelationshipType.Child, this.factories.relationshipType.createReadableRelationshipType(RelationshipType.Child));
+		if (this._currentComponent.id.type !== component.id.type)
+			availableRelationshipsType.set(RelationshipType.Bidirectional, this.api.service(RelationshipService).getReadableRelationshipType(RelationshipType.Bidirectional));
+
+		availableRelationshipsType.set(RelationshipType.Unidirectional,
+			this.api.service(RelationshipService).getReadableRelationshipType(RelationshipType.Unidirectional));
+
+		if (this._currentComponent.id.type === component.id.type && this._relationshipTypeAllowedChildren.has(component.id.type))
+			availableRelationshipsType.set(RelationshipType.Child, this.api.service(RelationshipService).getReadableRelationshipType(RelationshipType.Child));
 
 		const relationshipTypeSelectorEl: HTMLSelectElement = containerEl.createEl('select');
 		if (availableRelationshipsType.size === 1){
@@ -275,20 +284,20 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 		if (checkboxEl.checked) {
 			const relationshipType = (relationshipTypeSelectorEl.value === '')
 				? RelationshipType.Bidirectional
-				: this.factories.relationshipType.createRelationshipType(relationshipTypeSelectorEl.value);
+				: this.api.service(RelationshipService).getTypeFromString(relationshipTypeSelectorEl.value);
 
-			const newRelationship = this.factories.relationship.create(
+			const newRelationship = this.api.service(RelationshipService).createRelationship(
 				relationshipType,
 				relatedComponent.file.path,
 				existingRelationship?.description,
 				relatedComponent,
 				false,
 				this._currentComponent.getRelationships(),
-			)
+			);
 
-			this.manipulators.codeblock.addOrUpdateRelationship(newRelationship);
+			this.api.service(CodeblockService).addOrUpdateRelationship(newRelationship);
 		} else {
-			this.manipulators.codeblock.removeRelationship(relatedComponent.file.path);
+			this.api.service(CodeblockService).removeRelationship(relatedComponent.file.path);
 		}
 	}
 
@@ -303,18 +312,18 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 
 		let components: ModelInterface[] = [];
 		if (type !== undefined) {
-			components = this.database.readList<ModelInterface>(type, this._currentComponent.id)
+			components = this.api.database.readList<ModelInterface>(type, this._currentComponent.id)
 				.sort(
-					this.factories.sorter.create<ModelInterface>([
+					this.api.service(SorterService).create<ModelInterface>([
 						new SorterComparisonElement((component: ModelInterface) => this._currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
 						new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 					])
 				);
 		} else {
-			components = this.database.recordset
+			components = this.api.database.recordset
 				.filter((component: ModelInterface) => this._currentComponent.getRelationships().existsAlready(component))
 				.sort(
-					this.factories.sorter.create<ModelInterface>([
+					this.api.service(SorterService).create<ModelInterface>([
 						new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 					])
 				);
@@ -356,15 +365,15 @@ export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 			if (a.result !== undefined && b.result !== undefined) {
 				if (a.result?.score !== undefined && b.result?.score === undefined) return -1;
 				if (a.result?.score === undefined && b.result?.score !== undefined) return +1;
-				return b.result.score - a.result.score
+				return b.result.score - a.result.score;
 			}
 			return 0;
 		});
 
-		const response: Array<ModelInterface> = []
+		const response: Array<ModelInterface> = [];
 		resultArray.forEach((value: {component: ModelInterface, result?: SearchResult}) => {
 			response.push(value.component);
-		})
+		});
 
 		return  response;
 	}

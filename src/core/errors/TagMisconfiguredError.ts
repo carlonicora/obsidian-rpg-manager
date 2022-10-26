@@ -1,7 +1,8 @@
-import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {ComponentType} from "../enums/ComponentType";
 import {IdTagStatus} from "../../services/idService/enums/IdTagStatus";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {TagService} from "../../services/tagService/TagService";
 
 export class TagMisconfiguredError extends AbstractRpgManagerError {
 	public id: IdInterface;
@@ -23,7 +24,7 @@ export class TagMisconfiguredError extends AbstractRpgManagerError {
 				requiredId = '/{campaignId}' + requiredId;
 		}
 		response += '`' +
-			(this.tagHelper.dataSettings.get(this.id.type) ?? '')
+			(this.api.service(TagService).dataSettings.get(this.id.type) ?? '')
 			+ requiredId + '`\n';
 
 		this.id.invalidIds?.forEach((status: IdTagStatus, type: ComponentType) => {

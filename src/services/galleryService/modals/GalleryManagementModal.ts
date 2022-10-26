@@ -1,5 +1,4 @@
 import {GalleryViewType} from "../enums/GalleryViewType";
-import {App} from "obsidian";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {AbstractModal} from "../../../core/abstracts/AbstractModal";
 import {GalleryNavigationModalView} from "../views/modals/GalleryNavigationModalView";
@@ -9,6 +8,7 @@ import {GalleryAddLocalModalView} from "../views/modals/GalleryAddLocalModalView
 import {GalleryAddRemoteModalView} from "../views/modals/GalleryAddRemoteModalView";
 import {GalleryUploadModalView} from "../views/modals/GalleryUploadModalView";
 import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export class GalleryManagementModal extends AbstractModal {
 	protected title = 'Gallery Manager';
@@ -24,10 +24,10 @@ export class GalleryManagementModal extends AbstractModal {
 	]);
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		private _component: ModelInterface,
 	) {
-		super(app);
+		super(api);
 	}
 
 	onClose() {

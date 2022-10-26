@@ -1,4 +1,4 @@
-import {SorterType} from "../enums/SorterType";
+import {SorterType} from "../../../database/enums/SorterType";
 
 export interface SorterComparisonElementInterface {
 	comparisonElement: any,

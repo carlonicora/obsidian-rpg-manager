@@ -14,21 +14,21 @@ export class ComponentOptionsService extends AbstractService implements Componen
 	): void {
 		this._addFunctionality(containerEl, 'Relationships', 'Manage Relationship')
 			.addEventListener("click", () => {
-				new RelationshipsSelectionModal(this.app, model).open();
+				new RelationshipsSelectionModal(this.api, model).open();
 			});
 
 		this._addSeparator(containerEl);
 
 		this._addFunctionality(containerEl,'Move', 'Move your ' + ComponentType[model.id.type])
 			.addEventListener("click", () => {
-				new IdSwitcherModal(this.app, model.file).open();
+				new IdSwitcherModal(this.api, model.file).open();
 			});
 
 		this._addSeparator(containerEl);
 
 		this._addFunctionality(containerEl, 'Images', 'Gallery Manager')
 			.addEventListener("click", () => {
-				new GalleryManagementModal(this.app, model).open();
+				new GalleryManagementModal(this.api, model).open();
 			});
 	}
 

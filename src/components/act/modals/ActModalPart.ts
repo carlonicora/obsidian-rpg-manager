@@ -1,22 +1,25 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {ActInterface} from "../interfaces/ActInterface";
+import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {IdService} from "../../../services/idService/IdService";
+
 export class ActModalPart extends AbstractModalPart {
 	private _acts: ActInterface[];
 private _allAct:ActInterface[];
 private _actEl: HTMLSelectElement;
 private _actErrorEl: HTMLParagraphElement;
 private _childEl: HTMLDivElement;
-constructor(
+
+	constructor(
 		app: App,
 		modal: ModalInterface,
 	) {
 		super(app, modal);
 
 		if (this.modal.actId === undefined) {
-			this.modal.actId = this.factories.id.create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
+			this.modal.actId = this.api.service(IdService).create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
 			this.modal.actId.id = 0;
 		}
 

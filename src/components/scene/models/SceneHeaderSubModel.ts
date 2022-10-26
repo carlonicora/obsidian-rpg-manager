@@ -7,7 +7,7 @@ import {ResponseHeaderElement} from "../../../../REFACTOR/responses/ResponseHead
 import {HeaderResponseType} from "../../../../REFACTOR/responses/enums/HeaderResponseType";
 import {StoryCircleStage} from "../../../services/plotsServices/enums/StoryCircleStage";
 import {ResponseType} from "../../../../REFACTOR/responses/enums/ResponseType";
-import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterType} from "../../../database/enums/SorterType";
 import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
 import {SceneInterface} from "../interfaces/SceneInterface";

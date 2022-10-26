@@ -1,4 +1,4 @@
-import {App, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {IdInterface} from "../interfaces/IdInterface";
 import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";
@@ -17,11 +17,10 @@ export class IdSwitcherModal extends AbstractModal {
 	private _errorIdEl: HTMLSpanElement;
 
 	constructor(
-		private _app: App,
-		private _api: RpgManagerApiInterface,
+		api: RpgManagerApiInterface,
 		private _file: TFile,
 	) {
-		super(_app);
+		super(api);
 		this.title = 'Component ID Updater';
 	}
 
@@ -61,7 +60,7 @@ export class IdSwitcherModal extends AbstractModal {
 
 		if (this._id.type === ComponentType.Campaign){
 			const newCampaignId = this._proposeNewId(ComponentType.Campaign);
-			this._newId = this._api.service(IdService).create(
+			this._newId = this.api.service(IdService).create(
 				ComponentType.Campaign,
 				newCampaignId,
 				undefined,
@@ -97,26 +96,26 @@ export class IdSwitcherModal extends AbstractModal {
 	): void {
 		switch (this._newId.type){
 			case ComponentType.Campaign:
-				this._newId = this._api.service(IdService).create(ComponentType.Campaign, +this._newIdEl.value, undefined, undefined, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IdService).create(ComponentType.Campaign, +this._newIdEl.value, undefined, undefined, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Adventure:
-				this._newId = this._api.service(IdService).create(ComponentType.Adventure, this._newId.campaignId, +this._newIdEl.value, undefined, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IdService).create(ComponentType.Adventure, this._newId.campaignId, +this._newIdEl.value, undefined, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Act:
-				this._newId = this._api.service(IdService).create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, +this._newIdEl.value, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IdService).create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, +this._newIdEl.value, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Scene:
-				this._newId = this._api.service(IdService).create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, +this._newIdEl.value, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IdService).create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, +this._newIdEl.value, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Session:
-				this._newId = this._api.service(IdService).create(ComponentType.Session, +this._newIdEl.value, undefined, undefined, undefined, +this._newIdEl.value, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IdService).create(ComponentType.Session, +this._newIdEl.value, undefined, undefined, undefined, +this._newIdEl.value, undefined, this._id.campaignSettings);
 				break;
 			default:
 				return;
 		}
 
 		try {
-			this._api.database.readSingle<ModelInterface>(this._newId.type, this._newId);
+			this.api.database.readSingle<ModelInterface>(this._newId.type, this._newId);
 			this._updateButtonEl.disabled = true;
 			this._errorIdEl.style.display = '';
 		} catch (e) {
@@ -127,7 +126,7 @@ export class IdSwitcherModal extends AbstractModal {
 
 	private async _save(
 	): Promise<void>{
-		this._api.service(CodeblockService).replaceID(this._file, this._newId.stringID);
+		this.api.service(CodeblockService).replaceID(this._file, this._newId.stringID);
 		this.close();
 	}
 
@@ -294,7 +293,7 @@ export class IdSwitcherModal extends AbstractModal {
 							if (newId !== undefined) this._addIdSelector(subContainerEl, newId.toString());
 						}
 
-						this._newId = this._api.service(IdService).create(
+						this._newId = this.api.service(IdService).create(
 							idValues.type,
 							idValues.campaignId,
 							idValues.adventureId,
@@ -321,14 +320,14 @@ export class IdSwitcherModal extends AbstractModal {
 
 		let components: ModelInterface[];
 		if (type === ComponentType.Scene){
-			components = this._api.database.read<ModelInterface>((component: ModelInterface) =>
+			components = this.api.database.read<ModelInterface>((component: ModelInterface) =>
 				component.id.type === type &&
 				component.id.campaignId === campaignId &&
 				component.id.adventureId === adventureId &&
 				component.id.actId === actId
 			);
 		} else {
-			components = this._api.database.read<ModelInterface>((component: ModelInterface) =>
+			components = this.api.database.read<ModelInterface>((component: ModelInterface) =>
 				component.id.type === type &&
 				(campaignId !== undefined ? component.id.campaignId === campaignId : true)
 			);
@@ -360,7 +359,7 @@ export class IdSwitcherModal extends AbstractModal {
 		adventureId: number|undefined = undefined,
 		actId: number|undefined = undefined,
 	): ModelInterface[]{
-		return this._api.database.read<ModelInterface>((component: ModelInterface) =>
+		return this.api.database.read<ModelInterface>((component: ModelInterface) =>
 			component.id.type === type &&
 			(campaignId !== undefined ? component.id.campaignId === campaignId : true) &&
 			(adventureId !== undefined ? component.id.adventureId === adventureId : true) &&

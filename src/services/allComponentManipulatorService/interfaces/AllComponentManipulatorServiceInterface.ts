@@ -1,4 +1,4 @@
-export interface AllComponentManipulatorInterface {
+export interface AllComponentManipulatorServiceInterface {
 	updateRelationshipPath(
 		oldPath: string,
 		newPath: string,

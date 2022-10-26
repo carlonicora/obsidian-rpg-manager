@@ -1,12 +1,11 @@
 import {CodeblockWorkerInterface} from "../interfaces/CodeblockWorkerInterface";
 import {CodeblockDomainInterface} from "../interfaces/CodeblockDomainInterface";
-import {App, CachedMetadata, Editor, EditorPosition, MarkdownView, parseYaml, SectionCache, TFile} from "obsidian";
+import {CachedMetadata, Editor, EditorPosition, MarkdownView, parseYaml, SectionCache, TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {YamlService} from "../../yamlService/YamlService";
 
 export class CodeblockWorker implements CodeblockWorkerInterface {
 	constructor(
-		private _app: App,
 		private _api: RpgManagerApiInterface,
 	) {
 	}
@@ -16,10 +15,10 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 	): Promise<boolean> {
 		if (domain.editor !== undefined){
 			await domain.editor.replaceRange(this._api.service(YamlService).stringify(domain.codeblock), domain.codeblockStart, domain.codeblockEnd);
-			this._app.vault.modify(domain.file, domain.editor.getValue())
+			this._api.app.vault.modify(domain.file, domain.editor.getValue())
 				.then(() => {
 					this._api.database.readByPath(domain.file.path)?.touch();
-					this._app.workspace.trigger("rpgmanager:refresh-views");
+					this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				});
 			return true;
 		} else {
@@ -46,7 +45,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 
 			editor = await activeView.editor;
 			const file: TFile = await activeView.file;
-			cache = await this._app.metadataCache.getFileCache(file);
+			cache = await this._api.app.metadataCache.getFileCache(file);
 
 			if (cache == undefined)
 				return undefined;
@@ -64,9 +63,9 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 				}
 			}
 		} else {
-			const fileContent: string = await this._app.vault.read(file);
+			const fileContent: string = await this._api.app.vault.read(file);
 			const fileContentLines = fileContent.split('\n');
-			cache = await this._app.metadataCache.getFileCache(file);
+			cache = await this._api.app.metadataCache.getFileCache(file);
 
 			if (cache == undefined)
 				return undefined;

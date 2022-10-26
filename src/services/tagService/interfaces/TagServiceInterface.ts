@@ -1,5 +1,4 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {RpgManagerSettingsInterface} from "../../../settings/RpgManagerSettingsInterface";
 
 export interface TagServiceInterface {
 	sanitiseTags(

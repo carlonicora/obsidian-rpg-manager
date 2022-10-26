@@ -1,5 +1,5 @@
 import {SorterComparisonElementInterface} from "./interfaces/SorterComparisonElementInterface";
-import {SorterType} from "./enums/SorterType";
+import {SorterType} from "../../database/enums/SorterType";
 
 export class SorterComparisonElement implements SorterComparisonElementInterface {
 	constructor(

@@ -1,15 +1,15 @@
 import {ComponentsManagerInterface} from "./interfaces/ComponentsManagerInterface";
 import {ComponentClassInterface} from "./interfaces/ComponentClassInterface";
-import {App} from "obsidian";
 import {ComponentInterface} from "./interfaces/ComponentInterface";
 import {ViewClassInterface} from "../viewsManager/interfaces/ViewClassInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
+import {RpgManagerApiInterface} from "../interfaces/RpgManagerApiInterface";
 
 export class ComponentsManager implements ComponentsManagerInterface {
 	private _components: Map<ComponentClassInterface<any>, ComponentInterface> = new Map<ComponentClassInterface<any>, ComponentInterface>();
 
 	constructor(
-		private _app: App,
+		private _api: RpgManagerApiInterface,
 	) {
 	}
 
@@ -28,7 +28,7 @@ export class ComponentsManager implements ComponentsManagerInterface {
 	public register<T extends ComponentInterface>(
 		componentClass: ComponentClassInterface<T>,
 	): void {
-		const component: ComponentInterface = new componentClass(this._app);
+		const component: ComponentInterface = new componentClass(this._api);
 		this._components.set(componentClass, component);
 
 		window.RpgManagerAPI?.models.register(component.model, component.type, component.campaignSettings);

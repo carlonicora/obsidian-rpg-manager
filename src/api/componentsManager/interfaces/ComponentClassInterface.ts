@@ -1,5 +1,5 @@
-import {App} from "obsidian";
+import {RpgManagerApiInterface} from "../../interfaces/RpgManagerApiInterface";
 
 export interface ComponentClassInterface<T> {
-	new (app: App): T;
+	new (api: RpgManagerApiInterface): T;
 }

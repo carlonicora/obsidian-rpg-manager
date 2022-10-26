@@ -1,7 +1,5 @@
-import {App, parseYaml, TFile} from "obsidian";
+import {parseYaml, TFile} from "obsidian";
 import {RpgErrorInterface} from "../core/interfaces/RpgErrorInterface";
-import {FactoriesInterface} from "../../REFACTOR/interfaces/FactoriesInterface";
-import {TagService} from "../services/tagService/TagService";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
 import {IdInterface} from "../services/idService/interfaces/IdInterface";
 import {TagMisconfiguredError} from "../core/errors/TagMisconfiguredError";
@@ -10,32 +8,28 @@ import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
 import {ComponentStage} from "../core/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../core/errors/ComponentDuplicatedError";
-import {LogMessageType} from "../../REFACTOR/services/loggers/enums/LogMessageType";
 import {Md5} from "ts-md5";
 import {InvalidIdChecksumError} from "../core/errors/InvalidIdChecksumError";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
+import {IdService} from "../services/idService/IdService";
+import {RelationshipService} from "../services/relationshipsService/RelationshipService";
+import {DatabaseFactory} from "./factories/DatabaseFactory";
 
 export class DatabaseInitialiser {
 	private static _misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
-	private static _app: App;
-
-	private static _factories: FactoriesInterface;
-	private static _tagHelper: TagService;
+	private static _api: RpgManagerApiInterface;
 
 	public static async initialise(
-		app: App,
 		api: RpgManagerApiInterface,
 	): Promise<DatabaseInterface> {
-		this._app = app;
+		this._api = api;
 		this._misconfiguredTags = await new Map();
 
-		this._factories = this._app.plugins.getPlugin('rpg-manager').factories;
-		this._tagHelper = this._app.plugins.getPlugin('rpg-manager').tagHelper;
+		//const group = this._factories.logger.createGroup();
 
-		const group = this._factories.logger.createGroup();
-
-		const response: DatabaseInterface = await this._factories.database.create();
-		group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
+		const databaseFactory = new DatabaseFactory(this._api);
+		const response: DatabaseInterface = await databaseFactory.create();
+		// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
 		const components: ModelInterface[] = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
@@ -51,7 +45,7 @@ export class DatabaseInitialiser {
 							let error: Error | undefined = undefined;
 							try {
 								const duplicate = response.readSingle(component.id.type, component.id);
-								error = new ComponentDuplicatedError(this._app, component.id, [duplicate], component);
+								error = new ComponentDuplicatedError(this._api, component.id, [duplicate], component);
 							} catch (e) {
 								//no need to trap anything here
 							}
@@ -68,7 +62,7 @@ export class DatabaseInitialiser {
 			}
 		}
 
-		group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, componentCounter + ' Components created'));
+		// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, componentCounter + ' Components created'));
 
 		await Promise.all(components);
 
@@ -79,23 +73,23 @@ export class DatabaseInitialiser {
 			} catch (e) {
 				this._misconfiguredTags.set(component.file, e);
 			}
-		})
+		});
 
 		Promise.all(metadata)
 			.then(() => {
-				group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Data read for ' + metadata.length + ' Components'));
+				// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Data read for ' + metadata.length + ' Components'));
 				this._initialiseRelationships(response)
 					.then(() => {
-						group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Relationships created'));
+						// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Relationships created'));
 						this._validateComponents(response)
 							.then(() => {
-								group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Components Validated'));
+								// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Components Validated'));
 								response.ready();
 								if (this._misconfiguredTags.size > 0){
-									new DatabaseErrorModal(this._app, this._misconfiguredTags).open();
+									new DatabaseErrorModal(this._api, this._misconfiguredTags).open();
 								}
 
-								this._factories.logger.group(group);
+								// this._factories.logger.group(group);
 							});
 					});
 			});
@@ -113,17 +107,17 @@ export class DatabaseInitialiser {
 				database.delete(component);
 				this._misconfiguredTags.set(component.file, e);
 			}
-		})
+		});
 	}
 
 	public static async readID(
 		file: TFile
 	): Promise<IdInterface|undefined> {
-		const metadata = this._app.metadataCache.getFileCache(file);
+		const metadata = this._api.app.metadataCache.getFileCache(file);
 		if (metadata == undefined) return undefined;
 		if (metadata.sections == undefined || metadata.sections.length === 0) return undefined;
 
-		const content: string = await this._app.vault.read(file);
+		const content: string = await this._api.app.vault.read(file);
 		const contentArray: string[] = content.split('\n');
 		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
 			const section = metadata.sections[sectionIndex];
@@ -131,9 +125,10 @@ export class DatabaseInitialiser {
 				const rpgManagerIdContent: string[] = contentArray.slice(section.position.start.line + 1, section.position.end.line);
 				const rpgManagerID: {id: string, checksum: string} = parseYaml(rpgManagerIdContent.join('\n'));
 
-				const response = this._factories.id.createFromID(rpgManagerID.id);
+				const response = this._api.service(IdService).createFromID(rpgManagerID.id);
 
-				if (Md5.hashStr(rpgManagerID.id) !== rpgManagerID.checksum) throw new InvalidIdChecksumError(this._app, response)
+				if (Md5.hashStr(rpgManagerID.id) !== rpgManagerID.checksum)
+					throw new InvalidIdChecksumError(this._api, response);
 
 				return response;
 			}
@@ -155,7 +150,8 @@ export class DatabaseInitialiser {
 		const id: IdInterface|undefined = await this.readID(file);
 		if (id === undefined) return undefined;
 
-		if (!id.isValid) throw new TagMisconfiguredError(this._app, id);
+		if (!id.isValid)
+			throw new TagMisconfiguredError(this._api, id);
 
 		const response = await api.models.get(id, id.campaignSettings, file);
 
@@ -177,7 +173,7 @@ export class DatabaseInitialiser {
 					const relationships = database.recordset[index].getRelationships(database).relationships;
 					for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
 						if (relationships[relationshipIndex].component !== undefined){
-							this._factories.relationship.createFromReverse(database.recordset[index], relationships[relationshipIndex]);
+							this._api.service(RelationshipService).createRelationshipFromReverse(database.recordset[index], relationships[relationshipIndex]);
 						}
 					}
 				}
@@ -186,7 +182,7 @@ export class DatabaseInitialiser {
 					database.recordset[index].touch();
 				}
 
-				return
+				return;
 			});
 	}
 
@@ -199,7 +195,8 @@ export class DatabaseInitialiser {
 				const relationships = component.getRelationships();
 				if (component.touch()) {
 					relationships.forEach((relationship: RelationshipInterface) => {
-						if (relationship.component === undefined) this._factories.relationship.createFromReverse(component, relationship);
+						if (relationship.component === undefined)
+							this._api.service(RelationshipService).createRelationshipFromReverse(component, relationship);
 					});
 
 					database.recordset.forEach((component: ModelInterface) => {
@@ -209,6 +206,6 @@ export class DatabaseInitialiser {
 				}
 
 				return;
-			})
+			});
 	}
 }
