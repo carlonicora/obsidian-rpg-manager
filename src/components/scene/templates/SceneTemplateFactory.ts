@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
 import {ActDataInterface} from "../../act/interfaces/ActDataInterface";
@@ -38,6 +38,7 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 				storyCircleStage: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 
@@ -80,7 +81,7 @@ export class SceneTemplateFactory extends AbstractComponentTemplateFactory {
 					},
 				}
 			}
-		}
+		};
 
 		return this.generateRpgManagerCodeBlock(metadata);
 	}

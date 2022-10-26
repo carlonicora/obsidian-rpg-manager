@@ -1,9 +1,8 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
-
 export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 	protected generateDataCodeBlock(
 	): string {
@@ -15,6 +14,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 				abtStage: undefined
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 
@@ -30,8 +30,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 				}
 			},
 		};
-
-		return this.generateRpgManagerCodeBlock(metadata);
+return this.generateRpgManagerCodeBlock(metadata);
 	}
 
 	public generateLastCodeBlock(
@@ -65,7 +64,7 @@ export class SessionTemplateFactory extends AbstractComponentTemplateFactory {
 					},
 				}
 			}
-		}
+		};
 
 		return this.generateRpgManagerCodeBlock(metadata);
 	}

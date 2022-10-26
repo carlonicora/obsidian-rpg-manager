@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {SubplotMetadataInterface} from "../interfaces/SubplotMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -31,6 +31,7 @@ export class SubplotTemplateFactory extends AbstractComponentTemplateFactory {
 				complete: false
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 
@@ -48,6 +49,7 @@ export class SubplotTemplateFactory extends AbstractComponentTemplateFactory {
 				}
 			},
 		};
+
 		return this.generateRpgManagerCodeBlock(metadata);
 	}
 

@@ -1,4 +1,4 @@
-import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
+import {AbstractRpgManager} from "../../../../REFACTOR/abstracts/AbstractRpgManager";
 import {ImageInterface} from "../interfaces/ImageInterface";
 import {App, Component, MarkdownRenderer} from "obsidian";
 
@@ -53,7 +53,7 @@ export class GalleryCarouselView extends AbstractRpgManager {
 			} else {
 				imageContainerEl.append(imageEl);
 			}
-		}
+		};
 
 		imageEl.src = image.src;
 
@@ -77,10 +77,10 @@ export class GalleryCarouselView extends AbstractRpgManager {
 
 		if (this._images.length > 0) {
 			const previousImageNavigatorEl: HTMLDivElement = imageNavigatorContainerEl.createDiv({cls: 'previous', text: '<<'});
-			previousImageNavigatorEl.addEventListener('click', this._movePrevious.bind(this))
+			previousImageNavigatorEl.addEventListener('click', this._movePrevious.bind(this));
 
 			const nextImageNavigatorEl: HTMLDivElement = imageNavigatorContainerEl.createDiv({cls: 'next', text: '>>'});
-			nextImageNavigatorEl.addEventListener('click', this._moveNext.bind(this))
+			nextImageNavigatorEl.addEventListener('click', this._moveNext.bind(this));
 
 			this._imageCounterEl = imageNavigatorContainerEl.createDiv({cls: 'counter'});
 		}

@@ -1,6 +1,6 @@
-import {AbstractRpgManagerModal} from "./AbstractRpgManagerModal";
+import {Modal} from "obsidian";
 
-export class AbstractModal extends AbstractRpgManagerModal {
+export class AbstractModal extends Modal {
 	protected maxWidth = false;
 	protected title: string;
 	protected rpgmContainerEl: HTMLDivElement;

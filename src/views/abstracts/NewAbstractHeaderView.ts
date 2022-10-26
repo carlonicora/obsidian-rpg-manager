@@ -2,9 +2,13 @@ import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface"
 import {NewHeaderViewInterface} from "../interfaces/NewHeaderViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {Component, MarkdownRenderer} from "obsidian";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {BreadcrumbService} from "../../services/breadcrumbService/BreadcrumbService";
+import {ComponentOptionsService} from "../../services/componentOptionsService/ComponentOptionsService";
 
 export abstract class NewAbstractHeaderView implements NewHeaderViewInterface {
 	private _breadcumbContainerEl: HTMLDivElement;
+	private _componentOptionsContainerEl: HTMLDivElement;
 	private _headerContainerEl: HTMLDivElement;
 	private _titleContainerEl: HTMLDivElement;
 	private _galleryContainerEl: HTMLDivElement;
@@ -13,11 +17,14 @@ export abstract class NewAbstractHeaderView implements NewHeaderViewInterface {
 	private _analyserContainerEl: HTMLDivElement;
 
 	constructor(
+		protected api: RpgManagerApiInterface,
 		public model: ModelInterface,
 		public containerEl: HTMLElement,
 		public sourcePath: string,
 	) {
 		this._breadcumbContainerEl = containerEl.createDiv({cls: ''});
+		this._componentOptionsContainerEl = containerEl.createDiv({cls: ''});
+
 		this._headerContainerEl = containerEl.createDiv({cls: 'rpgm-header-info'});
 		this._titleContainerEl = this._headerContainerEl.createDiv({cls: 'title'});
 		const headerInfoAndGalleryEl = this._headerContainerEl.createDiv({cls: ''});
@@ -31,7 +38,12 @@ export abstract class NewAbstractHeaderView implements NewHeaderViewInterface {
 
 	protected addBreadcrumb(
 	): void {
+		this.api.service(BreadcrumbService).render(this.model, this._breadcumbContainerEl);
+	}
 
+	protected addComponentOptions(
+	): void {
+		this.api.service(ComponentOptionsService).render(this.model, this._componentOptionsContainerEl);
 	}
 
 	protected addTitle(

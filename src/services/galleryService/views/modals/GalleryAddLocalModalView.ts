@@ -1,8 +1,9 @@
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {TAbstractFile} from "obsidian";
-import {AbstractModel} from "../../../../api/modelsManager/abstracts/AbstractModel";
 import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
+import {GalleryService} from "../../GalleryService";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
 
 export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 	private _masonryEl: HTMLDivElement;
@@ -14,16 +15,13 @@ export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalVi
 	): void {
 		super.render(containerEl);
 
-		this.containerEl.createEl('label', {text: 'Search your image'})
-		const searchEl = this.containerEl.createEl('input', {type: 'text'})
+		this.containerEl.createEl('label', {text: 'Search your image'});
+		const searchEl = this.containerEl.createEl('input', {type: 'text'});
 		searchEl.addEventListener('keyup', () => {
 			this._populateGrid(searchEl.value);
 		});
 
 		this._masonryEl = this.containerEl.createDiv({cls: 'gallery-operations-masonry-x'});
-
-		if (AbstractModel.root == undefined)
-			AbstractModel.initialiseRoots(this.app);
 
 		this._attachmentFolder = (this.settings.imagesFolder !== undefined && this.settings.imagesFolder !== '') ? this.settings.imagesFolder : this.app.vault.config.attachmentFolderPath;
 
@@ -59,12 +57,12 @@ export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalVi
 		images.forEach((image: TAbstractFile) => {
 			const imageEl = new Image();
 			imageEl.addClass('image');
-			imageEl.src = AbstractModel.root + image.path;
+			imageEl.src = this.api.service(GalleryService).root + image.path;
 			imageEl.dataset.id = image.path;
 
 			imageEl.addEventListener('click', () => {
 				if (imageEl.dataset.id !== undefined) {
-					this.manipulators.codeblock.addOrUpdateImage(imageEl.dataset.id, '')
+					this.api.service(CodeblockService).addOrUpdateImage(imageEl.dataset.id, '')
 						.then((image: ImageInterface|undefined) => {
 							if (image !== undefined) {
 								this.selectedImage = image;
@@ -72,7 +70,7 @@ export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalVi
 							}
 						});
 				}
-			})
+			});
 
 			this._masonryEl.append(imageEl);
 		});

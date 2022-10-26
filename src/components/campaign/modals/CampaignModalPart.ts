@@ -1,8 +1,8 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {IdInterface} from "../../../services/id/interfaces/IdInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 
@@ -64,7 +64,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			);
 			this.modal.elementModal.addElement(
 				containerEl,
-			)
+			);
 		} else {
 			if (this.modal.type === ComponentType.Adventure || this.modal.type === ComponentType.Act || this.modal.type === ComponentType.Scene) {
 				this.modal.adventureModal = this.factories.modals.create(
@@ -75,7 +75,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 				this.modal.adventureModal.addElement(
 					containerEl,
-				)
+				);
 			} else if (this.modal.type === ComponentType.Session){
 				this.modal.sessionModal = this.factories.modals.create(
 					this.modal.campaignSetting,
@@ -85,7 +85,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 				this.modal.sessionModal.addElement(
 					containerEl,
-				)
+				);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			const campaignSettingOption = this._campaignSettingsEl.createEl('option', {
 				text: setting,
 				value: setting,
-			})
+			});
 
 			if (setting === CampaignSetting.Agnostic.toString()){
 				campaignSettingOption.selected = true;

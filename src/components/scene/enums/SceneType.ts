@@ -21,7 +21,6 @@ export const sceneTypeDescription: Map<SceneType, string> = new Map<SceneType, s
 	[SceneType.Recap, 'Recap: Pcs talks amongst themselves (not exciteable)'],
 	[SceneType.SocialCombat, 'Social Combat: PCs need to get something from NPCs (active)'],
 ]);
-
 export const activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
 	[SceneType.Action, true],
 	[SceneType.Combat, true],

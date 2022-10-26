@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {ClueMetadataInterface} from "../interfaces/ClueMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -14,6 +14,7 @@ export class ClueTemplateFactory extends AbstractComponentTemplateFactory {
 				found: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 

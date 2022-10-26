@@ -1,23 +1,23 @@
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {DatabaseInterface} from "../../../database/interfaces/DatabaseInterface";
-import {AbtPlot} from "../../../services/plots/AbtPlot";
-import {AbtInterface} from "../../../services/plots/interfaces/AbtInterface";
-import {StoryCircleInterface} from "../../../services/plots/interfaces/StoryCircleInterface";
-import {StoryCirclePlot} from "../../../services/plots/StoryCirclePlot";
+import {AbtPlot} from "../../../services/plotsServices/AbtPlot";
+import {AbtInterface} from "../../../services/plotsServices/interfaces/AbtInterface";
+import {StoryCircleInterface} from "../../../services/plotsServices/interfaces/StoryCircleInterface";
+import {StoryCirclePlot} from "../../../services/plotsServices/StoryCirclePlot";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
 import {RelationshipList} from "../../../services/relationshipsService/RelationshipList";
 import {ControllerMetadataDataInterface} from "../../controllerManager/interfaces/ControllerMetadataDataInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../controllerManager/interfaces/ControllerMetadataRelationshipInterface";
-import {OldFileManipulatorInterface} from "../../../services/fileManipulatorService/interfaces/OldFileManipulatorInterface";
+import {OldFileManipulatorInterface} from "../../../../REFACTOR/OldFileManipulatorInterface";
 import {Md5} from "ts-md5";
 import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
-import {IdInterface} from "../../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 import {App, CachedMetadata, TFile} from "obsidian";
 import {ComponentStage} from "../../../core/enums/ComponentStage";
 import {CampaignInterface} from "../../../components/campaign/interfaces/CampaignInterface";
@@ -27,6 +27,7 @@ import {ImageMetadataInterface} from "../../../core/interfaces/ImageMetadataInte
 import {RpgManagerApiInterface} from "../../interfaces/RpgManagerApiInterface";
 import {GalleryService} from "../../../services/galleryService/GalleryService";
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
+import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 
 export abstract class AbstractModel implements ModelInterface {
 	public id: IdInterface;
@@ -46,7 +47,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 	constructor(
 		private _app: App,
-		private _api: RpgManagerApiInterface,
+		protected api: RpgManagerApiInterface,
 	) {
 	}
 
@@ -64,7 +65,7 @@ export abstract class AbstractModel implements ModelInterface {
 		if (metadata.frontmatter?.alias != undefined) {
 			metadata.frontmatter.alias.forEach((alias: string) => {
 				response.push(alias);
-			})
+			});
 		}
 
 		return response;
@@ -72,7 +73,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 	public get campaign(): CampaignInterface {
 		if (this.id.type === ComponentType.Campaign) return <unknown>this as CampaignInterface;
-		return this._api.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
+		return this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
 	}
 
 	public get campaignSettings(): CampaignSetting {
@@ -92,7 +93,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 		if (this.metadata?.data?.images != undefined && Array.isArray(this.metadata?.data?.images)){
 			this.metadata.data.images.forEach((imageMetadata: ImageMetadataInterface) => {
-				const image: ImageInterface|undefined = this._api.services.get(GalleryService)?.createImage(imageMetadata.path, imageMetadata.caption);
+				const image: ImageInterface|undefined = this.api.service(GalleryService).createImage(imageMetadata.path, imageMetadata.caption);
 
 				if (image !== undefined)
 					response.push(image);
@@ -107,7 +108,7 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public get link(): string {
-		return '[[' + this.file.basename + ']]'
+		return '[[' + this.file.basename + ']]';
 	}
 
 	get storyCircle(): StoryCircleInterface {
@@ -127,15 +128,15 @@ export abstract class AbstractModel implements ModelInterface {
 				if (relationship.component === undefined) {
 					const path = relationship.path;
 					if (relationship.type !== RelationshipType.Undefined){
-						relationship.component = (database ?? this._api.database).readByPath(path);
+						relationship.component = (database ?? this.api.database).readByPath(path);
 					} else {
-						const maybeRelatedComponents = (database ?? this._api.database).read<ModelInterface>((component: ModelInterface) =>
+						const maybeRelatedComponents = (database ?? this.api.database).read<ModelInterface>((component: ModelInterface) =>
 							component.file.basename === path
 						);
 
 						if (maybeRelatedComponents.length === 1) {
 							/**
-							 * @TODO: what is the defaultRelationship for this.id.type?
+							 * @TODO: what is the defaultRelationship for this.idService.type?
 							 */
 							relationship.type = RelationshipType.Unidirectional;
 							relationship.component = maybeRelatedComponents[0];
@@ -173,7 +174,7 @@ export abstract class AbstractModel implements ModelInterface {
 		if (this.metadata.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 				if (relationshipMetadata.path !== this.file.path) {
-					const relationship = this._api.services.get(RelationshipService)?.createRelationshipFromMetadata(relationshipMetadata);
+					const relationship = this.api.service(RelationshipService).createRelationshipFromMetadata(relationshipMetadata);
 
 					if (relationship !== undefined)
 						this._relationships.add(
@@ -182,29 +183,24 @@ export abstract class AbstractModel implements ModelInterface {
 						);
 
 				}
-			})
+			});
 		}
 	}
 
 	public async readMetadata(
 	): Promise<void> {
-		const fileManipulator = await this.factories.fileManipulator.create(this.file)
-
-		if (fileManipulator !== undefined) {
-			this.fileManipulator = fileManipulator;
-			return this.manipulators.codeblock.read(this.fileManipulator, this)
-				.then((metadata: ControllerMetadataDataInterface) => {
-					this.metadata = metadata;
-					this.initialiseData();
-					return this.initialiseRelationships()
-						.then(() => {
-							return;
-						});
-				})
-				.catch((e) => {
-					if (e.message === 'INVALID YAML') return;
-				});
-		}
+		return this.api.service(CodeblockService).read(this.file)
+			.then((metadata: ControllerMetadataDataInterface) => {
+				this.metadata = metadata;
+				this.initialiseData();
+				return this.initialiseRelationships()
+					.then(() => {
+						return;
+					});
+			})
+			.catch((e) => {
+				if (e.message === 'INVALID YAML') return;
+			});
 	}
 
 	public touch(

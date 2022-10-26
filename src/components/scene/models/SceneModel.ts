@@ -16,7 +16,6 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	public validateHierarchy(
 	): void {
 		super.validateHierarchy();
-
 		try {
 			this.adventure.validateHierarchy();
 			this.act.validateHierarchy();
@@ -27,14 +26,18 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 
 	get act(): ActInterface {
 		const response = this.database.readSingle<ActInterface>(ComponentType.Act, this.id);
-		if (response === undefined) throw new Error('');
+
+		if (response === undefined)
+			throw new Error('');
 
 		return response;
 	}
 
 	get adventure(): AdventureInterface {
 		const response = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
-		if (response === undefined) throw new Error('');
+
+		if (response === undefined)
+			throw new Error('');
 
 		return response;
 	}
@@ -45,16 +48,17 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 
 	get duration(): string {
 		if (this.currentDuration === 0) return '00:00';
-
 		const hours: number = Math.floor(this.currentDuration / (60 * 60));
 		const minutes: number = Math.floor((this.currentDuration - (hours * 60 * 60))/60);
+
 		return (hours < 10 ? '0' + hours.toString() : hours.toString()) +
 			':' +
 			(minutes < 10 ? '0' + minutes.toString() : minutes.toString());
 	}
 
 	get expectedDuration(): number {
-		if (this.sceneType == undefined) return 0;
+		if (this.sceneType == undefined)
+			return 0;
 
 		const previousDurations: number[] = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
 		previousDurations.sort((left: number, right: number) => {
@@ -63,8 +67,11 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 			return 0;
 		});
 
-		if (previousDurations.length === 0) return 0;
-		if (previousDurations.length === 1) return previousDurations[0];
+		if (previousDurations.length === 0)
+			return 0;
+
+		if (previousDurations.length === 1)
+			return previousDurations[0];
 
 		if (previousDurations.length % 2 === 0){
 			const previous = previousDurations[previousDurations.length/2];
@@ -76,13 +83,15 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get isActive(): boolean {
-		if (this.sceneType == undefined) return false;
+		if (this.sceneType == undefined)
+			return false;
 
 		return activeSceneTypes.get(this.sceneType) ?? false;
 	}
 
 	get isCurrentlyRunning(): boolean {
-		if (this.metadata.data?.durations == undefined) return false;
+		if (this.metadata.data?.durations == undefined)
+			return false;
 
 		for (let index=0; index<this.metadata.data?.durations.length; index++) {
 			if (this.metadata.data?.durations[index].indexOf('-') === -1) return true;
@@ -92,7 +101,8 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get lastStart(): number {
-		if (!this.isCurrentlyRunning || this.metadata.data?.durations == undefined) return 0;
+		if (!this.isCurrentlyRunning || this.metadata.data?.durations == undefined)
+			return 0;
 
 		for (let index=0; index<this.metadata.data?.durations.length; index++) {
 			if (this.metadata.data?.durations[index].indexOf('-') === -1) return +this.metadata.data?.durations[index];
@@ -110,7 +120,8 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get session(): SessionInterface | undefined {
-		if (this.metadata.data?.sessionId === undefined) return undefined;
+		if (this.metadata.data?.sessionId === undefined)
+			return undefined;
 
 		const response = this.database.read<SessionInterface>((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&
@@ -125,12 +136,14 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		next: boolean,
 	): SceneInterface | null {
 		const sceneId = this.id.sceneId;
-		if (sceneId === undefined) return null;
+
+		if (sceneId === undefined)
+			return null;
 
 		try {
 			return this.database.readSingle<SceneInterface>(ComponentType.Scene, this.id, (next ? sceneId + 1 : sceneId - 1));
 		} catch (e) {
-			return null
+			return null;
 		}
 	}
 }

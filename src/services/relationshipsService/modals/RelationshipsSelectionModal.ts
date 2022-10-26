@@ -1,4 +1,4 @@
-import {AbstractRpgManagerModal} from "../../../core/abstracts/AbstractRpgManagerModal";
+import {AbstractRpgManagerModal} from "../../../../REFACTOR/abstracts/AbstractRpgManagerModal";
 import {App, Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../../database/SorterComparisonElement";
@@ -6,7 +6,7 @@ import {SorterType} from "../../../database/enums/SorterType";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
-import {IdInterface} from "../../id/interfaces/IdInterface";
+import {IdInterface} from "../../idService/interfaces/IdInterface";
 
 export class RelationshipsSelectionModal extends AbstractRpgManagerModal {
 	private _relationshipsEl: HTMLDivElement;

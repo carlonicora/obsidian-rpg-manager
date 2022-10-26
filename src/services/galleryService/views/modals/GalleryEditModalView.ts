@@ -2,6 +2,7 @@ import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {GalleryViewType} from "../../enums/GalleryViewType";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
 
 export class GalleryEditModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _image: ImageInterface;
@@ -11,7 +12,7 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 
 	set image(image: ImageInterface) {
 		this._image = image;
-		this.component
+		this.component;
 	}
 
 	public render(
@@ -44,12 +45,12 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 
 		editorEditorContainerEl.createEl('button', {text: 'Save Caption'})
 			.addEventListener('click', () => {
-				this.manipulators.codeblock.addOrUpdateImage(this._image.path, this._captionEl.value)
+				this.api.service(CodeblockService).addOrUpdateImage(this._image.path, this._captionEl.value);
 			});
 
 		editorEditorContainerEl.createEl('button', {cls: 'danger', text: 'Remove Image from ' + this.component.file.basename})
 			.addEventListener('click', () => {
-				this.manipulators.codeblock.removeImage(this._image.path)
+				this.api.service(CodeblockService).removeImage(this._image.path)
 					.then(() => {
 						editorDeletedContainerEl.style.display = 'block';
 					});

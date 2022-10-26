@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {FactionMetadataInterface} from "../interfaces/FactionMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -13,6 +13,7 @@ export class FactionTemplateFactory extends AbstractComponentTemplateFactory {
 				complete: false
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 

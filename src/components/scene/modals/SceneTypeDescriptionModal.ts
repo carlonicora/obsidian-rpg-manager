@@ -1,4 +1,4 @@
-import {AbstractRpgManagerModal} from "../../../core/abstracts/AbstractRpgManagerModal";
+import {AbstractRpgManagerModal} from "../../../../REFACTOR/abstracts/AbstractRpgManagerModal";
 import {Component, MarkdownRenderer} from "obsidian";
 
 interface SceneTypeInformation {
@@ -57,20 +57,18 @@ const sceneTypeDescription: SceneTypeInformation[] = [
 			'A **Social Combat** scene type is a scene in which the player characters must obtain something from ' +
 		'an NPC through a discussion. The goal is to `win the argument` adn it is normally performed through persuasion, intimidation or fast talk.',
 		isActive: true},
-]
+];
 
 export class SceneTypeDescriptionModal extends AbstractRpgManagerModal {
 	private _sceneTypeDescriptionsEl: HTMLDivElement;
 
 	onOpen() {
 		super.onOpen();
-
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.addClass('rpgm-modal');
 
-		this._sceneTypeDescriptionsEl = contentEl.createDiv({cls: 'rpgm-modal-scene-descriptions'})
-
+		this._sceneTypeDescriptionsEl = contentEl.createDiv({cls: 'rpgm-modal-scene-descriptions'});
 		this._sceneTypeDescriptionsEl.createEl('h1', {text: 'SceneModel Types'});
 
 		sceneTypeDescription.forEach((sceneTypeInformation: SceneTypeInformation) => {
@@ -82,10 +80,10 @@ export class SceneTypeDescriptionModal extends AbstractRpgManagerModal {
 		sceneTypeInformation: SceneTypeInformation,
 	): void {
 		const descriptionContainerEl = this._sceneTypeDescriptionsEl.createDiv('description-container');
-
 		descriptionContainerEl.createEl('h2', {text: sceneTypeInformation.title});
+
 		const descriptionEl = descriptionContainerEl.createDiv();
-		descriptionContainerEl.createSpan({text: 'This is ' + (sceneTypeInformation.isActive ? ''  : 'NOT ') + 'an "active" type of scene'})
+		descriptionContainerEl.createSpan({text: 'This is ' + (sceneTypeInformation.isActive ? ''  : 'NOT ') + 'an "active" type of scene'});
 
 		MarkdownRenderer.renderMarkdown(
 			sceneTypeInformation.description,

@@ -1,5 +1,5 @@
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
-import {PlotsInterface} from "../../../services/plots/interfaces/PlotsInterface";
+import {PlotsInterface} from "../../../services/plotsServices/interfaces/PlotsInterface";
 import {SessionDataInterface} from "./SessionDataInterface";
 
 export interface SessionInterface extends ModelInterface, PlotsInterface, SessionDataInterface {

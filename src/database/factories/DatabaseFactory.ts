@@ -1,5 +1,5 @@
 import {DatabaseFactoryInterface} from "./interfaces/DatabaseFactoryInterface";
-import {AbstractFactory} from "../../core/abstracts/AbstractFactory";
+import {AbstractFactory} from "../../../REFACTOR/abstracts/AbstractFactory";
 import {Database} from "../Database";
 import {DatabaseInterface} from "../interfaces/DatabaseInterface";
 

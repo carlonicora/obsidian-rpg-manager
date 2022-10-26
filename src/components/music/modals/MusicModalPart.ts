@@ -1,11 +1,10 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 
 export class MusicModalPart extends AbstractModalPart {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
 		contentEl.createDiv({cls: 'musicContainer'});
-
 		this.modal.saver = this;
 		this.modal.enableButton();
 	}

@@ -1,12 +1,11 @@
 import {CodeblockServiceInterface} from "./interfaces/CodeblockServiceInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
-import {App, CachedMetadata, Editor, EditorPosition, MarkdownView, parseYaml, SectionCache, TFile} from "obsidian";
+import {App, TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ImageInterface} from "../galleryService/interfaces/ImageInterface";
 import {RelationshipInterface} from "../relationshipsService/interfaces/RelationshipInterface";
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
 import {CodeblockDomainInterface} from "./interfaces/CodeblockDomainInterface";
-import {YamlHelper} from "../../core/helpers/YamlHelper";
 import {CodeblockWorkerInterface} from "./interfaces/CodeblockWorkerInterface";
 import {CodeblockWorker} from "./workers/CodeblockWorker";
 import {CodeblockImageWorker} from "./workers/CodeblockImageWorker";
@@ -37,8 +36,8 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 		return this._worker.updateContent(domain)
 			.then(() => {
-				return this.api.services.get(GalleryService)?.createImage(path, caption);
-			})
+				return this.api.service(GalleryService)?.createImage(path, caption);
+			});
 	}
 
 	public async addOrUpdateRelationship(
@@ -54,13 +53,21 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 	public async replaceID(
 		file: TFile,
-		ID: string,
+		id: string,
 	): Promise<void> {
 		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
 		if (domain === undefined)
 			return;
 
+	}
 
+	public async read(
+		file?: TFile,
+		codeblockName = 'RpgManagerData',
+	): Promise<any> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(codeblockName, file);
+
+		return domain?.codeblock;
 	}
 
 	public async removeImage(

@@ -1,6 +1,5 @@
 import {TFile} from "obsidian";
 import {CodeblockDomainInterface} from "./CodeblockDomainInterface";
-import {CodeblockDataWorkerInterface} from "./CodeblockDataWorkerInterface";
 
 export interface CodeblockWorkerInterface {
 	readContent(

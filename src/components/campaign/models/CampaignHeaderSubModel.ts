@@ -1,9 +1,5 @@
-import {AbstractHeaderSubModel} from "../../../REFACTOR/models/abstracts/AbstractHeaderSubModel";
-import {ResponseDataElementInterface} from "../../../responses/interfaces/ResponseDataElementInterface";
-import {ResponseHeader} from "../../../responses/ResponseHeader";
-import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
+import {AbstractHeaderSubModel} from "../../../../REFACTOR/models/abstracts/AbstractHeaderSubModel";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {ResponseType} from "../../../responses/enums/ResponseType";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
@@ -12,9 +8,7 @@ import {SorterComparisonElement} from "../../../database/SorterComparisonElement
 import {SorterType} from "../../../database/enums/SorterType";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
-import {ResponseHeaderElement} from "../../../responses/ResponseHeaderElement";
-import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
-import {DateService} from "../../../services/date/DateService";
+import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 
 export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 	protected data: CampaignInterface;
@@ -36,7 +30,7 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 		additionalInformation.acts = this.database.readList<ActInterface>(ComponentType.Act, this.currentComponent.id);
 		if (this.data.currentAdventureId != undefined && this.data.currentAdventureId !== '') {
 			const currentAdventureId = +this.data.currentAdventureId.split('/')[2];
-			additionalInformation.acts = additionalInformation.acts.filter((act: ActInterface) => act.id.adventureId === currentAdventureId)
+			additionalInformation.acts = additionalInformation.acts.filter((act: ActInterface) => act.id.adventureId === currentAdventureId);
 		}
 
 		additionalInformation.acts.sort(this.factories.sorter.create<ModelInterface>([
@@ -61,12 +55,12 @@ export class CampaignHeaderSubModel extends AbstractHeaderSubModel {
 				this.app,
 				this.currentComponent,
 				'Current Date',
-				this.api.services.get<DateService>(DateService)?.getReadableDate(this.data.date, this.data),
+				this.api.service(DateService).getReadableDate(this.data.date, this.data),
 				(this.data.fantasyCalendar !== undefined ? HeaderResponseType.FantasyDateSelector : HeaderResponseType.DateSelector),
 				{
-					yamlIdentifier: 'data.date',
+					yamlIdentifier: 'data.dateService',
 					date: this.data.date,
-					placeholder: 'Select the current date in the campaign'
+					placeholder: 'Select the current dateService in the campaign'
 				}
 			)
 		);

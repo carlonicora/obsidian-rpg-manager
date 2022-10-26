@@ -1,8 +1,8 @@
-import {ContentType} from "../../../responses/enums/ContentType";
-import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/AbstractTableSubModel";
-import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
+import {ContentType} from "../../../../REFACTOR/responses/enums/ContentType";
+import {AbstractTableSubModel} from "../../../../REFACTOR/models/abstracts/AbstractTableSubModel";
+import {ContentInterface} from "../../../../REFACTOR/responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {TableField} from "../../../REFACTOR/views/enums/TableField";
+import {TableField} from "../../../../REFACTOR/views/enums/TableField";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {CharacterInterface} from "../interfaces/CharacterInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
@@ -28,6 +28,7 @@ export class CharacterTableSubModel extends AbstractTableSubModel {
 		relationship: RelationshipInterface,
 	): ContentInterface|undefined {
 		const character: CharacterInterface = <unknown>component as CharacterInterface;
+
 		switch (fieldType) {
 			case TableField.Name:
 				return this.factories.contents.create(component.link + (character.isDead ? '\n_(Deceased)_' : ''), ContentType.Link, true);

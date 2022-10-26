@@ -1,6 +1,7 @@
 import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
 
 export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 
@@ -15,8 +16,8 @@ export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalV
 	): void {
 		super.render(containerEl);
 
-		this.containerEl.createEl('label', {text: 'Add the URL of the online image'})
-		this._urlEl = this.containerEl.createEl('input', {type: 'text'})
+		this.containerEl.createEl('label', {text: 'Add the URL of the online image'});
+		this._urlEl = this.containerEl.createEl('input', {type: 'text'});
 		this._addButtonEl = this.containerEl.createEl('button', {text: 'Add image'});
 		this._addButtonEl.disabled = true;
 		this._errorEl = this.containerEl.createDiv({cls: 'error'});
@@ -43,7 +44,7 @@ export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalV
 			};
 
 			imageEl.onload = (evt: Event) => {
-				this.manipulators.codeblock.addOrUpdateImage(this._urlEl.value.toLowerCase(), '')
+				this.api.service(CodeblockService).addOrUpdateImage(this._urlEl.value.toLowerCase(), '')
 					.then((image: ImageInterface|undefined) => {
 						if (image !== undefined) {
 							this.selectedImage = image;

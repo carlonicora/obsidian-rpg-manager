@@ -9,7 +9,7 @@ import {
 } from "./RpgManagerSettingsInterface";
 import {SettingType} from "./enums/SettingType";
 import {SettingInterface} from "./interfaces/SettingsInterface";
-import {tableFieldName} from "../REFACTOR/views/enums/TableField";
+import {tableFieldName} from "../../REFACTOR/views/enums/TableField";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private _plugin: RpgManagerInterface;

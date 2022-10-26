@@ -1,5 +1,5 @@
-import {CalendarType} from "../../../services/date/enums/CalendarType";
-import {DateInterface} from "../../../services/date/interfaces/DateInterface";
+import {CalendarType} from "../../../../REFACTOR/services/dateService/enums/CalendarType";
+import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
 import {Calendar} from "obsidian-fantasy-calendar";
 
 export interface CampaignDataInterface {

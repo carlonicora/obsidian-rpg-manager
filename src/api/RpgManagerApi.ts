@@ -3,9 +3,7 @@ import {App} from "obsidian";
 import {ServiceManagerInterface} from "./servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "./servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
-import {SearchService} from "../services/search/SearchService";
-import {FantasyCalendarService} from "../services/fantasyCalendar/FantasyCalendarService";
-import {DateService} from "../services/date/DateService";
+import {FantasyCalendarService} from "../services/fantasyCalendarService/FantasyCalendarService";
 import {ViewsManagerInterface} from "./viewsManager/interfaces/ViewsManagerInterface";
 import {ViewsManager} from "./viewsManager/ViewsManager";
 import {ComponentsManagerInterface} from "./componentsManager/interfaces/ComponentsManagerInterface";
@@ -27,10 +25,18 @@ import {SceneComponent} from "../components/scene/SceneComponent";
 import {SessionComponent} from "../components/session/SessionComponent";
 import {SubplotComponent} from "../components/subplot/SubplotComponent";
 import {RelationshipService} from "../services/relationshipsService/RelationshipService";
-import {BreadcrumbService} from "../services/breadcrumb/BreadcrumbService";
+import {BreadcrumbService} from "../services/breadcrumbService/BreadcrumbService";
 import {ControllerManagerInterface} from "./controllerManager/interfaces/ControllerManagerInterface";
 import {ControllerManager} from "./controllerManager/ControllerManager";
 import {RunningTimeService} from "../services/runningTimeService/RunningTimeService";
+import {TagService} from "../services/tagService/TagService";
+import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
+import {PronounService} from "../services/pronounService/PronounService";
+import {ServiceInterface} from "./servicesManager/interfaces/ServiceInterface";
+import {ServiceClassInterface} from "./servicesManager/interfaces/ServiceClassInterface";
+import {YamlService} from "../services/yamlService/YamlService";
+import {SearchService} from "../services/searchService/SearchService";
+import {DateService} from "../services/dateService/DateService";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -47,7 +53,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		this._controllers = new ControllerManager(this._app, this);
 		this._components = new ComponentsManager(this._app);
 		this._models = new ModelsManager(this._app, this);
-		this._services = new ServicesManager(this._app);
+		this._services = new ServicesManager(this._app, this);
 		this._views = new ViewsManager(this._app);
 	}
 
@@ -71,8 +77,8 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		return this._models;
 	}
 
-	public get services(): ServiceManagerInterface {
-		return this._services;
+	public get settings(): RpgManagerSettingsInterface {
+		return this._plugin.settings;
 	}
 
 	public get views(): ViewsManagerInterface {
@@ -83,6 +89,18 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	): void {
 		this._addComponents();
 		this._addServices();
+	}
+
+	service<T extends ServiceInterface>(
+		service: ServiceClassInterface<T>,
+	): T {
+		const response = this._services.get(service);
+
+		//TODO change the empty error
+		if (response === undefined)
+			throw new Error('');
+
+		return response;
 	}
 	
 	private _addComponents(
@@ -104,10 +122,13 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	private _addServices(
 	): void {
+		this._services.register(TagService);
 		this._services.register(RelationshipService);
 		this._services.register(SearchService);
 		this._services.register(BreadcrumbService);
 		this._services.register(RunningTimeService);
+		this._services.register(PronounService);
+		this._services.register(YamlService);
 
 		if (this._app.plugins.enabledPlugins.has("fantasy-calendar"))
 			this._services.register(FantasyCalendarService);

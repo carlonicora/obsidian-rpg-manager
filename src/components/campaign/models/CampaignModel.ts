@@ -10,6 +10,7 @@ export class CampaignModel extends AbstractCampaignData implements CampaignInter
 	public get folder(
 	): string {
 		const lastSlashPosition = this.file.path.lastIndexOf('/');
+
 		return (lastSlashPosition !== -1 ? this.file.path.substring(0, lastSlashPosition + 1) : '/');
 	}
 }

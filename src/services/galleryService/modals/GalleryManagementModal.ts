@@ -1,12 +1,27 @@
-import {AbstractModal} from "../../../core/abstracts/AbstractModal";
 import {GalleryViewType} from "../enums/GalleryViewType";
 import {App} from "obsidian";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {AbstractModal} from "../../../core/abstracts/AbstractModal";
+import {GalleryNavigationModalView} from "../views/modals/GalleryNavigationModalView";
+import {GalleryListModalView} from "../views/modals/GalleryListModalView";
+import {GalleryEditModalView} from "../views/modals/GalleryEditModalView";
+import {GalleryAddLocalModalView} from "../views/modals/GalleryAddLocalModalView";
+import {GalleryAddRemoteModalView} from "../views/modals/GalleryAddRemoteModalView";
+import {GalleryUploadModalView} from "../views/modals/GalleryUploadModalView";
+import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
 
 export class GalleryManagementModal extends AbstractModal {
 	protected title = 'Gallery Manager';
 
 	private _containerEl: HTMLDivElement;
+	private _views: Map<GalleryViewType, any> = new Map<GalleryViewType, any>([
+		[GalleryViewType.ModalNavigation, GalleryNavigationModalView],
+		[GalleryViewType.ModalList, GalleryListModalView],
+		[GalleryViewType.ModalEdit, GalleryEditModalView],
+		[GalleryViewType.ModalAddLocal, GalleryAddLocalModalView],
+		[GalleryViewType.ModalAddRemote, GalleryAddRemoteModalView],
+		[GalleryViewType.ModalUpload, GalleryUploadModalView],
+	]);
 
 	constructor(
 		app: App,
@@ -27,7 +42,13 @@ export class GalleryManagementModal extends AbstractModal {
 
 		this._containerEl = this.rpgmContainerEl.createDiv({cls:'gallery'});
 
-		const view = this.factories.imageView.create(GalleryViewType.ModalNavigation, this._component);
+		const viewClass = this._views.get(GalleryViewType.ModalNavigation);
+		if (viewClass === undefined)
+			throw new Error('');
+
+		const view: GalleryViewInterface = new viewClass(this.app);
+		view.component = this._component;
+
 		view.render(this._containerEl);
 	}
 }

@@ -1,7 +1,7 @@
 import {RpgManagerSettingsInterface} from "../../settings/RpgManagerSettingsInterface";
-import {FactoriesInterface} from "./FactoriesInterface";
-import {TagHelper} from "../../database/TagHelper";
-import {ManipulatorsInterface} from "../../services/manipulators/interfaces/ManipulatorsInterface";
+import {FactoriesInterface} from "../../../REFACTOR/interfaces/FactoriesInterface";
+import {TagService} from "../../services/tagService/TagService";
+import {ManipulatorsInterface} from "../../../REFACTOR/services/manipulators/interfaces/ManipulatorsInterface";
 import {DatabaseInterface} from "../../database/interfaces/DatabaseInterface";
 import {ServiceManagerInterface} from "../../api/servicesManager/interfaces/ServiceManagerInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
@@ -11,7 +11,7 @@ export interface RpgManagerInterface {
 	database: DatabaseInterface;
 	factories: FactoriesInterface;
 	manipulators: ManipulatorsInterface;
-	tagHelper: TagHelper;
+	tagHelper: TagService;
 	services: ServiceManagerInterface;
 	version: string;
 	api: RpgManagerApiInterface;

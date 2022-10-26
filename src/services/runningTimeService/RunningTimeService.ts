@@ -1,12 +1,9 @@
-import {AbstractRpgManager} from "../../core/abstracts/AbstractRpgManager";
 import {RunningTimeServiceInterface} from "./interfaces/RunningTimeServiceInterface";
 import {SceneType} from "../../components/scene/enums/SceneType";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
-import {App} from "obsidian";
-import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
 
 export class RunningTimeService extends AbstractService implements RunningTimeServiceInterface, ServiceInterface {

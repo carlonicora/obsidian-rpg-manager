@@ -1,19 +1,19 @@
-import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
+import {HeaderResponseInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../../REFACTOR/responses/enums/HeaderResponseType";
 import {Component, Editor, MarkdownRenderer, MarkdownView, TFile, WorkspaceLeaf} from "obsidian";
 import {SceneType, sceneTypeDescription} from "../enums/SceneType";
-import {IdInterface} from "../../../services/id/interfaces/IdInterface";
-import {HeadlessTableView} from "../../../REFACTOR/views/HeadlessTableView";
-import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
-import {AbstractPlotHeaderView} from "../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
+import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {HeadlessTableView} from "../../../../REFACTOR/views/HeadlessTableView";
+import {ContentInterface} from "../../../../REFACTOR/responses/contents/interfaces/ContentInterface";
+import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
 import {SceneTypeDescriptionModal} from "../modals/SceneTypeDescriptionModal";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import flatpickr from "flatpickr";
-import {AnalyserInterface} from "../../../services/analyser/interfaces/AnalyserInterface";
-import {AnalyserReportType} from "../../../services/analyser/enums/AnalyserReportType";
-import {DateInterface} from "../../../services/date/interfaces/DateInterface";
+import {AnalyserInterface} from "../../../../REFACTOR/services/analyser/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../../REFACTOR/services/analyser/enums/AnalyserReportType";
+import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
 
 export class SceneHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SceneInterface;
@@ -23,7 +23,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseInterface,
 	): void {
 		super.internalRender(container, data);
-
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
@@ -50,7 +49,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					headlessTable.addRow(element, this._addSceneDateSelector.bind(this));
 					break;
 				case HeaderResponseType.FantasyDateSelector:
-					headlessTable.addRow(element, this.addFantasyDateSelector.bind(this))
+					headlessTable.addRow(element, this.addFantasyDateSelector.bind(this));
 					break;
 				default:
 					element.value.fillContent(
@@ -63,9 +62,9 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
-		if (data.metadata?.sourceMeta?.analyser !== undefined){
-			(<AnalyserInterface>data.metadata.sourceMeta.analyser).render(AnalyserReportType.Scene, this.headerContainerEl)
-		}
+		if (data.metadata?.sourceMeta?.analyser !== undefined)
+			(<AnalyserInterface>data.metadata.sourceMeta.analyser).render(AnalyserReportType.Scene, this.headerContainerEl);
+
 	}
 
 	private _addSceneDateSelector(
@@ -78,7 +77,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			altInput: true,
 			onChange: (selectedDate: any, dateStr: any , instance: any) => {
 				this.manipulators.codeblock.update(
-					'data.date',
+					'data.dateService',
 					dateStr,
 				);
 			}
@@ -90,7 +89,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
 		flatpickrEl.placeholder = 'Select the SceneModel Date';
 		flatpickrEl.readOnly = true;
-
 		flatpickr(flatpickrEl, options);
 	}
 
@@ -99,6 +97,7 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
 		const durationEl = contentEl.createSpan({text: this._countOngoingDuration()});
+
 		if (this.currentComponent.isCurrentlyRunning) {
 			setInterval(() => {
 				durationEl.textContent = this._countOngoingDuration();
@@ -109,12 +108,13 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 	private _countOngoingDuration(
 	): string {
 		let duration: number = this.currentComponent.currentDuration ?? 0;
-		if (this.currentComponent.lastStart !== undefined && this.currentComponent.lastStart !== 0){
+
+		if (this.currentComponent.lastStart !== undefined && this.currentComponent.lastStart !== 0)
 			duration += (Math.floor(Date.now()/1000) - this.currentComponent.lastStart);
-		}
 
 		const expectedHoursDuration: number = Math.floor(duration / 60);
 		const expectedMinutesDuration: number = Math.floor(duration - (expectedHoursDuration * 60));
+
 		return (expectedHoursDuration < 10 ? '0' + expectedHoursDuration.toString() : expectedHoursDuration.toString()) +
 			':' +
 			(expectedMinutesDuration < 10 ? '0' + expectedMinutesDuration.toString() : expectedMinutesDuration.toString());
@@ -127,7 +127,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		const startStopEl = contentEl.createEl('a', {href: '#', text: (this.currentComponent.isCurrentlyRunning ? 'stop' : 'start')});
 		startStopEl.addEventListener('click', (e) => {
 			const editorPositions: Map<Editor, number> = new Map<Editor, number>();
-
 			this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
 				if (leaf.view instanceof MarkdownView) {
 					const editor = leaf.view.editor;
@@ -136,19 +135,18 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 			});
 
 			e.preventDefault();
-
 			if (this.currentComponent.isCurrentlyRunning){
 				this.factories.runningTimeManager.stopScene(this.currentComponent)
 					.then(() => {
-						setTimeout(() => {this._refreshEditorsPosition(editorPositions)},0);
+						setTimeout(() => {this._refreshEditorsPosition(editorPositions);},0);
 					});
 			} else {
 				this.factories.runningTimeManager.startScene(this.currentComponent)
 					.then(() => {
-						setTimeout(() => {this._refreshEditorsPosition(editorPositions)},0);
+						setTimeout(() => {this._refreshEditorsPosition(editorPositions);},0);
 					});
 			}
-		})
+		});
 	}
 
 	private async _refreshEditorsPosition(
@@ -166,15 +164,14 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseElementInterface,
 	): any|ContentInterface|undefined {
 		if (data.additionalInformation?.sceneId !== undefined) {
-
 			const sceneExcitementSelectorEl = contentEl.createEl('input');
 			sceneExcitementSelectorEl.type = 'checkbox';
 
-			if (data.value.content === true) sceneExcitementSelectorEl.checked = true;
+			if (data.value.content === true)
+				sceneExcitementSelectorEl.checked = true;
 
 			sceneExcitementSelectorEl.addEventListener("change", (e) => {
 				const file: TFile|undefined = data.additionalInformation.file;
-
 				if (file !== undefined){
 					this.manipulators.codeblock.update(
 						'data.isActedUpon',
@@ -205,7 +202,8 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					value: type,
 				});
 
-				if (data.value.content !== undefined && data.value.content === SceneType[type as keyof typeof SceneType]) sceneTypeOptionEl.selected = true;
+				if (data.value.content !== undefined && data.value.content === SceneType[type as keyof typeof SceneType])
+					sceneTypeOptionEl.selected = true;
 			});
 
 			sceneTypeSelectorEl.addEventListener("change", (e) => {
@@ -232,7 +230,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseElementInterface,
 	): void {
 		const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
-
 		if (sceneId !== undefined) {
 			const sessions = data.additionalInformation.sessions;
 			sessions.forEach((session: SessionInterface) => {
@@ -256,7 +253,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 		if (sceneId !== undefined) {
 			const sessions = data.additionalInformation.sessions;
-
 			const sessionSelectorEl = contentEl.createEl("select");
 			sessionSelectorEl.createEl("option", {
 				text: "",
@@ -286,9 +282,9 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 
 		return ((contentEl: HTMLDivElement,data: HeaderResponseElementInterface) => {
 			const sceneId:IdInterface|undefined = data.additionalInformation?.sceneId;
-
 			if (sceneId !== undefined) {
 				const sessions = data.additionalInformation.sessions;
+
 				sessions.forEach((session: SessionInterface) => {
 					if (data.value.content !== undefined && data.value.content.toString() === session.id.sessionId?.toString()) {
 						MarkdownRenderer.renderMarkdown(
@@ -300,7 +296,6 @@ export class SceneHeaderView extends AbstractPlotHeaderView {
 					}
 				});
 			}
-		}
-		);
+		});
 	}
 }

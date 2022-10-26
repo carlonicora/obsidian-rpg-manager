@@ -1,8 +1,8 @@
 import {TFile} from "obsidian";
-import {AbstractRpgManager} from "../core/abstracts/AbstractRpgManager";
+import {AbstractRpgManager} from "../../REFACTOR/abstracts/AbstractRpgManager";
 import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
 import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
-import {LogMessageType} from "../services/loggers/enums/LogMessageType";
+import {LogMessageType} from "../../REFACTOR/services/loggers/enums/LogMessageType";
 
 export class SettingsUpdater extends AbstractRpgManager {
 	public async updateTags(

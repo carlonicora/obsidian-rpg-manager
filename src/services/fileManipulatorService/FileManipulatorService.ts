@@ -1,6 +1,5 @@
 import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
-import {App, TFile} from "obsidian";
-import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {TFile} from "obsidian";
 import {FileManipulatorServiceInterface} from "./interfaces/FileManipulatorServiceInterface";
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
 import {FileManipulator} from "./FileManipulator";

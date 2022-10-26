@@ -1,12 +1,11 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 
 export class SessionModalPart extends AbstractModalPart {
 	private _sessions: SessionInterface[];
-
 	private _sessionEl: HTMLSelectElement;
 	private _sessionErrorEl: HTMLParagraphElement;
 	private _childEl: HTMLDivElement;
@@ -19,7 +18,6 @@ export class SessionModalPart extends AbstractModalPart {
 		super(app, modal);
 		this.modal.sessionId = this.factories.id.create(ComponentType.Session, this.modal.campaignId.id);
 		this.modal.sessionId.id = 0;
-
 		this._sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
 
@@ -27,10 +25,8 @@ export class SessionModalPart extends AbstractModalPart {
 		contentEl: HTMLElement,
 	): Promise<void> {
 		const sessionEl = contentEl.createDiv({cls: 'sessionContainer'});
-
 		this.addAdditionalElements();
 		this._addNewAdventureElements(sessionEl);
-
 		this.modal.saver = this;
 		this.modal.enableButton();
 	}
@@ -42,7 +38,9 @@ export class SessionModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.sessionId?.id === 0) this.modal.sessionId.id = 1;
+		if (this.modal.sessionId?.id === 0)
+			this.modal.sessionId.id = 1;
+
 		return true;
 	}
 

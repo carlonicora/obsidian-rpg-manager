@@ -1,4 +1,4 @@
-import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 
 export class MultipleTagsError extends AbstractRpgManagerError {
 	public showErrorMessage(

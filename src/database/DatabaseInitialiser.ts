@@ -1,16 +1,16 @@
 import {App, parseYaml, TFile} from "obsidian";
-import {RpgErrorInterface} from "../core/errors/interfaces/RpgErrorInterface";
-import {FactoriesInterface} from "../core/interfaces/FactoriesInterface";
-import {TagHelper} from "./TagHelper";
-import {DatabaseErrorModal} from "../core/modals/DatabaseErrorModal";
-import {IdInterface} from "../services/id/interfaces/IdInterface";
+import {RpgErrorInterface} from "../core/interfaces/RpgErrorInterface";
+import {FactoriesInterface} from "../../REFACTOR/interfaces/FactoriesInterface";
+import {TagService} from "../services/tagService/TagService";
+import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
+import {IdInterface} from "../services/idService/interfaces/IdInterface";
 import {TagMisconfiguredError} from "../core/errors/TagMisconfiguredError";
 import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
 import {ComponentStage} from "../core/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../core/errors/ComponentDuplicatedError";
-import {LogMessageType} from "../services/loggers/enums/LogMessageType";
+import {LogMessageType} from "../../REFACTOR/services/loggers/enums/LogMessageType";
 import {Md5} from "ts-md5";
 import {InvalidIdChecksumError} from "../core/errors/InvalidIdChecksumError";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
@@ -20,7 +20,7 @@ export class DatabaseInitialiser {
 	private static _app: App;
 
 	private static _factories: FactoriesInterface;
-	private static _tagHelper: TagHelper;
+	private static _tagHelper: TagService;
 
 	public static async initialise(
 		app: App,

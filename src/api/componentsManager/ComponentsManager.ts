@@ -3,11 +3,7 @@ import {ComponentClassInterface} from "./interfaces/ComponentClassInterface";
 import {App} from "obsidian";
 import {ComponentInterface} from "./interfaces/ComponentInterface";
 import {ViewClassInterface} from "../viewsManager/interfaces/ViewClassInterface";
-import {ViewInterface} from "../viewsManager/interfaces/ViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
-import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
-import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {ComponentType} from "../../core/enums/ComponentType";
 
 export class ComponentsManager implements ComponentsManagerInterface {
 	private _components: Map<ComponentClassInterface<any>, ComponentInterface> = new Map<ComponentClassInterface<any>, ComponentInterface>();
@@ -37,7 +33,7 @@ export class ComponentsManager implements ComponentsManagerInterface {
 
 		window.RpgManagerAPI?.models.register(component.model, component.type, component.campaignSettings);
 
-		component.views.forEach((viewType:NewViewType, view: ViewClassInterface<ViewInterface>) => {
+		component.views.forEach((viewType:NewViewType, view: ViewClassInterface) => {
 			window.RpgManagerAPI?.views.register(view, viewType, component.type, component.campaignSettings);
 		});
 	}

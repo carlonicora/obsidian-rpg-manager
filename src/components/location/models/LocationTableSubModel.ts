@@ -1,4 +1,4 @@
-import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/AbstractTableSubModel";
+import {AbstractTableSubModel} from "../../../../REFACTOR/models/abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
 
 export class LocationTableSubModel extends AbstractTableSubModel {

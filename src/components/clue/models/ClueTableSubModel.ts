@@ -1,12 +1,12 @@
-import {ContentType} from "../../../responses/enums/ContentType";
-import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/AbstractTableSubModel";
-import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
+import {ContentType} from "../../../../REFACTOR/responses/enums/ContentType";
+import {AbstractTableSubModel} from "../../../../REFACTOR/models/abstracts/AbstractTableSubModel";
+import {ContentInterface} from "../../../../REFACTOR/responses/contents/interfaces/ContentInterface";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {TableField} from "../../../REFACTOR/views/enums/TableField";
+import {TableField} from "../../../../REFACTOR/views/enums/TableField";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {ClueInterface} from "../interfaces/ClueInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
-import {DateService} from "../../../services/date/DateService";
+import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 
 export class ClueTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.ClueList;
@@ -32,10 +32,9 @@ export class ClueTableSubModel extends AbstractTableSubModel {
 		const clue: ClueInterface = <unknown>component as ClueInterface;
 		switch (fieldType) {
 			case TableField.Found:
-				let foundDate = this.api.services.get<DateService>(DateService)?.getReadableDate(clue.found, clue);
 				return this.factories.contents.create(
-					(foundDate !== undefined
-						? foundDate
+					(this.api.service(DateService).getReadableDate(clue.found, clue) !== undefined
+						? this.api.service(DateService).getReadableDate(clue.found, clue)
 						: '<span class="rpgm-missing">no</span>'
 					),
 					ContentType.Date

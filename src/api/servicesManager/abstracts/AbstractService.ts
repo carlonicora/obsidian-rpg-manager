@@ -1,6 +1,4 @@
-import {AbstractRpgManager} from "../../../core/abstracts/AbstractRpgManager";
 import {ServiceInterface} from "../interfaces/ServiceInterface";
-import {AbstractRpgManagerComponent} from "../../../core/abstracts/AbstractRpgManagerComponent";
 import {App, Component} from "obsidian";
 import {RpgManagerApiInterface} from "../../interfaces/RpgManagerApiInterface";
 

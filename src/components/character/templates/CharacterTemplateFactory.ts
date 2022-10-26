@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -17,6 +17,7 @@ export class CharacterTemplateFactory extends AbstractComponentTemplateFactory {
 				pronoun: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 

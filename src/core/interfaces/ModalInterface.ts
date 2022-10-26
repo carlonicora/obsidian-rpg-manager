@@ -1,7 +1,7 @@
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {ModalPartInterface} from "./ModalPartInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 
 export interface ModalInterface {
 	saver: ModalPartInterface

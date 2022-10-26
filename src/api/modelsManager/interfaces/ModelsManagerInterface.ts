@@ -2,7 +2,7 @@ import {CampaignSetting} from "../../../components/campaign/enums/CampaignSettin
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ModelClassInterface} from "./ModelClassInterface";
 import {ModelInterface} from "./ModelInterface";
-import {IdInterface} from "../../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 import {TFile} from "obsidian";
 
 export interface ModelsManagerInterface {

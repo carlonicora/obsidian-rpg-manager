@@ -1,7 +1,7 @@
-import {AbstractRpgManagerComponent} from "../core/abstracts/AbstractRpgManagerComponent";
+import {AbstractRpgManagerComponent} from "../../REFACTOR/abstracts/AbstractRpgManagerComponent";
 import {App, CachedMetadata, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../core/enums/ComponentType";
-import {IdInterface} from "../services/id/interfaces/IdInterface";
+import {IdInterface} from "../services/idService/interfaces/IdInterface";
 import {ComponentNotFoundError} from "../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
@@ -13,10 +13,10 @@ import {SceneInterface} from "../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {ComponentDuplicatedError} from "../core/errors/ComponentDuplicatedError";
 import {ComponentStage} from "../core/enums/ComponentStage";
-import {AbstractRpgManagerError} from "../core/abstracts/AbstractRpgManagerError";
-import {DatabaseErrorModal} from "../core/modals/DatabaseErrorModal";
-import {RpgErrorInterface} from "../core/errors/interfaces/RpgErrorInterface";
-import {AbstractComponentData} from "../core/abstracts/AbstractComponentData";
+import {AbstractRpgManagerError} from "../../REFACTOR/abstracts/AbstractRpgManagerError";
+import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
+import {RpgErrorInterface} from "../core/interfaces/RpgErrorInterface";
+import {AbstractComponentData} from "../../REFACTOR/abstracts/AbstractComponentData";
 
 export class Database extends AbstractRpgManagerComponent implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];

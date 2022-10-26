@@ -2,6 +2,7 @@ import {ServiceClassInterface} from "./interfaces/ServiceClassInterface";
 import {App} from "obsidian";
 import {ServiceManagerInterface} from "./interfaces/ServiceManagerInterface";
 import {ServiceInterface} from "./interfaces/ServiceInterface";
+import {RpgManagerApiInterface} from "../interfaces/RpgManagerApiInterface";
 
 export class ServicesManager implements ServiceManagerInterface{
 	private _services: Map<ServiceClassInterface<any>, ServiceInterface>
@@ -9,6 +10,7 @@ export class ServicesManager implements ServiceManagerInterface{
 
 	constructor(
 		private _app: App,
+		private _api: RpgManagerApiInterface,
 	) {
 	}
 
@@ -21,6 +23,6 @@ export class ServicesManager implements ServiceManagerInterface{
 	public register<T extends ServiceInterface>(
 		serviceClass: ServiceClassInterface<T>
 	): void {
-		this._services.set(serviceClass, new serviceClass(this._app))
+		this._services.set(serviceClass, new serviceClass(this._app, this._api));
 	}
 }

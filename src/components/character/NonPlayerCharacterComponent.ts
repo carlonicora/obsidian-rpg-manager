@@ -5,7 +5,6 @@ import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface"
 import {CharacterModel} from "./models/CharacterModel";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
-import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {NewCharacterHeaderView} from "./views/NewCharacterHeaderView";
 
@@ -22,8 +21,8 @@ export class NonPlayerCharacterComponent implements ComponentInterface {
 		return ComponentType.NonPlayerCharacter;
 	}
 
-	public get views(): Map<ViewClassInterface<ViewInterface>, NewViewType> {
-		return new Map<ViewClassInterface<ViewInterface>, NewViewType>([
+	public get views(): Map<ViewClassInterface, NewViewType> {
+		return new Map<ViewClassInterface, NewViewType>([
 			[NewCharacterHeaderView, NewViewType.Header],
 		]);
 	}

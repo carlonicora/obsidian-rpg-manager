@@ -1,14 +1,14 @@
 import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
-import {ViewType} from "../../../REFACTOR/views/enums/ViewType";
+import {ViewType} from "../../../../REFACTOR/views/enums/ViewType";
 import {Component, MarkdownRenderer, TFile} from "obsidian";
-import {AbstractPlotHeaderView} from "../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
-import {HeadlessTableView} from "../../../REFACTOR/views/HeadlessTableView";
+import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
+import {HeadlessTableView} from "../../../../REFACTOR/views/HeadlessTableView";
 import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
 import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
-import {DateService} from "../../../services/date/DateService";
+import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 
 export class CampaignHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: CampaignInterface;
@@ -33,7 +33,7 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 			overlay.createDiv({cls: 'rpgm-header-title', text: this.currentComponent.file.basename});
 
 			//overlay.createDiv({cls: 'rpgm-campaign-name', text: this.campaign.name});
-			overlay.createDiv({cls: 'rpgm-current-date', text: (this.api.services.get<DateService>(DateService)?.getReadableDate(this.currentComponent.date, this.currentComponent) ?? '')});
+			overlay.createDiv({cls: 'rpgm-current-dateService', text: (this.api.service(DateService).getReadableDate(this.currentComponent.date, this.currentComponent) ?? '')});
 		}
 
 		if (this.currentComponent.date !== undefined) {
@@ -48,10 +48,10 @@ export class CampaignHeaderView extends AbstractPlotHeaderView {
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
 			switch (element.type){
 				case HeaderResponseType.DateSelector:
-					this.createContainerEl(element, this.addDateSelector.bind(this))
+					this.createContainerEl(element, this.addDateSelector.bind(this));
 					break;
 				case HeaderResponseType.FantasyDateSelector:
-					this.createContainerEl(element, this.addFantasyDateSelector.bind(this))
+					this.createContainerEl(element, this.addFantasyDateSelector.bind(this));
 					break;
 				default:
 					element.value.fillContent(

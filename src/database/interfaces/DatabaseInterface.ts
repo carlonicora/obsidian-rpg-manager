@@ -1,5 +1,5 @@
 import {ComponentType} from "../../core/enums/ComponentType";
-import {IdInterface} from "../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {TFile} from "obsidian";
 

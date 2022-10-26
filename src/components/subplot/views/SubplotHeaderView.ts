@@ -1,8 +1,8 @@
 import {SubplotInterface} from "../interfaces/SubplotInterface";
-import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
-import {HeadlessTableView} from "../../../REFACTOR/views/HeadlessTableView";
-import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
-import {AbstractPlotHeaderView} from "../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
+import {HeaderResponseInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseInterface";
+import {HeadlessTableView} from "../../../../REFACTOR/views/HeadlessTableView";
+import {HeaderResponseElementInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseElementInterface";
+import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
 
 export class SubplotHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SubplotInterface;
@@ -12,9 +12,7 @@ export class SubplotHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseInterface,
 	): void {
 		super.internalRender(container, data);
-
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
-
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
 			element.value.fillContent(
 				this.createContainerEl(element),
@@ -23,7 +21,6 @@ export class SubplotHeaderView extends AbstractPlotHeaderView {
 		});
 
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
-
 
 		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){
 			this.addAbtPlot(data.currentComponent.abt);

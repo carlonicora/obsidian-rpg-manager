@@ -1,10 +1,10 @@
 @use "src/styles/input";
-@use "src/services/analyser/views/circle";
-@use "src/services/analyser/views/analyserStyles";
+@use "REFACTOR/services/analyser/views/circle";
+@use "REFACTOR/services/analyser/views/analyserStyles";
 @use "src/services/galleryService/views/styles";
 @use "src/styles/flatpickr";
-@use "src/services/sceneBuilder/styles/sceneBuilder";
-@use "src/services/contentEditor/styles/ContentEditor";
+@use "REFACTOR/services/sceneBuilder/styles/sceneBuilder";
+@use "REFACTOR/services/contentEditor/styles/ContentEditor";
 
 .suggestion-container {
 	padding: 6px 0px;

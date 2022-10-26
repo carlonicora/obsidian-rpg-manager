@@ -1,4 +1,4 @@
-import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {ComponentType} from "../enums/ComponentType";
 
 export class InvalidIdChecksumError extends AbstractRpgManagerError {

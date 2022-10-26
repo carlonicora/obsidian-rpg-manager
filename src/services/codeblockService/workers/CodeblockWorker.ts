@@ -1,8 +1,8 @@
 import {CodeblockWorkerInterface} from "../interfaces/CodeblockWorkerInterface";
 import {CodeblockDomainInterface} from "../interfaces/CodeblockDomainInterface";
-import {YamlHelper} from "../../../core/helpers/YamlHelper";
 import {App, CachedMetadata, Editor, EditorPosition, MarkdownView, parseYaml, SectionCache, TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {YamlService} from "../../yamlService/YamlService";
 
 export class CodeblockWorker implements CodeblockWorkerInterface {
 	constructor(
@@ -15,7 +15,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 		domain: CodeblockDomainInterface,
 	): Promise<boolean> {
 		if (domain.editor !== undefined){
-			await domain.editor.replaceRange(YamlHelper.stringify(domain.codeblock), domain.codeblockStart, domain.codeblockEnd);
+			await domain.editor.replaceRange(this._api.service(YamlService).stringify(domain.codeblock), domain.codeblockStart, domain.codeblockEnd);
 			this._app.vault.modify(domain.file, domain.editor.getValue())
 				.then(() => {
 					this._api.database.readByPath(domain.file.path)?.touch();
@@ -29,7 +29,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 	}
 
 	public async readContent(
-		codeblockName: string = 'RpgManagerData',
+		codeblockName = 'RpgManagerData',
 		file?: TFile,
 	): Promise<CodeblockDomainInterface|undefined> {
 		let editor: Editor|undefined = undefined;
@@ -64,7 +64,32 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 				}
 			}
 		} else {
-			//TODO: Add this part
+			const fileContent: string = await this._app.vault.read(file);
+			const fileContentLines = fileContent.split('\n');
+			cache = await this._app.metadataCache.getFileCache(file);
+
+			if (cache == undefined)
+				return undefined;
+
+			let codeblockData: SectionCache|undefined = undefined;
+			for (let index=0; index<(cache?.sections?.length ?? 0); index++) {
+				codeblockData = await (cache?.sections !== undefined ? cache.sections[index] : undefined);
+				if (codeblockData !== undefined && fileContentLines[codeblockData.position.start.line] === '```' + codeblockName){
+					codeblockStart = {line: codeblockData.position.start.line + 1, ch: 0};
+					codeblockEnd = {line: codeblockData.position.end.line, ch: 0};
+
+					codeblockContent = '';
+					for (let lineIndex=codeblockData.position.start.line+1; lineIndex<codeblockData.position.end.line; lineIndex++){
+						codeblockContent += fileContentLines[lineIndex] + '\n';
+					}
+
+					if (codeblockContent === undefined)
+						return undefined;
+
+					codeblock = await parseYaml(codeblockContent) ?? {};
+					break;
+				}
+			}
 		}
 
 		if (cache == undefined || file === undefined || codeblockContent === undefined || codeblockStart === undefined || codeblockEnd === undefined)
@@ -78,7 +103,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			codeblockStart: codeblockStart,
 			codeblockEnd: codeblockEnd,
 			codeblockContent: codeblockContent,
-		}
+		};
 
 		return response;
 	}

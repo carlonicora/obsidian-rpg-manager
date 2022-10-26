@@ -4,6 +4,7 @@ import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInte
 import {App, TFile} from "obsidian";
 import {ImageInterface} from "./interfaces/ImageInterface";
 import {Image} from "./data/Image";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class GalleryService extends AbstractService implements GalleryServiceInterface, ServiceInterface {
 	private _root: string;
@@ -11,8 +12,9 @@ export class GalleryService extends AbstractService implements GalleryServiceInt
 
 	constructor(
 		app: App,
+		api: RpgManagerApiInterface,
 	) {
-		super(app);
+		super(app, api);
 
 		const file = app.vault.getAbstractFileByPath('/');
 		this._root = app.vault.getResourcePath(file as TFile);
@@ -38,7 +40,7 @@ export class GalleryService extends AbstractService implements GalleryServiceInt
 		const imageLocation = this._getImageLocation(path);
 
 		if (imageLocation === undefined)
-			return undefined
+			return undefined;
 
 		const response = new Image(path, imageLocation);
 		if (caption !== undefined)

@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {MusicMetadataInterface} from "../interfaces/MusicMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -14,6 +14,7 @@ export class MusicTemplateFactory extends AbstractComponentTemplateFactory {
 				url: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 

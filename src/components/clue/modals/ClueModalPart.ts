@@ -1,11 +1,10 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 
 export class ClueModalPart extends AbstractModalPart {
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
 		contentEl.createDiv({cls: 'clueContainer'});
-
 		this.modal.saver = this;
 		this.modal.enableButton();
 	}

@@ -13,7 +13,6 @@ export class ActModel extends AbstractActData implements ActInterface {
 	public validateHierarchy(
 	): void {
 		super.validateHierarchy();
-
 		try {
 			this.adventure.validateHierarchy();
 		} catch (e) {
@@ -23,7 +22,9 @@ export class ActModel extends AbstractActData implements ActInterface {
 
 	public get adventure(): AdventureInterface {
 		const response = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
-		if (response === undefined) throw new Error('');
+
+		if (response === undefined)
+			throw new Error('');
 
 		return response;
 	}
@@ -40,7 +41,9 @@ export class ActModel extends AbstractActData implements ActInterface {
 		next: boolean,
 	): ActInterface | null {
 		const actId = this.id.actId;
-		if (actId === undefined) return null;
+
+		if (actId === undefined)
+			return null;
 
 		const response = this.database.read<ActInterface>((act: ActInterface) =>
 			act.id.type === ComponentType.Act &&

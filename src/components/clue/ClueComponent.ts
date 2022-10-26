@@ -2,13 +2,11 @@ import {ComponentInterface} from "../../api/componentsManager/interfaces/Compone
 import {CampaignSetting} from "../campaign/enums/CampaignSetting";
 import {ModelClassInterface} from "../../api/modelsManager/interfaces/ModelClassInterface";
 import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
-import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
 import {ClueModel} from "./models/ClueModel";
 import {NewClueHeaderView} from "./views/NewClueHeaderView";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
-import {NewRelationshipsViewInterface} from "../../views/interfaces/NewRelationshipsViewInterface";
 
 export class ClueComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -23,8 +21,8 @@ export class ClueComponent implements ComponentInterface {
 		return ComponentType.Clue;
 	}
 
-	public get views(): Map<ViewClassInterface<ViewInterface>, NewViewType> {
-		return new Map<ViewClassInterface<ViewInterface>, NewViewType>([
+	public get views(): Map<ViewClassInterface, NewViewType> {
+		return new Map<ViewClassInterface, NewViewType>([
 			[NewClueHeaderView, NewViewType.Header],
 		]);
 	}

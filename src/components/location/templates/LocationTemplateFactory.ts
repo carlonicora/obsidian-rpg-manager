@@ -1,9 +1,8 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {LocationMetadataInterface} from "../interfaces/LocationMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
-
 export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 	protected generateDataCodeBlock(
 	): string {
@@ -14,6 +13,7 @@ export class LocationTemplateFactory extends AbstractComponentTemplateFactory {
 				address: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 

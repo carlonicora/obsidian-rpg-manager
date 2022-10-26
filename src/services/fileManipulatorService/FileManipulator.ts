@@ -3,7 +3,6 @@ import {App, CachedMetadata, TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {RunningTimeService} from "../runningTimeService/RunningTimeService";
-import {API} from "obsidian-fantasy-calendar";
 
 export class FileManipulator implements FileManipulatorInterface {
 	private _fileContent: string;
@@ -43,13 +42,13 @@ export class FileManipulator implements FileManipulatorInterface {
 							model.touch();
 
 							if (model.id.type === ComponentType.Scene)
-								this._api.services.get(RunningTimeService)?.updateMedianTimes();
+								this._api.service(RunningTimeService).updateMedianTimes();
 						}
 
 						this._app.workspace.trigger("rpgmanager:force-refresh-views");
 						return true;
 					});
-			})
+			});
 	}
 
 	public async read(

@@ -1,18 +1,16 @@
-import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
-import {AbstractPlotHeaderView} from "../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
+import {HeaderResponseInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../../REFACTOR/responses/enums/HeaderResponseType";
+import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
 import {SceneSelectionModal} from "../modals/SceneSelectionModal";
-import {HeadlessTableView} from "../../../REFACTOR/views/HeadlessTableView";
+import {HeadlessTableView} from "../../../../REFACTOR/views/HeadlessTableView";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import flatpickr from "flatpickr";
-import {AnalyserInterface} from "../../../services/analyser/interfaces/AnalyserInterface";
-import {AnalyserReportType} from "../../../services/analyser/enums/AnalyserReportType";
-
+import {AnalyserInterface} from "../../../../REFACTOR/services/analyser/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../../REFACTOR/services/analyser/enums/AnalyserReportType";
 export class SessionHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: SessionInterface;
-
 	private _analyser: AnalyserInterface|undefined;
 
 	public render(
@@ -20,7 +18,6 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseInterface,
 	): void {
 		super.internalRender(container, data);
-
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
 
 		data.elements.forEach((element: HeaderResponseElementInterface) => {
@@ -30,9 +27,9 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.AbtSelector:
 					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
-					if (this.currentComponent.abtStage !== undefined) {
+					if (this.currentComponent.abtStage !== undefined)
 						this._analyser = element.additionalInformation.sceneAnalyser as AnalyserInterface;
-					}
+
 					break;
 				case HeaderResponseType.SceneAnalyser:
 					this._analyser = element.additionalInformation.sceneAnalyser;
@@ -58,15 +55,16 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 			const sceneNoteReplacerButtonEl = this.headerContainerEl
 				.createDiv().
 				createEl('button', {cls: 'actionButton', text: 'Add scene list to Storyteller Diary'});
-
-			sceneNoteReplacerButtonEl.addEventListener('click', () => {
+				sceneNoteReplacerButtonEl.addEventListener('click', () => {
 				const content: string[] = [];
 				content.push('### Storyteller Diary');
+
 				data.metadata.scenes.forEach((scene: SceneInterface) => {
 					content.push(scene.link);
 					content.push('-');
 					content.push('');
-				})
+				});
+
 				content.push('');
 				content.push('###');
 
@@ -105,14 +103,12 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		if (this.currentComponent.targetDuration != undefined) {
 			const hours = Math.floor(this.currentComponent.targetDuration/60);
 			const minutes = (this.currentComponent.targetDuration % 60);
-
-			options.defaultDate = hours.toString() + ':' + (minutes < 10 ? '0' : '') + minutes.toString()
+			options.defaultDate = hours.toString() + ':' + (minutes < 10 ? '0' : '') + minutes.toString();
 		}
 
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
 		flatpickrEl.placeholder = 'Target Duration';
 		flatpickrEl.readOnly = true;
-
 		flatpickr(flatpickrEl, options);
 	}
 
@@ -133,7 +129,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		};
 
 		if (this.currentComponent.irl !== undefined) {
-			options.defaultDate = this.currentComponent.irl
+			options.defaultDate = this.currentComponent.irl;
 		} else {
 			//const previousSession = this.currentComponent.previousSession;
 			//if (previousSession !== undefined && previousSession?.irl !== undefined) options.setSelectedDate(previousSession?.irl);
@@ -142,7 +138,6 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		const flatpickrEl = contentEl.createEl('input', {cls: 'flatpickr', type: 'text'});
 		flatpickrEl.placeholder = 'Select the SessionModel Date';
 		flatpickrEl.readOnly = true;
-
 		flatpickr(flatpickrEl, options);
 	}
 
@@ -152,6 +147,7 @@ export class SessionHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseElementInterface,
 	): void {
 		const sceneSelectionButtonEl = contentEl.createEl('button', {text: 'Select session scenes'});
+
 		sceneSelectionButtonEl.addEventListener("click", () => {
 			new SceneSelectionModal(this.app, data.additionalInformation.session).open();
 		});

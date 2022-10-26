@@ -23,6 +23,8 @@
 		"no-fallthrough": "off",
 		"@typescript-eslint/no-var-requires": "off",
 		"@typescript-eslint/no-empty-interface": "off",
+		"semi": ["error", "always", { "omitLastInOneLineBlock": false}],
+		semi-style: ["error", "last"],
 		"@typescript-eslint/naming-convention": [
 			"error",
 			{

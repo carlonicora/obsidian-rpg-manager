@@ -4,7 +4,6 @@ import {ModelClassInterface} from "../../api/modelsManager/interfaces/ModelClass
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
-import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {CampaignModel} from "./models/CampaignModel";
 import {NewCampaignHeaderView} from "./views/NewCampaignHeaderView";
@@ -22,8 +21,8 @@ export class CampaignComponent implements ComponentInterface {
 		return ComponentType.Campaign;
 	}
 
-	public get views(): Map<ViewClassInterface<ViewInterface>, NewViewType> {
-		return new Map<ViewClassInterface<ViewInterface>, NewViewType>([
+	public get views(): Map<ViewClassInterface, NewViewType> {
+		return new Map<ViewClassInterface, NewViewType>([
 			[NewCampaignHeaderView, NewViewType.Header],
 		]);
 	}

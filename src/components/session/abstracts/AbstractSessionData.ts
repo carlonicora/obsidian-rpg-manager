@@ -1,16 +1,15 @@
 import {SessionDataInterface} from "../interfaces/SessionDataInterface";
 import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
-import {AbtStage} from "../../../services/plots/enums/AbtStage";
-import {Plots} from "../../../services/plots/Plots";
-import {DateHelper} from "../../../core/helpers/DateHelper";
-import {DateInterface} from "../../../services/date/interfaces/DateInterface";
-import {DateService} from "../../../services/date/DateService";
+import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
+import {Plots} from "../../../services/plotsServices/Plots";
+import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
+import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 
 export class AbstractSessionData extends Plots implements SessionDataInterface {
 	protected metadata: SessionMetadataInterface;
 
 	public get irl(): DateInterface | undefined {
-		return this.api.services.get(DateService)?.getDate(
+		return this.api.service(DateService).getDate(
 			this.metadata.data?.irl,
 			undefined,
 			this,

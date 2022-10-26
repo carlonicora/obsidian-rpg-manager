@@ -1,14 +1,13 @@
 import {ViewsManagerInterface} from "./interfaces/ViewsManagerInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {ViewInterface} from "./interfaces/ViewInterface";
 import {ViewClassInterface} from "./interfaces/ViewClassInterface";
 import {App} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 
 export class ViewsManager implements ViewsManagerInterface {
-	private _factories: Map<string, ViewClassInterface<ViewInterface>>
-		= new Map<string, ViewClassInterface<ViewInterface>>();
+	private _factories: Map<string, ViewClassInterface>
+		= new Map<string, ViewClassInterface>();
 
 	constructor(
 		private _app: App,
@@ -19,7 +18,7 @@ export class ViewsManager implements ViewsManagerInterface {
 		viewType: NewViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
-	): ViewClassInterface<ViewInterface>|undefined {
+	): ViewClassInterface|undefined {
 		let response = this._factories.get(this._getIdentifier(viewType, componentType, campaignSettings));
 
 		if (response !== undefined)
@@ -36,8 +35,8 @@ export class ViewsManager implements ViewsManagerInterface {
 		return response;
 	}
 
-	register<T extends ViewInterface>(
-		view: ViewClassInterface<T>,
+	register(
+		view: ViewClassInterface,
 		viewType: NewViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting

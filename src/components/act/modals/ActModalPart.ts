@@ -1,18 +1,15 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {ActInterface} from "../interfaces/ActInterface";
-
 export class ActModalPart extends AbstractModalPart {
 	private _acts: ActInterface[];
-	private _allAct:ActInterface[];
-
-	private _actEl: HTMLSelectElement;
-	private _actErrorEl: HTMLParagraphElement;
-	private _childEl: HTMLDivElement;
-
-	constructor(
+private _allAct:ActInterface[];
+private _actEl: HTMLSelectElement;
+private _actErrorEl: HTMLParagraphElement;
+private _childEl: HTMLDivElement;
+constructor(
 		app: App,
 		modal: ModalInterface,
 	) {
@@ -53,7 +50,6 @@ export class ActModalPart extends AbstractModalPart {
 			} else {
 				this._childEl = contentEl.createDiv({cls: 'child'});
 				this._childEl.id = 'ActChild';
-
 				this._selectActElements(actEl);
 			}
 
@@ -81,7 +77,8 @@ export class ActModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.actId?.id === 0) this.modal.actId.id = 1;
+		if (this.modal.actId?.id === 0)
+			this.modal.actId.id = 1;
 
 		return true;
 	}
@@ -100,11 +97,9 @@ export class ActModalPart extends AbstractModalPart {
 		containerEl: HTMLElement
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'group'});
-
 		groupElement.createDiv({cls: 'title', text: 'Act'});
 		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
 		groupElement.createDiv({cls: 'clear'});
-
 		this._actEl = selectionContainerEl.createEl('select');
 
 		if (this._acts.length > 1) {

@@ -4,7 +4,7 @@ import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {App, TFile} from "obsidian";
 import {ModelClassInterface} from "./interfaces/ModelClassInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {IdInterface} from "../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {RpgManagerApiInterface} from "../interfaces/RpgManagerApiInterface";
 
 export class ModelsManager implements ModelsManagerInterface {
@@ -28,14 +28,14 @@ export class ModelsManager implements ModelsManagerInterface {
 			return this._initialiseComponentModel(modelClass, id, campaignSettings, file);
 
 		if (campaignSettings === CampaignSetting.Agnostic)
-			return undefined
+			return undefined;
 
 		modelClass = this._models.get(this._getIdentifier(id.type, CampaignSetting.Agnostic));
 
 		if (modelClass === undefined)
-			return undefined
+			return undefined;
 
-		return this._initialiseComponentModel(modelClass, id, campaignSettings, file);;
+		return this._initialiseComponentModel(modelClass, id, campaignSettings, file);
 	}
 
 	public register<T extends ModelInterface>(

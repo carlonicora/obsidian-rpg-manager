@@ -1,12 +1,12 @@
-import {ContentType} from "../../../responses/enums/ContentType";
-import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/AbstractTableSubModel";
+import {ContentType} from "../../../../REFACTOR/responses/enums/ContentType";
+import {AbstractTableSubModel} from "../../../../REFACTOR/models/abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
-import {TableField} from "../../../REFACTOR/views/enums/TableField";
+import {ContentInterface} from "../../../../REFACTOR/responses/contents/interfaces/ContentInterface";
+import {TableField} from "../../../../REFACTOR/views/enums/TableField";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
-import {DateService} from "../../../services/date/DateService";
+import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 
 export class SessionTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SessionList;
@@ -23,8 +23,7 @@ export class SessionTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(session.id.sessionId, ContentType.String, true);
 				break;
 			case TableField.Date:
-				let irl = this.api.services.get<DateService>(DateService)?.getReadableDate(session.irl, session);
-				return this.factories.contents.create(irl, ContentType.Date, true);
+				return this.factories.contents.create(this.api.service(DateService).getReadableDate(session.irl, session), ContentType.Date, true);
 				break;
 		}
 

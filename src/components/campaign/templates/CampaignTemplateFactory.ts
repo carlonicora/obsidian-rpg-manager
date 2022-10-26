@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {CampaignMetadataInterface} from "../interfaces/CampaignMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -35,6 +35,7 @@ export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 				currentSessionId: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 
@@ -77,7 +78,7 @@ export class CampaignTemplateFactory extends AbstractComponentTemplateFactory {
 					}
 				}
 			}
-		}
+		};
 
 		return this.generateRpgManagerCodeBlock(metadata);
 	}

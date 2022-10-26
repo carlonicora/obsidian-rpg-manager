@@ -1,13 +1,13 @@
-import {ContentType} from "../../../responses/enums/ContentType";
-import {AbstractTableSubModel} from "../../../REFACTOR/models/abstracts/AbstractTableSubModel";
+import {ContentType} from "../../../../REFACTOR/responses/enums/ContentType";
+import {AbstractTableSubModel} from "../../../../REFACTOR/models/abstracts/AbstractTableSubModel";
 import {RpgManagerAdvancedSettingsListsInterface} from "../../../settings/RpgManagerSettingsInterface";
-import {ContentInterface} from "../../../responses/contents/interfaces/ContentInterface";
-import {TableField} from "../../../REFACTOR/views/enums/TableField";
+import {ContentInterface} from "../../../../REFACTOR/responses/contents/interfaces/ContentInterface";
+import {TableField} from "../../../../REFACTOR/views/enums/TableField";
 import {SceneType} from "../enums/SceneType";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
-import {DateService} from "../../../services/date/DateService";
+import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 
 export class SceneTableSubModel extends AbstractTableSubModel {
 	protected advancedSettings: RpgManagerAdvancedSettingsListsInterface = this.settings.advanced.Agnostic.SceneList;
@@ -29,7 +29,6 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;
-
 				return this.factories.contents.create('', ContentType.String);
 				break;
 		}
@@ -52,8 +51,7 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				return this.factories.contents.create(scene.link + (scene.isComplete ? '' : ' _(incomplete)_'), ContentType.Link);
 				break;
 			case TableField.Date:
-				let sceneDate = this.api.services.get<DateService>(DateService)?.getReadableDate(scene.date, scene);
-				return this.factories.contents.create((sceneDate != null ? sceneDate : ''), ContentType.Date, true);
+				return this.factories.contents.create((this.api.service(DateService).getReadableDate(scene.date, scene) != null ? this.api.services.get<DateService>(DateService)?.getReadableDate(scene.date, scene) : ''), ContentType.Date, true);
 				break;
 			case TableField.Duration:
 				return this.factories.contents.create((scene.duration === '00:00' ? undefined : scene.duration), ContentType.Date, true);
@@ -68,7 +66,6 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.settings.usePlotStructures) return undefined;
-
 				return this.factories.contents.create('pieEighth', ContentType.SVG, true, {storyCircleStage: scene.storyCircleStage});
 				break;
 		}
@@ -79,7 +76,8 @@ export class SceneTableSubModel extends AbstractTableSubModel {
 	private _formatTime(
 		date: Date|null
 	): string {
-		if (date == null) return '';
+		if (date == null)
+			return '';
 
 		const hours = date.getHours();
 		const minutes = date.getMinutes();

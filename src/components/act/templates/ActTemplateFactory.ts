@@ -1,4 +1,4 @@
-import {AbstractComponentTemplateFactory} from "../../../core/abstracts/AbstractComponentTemplateFactory";
+import {AbstractComponentTemplateFactory} from "../../../../REFACTOR/abstracts/AbstractComponentTemplateFactory";
 import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
 import {ActMetadataInterface} from "../interfaces/ActMetadataInterface";
 import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
@@ -32,6 +32,7 @@ export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 				abtStage: ''
 			}
 		};
+
 		return this.generateRpgManagerDataCodeBlock(metadata);
 	}
 
@@ -71,7 +72,8 @@ export class ActTemplateFactory extends AbstractComponentTemplateFactory {
 					}
 				}
 			}
-		}
+		};
+
 		return this.generateRpgManagerCodeBlock(metadata);
 	}
 

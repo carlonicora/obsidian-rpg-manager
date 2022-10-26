@@ -1,16 +1,15 @@
-import {HeaderResponseInterface} from "../../../responses/interfaces/HeaderResponseInterface";
-import {HeaderResponseElementInterface} from "../../../responses/interfaces/HeaderResponseElementInterface";
-import {HeaderResponseType} from "../../../responses/enums/HeaderResponseType";
-import {AbstractPlotHeaderView} from "../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
-import {HeadlessTableView} from "../../../REFACTOR/views/HeadlessTableView";
+import {HeaderResponseInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseInterface";
+import {HeaderResponseElementInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseElementInterface";
+import {HeaderResponseType} from "../../../../REFACTOR/responses/enums/HeaderResponseType";
+import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
+import {HeadlessTableView} from "../../../../REFACTOR/views/HeadlessTableView";
 import {ActInterface} from "../interfaces/ActInterface";
-import {AnalyserInterface} from "../../../services/analyser/interfaces/AnalyserInterface";
-import {AnalyserReportType} from "../../../services/analyser/enums/AnalyserReportType";
-import {SceneBuilderModal} from "../../../services/sceneBuilder/modals/SceneBuilderModal";
+import {AnalyserInterface} from "../../../../REFACTOR/services/analyser/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../../REFACTOR/services/analyser/enums/AnalyserReportType";
+import {SceneBuilderModal} from "../../../../REFACTOR/services/sceneBuilder/modals/SceneBuilderModal";
 
 export class ActHeaderView extends AbstractPlotHeaderView {
 	protected currentComponent: ActInterface;
-
 	private _analyser: AnalyserInterface|undefined;
 
 	public render(
@@ -18,9 +17,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 		data: HeaderResponseInterface,
 	): void {
 		super.internalRender(container, data);
-
 		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
-
 		const sceneBuilderContinerEl = this.headerTitleEl.createDiv();
 		const sceneBuilderButtonEl = sceneBuilderContinerEl.createEl('button', {cls: 'actionButton', text: 'SceneModel Builder'});
 		sceneBuilderButtonEl.addEventListener('click', () => {
@@ -34,9 +31,9 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 					break;
 				case HeaderResponseType.AbtSelector:
 					headlessTable.addRow(element, this.addAbtStageSelector.bind(this));
-					if (this.currentComponent.abtStage !== undefined) {
+					if (this.currentComponent.abtStage !== undefined)
 						this._analyser = element.additionalInformation.sceneAnalyser as AnalyserInterface;
-					}
+
 					break;
 				case HeaderResponseType.SceneAnalyser:
 					this._analyser = element.additionalInformation.sceneAnalyser as AnalyserInterface;
@@ -53,7 +50,7 @@ export class ActHeaderView extends AbstractPlotHeaderView {
 		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
 
 		if (this._analyser !== undefined){
-			this._analyser.render(AnalyserReportType.Extended, this.headerContainerEl)
+			this._analyser.render(AnalyserReportType.Extended, this.headerContainerEl);
 		}
 
 		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){

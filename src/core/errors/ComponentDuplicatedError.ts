@@ -1,6 +1,6 @@
-import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {App} from "obsidian";
-import {IdInterface} from "../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 
 export class ComponentDuplicatedError extends AbstractRpgManagerError {
@@ -15,12 +15,12 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 
 	public getErrorTitle(
 	): string|undefined {
-		return 'Duplicated outline id';
+		return 'Duplicated outline idService';
 	}
 
 	public showErrorMessage(
 	): string {
-		let response = ''; //this.id.tag + '\n';
+		let response = ''; //this.idService.tag + '\n';
 
 		if (this._duplication.length > 1) {
 			this._duplication.forEach((component: ModelInterface) => {

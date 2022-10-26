@@ -2,6 +2,7 @@ import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {setIcon} from "obsidian";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
 const fs = require("fs");
 
 export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
@@ -12,7 +13,7 @@ export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView
 	): void {
 		super.render(containerEl);
 
-		this._dropZoneEl = this.containerEl.createDiv({cls: 'dropzone'})
+		this._dropZoneEl = this.containerEl.createDiv({cls: 'dropzone'});
 		this._dropZoneEl.createDiv();
 		setIcon(this._dropZoneEl, 'download');
 		this._dropZoneEl.createDiv({text: 'Drag and drop your image here to add it to your Vault'});
@@ -66,7 +67,7 @@ export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView
 							(err: Error|undefined) => {
 								if (err) throw err;
 
-								this.manipulators.codeblock.addOrUpdateImage(folder + '/' + fileName, '')
+								this.api.service(CodeblockService).addOrUpdateImage(folder + '/' + fileName, '')
 									.then((image: ImageInterface|undefined) => {
 										if (image !== undefined) {
 											this.selectedImage = image;

@@ -8,7 +8,7 @@ export class GalleryNavigationModalView extends AbstractGalleryModalView {
 		containerEl: HTMLDivElement,
 	): void {
 		const navigationEl: HTMLDivElement = containerEl.createDiv({cls: 'gallery-navigation'});
-		this._operationsEl = containerEl.createDiv({cls: 'gallery-operations'})
+		this._operationsEl = containerEl.createDiv({cls: 'gallery-operations'});
 
 		this.addLinkWithFunction(
 			navigationEl,

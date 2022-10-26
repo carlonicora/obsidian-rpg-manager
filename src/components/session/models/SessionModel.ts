@@ -3,12 +3,11 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
 import {ComponentStage} from "../../../core/enums/ComponentStage";
 import {AbstractSessionData} from "../abstracts/AbstractSessionData";
-import {FilePatternPositionInterface} from "../../../services/manipulators/interfaces/FilePatternPositionInterface";
+import {FilePatternPositionInterface} from "../../../../REFACTOR/services/manipulators/interfaces/FilePatternPositionInterface";
 
 export class SessionModel extends AbstractSessionData implements SessionInterface {
 	protected metadata: SessionMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Run;
-
 	private _sceneNoteListPattern: FilePatternPositionInterface|undefined = undefined;
 
 	public async initialiseData(
@@ -25,7 +24,7 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		content: string[],
 	): Promise<void> {
 		if (this._sceneNoteListPattern !== undefined) this.fileManipulator.replacePattern(this._sceneNoteListPattern, content);
-	}
+}
 
 	get nextSession(): SessionInterface | null {
 		return this._adjacentSession(true);
@@ -39,7 +38,9 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		next: boolean,
 	): SessionInterface | null {
 		const sessionId = this.id.sessionId;
-		if (sessionId === undefined) return null;
+
+		if (sessionId === undefined)
+			return null;
 
 		const response = this.database.read<SessionInterface>((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&

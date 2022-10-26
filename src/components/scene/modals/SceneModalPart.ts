@@ -1,6 +1,6 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {App} from "obsidian";
-import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SceneInterface} from "../interfaces/SceneInterface";
 
@@ -15,18 +15,17 @@ export class SceneModalPart extends AbstractModalPart {
 		this.modal.sceneId = this.factories.id.create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
 		this.modal.sceneId.id = 0;
 
-		if (this.modal.adventureId != null && this.modal.actId != null) {
+		if (this.modal.adventureId != null && this.modal.actId != null)
 			this._scenes = this.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
-		} else {
+		else
 			this._scenes = [];
-		}
+
 	}
 
 	public async addElement(
 		contentEl: HTMLElement,
 	): Promise<void> {
 		contentEl.createDiv({cls: 'sceneContainer'});
-
 		this._scenes.forEach((scene: SceneInterface) => {
 			if (this.modal.sceneId !== undefined && (scene.id.sceneId ?? 0) >= (this.modal.sceneId.id ?? 0)) {
 				this.modal.sceneId.id = ((scene.id.sceneId ?? 0) + 1);
@@ -44,7 +43,9 @@ export class SceneModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.sceneId?.id === 0) this.modal.sceneId.id = 1;
+		if (this.modal.sceneId?.id === 0)
+			this.modal.sceneId.id = 1;
+
 		return true;
 	}
 

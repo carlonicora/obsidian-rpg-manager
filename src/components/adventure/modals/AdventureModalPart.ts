@@ -1,12 +1,11 @@
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {App} from "obsidian";
-import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {AdventureInterface} from "../interfaces/AdventureInterface";
 
 export class AdventureModalPart extends AbstractModalPart {
 	private _adventures: AdventureInterface[];
-
 	private _adventureEl: HTMLSelectElement;
 	private _adventureErrorEl: HTMLParagraphElement;
 	private _childEl: HTMLDivElement;
@@ -17,6 +16,7 @@ export class AdventureModalPart extends AbstractModalPart {
 		modal: ModalInterface,
 	) {
 		super(app, modal);
+
 		if (this.modal.adventureId === undefined) {
 			this.modal.adventureId = this.factories.id.create(ComponentType.Adventure, this.modal.campaignId.id);
 			this.modal.adventureId.id = 0;
@@ -42,7 +42,6 @@ export class AdventureModalPart extends AbstractModalPart {
 			} else {
 				this._childEl = contentEl.createDiv({cls: 'child'});
 				this._childEl.id = 'AdventureChild';
-
 				this._selectAdventureElements(adventureEl);
 			}
 
@@ -65,12 +64,13 @@ export class AdventureModalPart extends AbstractModalPart {
 
 		this.modal.actModal.addElement(
 			containerEl,
-		)
+		);
 	}
 
 	public validate(
 	): boolean {
-		if (this.modal.adventureId?.id === 0) this.modal.adventureId.id = 1;
+		if (this.modal.adventureId?.id === 0)
+			this.modal.adventureId.id = 1;
 
 		return true;
 	}
@@ -89,12 +89,11 @@ export class AdventureModalPart extends AbstractModalPart {
 		containerEl: HTMLElement
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'group'});
-
 		groupElement.createDiv({cls: 'title', text: 'Adventure'});
 		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
 		groupElement.createDiv({cls: 'clear'});
-
 		this._adventureEl = selectionContainerEl.createEl('select');
+
 		if (this._adventures.length > 1) {
 			this._adventureEl.createEl('option', {
 				text: '',

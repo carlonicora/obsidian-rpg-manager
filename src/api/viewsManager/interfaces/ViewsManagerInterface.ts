@@ -1,6 +1,5 @@
 import {NewViewType} from "../../../core/enums/NewViewType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
-import {ViewInterface} from "./ViewInterface";
 import {ViewClassInterface} from "./ViewClassInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 
@@ -9,10 +8,10 @@ export interface ViewsManagerInterface {
 		viewType: NewViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
-	): ViewClassInterface<ViewInterface>|undefined;
+	): ViewClassInterface|undefined;
 
-	register<T extends ViewInterface>(
-		view: ViewClassInterface<T>,
+	register(
+		view: ViewClassInterface,
 		viewType: NewViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,

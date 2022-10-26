@@ -1,7 +1,7 @@
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
-import {Pronoun} from "../enums/Pronoun";
+import {Pronoun} from "../../../services/pronounService/enums/Pronoun";
 import {CharacterDataInterface} from "./CharacterDataInterface";
-import {DateInterface} from "../../../services/date/interfaces/DateInterface";
+import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
 
 export interface CharacterInterface extends ModelInterface, CharacterDataInterface {
 	get dob(): DateInterface | undefined;

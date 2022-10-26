@@ -1,5 +1,5 @@
-import {AbstractTemplate} from "../../../core/abstracts/AbstractTemplate";
-import {ComponentNotesTemplateFactoryInterface} from "../../../core/interfaces/ComponentNotesTemplateFactoryInterface";
+import {AbstractTemplate} from "../../../../REFACTOR/abstracts/AbstractTemplate";
+import {ComponentNotesTemplateFactoryInterface} from "../../../../REFACTOR/interfaces/ComponentNotesTemplateFactoryInterface";
 
 export class MusicNotesTemplateFactory extends AbstractTemplate implements ComponentNotesTemplateFactoryInterface {
 	public getContent(): string {

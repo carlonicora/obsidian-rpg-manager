@@ -1,6 +1,6 @@
-import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
+import {AbstractRpgManagerError} from "../../../REFACTOR/abstracts/AbstractRpgManagerError";
 import {ComponentType} from "../enums/ComponentType";
-import {IdInterface} from "../../services/id/interfaces/IdInterface";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 
 export class ComponentNotFoundError extends AbstractRpgManagerError {
 	public id: IdInterface;
@@ -11,7 +11,7 @@ export class ComponentNotFoundError extends AbstractRpgManagerError {
 
 		let check = 'Please check you have the following Outlines:\n';
 		this.id.possiblyNotFoundIds?.forEach((id: number, type: ComponentType) => {
-			check += ' - ' + ComponentType[type].toLowerCase() + ' with an id of `' + id.toString() + '`\n';
+			check += ' - ' + ComponentType[type].toLowerCase() + ' with an idService of `' + id.toString() + '`\n';
 		});
 
 		return response + check;
@@ -23,7 +23,7 @@ export class ComponentNotFoundError extends AbstractRpgManagerError {
 			'The following ids might be either missing or invalid:\n';
 
 		this.id.possiblyNotFoundIds?.forEach((id: number, type: ComponentType) => {
-			response += ' - ' + ComponentType[type].toLowerCase() + ' with an id of `' + id.toString() + '`\n';
+			response += ' - ' + ComponentType[type].toLowerCase() + ' with an idService of `' + id.toString() + '`\n';
 		});
 
 		return response;

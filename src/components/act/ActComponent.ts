@@ -2,12 +2,9 @@ import {ComponentInterface} from "../../api/componentsManager/interfaces/Compone
 import {CampaignSetting} from "../campaign/enums/CampaignSetting";
 import {ModelClassInterface} from "../../api/modelsManager/interfaces/ModelClassInterface";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
-import {ClueModel} from "../clue/models/ClueModel";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
-import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
-import {NewClueHeaderView} from "../clue/views/NewClueHeaderView";
 import {ActModel} from "./models/ActModel";
 import {NewActHeaderView} from "./views/NewActHeaderView";
 
@@ -24,8 +21,8 @@ export class ActComponent implements ComponentInterface {
 		return ComponentType.Act;
 	}
 
-	public get views(): Map<ViewClassInterface<ViewInterface>, NewViewType> {
-		return new Map<ViewClassInterface<ViewInterface>, NewViewType>([
+	public get views(): Map<ViewClassInterface, NewViewType> {
+		return new Map<ViewClassInterface, NewViewType>([
 			[NewActHeaderView, NewViewType.Header],
 		]);
 	}

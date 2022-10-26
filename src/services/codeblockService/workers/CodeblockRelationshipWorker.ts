@@ -4,7 +4,6 @@ import {RelationshipInterface} from "../../relationshipsService/interfaces/Relat
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../../api/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
-import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {RelationshipService} from "../../relationshipsService/RelationshipService";
 
@@ -34,10 +33,10 @@ export class CodeblockRelationshipWorker implements CodeblockDataWorkerInterface
 
 
 		const metadataRelationship: ControllerMetadataRelationshipInterface = {
-			type: this._api.services.get(RelationshipService)?.getReadableRelationshipType(data.type),
+			type: this._api.service(RelationshipService).getReadableRelationshipType(data.type),
 			path: data.path,
 			description: data.description,
-		}
+		};
 
 		domain.codeblock.relationships.push(metadataRelationship);
 	}

@@ -1,5 +1,4 @@
-import {App, Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
-import {RpgManagerApiInterface} from "../../interfaces/RpgManagerApiInterface";
+import {Component, MarkdownPostProcessorContext, MarkdownRenderChild} from "obsidian";
 
 export interface ControllerManagerInterface {
 	create(

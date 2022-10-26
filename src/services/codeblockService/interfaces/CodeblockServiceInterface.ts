@@ -12,6 +12,11 @@ export interface CodeblockServiceInterface {
 		relationship: RelationshipInterface,
 	): Promise<void>;
 
+	read(
+		file?: TFile,
+		codeblockName?: string,
+	): Promise<any>;
+
 	replaceID(
 		file: TFile,
 		ID: string,
