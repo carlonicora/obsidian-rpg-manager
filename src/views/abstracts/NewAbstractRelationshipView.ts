@@ -1,4 +1,4 @@
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {RelationshipType} from "../../services/relationshipsService/enums/RelationshipType";
 import {NewRelationshipsViewInterface} from "../interfaces/NewRelationshipsViewInterface";

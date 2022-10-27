@@ -2,7 +2,7 @@ import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {IdService} from "../../../services/idService/IdService";
 import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";

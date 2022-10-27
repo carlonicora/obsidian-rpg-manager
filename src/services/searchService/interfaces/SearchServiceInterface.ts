@@ -1,6 +1,6 @@
 import {SearchResultInterface} from "./SearchResultInterface";
 import {SearchType} from "../enums/SearchType";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export interface SearchServiceInterface {
 	search(

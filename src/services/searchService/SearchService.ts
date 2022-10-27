@@ -1,11 +1,11 @@
 import {SearchServiceInterface} from "./interfaces/SearchServiceInterface";
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
-import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {SearchType} from "./enums/SearchType";
 import {SearchResultInterface} from "./interfaces/SearchResultInterface";
 import {SearchWorkerInterface} from "./interfaces/SearchWorkerInterface";
 import {FuzzyFileSearchWorker} from "./workers/FuzzyFileSearchWorker";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {FuzzyElementSearchWorker} from "./workers/FuzzyElementSearchWorker";
 
 export class SearchService extends AbstractService implements SearchServiceInterface, ServiceInterface {

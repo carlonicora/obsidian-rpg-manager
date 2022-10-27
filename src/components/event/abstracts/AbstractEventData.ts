@@ -1,4 +1,4 @@
-import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
+import {AbstractModel} from "../../../managers/modelsManager/abstracts/AbstractModel";
 import {EventDataInterface} from "../interfaces/EventDataInterface";
 import {EventMetadataInterface} from "../interfaces/EventMetadataInterface";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";

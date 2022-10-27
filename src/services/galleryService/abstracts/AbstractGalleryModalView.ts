@@ -1,5 +1,5 @@
 import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractView} from "../../../../REFACTOR/views/abstracts/AbstractView";
 
 export abstract class AbstractGalleryModalView extends AbstractView implements GalleryViewInterface {

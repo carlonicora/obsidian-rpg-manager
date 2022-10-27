@@ -1,15 +1,18 @@
-import {ModelsManagerInterface} from "../modelsManager/interfaces/ModelsManagerInterface";
-import {ViewsManagerInterface} from "../viewsManager/interfaces/ViewsManagerInterface";
-import {ComponentsManagerInterface} from "../componentsManager/interfaces/ComponentsManagerInterface";
+import {ModelsManagerInterface} from "../../managers/modelsManager/interfaces/ModelsManagerInterface";
+import {ViewsManagerInterface} from "../../managers/viewsManager/interfaces/ViewsManagerInterface";
+import {ComponentsManagerInterface} from "../../managers/componentsManager/interfaces/ComponentsManagerInterface";
 import {DatabaseInterface} from "../../database/interfaces/DatabaseInterface";
-import {ControllerManagerInterface} from "../controllerManager/interfaces/ControllerManagerInterface";
+import {ControllerManagerInterface} from "../../managers/controllerManager/interfaces/ControllerManagerInterface";
 import {RpgManagerSettingsInterface} from "../../settings/RpgManagerSettingsInterface";
-import {ServiceInterface} from "../servicesManager/interfaces/ServiceInterface";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {App} from "obsidian";
 import {RpgManagerInterface} from "../../core/interfaces/RpgManagerInterface";
 import {ClassInterface} from "./ClassInterface";
-import {ModalsManagerInterface} from "../modalsManager/interfaces/ModalsManagerInterface";
-import {TemplatesManagerInterface} from "../templatesManager/interfaces/TemplatesManagerInterface";
+import {ModalsManagerInterface} from "../../managers/modalsManager/interfaces/ModalsManagerInterface";
+import {TemplatesManagerInterface} from "../../managers/templatesManager/interfaces/TemplatesManagerInterface";
+import {ServiceManagerInterface} from "../../managers/servicesManager/interfaces/ServiceManagerInterface";
+import {FetchersManagerInterface} from "../../managers/fetchersManager/interfaces/FetchersManagerInterface";
+import {FetcherInterface} from "../../managers/fetchersManager/interfaces/FetcherInterface";
 
 export interface RpgManagerApiInterface {
 	app: App;
@@ -18,15 +21,19 @@ export interface RpgManagerApiInterface {
 	get components(): ComponentsManagerInterface;
 	get database(): DatabaseInterface;
 	set database(database: DatabaseInterface);
+	get fetchers(): FetchersManagerInterface;
 	get modals(): ModalsManagerInterface;
 	get models(): ModelsManagerInterface;
 	get plugin(): RpgManagerInterface;
+	get services(): ServiceManagerInterface;
 	get settings(): RpgManagerSettingsInterface;
 	get templates(): TemplatesManagerInterface;
 	get views(): ViewsManagerInterface;
+	get version(): string;
 
 	bootstrap(
 	): void;
 
+	fetcher<T extends FetcherInterface>(fetcher: ClassInterface<T>): T;
 	service<T extends ServiceInterface>(service: ClassInterface<T>): T;
 }

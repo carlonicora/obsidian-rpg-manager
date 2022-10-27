@@ -1,5 +1,5 @@
 import {BreadcrumbElementInterface} from "./interfaces/BreadcrumbElementInterface";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 
 export class BreadcrumbElement implements BreadcrumbElementInterface {
 	public nextBreadcrumb: BreadcrumbElementInterface|null;

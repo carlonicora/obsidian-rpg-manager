@@ -1,4 +1,4 @@
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {Pronoun} from "../../../services/pronounService/enums/Pronoun";
 import {CharacterDataInterface} from "./CharacterDataInterface";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";

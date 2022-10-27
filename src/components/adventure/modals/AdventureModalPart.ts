@@ -1,7 +1,7 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {AdventureInterface} from "../interfaces/AdventureInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {IdService} from "../../../services/idService/IdService";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 

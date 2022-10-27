@@ -1,14 +1,14 @@
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {RelationshipType} from "./enums/RelationshipType";
 import {RelationshipServiceInterface} from "./interfaces/RelationshipServiceInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipListInterface} from "./interfaces/RelationshipListInterface";
 import {RelationshipInterface} from "./interfaces/RelationshipInterface";
 import {Relationship} from "./Relationship";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../../api/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
+} from "../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 
 export class RelationshipService implements RelationshipServiceInterface, ServiceInterface {

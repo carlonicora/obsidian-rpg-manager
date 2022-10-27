@@ -1,7 +1,7 @@
 import {ComponentType} from "../../core/enums/ComponentType";
-import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {TagServiceInterface} from "./interfaces/TagServiceInterface";
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class TagService extends AbstractService implements TagServiceInterface, ServiceInterface{

@@ -1,4 +1,4 @@
-import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
+import {AbstractModel} from "../../../managers/modelsManager/abstracts/AbstractModel";
 import {MusicMetadataInterface} from "../interfaces/MusicMetadataInterface";
 
 export abstract class AbstractMusicData extends AbstractModel {

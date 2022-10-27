@@ -1,8 +1,8 @@
 import {SorterServiceInterface} from "./interfaces/SorterServiceInterface";
 import {Sorter} from "./Sorter";
 import {SorterComparisonElementInterface} from "./interfaces/SorterComparisonElementInterface";
-import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 
 export class SorterService extends AbstractService implements SorterServiceInterface, ServiceInterface {
 	create<T>(

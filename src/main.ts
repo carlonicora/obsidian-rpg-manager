@@ -14,10 +14,10 @@ import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
 import {TagService} from "./services/tagService/TagService";
 import {DatabaseInterface} from "./database/interfaces/DatabaseInterface";
-import {ModelInterface} from "./api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "./managers/modelsManager/interfaces/ModelInterface";
 import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
 import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
-import {ServiceManagerInterface} from "./api/servicesManager/interfaces/ServiceManagerInterface";
+import {ServiceManagerInterface} from "./managers/servicesManager/interfaces/ServiceManagerInterface";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
 

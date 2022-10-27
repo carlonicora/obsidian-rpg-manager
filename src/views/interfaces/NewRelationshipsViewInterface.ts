@@ -1,5 +1,5 @@
-import {ViewInterface} from "../../api/viewsManager/interfaces/ViewInterface";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ViewInterface} from "../../managers/viewsManager/interfaces/ViewInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {RelationshipType} from "../../services/relationshipsService/enums/RelationshipType";
 

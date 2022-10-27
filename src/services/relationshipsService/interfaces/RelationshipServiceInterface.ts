@@ -1,11 +1,11 @@
 import {RelationshipType} from "../enums/RelationshipType";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipListInterface} from "./RelationshipListInterface";
 import {RelationshipInterface} from "./RelationshipInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../../../api/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
+} from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 
 export interface RelationshipServiceInterface {
 	createRelationship(

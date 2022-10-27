@@ -3,7 +3,7 @@ import {RpgErrorInterface} from "../core/interfaces/RpgErrorInterface";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
 import {IdInterface} from "../services/idService/interfaces/IdInterface";
 import {TagMisconfiguredError} from "../core/errors/TagMisconfiguredError";
-import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../managers/modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
 import {ComponentStage} from "../core/enums/ComponentStage";
@@ -14,6 +14,8 @@ import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 import {IdService} from "../services/idService/IdService";
 import {RelationshipService} from "../services/relationshipsService/RelationshipService";
 import {DatabaseFactory} from "./factories/DatabaseFactory";
+import {LoggerService} from "../services/loggerService/LoggerService";
+import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
 
 export class DatabaseInitialiser {
 	private static _misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
@@ -25,11 +27,11 @@ export class DatabaseInitialiser {
 		this._api = api;
 		this._misconfiguredTags = await new Map();
 
-		//const group = this._factories.logger.createGroup();
+		const group = this._api.service(LoggerService).createGroup();
 
 		const databaseFactory = new DatabaseFactory(this._api);
 		const response: DatabaseInterface = await databaseFactory.create();
-		// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
+		group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
 		const components: ModelInterface[] = [];
 		const markdownFiles: TFile[] = app.vault.getMarkdownFiles();
@@ -62,7 +64,7 @@ export class DatabaseInitialiser {
 			}
 		}
 
-		// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, componentCounter + ' Components created'));
+		group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, componentCounter + ' Components created'));
 
 		await Promise.all(components);
 
@@ -77,19 +79,19 @@ export class DatabaseInitialiser {
 
 		Promise.all(metadata)
 			.then(() => {
-				// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Data read for ' + metadata.length + ' Components'));
+				group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, 'Data read for ' + metadata.length + ' Components'));
 				this._initialiseRelationships(response)
 					.then(() => {
-						// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Relationships created'));
+						group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, 'Relationships created'));
 						this._validateComponents(response)
 							.then(() => {
-								// group.add(this._factories.logger.createInfo(LogMessageType.DatabaseInitialisation, 'Components Validated'));
+								group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, 'Components Validated'));
 								response.ready();
 								if (this._misconfiguredTags.size > 0){
 									new DatabaseErrorModal(this._api, this._misconfiguredTags).open();
 								}
 
-								// this._factories.logger.group(group);
+								this._api.service(LoggerService).group(group);
 							});
 					});
 			});

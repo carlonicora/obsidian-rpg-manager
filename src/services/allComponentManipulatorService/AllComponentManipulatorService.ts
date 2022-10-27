@@ -1,7 +1,7 @@
 import {TFile} from "obsidian";
-import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {AllComponentManipulatorServiceInterface} from "./interfaces/AllComponentManipulatorServiceInterface";
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {FileManipulatorService} from "../fileManipulatorService/FileManipulatorService";
 import {FileManipulatorInterface} from "../fileManipulatorService/interfaces/FileManipulatorInterface";
 

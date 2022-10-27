@@ -1,6 +1,6 @@
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
-import {PlotsInterface} from "../../../services/plotsServices/interfaces/PlotsInterface";
+import {PlotsInterface} from "../../../services/plotsServices/oldInterfaces/PlotsInterface";
 import {ActDataInterface} from "./ActDataInterface";
 
 export interface ActInterface extends ModelInterface, PlotsInterface, ActDataInterface {

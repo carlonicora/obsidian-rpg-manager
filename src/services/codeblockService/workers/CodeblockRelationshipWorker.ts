@@ -3,7 +3,7 @@ import {CodeblockDomainInterface} from "../interfaces/CodeblockDomainInterface";
 import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
 import {
 	ControllerMetadataRelationshipInterface
-} from "../../../api/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
+} from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {RelationshipService} from "../../relationshipsService/RelationshipService";
 

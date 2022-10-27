@@ -6,7 +6,7 @@ import {SessionInterface} from "../interfaces/SessionInterface";
 import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SorterType} from "../../../database/enums/SorterType";
-import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
+import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";

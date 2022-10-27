@@ -1,7 +1,7 @@
 import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
 import {fuzzySearch, prepareQuery} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 

@@ -7,7 +7,7 @@ import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface"
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {AbstractSceneData} from "../abstracts/AbstractSceneData";
 import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
-import {activeSceneTypes} from "../enums/SceneType";
+import {activeSceneTypes} from "../../../../REFACTOR/services/analyserService/enums/SceneType";
 import {RunningTimeService} from "../../../services/runningTimeService/RunningTimeService";
 
 export class SceneModel extends AbstractSceneData implements SceneInterface {

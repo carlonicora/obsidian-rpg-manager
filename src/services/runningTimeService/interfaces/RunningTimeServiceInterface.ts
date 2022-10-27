@@ -1,4 +1,4 @@
-import {SceneType} from "../../../components/scene/enums/SceneType";
+import {SceneType} from "../../../../REFACTOR/services/analyserService/enums/SceneType";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 
 export interface RunningTimeServiceInterface {

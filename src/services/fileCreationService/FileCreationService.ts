@@ -4,8 +4,8 @@ import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {FileCreationServiceInterface} from "./interfaces/FileCreationServiceInterface";
 import {IdInterface} from "../idService/interfaces/IdInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
-import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {IdService} from "../idService/IdService";
 
 const path = require('path');
@@ -42,7 +42,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			//no need to catch it here
 		}
 
-		const template = this.api.app.plugins.getPlugin('rpg-manager').factories.templates.create(
+		const template = this.api.templates.get(
 			settings,
 			type,
 			templateName,
@@ -124,7 +124,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			folder = campaign.folder;
 		}
 
-		const template = this.api.app.plugins.getPlugin('rpg-manager').factories.templates.create(
+		const template = this.api.templates.get(
 			settings,
 			type,
 			'internal' + ComponentType[type],

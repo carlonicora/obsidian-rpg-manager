@@ -1,4 +1,4 @@
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {NewHeaderViewInterface} from "../interfaces/NewHeaderViewInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";

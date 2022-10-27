@@ -1,4 +1,4 @@
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export interface BreadcrumbElementInterface {
 	model: ModelInterface;

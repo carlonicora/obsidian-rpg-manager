@@ -1,5 +1,5 @@
 import {Component, MarkdownRenderer} from "obsidian";
-import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
+import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 
 interface SceneTypeInformation {
 	title: string,

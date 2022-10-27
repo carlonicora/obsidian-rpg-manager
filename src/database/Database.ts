@@ -3,7 +3,7 @@ import {ComponentType} from "../core/enums/ComponentType";
 import {IdInterface} from "../services/idService/interfaces/IdInterface";
 import {ComponentNotFoundError} from "../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {ModelInterface} from "../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../managers/modelsManager/interfaces/ModelInterface";
 import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
 import {AdventureInterface} from "../components/adventure/interfaces/AdventureInterface";
 import {SessionInterface} from "../components/session/interfaces/SessionInterface";

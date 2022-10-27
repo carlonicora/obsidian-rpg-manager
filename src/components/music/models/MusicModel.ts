@@ -1,8 +1,7 @@
 import {MusicMetadataInterface} from "../interfaces/MusicMetadataInterface";
-import {YouTubeImageFetcherInterface} from "../../../../REFACTOR/services/fetchers/YouTubeImageFetcherInterface";
-import {YouTubeImageFetcher} from "../../../../REFACTOR/services/fetchers/YouTubeImageFetcher";
 import {AbstractMusicData} from "../abstracts/AbstractMusicData";
 import {MusicInterface} from "../interfaces/MusicInterface";
+import {YouTubeImageFetcher} from "../../../fetchers/youTubeFetcher/YouTubeImageFetcher";
 
 export class MusicModel extends AbstractMusicData implements MusicInterface {
 	protected metadata: MusicMetadataInterface;
@@ -47,11 +46,7 @@ export class MusicModel extends AbstractMusicData implements MusicInterface {
 			return null;
 
 		if (this.url.indexOf('youtube.com') !== -1 || this.url.indexOf('youtu.be') !== -1){
-			const fetcher: YouTubeImageFetcherInterface = await this.factories.fetchers.create(
-				YouTubeImageFetcher,
-			);
-
-			response = await fetcher.fetchImage(this.url) ?? null;
+			response = await this.api.fetcher(YouTubeImageFetcher).fetchImage(this.url) ?? null;
 		}
 
 		return response;

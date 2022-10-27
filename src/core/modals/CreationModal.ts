@@ -7,7 +7,7 @@ import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {IdService} from "../../services/idService/IdService";
 import {TagService} from "../../services/tagService/TagService";
-import {ComponentNotesInterface} from "../../api/templatesManager/interfaces/ComponentNotesInterface";
+import {ComponentNotesInterface} from "../../managers/templatesManager/interfaces/ComponentNotesInterface";
 
 export class CreationModal extends Modal implements ModalInterface {
 	public saver: ModalPartInterface;

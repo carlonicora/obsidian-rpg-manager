@@ -1,4 +1,4 @@
-import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
+import {AbstractModel} from "../../../managers/modelsManager/abstracts/AbstractModel";
 import {Pronoun} from "../../../services/pronounService/enums/Pronoun";
 import {CharacterDataInterface} from "../interfaces/CharacterDataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";

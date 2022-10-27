@@ -1,4 +1,4 @@
-import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
+import {AbstractModel} from "../../../managers/modelsManager/abstracts/AbstractModel";
 import {ClueDataInterface} from "../interfaces/ClueDataInterface";
 import {ClueMetadataInterface} from "../interfaces/ClueMetadataInterface";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";

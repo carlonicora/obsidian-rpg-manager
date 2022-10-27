@@ -1,6 +1,6 @@
 import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../../core/interfaces/RpgErrorInterface";
-import {AbstractModal} from "../../api/modalsManager/abstracts/AbstractModal";
+import {AbstractModal} from "../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ViewType} from "../../core/enums/ViewType";
 

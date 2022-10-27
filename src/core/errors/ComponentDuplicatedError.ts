@@ -1,5 +1,5 @@
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 

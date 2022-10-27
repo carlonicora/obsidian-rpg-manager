@@ -1,9 +1,9 @@
-import {ServiceInterface} from "../../api/servicesManager/interfaces/ServiceInterface";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {TFile} from "obsidian";
 import {FileManipulatorServiceInterface} from "./interfaces/FileManipulatorServiceInterface";
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
 import {FileManipulator} from "./FileManipulator";
-import {AbstractService} from "../../api/servicesManager/abstracts/AbstractService";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 
 export class FileManipulatorService extends AbstractService implements FileManipulatorServiceInterface, ServiceInterface {
 	public async read(

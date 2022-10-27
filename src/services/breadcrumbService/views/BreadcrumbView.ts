@@ -1,6 +1,6 @@
 import {BreadcrumbElementInterface} from "../interfaces/BreadcrumbElementInterface";
 import {Component, MarkdownRenderer} from "obsidian";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export class BreadcrumbView {
 	private _model: ModelInterface;

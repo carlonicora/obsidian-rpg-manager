@@ -1,6 +1,6 @@
 import {RelationshipListInterface} from "./interfaces/RelationshipListInterface";
 import {RelationshipInterface} from "./interfaces/RelationshipInterface";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipType} from "./enums/RelationshipType";
 import {Md5} from "ts-md5";
 

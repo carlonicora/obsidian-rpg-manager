@@ -3,7 +3,7 @@ import {ResponseDataElementInterface} from "../../../../REFACTOR/responses/inter
 import {ResponseTable} from "../../../../REFACTOR/responses/ResponseTable";
 import {ContentType} from "../../../../REFACTOR/responses/enums/ContentType";
 import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
-import {PlotsInterface} from "../interfaces/PlotsInterface";
+import {PlotsInterface} from "../oldInterfaces/PlotsInterface";
 import {ResponseTableElement} from "../../../../REFACTOR/responses/ResponseTableElement";
 
 export class AbtPlotSubModel extends AbstractSubModel {

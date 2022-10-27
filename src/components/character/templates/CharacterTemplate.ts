@@ -1,10 +1,10 @@
-import {ControllerMetadataInterface} from "../../../api/controllerManager/interfaces/ControllerMetadataInterface";
+import {ControllerMetadataInterface} from "../../../managers/controllerManager/interfaces/ControllerMetadataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 import {
 	AbstractComponentTemplate
-} from "../../../api/templatesManager/abstracts/AbstractComponentTemplate";
+} from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
 
 export class CharacterTemplate extends AbstractComponentTemplate {
 	protected generateDataCodeBlock(

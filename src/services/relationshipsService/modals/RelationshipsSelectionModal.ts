@@ -2,11 +2,11 @@ import {Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} fr
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
 import {SorterType} from "../../../database/enums/SorterType";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
-import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
+import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {RelationshipService} from "../RelationshipService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";

@@ -1,7 +1,7 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CharacterInterface} from "../../character/interfaces/CharacterInterface";
-import {ComponentNotesInterface} from "../../../api/templatesManager/interfaces/ComponentNotesInterface";
-import {AbstractComponentNoteTemplate} from "../../../api/templatesManager/abstracts/AbstractComponentNoteTemplate";
+import {ComponentNotesInterface} from "../../../managers/templatesManager/interfaces/ComponentNotesInterface";
+import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/abstracts/AbstractComponentNoteTemplate";
 
 export class SessionNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {

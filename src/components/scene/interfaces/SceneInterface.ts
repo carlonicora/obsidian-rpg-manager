@@ -1,4 +1,4 @@
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";

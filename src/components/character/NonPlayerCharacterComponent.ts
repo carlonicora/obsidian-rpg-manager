@@ -1,16 +1,16 @@
-import {ComponentInterface} from "../../api/componentsManager/interfaces/ComponentInterface";
+import {ComponentInterface} from "../../managers/componentsManager/interfaces/ComponentInterface";
 import {CampaignSetting} from "../campaign/enums/CampaignSetting";
-import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {CharacterModel} from "./models/CharacterModel";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
+import {ViewClassInterface} from "../../managers/viewsManager/interfaces/ViewClassInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
 import {CharacterHeaderView} from "./views/CharacterHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
 import {ModalInterface} from "../../core/interfaces/ModalInterface";
-import {TemplateClassInterface} from "../../api/templatesManager/interfaces/TemplateClassInterface";
-import {TemplateInterface} from "../../api/templatesManager/interfaces/TemplateInterface";
+import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
+import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {NonPlayerCharacterTemplate} from "./templates/NonPlayerCharacterTemplate";
 
 export class NonPlayerCharacterComponent implements ComponentInterface {

@@ -1,73 +1,50 @@
 import {RpgManagerApiInterface} from "./interfaces/RpgManagerApiInterface";
 import {App} from "obsidian";
-import {ServiceManagerInterface} from "./servicesManager/interfaces/ServiceManagerInterface";
-import {ServicesManager} from "./servicesManager/ServicesManager";
+import {ServiceManagerInterface} from "../managers/servicesManager/interfaces/ServiceManagerInterface";
+import {ServicesManager} from "../managers/servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
-import {FantasyCalendarService} from "../services/fantasyCalendarService/FantasyCalendarService";
-import {ViewsManagerInterface} from "./viewsManager/interfaces/ViewsManagerInterface";
-import {ViewsManager} from "./viewsManager/ViewsManager";
-import {ComponentsManagerInterface} from "./componentsManager/interfaces/ComponentsManagerInterface";
-import {ComponentsManager} from "./componentsManager/ComponentsManager";
+import {ViewsManagerInterface} from "../managers/viewsManager/interfaces/ViewsManagerInterface";
+import {ViewsManager} from "../managers/viewsManager/ViewsManager";
+import {ComponentsManagerInterface} from "../managers/componentsManager/interfaces/ComponentsManagerInterface";
+import {ComponentsManager} from "../managers/componentsManager/ComponentsManager";
 import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
-import {ModelsManagerInterface} from "./modelsManager/interfaces/ModelsManagerInterface";
-import {ModelsManager} from "./modelsManager/ModelsManager";
-import {ActComponent} from "../components/act/ActComponent";
-import {AdventureComponent} from "../components/adventure/AdventureComponent";
-import {CampaignComponent} from "../components/campaign/CampaignComponent";
-import {CharacterComponent} from "../components/character/CharacterComponent";
-import {NonPlayerCharacterComponent} from "../components/character/NonPlayerCharacterComponent";
-import {ClueComponent} from "../components/clue/ClueComponent";
-import {EventComponent} from "../components/event/EventComponent";
-import {FactionComponent} from "../components/faction/FactionComponent";
-import {LocationComponent} from "../components/location/LocationComponent";
-import {MusicComponent} from "../components/music/MusicComponent";
-import {SceneComponent} from "../components/scene/SceneComponent";
-import {SessionComponent} from "../components/session/SessionComponent";
-import {SubplotComponent} from "../components/subplot/SubplotComponent";
-import {RelationshipService} from "../services/relationshipsService/RelationshipService";
-import {BreadcrumbService} from "../services/breadcrumbService/BreadcrumbService";
-import {ControllerManagerInterface} from "./controllerManager/interfaces/ControllerManagerInterface";
-import {ControllerManager} from "./controllerManager/ControllerManager";
-import {RunningTimeService} from "../services/runningTimeService/RunningTimeService";
-import {TagService} from "../services/tagService/TagService";
+import {ModelsManagerInterface} from "../managers/modelsManager/interfaces/ModelsManagerInterface";
+import {ModelsManager} from "../managers/modelsManager/ModelsManager";
+import {ControllerManagerInterface} from "../managers/controllerManager/interfaces/ControllerManagerInterface";
+import {ControllerManager} from "../managers/controllerManager/ControllerManager";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
-import {PronounService} from "../services/pronounService/PronounService";
-import {ServiceInterface} from "./servicesManager/interfaces/ServiceInterface";
-import {YamlService} from "../services/yamlService/YamlService";
-import {SearchService} from "../services/searchService/SearchService";
-import {DateService} from "../services/dateService/DateService";
-import {CodeblockService} from "../services/codeblockService/CodeblockService";
-import {ComponentOptionsService} from "../services/componentOptionsService/ComponentOptionsService";
-import {FileCreationService} from "../services/fileCreationService/FileCreationService";
-import {FileManipulatorService} from "../services/fileManipulatorService/FileManipulatorService";
-import {GalleryService} from "../services/galleryService/GalleryService";
-import {IdService} from "../services/idService/IdService";
-import {SorterService} from "../services/sorterService/SorterService";
-import {
-	AllComponentManipulatorService
-} from "../services/allComponentManipulatorService/AllComponentManipulatorService";
+import {ServiceInterface} from "../managers/servicesManager/interfaces/ServiceInterface";
 import {ClassInterface} from "./interfaces/ClassInterface";
-import {ModalsManagerInterface} from "./modalsManager/interfaces/ModalsManagerInterface";
-import {TemplatesManagerInterface} from "./templatesManager/interfaces/TemplatesManagerInterface";
-import {ModalsManager} from "./modalsManager/ModalsManager";
-import {TemplatesManager} from "./templatesManager/TemplatesManager";
+import {ModalsManagerInterface} from "../managers/modalsManager/interfaces/ModalsManagerInterface";
+import {TemplatesManagerInterface} from "../managers/templatesManager/interfaces/TemplatesManagerInterface";
+import {ModalsManager} from "../managers/modalsManager/ModalsManager";
+import {TemplatesManager} from "../managers/templatesManager/TemplatesManager";
+import {Bootstrapper} from "./Bootstrapper";
+import {FetchersManagerInterface} from "../managers/fetchersManager/interfaces/FetchersManagerInterface";
+import {FetchersManager} from "../managers/fetchersManager/FetchersManager";
+import {FetcherInterface} from "../managers/fetchersManager/interfaces/FetcherInterface";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
 	private _components: ComponentsManagerInterface;
 	private _database: DatabaseInterface;
+	private _fetchers: FetchersManagerInterface;
 	private _modals: ModalsManagerInterface;
 	private _models: ModelsManagerInterface;
 	private _services: ServiceManagerInterface;
 	private _templates: TemplatesManagerInterface;
 	private _views: ViewsManagerInterface;
+	private _version: string;
 
 	constructor(
 		public app: App,
 		private _plugin: RpgManagerInterface,
 	) {
+		this._version = this._plugin.version;
+
 		this._controllers = new ControllerManager(this);
 		this._components = new ComponentsManager(this);
+		this._fetchers = new FetchersManager(this);
 		this._modals = new ModalsManager(this);
 		this._models = new ModelsManager(this);
 		this._services = new ServicesManager(this);
@@ -91,6 +68,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		this._database = database;
 	}
 
+	public get fetchers(): FetchersManagerInterface {
+		return this._fetchers;
+	}
+
 	public get modals(): ModalsManagerInterface {
 		return this._modals;
 	}
@@ -101,6 +82,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	public get plugin(): RpgManagerInterface {
 		return this._plugin;
+	}
+
+	public get services(): ServiceManagerInterface {
+		return this._services;
 	}
 
 	public get settings(): RpgManagerSettingsInterface {
@@ -114,14 +99,29 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	public get views(): ViewsManagerInterface {
 		return this._views;
 	}
+
+	public get version(): string {
+		return this._version;
+	}
 	
 	public bootstrap(
 	): void {
-		this._addComponents();
-		this._addServices();
+		Bootstrapper.initialise(this);
 	}
 
-	service<T extends ServiceInterface>(
+	public fetcher<T extends FetcherInterface>(
+		fetcher: ClassInterface<T>,
+	): T {
+		const response = this._fetchers.get(fetcher);
+
+		//TODO change the empty error
+		if (response === undefined)
+			throw new Error('');
+
+		return response;
+	}
+
+	public service<T extends ServiceInterface>(
 		service: ClassInterface<T>,
 	): T {
 		const response = this._services.get(service);
@@ -131,46 +131,5 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 			throw new Error('');
 
 		return response;
-	}
-	
-	private _addComponents(
-	): void {
-		this._components.register(ActComponent);
-		this._components.register(AdventureComponent);
-		this._components.register(CampaignComponent);
-		this._components.register(CharacterComponent);
-		this._components.register(NonPlayerCharacterComponent);
-		this._components.register(ClueComponent);
-		this._components.register(EventComponent);
-		this._components.register(FactionComponent);
-		this._components.register(LocationComponent);
-		this._components.register(MusicComponent);
-		this._components.register(SceneComponent);
-		this._components.register(SessionComponent);
-		this._components.register(SubplotComponent);
-	}
-
-	private _addServices(
-	): void {
-		this._services.register(AllComponentManipulatorService);
-		this._services.register(BreadcrumbService);
-		this._services.register(CodeblockService);
-		this._services.register(ComponentOptionsService);
-		this._services.register(FileCreationService);
-		this._services.register(FileManipulatorService);
-		this._services.register(GalleryService);
-		this._services.register(IdService);
-		this._services.register(PronounService);
-		this._services.register(RelationshipService);
-		this._services.register(RunningTimeService);
-		this._services.register(SearchService);
-		this._services.register(SorterService);
-		this._services.register(TagService);
-		this._services.register(YamlService);
-
-		if (this.app.plugins.enabledPlugins.has("fantasy-calendar"))
-			this._services.register(FantasyCalendarService);
-
-		this._services.register(DateService);
 	}
 }

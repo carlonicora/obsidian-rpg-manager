@@ -1,5 +1,5 @@
 import {RelationshipType} from "../enums/RelationshipType";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export interface RelationshipInterface {
 	type: RelationshipType,

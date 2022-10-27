@@ -3,7 +3,7 @@ import {BreadcrumbElementInterface} from "../interfaces/BreadcrumbElementInterfa
 import {BreadcrumbElement} from "../BreadcrumbElement";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {FileCreationService} from "../../fileCreationService/FileCreationService";
-import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
 import {SessionInterface} from "../../../components/session/interfaces/SessionInterface";
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
