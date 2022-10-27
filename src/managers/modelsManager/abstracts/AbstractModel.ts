@@ -1,6 +1,6 @@
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
-import {DatabaseInterface} from "../../../database/interfaces/DatabaseInterface";
+import {DatabaseInterface} from "../../databaseManager/interfaces/DatabaseInterface";
 import {AbtPlot} from "../../../services/plotsServices/plots/AbtPlot";
 import {AbtInterface} from "../../../services/plotsServices/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../../services/plotsServices/interfaces/StoryCircleInterface";
@@ -24,9 +24,9 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {ImageInterface} from "../../../services/galleryService/interfaces/ImageInterface";
 import {ImageMetadataInterface} from "../../../core/interfaces/ImageMetadataInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {GalleryService} from "../../../services/galleryService/GalleryService";
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
+import {ImageService} from "../../../services/imageService/ImageService";
 
 export abstract class AbstractModel implements ModelInterface {
 	public id: IdInterface;
@@ -90,7 +90,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 		if (this.metadata?.data?.images != undefined && Array.isArray(this.metadata?.data?.images)){
 			this.metadata.data.images.forEach((imageMetadata: ImageMetadataInterface) => {
-				const image: ImageInterface|undefined = this.api.service(GalleryService).createImage(imageMetadata.path, imageMetadata.caption);
+				const image: ImageInterface|undefined = this.api.service(ImageService).createImage(imageMetadata.path, imageMetadata.caption);
 
 				if (image !== undefined)
 					response.push(image);

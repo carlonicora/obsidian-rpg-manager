@@ -38,6 +38,7 @@ import {AnalyserService} from "../services/analyserService/AnalyserService";
 import {DiceService} from "../services/diceService/DiceService";
 import {LoggerService} from "../services/loggerService/LoggerService";
 import {SceneBuilderService} from "../services/sceneBuilderService/SceneBuilderService";
+import {ImageService} from "../services/imageService/ImageService";
 
 export class Bootstrapper {
 	public static initialise(
@@ -79,6 +80,7 @@ export class Bootstrapper {
 		api.services.register(FileManipulatorService);
 		api.services.register(GalleryService);
 		api.services.register(IdService);
+		api.services.register(ImageService);
 		api.services.register(LoggerService);
 		api.services.register(PronounService);
 		api.services.register(PlotService);

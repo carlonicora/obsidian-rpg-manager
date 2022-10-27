@@ -6,6 +6,7 @@ import {ComponentType} from "../../core/enums/ComponentType";
 import {RelationshipsSelectionModal} from "../relationshipsService/modals/RelationshipsSelectionModal";
 import {IdSwitcherModal} from "../idService/modals/IdSwitcherModal";
 import {GalleryManagementModal} from "../galleryService/modals/GalleryManagementModal";
+import {GalleryService} from "../galleryService/GalleryService";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
@@ -28,7 +29,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 		this._addFunctionality(containerEl, 'Images', 'Gallery Manager')
 			.addEventListener("click", () => {
-				new GalleryManagementModal(this.api, model).open();
+				new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
 			});
 	}
 

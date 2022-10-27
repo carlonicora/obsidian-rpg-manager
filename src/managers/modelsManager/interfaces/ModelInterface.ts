@@ -1,4 +1,4 @@
-import {DatabaseInterface} from "../../../database/interfaces/DatabaseInterface";
+import {DatabaseInterface} from "../../databaseManager/interfaces/DatabaseInterface";
 import {AbtInterface} from "../../../services/plotsServices/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../../services/plotsServices/interfaces/StoryCircleInterface";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";

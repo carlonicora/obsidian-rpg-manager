@@ -1,26 +1,26 @@
 import {CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
-import {ComponentType} from "../core/enums/ComponentType";
-import {IdInterface} from "../services/idService/interfaces/IdInterface";
-import {ComponentNotFoundError} from "../errors/ComponentNotFoundError";
+import {ComponentType} from "../../core/enums/ComponentType";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {ComponentNotFoundError} from "../../errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {ModelInterface} from "../managers/modelsManager/interfaces/ModelInterface";
-import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
-import {AdventureInterface} from "../components/adventure/interfaces/AdventureInterface";
-import {SessionInterface} from "../components/session/interfaces/SessionInterface";
-import {ActInterface} from "../components/act/interfaces/ActInterface";
-import {SceneInterface} from "../components/scene/interfaces/SceneInterface";
+import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
+import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
+import {AdventureInterface} from "../../components/adventure/interfaces/AdventureInterface";
+import {SessionInterface} from "../../components/session/interfaces/SessionInterface";
+import {ActInterface} from "../../components/act/interfaces/ActInterface";
+import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
-import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
-import {ComponentStage} from "../core/enums/ComponentStage";
+import {ComponentDuplicatedError} from "../../errors/ComponentDuplicatedError";
+import {ComponentStage} from "../../core/enums/ComponentStage";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
-import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
-import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
-import {RunningTimeService} from "../services/runningTimeService/RunningTimeService";
-import {AbstractRpgManagerError} from "../errors/abstracts/AbstractRpgManagerError";
-import {GalleryService} from "../services/galleryService/GalleryService";
+import {RpgErrorInterface} from "../../errors/interfaces/RpgErrorInterface";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {RunningTimeService} from "../../services/runningTimeService/RunningTimeService";
+import {AbstractRpgManagerError} from "../../errors/abstracts/AbstractRpgManagerError";
+import {GalleryService} from "../../services/galleryService/GalleryService";
 import {
 	AllComponentManipulatorService
-} from "../services/allComponentManipulatorService/AllComponentManipulatorService";
+} from "../../services/allComponentManipulatorService/AllComponentManipulatorService";
 
 export class Database extends Component implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];

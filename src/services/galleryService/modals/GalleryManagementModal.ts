@@ -3,7 +3,7 @@ import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelIn
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {GalleryService} from "../GalleryService";
+import {GalleryServiceInterface} from "../interfaces/GalleryServiceInterface";
 
 export class GalleryManagementModal extends AbstractModal {
 	protected title = 'Gallery Manager';
@@ -13,6 +13,7 @@ export class GalleryManagementModal extends AbstractModal {
 	constructor(
 		api: RpgManagerApiInterface,
 		private _model: ModelInterface,
+		private _gallery: GalleryServiceInterface,
 	) {
 		super(api);
 	}
@@ -29,7 +30,7 @@ export class GalleryManagementModal extends AbstractModal {
 
 		this._containerEl = this.rpgmContainerEl.createDiv({cls:'gallery'});
 
-		const viewClass = this.api.service(GalleryService).views.get(GalleryViewType.ModalNavigation);
+		const viewClass = this._gallery.views.get(GalleryViewType.ModalNavigation);
 		if (viewClass === undefined)
 			throw new Error('');
 

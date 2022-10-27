@@ -1,6 +1,6 @@
 import {TFile} from "obsidian";
-import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
-import {DatabaseInitialiser} from "../database/DatabaseInitialiser";
+import {DatabaseInterface} from "../managers/databaseManager/interfaces/DatabaseInterface";
+import {DatabaseInitialiser} from "../managers/databaseManager/DatabaseInitialiser";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 import {LoggerService} from "../services/loggerService/LoggerService";
 import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
@@ -33,7 +33,7 @@ export class SettingsUpdater {
 			}
 		}
 
-		this._api.service(LoggerService).info(LogMessageType.TagUpdates, 'Re-initialising database');
+		this._api.service(LoggerService).info(LogMessageType.TagUpdates, 'Re-initialising databaseManager');
 		return await DatabaseInitialiser.initialise(this._api)
 			.then((database: DatabaseInterface) => {
 				this._api.database = database;

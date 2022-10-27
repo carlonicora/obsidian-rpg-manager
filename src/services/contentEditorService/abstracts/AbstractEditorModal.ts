@@ -3,8 +3,8 @@ import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractM
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {LinkSuggesterHandlerInterface} from "../../linkSuggesterService/interfaces/LinkSuggesterHandlerInterface";
 import {CodeblockService} from "../../codeblockService/CodeblockService";
-import {ContentEditorService} from "../ContentEditorService";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import {ContentEditorServiceInterface} from "../interfaces/ContentEditorServiceInterface";
 
 export abstract class AbstractEditorModal extends AbstractModal {
 	protected contentEditorEl: HTMLTextAreaElement|HTMLInputElement;
@@ -16,6 +16,7 @@ export abstract class AbstractEditorModal extends AbstractModal {
 
 	constructor(
 		api: RpgManagerApiInterface,
+		protected contentEditor: ContentEditorServiceInterface,
 		protected component: ModelInterface,
 		protected editableContentType: EditableContentType|undefined,
 		protected editableField: string,
@@ -24,7 +25,7 @@ export abstract class AbstractEditorModal extends AbstractModal {
 		super(api);
 
 		if (this.editableContentType !== undefined) {
-			const contentValue = this.api.service(ContentEditorService).read(this.component, this.editableContentType);
+			const contentValue = this.contentEditor.read(this.component, this.editableContentType);
 			if (contentValue != null)
 				this.contentValue = contentValue.toString()
 					.replaceAll('\\"', '"')

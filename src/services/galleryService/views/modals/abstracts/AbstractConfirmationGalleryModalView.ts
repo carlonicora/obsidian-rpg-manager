@@ -3,12 +3,20 @@ import {GalleryViewInterface} from "../../../interfaces/GalleryViewInterface";
 import {GalleryViewType} from "../../../enums/GalleryViewType";
 import {GalleryEditModalView} from "../GalleryEditModalView";
 import {ImageInterface} from "../../../interfaces/ImageInterface";
-import {GalleryService} from "../../../GalleryService";
+import {RpgManagerApiInterface} from "../../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../../interfaces/GalleryServiceInterface";
 
 export abstract class AbstractConfirmationGalleryModalView extends AbstractGalleryModalView implements GalleryViewInterface{
 	protected containerEl: HTMLDivElement;
 	protected confirmationOverlayEl: HTMLDivElement;
 	protected selectedImage: ImageInterface|undefined;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		protected gallery: GalleryServiceInterface,
+	) {
+		super(api);
+	}
 
 	render(
 		containerEl: HTMLDivElement,
@@ -21,11 +29,11 @@ export abstract class AbstractConfirmationGalleryModalView extends AbstractGalle
 		this.confirmationOverlayEl.createDiv({text: 'Click to edit its caption'});
 		this.confirmationOverlayEl.addEventListener('click', () => {
 			if (this.selectedImage !== undefined) {
-				const view = this.api.service(GalleryService).createView(GalleryViewType.ModalEdit, this.model);
+				const view = this.gallery.createView(GalleryViewType.ModalEdit, this.model);
 				(<GalleryEditModalView>view).image = this.selectedImage;
 				view.render(this.containerEl);
 			} else {
-				const view = this.api.service(GalleryService).createView(GalleryViewType.ModalList, this.model);
+				const view = this.gallery.createView(GalleryViewType.ModalList, this.model);
 				view.render(containerEl);
 			}
 		});

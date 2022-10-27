@@ -1,7 +1,7 @@
 import {ModelsManagerInterface} from "../../managers/modelsManager/interfaces/ModelsManagerInterface";
 import {ViewsManagerInterface} from "../../managers/viewsManager/interfaces/ViewsManagerInterface";
 import {ComponentsManagerInterface} from "../../managers/componentsManager/interfaces/ComponentsManagerInterface";
-import {DatabaseInterface} from "../../database/interfaces/DatabaseInterface";
+import {DatabaseInterface} from "../../managers/databaseManager/interfaces/DatabaseInterface";
 import {ControllerManagerInterface} from "../../managers/controllerManager/interfaces/ControllerManagerInterface";
 import {RpgManagerSettingsInterface} from "../../settings/RpgManagerSettingsInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
@@ -26,6 +26,7 @@ export interface RpgManagerApiInterface {
 	get modals(): ModalsManagerInterface;
 	get models(): ModelsManagerInterface;
 	get plugin(): RpgManagerInterface;
+	get root(): string;
 	get services(): ServiceManagerInterface;
 	get settings(): RpgManagerSettingsInterface;
 	get staticViews(): StaticViewsManagerInterface;

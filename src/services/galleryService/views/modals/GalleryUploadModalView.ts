@@ -3,10 +3,19 @@ import {setIcon} from "obsidian";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
 import {CodeblockService} from "../../../codeblockService/CodeblockService";
+import {RpgManagerApiInterface} from "../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../interfaces/GalleryServiceInterface";
 const fs = require("fs");
 
 export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 	private _dropZoneEl: HTMLDivElement;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		gallery: GalleryServiceInterface,
+	) {
+		super(api, gallery);
+	}
 
 	public render(
 		containerEl: HTMLDivElement,

@@ -5,15 +5,17 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {CodeblockService} from "../../codeblockService/CodeblockService";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
+import {ContentEditorServiceInterface} from "../interfaces/ContentEditorServiceInterface";
 
 export class RelationshipEditorModal extends AbstractEditorModal {
 	constructor(
 		api: RpgManagerApiInterface,
+		contentEditor: ContentEditorServiceInterface,
 		component: ModelInterface,
 		editableField: string,
 		private _relationship: RelationshipInterface,
 	) {
-		super(api, component, undefined, editableField, true);
+		super(api, contentEditor, component, undefined, editableField, true);
 
 		this.contentValue = (this._relationship.description ?? '').replaceAll('\\"', '"');
 

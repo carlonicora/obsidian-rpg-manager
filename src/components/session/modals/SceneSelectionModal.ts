@@ -3,7 +3,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
-import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";
+import {DatabaseInitialiser} from "../../../managers/databaseManager/DatabaseInitialiser";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";

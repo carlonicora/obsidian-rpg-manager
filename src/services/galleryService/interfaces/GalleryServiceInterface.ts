@@ -1,14 +1,15 @@
 import {ImageInterface} from "./ImageInterface";
 import {GalleryViewType} from "../enums/GalleryViewType";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import {GalleryViewInterface} from "./GalleryViewInterface";
 
 export interface GalleryServiceInterface {
 	views: Map<GalleryViewType, any>
 
-	get root(): string;
 	get imageExtensions(): string[];
 
-	createImage(
-		path: string,
-		caption?: string,
-	): ImageInterface|undefined;
+	createView(
+		type: GalleryViewType,
+		model: ModelInterface,
+	): GalleryViewInterface;
 }

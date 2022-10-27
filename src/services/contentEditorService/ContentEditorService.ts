@@ -30,12 +30,12 @@ export class ContentEditorService extends AbstractService implements ContentEdit
 			case EditableContentType.AbtAnd:
 			case EditableContentType.AbtBut:
 			case EditableContentType.AbtTherefore:
-				new ContentEditorModal(this.api, component, type, editableField, true).open();
+				new ContentEditorModal(this.api, this, component, type, editableField, true).open();
 				return true;
 				break;
 			case EditableContentType.Address:
 			case EditableContentType.Url:
-				new ContentEditorModal(this.api, component, type, editableField, false).open();
+				new ContentEditorModal(this.api, this, component, type, editableField, false).open();
 				return true;
 				break;
 			case EditableContentType.StoryCircleYou:
@@ -46,7 +46,7 @@ export class ContentEditorService extends AbstractService implements ContentEdit
 			case EditableContentType.StoryCircleTake:
 			case EditableContentType.StoryCircleReturn:
 			case EditableContentType.StoryCircleChange:
-				new StoryCircleContentEditorModal(this.api, component, type, editableField, this._readRelatedPlot(component, type)).open();
+				new StoryCircleContentEditorModal(this.api, this, component, type, editableField, this._readRelatedPlot(component, type)).open();
 				break;
 			default:
 				relatedComponent = component.getRelationships().filter((relationship: RelationshipInterface) =>
@@ -56,7 +56,7 @@ export class ContentEditorService extends AbstractService implements ContentEdit
 				if (relatedComponent.length !== 1)
 					return false;
 
-				new RelationshipEditorModal(this.api, component, editableField, relatedComponent[0]).open();
+				new RelationshipEditorModal(this.api, this, component, editableField, relatedComponent[0]).open();
 
 				break;
 		}

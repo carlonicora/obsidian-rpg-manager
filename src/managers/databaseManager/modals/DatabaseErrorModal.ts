@@ -1,8 +1,8 @@
 import {Component, MarkdownRenderer, TFile} from "obsidian";
-import {RpgErrorInterface} from "../../errors/interfaces/RpgErrorInterface";
-import {AbstractModal} from "../../managers/modalsManager/abstracts/AbstractModal";
-import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticViewType";
+import {RpgErrorInterface} from "../../../errors/interfaces/RpgErrorInterface";
+import {AbstractModal} from "../../modalsManager/abstracts/AbstractModal";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {StaticViewType} from "../../staticViewsManager/enums/StaticViewType";
 
 export class DatabaseErrorModal extends AbstractModal {
 	constructor(

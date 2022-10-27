@@ -1,5 +1,5 @@
 import {RpgManagerApiInterface} from "./interfaces/RpgManagerApiInterface";
-import {App} from "obsidian";
+import {App, TFile} from "obsidian";
 import {ServiceManagerInterface} from "../managers/servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "../managers/servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
@@ -7,7 +7,7 @@ import {ViewsManagerInterface} from "../managers/viewsManager/interfaces/ViewsMa
 import {ViewsManager} from "../managers/viewsManager/ViewsManager";
 import {ComponentsManagerInterface} from "../managers/componentsManager/interfaces/ComponentsManagerInterface";
 import {ComponentsManager} from "../managers/componentsManager/ComponentsManager";
-import {DatabaseInterface} from "../database/interfaces/DatabaseInterface";
+import {DatabaseInterface} from "../managers/databaseManager/interfaces/DatabaseInterface";
 import {ModelsManagerInterface} from "../managers/modelsManager/interfaces/ModelsManagerInterface";
 import {ModelsManager} from "../managers/modelsManager/ModelsManager";
 import {ControllerManagerInterface} from "../managers/controllerManager/interfaces/ControllerManagerInterface";
@@ -25,14 +25,17 @@ import {FetchersManager} from "../managers/fetchersManager/FetchersManager";
 import {FetcherInterface} from "../managers/fetchersManager/interfaces/FetcherInterface";
 import {StaticViewsManagerInterface} from "../managers/staticViewsManager/interfaces/StaticViewsManagerInterface";
 import {StaticViewsManager} from "../managers/staticViewsManager/StaticViewsManager";
+import {DatabaseManagerInterface} from "../managers/databaseManager/interfaces/DatabaseManagerInterface";
+import {DatabaseManager} from "../managers/databaseManager/DatabaseManager";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
 	private _components: ComponentsManagerInterface;
-	private _database: DatabaseInterface;
+	private _database: DatabaseManagerInterface;
 	private _fetchers: FetchersManagerInterface;
 	private _modals: ModalsManagerInterface;
 	private _models: ModelsManagerInterface;
+	private _root: string;
 	private _services: ServiceManagerInterface;
 	private _staticViews: StaticViewsManagerInterface;
 	private _templates: TemplatesManagerInterface;
@@ -47,6 +50,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 		this._controllers = new ControllerManager(this);
 		this._components = new ComponentsManager(this);
+		this._database = new DatabaseManager(this);
 		this._fetchers = new FetchersManager(this);
 		this._modals = new ModalsManager(this);
 		this._models = new ModelsManager(this);
@@ -54,6 +58,14 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		this._staticViews = new StaticViewsManager(this);
 		this._templates = new TemplatesManager(this);
 		this._views = new ViewsManager(this);
+
+		const file = this.app.vault.getAbstractFileByPath('/');
+		this._root = this. app.vault.getResourcePath(file as TFile);
+		if (this._root.includes("?"))
+			this._root = this._root.substring(0, this._root.lastIndexOf("?"));
+
+		if (!this._root.endsWith("/"))
+			this._root += "/";
 	}
 
 	public get controllers(): ControllerManagerInterface {
@@ -65,11 +77,11 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	}
 
 	public get database(): DatabaseInterface {
-		return this._database;
+		return this._database.database;
 	}
 
 	public set database(database: DatabaseInterface) {
-		this._database = database;
+		this._database.database = database;
 	}
 
 	public get fetchers(): FetchersManagerInterface {
@@ -86,6 +98,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	public get plugin(): RpgManagerInterface {
 		return this._plugin;
+	}
+
+	public get root(): string {
+		return this._root;
 	}
 
 	public get services(): ServiceManagerInterface {

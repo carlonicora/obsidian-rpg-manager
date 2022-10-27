@@ -2,13 +2,21 @@ import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {TAbstractFile} from "obsidian";
 import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
-import {GalleryService} from "../../GalleryService";
 import {CodeblockService} from "../../../codeblockService/CodeblockService";
+import {RpgManagerApiInterface} from "../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../interfaces/GalleryServiceInterface";
 
 export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 	private _masonryEl: HTMLDivElement;
 	private _attachmentFolder: string;
 	private _allImages: Array<TAbstractFile>;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		gallery: GalleryServiceInterface,
+	) {
+		super(api, gallery);
+	}
 
 	public render(
 		containerEl: HTMLDivElement,
@@ -57,7 +65,7 @@ export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalVi
 		images.forEach((image: TAbstractFile) => {
 			const imageEl = new Image();
 			imageEl.addClass('image');
-			imageEl.src = this.api.service(GalleryService).root + image.path;
+			imageEl.src = this.api.root + image.path;
 			imageEl.dataset.id = image.path;
 
 			imageEl.addEventListener('click', () => {

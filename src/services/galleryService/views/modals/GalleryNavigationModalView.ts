@@ -1,9 +1,17 @@
 import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewType} from "../../enums/GalleryViewType";
-import {GalleryService} from "../../GalleryService";
+import {RpgManagerApiInterface} from "../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../interfaces/GalleryServiceInterface";
 
 export class GalleryNavigationModalView extends AbstractGalleryModalView {
 	private _operationsEl: HTMLDivElement;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		private _gallery: GalleryServiceInterface,
+	) {
+		super(api);
+	}
 
 	public render(
 		containerEl: HTMLDivElement,
@@ -58,7 +66,7 @@ export class GalleryNavigationModalView extends AbstractGalleryModalView {
 	): void {
 		this._operationsEl.empty();
 
-		const view = this.api.service(GalleryService).createView(type, this.model);
+		const view = this._gallery.createView(type, this.model);
 		view.render(this._operationsEl);
 	}
 }

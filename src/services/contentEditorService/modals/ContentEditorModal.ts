@@ -3,16 +3,18 @@ import {AbstractEditorModal} from "../abstracts/AbstractEditorModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
+import {ContentEditorServiceInterface} from "../interfaces/ContentEditorServiceInterface";
 
 export class ContentEditorModal extends AbstractEditorModal {
 	constructor(
 		api: RpgManagerApiInterface,
+		contentEditor: ContentEditorServiceInterface,
 		component: ModelInterface,
 		editableContentType: EditableContentType,
 		editableField: string,
 		isLongText: boolean,
 	) {
-		super(api, component, editableContentType, editableField, isLongText);
+		super(api, contentEditor, component, editableContentType, editableField, isLongText);
 
 		let title = '';
 		switch (this.editableContentType){

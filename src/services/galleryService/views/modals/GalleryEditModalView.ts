@@ -3,13 +3,21 @@ import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {GalleryViewType} from "../../enums/GalleryViewType";
 import {CodeblockService} from "../../../codeblockService/CodeblockService";
-import {GalleryService} from "../../GalleryService";
+import {RpgManagerApiInterface} from "../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../interfaces/GalleryServiceInterface";
 
 export class GalleryEditModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _image: ImageInterface;
 
 	private _captionEl: HTMLTextAreaElement;
 	private _imageEl: HTMLImageElement;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		private _gallery: GalleryServiceInterface,
+	) {
+		super(api);
+	}
 
 	set image(image: ImageInterface) {
 		this._image = image;
@@ -25,7 +33,7 @@ export class GalleryEditModalView extends AbstractGalleryModalView implements Ga
 		editorDeletedContainerEl.createDiv({text: 'The image has been removed from ' + this.model.file.basename});
 		editorDeletedContainerEl.createDiv({text: 'Click to return to its gallery'});
 		editorDeletedContainerEl.addEventListener('click', () => {
-			const view = this.api.service(GalleryService).createView(GalleryViewType.ModalList, this.model);
+			const view = this._gallery.createView(GalleryViewType.ModalList, this.model);
 			view.render(containerEl);
 		});
 

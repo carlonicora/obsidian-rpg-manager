@@ -4,16 +4,18 @@ import {EditableContentType} from "../enums/EditableContentType";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
+import {ContentEditorServiceInterface} from "../interfaces/ContentEditorServiceInterface";
 
 export class StoryCircleContentEditorModal extends AbstractEditorModal {
 	constructor(
 		api: RpgManagerApiInterface,
+		contentEditor: ContentEditorServiceInterface,
 		component: ModelInterface,
 		editableContentType: EditableContentType,
 		editableField: string,
 		private _relatedAbtValue: string,
 	) {
-		super(api, component, editableContentType, editableField, true);
+		super(api, contentEditor, component, editableContentType, editableField, true);
 
 		this.maxWidth = true;
 

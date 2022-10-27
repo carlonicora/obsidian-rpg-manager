@@ -9,9 +9,9 @@ import {CodeblockDomainInterface} from "./interfaces/CodeblockDomainInterface";
 import {CodeblockWorkerInterface} from "./interfaces/CodeblockWorkerInterface";
 import {CodeblockWorker} from "./workers/CodeblockWorker";
 import {CodeblockImageWorker} from "./workers/CodeblockImageWorker";
-import {GalleryService} from "../galleryService/GalleryService";
 import {CodeblockRelationshipWorker} from "./workers/CodeblockRelationshipWorker";
 import {CodeblockKeyWorker} from "./workers/CodeblockKeyWorker";
+import {ImageService} from "../imageService/ImageService";
 
 export class CodeblockService extends AbstractService implements CodeblockServiceInterface, ServiceInterface {
 	private _worker: CodeblockWorkerInterface;
@@ -52,7 +52,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 		return this._worker.updateContent(domain)
 			.then(() => {
-				return this.api.service(GalleryService)?.createImage(path, caption);
+				return this.api.service(ImageService).createImage(path, caption);
 			});
 	}
 

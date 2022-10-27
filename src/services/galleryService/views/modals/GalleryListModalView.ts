@@ -4,10 +4,18 @@ import {ImageInterface} from "../../interfaces/ImageInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 import {GalleryViewType} from "../../enums/GalleryViewType";
 import {GalleryEditModalView} from "./GalleryEditModalView";
-import {GalleryService} from "../../GalleryService";
+import {RpgManagerApiInterface} from "../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../interfaces/GalleryServiceInterface";
 
 export class GalleryListModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _masonryEl: HTMLDivElement;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		private _gallery: GalleryServiceInterface,
+	) {
+		super(api);
+	}
 
 	public render(
 		containerEl: HTMLDivElement,
@@ -38,7 +46,7 @@ export class GalleryListModalView extends AbstractGalleryModalView implements Ga
 			}
 
 			imageEl.addEventListener('click', () => {
-				const view = this.api.service(GalleryService).createView(GalleryViewType.ModalEdit, this.model);
+				const view = this._gallery.createView(GalleryViewType.ModalEdit, this.model);
 				(<GalleryEditModalView>view).image = image;
 				view.render(containerEl);
 			});

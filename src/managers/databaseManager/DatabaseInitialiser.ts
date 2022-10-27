@@ -1,21 +1,20 @@
 import {parseYaml, TFile} from "obsidian";
-import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
+import {RpgErrorInterface} from "../../errors/interfaces/RpgErrorInterface";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
-import {IdInterface} from "../services/idService/interfaces/IdInterface";
-import {TagMisconfiguredError} from "../errors/TagMisconfiguredError";
-import {ModelInterface} from "../managers/modelsManager/interfaces/ModelInterface";
+import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
+import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {RelationshipInterface} from "../services/relationshipsService/interfaces/RelationshipInterface";
-import {ComponentStage} from "../core/enums/ComponentStage";
-import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
+import {RelationshipInterface} from "../../services/relationshipsService/interfaces/RelationshipInterface";
+import {ComponentStage} from "../../core/enums/ComponentStage";
+import {ComponentDuplicatedError} from "../../errors/ComponentDuplicatedError";
 import {Md5} from "ts-md5";
-import {InvalidIdChecksumError} from "../errors/InvalidIdChecksumError";
-import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../services/idService/IdService";
-import {RelationshipService} from "../services/relationshipsService/RelationshipService";
-import {DatabaseFactory} from "./factories/DatabaseFactory";
-import {LoggerService} from "../services/loggerService/LoggerService";
-import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
+import {InvalidIdChecksumError} from "../../errors/InvalidIdChecksumError";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {IdService} from "../../services/idService/IdService";
+import {RelationshipService} from "../../services/relationshipsService/RelationshipService";
+import {LoggerService} from "../../services/loggerService/LoggerService";
+import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 
 export class DatabaseInitialiser {
 	private static _misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
@@ -29,8 +28,7 @@ export class DatabaseInitialiser {
 
 		const group = this._api.service(LoggerService).createGroup();
 
-		const databaseFactory = new DatabaseFactory(this._api);
-		const response: DatabaseInterface = await databaseFactory.create();
+		const response: DatabaseInterface = await this._api.database;
 		group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
 		const components: ModelInterface[] = [];

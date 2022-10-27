@@ -2,6 +2,8 @@ import {GalleryViewInterface} from "../../interfaces/GalleryViewInterface";
 import {ImageInterface} from "../../interfaces/ImageInterface";
 import {AbstractConfirmationGalleryModalView} from "./abstracts/AbstractConfirmationGalleryModalView";
 import {CodeblockService} from "../../../codeblockService/CodeblockService";
+import {RpgManagerApiInterface} from "../../../../api/interfaces/RpgManagerApiInterface";
+import {GalleryServiceInterface} from "../../interfaces/GalleryServiceInterface";
 
 export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalView implements GalleryViewInterface {
 
@@ -10,6 +12,13 @@ export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalV
 	private _addButtonEl: HTMLButtonElement;
 	private _urlEl: HTMLInputElement;
 	private _confirmationOverlayEl: HTMLDivElement;
+
+	constructor(
+		api: RpgManagerApiInterface,
+		gallery: GalleryServiceInterface,
+	) {
+		super(api, gallery);
+	}
 
 	public render(
 		containerEl: HTMLDivElement,

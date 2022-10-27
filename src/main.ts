@@ -13,9 +13,9 @@ import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
 import {TagService} from "./services/tagService/TagService";
-import {DatabaseInterface} from "./database/interfaces/DatabaseInterface";
+import {DatabaseInterface} from "./managers/databaseManager/interfaces/DatabaseInterface";
 import {ModelInterface} from "./managers/modelsManager/interfaces/ModelInterface";
-import {DatabaseInitialiser} from "./database/DatabaseInitialiser";
+import {DatabaseInitialiser} from "./managers/databaseManager/DatabaseInitialiser";
 import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
 import {ServiceManagerInterface} from "./managers/servicesManager/interfaces/ServiceManagerInterface";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
