@@ -44,7 +44,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 				return undefined;
 
 			editor = await activeView.editor;
-			const file: TFile = await activeView.file;
+			file = await activeView.file;
 			cache = await this._api.app.metadataCache.getFileCache(file);
 
 			if (cache == undefined)
