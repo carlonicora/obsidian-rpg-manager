@@ -19,7 +19,6 @@
 	  "ES2021.String"
     ]
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"],
+	"exclude": ["REFACTOR"]
 }

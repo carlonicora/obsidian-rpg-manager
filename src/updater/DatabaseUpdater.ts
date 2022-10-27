@@ -62,7 +62,10 @@ export class DatabaseUpdater {
 			return false;
 		}
 
-		return this._versionsHistory.get(previousVersionMajorMinor) !== undefined;
+		if (this._versionsHistory.get(previousVersionMajorMinor) === undefined)
+			return false;
+
+		return versionMap[previousVersionMajorMinor as keyof typeof versionMap] !== undefined;
 	}
 
 	public async update(
