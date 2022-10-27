@@ -1,4 +1,3 @@
-import {ImageInterface} from "./ImageInterface";
 import {GalleryViewType} from "../enums/GalleryViewType";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {GalleryViewInterface} from "./GalleryViewInterface";
