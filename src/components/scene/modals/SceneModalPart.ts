@@ -1,22 +1,23 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
-import {App} from "obsidian";
-import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SceneInterface} from "../interfaces/SceneInterface";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {IdService} from "../../../services/idService/IdService";
+import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class SceneModalPart extends AbstractModalPart {
 	private _scenes: SceneInterface[];
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		modal: ModalInterface,
 	) {
-		super(app, modal);
-		this.modal.sceneId = this.factories.id.create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
+		super(api, modal);
+		this.modal.sceneId = this.api.service(IdService).create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
 		this.modal.sceneId.id = 0;
 
 		if (this.modal.adventureId != null && this.modal.actId != null)
-			this._scenes = this.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
+			this._scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
 		else
 			this._scenes = [];
 

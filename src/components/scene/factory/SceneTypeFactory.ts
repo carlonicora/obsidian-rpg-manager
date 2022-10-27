@@ -1,8 +1,7 @@
-import {AbstractFactory} from "../../../../REFACTOR/abstracts/AbstractFactory";
 import {SceneTypeFactoryInterface} from "./interfaces/SceneTypeFactoryInterface";
 import {SceneType} from "../enums/SceneType";
 
-export class SceneTypeFactory extends AbstractFactory implements SceneTypeFactoryInterface {
+export class SceneTypeFactory implements SceneTypeFactoryInterface {
 	createReadableSceneType(
 		type: SceneType,
 	): string {

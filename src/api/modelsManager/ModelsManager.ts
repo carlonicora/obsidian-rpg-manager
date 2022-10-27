@@ -2,14 +2,14 @@ import {ModelsManagerInterface} from "./interfaces/ModelsManagerInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {TFile} from "obsidian";
-import {ModelClassInterface} from "./interfaces/ModelClassInterface";
 import {ModelInterface} from "./interfaces/ModelInterface";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {RpgManagerApiInterface} from "../interfaces/RpgManagerApiInterface";
+import {ClassInterface} from "../interfaces/ClassInterface";
 
 export class ModelsManager implements ModelsManagerInterface {
-	private _models: Map<string, ModelClassInterface<ModelInterface>>
-		= new Map<string, ModelClassInterface<ModelInterface>>();
+	private _models: Map<string, ClassInterface<ModelInterface>>
+		= new Map<string, ClassInterface<ModelInterface>>();
 
 	constructor(
 		private _api: RpgManagerApiInterface,
@@ -38,7 +38,7 @@ export class ModelsManager implements ModelsManagerInterface {
 	}
 
 	public register<T extends ModelInterface>(
-		model: ModelClassInterface<T>,
+		model: ClassInterface<T>,
 		type: ComponentType,
 		campaignSettings: CampaignSetting,
 	): void {
@@ -53,7 +53,7 @@ export class ModelsManager implements ModelsManagerInterface {
 	}
 
 	private _initialiseComponentModel(
-		modelClass: ModelClassInterface<ModelInterface>,
+		modelClass: ClassInterface<ModelInterface>,
 		id: IdInterface,
 		campaignSettings: CampaignSetting,
 		file: TFile,
@@ -63,5 +63,4 @@ export class ModelsManager implements ModelsManagerInterface {
 
 		return response;
 	}
-
 }

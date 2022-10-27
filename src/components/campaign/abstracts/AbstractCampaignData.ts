@@ -1,14 +1,14 @@
 import {CampaignDataInterface} from "../interfaces/CampaignDataInterface";
 import {CampaignMetadataInterface} from "../interfaces/CampaignMetadataInterface";
 import {PlotsAbtOnly} from "../../../services/plotsServices/PlotsAbtOnly";
-import {CalendarType} from "../../../../REFACTOR/services/dateService/enums/CalendarType";
 import {FantasyCalendarService} from "../../../services/fantasyCalendarService/FantasyCalendarService";
-import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
 import {Calendar} from "obsidian-fantasy-calendar";
 import {
 	FantasyCalendarDateInterface
 } from "../../../services/fantasyCalendarService/interfaces/FantasyCalendarDateInterface";
+import {DateService} from "../../../services/dateService/DateService";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;
@@ -20,6 +20,7 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 				undefined,
 				this,
 			);
+
 		const fantasyCalendar = this.fantasyCalendar;
 		if (fantasyCalendar === undefined)
 			return undefined;
@@ -54,12 +55,7 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		if (this.calendar === CalendarType.Gregorian)
 			return undefined;
 
-		const fantasyCalendarService = this.api.service(FantasyCalendarService);
-
-		if (fantasyCalendarService === undefined)
-			return undefined;
-
-		const calendars = fantasyCalendarService.calendars;
+		const calendars = this.api.service(FantasyCalendarService).calendars;
 
 		if (calendars.length === 1)
 			return calendars[0];

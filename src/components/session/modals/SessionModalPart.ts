@@ -1,8 +1,9 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {App} from "obsidian";
-import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {IdService} from "../../../services/idService/IdService";
+import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class SessionModalPart extends AbstractModalPart {
 	private _sessions: SessionInterface[];
@@ -12,13 +13,13 @@ export class SessionModalPart extends AbstractModalPart {
 	private _synopsisEl: HTMLTextAreaElement;
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		modal: ModalInterface,
 	) {
-		super(app, modal);
-		this.modal.sessionId = this.factories.id.create(ComponentType.Session, this.modal.campaignId.id);
+		super(api, modal);
+		this.modal.sessionId = this.api.service(IdService).create(ComponentType.Session, this.modal.campaignId.id);
 		this.modal.sessionId.id = 0;
-		this._sessions = this.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
+		this._sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
 
 	public async addElement(

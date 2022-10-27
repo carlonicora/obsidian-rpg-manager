@@ -1,4 +1,4 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
 
 export class SubplotModalPart extends AbstractModalPart {
 	public async addElement(

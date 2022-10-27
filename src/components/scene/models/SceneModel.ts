@@ -8,6 +8,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {AbstractSceneData} from "../abstracts/AbstractSceneData";
 import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
 import {activeSceneTypes} from "../enums/SceneType";
+import {RunningTimeService} from "../../../services/runningTimeService/RunningTimeService";
 
 export class SceneModel extends AbstractSceneData implements SceneInterface {
 	protected metadata: SceneMetadataInterface;
@@ -20,12 +21,12 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 			this.adventure.validateHierarchy();
 			this.act.validateHierarchy();
 		} catch (e) {
-			throw new ComponentNotFoundError(this.app, this.id);
+			throw new ComponentNotFoundError(this.api, this.id);
 		}
 	}
 
 	get act(): ActInterface {
-		const response = this.database.readSingle<ActInterface>(ComponentType.Act, this.id);
+		const response = this.api.database.readSingle<ActInterface>(ComponentType.Act, this.id);
 
 		if (response === undefined)
 			throw new Error('');
@@ -34,7 +35,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get adventure(): AdventureInterface {
-		const response = this.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
+		const response = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
 
 		if (response === undefined)
 			throw new Error('');
@@ -60,7 +61,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		if (this.sceneType == undefined)
 			return 0;
 
-		const previousDurations: number[] = this.factories.runningTimeManager.medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
+		const previousDurations: number[] = this.api.service(RunningTimeService).medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
 		previousDurations.sort((left: number, right: number) => {
 			if (left > right) return +1;
 			if (left < right) return -1;
@@ -123,7 +124,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		if (this.metadata.data?.sessionId === undefined)
 			return undefined;
 
-		const response = this.database.read<SessionInterface>((session: SessionInterface) =>
+		const response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&
 			session.id.campaignId === this.id.campaignId &&
 			session.id.sessionId === this.metadata.data?.sessionId
@@ -141,7 +142,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 			return null;
 
 		try {
-			return this.database.readSingle<SceneInterface>(ComponentType.Scene, this.id, (next ? sceneId + 1 : sceneId - 1));
+			return this.api.database.readSingle<SceneInterface>(ComponentType.Scene, this.id, (next ? sceneId + 1 : sceneId - 1));
 		} catch (e) {
 			return null;
 		}

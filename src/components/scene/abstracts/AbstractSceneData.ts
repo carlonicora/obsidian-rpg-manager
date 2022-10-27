@@ -3,8 +3,8 @@ import {SceneDataInterface} from "../interfaces/SceneDataInterface";
 import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
 import {SceneType} from "../enums/SceneType";
 import {StoryCircleStage} from "../../../services/plotsServices/enums/StoryCircleStage";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
-import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
+import {DateService} from "../../../services/dateService/DateService";
 
 export abstract class AbstractSceneData extends AbstractModel implements SceneDataInterface {
 	protected metadata: SceneMetadataInterface;

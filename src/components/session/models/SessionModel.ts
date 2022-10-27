@@ -42,7 +42,7 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		if (sessionId === undefined)
 			return null;
 
-		const response = this.database.read<SessionInterface>((session: SessionInterface) =>
+		const response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&
 			session.id.campaignId === this.id.campaignId &&
 			session.id.sessionId === (next ? sessionId + 1 : sessionId -1)

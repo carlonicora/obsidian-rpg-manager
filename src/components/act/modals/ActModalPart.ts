@@ -1,35 +1,35 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {App} from "obsidian";
 import {ActInterface} from "../interfaces/ActInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
-import {AbstractModalPart} from "../../../core/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
 import {IdService} from "../../../services/idService/IdService";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export class ActModalPart extends AbstractModalPart {
 	private _acts: ActInterface[];
-private _allAct:ActInterface[];
-private _actEl: HTMLSelectElement;
-private _actErrorEl: HTMLParagraphElement;
-private _childEl: HTMLDivElement;
+	private _allAct:ActInterface[];
+	private _actEl: HTMLSelectElement;
+	private _actErrorEl: HTMLParagraphElement;
+	private _childEl: HTMLDivElement;
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		modal: ModalInterface,
 	) {
-		super(app, modal);
+		super(api, modal);
 
 		if (this.modal.actId === undefined) {
 			this.modal.actId = this.api.service(IdService).create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
 			this.modal.actId.id = 0;
 		}
 
-		this._allAct = this.database.read<ActInterface>(
+		this._allAct = this.api.database.read<ActInterface>(
 			(component: ActInterface) =>
 				component.id.type === ComponentType.Act &&
 				component.id.campaignId === this.modal.campaignId.id
 		);
 
-		this._acts = this.database.read<ActInterface>(
+		this._acts = this.api.database.read<ActInterface>(
 			(component: ActInterface) =>
 				component.id.type === ComponentType.Act &&
 				component.id.campaignId === this.modal.campaignId.id &&
@@ -67,7 +67,7 @@ private _childEl: HTMLDivElement;
 	public async loadChild(
 		containerEl: HTMLElement,
 	): Promise<void> {
-		this.modal.sceneModal = this.factories.modals.create(
+		this.modal.sceneModal = this.api.modals.getPartial(
 			this.modal.campaignSetting,
 			ComponentType.Scene,
 			this.modal,
@@ -134,7 +134,7 @@ private _childEl: HTMLDivElement;
 	private _selectAct(
 	): void {
 		if (this.modal.actId === undefined) {
-			this.modal.actId = this.factories.id.create(ComponentType.Adventure, this.modal.campaignId.id, this.modal.adventureId?.id);
+			this.modal.actId = this.api.service(IdService).create(ComponentType.Adventure, this.modal.campaignId.id, this.modal.adventureId?.id);
 		}
 
 		if (this.modal.actId !== undefined){

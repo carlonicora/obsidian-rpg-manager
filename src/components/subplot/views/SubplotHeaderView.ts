@@ -1,32 +1,12 @@
+import {NewAbstractHeaderView} from "../../../views/abstracts/NewAbstractHeaderView";
+import {NewHeaderViewInterface} from "../../../views/interfaces/NewHeaderViewInterface";
 import {SubplotInterface} from "../interfaces/SubplotInterface";
-import {HeaderResponseInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseInterface";
-import {HeadlessTableView} from "../../../../REFACTOR/views/HeadlessTableView";
-import {HeaderResponseElementInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseElementInterface";
-import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
 
-export class SubplotHeaderView extends AbstractPlotHeaderView {
-	protected currentComponent: SubplotInterface;
+export class SubplotHeaderView extends NewAbstractHeaderView implements NewHeaderViewInterface {
+	public model: SubplotInterface;
 
 	public render(
-		container: HTMLElement,
-		data: HeaderResponseInterface,
 	): void {
-		super.internalRender(container, data);
-		const headlessTable = new HeadlessTableView(this.app, this.sourcePath);
-		data.elements.forEach((element: HeaderResponseElementInterface) => {
-			element.value.fillContent(
-				this.createContainerEl(element),
-				this.sourcePath,
-			);
-		});
 
-		this.headerContainerEl.appendChild(headlessTable.tableEl as Node);
-
-		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty){
-			this.addAbtPlot(data.currentComponent.abt);
-		}
-		if (this.settings.usePlotStructures && data.currentComponent.hasStoryCirclePlot && !data.currentComponent.storyCircle.isEmpty){
-			this.addStoryCirclePlot(data.currentComponent.storyCircle);
-		}
 	}
 }

@@ -1,20 +1,37 @@
 import {ComponentInterface} from "../../api/componentsManager/interfaces/ComponentInterface";
 import {CampaignSetting} from "../campaign/enums/CampaignSetting";
-import {ModelClassInterface} from "../../api/modelsManager/interfaces/ModelClassInterface";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {CharacterModel} from "./models/CharacterModel";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../api/viewsManager/interfaces/ViewClassInterface";
 import {NewViewType} from "../../core/enums/NewViewType";
-import {NewCharacterHeaderView} from "./views/NewCharacterHeaderView";
+import {CharacterHeaderView} from "./views/CharacterHeaderView";
+import {ClassInterface} from "../../api/interfaces/ClassInterface";
+import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
+import {ModalInterface} from "../../core/interfaces/ModalInterface";
+import {TemplateClassInterface} from "../../api/templatesManager/interfaces/TemplateClassInterface";
+import {TemplateInterface} from "../../api/templatesManager/interfaces/TemplateInterface";
+import {NonPlayerCharacterTemplate} from "./templates/NonPlayerCharacterTemplate";
 
 export class NonPlayerCharacterComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	public get model(): ModelClassInterface<ModelInterface>{
+	get modalParts(): ClassInterface<ModalPartInterface>[] {
+		return [];
+	}
+
+	get modals(): ClassInterface<ModalInterface>[] {
+		return [];
+	}
+
+	public get model(): ClassInterface<ModelInterface>{
 		return CharacterModel;
+	}
+
+	public get template(): TemplateClassInterface<TemplateInterface> {
+		return NonPlayerCharacterTemplate;
 	}
 
 	public get type(): ComponentType {
@@ -23,7 +40,7 @@ export class NonPlayerCharacterComponent implements ComponentInterface {
 
 	public get views(): Map<ViewClassInterface, NewViewType> {
 		return new Map<ViewClassInterface, NewViewType>([
-			[NewCharacterHeaderView, NewViewType.Header],
+			[CharacterHeaderView, NewViewType.Header],
 		]);
 	}
 }

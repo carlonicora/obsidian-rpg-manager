@@ -4,7 +4,7 @@ import {IdInterface} from "../interfaces/IdInterface";
 import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
 import {InvalidIdChecksumError} from "../../../core/errors/InvalidIdChecksumError";
-import {AbstractModal} from "../../../core/abstracts/AbstractModal";
+import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {IdService} from "../IdService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";

@@ -1,12 +1,12 @@
-import {ServiceClassInterface} from "./ServiceClassInterface";
 import {ServiceInterface} from "./ServiceInterface";
+import {ClassInterface} from "../../interfaces/ClassInterface";
 
 export interface ServiceManagerInterface {
 	register<T extends ServiceInterface>(
-		serviceClass: ServiceClassInterface<T>
+		serviceClass: ClassInterface<T>
 	): void;
 
 	get<T extends ServiceInterface>(
-		service: ServiceClassInterface<T>
+		service: ClassInterface<T>
 	): T|undefined;
 }

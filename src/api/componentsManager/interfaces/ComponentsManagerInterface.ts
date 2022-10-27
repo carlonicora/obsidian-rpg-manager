@@ -1,12 +1,12 @@
-import {ComponentClassInterface} from "./ComponentClassInterface";
 import {ComponentInterface} from "./ComponentInterface";
+import {ClassInterface} from "../../interfaces/ClassInterface";
 
 export interface ComponentsManagerInterface {
 	get<T extends ComponentInterface>(
-		component: ComponentClassInterface<T>,
+		component: ClassInterface<T>,
 	): T;
 
 	register<T extends ComponentInterface>(
-		componentClass: ComponentClassInterface<T>,
+		componentClass: ClassInterface<T>,
 	): void;
 }

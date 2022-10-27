@@ -33,7 +33,6 @@ import {TagService} from "../services/tagService/TagService";
 import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
 import {PronounService} from "../services/pronounService/PronounService";
 import {ServiceInterface} from "./servicesManager/interfaces/ServiceInterface";
-import {ServiceClassInterface} from "./servicesManager/interfaces/ServiceClassInterface";
 import {YamlService} from "../services/yamlService/YamlService";
 import {SearchService} from "../services/searchService/SearchService";
 import {DateService} from "../services/dateService/DateService";
@@ -47,13 +46,20 @@ import {SorterService} from "../services/sorterService/SorterService";
 import {
 	AllComponentManipulatorService
 } from "../services/allComponentManipulatorService/AllComponentManipulatorService";
+import {ClassInterface} from "./interfaces/ClassInterface";
+import {ModalsManagerInterface} from "./modalsManager/interfaces/ModalsManagerInterface";
+import {TemplatesManagerInterface} from "./templatesManager/interfaces/TemplatesManagerInterface";
+import {ModalsManager} from "./modalsManager/ModalsManager";
+import {TemplatesManager} from "./templatesManager/TemplatesManager";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
 	private _components: ComponentsManagerInterface;
 	private _database: DatabaseInterface;
+	private _modals: ModalsManagerInterface;
 	private _models: ModelsManagerInterface;
 	private _services: ServiceManagerInterface;
+	private _templates: TemplatesManagerInterface;
 	private _views: ViewsManagerInterface;
 
 	constructor(
@@ -62,8 +68,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	) {
 		this._controllers = new ControllerManager(this);
 		this._components = new ComponentsManager(this);
+		this._modals = new ModalsManager(this);
 		this._models = new ModelsManager(this);
 		this._services = new ServicesManager(this);
+		this._templates = new TemplatesManager(this);
 		this._views = new ViewsManager(this);
 	}
 
@@ -83,6 +91,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		this._database = database;
 	}
 
+	public get modals(): ModalsManagerInterface {
+		return this._modals;
+	}
+
 	public get models(): ModelsManagerInterface {
 		return this._models;
 	}
@@ -93,6 +105,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	public get settings(): RpgManagerSettingsInterface {
 		return this._plugin.settings;
+	}
+
+	public get templates(): TemplatesManagerInterface {
+		return this._templates;
 	}
 
 	public get views(): ViewsManagerInterface {
@@ -106,7 +122,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	}
 
 	service<T extends ServiceInterface>(
-		service: ServiceClassInterface<T>,
+		service: ClassInterface<T>,
 	): T {
 		const response = this._services.get(service);
 

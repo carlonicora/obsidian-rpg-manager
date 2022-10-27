@@ -35,7 +35,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 		let folder = pathSeparator;
 
 		try {
-			const campaign: CampaignInterface|undefined = this.api.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
+			const campaign: CampaignInterface|undefined = this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
 			settings = campaign.campaignSettings;
 			folder = campaign.folder;
 		} catch (e) {
@@ -113,7 +113,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 
 		if (id !== undefined){
 			try {
-				campaign = this.api.app.plugins.getPlugin('rpg-manager').database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
+				campaign = this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
 			} catch (e) {
 				campaign = undefined;
 			}

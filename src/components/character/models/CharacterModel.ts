@@ -1,7 +1,7 @@
 import {CharacterInterface} from "../interfaces/CharacterInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
 import {AbstractCharacterData} from "../abstracts/AbstractCharacterData";
-import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
+import {DateService} from "../../../services/dateService/DateService";
 
 export class CharacterModel extends AbstractCharacterData implements CharacterInterface {
 	protected metadata: CharacterMetadataInterface;

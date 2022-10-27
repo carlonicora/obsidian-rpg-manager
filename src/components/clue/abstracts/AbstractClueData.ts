@@ -1,8 +1,8 @@
 import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel";
 import {ClueDataInterface} from "../interfaces/ClueDataInterface";
 import {ClueMetadataInterface} from "../interfaces/ClueMetadataInterface";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
-import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
+import {DateService} from "../../../services/dateService/DateService";
 
 export abstract class AbstractClueData extends AbstractModel implements ClueDataInterface {
 	protected metadata: ClueMetadataInterface;

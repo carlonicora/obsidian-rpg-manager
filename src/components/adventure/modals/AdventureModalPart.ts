@@ -1,8 +1,9 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {App} from "obsidian";
-import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
 import {AdventureInterface} from "../interfaces/AdventureInterface";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
+import {IdService} from "../../../services/idService/IdService";
+import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class AdventureModalPart extends AbstractModalPart {
 	private _adventures: AdventureInterface[];
@@ -12,17 +13,17 @@ export class AdventureModalPart extends AbstractModalPart {
 	private _synopsisEl: HTMLTextAreaElement;
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		modal: ModalInterface,
 	) {
-		super(app, modal);
+		super(api, modal);
 
 		if (this.modal.adventureId === undefined) {
-			this.modal.adventureId = this.factories.id.create(ComponentType.Adventure, this.modal.campaignId.id);
+			this.modal.adventureId = this.api.service(IdService).create(ComponentType.Adventure, this.modal.campaignId.id);
 			this.modal.adventureId.id = 0;
 		}
 
-		this._adventures = this.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
+		this._adventures = this.api.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
 	}
 
 	public async addElement(
@@ -56,7 +57,7 @@ export class AdventureModalPart extends AbstractModalPart {
 	public async loadChild(
 		containerEl: HTMLElement,
 	): Promise<void> {
-		this.modal.actModal = this.factories.modals.create(
+		this.modal.actModal = this.api.modals.getPartial(
 			this.modal.campaignSetting,
 			ComponentType.Act,
 			this.modal,

@@ -11,6 +11,7 @@ import {CodeblockWorker} from "./workers/CodeblockWorker";
 import {CodeblockImageWorker} from "./workers/CodeblockImageWorker";
 import {GalleryService} from "../galleryService/GalleryService";
 import {CodeblockRelationshipWorker} from "./workers/CodeblockRelationshipWorker";
+import {CodeblockKeyWorker} from "./workers/CodeblockKeyWorker";
 
 export class CodeblockService extends AbstractService implements CodeblockServiceInterface, ServiceInterface {
 	private _worker: CodeblockWorkerInterface;
@@ -22,11 +23,27 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		this._worker = new CodeblockWorker(this.api);
 	}
 
+	public async addOrUpdate(
+		key: string,
+		value?: string|boolean|number,
+		file?: TFile,
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		if (domain === undefined)
+			return undefined;
+
+		const dataWorker = await new CodeblockKeyWorker(this.api);
+		await dataWorker.addOrUpdate(domain, {key: key, value: value});
+
+		this._worker.updateContent(domain);
+	}
+
 	public async addOrUpdateImage(
 		path: string,
 		caption: string,
+		file?: TFile,
 	): Promise<ImageInterface | undefined> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
 		if (domain === undefined)
 			return undefined;
 
@@ -41,55 +58,77 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 	public async addOrUpdateRelationship(
 		relationship: RelationshipInterface,
+		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
 		if (domain === undefined)
 			return;
 
 		const dataWorker = await new CodeblockRelationshipWorker(this.api);
-		dataWorker.addOrUpdate(domain, relationship);
+		await dataWorker.addOrUpdate(domain, relationship);
+
+		this._worker.updateContent(domain);
 	}
 
 	public async replaceID(
 		file: TFile,
 		id: string,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
 		if (domain === undefined)
 			return;
 
+		//TODO ADD!!!!
+	}
+
+	public async remove(
+		key: string,
+		file?: TFile,
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		if (domain === undefined)
+			return undefined;
+
+		const dataWorker = await new CodeblockKeyWorker(this.api);
+		await dataWorker.remove(domain, key);
+
+		this._worker.updateContent(domain);
 	}
 
 	public async read(
 		file?: TFile,
 		codeblockName = 'RpgManagerData',
 	): Promise<any> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(codeblockName, file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file, codeblockName);
 
 		return domain?.codeblock;
 	}
 
 	public async removeImage(
 		path: string,
+		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
 		if (domain === undefined)
 			return;
 
 		const dataWorker = new CodeblockImageWorker();
-		dataWorker.remove(domain, path);
+		await dataWorker.remove(domain, path);
 
 		this._worker.updateContent(domain);
 	}
 
 	public async removeRelationship(
 		path: string,
+		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
 		if (domain === undefined)
 			return;
 
 		const dataWorker = await new CodeblockRelationshipWorker(this.api);
-		dataWorker.remove(domain, path);
+		await dataWorker.remove(domain, path);
+
+		this._worker.updateContent(domain);
 	}
 }

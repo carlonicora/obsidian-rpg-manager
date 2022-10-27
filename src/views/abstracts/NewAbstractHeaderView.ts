@@ -1,6 +1,5 @@
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {NewHeaderViewInterface} from "../interfaces/NewHeaderViewInterface";
-import {NewViewType} from "../../core/enums/NewViewType";
 import {Component, MarkdownRenderer} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {BreadcrumbService} from "../../services/breadcrumbService/BreadcrumbService";

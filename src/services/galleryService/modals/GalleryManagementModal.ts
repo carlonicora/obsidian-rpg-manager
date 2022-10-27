@@ -1,6 +1,6 @@
 import {GalleryViewType} from "../enums/GalleryViewType";
 import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterface";
-import {AbstractModal} from "../../../core/abstracts/AbstractModal";
+import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
 import {GalleryNavigationModalView} from "../views/modals/GalleryNavigationModalView";
 import {GalleryListModalView} from "../views/modals/GalleryListModalView";
 import {GalleryEditModalView} from "../views/modals/GalleryEditModalView";

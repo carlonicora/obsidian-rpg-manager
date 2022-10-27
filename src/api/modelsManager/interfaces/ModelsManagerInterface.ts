@@ -1,9 +1,9 @@
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {ModelClassInterface} from "./ModelClassInterface";
 import {ModelInterface} from "./ModelInterface";
 import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 import {TFile} from "obsidian";
+import {ClassInterface} from "../../interfaces/ClassInterface";
 
 export interface ModelsManagerInterface {
 	get(
@@ -13,7 +13,7 @@ export interface ModelsManagerInterface {
 	): ModelInterface|undefined;
 
 	register<T extends ModelInterface>(
-		model: ModelClassInterface<T>,
+		model: ClassInterface<T>,
 		type: ComponentType,
 		campaignSettings: CampaignSetting,
 	): void;

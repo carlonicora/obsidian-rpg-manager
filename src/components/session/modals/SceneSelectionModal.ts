@@ -1,5 +1,4 @@
-import {AbstractRpgManagerModal} from "../../../../REFACTOR/abstracts/AbstractRpgManagerModal";
-import {App, TAbstractFile, TFile} from "obsidian";
+import {TAbstractFile, TFile} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
@@ -7,8 +6,12 @@ import {SessionInterface} from "../interfaces/SessionInterface";
 import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SorterType} from "../../../database/enums/SorterType";
+import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 
-export class SceneSelectionModal extends AbstractRpgManagerModal {
+export class SceneSelectionModal extends AbstractModal {
 	private _availableScenes:SceneInterface[];
 	private _scenesEls: Map<string, HTMLInputElement>;
 	private _initialScenesEls: Map<string, boolean>;
@@ -17,14 +20,13 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 	private _selectedAct: ActInterface|undefined;
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		private _session: SessionInterface,
 	) {
-		super(app);
+		super(api);
 		this._scenesEls = new Map<string, HTMLInputElement>();
 		this._loadAvailableScenes();
 	}
-
 
 	onOpen() {
 		super.onOpen();
@@ -41,10 +43,10 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			value: '',
 		});
 
-		const acts = this.database.read<ActInterface>((act: ActInterface) =>
+		const acts = this.api.database.read<ActInterface>((act: ActInterface) =>
 			act.id.type === ComponentType.Act &&
 			act.id.campaignId === this._session.id.campaignId
-		).sort(this.factories.sorter.create<ActInterface>([
+		).sort(this.api.service(SorterService).create<ActInterface>([
 			new SorterComparisonElement((act: ActInterface) => act.file.stat.mtime, SorterType.Descending)
 		]));
 
@@ -54,7 +56,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 
 		this._actSelectorEl.addEventListener('change', () => {
 			if (this._actSelectorEl.value !== '') {
-				this._selectedAct = this.database.readByPath<ActInterface>(this._actSelectorEl.value);
+				this._selectedAct = this.api.database.readByPath<ActInterface>(this._actSelectorEl.value);
 			} else {
 				this._selectedAct = undefined;
 			}
@@ -73,7 +75,7 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 				.then(() => {
 					this._session.readMetadata()
 						.then(() => {
-							DatabaseInitialiser.reinitialiseRelationships(this._session, this.database);
+							DatabaseInitialiser.reinitialiseRelationships(this._session, this.api.database);
 						});
 						return;
 				})
@@ -93,13 +95,13 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 
 	private _loadAvailableScenes(
 	): void {
-		this._availableScenes = this.database.read<SceneInterface>(
+		this._availableScenes = this.api.database.read<SceneInterface>(
 			(scene: SceneInterface) =>
 				scene.id.type === ComponentType.Scene &&
 				scene.id.campaignId === this._session.id.campaignId &&
 				(this._selectedAct !== undefined ? scene.id.actId === this._selectedAct.id.actId : true) &&
 				(scene.session === undefined || scene.session?.id.sessionId === this._session.id.sessionId),
-		).sort(this.factories.sorter.create<SceneInterface>([
+		).sort(this.api.service(SorterService).create<SceneInterface>([
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
 			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
@@ -167,10 +169,10 @@ export class SceneSelectionModal extends AbstractRpgManagerModal {
 			if (initialSceneCheked === undefined || sceneEl.checked !== initialSceneCheked) {
 				const file: TAbstractFile | null = this.app.vault.getAbstractFileByPath(path);
 				if (file != null && file instanceof TFile) {
-					this.manipulators.codeblock.updateInFile(
-						file,
+					this.api.service(CodeblockService).addOrUpdate(
 						'data.sessionId',
 						(sceneEl.checked === true ? (this._session.id.sessionId ?? '') : ''),
+						file,
 					);
 				}
 			}

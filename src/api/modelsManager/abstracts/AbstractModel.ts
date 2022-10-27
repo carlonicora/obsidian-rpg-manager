@@ -228,7 +228,7 @@ export abstract class AbstractModel implements ModelInterface {
 		try {
 			this.campaign;
 		} catch (e) {
-			throw new ComponentNotFoundError(this.api.app, this.id);
+			throw new ComponentNotFoundError(this.api, this.id);
 		}
 	}
 }

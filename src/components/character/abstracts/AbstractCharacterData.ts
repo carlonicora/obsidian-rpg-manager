@@ -2,9 +2,9 @@ import {AbstractModel} from "../../../api/modelsManager/abstracts/AbstractModel"
 import {Pronoun} from "../../../services/pronounService/enums/Pronoun";
 import {CharacterDataInterface} from "../interfaces/CharacterDataInterface";
 import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterface";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
-import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
 import {PronounService} from "../../../services/pronounService/PronounService";
+import {DateService} from "../../../services/dateService/DateService";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 
 export class AbstractCharacterData extends AbstractModel implements CharacterDataInterface {
 	protected metadata: CharacterMetadataInterface;

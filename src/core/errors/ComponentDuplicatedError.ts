@@ -1,4 +1,3 @@
-import {App} from "obsidian";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {ModelInterface} from "../../api/modelsManager/interfaces/ModelInterface";
 import {AbstractRpgManagerError} from "../abstracts/AbstractRpgManagerError";
@@ -26,7 +25,7 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		if (this._duplication.length > 1) {
 			this._duplication.forEach((component: ModelInterface) => {
 				response += ' - ' + component.file.basename + '\n';
-			})
+			});
 		} else if (this._duplicated !== undefined) {
 			response += ' - ' + this._duplication[0].file.basename + '\n' +
 				' - ' + this._duplicated?.file.basename + '\n';
@@ -49,7 +48,7 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 		if (this._duplication.length > 1) {
 			this._duplication.forEach((component: ModelInterface) => {
 				response.push(component.file.path);
-			})
+			});
 		} else if (this._duplicated !== undefined) {
 			response.push(this._duplication[0].file.path);
 			response.push(this._duplicated?.file.path);

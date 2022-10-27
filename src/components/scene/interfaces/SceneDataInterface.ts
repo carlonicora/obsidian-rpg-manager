@@ -1,6 +1,6 @@
 import {StoryCircleStage} from "../../../services/plotsServices/enums/StoryCircleStage";
 import {SceneType} from "../enums/SceneType";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 
 export interface SceneDataInterface {
 	get action(): string|undefined;

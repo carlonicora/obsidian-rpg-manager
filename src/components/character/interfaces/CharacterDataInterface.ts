@@ -1,5 +1,5 @@
 import {Pronoun} from "../../../services/pronounService/enums/Pronoun";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 
 export interface CharacterDataInterface {
 	get death(): DateInterface | undefined;

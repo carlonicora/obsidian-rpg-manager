@@ -3,8 +3,8 @@ import {CodeblockDomainInterface} from "./CodeblockDomainInterface";
 
 export interface CodeblockWorkerInterface {
 	readContent(
-		codeblockName?: string,
 		file?: TFile,
+		codeblockName?: string,
 	): Promise<CodeblockDomainInterface|undefined>;
 
 	updateContent(

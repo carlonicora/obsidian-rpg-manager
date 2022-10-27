@@ -1,5 +1,5 @@
-import {AbstractRpgManagerModal} from "../../../../REFACTOR/abstracts/AbstractRpgManagerModal";
 import {Component, MarkdownRenderer} from "obsidian";
+import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
 
 interface SceneTypeInformation {
 	title: string,
@@ -59,7 +59,7 @@ const sceneTypeDescription: SceneTypeInformation[] = [
 		isActive: true},
 ];
 
-export class SceneTypeDescriptionModal extends AbstractRpgManagerModal {
+export class SceneTypeDescriptionModal extends AbstractModal {
 	private _sceneTypeDescriptionsEl: HTMLDivElement;
 
 	onOpen() {

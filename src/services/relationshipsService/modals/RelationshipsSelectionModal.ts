@@ -6,7 +6,7 @@ import {ModelInterface} from "../../../api/modelsManager/interfaces/ModelInterfa
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
-import {AbstractModal} from "../../../core/abstracts/AbstractModal";
+import {AbstractModal} from "../../../api/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {RelationshipService} from "../RelationshipService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";

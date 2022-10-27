@@ -2,8 +2,8 @@ import {SessionDataInterface} from "../interfaces/SessionDataInterface";
 import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
 import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
 import {Plots} from "../../../services/plotsServices/Plots";
-import {DateInterface} from "../../../../REFACTOR/services/dateService/interfaces/DateInterface";
-import {DateService} from "../../../../REFACTOR/services/dateService/DateService";
+import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
+import {DateService} from "../../../services/dateService/DateService";
 
 export class AbstractSessionData extends Plots implements SessionDataInterface {
 	protected metadata: SessionMetadataInterface;

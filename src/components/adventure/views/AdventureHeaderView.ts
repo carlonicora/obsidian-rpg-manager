@@ -1,20 +1,12 @@
-import {AbstractPlotHeaderView} from "../../../../REFACTOR/views/abstracts/AbstractPlotHeaderView";
-import {HeaderResponseInterface} from "../../../../REFACTOR/responses/interfaces/HeaderResponseInterface";
+import {NewAbstractHeaderView} from "../../../views/abstracts/NewAbstractHeaderView";
+import {NewHeaderViewInterface} from "../../../views/interfaces/NewHeaderViewInterface";
 import {AdventureInterface} from "../interfaces/AdventureInterface";
-export class AdventureHeaderView extends AbstractPlotHeaderView {
-	protected currentComponent: AdventureInterface;
+
+export class AdventureHeaderView extends NewAbstractHeaderView implements NewHeaderViewInterface {
+	public model: AdventureInterface;
 
 	public render(
-		container: HTMLElement,
-		data: HeaderResponseInterface,
 	): void {
-		super.render(container, data);
-
-		if (this.settings.usePlotStructures && data.currentComponent.hasAbtPlot && !data.currentComponent.abt.isEmpty)
-			this.addAbtPlot(data.currentComponent.abt);
-
-		if (this.settings.usePlotStructures && data.currentComponent.hasStoryCirclePlot && !data.currentComponent.storyCircle.isEmpty)
-			this.addStoryCirclePlot(data.currentComponent.storyCircle);
 
 	}
 }

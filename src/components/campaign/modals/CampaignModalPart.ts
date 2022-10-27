@@ -1,10 +1,11 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
 import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {App} from "obsidian";
-import {ModalInterface} from "../../../../REFACTOR/interfaces/ModalInterface";
-import {IdInterface} from "../../../services/id/interfaces/IdInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
+import {IdService} from "../../../services/idService/IdService";
+import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
 	private _campaigns: CampaignInterface[];
@@ -17,12 +18,12 @@ export class CampaignModalPart extends AbstractModalPart {
 	private _currentDateEl: HTMLInputElement;
 
 	constructor(
-		app: App,
+		api: RpgManagerApiInterface,
 		modal: ModalInterface,
 	) {
-		super(app, modal);
+		super(api, modal);
 
-		this._campaigns = this.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
+		this._campaigns = this.api.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
 	}
 
 	public async addElement(
@@ -57,7 +58,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		containerEl: HTMLElement
 	): Promise<void> {
 		if (this.modal.type !== ComponentType.Adventure && this.modal.type !== ComponentType.Session && this.modal.type !== ComponentType.Act && this.modal.type !== ComponentType.Scene) {
-			this.modal.elementModal = this.factories.modals.create(
+			this.modal.elementModal = this.api.modals.getPartial(
 				this.modal.campaignSetting,
 				this.modal.type,
 				this.modal,
@@ -67,7 +68,7 @@ export class CampaignModalPart extends AbstractModalPart {
 			);
 		} else {
 			if (this.modal.type === ComponentType.Adventure || this.modal.type === ComponentType.Act || this.modal.type === ComponentType.Scene) {
-				this.modal.adventureModal = this.factories.modals.create(
+				this.modal.adventureModal = this.api.modals.getPartial(
 					this.modal.campaignSetting,
 					ComponentType.Adventure,
 					this.modal,
@@ -77,7 +78,7 @@ export class CampaignModalPart extends AbstractModalPart {
 					containerEl,
 				);
 			} else if (this.modal.type === ComponentType.Session){
-				this.modal.sessionModal = this.factories.modals.create(
+				this.modal.sessionModal = this.api.modals.getPartial(
 					this.modal.campaignSetting,
 					ComponentType.Session,
 					this.modal,
@@ -99,7 +100,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		if (this.modal.campaignId === undefined) {
-			this.modal.campaignId = this.factories.id.create(ComponentType.Campaign, 1);
+			this.modal.campaignId = this.api.service(IdService).create(ComponentType.Campaign, 1);
 		}
 
 		this._campaigns.forEach((campaign: CampaignInterface) => {
@@ -172,7 +173,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 	private _selectCampaign(
 	): void {
-		const campaignId:IdInterface|undefined = this.factories.id.create(ComponentType.Campaign, this._campaignEl.value);
+		const campaignId: IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, this._campaignEl.value);
 		if (campaignId !== undefined) this.modal.campaignId = campaignId;
 
 		this._childEl.empty();

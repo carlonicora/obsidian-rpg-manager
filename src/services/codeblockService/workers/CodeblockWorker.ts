@@ -28,8 +28,8 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 	}
 
 	public async readContent(
-		codeblockName = 'RpgManagerData',
 		file?: TFile,
+		codeblockName = 'RpgManagerData',
 	): Promise<CodeblockDomainInterface|undefined> {
 		let editor: Editor|undefined = undefined;
 		let cache: CachedMetadata|null = null;

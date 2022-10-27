@@ -1,4 +1,4 @@
-import {AbstractModalPart} from "../../../../REFACTOR/abstracts/AbstractModalPart";
+import {AbstractModalPart} from "../../../api/modalsManager/abstracts/AbstractModalPart";
 
 export class FactionModalPart extends AbstractModalPart {
 	public async addElement(

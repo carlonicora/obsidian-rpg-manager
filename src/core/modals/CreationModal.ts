@@ -1,9 +1,13 @@
-import {App, CachedMetadata, MarkdownView, Modal, TFile} from "obsidian";
+import {CachedMetadata, MarkdownView, Modal, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ModalPartInterface} from "../interfaces/ModalPartInterface";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {IdService} from "../../services/idService/IdService";
+import {TagService} from "../../services/tagService/TagService";
+import {ComponentNotesInterface} from "../../api/templatesManager/interfaces/ComponentNotesInterface";
 
 export class CreationModal extends Modal implements ModalInterface {
 	public saver: ModalPartInterface;
@@ -32,10 +36,10 @@ export class CreationModal extends Modal implements ModalInterface {
 	public availableSpecificTemplates: TFile[] = [];
 	public availableGenericTemplates: TFile[] = [];
 
-	private _internalTemplates: Map<ComponentType, ComponentNotesTemplateFactoryInterface>;
+	private _internalTemplates: Map<ComponentType, ComponentNotesInterface>;
 
 	constructor(
-		public app: App,
+		public api: RpgManagerApiInterface,
 		public type: ComponentType,
 		private _create: boolean = true,
 		private _name: string|null = null,
@@ -46,14 +50,14 @@ export class CreationModal extends Modal implements ModalInterface {
 		super(app);
 
 		if (campaignId !== undefined) {
-			const campaign:IdInterface|undefined = this.factories.id.create(ComponentType.Campaign, campaignId);
+			const campaign:IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, campaignId);
 			if (campaign !== undefined) {
 				this.campaignId = campaign;
 
 				if (adventureId !== undefined) {
-					this.adventureId = this.factories.id.create(ComponentType.Adventure, campaignId, adventureId);
+					this.adventureId = this.api.service(IdService).create(ComponentType.Adventure, campaignId, adventureId);
 
-					if (actId !== undefined) this.actId = this.factories.id.create(ComponentType.Act, campaignId, adventureId, actId);
+					if (actId !== undefined) this.actId = this.api.service(IdService).create(ComponentType.Act, campaignId, adventureId, actId);
 				}
 			}
 		}
@@ -65,10 +69,10 @@ export class CreationModal extends Modal implements ModalInterface {
 			.forEach((file: TFile) => {
 				const metadata: CachedMetadata|null = this.app.metadataCache.getFileCache(file);
 				if (metadata != null) {
-					const tags = this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
+					const tags = this.api.service(TagService).sanitiseTags(metadata.frontmatter?.tags);
 					if (tags.length > 0) {
-						const tags = this.tagHelper.sanitiseTags(metadata.frontmatter?.tags);
-						const templateType = this.tagHelper.getTemplateDataType(tags);
+						const tags = this.api.service(TagService).sanitiseTags(metadata.frontmatter?.tags);
+						const templateType = this.api.service(TagService).getTemplateDataType(tags);
 						if (templateType == undefined) this.availableGenericTemplates.push(file);
 						if (templateType === this.type) this.availableSpecificTemplates.push(file);
 					} else {
@@ -95,12 +99,12 @@ export class CreationModal extends Modal implements ModalInterface {
 		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + ComponentType[this.type]});
 
 		//Navigation & Additional Info
-		const gridEl = contentEl.createDiv({cls: 'rpgm-grid'})
+		const gridEl = contentEl.createDiv({cls: 'rpgm-grid'});
 		const navigationEl = gridEl.createDiv({cls: 'navigation'});
 		this.additionalInformationEl = gridEl.createDiv({cls: 'additionalElements'});
 
 		//Title Input
-		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
+		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'});
 		titleEl.createEl('label', {text: 'Title of your new ' + ComponentType[this.type]});
 		this.title = titleEl.createEl('input', {type: 'text'});
 		if (this._name !== null) {
@@ -109,7 +113,7 @@ export class CreationModal extends Modal implements ModalInterface {
 		this.titleError = navigationEl.createEl('p', {cls: 'error', text: 'Please specify a valid title'});
 
 		//Template Selection
-		const selectionTitleEl = navigationEl.createDiv({cls: 'rpgm-input-title'})
+		const selectionTitleEl = navigationEl.createDiv({cls: 'rpgm-input-title'});
 		selectionTitleEl.createEl('label', {text: 'Template to use'});
 		this.templateEl = selectionTitleEl.createEl('select');
 		this.templateEl.createEl('option', {
@@ -125,7 +129,7 @@ export class CreationModal extends Modal implements ModalInterface {
 		this.templateEl.createEl('option', {
 			text: '',
 			value: '',
-		})
+		});
 
 		if (this.availableSpecificTemplates.length > 0) {
 			const templateOptionEl = this.templateEl.createEl('option', {
@@ -157,11 +161,11 @@ export class CreationModal extends Modal implements ModalInterface {
 			});
 		}
 
-		this.campaignModal = this.factories.modals.create(
+		this.campaignModal = this.api.modals.getPartial(
 			this.campaignSetting,
 			ComponentType.Campaign,
 			this,
-		)
+		);
 
 		const childElement = navigationEl.createDiv();
 
@@ -216,7 +220,7 @@ export class CreationModal extends Modal implements ModalInterface {
 			this.sceneId,
 			this.sessionId,
 			this.saver.prepareAdditionalInformation(),
-		)
+		);
 		this.close();
 	}
 
