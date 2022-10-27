@@ -1,7 +1,7 @@
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ViewClassInterface} from "../../viewsManager/interfaces/ViewClassInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {NewViewType} from "../../../core/enums/NewViewType";
+import {ViewType} from "../../viewsManager/enum/ViewType";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {ClassInterface} from "../../../api/interfaces/ClassInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
@@ -16,5 +16,5 @@ export interface ComponentInterface {
 	get model(): ClassInterface<ModelInterface>;
 	get template(): TemplateClassInterface<TemplateInterface>;
 	get type(): ComponentType;
-	get views(): Map<ViewClassInterface, NewViewType>;
+	get views(): Map<ViewClassInterface, ViewType>;
 }

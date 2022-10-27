@@ -131,4 +131,18 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 		this._worker.updateContent(domain);
 	}
+
+	public async selectRpgManagerData(
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+
+		if (domain === undefined || domain.editor === undefined)
+			return;
+
+		domain.editor.setSelection(
+			domain.codeblockStart,
+			domain.codeblockEnd,
+		);
+		domain.editor.focus();
+	}
 }

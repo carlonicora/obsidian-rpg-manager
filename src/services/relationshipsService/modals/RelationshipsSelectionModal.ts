@@ -1,7 +1,7 @@
 import {Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
-import {SorterType} from "../../../database/enums/SorterType";
+import {SorterType} from "../../searchService/enums/SorterType";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";

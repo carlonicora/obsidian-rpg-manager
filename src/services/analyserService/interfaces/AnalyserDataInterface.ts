@@ -1,5 +1,5 @@
-import {SceneType} from "../../../../src/components/scene/enums/SceneType";
 import {AbtStage} from "../../plotsServices/enums/AbtStage";
+import {SceneType} from "../enums/SceneType";
 
 export interface AnalyserDataInterface {
 	dataLength: number;

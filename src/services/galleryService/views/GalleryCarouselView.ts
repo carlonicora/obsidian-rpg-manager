@@ -1,8 +1,8 @@
-import {AbstractRpgManager} from "../../../../REFACTOR/abstracts/AbstractRpgManager";
 import {ImageInterface} from "../interfaces/ImageInterface";
-import {App, Component, MarkdownRenderer} from "obsidian";
+import {Component, MarkdownRenderer} from "obsidian";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
-export class GalleryCarouselView extends AbstractRpgManager {
+export class GalleryCarouselView {
 	private _currentImage: number;
 	private _imagesCount: number;
 
@@ -11,11 +11,9 @@ export class GalleryCarouselView extends AbstractRpgManager {
 	private _imageCounterEl: HTMLDivElement;
 
 	constructor(
-		app: App,
+		private _api: RpgManagerApiInterface,
 		private _images: ImageInterface[],
 	) {
-		super(app);
-
 		this._currentImage = 0;
 		this._imagesCount = this._images.length;
 		this._imageGroups = [];

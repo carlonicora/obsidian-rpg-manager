@@ -1,6 +1,5 @@
 import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
-import {ComponentDataInterface} from "../../../../REFACTOR/interfaces/ComponentDataInterface";
 
-export interface ActDataInterface extends ComponentDataInterface {
+export interface ActDataInterface {
 	get abtStage(): AbtStage|undefined;
 }

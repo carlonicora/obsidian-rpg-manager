@@ -3,7 +3,7 @@ import {CampaignSetting} from "../campaign/enums/CampaignSetting";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../managers/viewsManager/interfaces/ViewClassInterface";
-import {NewViewType} from "../../core/enums/NewViewType";
+import {ViewType} from "../../managers/viewsManager/enum/ViewType";
 import {FactionModel} from "./models/FactionModel";
 import {FactionHeaderView} from "./views/FactionHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
@@ -38,9 +38,9 @@ export class FactionComponent implements ComponentInterface {
 		return ComponentType.Faction;
 	}
 
-	public get views(): Map<ViewClassInterface, NewViewType> {
-		return new Map<ViewClassInterface, NewViewType>([
-			[FactionHeaderView, NewViewType.Header],
+	public get views(): Map<ViewClassInterface, ViewType> {
+		return new Map<ViewClassInterface, ViewType>([
+			[FactionHeaderView, ViewType.Header],
 		]);
 	}
 }

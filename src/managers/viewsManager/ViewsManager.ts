@@ -1,5 +1,5 @@
 import {ViewsManagerInterface} from "./interfaces/ViewsManagerInterface";
-import {NewViewType} from "../../core/enums/NewViewType";
+import {ViewType} from "./enum/ViewType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {ViewClassInterface} from "./interfaces/ViewClassInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
@@ -15,7 +15,7 @@ export class ViewsManager implements ViewsManagerInterface {
 	}
 
 	create(
-		viewType: NewViewType,
+		viewType: ViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
 	): ViewClassInterface|undefined {
@@ -37,7 +37,7 @@ export class ViewsManager implements ViewsManagerInterface {
 
 	register(
 		view: ViewClassInterface,
-		viewType: NewViewType,
+		viewType: ViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting
 	): void {
@@ -45,7 +45,7 @@ export class ViewsManager implements ViewsManagerInterface {
 	}
 
 	private _getIdentifier(
-		viewType: NewViewType,
+		viewType: ViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
 	): string {

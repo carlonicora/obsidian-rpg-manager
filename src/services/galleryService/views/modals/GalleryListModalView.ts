@@ -4,6 +4,7 @@ import {ImageInterface} from "../../interfaces/ImageInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 import {GalleryViewType} from "../../enums/GalleryViewType";
 import {GalleryEditModalView} from "./GalleryEditModalView";
+import {GalleryService} from "../../GalleryService";
 
 export class GalleryListModalView extends AbstractGalleryModalView implements GalleryViewInterface {
 	private _masonryEl: HTMLDivElement;
@@ -15,7 +16,7 @@ export class GalleryListModalView extends AbstractGalleryModalView implements Ga
 
 		this._masonryEl = containerEl.createDiv({cls: 'gallery-operations-masonry'});
 
-		this.component.images.forEach((image: ImageInterface) => {
+		this.model.images.forEach((image: ImageInterface) => {
 			const masonryItemEl = this._masonryEl.createDiv({cls: 'gallery-operations-masonry-item'});
 
 			const imageContainerEl = masonryItemEl.createDiv({cls: 'gallery-operations-masonry-item-container'});
@@ -37,7 +38,7 @@ export class GalleryListModalView extends AbstractGalleryModalView implements Ga
 			}
 
 			imageEl.addEventListener('click', () => {
-				const view = this.factories.imageView.create(GalleryViewType.ModalEdit, this.component);
+				const view = this.api.service(GalleryService).createView(GalleryViewType.ModalEdit, this.model);
 				(<GalleryEditModalView>view).image = image;
 				view.render(containerEl);
 			});

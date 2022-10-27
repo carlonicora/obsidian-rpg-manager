@@ -1,5 +1,5 @@
 import {SorterComparisonElementInterface} from "./interfaces/SorterComparisonElementInterface";
-import {SorterType} from "../../database/enums/SorterType";
+import {SorterType} from "../searchService/enums/SorterType";
 import {SorterInterface} from "./interfaces/SorterInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 

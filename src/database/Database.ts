@@ -1,7 +1,7 @@
 import {CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../core/enums/ComponentType";
 import {IdInterface} from "../services/idService/interfaces/IdInterface";
-import {ComponentNotFoundError} from "../core/errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ModelInterface} from "../managers/modelsManager/interfaces/ModelInterface";
 import {CampaignInterface} from "../components/campaign/interfaces/CampaignInterface";
@@ -10,13 +10,13 @@ import {SessionInterface} from "../components/session/interfaces/SessionInterfac
 import {ActInterface} from "../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
-import {ComponentDuplicatedError} from "../core/errors/ComponentDuplicatedError";
+import {ComponentDuplicatedError} from "../errors/ComponentDuplicatedError";
 import {ComponentStage} from "../core/enums/ComponentStage";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
-import {RpgErrorInterface} from "../core/interfaces/RpgErrorInterface";
+import {RpgErrorInterface} from "../errors/interfaces/RpgErrorInterface";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 import {RunningTimeService} from "../services/runningTimeService/RunningTimeService";
-import {AbstractRpgManagerError} from "../core/abstracts/AbstractRpgManagerError";
+import {AbstractRpgManagerError} from "../errors/abstracts/AbstractRpgManagerError";
 import {GalleryService} from "../services/galleryService/GalleryService";
 import {
 	AllComponentManipulatorService
@@ -45,7 +45,7 @@ export class Database extends Component implements DatabaseInterface {
 		this.registerEvent(this._api.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
 
 		this._api.app.workspace.trigger("rpgmanager:index-complete");
-		this._api.app.workspace.trigger("rpgmanager:refresh-views");
+		this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
 
 		this._api.service(RunningTimeService).updateMedianTimes(true);
 	}
@@ -230,7 +230,7 @@ export class Database extends Component implements DatabaseInterface {
 		file: TFile,
 	): Promise<void> {
 		if (this.delete(file.path)){
-			this._api.app.workspace.trigger("rpgmanager:refresh-views");
+			this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
 		}
 	}
 
@@ -263,7 +263,7 @@ export class Database extends Component implements DatabaseInterface {
 						this._api.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
 					}
 
-					this._api.app.workspace.trigger("rpgmanager:refresh-views");
+					this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
 				});
 		}
 	}
@@ -303,7 +303,7 @@ export class Database extends Component implements DatabaseInterface {
 
 			DatabaseInitialiser.reinitialiseRelationships(component, this)
 				.then(() => {
-					this._api.app.workspace.trigger("rpgmanager:refresh-views");
+					this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
 				});
 		} catch (e) {
 			if (e instanceof AbstractRpgManagerError) {

@@ -1,4 +1,4 @@
-import {App, Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
+import {Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {SettingsFactory} from "./factories/SettingsFactory";
@@ -10,6 +10,7 @@ import {
 import {SettingType} from "./enums/SettingType";
 import {SettingInterface} from "./interfaces/SettingsInterface";
 import {tableFieldName} from "../../REFACTOR/views/enums/TableField";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private _plugin: RpgManagerInterface;
@@ -22,10 +23,10 @@ export class RpgManagerSettings extends PluginSettingTab {
 	private _advancedSettingsDescription: Map<string, {title: string, description: string}> = new Map<string, {title: string, description: string}>();
 
 	constructor(
-		app: App,
+		private _api: RpgManagerApiInterface,
 	) {
 		super(
-			app,
+			_api.app,
 			(<unknown>app.plugins.getPlugin('rpg-manager')) as Plugin_2,
 		);
 
@@ -55,7 +56,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this._advancedSettingsDescription.set('SessionList', {title: 'SessionModel List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
 		this._advancedSettingsDescription.set('SubplotList', {title: 'SubplotModel List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
 
-		this._settingsUpdater = new SettingsUpdater(this.app);
+		this._settingsUpdater = new SettingsUpdater(this._api);
 		this._settingsFactory = new SettingsFactory(this.app, this._plugin, this._map, this.containerEl);
 	}
 
@@ -218,6 +219,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 			await this._plugin.updateSettings(partialSettings);
 		}
 
-		this.app.workspace.trigger("rpgmanager:refresh-views");
+		this.app.workspace.trigger("rpgmanager:refresh-staticViews");
 	}
 }

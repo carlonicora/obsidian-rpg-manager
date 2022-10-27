@@ -1,8 +1,8 @@
 import {Component, MarkdownRenderer, TFile} from "obsidian";
-import {RpgErrorInterface} from "../../core/interfaces/RpgErrorInterface";
+import {RpgErrorInterface} from "../../errors/interfaces/RpgErrorInterface";
 import {AbstractModal} from "../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {ViewType} from "../../core/enums/ViewType";
+import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticViewType";
 
 export class DatabaseErrorModal extends AbstractModal {
 	constructor(
@@ -47,10 +47,7 @@ export class DatabaseErrorModal extends AbstractModal {
 
 		const viewErrorsButtonEl = contentEl.createEl('button', {text: 'Fix errors'});
 		viewErrorsButtonEl.addEventListener("click", () => {
-			this.app.plugins.getPlugin('rpg-manager').factories.views.showObsidianView(
-				ViewType.Errors,
-				[this._misconfiguredTags],
-			);
+			this.api.staticViews.create(StaticViewType.Errors, [this._misconfiguredTags]);
 			this.close();
 		});
 	}

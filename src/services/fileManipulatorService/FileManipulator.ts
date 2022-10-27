@@ -44,7 +44,7 @@ export class FileManipulator implements FileManipulatorInterface {
 								this._api.service(RunningTimeService).updateMedianTimes();
 						}
 
-						this._api.app.workspace.trigger("rpgmanager:force-refresh-views");
+						this._api.app.workspace.trigger("rpgmanager:force-refresh-staticViews");
 						return true;
 					});
 			});

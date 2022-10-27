@@ -1,7 +1,5 @@
-import {TableResponseElementInterface} from "./interfaces/TableResponseElementInterface";
-import {ModelInterface} from "../../src/api/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../../src/services/relationshipsService/interfaces/RelationshipInterface";
-import {ContentInterface} from "./contents/interfaces/ContentInterface";
+import {ModelInterface} from "../../src/managers/modelsManager/interfaces/ModelInterface";
 
 export class ResponseTableElement implements TableResponseElementInterface {
 	public elements: ContentInterface[];

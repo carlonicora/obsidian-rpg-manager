@@ -23,6 +23,8 @@ import {Bootstrapper} from "./Bootstrapper";
 import {FetchersManagerInterface} from "../managers/fetchersManager/interfaces/FetchersManagerInterface";
 import {FetchersManager} from "../managers/fetchersManager/FetchersManager";
 import {FetcherInterface} from "../managers/fetchersManager/interfaces/FetcherInterface";
+import {StaticViewsManagerInterface} from "../managers/staticViewsManager/interfaces/StaticViewsManagerInterface";
+import {StaticViewsManager} from "../managers/staticViewsManager/StaticViewsManager";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -32,6 +34,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	private _modals: ModalsManagerInterface;
 	private _models: ModelsManagerInterface;
 	private _services: ServiceManagerInterface;
+	private _staticViews: StaticViewsManagerInterface;
 	private _templates: TemplatesManagerInterface;
 	private _views: ViewsManagerInterface;
 	private _version: string;
@@ -48,6 +51,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		this._modals = new ModalsManager(this);
 		this._models = new ModelsManager(this);
 		this._services = new ServicesManager(this);
+		this._staticViews = new StaticViewsManager(this);
 		this._templates = new TemplatesManager(this);
 		this._views = new ViewsManager(this);
 	}
@@ -90,6 +94,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	public get settings(): RpgManagerSettingsInterface {
 		return this._plugin.settings;
+	}
+
+	public get staticViews(): StaticViewsManagerInterface {
+		return this._staticViews;
 	}
 
 	public get templates(): TemplatesManagerInterface {

@@ -33,7 +33,7 @@ export class SceneBuilderModal extends AbstractModal {
 
 	onClose() {
 		super.onClose();
-		this.app.workspace.trigger("rpgmanager:force-refresh-views");
+		this.app.workspace.trigger("rpgmanager:force-refresh-staticViews");
 	}
 
 	onOpen() {

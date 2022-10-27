@@ -3,17 +3,28 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
 import {ComponentStage} from "../../../core/enums/ComponentStage";
 import {AbstractSessionData} from "../abstracts/AbstractSessionData";
-import {FilePatternPositionInterface} from "../../../../REFACTOR/services/manipulators/interfaces/FilePatternPositionInterface";
+import {FileManipulatorService} from "../../../services/fileManipulatorService/FileManipulatorService";
+import {FileManipulatorInterface} from "../../../services/fileManipulatorService/interfaces/FileManipulatorInterface";
+import {
+	FilePatternPositionInterface
+} from "../../../services/fileManipulatorService/interfaces/FilePatternPositionInterface";
 
 export class SessionModel extends AbstractSessionData implements SessionInterface {
-	protected metadata: SessionMetadataInterface;
 	public stage: ComponentStage = ComponentStage.Run;
+
+	protected metadata: SessionMetadataInterface;
+
 	private _sceneNoteListPattern: FilePatternPositionInterface|undefined = undefined;
+	private _fileManipulator: FileManipulatorInterface|undefined;
 
 	public async initialiseData(
 	): Promise<void> {
 		const pattern: string[] = ['### Storyteller Diary','-', '', '###'];
-		this._sceneNoteListPattern = await this.fileManipulator.patternPosition(pattern);
+		this._fileManipulator = await this.api.service(FileManipulatorService).read(this.file);
+
+		if (this._fileManipulator !== undefined)
+			this._sceneNoteListPattern = await await this.api.service(FileManipulatorService).patternPosition(this._fileManipulator, pattern);
+
 	}
 
 	get isSceneNoteListAvailable(): boolean {
@@ -23,8 +34,10 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 	public async replaceSceneNoteList(
 		content: string[],
 	): Promise<void> {
-		if (this._sceneNoteListPattern !== undefined) this.fileManipulator.replacePattern(this._sceneNoteListPattern, content);
-}
+		if (this._fileManipulator !== undefined && this._sceneNoteListPattern !== undefined)
+			this.api.service(FileManipulatorService).replacePattern(this._fileManipulator, this._sceneNoteListPattern, content);
+
+	}
 
 	get nextSession(): SessionInterface | null {
 		return this._adjacentSession(true);

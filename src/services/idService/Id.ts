@@ -1,18 +1,18 @@
 import {ComponentType} from "../../core/enums/ComponentType";
 import {IdTagValueInterface} from "./interfaces/IdTagValueInterface";
 import {IdTagStatus} from "./enums/IdTagStatus";
-import {App} from "obsidian";
-import {TagMisconfiguredError} from "../../core/errors/TagMisconfiguredError";
+import {TagMisconfiguredError} from "../../errors/TagMisconfiguredError";
 import {IdInterface} from "./interfaces/IdInterface";
-import {AbstractRpgManager} from "../../../REFACTOR/abstracts/AbstractRpgManager";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {TagService} from "../tagService/TagService";
 
-export class Id extends AbstractRpgManager implements IdInterface{
+export class Id  implements IdInterface{
 	public tagMap: Map<ComponentType, IdTagValueInterface>;
 	public campaignSettings: CampaignSetting = CampaignSetting.Agnostic;
 
 	constructor(
-		app: App,
+		private _api: RpgManagerApiInterface,
 		public type: ComponentType,
 		campaignId: string|undefined,
 		adventureId: string|undefined,
@@ -21,8 +21,6 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		sessionId: string|undefined,
 		private _existingTag: string|undefined,
 	) {
-		super(app);
-
 		this.tagMap = new Map();
 
 		this._generateTagValue(ComponentType.Campaign, campaignId);
@@ -74,7 +72,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 	): string {
 		if (this._existingTag !== undefined) return this._existingTag;
 
-		const tag = this.tagHelper.dataSettings.get(this.type);
+		const tag = this._api.service(TagService).dataSettings.get(this.type);
 		if (tag === undefined) throw new Error('');
 
 		let ids = '';
@@ -103,7 +101,7 @@ export class Id extends AbstractRpgManager implements IdInterface{
 	): number {
 		const response = this.getTypeValue(ComponentType.Campaign);
 
-		if (response === undefined) throw new TagMisconfiguredError(this.app, this);
+		if (response === undefined) throw new TagMisconfiguredError(this._api, this);
 
 		return response;
 	}
@@ -233,6 +231,6 @@ export class Id extends AbstractRpgManager implements IdInterface{
 		if (typeValue.status === IdTagStatus.Valid) return typeValue.value;
 		if (typeValue.status === IdTagStatus.NotRequired) return undefined;
 
-		throw new TagMisconfiguredError(this.app, this);
+		throw new TagMisconfiguredError(this._api, this);
 	}
 }

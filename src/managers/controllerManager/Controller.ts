@@ -10,13 +10,13 @@ import {
 import {ControllerMetadataInterface} from "./interfaces/ControllerMetadataInterface";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {ResponseDataInterface} from "../../../REFACTOR/responses/interfaces/ResponseDataInterface";
-import {NewViewType} from "../../core/enums/NewViewType";
-import {ViewInterface} from "../viewsManager/interfaces/ViewInterface";
+import {ViewType} from "../viewsManager/enum/ViewType";
+import {StaticViewInterface} from "../staticViewsManager/interfaces/StaticViewInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {RelationshipType} from "../../services/relationshipsService/enums/RelationshipType";
 import {RelationshipService} from "../../services/relationshipsService/RelationshipService";
 import {ViewClassInterface} from "../viewsManager/interfaces/ViewClassInterface";
-import {NewRelationshipsViewInterface} from "../../views/interfaces/NewRelationshipsViewInterface";
+import {NewRelationshipsViewInterface} from "../viewsManager/interfaces/NewRelationshipsViewInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class Controller extends MarkdownRenderChild {
@@ -24,7 +24,7 @@ export class Controller extends MarkdownRenderChild {
 	private _currentComponent: ModelInterface;
 	private _data: ResponseDataInterface;
 	private _isActive = false;
-	private _views: Map<ViewClassInterface, {type: NewViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}>;
+	private _views: Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}>;
 
 	constructor(
 		private _api: RpgManagerApiInterface,
@@ -35,7 +35,7 @@ export class Controller extends MarkdownRenderChild {
 	) {
 		super(container);
 
-		this._views = new Map<ViewClassInterface, {type: NewViewType, relatedType?: ComponentType; relationshipType?: RelationshipType}>();
+		this._views = new Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType; relationshipType?: RelationshipType}>();
 
 		this.registerEvent(this._api.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
 
@@ -97,9 +97,9 @@ export class Controller extends MarkdownRenderChild {
 		const yamlSource: ControllerMetadataInterface = parseYaml(this._source);
 
 		if (yamlSource.models.header !== undefined) {
-			const viewClass = window.RpgManagerAPI.views.create(NewViewType.Header, this._currentComponent.id.type, this._currentComponent.campaignSettings);
+			const viewClass = window.RpgManagerAPI.views.create(ViewType.Header, this._currentComponent.id.type, this._currentComponent.campaignSettings);
 			if (viewClass !== undefined)
-				this._views.set(viewClass, {type: NewViewType.Header});
+				this._views.set(viewClass, {type: ViewType.Header});
 
 		}
 
@@ -108,13 +108,13 @@ export class Controller extends MarkdownRenderChild {
 				const componentType: ComponentType|undefined = this._api.service(RelationshipService).getComponentTypeFromListName(relationshipType);
 
 				if (componentType !== undefined && window.RpgManagerAPI !== undefined) {
-					const viewClass = this._api.views.create(NewViewType.Relationships, componentType, this._currentComponent.campaignSettings);
+					const viewClass = this._api.views.create(ViewType.Relationships, componentType, this._currentComponent.campaignSettings);
 
 					if (viewClass !== undefined)
 						this._views.set(
 							viewClass,
 							{
-								type: NewViewType.Relationships,
+								type: ViewType.Relationships,
 								relatedType: componentType,
 								relationshipType: this._api.service(RelationshipService).getTypeFromString(relationshipType),
 							}
@@ -145,10 +145,10 @@ export class Controller extends MarkdownRenderChild {
 		if (await this._initialise()) {
 			this.containerEl.empty();
 
-			this._views.forEach((viewClassDetails: {type: NewViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}, viewClass: ViewClassInterface) => {
-				let view: ViewInterface|undefined = undefined;
+			this._views.forEach((viewClassDetails: {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}, viewClass: ViewClassInterface) => {
+				let view: StaticViewInterface|undefined = undefined;
 
-				if (viewClassDetails.type === NewViewType.Header){
+				if (viewClassDetails.type === ViewType.Header){
 					view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
 				} else {
 					if (viewClassDetails.relatedType !== undefined && viewClassDetails.relationshipType !== undefined) {

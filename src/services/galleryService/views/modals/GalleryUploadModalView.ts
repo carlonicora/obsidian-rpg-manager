@@ -42,12 +42,12 @@ export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView
 				if (e.dataTransfer != null) {
 					for(let index=0; index<e.dataTransfer.files.length; index++) {
 						const file: any  = e.dataTransfer.files[index];
-						const folder = (this.settings.imagesFolder !== undefined && this.settings.imagesFolder !== '') ? this.settings.imagesFolder : this.app.vault.config.attachmentFolderPath;
+						const folder = (this.api.settings.imagesFolder !== undefined && this.api.settings.imagesFolder !== '') ? this.api.settings.imagesFolder : this.api.app.vault.config.attachmentFolderPath;
 
 						let fileName = file.name;
 						let fileIndex = 0;
 
-						while (this.app.vault.getAbstractFileByPath(folder + '/' + fileName) != undefined) {
+						while (this.api.app.vault.getAbstractFileByPath(folder + '/' + fileName) != undefined) {
 							const indexOfExtension = fileName.lastIndexOf('.');
 
 							const name = fileName.substring(0, indexOfExtension);
@@ -57,7 +57,7 @@ export class GalleryUploadModalView extends AbstractConfirmationGalleryModalView
 							fileName = name + '_' + fileIndex.toString() + extension;
 						}
 
-						const path = this.app.vault.adapter.basePath + '/' +folder + '/' + fileName;
+						const path = this.api.app.vault.adapter.basePath + '/' +folder + '/' + fileName;
 
 						const originalFilePath: string = file['path'];
 

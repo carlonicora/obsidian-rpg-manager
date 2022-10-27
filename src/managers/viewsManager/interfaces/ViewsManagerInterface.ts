@@ -1,18 +1,18 @@
-import {NewViewType} from "../../../core/enums/NewViewType";
+import {ViewType} from "../enum/ViewType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ViewClassInterface} from "./ViewClassInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 
 export interface ViewsManagerInterface {
 	create(
-		viewType: NewViewType,
+		viewType: ViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
 	): ViewClassInterface|undefined;
 
 	register(
 		view: ViewClassInterface,
-		viewType: NewViewType,
+		viewType: ViewType,
 		componentType: ComponentType,
 		campaignSettings: CampaignSetting,
 	): void;

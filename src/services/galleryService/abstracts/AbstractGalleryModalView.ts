@@ -1,16 +1,16 @@
 import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
-import {AbstractView} from "../../../../REFACTOR/views/abstracts/AbstractView";
+import {AbstractView} from "../../../managers/viewsManager/abstracts/AbstractView";
 
 export abstract class AbstractGalleryModalView extends AbstractView implements GalleryViewInterface {
-	private _component: ModelInterface;
+	private _model: ModelInterface;
 
-	get component(): ModelInterface {
-		return this._component;
+	get model(): ModelInterface {
+		return this._model;
 	}
 
-	set component(component: ModelInterface) {
-		this._component = component;
+	set model(model: ModelInterface) {
+		this._model = model;
 	}
 
 	abstract render(

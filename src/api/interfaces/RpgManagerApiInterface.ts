@@ -13,6 +13,7 @@ import {TemplatesManagerInterface} from "../../managers/templatesManager/interfa
 import {ServiceManagerInterface} from "../../managers/servicesManager/interfaces/ServiceManagerInterface";
 import {FetchersManagerInterface} from "../../managers/fetchersManager/interfaces/FetchersManagerInterface";
 import {FetcherInterface} from "../../managers/fetchersManager/interfaces/FetcherInterface";
+import {StaticViewsManagerInterface} from "../../managers/staticViewsManager/interfaces/StaticViewsManagerInterface";
 
 export interface RpgManagerApiInterface {
 	app: App;
@@ -27,6 +28,7 @@ export interface RpgManagerApiInterface {
 	get plugin(): RpgManagerInterface;
 	get services(): ServiceManagerInterface;
 	get settings(): RpgManagerSettingsInterface;
+	get staticViews(): StaticViewsManagerInterface;
 	get templates(): TemplatesManagerInterface;
 	get views(): ViewsManagerInterface;
 	get version(): string;

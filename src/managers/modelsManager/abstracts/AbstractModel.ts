@@ -1,19 +1,18 @@
 import {ModelInterface} from "../interfaces/ModelInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {DatabaseInterface} from "../../../database/interfaces/DatabaseInterface";
-import {AbtPlot} from "../../../services/plotsServices/classes/AbtPlot";
-import {AbtInterface} from "../../../services/plotsServices/oldInterfaces/AbtInterface";
-import {StoryCircleInterface} from "../../../services/plotsServices/oldInterfaces/StoryCircleInterface";
-import {StoryCirclePlot} from "../../../services/plotsServices/classes/StoryCirclePlot";
+import {AbtPlot} from "../../../services/plotsServices/plots/AbtPlot";
+import {AbtInterface} from "../../../services/plotsServices/interfaces/AbtInterface";
+import {StoryCircleInterface} from "../../../services/plotsServices/interfaces/StoryCircleInterface";
+import {StoryCirclePlot} from "../../../services/plotsServices/plots/StoryCirclePlot";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
 import {RelationshipList} from "../../../services/relationshipsService/RelationshipList";
 import {ControllerMetadataDataInterface} from "../../controllerManager/interfaces/ControllerMetadataDataInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../controllerManager/interfaces/ControllerMetadataRelationshipInterface";
-import {OldFileManipulatorInterface} from "../../../../REFACTOR/OldFileManipulatorInterface";
 import {Md5} from "ts-md5";
-import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../../../errors/ComponentNotFoundError";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
@@ -35,7 +34,6 @@ export abstract class AbstractModel implements ModelInterface {
 	public stage: ComponentStage = ComponentStage.Element;
 	public version: number|undefined=undefined;
 
-	protected fileManipulator: OldFileManipulatorInterface;
 	protected metadata: ComponentMetadataInterface|any = {};
 	protected frontmatter: any = {};
 

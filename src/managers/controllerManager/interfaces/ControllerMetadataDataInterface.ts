@@ -1,5 +1,5 @@
-import {AbtMetadataInterface} from "../../../services/plotsServices/oldInterfaces/AbtMetadataInterface";
-import {StoryCircleMetadataInterface} from "../../../services/plotsServices/oldInterfaces/StoryCircleMetadataInterface";
+import {AbtMetadataInterface} from "../../../services/plotsServices/interfaces/AbtMetadataInterface";
+import {StoryCircleMetadataInterface} from "../../../services/plotsServices/interfaces/StoryCircleMetadataInterface";
 import {ControllerMetadataRelationshipInterface} from "./ControllerMetadataRelationshipInterface";
 import {CampaignMetadataInterface} from "../../../components/campaign/interfaces/CampaignMetadataInterface";
 import {AdventureMetadataInterface} from "../../../components/adventure/interfaces/AdventureMetadataInterface";

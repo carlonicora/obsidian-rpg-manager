@@ -4,7 +4,7 @@ import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface"
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ActMetadataInterface} from "../interfaces/ActMetadataInterface";
 import {AbstractActData} from "../abstracts/AbstractActData";
-import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../../../errors/ComponentNotFoundError";
 
 export class ActModel extends AbstractActData implements ActInterface {
 	protected metadata: ActMetadataInterface;

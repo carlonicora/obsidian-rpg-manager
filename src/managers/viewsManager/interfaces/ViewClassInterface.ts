@@ -1,4 +1,4 @@
-import {ViewInterface} from "./ViewInterface";
+import {StaticViewInterface} from "../../staticViewsManager/interfaces/StaticViewInterface";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
@@ -8,5 +8,5 @@ export interface ViewClassInterface {
 		model: ModelInterface,
 		containerEl: HTMLElement,
 		sourcePath: string,
-	): ViewInterface;
+	): StaticViewInterface;
 }

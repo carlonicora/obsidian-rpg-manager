@@ -29,8 +29,8 @@ export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalV
 		this._addButtonEl.addEventListener('click', () => {
 			const imageEl = new Image();
 
-			for (let index=0; index<this.component.images.length; index++){
-				if (this._urlEl.value.toLowerCase() === this.component.images[index].src.toLowerCase()){
+			for (let index=0; index<this.model.images.length; index++){
+				if (this._urlEl.value.toLowerCase() === this.model.images[index].src.toLowerCase()){
 					this._errorEl.style.display = '';
 					this._errorEl.textContent = 'The URL to the image is invalid.';
 					return;

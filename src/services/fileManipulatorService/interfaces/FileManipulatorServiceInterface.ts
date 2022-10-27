@@ -1,8 +1,20 @@
 import {TFile} from "obsidian";
 import {FileManipulatorInterface} from "./FileManipulatorInterface";
+import {FilePatternPositionInterface} from "./FilePatternPositionInterface";
 
 export interface FileManipulatorServiceInterface {
 	read(
 		file: TFile,
 	): Promise<FileManipulatorInterface|undefined>;
+
+	patternPosition(
+		fileManipulator: FileManipulatorInterface,
+		pattern: string[],
+	): FilePatternPositionInterface|undefined;
+
+	replacePattern(
+		fileManipulator: FileManipulatorInterface,
+		patternPosition: FilePatternPositionInterface,
+		content: string[],
+	): Promise<void>;
 }

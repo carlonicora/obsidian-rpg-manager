@@ -19,7 +19,7 @@ export class IdService extends AbstractService implements IdServiceInterface, Se
 		campaignSettings: CampaignSetting|undefined=undefined,
 	): IdInterface {
 		const response = new Id(
-			this.api.app,
+			this.api,
 			type,
 			this._convertIdElement(campaignId),
 			this._convertIdElement(adventureId),

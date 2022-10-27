@@ -1,7 +1,7 @@
 import {ComponentsManagerInterface} from "./interfaces/ComponentsManagerInterface";
 import {ComponentInterface} from "./interfaces/ComponentInterface";
 import {ViewClassInterface} from "../viewsManager/interfaces/ViewClassInterface";
-import {NewViewType} from "../../core/enums/NewViewType";
+import {ViewType} from "../viewsManager/enum/ViewType";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalInterface} from "../../core/interfaces/ModalInterface";
@@ -43,7 +43,7 @@ export class ComponentsManager implements ComponentsManagerInterface {
 			this._api.modals.registerPartial(modalPart, component.campaignSettings, component.type);
 		});
 
-		component.views.forEach((viewType:NewViewType, view: ViewClassInterface) => {
+		component.views.forEach((viewType:ViewType, view: ViewClassInterface) => {
 			this._api.views.register(view, viewType, component.type, component.campaignSettings);
 		});
 	}

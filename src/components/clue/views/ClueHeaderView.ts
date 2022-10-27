@@ -1,5 +1,5 @@
-import {NewHeaderViewInterface} from "../../../views/interfaces/NewHeaderViewInterface";
-import {NewAbstractHeaderView} from "../../../views/abstracts/NewAbstractHeaderView";
+import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
+import {NewAbstractHeaderView} from "../../../managers/viewsManager/abstracts/NewAbstractHeaderView";
 import {ClueInterface} from "../interfaces/ClueInterface";
 
 export class ClueHeaderView extends NewAbstractHeaderView implements NewHeaderViewInterface {

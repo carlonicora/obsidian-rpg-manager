@@ -44,4 +44,7 @@ export interface CodeblockServiceInterface {
 		path: string,
 		file?: TFile,
 	): Promise<void>;
+
+	selectRpgManagerData(
+	): Promise<void>;
 }

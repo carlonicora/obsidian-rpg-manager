@@ -4,7 +4,7 @@ import {ViewClassInterface} from "../../managers/viewsManager/interfaces/ViewCla
 import {ClueModel} from "./models/ClueModel";
 import {ClueHeaderView} from "./views/ClueHeaderView";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {NewViewType} from "../../core/enums/NewViewType";
+import {ViewType} from "../../managers/viewsManager/enum/ViewType";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
@@ -38,9 +38,9 @@ export class ClueComponent implements ComponentInterface {
 		return ComponentType.Clue;
 	}
 
-	public get views(): Map<ViewClassInterface, NewViewType> {
-		return new Map<ViewClassInterface, NewViewType>([
-			[ClueHeaderView, NewViewType.Header],
+	public get views(): Map<ViewClassInterface, ViewType> {
+		return new Map<ViewClassInterface, ViewType>([
+			[ClueHeaderView, ViewType.Header],
 		]);
 	}
 }

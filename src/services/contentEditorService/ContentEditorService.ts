@@ -11,7 +11,7 @@ import {CharacterInterface} from "../../components/character/interfaces/Characte
 import {LocationInterface} from "../../components/location/interfaces/LocationInterface";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {MusicInterface} from "../../components/music/interfaces/MusicInterface";
-import {PlotsInterface} from "../plotsServices/oldInterfaces/PlotsInterface";
+import {PlotsInterface} from "../plotsServices/interfaces/PlotsInterface";
 
 export class ContentEditorService extends AbstractService implements ContentEditorServiceInterface, ServiceInterface {
 	public async open(

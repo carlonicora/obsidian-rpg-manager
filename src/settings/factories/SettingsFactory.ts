@@ -126,7 +126,7 @@ export class SettingsFactory {
 								settings.value = value;
 								break;
 						}
-						this._app.workspace.trigger("rpgmanager:force-refresh-views");
+						this._app.workspace.trigger("rpgmanager:force-refresh-staticViews");
 					})
 			);
 	}

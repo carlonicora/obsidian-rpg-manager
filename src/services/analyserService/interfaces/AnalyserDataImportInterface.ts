@@ -1,4 +1,4 @@
-import {SceneType} from "../../../../src/components/scene/enums/SceneType";
+import {SceneType} from "../enums/SceneType";
 
 export interface AnalyserDataImportInterface {
 	currentDuration?: number|undefined,

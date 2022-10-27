@@ -1,5 +1,5 @@
-import {NewAbstractHeaderView} from "../../../views/abstracts/NewAbstractHeaderView";
-import {NewHeaderViewInterface} from "../../../views/interfaces/NewHeaderViewInterface";
+import {NewAbstractHeaderView} from "../../../managers/viewsManager/abstracts/NewAbstractHeaderView";
+import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
 import {LocationInterface} from "../interfaces/LocationInterface";
 
 export class LocationHeaderView extends NewAbstractHeaderView implements NewHeaderViewInterface {

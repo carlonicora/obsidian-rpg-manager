@@ -5,7 +5,7 @@ import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {DatabaseInitialiser} from "../../../database/DatabaseInitialiser";
 import {ActInterface} from "../../act/interfaces/ActInterface";
-import {SorterType} from "../../../database/enums/SorterType";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {SorterService} from "../../../services/sorterService/SorterService";
@@ -80,7 +80,7 @@ export class SceneSelectionModal extends AbstractModal {
 						return;
 				})
 				.then(() => {
-					this.app.workspace.trigger("rpgmanager:refresh-views");
+					this.app.workspace.trigger("rpgmanager:refresh-staticViews");
 					this.close();
 					return;
 				});

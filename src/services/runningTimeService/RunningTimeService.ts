@@ -1,10 +1,10 @@
 import {RunningTimeServiceInterface} from "./interfaces/RunningTimeServiceInterface";
-import {SceneType} from "../../../REFACTOR/services/analyserService/enums/SceneType";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
+import {SceneType} from "../analyserService/enums/SceneType";
 
 export class RunningTimeService extends AbstractService implements RunningTimeServiceInterface, ServiceInterface {
 	public currentlyRunningScene: SceneInterface|undefined = undefined;

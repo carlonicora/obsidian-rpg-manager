@@ -23,7 +23,7 @@ export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalVi
 
 		this._masonryEl = this.containerEl.createDiv({cls: 'gallery-operations-masonry-x'});
 
-		this._attachmentFolder = (this.settings.imagesFolder !== undefined && this.settings.imagesFolder !== '') ? this.settings.imagesFolder : this.app.vault.config.attachmentFolderPath;
+		this._attachmentFolder = (this.api.settings.imagesFolder !== undefined && this.api.settings.imagesFolder !== '') ? this.api.settings.imagesFolder : this.api.app.vault.config.attachmentFolderPath;
 
 		if (this._attachmentFolder === undefined)
 			return;
@@ -31,11 +31,11 @@ export class GalleryAddLocalModalView extends AbstractConfirmationGalleryModalVi
 		this._attachmentFolder = this._attachmentFolder.toLowerCase();
 
 		const existingImages: Array<string> = [];
-		this.component.images.forEach((image: ImageInterface) => {
+		this.model.images.forEach((image: ImageInterface) => {
 			existingImages.push(image.path);
 		});
 
-		this._allImages = this.app.vault.getFiles().filter((file: TAbstractFile) =>
+		this._allImages = this.api.app.vault.getFiles().filter((file: TAbstractFile) =>
 			file.path.toLowerCase().startsWith(this._attachmentFolder) &&
 			!existingImages.contains(file.path)
 		);

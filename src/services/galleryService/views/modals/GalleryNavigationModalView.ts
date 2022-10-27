@@ -1,5 +1,6 @@
 import {AbstractGalleryModalView} from "../../abstracts/AbstractGalleryModalView";
 import {GalleryViewType} from "../../enums/GalleryViewType";
+import {GalleryService} from "../../GalleryService";
 
 export class GalleryNavigationModalView extends AbstractGalleryModalView {
 	private _operationsEl: HTMLDivElement;
@@ -57,7 +58,7 @@ export class GalleryNavigationModalView extends AbstractGalleryModalView {
 	): void {
 		this._operationsEl.empty();
 
-		const view = this.factories.imageView.create(type, this.component);
+		const view = this.api.service(GalleryService).createView(type, this.model);
 		view.render(this._operationsEl);
 	}
 }

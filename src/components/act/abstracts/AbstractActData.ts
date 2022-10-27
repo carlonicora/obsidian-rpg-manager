@@ -1,4 +1,4 @@
-import {Plots} from "../../../services/plotsServices/classes/Plots";
+import {Plots} from "../../../services/plotsServices/models/Plots";
 import {ActDataInterface} from "../interfaces/ActDataInterface";
 import {ActMetadataInterface} from "../interfaces/ActMetadataInterface";
 import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
