@@ -4,7 +4,6 @@ import {Component, MarkdownRenderer, setIcon} from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {BreadcrumbService} from "../../../services/breadcrumbService/BreadcrumbService";
 import {ComponentOptionsService} from "../../../services/componentOptionsService/ComponentOptionsService";
-import {GalleryService} from "../../../services/galleryService/GalleryService";
 import {GalleryCarouselView} from "../../../services/galleryService/views/GalleryCarouselView";
 import {ElementInterface} from "../interfaces/ElementInterface";
 import {ElementDataInterface} from "../interfaces/ElementDataInterface";
@@ -98,13 +97,13 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 		content: string,
 		editableKeyId?: string,
 	): void {
-		const infoEl = this._infoContainerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-long clearfix'})
+		const infoEl = this._infoContainerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-long clearfix'});
 
 		let titleClass = 'rpg-manager-header-container-info-data-container-title';
 		let contentClass = 'rpg-manager-header-container-info-data-container-content';
 
 		if (editableKeyId !== undefined) {
-			infoEl.addClass('rpg-manager-header-container-info-data-container-editable')
+			infoEl.addClass('rpg-manager-header-container-info-data-container-editable');
 			const editEl = infoEl.createDiv({cls: 'rpg-manager-header-container-info-data-container-edit'});
 			setIcon(editEl, 'edit');
 

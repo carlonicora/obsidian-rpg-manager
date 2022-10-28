@@ -1,5 +1,4 @@
 import {TextElementInterface} from "./interfaces/TextElementInterface";
-import {Component, MarkdownRenderer, setIcon} from "obsidian";
 import {AbstractTextElement} from "./abstracts/AbstractTextElement";
 
 export class ShortTextElement extends AbstractTextElement {

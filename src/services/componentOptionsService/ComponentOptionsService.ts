@@ -39,15 +39,11 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		description: string,
 	): HTMLDivElement {
 		return  containerEl.createDiv({cls: 'option', text: description});
-		//const value = crumb.createDiv({cls: 'value'});
-		//return value.createSpan({cls: 'rpgm-edit-icon', text: description});
 	}
 
 	private _addSeparator(
 		containerEl: HTMLElement,
 	): void {
-		const separator = containerEl.createDiv({cls: 'separator', text: '|'});
-		//const separatorText = separator.createDiv({cls: 'value'});
-		//separatorText.createEl('p').textContent = '|';
+		containerEl.createDiv({cls: 'separator', text: '|'});
 	}
 }

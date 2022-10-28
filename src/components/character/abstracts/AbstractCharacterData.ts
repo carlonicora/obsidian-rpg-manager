@@ -26,7 +26,12 @@ export class AbstractCharacterData extends AbstractModel implements CharacterDat
 	}
 
 	public get goals(): string | undefined {
-		return this.metadata.data?.goals;
+		const response: string|undefined = this.metadata.data?.goals;
+
+		if (response === undefined || response === '')
+			return undefined;
+
+		return response;
 	}
 
 	public get pronoun(): Pronoun | undefined {

@@ -113,7 +113,12 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public get synopsis(): string|undefined {
-		return this.metadata?.data?.synopsis;
+		const response: string|undefined = this.metadata.data?.synopsis;
+
+		if (response === undefined || response === '')
+			return undefined;
+
+		return response;
 	}
 
 	public getRelationships(

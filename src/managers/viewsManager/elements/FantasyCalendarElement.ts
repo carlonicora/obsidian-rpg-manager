@@ -1,13 +1,12 @@
 import {AbstractElement} from "../abstracts/AbstractElement";
-import {DateElementInterface} from "./interfaces/DateElementInterface";
-import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
+import {DateElementDataInterface} from "./interfaces/DateElementDataInterface";
 import {
 	FantasyCalendarDateInterface
 } from "../../../services/fantasyCalendarService/interfaces/FantasyCalendarDateInterface";
 
 export class FantasyCalendarElement extends AbstractElement {
 	render(
-		data: DateElementInterface,
+		data: DateElementDataInterface,
 		containerEl: HTMLElement,
 	) {
 		const infoEl = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-short clearfix'});

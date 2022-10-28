@@ -12,11 +12,21 @@ export abstract class AbstractSceneData extends AbstractModel implements SceneDa
 	protected metadata: SceneMetadataInterface;
 
 	public get action(): string | undefined {
-		return this.metadata.data?.action;
+		const response: string|undefined = this.metadata.data?.action;
+
+		if (response === undefined || response === '')
+			return undefined;
+
+		return response;
 	}
 
 	public get trigger(): string | undefined {
-		return this.metadata.data?.trigger;
+		const response: string|undefined = this.metadata.data?.trigger;
+
+		if (response === undefined || response === '')
+			return undefined;
+
+		return response;
 	}
 
 	get date(): DateInterface | undefined {

@@ -5,9 +5,7 @@ import {ViewClassInterface} from "./interfaces/ViewClassInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ElementInterface} from "./interfaces/ElementInterface";
-import {LongTextElement} from "./elements/LongTextElement";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
-import {ElementDataInterface} from "./interfaces/ElementDataInterface";
 
 export class ViewsManager implements ViewsManagerInterface {
 	private _factories: Map<string, ViewClassInterface>
@@ -67,7 +65,7 @@ export class ViewsManager implements ViewsManagerInterface {
 	public async registerElement<T extends ElementInterface>(
 		elementClass: ClassInterface<T>,
 	): Promise<void> {
-		this._elements.set(elementClass, new elementClass(this._api))
+		this._elements.set(elementClass, new elementClass(this._api));
 	}
 
 	private _getIdentifier(

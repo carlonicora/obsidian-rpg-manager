@@ -22,7 +22,7 @@ export abstract class AbstractElement implements ElementInterface{
 		let titleClass = 'rpg-manager-header-container-info-data-container-title';
 
 		if (editableField !== undefined) {
-			containerEl.addClass('rpg-manager-header-container-info-data-container-editable')
+			containerEl.addClass('rpg-manager-header-container-info-data-container-editable');
 			const editEl = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container-edit'});
 			setIcon(editEl, 'edit');
 

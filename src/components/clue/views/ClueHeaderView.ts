@@ -4,6 +4,7 @@ import {ClueInterface} from "../interfaces/ClueInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
 import {ShortTextElement} from "../../../managers/viewsManager/elements/ShortTextElement";
 import {DateElement} from "../../../managers/viewsManager/elements/DateElement";
+import {FantasyCalendarElement} from "../../../managers/viewsManager/elements/FantasyCalendarElement";
 
 export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: ClueInterface;
@@ -14,11 +15,14 @@ export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewI
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(ShortTextElement, {title: 'Found', values: this.model.found ? 'Yes' : 'No', editableKey: 'data.synopsis'});
 
-		if (this.model.campaign.fantasyCalendar !== undefined)
-			this.addInfoElement(DateElement, {title: 'Found', values: this.model.found, editableKey: 'data.found'});
-		else
-			this.addInfoElement(DateElement, {title: 'Found', values: this.model.found, editableKey: 'data.found'});
+		this.addInfoElement(
+			this.model.campaign.fantasyCalendar !== undefined
+				? FantasyCalendarElement
+				: DateElement,
+			{title: 'Date Found', values: this.model.found, editableKey: 'data.found'}
+		);
 	}
 }

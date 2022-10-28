@@ -19,27 +19,6 @@
 				width: calc(100% - 310px);
 				float: left;
 
-				.rpg-manager-header-container-info-data-container-long, {
-					.rpg-manager-header-container-info-data-container-title {
-						width: 100%;
-					}
-
-					.rpg-manager-header-container-info-data-container-content {
-						width: 100%;
-					}
-				}
-
-				.rpg-manager-header-container-info-data-container-short {
-					.rpg-manager-header-container-info-data-container-title {
-						width: 100px;
-					}
-
-					.rpg-manager-header-container-info-data-container-content {
-						width: calc(100% - 100px);
-						float: left;
-					}
-				}
-
 				.rpg-manager-header-container-info-data-container {
 					margin-bottom: 10px;
 					padding-bottom: 10px;
@@ -48,7 +27,6 @@
 					.rpg-manager-header-container-info-data-container-edit {
 						float: right;
 						width: 25px;
-						margin-top: 1.5em;
 						display: none;
 						cursor: pointer;
 						color: var(--rpg-manager-colour-text-link);
@@ -64,6 +42,11 @@
 
 					.rpg-manager-header-container-info-data-container-content,
 					.rpg-manager-header-container-info-data-container-content-editable{
+						.rpg-manager-header-container-info-data-container-content-link {
+							font-size: 0.8em;
+							padding: 2px 12px;
+						}
+
 						p {
 							margin: 0px;
 						}
@@ -76,6 +59,36 @@
 					.rpg-manager-header-container-info-data-container-title-editable,
 					.rpg-manager-header-container-info-data-container-content-editable {
 						width: calc(100% - 30px);
+					}
+				}
+
+				.rpg-manager-header-container-info-data-container-long, {
+					.rpg-manager-header-container-info-data-container-title {
+						width: 100%;
+					}
+
+					.rpg-manager-header-container-info-data-container-content {
+						width: 100%;
+					}
+				}
+
+				.rpg-manager-header-container-info-data-container-short {
+					.rpg-manager-header-container-info-data-container-title,
+					.rpg-manager-header-container-info-data-container-title-editable {
+						width: 100px;
+					}
+
+					.rpg-manager-header-container-info-data-container-content,
+					.rpg-manager-header-container-info-data-container-content-editable {
+						float: left;
+					}
+
+					.rpg-manager-header-container-info-data-container-content {
+						width: calc(100% - 100px);
+					}
+
+					.rpg-manager-header-container-info-data-container-content-editable {
+						width: calc(100% - 130px);
 					}
 				}
 

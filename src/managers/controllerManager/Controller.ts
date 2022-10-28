@@ -74,7 +74,7 @@ export class Controller extends MarkdownRenderChild {
 		const poll = (resolve: any) => {
 			if (this._api.database.isReady){
 				if (this._currentComponent === undefined)
-					this._loadCurrentModel()
+					this._loadCurrentModel();
 
 				if (this._currentComponent !== undefined && this._currentComponent.version !== undefined)
 					resolve();

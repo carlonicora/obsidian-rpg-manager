@@ -1,6 +1,6 @@
 import {AbstractElement} from "../../abstracts/AbstractElement";
 import {TextElementInterface} from "../interfaces/TextElementInterface";
-import {Component, MarkdownRenderer, setIcon} from "obsidian";
+import {Component, MarkdownRenderer} from "obsidian";
 
 export abstract class AbstractTextElement extends AbstractElement {
 	protected renderText(
@@ -8,7 +8,7 @@ export abstract class AbstractTextElement extends AbstractElement {
 		containerEl: HTMLElement,
 		isLong: boolean,
 	): void {
-		const infoEl = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-' + (isLong ? 'long' : 'short') + ' clearfix'})
+		const infoEl = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-' + (isLong ? 'long' : 'short') + ' clearfix'});
 
 		this.createTitle(data.title, infoEl, data.editableKey);
 

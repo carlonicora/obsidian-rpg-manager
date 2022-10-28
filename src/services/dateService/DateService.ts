@@ -55,7 +55,8 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 			const day = window.FantasyCalendarAPI.getDay(fantasyDate, fantasyCalendar);
 			return day.displayDate;
 		} else {
-			return date.date.toLocaleString();
+
+			return (<Date>date.date).toDateString();
 		}
 	}
 
