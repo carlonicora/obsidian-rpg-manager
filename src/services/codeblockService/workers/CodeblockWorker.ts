@@ -18,7 +18,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			this._api.app.vault.modify(domain.file, domain.editor.getValue())
 				.then(() => {
 					this._api.database.readByPath(domain.file.path)?.touch();
-					this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
+					this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				});
 			return true;
 		} else {

@@ -45,7 +45,7 @@ export class Database extends Component implements DatabaseInterface {
 		this.registerEvent(this._api.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
 
 		this._api.app.workspace.trigger("rpgmanager:index-complete");
-		this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
+		this._api.app.workspace.trigger("rpgmanager:refresh-views");
 
 		this._api.service(RunningTimeService).updateMedianTimes(true);
 	}
@@ -230,7 +230,7 @@ export class Database extends Component implements DatabaseInterface {
 		file: TFile,
 	): Promise<void> {
 		if (this.delete(file.path)){
-			this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
+			this._api.app.workspace.trigger("rpgmanager:refresh-views");
 		}
 	}
 
@@ -263,7 +263,7 @@ export class Database extends Component implements DatabaseInterface {
 						this._api.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
 					}
 
-					this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
+					this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				});
 		}
 	}
@@ -280,7 +280,8 @@ export class Database extends Component implements DatabaseInterface {
 				component = await DatabaseInitialiser.createComponent(this._api, file);
 			}
 
-			if (component === undefined) return;
+			if (component === undefined)
+				return;
 
 			await component.readMetadata();
 			await component.validateHierarchy();
@@ -303,7 +304,10 @@ export class Database extends Component implements DatabaseInterface {
 
 			DatabaseInitialiser.reinitialiseRelationships(component, this)
 				.then(() => {
-					this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
+					if (component !== undefined && !isNewComponent)
+						component.touch();
+
+					this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				});
 		} catch (e) {
 			if (e instanceof AbstractRpgManagerError) {

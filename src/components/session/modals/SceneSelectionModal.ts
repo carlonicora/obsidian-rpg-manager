@@ -80,7 +80,7 @@ export class SceneSelectionModal extends AbstractModal {
 						return;
 				})
 				.then(() => {
-					this.app.workspace.trigger("rpgmanager:refresh-staticViews");
+					this.app.workspace.trigger("rpgmanager:refresh-views");
 					this.close();
 					return;
 				});

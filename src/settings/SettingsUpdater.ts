@@ -38,7 +38,7 @@ export class SettingsUpdater {
 			.then((database: DatabaseInterface) => {
 				this._api.database = database;
 				this._api.service(LoggerService).info(LogMessageType.TagUpdates, 'Database re-initialised');
-				this._api.app.workspace.trigger("rpgmanager:refresh-staticViews");
+				this._api.app.workspace.trigger("rpgmanager:refresh-views");
 				return;
 			});
 	}

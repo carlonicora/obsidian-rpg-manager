@@ -14,16 +14,10 @@ export class BreadcrumbView {
 
 		this._model = data.model;
 
-		const breadcrumbContainer = container.createDiv({cls: 'rpgm-breadcrumbService'});
-		breadcrumbContainer.createEl('h2').textContent = data.mainTitle;
-		const breadcrumbLine = breadcrumbContainer.createDiv({cls:'line'});
+		const breadcrumbLine = container.createDiv({cls:'line'});
 
-		this._renderBreadcrumb(breadcrumbContainer, breadcrumbLine, data);
-
-		breadcrumbContainer.createDiv({cls: 'reset'});
+		this._renderBreadcrumb(container, breadcrumbLine, data);
 	}
-
-
 
 	private _renderBreadcrumb(
 		breadcrumb: HTMLElement,
@@ -34,8 +28,7 @@ export class BreadcrumbView {
 		let lineToUse = line;
 
 		if (data.isInNewLine){
-			breadcrumb.createDiv({cls: 'reset'});
-			lineToUse = breadcrumb.createDiv({cls:'line'});
+			lineToUse = breadcrumb.createDiv({cls:'line clearfix'});
 			isFirstLine = false;
 		}
 
@@ -80,8 +73,6 @@ export class BreadcrumbView {
 			}
 
 			this._renderBreadcrumb(breadcrumb, lineToUse, data.nextBreadcrumb, isFirstLine);
-		} else {
-			breadcrumb.createDiv({cls: 'reset'});
 		}
 	}
 }

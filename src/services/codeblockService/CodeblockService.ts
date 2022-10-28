@@ -29,6 +29,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		file?: TFile,
 	): Promise<void> {
 		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+
 		if (domain === undefined)
 			return undefined;
 

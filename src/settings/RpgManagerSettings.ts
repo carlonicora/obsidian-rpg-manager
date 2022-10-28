@@ -219,6 +219,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 			await this._plugin.updateSettings(partialSettings);
 		}
 
-		this.app.workspace.trigger("rpgmanager:refresh-staticViews");
+		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 }

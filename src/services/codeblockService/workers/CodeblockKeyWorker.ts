@@ -20,10 +20,12 @@ export class CodeblockKeyWorker  implements CodeblockDataWorkerInterface {
 			if (key[parts[index]] === undefined)
 				key[parts[index]] = {};
 
-			key = key[parts[index]];
-		}
+			if (index === parts.length -1)
+				key[parts[index]] = data.value;
+			else
+				key = key[parts[index]];
 
-		key = data.value;
+		}
 	}
 
 	public async remove(
@@ -37,10 +39,11 @@ export class CodeblockKeyWorker  implements CodeblockDataWorkerInterface {
 			if (key[parts[index]] === undefined)
 				key[parts[index]] = {};
 
-			key = key[parts[index]];
-		}
+			if (index === parts.length -1)
+				delete key[parts[index]];
+			else
+				key = key[parts[index]];
 
-		//TODO Check this
-		delete domain.codeblock[key];
+		}
 	}
 }

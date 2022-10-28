@@ -72,8 +72,15 @@ export class Controller extends MarkdownRenderChild {
 
 	private async _waitForComponentToBeReady() {
 		const poll = (resolve: any) => {
-			if(window.RpgManagerAPI?.database.isReady && this._currentComponent.version !== undefined) {
-				resolve();
+			if (this._api.database.isReady){
+				if (this._currentComponent === undefined)
+					this._loadCurrentModel()
+
+				if (this._currentComponent !== undefined && this._currentComponent.version !== undefined)
+					resolve();
+				else
+					setTimeout(callback => poll(resolve), 100);
+
 			} else {
 				setTimeout(callback => poll(resolve), 100);
 			}
@@ -84,10 +91,10 @@ export class Controller extends MarkdownRenderChild {
 
 	private _loadCurrentModel(
 	): void {
-		if (window.RpgManagerAPI?.database === undefined)
+		if (this._api.database === undefined)
 			return;
 
-		const rpgmComponent: ModelInterface|undefined = window.RpgManagerAPI?.database.readByPath<ModelInterface>(this._sourcePath);
+		const rpgmComponent: ModelInterface|undefined = this._api.database.readByPath<ModelInterface>(this._sourcePath);
 
 		if (rpgmComponent === undefined)
 			return;
@@ -97,7 +104,7 @@ export class Controller extends MarkdownRenderChild {
 		const yamlSource: ControllerMetadataInterface = parseYaml(this._source);
 
 		if (yamlSource.models.header !== undefined) {
-			const viewClass = window.RpgManagerAPI.views.create(ViewType.Header, this._currentComponent.id.type, this._currentComponent.campaignSettings);
+			const viewClass = this._api.views.create(ViewType.Header, this._currentComponent.id.type, this._currentComponent.campaignSettings);
 			if (viewClass !== undefined)
 				this._views.set(viewClass, {type: ViewType.Header});
 
@@ -107,7 +114,7 @@ export class Controller extends MarkdownRenderChild {
 			Object.entries(yamlSource.models.lists).forEach(([relationshipType, value]: [string, any]) => {
 				const componentType: ComponentType|undefined = this._api.service(RelationshipService).getComponentTypeFromListName(relationshipType);
 
-				if (componentType !== undefined && window.RpgManagerAPI !== undefined) {
+				if (componentType !== undefined) {
 					const viewClass = this._api.views.create(ViewType.Relationships, componentType, this._currentComponent.campaignSettings);
 
 					if (viewClass !== undefined)
@@ -128,13 +135,10 @@ export class Controller extends MarkdownRenderChild {
 	private async _render(
 		forceRefresh=false,
 	): Promise<void> {
-		if (this._currentComponent === undefined)
-			this._loadCurrentModel();
+		await this._waitForComponentToBeReady();
 
 		if (this._currentComponent === undefined)
 			return;
-
-		await this._waitForComponentToBeReady();
 
 		if (await !this._isComponentVisible())
 			return;

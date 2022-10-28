@@ -1,0 +1,57 @@
+.rpg-manager-image-carousel {
+	width: 300px;
+	float: right;
+	padding: 10px;
+	border: solid 1px var(--rpg-manager-colour-border);
+	background-color: var(--rpg-manager-colour-background);
+
+	.rpg-manager-image-carousel-images {
+		.rpg-manager-image-carousel-images-group {
+			width: 100%;
+
+			.rpg-manager-image-carousel-images-group-container {
+				width: 100%;
+				font-size: 0.9em;
+				color: var(--rpg-manager-colour-text-light);
+
+				img {
+					width: 280px;
+				}
+
+				p {
+					margin-bottom: 0px;
+				}
+			}
+		}
+
+		.rpg-manager-image-carousel-images-group-invisible {
+			display: none;
+		}
+	}
+
+	.rpg-manager-image-carousel-images-navigator {
+		padding: 0px 50px 10px 50px;
+
+		.rpg-manager-image-carousel-images-navigator-counter {
+			font-size: 0.8em;
+			color: var(--rpg-manager-colour-text-very-light);
+			margin: 0 auto;
+			width: 100px;
+			text-align: center;
+		}
+
+		.rpg-manager-image-carousel-images-navigator-previous,
+		.rpg-manager-image-carousel-images-navigator-next {
+			font-size: 0.9em;
+			cursor: pointer;
+			color: var(--rpg-manager-colour-text-link);
+		}
+
+		.rpg-manager-image-carousel-images-navigator-previous {
+			float: left;
+		}
+		.rpg-manager-image-carousel-images-navigator-next {
+			float: right;
+		}
+	}
+}

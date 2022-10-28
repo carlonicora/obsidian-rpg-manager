@@ -1,0 +1,18 @@
+body {
+	--rpg-manager-colour-border: var(--background-modifier-border);
+	--rpg-manager-colour-text-light: var(--text-muted);
+	--rpg-manager-colour-text-very-light: var(--text-faint);
+	--rpg-manager-colour-text-link: var(--text-accent);
+	--rpg-manager-colour-background: var(--background-secondary);
+	//--rpg-manager-colour-background: var(--background-modifier-cover);
+}
+
+.clearfix::after {
+	content: "";
+	clear: both;
+	display: table;
+}
+
+*{
+	box-sizing:border-box;
+}

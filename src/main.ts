@@ -105,7 +105,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 				this._registerEvents();
 
-				this.app.workspace.trigger("rpgmanager:refresh-staticViews");
+				this.app.workspace.trigger("rpgmanager:refresh-views");
 
 				this.app.workspace.on('active-leaf-change', (leaf: WorkspaceLeaf) => {
 					if (this.api.service(RunningTimeService).isTimerRunning) {
@@ -158,7 +158,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	}
 
 	refreshViews(){
-		this.app.workspace.trigger("rpgmanager:refresh-staticViews");
+		this.app.workspace.trigger("rpgmanager:refresh-views");
 	}
 
 	public async createRpgView(
