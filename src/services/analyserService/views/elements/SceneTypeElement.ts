@@ -1,8 +1,8 @@
-import {AbstractElement} from "../abstracts/AbstractElement";
+import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
 import {SceneTypeElementDataInterface} from "./interfaces/SceneTypeElementDataInterface";
-import {SceneTypeDescriptionModal} from "../../../components/scene/modals/SceneTypeDescriptionModal";
-import {SceneType, sceneTypeDescription} from "../../../services/analyserService/enums/SceneType";
-import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
+import {SceneTypeDescriptionModal} from "../../../../components/scene/modals/SceneTypeDescriptionModal";
+import {SceneType, sceneTypeDescription} from "../../enums/SceneType";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
 
 export class SceneTypeElement extends AbstractElement {
 	render(

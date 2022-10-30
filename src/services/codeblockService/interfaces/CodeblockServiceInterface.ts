@@ -47,4 +47,11 @@ export interface CodeblockServiceInterface {
 
 	selectRpgManagerData(
 	): Promise<void>;
+
+	startRunningTime(
+	): Promise<void>;
+
+	stopRunningTime(
+		file?: TFile,
+	): Promise<void>;
 }

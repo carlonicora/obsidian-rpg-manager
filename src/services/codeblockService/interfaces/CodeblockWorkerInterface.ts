@@ -7,6 +7,11 @@ export interface CodeblockWorkerInterface {
 		codeblockName?: string,
 	): Promise<CodeblockDomainInterface|undefined>;
 
+	tryReadOpenContent(
+		file: TFile,
+		codeblockName?: string,
+	): Promise<CodeblockDomainInterface|undefined>;
+
 	updateContent(
 		domain: CodeblockDomainInterface,
 	): Promise<boolean>;

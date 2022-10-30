@@ -1,8 +1,8 @@
-import {AbstractElement} from "../abstracts/AbstractElement";
+import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
 import {StoryCircleStageElementDataInterface} from "./interfaces/StoryCircleStageElementDataInterface";
-import {PlotService} from "../../../services/plotsServices/PlotService";
-import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
-import {StoryCircleStage} from "../../../services/plotsServices/enums/StoryCircleStage";
+import {PlotService} from "../../PlotService";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
+import {StoryCircleStage} from "../../enums/StoryCircleStage";
 
 export class StoryCircleStageElement extends AbstractElement {
 	render(

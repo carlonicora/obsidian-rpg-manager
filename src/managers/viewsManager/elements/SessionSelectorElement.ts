@@ -1,12 +1,12 @@
 import {AbstractElement} from "../abstracts/AbstractElement";
-import {SessionElementDataInterface} from "./interfaces/SessionElementDataInterface";
+import {SessionSelectorElementDataInterface} from "./interfaces/SessionSelectorElementDataInterface";
 import {SessionInterface} from "../../../components/session/interfaces/SessionInterface";
 import {Component, MarkdownRenderer, TAbstractFile} from "obsidian";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 
-export class SessionElement extends AbstractElement {
+export class SessionSelectorElement extends AbstractElement {
 	render(
-		data: SessionElementDataInterface,
+		data: SessionSelectorElementDataInterface,
 		containerEl: HTMLElement,
 	) {
 		let selectedSession: SessionInterface|undefined = undefined;

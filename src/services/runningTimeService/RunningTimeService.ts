@@ -5,6 +5,8 @@ import {CampaignInterface} from "../../components/campaign/interfaces/CampaignIn
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {SceneType} from "../analyserService/enums/SceneType";
+import {CodeblockService} from "../codeblockService/CodeblockService";
+import {TFile} from "obsidian";
 
 export class RunningTimeService extends AbstractService implements RunningTimeServiceInterface, ServiceInterface {
 	public currentlyRunningScene: SceneInterface|undefined = undefined;
@@ -44,20 +46,22 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 	public async startScene(
 		scene: SceneInterface,
 	): Promise<void> {
-		if (this.currentlyRunningScene !== undefined) await this.stopScene(this.currentlyRunningScene);
+		if (this.currentlyRunningScene !== undefined)
+			await this.stopScene(this.currentlyRunningScene, this.currentlyRunningScene.file);
+
 		this.currentlyRunningScene = scene;
 
-		//todo fix
-		//await this.manipulators.codeblock.startNewDuration(this.currentlyRunningScene.file);
+		this.api.service(CodeblockService).startRunningTime();
 	}
 
 	public async stopScene(
 		scene: SceneInterface,
+		file?: TFile,
 	): Promise<void> {
-		if (this.currentlyRunningScene === undefined) return;
+		if (this.currentlyRunningScene === undefined)
+			return;
 
-		//todo fix
-		//await this.manipulators.codeblock.stopCurrentDuration(this.currentlyRunningScene.file)
+		this.api.service(CodeblockService).stopRunningTime(file);
 		this.currentlyRunningScene = undefined;
 	}
 
@@ -79,7 +83,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		await scenes.forEach((scene: SceneInterface) => {
 			if (isStartup && scene.isCurrentlyRunning) {
 				this.currentlyRunningScene = scene;
-				this.stopScene(scene);
+				this.stopScene(scene, scene.file);
 			}
 			if (scene.sceneType !== undefined && scene.currentDuration !== undefined && scene.currentDuration !== 0) {
 				const campaignMedians: Map<SceneType, number[]> | undefined = this.medianTimes.get(scene.id.campaignId);

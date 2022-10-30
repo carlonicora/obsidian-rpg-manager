@@ -42,6 +42,7 @@ export class FileManipulator implements FileManipulatorInterface {
 
 							if (model.id.type === ComponentType.Scene)
 								this._api.service(RunningTimeService).updateMedianTimes();
+
 						}
 
 						this._api.app.workspace.trigger("rpgmanager:force-refresh-staticViews");

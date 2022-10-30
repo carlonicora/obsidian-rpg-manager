@@ -3,12 +3,13 @@ import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
 import {DateElement} from "../../../managers/viewsManager/elements/DateElement";
-import {SessionElement} from "../../../managers/viewsManager/elements/SessionElement";
+import {SessionSelectorElement} from "../../../managers/viewsManager/elements/SessionSelectorElement";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {StoryCircleStageElement} from "../../../managers/viewsManager/elements/StoryCircleStageElement";
-import {SceneTypeElement} from "../../../managers/viewsManager/elements/SceneTypeElement";
+import {StoryCircleStageElement} from "../../../services/plotsServices/views/elements/StoryCircleStageElement";
+import {SceneTypeElement} from "../../../services/analyserService/views/elements/SceneTypeElement";
 import {CheckboxElement} from "../../../managers/viewsManager/elements/CheckboxElement";
+import {RunElement} from "../../../services/runningTimeService/views/elements/RunElement";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -30,7 +31,7 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 			session.id.campaignId === this.model.id.campaignId
 		);
 
-		this.addInfoElement(SessionElement, {title: 'Session', values: {sessionId: this.model.session?.id.sessionId, sessions: sessions}, editableKey: 'data.sessionId'});
+		this.addInfoElement(SessionSelectorElement, {title: 'Session', values: {sessionId: this.model.session?.id.sessionId, sessions: sessions}, editableKey: 'data.sessionId'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addInfoElement(StoryCircleStageElement, {title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});
@@ -41,10 +42,16 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 				values: this.model.sceneType,
 				editableKey: 'data.sceneType'
 			});
+
 			this.addInfoElement(CheckboxElement,{
 				title: 'External Actions?',
 				values: this.model.isExciting,
 				editableKey: 'data.isActedUpon',
+			});
+
+			this.addInfoElement(RunElement, {
+				title: 'SceneRun',
+				values: {isRunning: this.model.isCurrentlyRunning, scene: this.model}
 			});
 		}
 	}

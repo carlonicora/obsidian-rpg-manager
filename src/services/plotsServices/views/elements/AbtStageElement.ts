@@ -1,8 +1,8 @@
-import {AbstractElement} from "../abstracts/AbstractElement";
+import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
 import {AbtStageElementDataInterface} from "./interfaces/AbtStageElementDataInterface";
-import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
-import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
-import {PlotService} from "../../../services/plotsServices/PlotService";
+import {AbtStage} from "../../enums/AbtStage";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
+import {PlotService} from "../../PlotService";
 
 export class AbtStageElement extends AbstractElement {
 	render(

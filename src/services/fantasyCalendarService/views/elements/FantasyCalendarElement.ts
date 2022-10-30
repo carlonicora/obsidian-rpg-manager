@@ -1,8 +1,8 @@
-import {AbstractElement} from "../abstracts/AbstractElement";
-import {DateElementDataInterface} from "./interfaces/DateElementDataInterface";
+import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
+import {DateElementDataInterface} from "../../../../managers/viewsManager/elements/interfaces/DateElementDataInterface";
 import {
 	FantasyCalendarDateInterface
-} from "../../../services/fantasyCalendarService/interfaces/FantasyCalendarDateInterface";
+} from "../../interfaces/FantasyCalendarDateInterface";
 
 export class FantasyCalendarElement extends AbstractElement {
 	render(

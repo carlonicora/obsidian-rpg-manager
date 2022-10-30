@@ -2,7 +2,7 @@ import {AbstractHeaderView} from "../../../managers/viewsManager/abstracts/Abstr
 import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
 import {ActInterface} from "../interfaces/ActInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
-import {AbtStageElement} from "../../../managers/viewsManager/elements/AbtStageElement";
+import {AbtStageElement} from "../../../services/plotsServices/views/elements/AbtStageElement";
 
 export class ActHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: ActInterface;

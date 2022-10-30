@@ -12,6 +12,8 @@ import {CodeblockImageWorker} from "./workers/CodeblockImageWorker";
 import {CodeblockRelationshipWorker} from "./workers/CodeblockRelationshipWorker";
 import {CodeblockKeyWorker} from "./workers/CodeblockKeyWorker";
 import {ImageService} from "../imageService/ImageService";
+import {CodeblockRunningWorker} from "./workers/CodeblockRunningWorker";
+import {FileManipulatorService} from "../fileManipulatorService/FileManipulatorService";
 
 export class CodeblockService extends AbstractService implements CodeblockServiceInterface, ServiceInterface {
 	private _worker: CodeblockWorkerInterface;
@@ -145,5 +147,39 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 			domain.codeblockEnd,
 		);
 		domain.editor.focus();
+	}
+
+	public async startRunningTime(
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+
+		if (domain === undefined || domain.editor === undefined)
+			return;
+
+		const dataWorker = await new CodeblockRunningWorker(this.api);
+		dataWorker.addOrUpdate(domain, {});
+	}
+
+	public async stopRunningTime(
+		file?: TFile,
+	): Promise<void> {
+		let domain: CodeblockDomainInterface | undefined = undefined;
+
+		if (file !== undefined)
+			domain = await this._worker.tryReadOpenContent(file);
+
+		if (domain === undefined)
+			domain = await this._worker.readContent(file);
+
+		if (domain === undefined || domain.editor === undefined)
+			return;
+
+		const dataWorker = await new CodeblockRunningWorker(this.api);
+		dataWorker.remove(domain, '');
+
+		if (file !== undefined){
+			const newContent = await domain.originalFileContent.replace(domain.originalCodeblockContent, domain.codeblockContent);
+			this.api.service(FileManipulatorService).maybeWrite(domain.file, newContent);
+		}
 	}
 }

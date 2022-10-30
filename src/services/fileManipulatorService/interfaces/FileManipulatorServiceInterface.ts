@@ -7,6 +7,11 @@ export interface FileManipulatorServiceInterface {
 		file: TFile,
 	): Promise<FileManipulatorInterface|undefined>;
 
+	maybeWrite(
+		file: TFile,
+		content: string,
+	): Promise<void>;
+
 	patternPosition(
 		fileManipulator: FileManipulatorInterface,
 		pattern: string[],
