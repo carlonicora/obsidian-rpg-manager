@@ -33,7 +33,7 @@ import {FantasyCalendarService} from "../services/fantasyCalendarService/Fantasy
 import {DateService} from "../services/dateService/DateService";
 import {YouTubeImageFetcher} from "../fetchers/youTubeFetcher/YouTubeImageFetcher";
 import {ReleaseNoteFetcher} from "../fetchers/releaseNoteFetcher/ReleaseNoteFetcher";
-import {PlotService} from "../services/plotsServices/PlotService";
+import {PlotService} from "../services/plotsService/PlotService";
 import {AnalyserService} from "../services/analyserService/AnalyserService";
 import {DiceService} from "../services/diceService/DiceService";
 import {LoggerService} from "../services/loggerService/LoggerService";

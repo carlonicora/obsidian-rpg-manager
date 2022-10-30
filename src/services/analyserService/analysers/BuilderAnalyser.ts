@@ -1,5 +1,5 @@
 import {AbstractAnalyser} from "../abstracts/AbstractAnalyser";
-import {AbtStage} from "../../plotsServices/enums/AbtStage";
+import {AbtStage} from "../../plotsService/enums/AbtStage";
 import {AnalyserDataImportInterface} from "../interfaces/AnalyserDataImportInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";

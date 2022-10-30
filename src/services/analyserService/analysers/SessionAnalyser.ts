@@ -1,5 +1,5 @@
 import {AbstractAnalyser} from "../abstracts/AbstractAnalyser";
-import {AbtStage} from "../../plotsServices/enums/AbtStage";
+import {AbtStage} from "../../plotsService/enums/AbtStage";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SessionInterface} from "../../../components/session/interfaces/SessionInterface";

@@ -1,4 +1,4 @@
-import {Plots} from "../../../services/plotsServices/models/Plots";
+import {Plots} from "../../../services/plotsService/models/Plots";
 import {AdventureDataInterface} from "../interfaces/AdventureDataInterface";
 import {AdventureMetadataInterface} from "../interfaces/AdventureMetadataInterface";
 

@@ -2,7 +2,7 @@ import {AbstractAnalyserReportDetail} from "../../abstracts/AbstractAnalyserRepo
 import {AnalyserScoreType} from "../../enums/AnalyserScoreType";
 import {AnalyserDataInterface} from "../../interfaces/AnalyserDataInterface";
 import {AnalyserThresholdResult} from "../../enums/AnalyserThresholdResult";
-import {AbtStage} from "../../../plotsServices/enums/AbtStage";
+import {AbtStage} from "../../../plotsService/enums/AbtStage";
 import {AnalyserDetailType} from "../../enums/AnalyserDetailType";
 
 export class AnalyserReportActivityDetail extends AbstractAnalyserReportDetail {

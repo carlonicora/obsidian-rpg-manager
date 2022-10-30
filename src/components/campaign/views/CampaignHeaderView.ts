@@ -8,6 +8,9 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 	public render(
 	): void {
 		this.addTitle();
+
+		if (this.api.settings.usePlotStructures)
+			this.addPlot();
 	}
 
 	protected addTitle(

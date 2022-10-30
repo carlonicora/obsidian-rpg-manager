@@ -1,6 +1,5 @@
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {NewHeaderViewInterface} from "../interfaces/NewHeaderViewInterface";
-import {Component, MarkdownRenderer, setIcon} from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {BreadcrumbService} from "../../../services/breadcrumbService/BreadcrumbService";
 import {ComponentOptionsService} from "../../../services/componentOptionsService/ComponentOptionsService";
@@ -8,6 +7,7 @@ import {GalleryCarouselView} from "../../../services/galleryService/views/Galler
 import {ElementInterface} from "../interfaces/ElementInterface";
 import {ElementDataInterface} from "../interfaces/ElementDataInterface";
 import {ClassInterface} from "../../../api/interfaces/ClassInterface";
+import {PlotService} from "../../../services/plotsService/PlotService";
 
 export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 	private _breadcumbContainerEl: HTMLDivElement;
@@ -71,7 +71,12 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 
 	protected addPlot(
 	): void {
+		this._plotContainerEl.addClass('rpg-manager-header-container-info-plot');
 
+		const plotView = this.api.service(PlotService).getView();
+
+		plotView.render(this.model.abt, this._plotContainerEl);
+		plotView.render(this.model.storyCircle, this._plotContainerEl);
 	}
 
 	protected addAnalyser(

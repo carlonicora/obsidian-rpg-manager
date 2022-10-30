@@ -1,6 +1,6 @@
 import {SceneType} from "../enums/SceneType";
 import {AnalyserDataImportInterface} from "./AnalyserDataImportInterface";
-import {AbtStage} from "../../plotsServices/enums/AbtStage";
+import {AbtStage} from "../../plotsService/enums/AbtStage";
 import {AnalyserInterface} from "./AnalyserInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";

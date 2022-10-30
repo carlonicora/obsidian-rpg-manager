@@ -1,4 +1,4 @@
-import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
+import {AbtStage} from "../../../services/plotsService/enums/AbtStage";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 
 export interface SessionDataInterface {

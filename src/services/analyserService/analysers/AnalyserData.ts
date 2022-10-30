@@ -1,5 +1,5 @@
 import {AnalyserDataInterface} from "../interfaces/AnalyserDataInterface";
-import {AbtStage} from "../../plotsServices/enums/AbtStage";
+import {AbtStage} from "../../plotsService/enums/AbtStage";
 import {SceneType} from "../enums/SceneType";
 
 export class AnalyserData implements AnalyserDataInterface {

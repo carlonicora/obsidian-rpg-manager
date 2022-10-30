@@ -1,10 +1,10 @@
 import {SessionDataInterface} from "../interfaces/SessionDataInterface";
 import {SessionMetadataInterface} from "../interfaces/SessionMetadataInterface";
-import {AbtStage} from "../../../services/plotsServices/enums/AbtStage";
-import {Plots} from "../../../services/plotsServices/models/Plots";
+import {AbtStage} from "../../../services/plotsService/enums/AbtStage";
+import {Plots} from "../../../services/plotsService/models/Plots";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 import {DateService} from "../../../services/dateService/DateService";
-import {PlotService} from "../../../services/plotsServices/PlotService";
+import {PlotService} from "../../../services/plotsService/PlotService";
 
 export class AbstractSessionData extends Plots implements SessionDataInterface {
 	protected metadata: SessionMetadataInterface;

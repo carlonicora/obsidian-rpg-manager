@@ -7,35 +7,67 @@ import {RelationshipsSelectionModal} from "../relationshipsService/modals/Relati
 import {IdSwitcherModal} from "../idService/modals/IdSwitcherModal";
 import {GalleryManagementModal} from "../galleryService/modals/GalleryManagementModal";
 import {GalleryService} from "../galleryService/GalleryService";
+import {CampaignModel} from "../../components/campaign/models/CampaignModel";
+import {SessionModel} from "../../components/session/models/SessionModel";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
 		model: ModelInterface,
 		containerEl: HTMLElement
 	): void {
-		this._addFunctionality(containerEl, 'Relationships', 'Manage Relationship')
+		this._addFunctionality(containerEl, 'Relationship')
 			.addEventListener("click", () => {
 				new RelationshipsSelectionModal(this.api, model).open();
 			});
 
 		this._addSeparator(containerEl);
 
-		this._addFunctionality(containerEl,'Move', 'Move your ' + ComponentType[model.id.type])
+		this._addFunctionality(containerEl,'Move')
 			.addEventListener("click", () => {
 				new IdSwitcherModal(this.api, model.file).open();
 			});
 
 		this._addSeparator(containerEl);
 
-		this._addFunctionality(containerEl, 'Images', 'Gallery Manager')
+		this._addFunctionality(containerEl, 'Gallery')
 			.addEventListener("click", () => {
 				new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
 			});
+
+		if (model instanceof CampaignModel){
+			this._addSeparator(containerEl);
+
+			//TODO edit onclick
+			this._addFunctionality(containerEl, 'Timeline')
+				.addEventListener("click", () => {
+					new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
+				});
+
+		} else if (model instanceof SessionModel){
+			this._addSeparator(containerEl);
+
+			//TODO edit onclick
+			this._addFunctionality(containerEl, 'Manage Scenes')
+				.addEventListener("click", () => {
+					new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
+				});
+
+		}
+
+		if (!model.isComplete) {
+			this._addSeparator(containerEl);
+
+			//TODO edit onclick
+			this._addFunctionality(containerEl, 'Complete')
+				.addEventListener("click", () => {
+					new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
+				});
+
+		}
 	}
 
 	private _addFunctionality(
 		containerEl: HTMLElement,
-		title: string,
 		description: string,
 	): HTMLDivElement {
 		return  containerEl.createDiv({cls: 'option', text: description});

@@ -13,5 +13,9 @@ export class AdventureHeaderView extends AbstractHeaderView implements NewHeader
 		this.addComponentOptions();
 		this.addGallery();
 		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+
+		if (this.api.settings.usePlotStructures)
+			this.addPlot();
+
 	}
 }

@@ -1,6 +1,6 @@
 import {CampaignDataInterface} from "../interfaces/CampaignDataInterface";
 import {CampaignMetadataInterface} from "../interfaces/CampaignMetadataInterface";
-import {PlotsAbtOnly} from "../../../services/plotsServices/plots/PlotsAbtOnly";
+import {PlotsAbtOnly} from "../../../services/plotsService/plots/PlotsAbtOnly";
 import {FantasyCalendarService} from "../../../services/fantasyCalendarService/FantasyCalendarService";
 import {Calendar} from "obsidian-fantasy-calendar";
 import {

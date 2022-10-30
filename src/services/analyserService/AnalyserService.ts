@@ -2,7 +2,7 @@ import {AnalyserServiceInterface} from "./interfaces/AnalyserServiceInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {SceneType} from "./enums/SceneType";
 import {AnalyserDataImportInterface} from "./interfaces/AnalyserDataImportInterface";
-import {AbtStage} from "../plotsServices/enums/AbtStage";
+import {AbtStage} from "../plotsService/enums/AbtStage";
 import {AnalyserInterface} from "./interfaces/AnalyserInterface";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {ActInterface} from "../../components/act/interfaces/ActInterface";

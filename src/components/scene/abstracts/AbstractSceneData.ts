@@ -1,10 +1,10 @@
 import {AbstractModel} from "../../../managers/modelsManager/abstracts/AbstractModel";
 import {SceneDataInterface} from "../interfaces/SceneDataInterface";
 import {SceneMetadataInterface} from "../interfaces/SceneMetadataInterface";
-import {StoryCircleStage} from "../../../services/plotsServices/enums/StoryCircleStage";
+import {StoryCircleStage} from "../../../services/plotsService/enums/StoryCircleStage";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 import {DateService} from "../../../services/dateService/DateService";
-import {PlotService} from "../../../services/plotsServices/PlotService";
+import {PlotService} from "../../../services/plotsService/PlotService";
 import {AnalyserService} from "../../../services/analyserService/AnalyserService";
 import {SceneType} from "../../../services/analyserService/enums/SceneType";
 

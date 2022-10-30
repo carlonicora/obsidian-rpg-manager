@@ -1,4 +1,4 @@
-import {PlotsMetadataInterface} from "../../../services/plotsServices/interfaces/PlotsMetadataInterface";
+import {PlotsMetadataInterface} from "../../../services/plotsService/interfaces/PlotsMetadataInterface";
 import {AdventureDataMetadataInterface} from "./AdventureDataMetadataInterface";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
 

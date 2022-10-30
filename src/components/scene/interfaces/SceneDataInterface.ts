@@ -1,4 +1,4 @@
-import {StoryCircleStage} from "../../../services/plotsServices/enums/StoryCircleStage";
+import {StoryCircleStage} from "../../../services/plotsService/enums/StoryCircleStage";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 import {SceneType} from "../../../services/analyserService/enums/SceneType";
 

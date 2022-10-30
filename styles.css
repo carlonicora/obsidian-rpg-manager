@@ -118,6 +118,7 @@ textarea:hover {
   border-bottom: 1px solid var(--rpg-manager-colour-border);
   text-align: center;
   min-height: 4em;
+  position: relative;
 }
 .rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-title .rpg-manager-header-container-title-name {
   position: absolute;
@@ -339,6 +340,52 @@ textarea:hover {
 }
 .rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator .rpg-manager-image-carousel-images-navigator-next {
   float: right;
+}
+
+.rpg-manager-header-container-info-plot {
+  border-top: solid 1px var(--rpg-manager-colour-border);
+  padding: 20px;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container {
+  margin-bottom: 10px;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-title {
+  font-weight: bold;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements {
+  width: 100%;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-title {
+  font-variant: small-caps;
+  font-size: 0.8em;
+  color: var(--rpg-manager-colour-text-very-light);
+  float: left;
+  width: 100px;
+  text-align: right;
+  padding-right: 10px;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-description {
+  width: calc(100% - 130px);
+  float: left;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-description p {
+  margin: 0px;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-editor {
+  width: 25px;
+  float: right;
+  display: none;
+  cursor: pointer;
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container:hover {
+  background-color: var(--rpg-manager-colour-background);
+}
+.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container:hover .rpg-manager-header-container-info-plot-container-elements-container-editor {
+  display: block;
 }
 
 .flatpickr-calendar {

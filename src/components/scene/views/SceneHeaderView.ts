@@ -6,7 +6,7 @@ import {DateElement} from "../../../services/dateService/views/elements/DateElem
 import {SessionSelectorElement} from "../../../managers/viewsManager/elements/SessionSelectorElement";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {StoryCircleStageElement} from "../../../services/plotsServices/views/elements/StoryCircleStageElement";
+import {StoryCircleStageElement} from "../../../services/plotsService/views/elements/StoryCircleStageElement";
 import {SceneTypeElement} from "../../../services/analyserService/views/elements/SceneTypeElement";
 import {CheckboxElement} from "../../../managers/viewsManager/elements/CheckboxElement";
 import {RunElement} from "../../../services/runningTimeService/views/elements/RunElement";
