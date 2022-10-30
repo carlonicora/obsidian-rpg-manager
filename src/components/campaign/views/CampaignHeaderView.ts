@@ -7,6 +7,20 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 
 	public render(
 	): void {
+		this.addTitle();
+	}
 
+	protected addTitle(
+	): void {
+		if (this.model.images.length == 0) {
+			super.addTitle();
+		} else {
+			const titleOverlayEl: HTMLDivElement = this.titleContainerEl.createDiv({cls: 'rpg-manager-header-container-title-overlay'});
+			const titleEl: HTMLDivElement = titleOverlayEl.createDiv({cls: 'rpg-manager-header-container-title-name'});
+			titleEl.textContent = this.model.file.basename;
+
+			this.titleContainerEl.addClass('rpg-manager-header-container-title-overlay');
+			this.titleContainerEl.style.backgroundImage = 'url(\'' + this.model.images[0].src + '\')';
+		}
 	}
 }

@@ -10,7 +10,31 @@
 			font-size: 2em;
 			border-bottom: 1px solid var(--rpg-manager-colour-border);
 			text-align: center;
+			min-height: 4em;
+
+			.rpg-manager-header-container-title-name {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%);
+			}
+
+			.rpg-manager-header-container-title-overlay {
+				content: '';
+				top: 0;
+				right: 0;
+				bottom: 100%;
+				left: 100%;
+				background-color: rgba(128, 128, 128, 0.5);
+				min-height: 350px;
+
+				.rpg-manager-header-container-title-name {
+					color: var(--color-base-00);
+				}
+			}
 		}
+
+
 
 		.rpg-manager-header-container-info {
 			padding: 10px;
