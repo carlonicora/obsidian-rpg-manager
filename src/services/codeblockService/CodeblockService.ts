@@ -158,6 +158,8 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 		const dataWorker = await new CodeblockRunningWorker(this.api);
 		dataWorker.addOrUpdate(domain, {});
+
+		this._worker.updateContent(domain);
 	}
 
 	public async stopRunningTime(
@@ -180,6 +182,8 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		if (file !== undefined){
 			const newContent = await domain.originalFileContent.replace(domain.originalCodeblockContent, domain.codeblockContent);
 			this.api.service(FileManipulatorService).maybeWrite(domain.file, newContent);
+		} else {
+			this._worker.updateContent(domain);
 		}
 	}
 }

@@ -20,4 +20,13 @@ export interface DateServiceInterface {
 		currentDate: DateInterface|undefined,
 		component: ModelInterface,
 	): number|undefined;
+
+	formatHoursMinutes(
+		durationInMinutes?: number,
+	): string;
+
+
+	formatMinutesSeconds(
+		durationInSeconds?: number,
+	): string;
 }

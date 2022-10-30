@@ -4,6 +4,7 @@ import {SceneInterface} from "../../../../../components/scene/interfaces/SceneIn
 export interface RunElementDataInterface extends ElementDataInterface {
 	values: {
 		isRunning: boolean,
+		runtime?: number,
 		scene: SceneInterface,
 	}
 }

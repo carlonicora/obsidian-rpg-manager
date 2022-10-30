@@ -3,7 +3,7 @@ import {AbstractHeaderView} from "../../../managers/viewsManager/abstracts/Abstr
 import {ClueInterface} from "../interfaces/ClueInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
 import {ShortTextElement} from "../../../managers/viewsManager/elements/ShortTextElement";
-import {DateElement} from "../../../managers/viewsManager/elements/DateElement";
+import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
 
 export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {

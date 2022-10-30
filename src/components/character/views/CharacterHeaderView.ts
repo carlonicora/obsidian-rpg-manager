@@ -4,7 +4,7 @@ import {CharacterInterface} from "../interfaces/CharacterInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
 import {ShortTextElement} from "../../../managers/viewsManager/elements/ShortTextElement";
 import {DateService} from "../../../services/dateService/DateService";
-import {DateElement} from "../../../managers/viewsManager/elements/DateElement";
+import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 
 export class CharacterHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CharacterInterface;

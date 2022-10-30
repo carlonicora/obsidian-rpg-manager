@@ -95,4 +95,36 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 			return Math.floor(end.diff(start, "years").years);
 		}
 	}
+
+	public formatMinutesSeconds(
+		durationInSeconds?: number,
+	): string {
+		if (durationInSeconds === undefined)
+			return '00:00:00';
+
+		const hours: number = Math.floor(durationInSeconds / 3600);
+		const minutes: number = Math.floor((durationInSeconds - hours * 3600) / 60);
+		const seconds: number = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
+
+		return  this._padHMS(hours) + ':' + this._padHMS(minutes) + ':' + this._padHMS(seconds);
+	}
+
+	private _padHMS(
+		duration: number,
+	): string {
+		if (duration === 0)
+			return '00';
+
+		if (duration < 10)
+			return '0' + duration.toString();
+
+		return duration.toString();
+	}
+
+	public formatHoursMinutes(
+		durationInSeconds?: number,
+	): string {
+		//todo implement
+		return '';
+	}
 }

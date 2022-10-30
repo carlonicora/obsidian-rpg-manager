@@ -2,7 +2,7 @@ import {AbstractHeaderView} from "../../../managers/viewsManager/abstracts/Abstr
 import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
 import {EventInterface} from "../interfaces/EventInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
-import {DateElement} from "../../../managers/viewsManager/elements/DateElement";
+import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 
 export class EventHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: EventInterface;

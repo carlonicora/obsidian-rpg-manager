@@ -1,5 +1,5 @@
 import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
-import {DateElementDataInterface} from "../../../../managers/viewsManager/elements/interfaces/DateElementDataInterface";
+import {DateElementDataInterface} from "../../../dateService/views/elements/interfaces/DateElementDataInterface";
 import {
 	FantasyCalendarDateInterface
 } from "../../interfaces/FantasyCalendarDateInterface";

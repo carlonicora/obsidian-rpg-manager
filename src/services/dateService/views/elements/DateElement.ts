@@ -1,7 +1,7 @@
-import {AbstractElement} from "../abstracts/AbstractElement";
+import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
 import {DateElementDataInterface} from "./interfaces/DateElementDataInterface";
 import flatpickr from "flatpickr";
-import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
+import {CodeblockService} from "../../../codeblockService/CodeblockService";
 
 export class DateElement extends AbstractElement {
 	render(

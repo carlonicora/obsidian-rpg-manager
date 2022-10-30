@@ -2,7 +2,7 @@ import {AbstractHeaderView} from "../../../managers/viewsManager/abstracts/Abstr
 import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
-import {DateElement} from "../../../managers/viewsManager/elements/DateElement";
+import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 import {SessionSelectorElement} from "../../../managers/viewsManager/elements/SessionSelectorElement";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
@@ -10,6 +10,7 @@ import {StoryCircleStageElement} from "../../../services/plotsServices/views/ele
 import {SceneTypeElement} from "../../../services/analyserService/views/elements/SceneTypeElement";
 import {CheckboxElement} from "../../../managers/viewsManager/elements/CheckboxElement";
 import {RunElement} from "../../../services/runningTimeService/views/elements/RunElement";
+import {RuntimeDurationElement} from "../../../services/runningTimeService/views/elements/RuntimeDurationElement";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -53,6 +54,13 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 				title: 'SceneRun',
 				values: {isRunning: this.model.isCurrentlyRunning, scene: this.model}
 			});
+
+			if (this.model.currentDuration > 0)
+				this.addInfoElement(RuntimeDurationElement, {
+					title: 'Duration',
+					values: {isRunning: this.model.isCurrentlyRunning, runtime: this.model.currentDuration, scene: this.model}
+				});
+
 		}
 	}
 }
