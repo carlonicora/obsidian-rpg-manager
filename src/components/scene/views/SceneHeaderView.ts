@@ -11,6 +11,11 @@ import {SceneTypeElement} from "../../../services/analyserService/views/elements
 import {CheckboxElement} from "../../../managers/viewsManager/elements/CheckboxElement";
 import {RunElement} from "../../../services/runningTimeService/views/elements/RunElement";
 import {RuntimeDurationElement} from "../../../services/runningTimeService/views/elements/RuntimeDurationElement";
+import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
+import {AnalyserService} from "../../../services/analyserService/AnalyserService";
+import {AbtStage} from "../../../services/plotsService/enums/AbtStage";
+import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
+import {StoryCircleStage} from "../../../services/plotsService/enums/StoryCircleStage";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -61,6 +66,32 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 					values: {isRunning: this.model.isCurrentlyRunning, runtime: this.model.currentDuration, scene: this.model}
 				});
 
+			let abtStage: AbtStage|undefined=undefined;
+
+			switch (this.model.storyCircleStage){
+				case StoryCircleStage.You:
+				case StoryCircleStage.Need:
+					abtStage = AbtStage.Need;
+					break;
+				case StoryCircleStage.Go:
+				case StoryCircleStage.Search:
+					abtStage = AbtStage.And;
+					break;
+				case StoryCircleStage.Find:
+				case StoryCircleStage.Take:
+					abtStage = AbtStage.But;
+					break;
+				case StoryCircleStage.Return:
+				case StoryCircleStage.Change:
+					abtStage = AbtStage.Therefore;
+					break;
+			}
+
+			if (abtStage !== undefined) {
+				const analyser: AnalyserInterface = this.api.service(AnalyserService).createScene(this.model, abtStage);
+
+				this.addAnalyser(analyser, AnalyserReportType.Scene);
+			}
 		}
 	}
 }

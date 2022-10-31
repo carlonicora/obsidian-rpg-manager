@@ -3,6 +3,9 @@ import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/
 import {ActInterface} from "../interfaces/ActInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
 import {AbtStageElement} from "../../../services/plotsService/views/elements/AbtStageElement";
+import {AnalyserService} from "../../../services/analyserService/AnalyserService";
+import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
 
 export class ActHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: ActInterface;
@@ -26,6 +29,12 @@ export class ActHeaderView extends AbstractHeaderView implements NewHeaderViewIn
 		}
 
 		if (this.api.settings.useSceneAnalyser) {
+			const analyser: AnalyserInterface = this.api.service(AnalyserService).createAct(this.model, this.model.abtStage);
+
+			if (analyser.scenesCount > 0) {
+				this.addAnalyser(analyser, AnalyserReportType.Visual);
+				this.addAnalyser(analyser, AnalyserReportType.Extended);
+			}
 		}
 	}
 }

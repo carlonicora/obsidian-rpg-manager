@@ -8,6 +8,8 @@ import {ElementInterface} from "../interfaces/ElementInterface";
 import {ElementDataInterface} from "../interfaces/ElementDataInterface";
 import {ClassInterface} from "../../../api/interfaces/ClassInterface";
 import {PlotService} from "../../../services/plotsService/PlotService";
+import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
+import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
 
 export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 	private _breadcumbContainerEl: HTMLDivElement;
@@ -38,8 +40,8 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 		this._infoContainerEl = this._headerInfoAndGalleryEl.createDiv({cls: 'rpg-manager-header-container-info-data'});
 		this._galleryContainerEl = this._headerInfoAndGalleryEl.createDiv({cls: 'rpg-manager-header-container-info-gallery'});
 
-		this._plotContainerEl = this._headerContainerEl.createDiv({cls: 'rpg-manager-header-container-info-plot'});
-		this._analyserContainerEl = this._headerContainerEl.createDiv({cls: 'rpg-manager-header-container-info-analyser'});
+		this._plotContainerEl = this._headerContainerEl.createDiv({cls: ''});
+		this._analyserContainerEl = this._headerContainerEl.createDiv({cls: ''});
 	}
 
 	public abstract render(): void;
@@ -81,8 +83,13 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 	}
 
 	protected addAnalyser(
+		analyser: AnalyserInterface,
+		type: AnalyserReportType,
 	): void {
+		if (!this._analyserContainerEl.hasClass('rpg-manager-header-container-info-analyser'))
+			this._analyserContainerEl.addClass('rpg-manager-header-container-info-analyser');
 
+		analyser.render(type, this._analyserContainerEl);
 	}
 
 	protected addInfoElement(

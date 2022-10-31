@@ -22,7 +22,7 @@ export class AnalyserExtendedView extends AbstractAnalyserView {
 	): void {
 		if (!report.isValid) return;
 
-		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyserService'});
+		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyser'});
 
 		this._addHeaderElement(report, analyserEl);
 

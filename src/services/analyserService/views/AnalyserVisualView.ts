@@ -22,9 +22,9 @@ export class AnalyserVisualView extends AbstractAnalyserView {
 	): void {
 		if (!report.isValid) return;
 
-		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyserService centred'});
+		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyser centred'});
 
-		const analyserContainerEl: HTMLDivElement = analyserEl.createDiv({cls: 'analyserService-container clearfix'});
+		const analyserContainerEl: HTMLDivElement = analyserEl.createDiv({cls: 'analyser-container clearfix'});
 
 		this.addCircle(analyserContainerEl, report.percentage, report.thresholdType, true, 'Score');
 

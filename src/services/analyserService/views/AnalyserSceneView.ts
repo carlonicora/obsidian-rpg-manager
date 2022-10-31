@@ -8,7 +8,7 @@ export class AnalyserSceneView extends AbstractAnalyserView {
 	): void {
 		if (!report.isValid) return;
 
-		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyserService'});
+		const analyserEl: HTMLDivElement = containerEl.createDiv({cls: 'rpgm-new-analyser'});
 
 		const analyserListEl: HTMLUListElement = analyserEl.createEl('ul');
 		const analyserListTimingElementEl: HTMLLIElement = analyserListEl.createEl('li');

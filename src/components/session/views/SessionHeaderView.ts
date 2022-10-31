@@ -5,6 +5,9 @@ import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextE
 import {AbtStageElement} from "../../../services/plotsService/views/elements/AbtStageElement";
 import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 import {TimeElement} from "../../../services/dateService/views/elements/TimeElement";
+import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
+import {AnalyserService} from "../../../services/analyserService/AnalyserService";
+import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
 
 export class SessionHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SessionInterface;
@@ -19,17 +22,22 @@ export class SessionHeaderView extends AbstractHeaderView implements NewHeaderVi
 
 		this.addInfoElement(DateElement, {title: 'Session Date', values: this.model.irl, editableKey: 'data.irl'});
 
-		if (this.api.settings.usePlotStructures) {
-			this.addInfoElement(AbtStageElement, {
-				title: 'ABT Stage',
-				values: this.model.abtStage,
-				editableKey: 'data.abtStage'
+		if (this.api.settings.useSceneAnalyser) {
+			this.addInfoElement(TimeElement, {
+				title: 'Target Duration',
+				values: this.model.targetDuration,
+				editableKey: 'data.targetDuration'
 			});
 
-			this.addPlot();
-		}
+			const analyser: AnalyserInterface = this.api.service(AnalyserService).createSession(
+				this.model,
+				this.model.abtStage,
+			);
 
-		if (this.api.settings.useSceneAnalyser)
-			this.addInfoElement(TimeElement, {title: 'Target Duration', values: this.model.targetDuration, editableKey: 'data.targetDuration'});
+			if (analyser.scenesCount > 0) {
+				this.addAnalyser(analyser, AnalyserReportType.Visual);
+				this.addAnalyser(analyser, AnalyserReportType.Extended);
+			}
+		}
 	}
 }

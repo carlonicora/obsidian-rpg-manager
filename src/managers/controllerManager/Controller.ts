@@ -9,7 +9,6 @@ import {
 } from "obsidian";
 import {ControllerMetadataInterface} from "./interfaces/ControllerMetadataInterface";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
-import {ResponseDataInterface} from "../../../REFACTOR/responses/interfaces/ResponseDataInterface";
 import {ViewType} from "../viewsManager/enum/ViewType";
 import {StaticViewInterface} from "../staticViewsManager/interfaces/StaticViewInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
@@ -22,7 +21,6 @@ import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterfac
 export class Controller extends MarkdownRenderChild {
 	private _componentVersion: number|undefined = undefined;
 	private _currentComponent: ModelInterface;
-	private _data: ResponseDataInterface;
 	private _isActive = false;
 	private _views: Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}>;
 
