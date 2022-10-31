@@ -1,6 +1,15 @@
 import {AbstractHeaderView} from "../../../managers/viewsManager/abstracts/AbstractHeaderView";
 import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
+import {ModelSelectorElement} from "../../../managers/viewsManager/elements/ModelSelectorElement";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {ActInterface} from "../../act/interfaces/ActInterface";
+import {SessionInterface} from "../../session/interfaces/SessionInterface";
 
 export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CampaignInterface;
@@ -8,6 +17,28 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 	public render(
 	): void {
 		this.addTitle();
+
+		const adventures = this.api.database.readList<AdventureInterface>(ComponentType.Adventure, this.model.id)
+			.sort(this.api.service(SorterService).create<AdventureInterface>([
+				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
+			]));
+		this.addInfoElement(ModelSelectorElement, {title: 'Current Adventure', values: {id: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
+
+		let acts = this.api.database.readList<ActInterface>(ComponentType.Act, this.model.id)
+			.sort(this.api.service(SorterService).create<ActInterface>([
+				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
+			]));
+
+		if (this.model.currentAdventureId != undefined)
+			acts = acts.filter((act: ActInterface) => act.id.adventureId === this.model.currentAdventureId?.adventureId);
+
+		this.addInfoElement(ModelSelectorElement, {title: 'Current Act', values: {id: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
+
+		const sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.model.id)
+			.sort(this.api.service(SorterService).create<SessionInterface>([
+				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
+			]));
+		this.addInfoElement(ModelSelectorElement, {title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addPlot();

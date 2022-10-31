@@ -21,6 +21,7 @@ import {GalleryService} from "../../services/galleryService/GalleryService";
 import {
 	AllComponentManipulatorService
 } from "../../services/allComponentManipulatorService/AllComponentManipulatorService";
+import {IdService} from "../../services/idService/IdService";
 
 export class Database extends Component implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];
@@ -77,6 +78,13 @@ export class Database extends Component implements DatabaseInterface {
 		query: any,
 	): T[] {
 		return (<unknown>this.recordset.filter((query !== null ? query : true))) as T[];
+	}
+
+	public readByStringID<T extends ModelInterface>(
+		stringID: string
+	): T|undefined {
+		const id = this._api.service(IdService).createFromID(stringID);
+		return this.readSingle<T>(id.type, id);
 	}
 
 	public update(

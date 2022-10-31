@@ -1,7 +1,7 @@
 import {ComponentDataMetadataInterface} from "../../../core/interfaces/ComponentDataMetadataInterface";
 
 export interface SceneDataMetadataInterface extends ComponentDataMetadataInterface {
-	sessionId?: number | undefined;
+	sessionId?: string | number | undefined;
 	action?: string | undefined;
 	trigger?: string | undefined;
 	date?: string | undefined;

@@ -3,7 +3,7 @@ import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
 import {DateElement} from "../../../services/dateService/views/elements/DateElement";
-import {SessionSelectorElement} from "../../../managers/viewsManager/elements/SessionSelectorElement";
+import {ModelSelectorElement} from "../../../managers/viewsManager/elements/ModelSelectorElement";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {StoryCircleStageElement} from "../../../services/plotsService/views/elements/StoryCircleStageElement";
@@ -32,7 +32,7 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 			session.id.campaignId === this.model.id.campaignId
 		);
 
-		this.addInfoElement(SessionSelectorElement, {title: 'Session', values: {sessionId: this.model.session?.id.sessionId, sessions: sessions}, editableKey: 'data.sessionId'});
+		this.addInfoElement(ModelSelectorElement, {title: 'Session', values: {id: this.model.session?.id, list: sessions}, editableKey: 'data.sessionId'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addInfoElement(StoryCircleStageElement, {title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});

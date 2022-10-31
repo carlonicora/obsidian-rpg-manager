@@ -2,7 +2,6 @@ import {AbstractService} from "../../managers/servicesManager/abstracts/Abstract
 import {ComponentOptionsServiceInterface} from "./interfaces/ComponentOptionsServiceInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
-import {ComponentType} from "../../core/enums/ComponentType";
 import {RelationshipsSelectionModal} from "../relationshipsService/modals/RelationshipsSelectionModal";
 import {IdSwitcherModal} from "../idService/modals/IdSwitcherModal";
 import {GalleryManagementModal} from "../galleryService/modals/GalleryManagementModal";

@@ -31,6 +31,10 @@ export interface DatabaseInterface {
 		name: string,
 	): T|undefined;
 
+	readByStringID<T extends ModelInterface>(
+		stringID: string
+	): T|undefined;
+
 	readByBaseName<T extends ModelInterface>(
 		basename: string,
 	): T|undefined;

@@ -32,7 +32,7 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 
 		this._headerContainerEl = containerEl.createDiv({cls: 'rpg-manager-header-container'});
 		this.titleContainerEl = this._headerContainerEl.createDiv({cls: 'rpg-manager-header-container-title'});
-		this._componentOptionsContainerEl = this._headerContainerEl.createDiv({cls: 'rpg-manager-component-option'});
+		this._componentOptionsContainerEl = this._headerContainerEl.createDiv();
 
 		this._headerInfoAndGalleryEl = this._headerContainerEl.createDiv({cls: 'rpg-manager-header-container-info rpg-manager-header-container-info-no-gallery clearfix'});
 		this._infoContainerEl = this._headerInfoAndGalleryEl.createDiv({cls: 'rpg-manager-header-container-info-data'});
@@ -51,6 +51,7 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 
 	protected addComponentOptions(
 	): void {
+		this._componentOptionsContainerEl.addClass('rpg-manager-component-option');
 		this.api.service(ComponentOptionsService).render(this.model, this._componentOptionsContainerEl);
 	}
 

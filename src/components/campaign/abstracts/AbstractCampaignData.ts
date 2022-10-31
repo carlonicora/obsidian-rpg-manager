@@ -9,6 +9,8 @@ import {
 import {DateService} from "../../../services/dateService/DateService";
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
+import {IdService} from "../../../services/idService/IdService";
+import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;
@@ -28,16 +30,25 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		return {date: fantasyCalendar.current as FantasyCalendarDateInterface, isFantasyCalendar: true};
 	}
 
-	get currentAdventureId(): string|undefined {
-		return this.metadata.data?.currentAdventureId;
+	get currentAdventureId(): IdInterface|undefined {
+		if (this.metadata.data.currentAdventureId === undefined || this.metadata.data.currentAdventureId === '')
+			return undefined;
+
+		return this.api.service(IdService).createFromID(this.metadata.data.currentAdventureId);
 	}
 
-	get currentActId(): string|undefined {
-		return this.metadata.data?.currentActId;
+	get currentActId(): IdInterface|undefined {
+		if (this.metadata.data.currentActId === undefined || this.metadata.data.currentActId === '')
+			return undefined;
+
+		return this.api.service(IdService).createFromID(this.metadata.data.currentActId);
 	}
 
-	get currentSessionId(): string|undefined {
-		return this.metadata.data?.currentSessionId;
+	get currentSessionId(): IdInterface|undefined {
+		if (this.metadata.data.currentSessionId === undefined || this.metadata.data.currentSessionId === '')
+			return undefined;
+
+		return this.api.service(IdService).createFromID(this.metadata.data.currentSessionId);
 	}
 
 	get calendar(): CalendarType {

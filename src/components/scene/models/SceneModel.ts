@@ -121,14 +121,28 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get session(): SessionInterface | undefined {
-		if (this.metadata.data?.sessionId === undefined)
+		if (this.metadata.data?.sessionId === undefined || this.metadata.data?.sessionId === '')
 			return undefined;
 
-		const response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
-			session.id.type === ComponentType.Session &&
-			session.id.campaignId === this.id.campaignId &&
-			session.id.sessionId === this.metadata.data?.sessionId
-		);
+		let response: SessionInterface[] = [];
+
+		if (typeof this.metadata.data.sessionId === 'number') {
+			response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
+				session.id.type === ComponentType.Session &&
+				session.id.campaignId === this.id.campaignId &&
+				session.id.sessionId === this.metadata.data?.sessionId
+			);
+		} else {
+			try {
+				const session: SessionInterface | undefined = this.api.database.readByStringID(this.metadata.data.sessionId);
+				if (session !== undefined)
+					response = [session];
+
+			} catch (e) {
+				response = [];
+			}
+
+		}
 
 		return response[0] ?? undefined;
 	}
