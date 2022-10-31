@@ -10,6 +10,7 @@ import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface"
 import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
+import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 
 export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CampaignInterface;
@@ -39,6 +40,8 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
 		this.addInfoElement(ModelSelectorElement, {title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
+
+		this.addInfoElement(DateElement, {title: 'Current Date', values: this.model.date, editableKey: 'data.date'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addPlot();
