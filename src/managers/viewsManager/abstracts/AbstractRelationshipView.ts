@@ -146,6 +146,8 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 			if (this.api.service(RelationshipService).getTableFieldInline(this.relatedComponentType, field))
 				cell.addClass('inline');
 		});
+
+		headerRow.insertCell();
 	}
 
 	private _addRelationships(
@@ -176,7 +178,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 						let editedValue = '';
 						switch(field){
 							case TableField.Image:
-								image = new Image(75, 75);
+								image = new Image(50, 50);
 
 								image.onerror = (evt: Event | string) => {
 									cell.textContent = '';
@@ -193,7 +195,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 								image.src = value;
 								break;
 							case TableField.SceneType:
-								editedValue = sceneTypeDescription.get(+value) ?? ''
+								editedValue = sceneTypeDescription.get(+value) ?? '';
 								editedValue = editedValue.substring(0, editedValue.indexOf(':'));
 								cell.textContent = editedValue;
 								break;
@@ -221,6 +223,24 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 					}
 				}
 			});
+
+			const editCell = relationshipRow.insertCell();
+
+			const isRowEditable = (
+				this.relationshipType !== undefined &&
+				(
+					relationship.type !== RelationshipType.Parent &&
+					relationship.type !== RelationshipType.Hierarchy
+				)
+			);
+
+			if (isRowEditable){
+				editCell.addClass('rpg-manager-table-editor-container');
+
+				const editorEl = editCell.createDiv({cls: 'rpg-manager-table-editor'});
+				setIcon(editorEl, 'edit');
+			}
+
 		});
 	}
 

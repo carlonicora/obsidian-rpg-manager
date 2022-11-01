@@ -34,8 +34,8 @@
 	}
 
 	tr > td.image {
-		width: 75px;
-		min-width: 75px;
+		width: 50px;
+		min-width: 50px;
 	}
 
 	tr > th {
@@ -45,8 +45,13 @@
 	}
 
 	tr > td {
+		height: 50px;
 		border: none;
 		text-align: left;
+
+		p {
+			margin: 0px;
+		}
 	}
 
 	tr > td .inline {
@@ -55,6 +60,31 @@
 
 	tbody > tr > td {
 		font-size: 0.8em;
+	}
+
+	tbody > tr > td.rpg-manager-table-editor-container {
+		width: 20px;
+		min-width: 20px;
+		margin: 0px;
+		padding: 0px;
+
+		.rpg-manager-table-editor {
+			display: none;
+			cursor: pointer;
+			margin: 0px;
+			padding: 0px;
+			color: var(--rpg-manager-colour-text-link);
+		}
+	}
+
+	tbody > tr:hover {
+		td {
+			background-color: var(--rpg-manager-colour-background);
+		}
+
+		td > .rpg-manager-table-editor {
+			display: inline;
+		}
 	}
 
 	tbody > tr > td.smaller {

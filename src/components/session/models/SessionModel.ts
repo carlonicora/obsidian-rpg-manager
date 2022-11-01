@@ -10,7 +10,6 @@ import {
 } from "../../../services/fileManipulatorService/interfaces/FilePatternPositionInterface";
 import {DatabaseInterface} from "../../../managers/databaseManager/interfaces/DatabaseInterface";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
-import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
