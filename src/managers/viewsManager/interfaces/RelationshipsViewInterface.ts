@@ -8,6 +8,7 @@ export interface RelationshipsViewInterface extends StaticViewInterface {
 	containerEl: HTMLElement;
 	relatedComponentType: ComponentType;
 	relationshipType: RelationshipType|undefined;
+	relationshipTitle?: string;
 
 	render(
 	): void;

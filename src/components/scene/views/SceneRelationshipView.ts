@@ -2,7 +2,7 @@ import {AbstractRelationshipView} from "../../../managers/viewsManager/abstracts
 import {RelationshipsViewInterface} from "../../../managers/viewsManager/interfaces/RelationshipsViewInterface";
 import {TableField} from "../../../services/relationshipsService/enums/TableField";
 import {SceneInterface} from "../interfaces/SceneInterface";
-import {SceneType} from "../../../services/analyserService/enums/SceneType";
+import {DateService} from "../../../services/dateService/DateService";
 
 export class SceneRelationshipView extends AbstractRelationshipView implements RelationshipsViewInterface {
 	protected getFieldValue(
@@ -18,18 +18,18 @@ export class SceneRelationshipView extends AbstractRelationshipView implements R
 					return '';
 
 				return model.sceneType?.toString() ?? '';
-				break;
 			case TableField.SceneExciting:
 				if (!this.api.settings.useSceneAnalyser)
 					return '';
 
 				return String(model.isExciting);
-				break;
 			case TableField.StoryCircleIndicator:
 				if (!this.api.settings.usePlotStructures)
 					return '';
 
 				return model.storyCircleStage?.toString() ?? '';
+			case TableField.Date:
+				return this.api.service(DateService).getReadableDate(model.date, model);
 		}
 		return '';
 	}

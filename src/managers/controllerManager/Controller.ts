@@ -23,7 +23,7 @@ export class Controller extends MarkdownRenderChild {
 	private _componentVersion: number|undefined = undefined;
 	private _currentComponent: ModelInterface;
 	private _isActive = false;
-	private _views: Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}>;
+	private _views: Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType, title?: string}>;
 
 	constructor(
 		private _api: RpgManagerApiInterface,
@@ -123,6 +123,7 @@ export class Controller extends MarkdownRenderChild {
 								type: ViewType.Relationships,
 								relatedType: componentType,
 								relationshipType: value.relationship ? this._api.service(RelationshipService).getTypeFromString(value.relationship) : undefined,
+								title: value.title,
 							}
 						);
 
@@ -148,7 +149,7 @@ export class Controller extends MarkdownRenderChild {
 		if (await this._initialise()) {
 			this.containerEl.empty();
 
-			this._views.forEach((viewClassDetails: {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType}, viewClass: ViewClassInterface) => {
+			this._views.forEach((viewClassDetails: {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType, title?: string}, viewClass: ViewClassInterface) => {
 				let view: StaticViewInterface|undefined = undefined;
 
 				if (viewClassDetails.type === ViewType.Header){
@@ -158,6 +159,7 @@ export class Controller extends MarkdownRenderChild {
 						view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
 						(<RelationshipsViewInterface>view).relatedComponentType = viewClassDetails.relatedType;
 						(<RelationshipsViewInterface>view).relationshipType = viewClassDetails.relationshipType;
+						(<RelationshipsViewInterface>view).relationshipTitle = viewClassDetails.title;
 					}
 				}
 
