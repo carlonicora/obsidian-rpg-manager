@@ -1,4 +1,4 @@
-import {RpgManagerSettingsInterface} from "../../settings/RpgManagerSettingsInterface";
+import {RpgManagerSettingsInterface} from "../../settings/interfaces/RpgManagerSettingsInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export interface RpgManagerInterface {

@@ -6,6 +6,7 @@ import {RelationshipInterface} from "./RelationshipInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
+import {TableField} from "../enums/TableField";
 
 export interface RelationshipServiceInterface {
 	createRelationship(
@@ -38,4 +39,15 @@ export interface RelationshipServiceInterface {
 	getTypeFromString(
 		readableRelationshipType: string,
 	): RelationshipType;
+
+
+
+	getTableFields(
+		relationshipComponentType: ComponentType,
+	): TableField[];
+
+	getTableFieldInline(
+		relationshipComponentType: ComponentType,
+		field: TableField,
+	): boolean;
 }

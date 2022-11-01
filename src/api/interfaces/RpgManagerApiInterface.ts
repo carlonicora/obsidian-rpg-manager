@@ -3,7 +3,7 @@ import {ViewsManagerInterface} from "../../managers/viewsManager/interfaces/View
 import {ComponentsManagerInterface} from "../../managers/componentsManager/interfaces/ComponentsManagerInterface";
 import {DatabaseInterface} from "../../managers/databaseManager/interfaces/DatabaseInterface";
 import {ControllerManagerInterface} from "../../managers/controllerManager/interfaces/ControllerManagerInterface";
-import {RpgManagerSettingsInterface} from "../../settings/RpgManagerSettingsInterface";
+import {RpgManagerSettingsInterface} from "../../settings/interfaces/RpgManagerSettingsInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {App} from "obsidian";
 import {RpgManagerInterface} from "../../core/interfaces/RpgManagerInterface";

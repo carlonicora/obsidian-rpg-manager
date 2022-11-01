@@ -10,8 +10,16 @@ import {
 	ControllerMetadataRelationshipInterface
 } from "../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
+import {TableField} from "./enums/TableField";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
+import {
+	RpgManagerAdvancedSettingsListElementInterface
+} from "../../settings/interfaces/RpgManagerAdvancedSettingsListElementInterface";
+import {
+	RpgManagerAdvancedSettingsListsInterface
+} from "../../settings/interfaces/RpgManagerAdvancedSettingsListsInterface";
 
-export class RelationshipService implements RelationshipServiceInterface, ServiceInterface {
+export class RelationshipService extends AbstractService implements RelationshipServiceInterface, ServiceInterface {
 	public createRelationship(
 		type: RelationshipType,
 		path: string,
@@ -138,5 +146,76 @@ export class RelationshipService implements RelationshipServiceInterface, Servic
 	): RelationshipType {
 		readableRelationshipType = readableRelationshipType[0].toUpperCase() + readableRelationshipType.substring(1).toLowerCase();
 		return RelationshipType[readableRelationshipType as keyof typeof RelationshipType];
+	}
+
+	public getTableFields(
+		relationshipComponentType: ComponentType,
+	): TableField[] {
+		//TODO change the name "AdventureList" and so on to something related to the Campaign Settings and Component Type
+		let fieldList: RpgManagerAdvancedSettingsListsInterface | undefined = undefined;
+		switch (relationshipComponentType){
+			case ComponentType.Adventure:
+				fieldList = this.api.settings.advanced.Agnostic.AdventureList;
+				break;
+			case ComponentType.Act:
+				fieldList = this.api.settings.advanced.Agnostic.ActList;
+				break;
+			case ComponentType.Scene:
+				fieldList = this.api.settings.advanced.Agnostic.SceneList;
+				break;
+			case ComponentType.Session:
+				fieldList = this.api.settings.advanced.Agnostic.SessionList;
+				break;
+			case ComponentType.Subplot:
+				fieldList = this.api.settings.advanced.Agnostic.SubplotList;
+				break;
+			case ComponentType.Character:
+				fieldList = this.api.settings.advanced.Agnostic.CharacterList;
+				break;
+			case ComponentType.Clue:
+				fieldList = this.api.settings.advanced.Agnostic.ClueList;
+				break;
+			case ComponentType.Event:
+				fieldList = this.api.settings.advanced.Agnostic.EventList;
+				break;
+			case ComponentType.Faction:
+				fieldList = this.api.settings.advanced.Agnostic.FactionList;
+				break;
+			case ComponentType.Location:
+				fieldList = this.api.settings.advanced.Agnostic.LocationList;
+				break;
+			case ComponentType.Music:
+				fieldList = this.api.settings.advanced.Agnostic.MusicList;
+				break;
+			case ComponentType.NonPlayerCharacter:
+				fieldList = this.api.settings.advanced.Agnostic.NonPlayerCharacterList;
+				break;
+		}
+
+		const response: TableField[] = [];
+
+		fieldList?.fields.forEach((element: RpgManagerAdvancedSettingsListElementInterface) => {
+			if (element.checked)
+				response.push(element.field);
+
+		});
+
+		return response;
+	}
+
+	public getTableFieldInline(
+		relationshipComponentType: ComponentType,
+		field: TableField,
+	): boolean {
+		switch (field){
+			case TableField.Name:
+			case TableField.Synopsis:
+			case TableField.Url:
+				return false;
+				break;
+			default:
+				return true;
+				break;
+		}
 	}
 }

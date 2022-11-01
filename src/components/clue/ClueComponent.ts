@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {ClueTemplate} from "./templates/ClueTemplate";
+import {ClueRelationshipView} from "./views/ClueRelationshipView";
 
 export class ClueComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class ClueComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[ClueHeaderView, ViewType.Header],
+			[ClueRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

@@ -15,7 +15,7 @@ import {ComponentType} from "../../core/enums/ComponentType";
 import {RelationshipType} from "../../services/relationshipsService/enums/RelationshipType";
 import {RelationshipService} from "../../services/relationshipsService/RelationshipService";
 import {ViewClassInterface} from "../viewsManager/interfaces/ViewClassInterface";
-import {NewRelationshipsViewInterface} from "../viewsManager/interfaces/NewRelationshipsViewInterface";
+import {RelationshipsViewInterface} from "../viewsManager/interfaces/RelationshipsViewInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
 export class Controller extends MarkdownRenderChild {
@@ -155,8 +155,8 @@ export class Controller extends MarkdownRenderChild {
 				} else {
 					if (viewClassDetails.relatedType !== undefined && viewClassDetails.relationshipType !== undefined) {
 						view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
-						(<NewRelationshipsViewInterface>view).relatedComponentType = viewClassDetails.relatedType;
-						(<NewRelationshipsViewInterface>view).relationshipType = viewClassDetails.relationshipType;
+						(<RelationshipsViewInterface>view).relatedComponentType = viewClassDetails.relatedType;
+						(<RelationshipsViewInterface>view).relationshipType = viewClassDetails.relationshipType;
 					}
 				}
 

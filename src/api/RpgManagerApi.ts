@@ -12,7 +12,7 @@ import {ModelsManagerInterface} from "../managers/modelsManager/interfaces/Model
 import {ModelsManager} from "../managers/modelsManager/ModelsManager";
 import {ControllerManagerInterface} from "../managers/controllerManager/interfaces/ControllerManagerInterface";
 import {ControllerManager} from "../managers/controllerManager/ControllerManager";
-import {RpgManagerSettingsInterface} from "../settings/RpgManagerSettingsInterface";
+import {RpgManagerSettingsInterface} from "../settings/interfaces/RpgManagerSettingsInterface";
 import {ServiceInterface} from "../managers/servicesManager/interfaces/ServiceInterface";
 import {ClassInterface} from "./interfaces/ClassInterface";
 import {ModalsManagerInterface} from "../managers/modalsManager/interfaces/ModalsManagerInterface";

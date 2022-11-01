@@ -2,7 +2,6 @@ import {AbstractHeaderView} from "../../../managers/viewsManager/abstracts/Abstr
 import {NewHeaderViewInterface} from "../../../managers/viewsManager/interfaces/NewHeaderViewInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextElement";
-import {AbtStageElement} from "../../../services/plotsService/views/elements/AbtStageElement";
 import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 import {TimeElement} from "../../../services/dateService/views/elements/TimeElement";
 import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";

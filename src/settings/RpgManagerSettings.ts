@@ -2,15 +2,13 @@ import {Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {SettingsFactory} from "./factories/SettingsFactory";
-import {
-	RpgManagerAdvancedSettingsInterface,
-	RpgManagerAdvancedSettingsListsInterface, rpgManagerDefaultSettings,
-	RpgManagerSettingsInterface
-} from "./RpgManagerSettingsInterface";
 import {SettingType} from "./enums/SettingType";
 import {SettingInterface} from "./interfaces/SettingsInterface";
-import {tableFieldName} from "../../REFACTOR/views/enums/TableField";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
+import {tableFieldName} from "../services/relationshipsService/enums/TableField";
+import {RpgManagerAdvancedSettingsInterface} from "./interfaces/RpgManagerAdvancedSettingsInterface";
+import {RpgManagerAdvancedSettingsListsInterface} from "./interfaces/RpgManagerAdvancedSettingsListsInterface";
+import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./interfaces/RpgManagerSettingsInterface";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private _plugin: RpgManagerInterface;

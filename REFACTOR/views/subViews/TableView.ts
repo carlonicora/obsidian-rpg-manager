@@ -1,16 +1,9 @@
-import {TableResponseInterface} from "../../responses/interfaces/TableResponseInterface";
-import {ContentInterface} from "../../responses/contents/interfaces/ContentInterface";
-import {AbstractSubModelView} from "../abstracts/AbstractSubModelView";
 import {ComponentType} from "../../../src/core/enums/ComponentType";
 import {IdInterface} from "../../../src/services/idService/interfaces/IdInterface";
-import {DateContent} from "../../responses/contents/DateContent";
-import {EditorSelector} from "../../../src/core/helpers/EditorSelector";
 import {setIcon} from "obsidian";
 import {AdventureInterface} from "../../../src/components/adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../../src/components/act/interfaces/ActInterface";
-import {TableResponseElementInterface} from "../../responses/interfaces/TableResponseElementInterface";
 import {RelationshipType} from "../../../src/services/relationshipsService/enums/RelationshipType";
-import {ImageContent} from "../../responses/contents/ImageContent";
 
 export class TableView extends AbstractSubModelView {
 	private _tableEl: HTMLTableElement;
@@ -43,74 +36,8 @@ export class TableView extends AbstractSubModelView {
 					arrowIconEl.style.transform = 'rotate(0deg)';
 				}
 			});
-
-			if (data.class === 'rpgm-plot'){
-				const titleEditor = headerEl.createEl('span', {cls: 'rpgm-td-edit', text: 'edit'});
-				titleEditor.addEventListener('click', () => {
-					EditorSelector.focusOnDataKey(this.app, data.currentComponent);
-				})
-			}
 		}
-
-		if (data.create !== undefined){
-			const createButtonEl = divContainer.createEl('button', {cls: 'create-button'});
-
-			let id:IdInterface|undefined;
-
-
-			switch(data.create){
-				case ComponentType.Adventure:
-					createButtonEl.textContent = 'Create act from AdventureModel Plot';
-					createButtonEl.addEventListener("click", () => {
-						if (data.campaignId !== undefined && data.adventureId !== undefined) {
-							id = this.factories.id.create(ComponentType.Adventure, data.campaignId, data.adventureId);
-							if (id !== undefined) {
-								const previousAdventure = this.database.readSingle<AdventureInterface>(
-									ComponentType.Adventure,
-									id,
-									data.adventureId - 1,
-								);
-
-								let nextActId = 1;
-								if (previousAdventure != null){
-									const previousAdventureActs = this.database.readList<ActInterface>(
-										ComponentType.Act,
-										id,
-										previousAdventure.id.adventureId,
-									);
-									previousAdventureActs.forEach((act: ActInterface) => {
-										if (nextActId <= (act.id.actId ?? 0)) nextActId = (act.id.actId ?? 0) + 1;
-									});
-								}
-
-								data.content.forEach((element: TableResponseElementInterface) => {
-									const content = element.elements[1];
-									if (data.campaignId != null) {
-										this.factories.files.silentCreate(
-											ComponentType.Act,
-											'ActModel ' + nextActId,
-											data.campaignId,
-											data.adventureId,
-											nextActId,
-											undefined,
-											undefined,
-											{
-												synopsis: content.content,
-											},
-											true
-										);
-									}
-									nextActId++;
-								});
-							}
-
-							createButtonEl.style.display = 'none';
-						}
-					});
-
-					break;
-			}
-		}
+		let id:IdInterface|undefined;
 
 		this._tableEl = divContainer.createEl('table');
 		this._tableEl.addClass('rpgm-table');

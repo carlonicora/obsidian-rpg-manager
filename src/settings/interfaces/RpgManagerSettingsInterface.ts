@@ -1,4 +1,5 @@
-import {TableField} from "../../REFACTOR/views/enums/TableField";
+import {TableField} from "../../services/relationshipsService/enums/TableField";
+import {RpgManagerAdvanceSettingsSettingListInterface} from "./RpgManagerAdvanceSettingsSettingListInterface";
 
 export interface RpgManagerSettingsInterface {
 	templateFolder: string;
@@ -10,38 +11,6 @@ export interface RpgManagerSettingsInterface {
 	useSceneAnalyser: boolean;
 	advanced: RpgManagerAdvanceSettingsSettingListInterface;
 }
-
-export interface RpgManagerAdvanceSettingsSettingListInterface {
-	Agnostic: RpgManagerAdvancedSettingsInterface;
-}
-
-export interface RpgManagerAdvancedSettingsInterface {
-	ActList: RpgManagerAdvancedSettingsListsInterface;
-	AdventureList: RpgManagerAdvancedSettingsListsInterface;
-	CharacterList: RpgManagerAdvancedSettingsListsInterface;
-	ClueList: RpgManagerAdvancedSettingsListsInterface;
-	EventList: RpgManagerAdvancedSettingsListsInterface;
-	FactionList: RpgManagerAdvancedSettingsListsInterface;
-	LocationList: RpgManagerAdvancedSettingsListsInterface;
-	MusicList: RpgManagerAdvancedSettingsListsInterface;
-	NonPlayerCharacterList: RpgManagerAdvancedSettingsListsInterface;
-	SceneList: RpgManagerAdvancedSettingsListsInterface;
-	SessionList: RpgManagerAdvancedSettingsListsInterface;
-	SubplotList: RpgManagerAdvancedSettingsListsInterface;
-}
-
-export interface RpgManagerAdvancedSettingsListsInterface {
-	title: string;
-	defaultVisible: boolean;
-	fields: RpgManagerAdvancedSettingsListElementInterface[];
-}
-
-export interface RpgManagerAdvancedSettingsListElementInterface {
-	field: TableField;
-	checked: boolean;
-	required: boolean;
-}
-
 
 export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	automaticMove: true,

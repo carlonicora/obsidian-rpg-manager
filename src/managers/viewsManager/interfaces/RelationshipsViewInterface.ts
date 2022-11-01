@@ -2,10 +2,15 @@ import {StaticViewInterface} from "../../staticViewsManager/interfaces/StaticVie
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
+import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
 
-export interface NewRelationshipsViewInterface extends StaticViewInterface {
+export interface RelationshipsViewInterface extends StaticViewInterface {
 	model: ModelInterface;
 	containerEl: HTMLElement;
 	relatedComponentType: ComponentType;
-	relationshipType: RelationshipType;
+	relationshipType: RelationshipType|undefined;
+
+	render(
+		alternativeRelationships?: RelationshipListInterface,
+	): void;
 }

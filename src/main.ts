@@ -9,7 +9,7 @@ import {
 } from 'obsidian';
 import {ComponentType} from "./core/enums/ComponentType";
 import {CreationModal} from "./core/modals/CreationModal";
-import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/RpgManagerSettingsInterface";
+import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/interfaces/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
 import {TagService} from "./services/tagService/TagService";
