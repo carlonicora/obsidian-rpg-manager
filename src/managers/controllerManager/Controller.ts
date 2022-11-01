@@ -17,6 +17,7 @@ import {RelationshipService} from "../../services/relationshipsService/Relations
 import {ViewClassInterface} from "../viewsManager/interfaces/ViewClassInterface";
 import {RelationshipsViewInterface} from "../viewsManager/interfaces/RelationshipsViewInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {ControllerMetadataModelElementInterface} from "./interfaces/ControllerMetadataModelElementInterface";
 
 export class Controller extends MarkdownRenderChild {
 	private _componentVersion: number|undefined = undefined;
@@ -109,7 +110,7 @@ export class Controller extends MarkdownRenderChild {
 		}
 
 		if (yamlSource.models.lists !== undefined) {
-			Object.entries(yamlSource.models.lists).forEach(([relationshipType, value]: [string, any]) => {
+			Object.entries(yamlSource.models.lists).forEach(([relationshipType, value]: [string, ControllerMetadataModelElementInterface]) => {
 				const componentType: ComponentType|undefined = this._api.service(RelationshipService).getComponentTypeFromListName(relationshipType);
 
 				if (componentType !== undefined) {
@@ -121,7 +122,7 @@ export class Controller extends MarkdownRenderChild {
 							{
 								type: ViewType.Relationships,
 								relatedType: componentType,
-								relationshipType: this._api.service(RelationshipService).getTypeFromString(relationshipType),
+								relationshipType: value.relationship ? this._api.service(RelationshipService).getTypeFromString(value.relationship) : undefined,
 							}
 						);
 
@@ -153,7 +154,7 @@ export class Controller extends MarkdownRenderChild {
 				if (viewClassDetails.type === ViewType.Header){
 					view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
 				} else {
-					if (viewClassDetails.relatedType !== undefined && viewClassDetails.relationshipType !== undefined) {
+					if (viewClassDetails.relatedType !== undefined) {
 						view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
 						(<RelationshipsViewInterface>view).relatedComponentType = viewClassDetails.relatedType;
 						(<RelationshipsViewInterface>view).relationshipType = viewClassDetails.relationshipType;

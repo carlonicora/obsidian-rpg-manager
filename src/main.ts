@@ -20,17 +20,17 @@ import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
 import {ServiceManagerInterface} from "./managers/servicesManager/interfaces/ServiceManagerInterface";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
-import {DatabaseUpdater} from "./updater/DatabaseUpdater";
+import {DatabaseUpdater} from "./core/updater/DatabaseUpdater";
 import {StaticViewType} from "./managers/staticViewsManager/enums/StaticViewType";
-import {UpdaterModal} from "./updater/modals/UpdaterModal";
+import {UpdaterModal} from "./core/updater/modals/UpdaterModal";
 import {LoggerService} from "./services/loggerService/LoggerService";
 import {RunningTimeService} from "./services/runningTimeService/RunningTimeService";
 import {LogMessageType} from "./services/loggerService/enums/LogMessageType";
 import {CodeblockService} from "./services/codeblockService/CodeblockService";
-import {RPGManagerView} from "./staticViews/rpgManagerView/RPGManagerView";
-import {ReleaseNoteView} from "./staticViews/releaseNoteView/ReleaseNoteView";
-import {ErrorView} from "./staticViews/errorView/ErrorView";
-import {TimelineView} from "./staticViews/timelineView/TimelineView";
+import {RPGManagerView} from "./core/staticViews/rpgManagerView/RPGManagerView";
+import {ReleaseNoteView} from "./core/staticViews/releaseNoteView/ReleaseNoteView";
+import {ErrorView} from "./core/staticViews/errorView/ErrorView";
+import {TimelineView} from "./core/staticViews/timelineView/TimelineView";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private _isVersionUpdated=false;

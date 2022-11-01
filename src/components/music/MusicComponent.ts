@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {MusicTemplate} from "./templates/MusicTemplate";
+import {MusicRelationshipView} from "./views/MusicRelationshipView";
 
 export class MusicComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class MusicComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[MusicHeaderView, ViewType.Header],
+			[MusicRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

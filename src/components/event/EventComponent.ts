@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {EventTemplate} from "./templates/EventTemplate";
+import {EventRelationshipView} from "./views/EventRelationshipView";
 
 export class EventComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class EventComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[EventHeaderView, ViewType.Header],
+			[EventRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {LocationTemplate} from "./templates/LocationTemplate";
+import {LocationRelationshipView} from "./views/LocationRelationshipView";
 
 export class LocationComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class LocationComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[LocationHeaderView, ViewType.Header],
+			[LocationRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

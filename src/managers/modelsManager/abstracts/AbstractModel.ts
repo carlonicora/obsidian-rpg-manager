@@ -12,7 +12,7 @@ import {
 	ControllerMetadataRelationshipInterface
 } from "../../controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {Md5} from "ts-md5";
-import {ComponentNotFoundError} from "../../../errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";

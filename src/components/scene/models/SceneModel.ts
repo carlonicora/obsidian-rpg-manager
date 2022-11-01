@@ -6,7 +6,7 @@ import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {AbstractSceneData} from "../abstracts/AbstractSceneData";
-import {ComponentNotFoundError} from "../../../errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
 import {RunningTimeService} from "../../../services/runningTimeService/RunningTimeService";
 import {activeSceneTypes} from "../../../services/analyserService/enums/SceneType";
 

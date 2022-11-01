@@ -4,7 +4,13 @@ import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface"
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ActMetadataInterface} from "../interfaces/ActMetadataInterface";
 import {AbstractActData} from "../abstracts/AbstractActData";
-import {ComponentNotFoundError} from "../../../errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
+import {DatabaseInterface} from "../../../managers/databaseManager/interfaces/DatabaseInterface";
+import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
+import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class ActModel extends AbstractActData implements ActInterface {
 	protected metadata: ActMetadataInterface;
@@ -52,5 +58,39 @@ export class ActModel extends AbstractActData implements ActInterface {
 		);
 
 		return response[0] ?? null;
+	}
+
+	getRelationships(
+		database?: DatabaseInterface
+	): RelationshipListInterface {
+		const response: RelationshipListInterface = super.getRelationships(database);
+
+		this.api.database.read<ModelInterface>((model: ModelInterface) =>
+			model.id.campaignId === this.id.campaignId &&
+			model.id.adventureId === this.id.adventureId &&
+			model.id.actId === this.id.actId
+		).forEach((model: ModelInterface) => {
+			if (model.id.type === ComponentType.Scene){
+				model.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
+					if (sceneRelationship.component !== undefined)
+						response.add(this.api.service(RelationshipService).createRelationship(
+							RelationshipType.Unidirectional,
+							sceneRelationship.path,
+							undefined,
+							sceneRelationship.component,
+						));
+
+				});
+			}
+
+			response.add(this.api.service(RelationshipService).createRelationship(
+				RelationshipType.Hierarchy,
+				model.file.path,
+				undefined,
+				model,
+			));
+		});
+
+		return response;
 	}
 }

@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {FactionTemplate} from "./templates/FactionTemplate";
+import {FactionRelationshipView} from "./views/FactionRelationshipView";
 
 export class FactionComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class FactionComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[FactionHeaderView, ViewType.Header],
+			[FactionRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

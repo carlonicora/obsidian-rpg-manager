@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {NonPlayerCharacterTemplate} from "./templates/NonPlayerCharacterTemplate";
+import {NonPlayerCharacterRelationshipView} from "./views/NonPlayerCharacterRelationshipView";
 
 export class NonPlayerCharacterComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class NonPlayerCharacterComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[CharacterHeaderView, ViewType.Header],
+			[NonPlayerCharacterRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

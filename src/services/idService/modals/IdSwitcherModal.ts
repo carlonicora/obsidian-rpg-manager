@@ -3,7 +3,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {IdInterface} from "../interfaces/IdInterface";
 import {DatabaseInitialiser} from "../../../managers/databaseManager/DatabaseInitialiser";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
-import {InvalidIdChecksumError} from "../../../errors/InvalidIdChecksumError";
+import {InvalidIdChecksumError} from "../../../core/errors/InvalidIdChecksumError";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {IdService} from "../IdService";

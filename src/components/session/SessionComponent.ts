@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {SessionTemplate} from "./templates/SessionTemplate";
+import {SessionRelationshipView} from "./views/SessionRelationshipView";
 
 export class SessionComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class SessionComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[SessionHeaderView, ViewType.Header],
+			[SessionRelationshipView, ViewType.Relationships],
 		]);
 	}
 }

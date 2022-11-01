@@ -8,6 +8,13 @@ import {FileManipulatorInterface} from "../../../services/fileManipulatorService
 import {
 	FilePatternPositionInterface
 } from "../../../services/fileManipulatorService/interfaces/FilePatternPositionInterface";
+import {DatabaseInterface} from "../../../managers/databaseManager/interfaces/DatabaseInterface";
+import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
+import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
+import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
+import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 
 export class SessionModel extends AbstractSessionData implements SessionInterface {
 	public stage: ComponentStage = ComponentStage.Run;
@@ -62,5 +69,37 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		);
 
 		return response[0] ?? null;
+	}
+
+	getRelationships(
+		database?: DatabaseInterface
+	): RelationshipListInterface {
+		const response: RelationshipListInterface = super.getRelationships(database);
+
+		this.api.database.read<SceneInterface>((model: SceneInterface) =>
+			model.id.campaignId === this.id.campaignId &&
+			model.session !== undefined &&
+			model.session.id === this.id
+		).forEach((model: SceneInterface) => {
+			model.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
+				if (sceneRelationship.component !== undefined)
+					response.add(this.api.service(RelationshipService).createRelationship(
+						RelationshipType.Hierarchy,
+						sceneRelationship.path,
+						undefined,
+						sceneRelationship.component,
+					));
+
+			});
+
+			response.add(this.api.service(RelationshipService).createRelationship(
+				RelationshipType.Hierarchy,
+				model.file.path,
+				undefined,
+				model,
+			));
+		});
+
+		return response;
 	}
 }

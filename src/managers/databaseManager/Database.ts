@@ -1,7 +1,7 @@
 import {CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
-import {ComponentNotFoundError} from "../../errors/ComponentNotFoundError";
+import {ComponentNotFoundError} from "../../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
@@ -10,13 +10,13 @@ import {SessionInterface} from "../../components/session/interfaces/SessionInter
 import {ActInterface} from "../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
-import {ComponentDuplicatedError} from "../../errors/ComponentDuplicatedError";
+import {ComponentDuplicatedError} from "../../core/errors/ComponentDuplicatedError";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
-import {RpgErrorInterface} from "../../errors/interfaces/RpgErrorInterface";
+import {RpgErrorInterface} from "../../core/errors/interfaces/RpgErrorInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {RunningTimeService} from "../../services/runningTimeService/RunningTimeService";
-import {AbstractRpgManagerError} from "../../errors/abstracts/AbstractRpgManagerError";
+import {AbstractRpgManagerError} from "../../core/errors/abstracts/AbstractRpgManagerError";
 import {GalleryService} from "../../services/galleryService/GalleryService";
 import {
 	AllComponentManipulatorService

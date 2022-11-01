@@ -12,6 +12,7 @@ import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {AdventureTemplate} from "./templates/AdventureTemplate";
+import {AdvenureRelationshipView} from "./views/AdvenureRelationshipView";
 
 export class AdventureComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -41,6 +42,7 @@ export class AdventureComponent implements ComponentInterface {
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
 			[AdventureHeaderView, ViewType.Header],
+			[AdvenureRelationshipView, ViewType.Relationships],
 		]);
 	}
 }
