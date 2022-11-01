@@ -251,6 +251,7 @@ textarea:hover {
 }
 .rpg-manager-table tr > td.image {
   width: 75px;
+  min-width: 75px;
 }
 .rpg-manager-table tr > th {
   white-space: nowrap;

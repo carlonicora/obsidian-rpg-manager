@@ -62,7 +62,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.sceneId),
 		]);
 
-		this._cellClass.set(TableField.Date, ['smaller']);
+		this._cellClass.set(TableField.Date, ['smaller', 'inline']);
 		this._cellClass.set(TableField.Duration, ['smaller']);
 		this._cellClass.set(TableField.Index, ['smaller']);
 		this._cellClass.set(TableField.Age, ['smaller']);
@@ -72,6 +72,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		this._cellClass.set(TableField.Found, ['smaller']);
 		this._cellClass.set(TableField.Name, ['inline']);
 		this._cellClass.set(TableField.Synopsis, ['inline']);
+		this._cellClass.set(TableField.Image, ['image']);
 	}
 
 	public render(
@@ -136,7 +137,9 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 			const cell = headerRow.createEl('th');
 
 			if (field === TableField.StoryCircleIndicator)
-				cell.textContent = ''
+				cell.textContent = '';
+			else if (field === TableField.Index)
+				cell.textContent = '#';
 			else
 				cell.textContent = tableFieldName.get(field) ?? '';
 

@@ -20,7 +20,7 @@ export class ComponentsManager implements ComponentsManagerInterface {
 	): T {
 		const response = this._components.get(component) as T;
 
-		//TODO replace error
+		//TODO change the empty error
 		if (response === undefined)
 			throw new Error('');
 

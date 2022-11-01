@@ -128,7 +128,7 @@ export class RelationshipService extends AbstractService implements Relationship
 				break;
 		}
 
-		//TODO remove empty error
+		//TODO change the empty error
 		if (response === undefined)
 			throw new Error('');
 
