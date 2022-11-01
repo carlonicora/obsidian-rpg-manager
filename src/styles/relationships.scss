@@ -1,0 +1,62 @@
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block > div .rpg-manager-table {
+	margin-left: 0px !important;
+	margin-right: 0px;
+	width: 100%;
+	max-width: 100%;
+}
+
+.rpg-manager-table-header {
+	margin-bottom: 0px;
+	padding-top: 15px;
+	cursor: pointer;
+	float: left;
+	width: 100%;
+
+	.rpgm-td-edit {
+		padding-left: 20px;
+		font-size: 0.7em;
+		cursor: pointer;
+		color: var(--text-accent);
+	}
+}
+
+.rpg-manager-table {
+	width: 100%;
+	max-width: 100%;
+
+	.inline {
+		white-space: nowrap;
+	}
+
+	thead {
+		border: none;
+		border-bottom: solid 1px var(--rpg-manager-colour-border);
+	}
+
+	tr > td.image {
+		width: 75px;
+	}
+
+	tr > th {
+		white-space: nowrap;
+		border: none;
+		text-align: left;
+	}
+
+	tr > td {
+		border: none;
+		text-align: left;
+	}
+
+	tr > td .inline {
+		white-space: nowrap;
+	}
+
+	tbody > tr > td {
+		font-size: 0.8em;
+	}
+
+	tbody > tr > td.smaller {
+		font-size: 0.7em;
+	}
+}

@@ -12,12 +12,13 @@ import {
 } from "../../../services/sorterService/interfaces/SorterComparisonElementInterface";
 import {sceneTypeDescription} from "../../../services/analyserService/enums/SceneType";
 import {EventInterface} from "../../../components/event/interfaces/EventInterface";
-import {CampaignInterface} from "../../../components/campaign/interfaces/CampaignInterface";
 import {SessionInterface} from "../../../components/session/interfaces/SessionInterface";
 import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
 
 export abstract class AbstractRelationshipView implements RelationshipsViewInterface {
 	public relatedComponentType: ComponentType;
@@ -25,6 +26,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 	public relationshipTitle: string|undefined;
 
 	private _componentSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
+	private _cellClass: Map<TableField, string[]> = new Map<TableField, string[]>();
 
 	private _fields: TableField[];
 	private _relationships: RelationshipInterface[];
@@ -40,7 +42,6 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 	) {
 		this._relationshipSortingMap = new Map();
 		this._relationshipSortingMap.set(ComponentType.Event, [new SorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date)]);
-		this._relationshipSortingMap.set(ComponentType.Campaign, [new SorterComparisonElement((component: RelationshipInterface) => (<CampaignInterface>component.component).id.campaignId)]);
 		this._relationshipSortingMap.set(ComponentType.Session, [
 			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).id.campaignId),
 			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).id.adventureId),
@@ -60,12 +61,21 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.actId),
 			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.sceneId),
 		]);
+
+		this._cellClass.set(TableField.Date, ['smaller']);
+		this._cellClass.set(TableField.Duration, ['smaller']);
+		this._cellClass.set(TableField.Index, ['smaller']);
+		this._cellClass.set(TableField.Age, ['smaller']);
+		this._cellClass.set(TableField.Url, ['smaller', 'inline']);
+		this._cellClass.set(TableField.SceneExciting, ['smaller']);
+		this._cellClass.set(TableField.SceneType, ['smaller']);
+		this._cellClass.set(TableField.Found, ['smaller']);
+		this._cellClass.set(TableField.Name, ['inline']);
+		this._cellClass.set(TableField.Synopsis, ['inline']);
 	}
 
 	public render(
 	): void {
-		//TODO sort relationships!
-
 		if (this.relationshipType === undefined)
 			this.relationshipType = RelationshipType.Reversed | RelationshipType.Bidirectional | RelationshipType.Unidirectional;
 
@@ -80,16 +90,22 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		);
 
 		if (this._relationships.length > 0) {
+			let sorter = this._relationshipSortingMap.get(this.relatedComponentType);
+			if (sorter === undefined)
+				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename, SorterType.Descending)];
+
+			this._relationships.sort(this.api.service(SorterService).create(sorter));
+
 			this._addTitle();
-			this._tableEl = this.containerEl.createEl('table');
-			this.addHeaders();
-			this.addRelationships();
+			this._tableEl = this.containerEl.createEl('table', {cls: 'rpg-manager-table'});
+			this._addHeaders();
+			this._addRelationships();
 		}
 	}
 
 	private _addTitle(
 	): void {
-		const headerEl = this.containerEl.createEl('h3', {cls: 'rpgm-table-header'});
+		const headerEl = this.containerEl.createEl('h3', {cls: 'rpg-manager-table-header'});
 		const arrowEl: HTMLSpanElement = headerEl.createSpan();
 		arrowEl.style.marginRight = '10px';
 		setIcon(arrowEl, 'openClose');
@@ -111,13 +127,13 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		});
 	}
 
-	protected addHeaders(
+	private _addHeaders(
 	): void {
 		const tableHeader = this._tableEl.createTHead();
 		const headerRow: HTMLTableRowElement = tableHeader.insertRow();
 
 		this._fields.forEach((field: TableField) => {
-			const cell = headerRow.insertCell();
+			const cell = headerRow.createEl('th');
 
 			if (field === TableField.StoryCircleIndicator)
 				cell.textContent = ''
@@ -129,7 +145,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		});
 	}
 
-	protected addRelationships(
+	private _addRelationships(
 	): void {
 		const tableBody = this._tableEl.createTBody();
 
@@ -141,8 +157,10 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 			this._fields.forEach((field: TableField) => {
 				const cell = relationshipRow.insertCell();
 
-				if (this.api.service(RelationshipService).getTableFieldInline(this.relatedComponentType, field))
-					cell.addClass('inline');
+				const classes = this._cellClass.get(field);
+
+				if (classes !== undefined)
+					cell.addClasses(classes);
 
 				if (relationship.component !== undefined) {
 					const value = this.getDefaultFieldValue(index, field, relationship.component, relationship.description);
@@ -152,6 +170,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 					} else {
 						let image: any|undefined = undefined;
 						let svgContainer: HTMLDivElement|undefined = undefined;
+						let editedValue = '';
 						switch(field){
 							case TableField.Image:
 								image = new Image(75, 75);
@@ -171,10 +190,16 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 								image.src = value;
 								break;
 							case TableField.SceneType:
-								cell.textContent = sceneTypeDescription.get(+value) ?? ''
+								editedValue = sceneTypeDescription.get(+value) ?? ''
+								editedValue = editedValue.substring(0, editedValue.indexOf(':'));
+								cell.textContent = editedValue;
 								break;
 							case TableField.SceneExciting:
 								cell.textContent = value === String(true) ? 'Yes' : '';
+								break;
+							case TableField.Duration:
+								if (value !== '00:00')
+									cell.textContent = value;
 								break;
 							case TableField.StoryCircleIndicator:
 								svgContainer = cell.createDiv();
