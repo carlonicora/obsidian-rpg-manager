@@ -133,6 +133,11 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		Bootstrapper.initialise(this);
 	}
 
+	public createDatabase(
+	): DatabaseInterface {
+		return this._database.createDatabase();
+	}
+
 	public fetcher<T extends FetcherInterface>(
 		fetcher: ClassInterface<T>,
 	): T {

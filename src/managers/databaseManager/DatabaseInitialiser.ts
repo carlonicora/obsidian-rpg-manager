@@ -28,7 +28,7 @@ export class DatabaseInitialiser {
 
 		const group = this._api.service(LoggerService).createGroup();
 
-		const response: DatabaseInterface = await this._api.database;
+		const response: DatabaseInterface = await this._api.createDatabase();
 		group.add(this._api.service(LoggerService).createInfo(LogMessageType.DatabaseInitialisation, 'Database Initialised'));
 
 		const components: ModelInterface[] = [];

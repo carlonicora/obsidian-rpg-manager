@@ -1,0 +1,40 @@
+.rpg-manager-modal {
+	display: block;
+	padding: 20px;
+
+	.input-title {
+		font-weight: 100;
+		font-size: 0.9em;
+		font-variant-caps: small-caps;
+		color: var(--text-muted);
+		border: none;
+		text-align: left;
+		margin-top: 20px;
+	}
+
+	.rpgm-modal-scene-descriptions {
+		.description-container{
+			margin-top: 20px;
+			border-top: solid 1px var(--background-modifier-border);
+
+			div, span {
+				margin-left: 20px;
+			}
+
+			span {
+				font-style: italic;
+				font-size: 0.9em;
+			}
+		}
+
+	}
+
+	button {
+		display: block;
+		margin-top: 10px;
+	}
+
+	.selector {
+		margin-bottom: 30px;
+	}
+}

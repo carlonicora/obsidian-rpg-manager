@@ -46,7 +46,7 @@ export class Database extends Component implements DatabaseInterface {
 		this.registerEvent(this._api.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
 
 		this._api.app.workspace.trigger("rpgmanager:index-complete");
-		this._api.app.workspace.trigger("rpgmanager:refresh-views");
+		this._api.app.workspace.trigger("rpgmanager:force-refresh-views");
 
 		this._api.service(RunningTimeService).updateMedianTimes(true);
 	}

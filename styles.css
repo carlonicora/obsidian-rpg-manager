@@ -1513,6 +1513,38 @@ span.flatpickr-weekday {
   display: block;
 }
 
+.rpg-manager-modal {
+  display: block;
+  padding: 20px;
+}
+.rpg-manager-modal .input-title {
+  font-weight: 100;
+  font-size: 0.9em;
+  font-variant-caps: small-caps;
+  color: var(--text-muted);
+  border: none;
+  text-align: left;
+  margin-top: 20px;
+}
+.rpg-manager-modal .rpgm-modal-scene-descriptions .description-container {
+  margin-top: 20px;
+  border-top: solid 1px var(--background-modifier-border);
+}
+.rpg-manager-modal .rpgm-modal-scene-descriptions .description-container div, .rpg-manager-modal .rpgm-modal-scene-descriptions .description-container span {
+  margin-left: 20px;
+}
+.rpg-manager-modal .rpgm-modal-scene-descriptions .description-container span {
+  font-style: italic;
+  font-size: 0.9em;
+}
+.rpg-manager-modal button {
+  display: block;
+  margin-top: 10px;
+}
+.rpg-manager-modal .selector {
+  margin-bottom: 30px;
+}
+
 .rpg-manager-header-container-info-analyser {
   border-top: solid 1px var(--rpg-manager-colour-border);
   padding: 20px;

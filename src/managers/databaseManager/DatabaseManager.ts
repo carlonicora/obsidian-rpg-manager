@@ -11,13 +11,19 @@ export class DatabaseManager implements DatabaseManagerInterface {
 	) {
 	}
 
-	get database(): DatabaseInterface {
+	public get database(): DatabaseInterface {
 		if (this._database === undefined)
 			this._database = new Database(this._api);
 
 		return this._database;
 	}
-	set database(database: DatabaseInterface) {
+
+	public set database(database: DatabaseInterface) {
 		this._database = database;
+	}
+
+	public createDatabase(
+	): DatabaseInterface {
+		return new Database(this._api);
 	}
 }

@@ -11,7 +11,6 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {RelationshipService} from "../RelationshipService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";
 import {SorterService} from "../../sorterService/SorterService";
-import {GalleryViewType} from "../../galleryService/enums/GalleryViewType";
 
 export class RelationshipsSelectionModal extends AbstractModal {
 	private _relationshipsEl: HTMLDivElement;
@@ -20,7 +19,7 @@ export class RelationshipsSelectionModal extends AbstractModal {
 	private _selectedType: ComponentType|undefined = undefined;
 
 	protected maxWidth = true;
-	protected title: string = 'Relationship Selector';
+	protected title = 'Relationship Selector';
 
 	private _availableRelationships: Map<ComponentType, ComponentType[]> = new Map<ComponentType, ComponentType[]>([
 		[ComponentType.Campaign, []],
@@ -66,9 +65,6 @@ export class RelationshipsSelectionModal extends AbstractModal {
 
 		const relationshipsModalEl = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-modal-relationships-container clearfix'});
 
-		// this._requiredRelationshipType(relationshipShortlistenersContainerEl);
-		// this._componentSearcher(relationshipShortlistenersContainerEl);
-
 		this._relationshipsEl = relationshipsModalEl.createDiv({cls:'relationships', text: ''});
 		this._addElementsToList();
 	}
@@ -103,39 +99,6 @@ export class RelationshipsSelectionModal extends AbstractModal {
 			});
 		}
 	}
-
-	/*
-	private _requiredRelationshipType(
-		contentEl: HTMLElement,
-	): void {
-		const relationshipSelectorEl: HTMLDivElement = contentEl.createDiv({cls: 'relationship-select'});
-
-
-		relationshipSelectorEl.createDiv().createEl('label', {text: 'Select the type of component'});
-		this._relationshipTypeSelectorEl = relationshipSelectorEl.createEl('select');
-		this._relationshipTypeSelectorEl.createEl("option", {
-			text: 'Existing Relationships',
-			value: '',
-		});
-		const availableRelationships = this._availableRelationships.get(this._currentComponent.id.type);
-		if (availableRelationships !== undefined && availableRelationships.length > 0) {
-			availableRelationships.forEach((type: ComponentType) => {
-				this._relationshipTypeSelectorEl.createEl("option", {
-					text: ComponentType[type] + 's',
-					value: type.toString(),
-				});
-			});
-			this._relationshipTypeSelectorEl.addEventListener('change', () => {
-				this._relationshipsEl.empty();
-				let value: ComponentType|undefined = undefined;
-
-				if (this._relationshipTypeSelectorEl.value !== '') value = (+this._relationshipTypeSelectorEl.value);
-				this._addElementsToList(value);
-			});
-		}
-	}
-
-	 */
 
 	private _componentSearcher(
 		contentEl: HTMLElement,

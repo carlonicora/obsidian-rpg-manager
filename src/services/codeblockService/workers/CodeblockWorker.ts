@@ -189,7 +189,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 	): Promise<boolean> {
 		if (domain.editor !== undefined){
 			await domain.editor.replaceRange(this._api.service(YamlService).stringify(domain.codeblock), domain.codeblockStart, domain.codeblockEnd);
-			this._api.app.vault.modify(domain.file, domain.editor.getValue())
+			await this._api.app.vault.modify(domain.file, domain.editor.getValue())
 				.then(() => {
 					this._api.database.readByPath(domain.file.path)?.touch();
 					this._api.app.workspace.trigger("rpgmanager:refresh-views");

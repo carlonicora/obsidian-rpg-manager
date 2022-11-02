@@ -13,6 +13,10 @@ import {CodeblockRelationshipWorker} from "./workers/CodeblockRelationshipWorker
 import {CodeblockKeyWorker} from "./workers/CodeblockKeyWorker";
 import {ImageService} from "../imageService/ImageService";
 import {CodeblockRunningWorker} from "./workers/CodeblockRunningWorker";
+import {DatabaseInitialiser} from "../../managers/databaseManager/DatabaseInitialiser";
+import {DatabaseInterface} from "../../managers/databaseManager/interfaces/DatabaseInterface";
+import {Md5} from "ts-md5";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 
 export class CodeblockService extends AbstractService implements CodeblockServiceInterface, ServiceInterface {
 	private _worker: CodeblockWorkerInterface;
@@ -76,11 +80,22 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		file: TFile,
 		id: string,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file, 'RpgManagerID');
+
 		if (domain === undefined)
 			return;
 
-		//TODO ADD!!!!
+		const checksum: string = await Md5.hashStr(id);
+
+		const dataWorker = await new CodeblockKeyWorker(this.api);
+		await dataWorker.addOrUpdate(domain, {key: 'id', value: id});
+		await dataWorker.addOrUpdate(domain, {key: 'checksum', value: checksum});
+
+		const oldModel: ModelInterface | undefined = await this.api.database.readByPath(file.path);
+		if (oldModel !== undefined)
+			await this.api.database.delete(oldModel);
+
+		await this._worker.updateContent(domain);
 	}
 
 	public async remove(

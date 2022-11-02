@@ -12,12 +12,10 @@ import {CreationModal} from "./core/modals/CreationModal";
 import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/interfaces/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
-import {TagService} from "./services/tagService/TagService";
 import {DatabaseInterface} from "./managers/databaseManager/interfaces/DatabaseInterface";
 import {ModelInterface} from "./managers/modelsManager/interfaces/ModelInterface";
 import {DatabaseInitialiser} from "./managers/databaseManager/DatabaseInitialiser";
 import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
-import {ServiceManagerInterface} from "./managers/servicesManager/interfaces/ServiceManagerInterface";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
 import {DatabaseUpdater} from "./core/updater/DatabaseUpdater";
@@ -35,9 +33,6 @@ import {TimelineView} from "./core/staticViews/timelineView/TimelineView";
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private _isVersionUpdated=false;
 	settings: RpgManagerSettingsInterface;
-	database: DatabaseInterface;
-	tagHelper: TagService;
-	services: ServiceManagerInterface;
 	version: string;
 	api: RpgManagerApiInterface;
 
@@ -100,8 +95,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 			.then((database: DatabaseInterface) => {
 				this.api.database = database;
 
-				this.database = database;
-				this.api.service(LoggerService).info(LogMessageType.Database, 'Database Initialised', this.database);
+				this.api.service(LoggerService).info(LogMessageType.Database, 'Database Initialised', this.api.database);
 
 				this._registerEvents();
 
@@ -114,7 +108,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							if (leaf.view instanceof MarkdownView) {
 								const file = leaf.view?.file;
 								if (file !== undefined) {
-									const component: ModelInterface|undefined = this.database.readByPath(file.path);
+									const component: ModelInterface|undefined = this.api.database.readByPath(file.path);
 									if (
 										component !== undefined &&
 										component.id.type === ComponentType.Scene &&

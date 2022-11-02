@@ -37,6 +37,9 @@ export interface RpgManagerApiInterface {
 	bootstrap(
 	): void;
 
+	createDatabase(
+	): DatabaseInterface;
+
 	fetcher<T extends FetcherInterface>(fetcher: ClassInterface<T>): T;
 	service<T extends ServiceInterface>(service: ClassInterface<T>): T;
 }
