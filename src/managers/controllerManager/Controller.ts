@@ -113,7 +113,7 @@ export class Controller extends MarkdownRenderChild {
 			Object.entries(yamlSource.models.lists).forEach(([relationshipType, value]: [string, ControllerMetadataModelElementInterface]) => {
 				const componentType: ComponentType|undefined = this._api.service(RelationshipService).getComponentTypeFromListName(relationshipType);
 
-				let requiredRelationship: RelationshipType | undefined = undefined
+				let requiredRelationship: RelationshipType | undefined = undefined;
 				let relationshipTitle: string|undefined = undefined;
 
 				if (value != undefined){

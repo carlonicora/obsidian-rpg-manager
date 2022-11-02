@@ -1,7 +1,7 @@
 import {AbstractView} from "../../../managers/viewsManager/abstracts/AbstractView";
 import {AbtPlot} from "../plots/AbtPlot";
 import {StoryCirclePlot} from "../plots/StoryCirclePlot";
-import {Component, MarkdownRenderer} from "obsidian";
+import {Component, MarkdownRenderer, setIcon} from "obsidian";
 import {AbtInterface} from "../interfaces/AbtInterface";
 import {StoryCircleInterface} from "../interfaces/StoryCircleInterface";
 
@@ -65,6 +65,6 @@ export class PlotView extends AbstractView {
 		);
 
 		const plotEditorEl: HTMLDivElement = plotElementContainerEl.createDiv({cls: 'rpg-manager-header-container-info-plot-container-elements-container-editor'});
-		//TODO edit button
+		setIcon(plotEditorEl, 'edit');
 	}
 }

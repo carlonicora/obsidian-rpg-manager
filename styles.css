@@ -1327,6 +1327,7 @@ span.flatpickr-weekday {
   float: right;
   display: none;
   cursor: pointer;
+  color: var(--rpg-manager-colour-text-link);
 }
 .rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container:hover {
   background-color: var(--rpg-manager-colour-background);
