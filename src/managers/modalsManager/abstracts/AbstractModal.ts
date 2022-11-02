@@ -17,12 +17,12 @@ export class AbstractModal extends Modal {
 
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.addClass('rpgm-modal');
+		contentEl.addClass('rpg-manager-modal');
 
 		if (this.maxWidth) this.modalEl.style.width = 'var(--modal-max-width)';
 
-		const mainContainer: HTMLDivElement = contentEl.createDiv({cls: 'rpgm-modal-container'});
+		const mainContainer: HTMLDivElement = contentEl.createDiv({cls: 'rpg-manager-modal-container'});
 		mainContainer.createEl('h2', {text: this.title ?? 'RPG Manager'});
-		this.rpgmContainerEl = mainContainer.createDiv({cls: 'rpgm-modal-main-container'});
+		this.rpgmContainerEl = mainContainer.createDiv({cls: 'rpg-manager-modal-main-container'});
 	}
 }

@@ -30,12 +30,7 @@ export class GalleryManagementModal extends AbstractModal {
 
 		this._containerEl = this.rpgmContainerEl.createDiv({cls:'gallery'});
 
-		const viewClass = this._gallery.views.get(GalleryViewType.ModalNavigation);
-		if (viewClass === undefined)
-			throw new Error('');
-
-		const view: GalleryViewInterface = new viewClass(this.app);
-		view.model = this._model;
+		const view = this._gallery.createView(GalleryViewType.ModalNavigation, this._model);
 
 		view.render(this._containerEl);
 	}

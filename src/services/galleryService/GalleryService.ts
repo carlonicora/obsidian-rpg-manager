@@ -32,7 +32,10 @@ export class GalleryService extends AbstractService implements GalleryServiceInt
 		model: ModelInterface,
 	): GalleryViewInterface {
 		const view = this.views.get(type);
-		if (view === undefined) throw new Error('');
+
+		//TODO clear empty error
+		if (view === undefined)
+			throw new Error('');
 
 		const response: GalleryViewInterface = new view(this.api, this);
 		response.model = model;
