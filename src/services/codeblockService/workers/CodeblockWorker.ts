@@ -12,6 +12,7 @@ import {
 } from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {YamlService} from "../../yamlService/YamlService";
+import {FileManipulatorService} from "../../fileManipulatorService/FileManipulatorService";
 
 export class CodeblockWorker implements CodeblockWorkerInterface {
 	constructor(
@@ -195,7 +196,9 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 				});
 			return true;
 		} else {
-			//TODO: Add this part
+			const newContent = await domain.originalFileContent.replace(domain.originalCodeblockContent, domain.codeblockContent);
+			await this._api.service(FileManipulatorService).maybeWrite(domain.file, newContent);
+
 			return true;
 		}
 	}

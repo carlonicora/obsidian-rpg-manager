@@ -206,7 +206,17 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public touch(
+		force?: boolean,
 	): boolean {
+		if (force) {
+			if (this.version === undefined)
+				this.version = 0;
+
+			this.version++;
+
+			return true;
+		}
+
 		const md5 = new Md5();
 		md5.appendStr(JSON.stringify(this.metadata));
 		const metadataMd5 = md5.end();
@@ -217,7 +227,9 @@ export abstract class AbstractModel implements ModelInterface {
 			this._previousRelationships = relationshipsMd5;
 			this._previousRelationshipsStringified = structuredClone(this._relationships.stringified);
 
-			if (this.version === undefined) this.version = 0;
+			if (this.version === undefined)
+				this.version = 0;
+
 			this.version++;
 
 			return true;

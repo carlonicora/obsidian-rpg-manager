@@ -8,7 +8,6 @@ import {SubplotModel} from "./models/SubplotModel";
 import {SubplotHeaderView} from "./views/SubplotHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
-import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {SubplotTemplate} from "./templates/SubplotTemplate";
@@ -23,10 +22,6 @@ export class SubplotComponent implements ComponentInterface {
 
 	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
 		return [SubplotModalPart];
-	}
-
-	get modals(): ClassInterface<ModalInterface>[] {
-		return [];
 	}
 
 	public get model(): ClassInterface<ModelInterface>{

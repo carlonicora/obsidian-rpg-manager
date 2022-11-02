@@ -8,6 +8,7 @@ import {GalleryManagementModal} from "../galleryService/modals/GalleryManagement
 import {GalleryService} from "../galleryService/GalleryService";
 import {CampaignModel} from "../../components/campaign/models/CampaignModel";
 import {SessionModel} from "../../components/session/models/SessionModel";
+import {SceneSelectionModal} from "../../components/session/modals/SceneSelectionModal";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
@@ -45,10 +46,9 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		} else if (model instanceof SessionModel){
 			this._addSeparator(containerEl);
 
-			//TODO edit onclick
 			this._addFunctionality(containerEl, 'Manage Scenes')
 				.addEventListener("click", () => {
-					new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
+					new SceneSelectionModal(this.api, model).open();
 				});
 
 		}

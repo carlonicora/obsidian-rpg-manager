@@ -8,7 +8,6 @@ import {SceneModel} from "./models/SceneModel";
 import {SceneHeaderView} from "./views/SceneHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
-import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {SceneTemplate} from "./templates/SceneTemplate";
@@ -23,10 +22,6 @@ export class SceneComponent implements ComponentInterface {
 
 	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
 		return [SceneModalPart];
-	}
-
-	get modals(): ClassInterface<ModalInterface>[] {
-		return [];
 	}
 
 	public get model(): ClassInterface<ModelInterface>{

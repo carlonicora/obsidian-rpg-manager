@@ -8,7 +8,6 @@ import {LocationModel} from "./models/LocationModel";
 import {LocationHeaderView} from "./views/LocationHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
-import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {LocationTemplate} from "./templates/LocationTemplate";
@@ -23,10 +22,6 @@ export class LocationComponent implements ComponentInterface {
 
 	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
 		return [LocationModalPart];
-	}
-
-	get modals(): ClassInterface<ModalInterface>[] {
-		return [];
 	}
 
 	public get model(): ClassInterface<ModelInterface>{

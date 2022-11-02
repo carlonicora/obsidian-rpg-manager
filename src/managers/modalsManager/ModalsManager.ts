@@ -16,28 +16,6 @@ export class ModalsManager implements ModalsManagerInterface {
 	) {
 	}
 
-	public get(
-		campaignSettings: CampaignSetting,
-		type: ComponentType,
-	): ModalInterface {
-		let modalClass = this._modals.get(this._getIdentifier(campaignSettings, type));
-
-		if (modalClass !== undefined)
-			return this._initialiseComponentModal(modalClass);
-
-		//TODO: Change empty error
-		if (campaignSettings === CampaignSetting.Agnostic)
-			throw new Error('');
-
-		modalClass = this._modals.get(this._getIdentifier(CampaignSetting.Agnostic, type));
-
-		//TODO: Change empty error
-		if (modalClass === undefined)
-			throw new Error('');
-
-		return this._initialiseComponentModal(modalClass);
-	}
-
 	public getPartial(
 		campaignSettings: CampaignSetting,
 		type: ComponentType,
@@ -59,14 +37,6 @@ export class ModalsManager implements ModalsManagerInterface {
 			throw new Error('');
 
 		return this._initialiseComponentModalPart(modalPartClass, modal);
-	}
-
-	public register<T extends ModalInterface> (
-		modal: ClassInterface<T>,
-		campaignSettings: CampaignSetting,
-		type: ComponentType,
-	): void {
-		this._modals.set(this._getIdentifier(campaignSettings, type), modal);
 	}
 
 	public registerPartial<T extends ModalPartInterface>(

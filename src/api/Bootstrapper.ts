@@ -39,6 +39,8 @@ import {DiceService} from "../services/diceService/DiceService";
 import {LoggerService} from "../services/loggerService/LoggerService";
 import {SceneBuilderService} from "../services/sceneBuilderService/SceneBuilderService";
 import {ImageService} from "../services/imageService/ImageService";
+import {ContentEditorService} from "../services/contentEditorService/ContentEditorService";
+import {LinkSuggesterService} from "../services/linkSuggesterService/LinkSuggesterService";
 
 export class Bootstrapper {
 	public static initialise(
@@ -75,19 +77,21 @@ export class Bootstrapper {
 		api.services.register(BreadcrumbService);
 		api.services.register(CodeblockService);
 		api.services.register(ComponentOptionsService);
+		api.services.register(ContentEditorService);
 		api.services.register(DiceService);
 		api.services.register(FileCreationService);
 		api.services.register(FileManipulatorService);
 		api.services.register(GalleryService);
 		api.services.register(IdService);
 		api.services.register(ImageService);
+		api.services.register(LinkSuggesterService);
 		api.services.register(LoggerService);
-		api.services.register(PronounService);
 		api.services.register(PlotService);
+		api.services.register(PronounService);
 		api.services.register(RelationshipService);
 		api.services.register(RunningTimeService);
-		api.services.register(SearchService);
 		api.services.register(SceneBuilderService);
+		api.services.register(SearchService);
 		api.services.register(SorterService);
 		api.services.register(TagService);
 		api.services.register(YamlService);

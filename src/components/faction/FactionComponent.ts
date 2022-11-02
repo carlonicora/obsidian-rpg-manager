@@ -8,7 +8,6 @@ import {FactionModel} from "./models/FactionModel";
 import {FactionHeaderView} from "./views/FactionHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
-import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {FactionTemplate} from "./templates/FactionTemplate";
@@ -23,10 +22,6 @@ export class FactionComponent implements ComponentInterface {
 
 	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
 		return [FactionModalPart];
-	}
-
-	get modals(): ClassInterface<ModalInterface>[] {
-		return [];
 	}
 
 	public get model(): ClassInterface<ModelInterface>{

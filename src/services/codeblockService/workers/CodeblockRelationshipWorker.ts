@@ -6,6 +6,7 @@ import {
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {RelationshipService} from "../../relationshipsService/RelationshipService";
+import {YamlService} from "../../yamlService/YamlService";
 
 export class CodeblockRelationshipWorker implements CodeblockDataWorkerInterface {
 	constructor(
@@ -39,6 +40,8 @@ export class CodeblockRelationshipWorker implements CodeblockDataWorkerInterface
 		};
 
 		domain.codeblock.relationships.push(metadataRelationship);
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 
 	public async remove(
@@ -58,5 +61,7 @@ export class CodeblockRelationshipWorker implements CodeblockDataWorkerInterface
 		if (found !== undefined){
 			domain.codeblock.relationships.splice(found, 1);
 		}
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 }

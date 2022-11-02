@@ -121,7 +121,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get session(): SessionInterface | undefined {
-		if (this.metadata.data?.sessionId === undefined || this.metadata.data?.sessionId === '')
+		if (this.metadata.data?.sessionId === undefined || this.metadata.data.sessionId === '')
 			return undefined;
 
 		let response: SessionInterface[] = [];

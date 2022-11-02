@@ -8,7 +8,6 @@ import {ViewType} from "../../managers/viewsManager/enum/ViewType";
 import {CharacterHeaderView} from "./views/CharacterHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
-import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {NonPlayerCharacterTemplate} from "./templates/NonPlayerCharacterTemplate";
@@ -23,10 +22,6 @@ export class NonPlayerCharacterComponent implements ComponentInterface {
 
 	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
 		return [NonPlayerCharacterModalPart];
-	}
-
-	get modals(): ClassInterface<ModalInterface>[] {
-		return [];
 	}
 
 	public get model(): ClassInterface<ModelInterface>{

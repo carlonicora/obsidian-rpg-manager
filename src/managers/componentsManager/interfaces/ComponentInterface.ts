@@ -4,7 +4,6 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {ViewType} from "../../viewsManager/enum/ViewType";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {ClassInterface} from "../../../api/interfaces/ClassInterface";
-import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 import {ModalPartInterface} from "../../../core/interfaces/ModalPartInterface";
 import {TemplateClassInterface} from "../../templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../templatesManager/interfaces/TemplateInterface";
@@ -13,7 +12,6 @@ import {ModalPartClassInterface} from "../../modalsManager/interfaces/ModalPartC
 export interface ComponentInterface {
 	get campaignSettings(): CampaignSetting;
 	get modalParts(): ModalPartClassInterface<ModalPartInterface>[];
-	get modals(): ClassInterface<ModalInterface>[];
 	get model(): ClassInterface<ModelInterface>;
 	get template(): TemplateClassInterface<TemplateInterface>;
 	get type(): ComponentType;

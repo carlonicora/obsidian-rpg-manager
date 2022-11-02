@@ -19,6 +19,7 @@ import {SceneInterface} from "../../../components/scene/interfaces/SceneInterfac
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
 
 export abstract class AbstractRelationshipView implements RelationshipsViewInterface {
 	public relatedComponentType: ComponentType;
@@ -239,6 +240,10 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 
 				const editorEl = editCell.createDiv({cls: 'rpg-manager-table-editor'});
 				setIcon(editorEl, 'edit');
+
+				editorEl.addEventListener('click', () => {
+					this.api.service(ContentEditorService).open(this.model, relationship.path);
+				});
 			}
 
 		});

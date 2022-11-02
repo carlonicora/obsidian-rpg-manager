@@ -26,42 +26,46 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
-		this.addInfoElement(LongTextElement, {title: 'Trigger', values: this.model.trigger ?? '<span class="missing">Trigger Missing</span>', editableKey: 'data.trigger'});
-		this.addInfoElement(LongTextElement, {title: 'Action', values: this.model.action ?? '<span class="missing">Action Missing</span>', editableKey: 'data.action'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Trigger', values: this.model.trigger ?? '<span class="missing">Trigger Missing</span>', editableKey: 'data.trigger'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Action', values: this.model.action ?? '<span class="missing">Action Missing</span>', editableKey: 'data.action'});
 
-		this.addInfoElement(DateElement, {title: 'Scene Date', values: this.model.date, editableKey: 'data.date'});
+		this.addInfoElement(DateElement, {model: this.model, title: 'Scene Date', values: this.model.date, editableKey: 'data.date'});
 
 		const sessions = this.api.database.read((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&
 			session.id.campaignId === this.model.id.campaignId
 		);
 
-		this.addInfoElement(ModelSelectorElement, {title: 'Session', values: {id: this.model.session?.id, list: sessions}, editableKey: 'data.sessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {id: this.model.session?.id, list: sessions}, editableKey: 'data.sessionId'});
 
 		if (this.api.settings.usePlotStructures)
-			this.addInfoElement(StoryCircleStageElement, {title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});
+			this.addInfoElement(StoryCircleStageElement, {model: this.model, title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});
 
 		if (this.api.settings.useSceneAnalyser) {
 			this.addInfoElement(SceneTypeElement, {
+				model: this.model,
 				title: 'Scene Type',
 				values: this.model.sceneType,
 				editableKey: 'data.sceneType'
 			});
 
 			this.addInfoElement(CheckboxElement,{
+				model: this.model,
 				title: 'External Actions?',
 				values: this.model.isExciting,
 				editableKey: 'data.isActedUpon',
 			});
 
 			this.addInfoElement(RunElement, {
+				model: this.model,
 				title: 'SceneRun',
 				values: {isRunning: this.model.isCurrentlyRunning, scene: this.model}
 			});
 
 			if (this.model.currentDuration > 0)
 				this.addInfoElement(RuntimeDurationElement, {
+					model: this.model,
 					title: 'Duration',
 					values: {isRunning: this.model.isCurrentlyRunning, runtime: this.model.currentDuration, scene: this.model}
 				});

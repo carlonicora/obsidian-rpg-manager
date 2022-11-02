@@ -14,6 +14,7 @@ import {RelationshipInterface} from "../../../services/relationshipsService/inte
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
+import {RelationshipList} from "../../../services/relationshipsService/RelationshipList";
 
 export class SessionModel extends AbstractSessionData implements SessionInterface {
 	public stage: ComponentStage = ComponentStage.Run;
@@ -73,7 +74,11 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 	getRelationships(
 		database?: DatabaseInterface
 	): RelationshipListInterface {
-		const response: RelationshipListInterface = super.getRelationships(database);
+		const response: RelationshipListInterface = new RelationshipList();
+
+		super.getRelationships(database).forEach((relationship: RelationshipInterface) => {
+			response.add(relationship);
+		});
 
 		this.api.database.read<SceneInterface>((model: SceneInterface) =>
 			model.id.campaignId === this.id.campaignId &&

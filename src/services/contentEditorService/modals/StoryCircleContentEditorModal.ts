@@ -52,12 +52,12 @@ export class StoryCircleContentEditorModal extends AbstractEditorModal {
 
 	onOpen() {
 		super.onOpen();
-		this.rpgmContainerEl.createDiv({cls: 'rpgm-content-editor-plot-container'});
+		this.rpgmContainerEl.createDiv({cls: 'rpg-manager-content-editor-plot-container'});
 
 		if (this._relatedAbtValue !== '') {
 			this.contentEditorContainerEl.addClass('clearfix');
 
-			const alternativeTextContainerEl: HTMLDivElement = this.contentEditorContainerEl.createDiv({cls: 'rpgm-content-editor-abt-relative'});
+			const alternativeTextContainerEl: HTMLDivElement = this.contentEditorContainerEl.createDiv({cls: 'rpg-manager-content-editor-abt-relative'});
 			alternativeTextContainerEl.createEl('h3', {text: 'Relative ABT Plot'});
 			const alternativeTextEl: HTMLDivElement = alternativeTextContainerEl.createDiv();
 			MarkdownRenderer.renderMarkdown(
@@ -67,7 +67,7 @@ export class StoryCircleContentEditorModal extends AbstractEditorModal {
 				null as unknown as Component,
 			);
 
-			const editorContainerEl = this.contentEditorContainerEl.createDiv({cls: 'rpgm-content-editor-storycircle-container'});
+			const editorContainerEl = this.contentEditorContainerEl.createDiv({cls: 'rpg-manager-content-editor-storycircle-container'});
 			this.addElements(editorContainerEl);
 		} else {
 			this.addElements(this.contentEditorContainerEl);

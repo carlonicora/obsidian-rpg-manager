@@ -2,8 +2,15 @@ import {CodeblockDataWorkerInterface} from "../interfaces/CodeblockDataWorkerInt
 import {CodeblockDomainInterface} from "../interfaces/CodeblockDomainInterface";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
 import {ImageMetadataInterface} from "../../../core/interfaces/ImageMetadataInterface";
+import {YamlService} from "../../yamlService/YamlService";
+import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export class CodeblockImageWorker implements CodeblockDataWorkerInterface {
+	constructor(
+		private _api: RpgManagerApiInterface,
+	) {
+	}
+
 	public async addOrUpdate(
 		domain: CodeblockDomainInterface,
 		data: ImageMetadataInterface,
@@ -27,6 +34,8 @@ export class CodeblockImageWorker implements CodeblockDataWorkerInterface {
 		} else {
 			(<ComponentMetadataInterface>domain.codeblock).data.images.push(data);
 		}
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 
 	public async remove(
@@ -47,5 +56,7 @@ export class CodeblockImageWorker implements CodeblockDataWorkerInterface {
 		if (found !== undefined) {
 			(<ComponentMetadataInterface>domain.codeblock).data.images.splice(found, 1);
 		}
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 }

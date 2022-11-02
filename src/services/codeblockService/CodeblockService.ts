@@ -13,7 +13,6 @@ import {CodeblockRelationshipWorker} from "./workers/CodeblockRelationshipWorker
 import {CodeblockKeyWorker} from "./workers/CodeblockKeyWorker";
 import {ImageService} from "../imageService/ImageService";
 import {CodeblockRunningWorker} from "./workers/CodeblockRunningWorker";
-import {FileManipulatorService} from "../fileManipulatorService/FileManipulatorService";
 
 export class CodeblockService extends AbstractService implements CodeblockServiceInterface, ServiceInterface {
 	private _worker: CodeblockWorkerInterface;
@@ -38,7 +37,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		const dataWorker = await new CodeblockKeyWorker(this.api);
 		await dataWorker.addOrUpdate(domain, {key: key, value: value});
 
-		this._worker.updateContent(domain);
+		await this._worker.updateContent(domain);
 	}
 
 	public async addOrUpdateImage(
@@ -50,7 +49,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		if (domain === undefined)
 			return undefined;
 
-		const dataWorker = await new CodeblockImageWorker();
+		const dataWorker = await new CodeblockImageWorker(this.api);
 		await dataWorker.addOrUpdate(domain, {path: path, caption: caption});
 
 		return this._worker.updateContent(domain)
@@ -115,7 +114,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		if (domain === undefined)
 			return;
 
-		const dataWorker = new CodeblockImageWorker();
+		const dataWorker = new CodeblockImageWorker(this.api);
 		await dataWorker.remove(domain, path);
 
 		this._worker.updateContent(domain);
@@ -179,11 +178,6 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		const dataWorker = await new CodeblockRunningWorker(this.api);
 		dataWorker.remove(domain, '');
 
-		if (file !== undefined){
-			const newContent = await domain.originalFileContent.replace(domain.originalCodeblockContent, domain.codeblockContent);
-			this.api.service(FileManipulatorService).maybeWrite(domain.file, newContent);
-		} else {
-			this._worker.updateContent(domain);
-		}
+		this._worker.updateContent(domain);
 	}
 }

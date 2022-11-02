@@ -1,5 +1,5 @@
 import {
-	Component,
+	Component, debounce,
 	MarkdownPostProcessorContext,
 	MarkdownRenderChild,
 	MarkdownView,
@@ -143,6 +143,8 @@ export class Controller extends MarkdownRenderChild {
 	private async _render(
 		forceRefresh=false,
 	): Promise<void> {
+		this._render = debounce(this._render, 250, true) as unknown as () => Promise<void>;
+
 		await this._waitForComponentToBeReady();
 
 		if (this._currentComponent === undefined)

@@ -23,7 +23,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			.sort(this.api.service(SorterService).create<AdventureInterface>([
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
-		this.addInfoElement(ModelSelectorElement, {title: 'Current Adventure', values: {id: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Adventure', values: {id: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
 
 		let acts = this.api.database.readList<ActInterface>(ComponentType.Act, this.model.id)
 			.sort(this.api.service(SorterService).create<ActInterface>([
@@ -33,15 +33,15 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 		if (this.model.currentAdventureId != undefined)
 			acts = acts.filter((act: ActInterface) => act.id.adventureId === this.model.currentAdventureId?.adventureId);
 
-		this.addInfoElement(ModelSelectorElement, {title: 'Current Act', values: {id: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Act', values: {id: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
 
 		const sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.model.id)
 			.sort(this.api.service(SorterService).create<SessionInterface>([
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
-		this.addInfoElement(ModelSelectorElement, {title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
 
-		this.addInfoElement(DateElement, {title: 'Current Date', values: this.model.date, editableKey: 'data.date'});
+		this.addInfoElement(DateElement, {model: this.model, title: 'Current Date', values: this.model.date, editableKey: 'data.date'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addPlot();

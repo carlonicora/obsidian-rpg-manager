@@ -78,8 +78,8 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 
 		const plotView = this.api.service(PlotService).getView();
 
-		plotView.render(this.model.abt, this._plotContainerEl);
-		plotView.render(this.model.storyCircle, this._plotContainerEl);
+		plotView.render(this.model, this.model.abt, this._plotContainerEl);
+		plotView.render(this.model, this.model.storyCircle, this._plotContainerEl);
 	}
 
 	protected addAnalyser(

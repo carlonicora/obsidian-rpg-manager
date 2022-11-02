@@ -15,14 +15,14 @@ export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewI
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
-		this.addInfoElement(ShortTextElement, {title: 'Found', values: this.model.found ? 'Yes' : 'No', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(ShortTextElement, {model: this.model, title: 'Found', values: this.model.found ? 'Yes' : 'No', editableKey: 'data.synopsis'});
 
 		this.addInfoElement(
 			this.model.campaign.fantasyCalendar !== undefined
 				? FantasyCalendarElement
 				: DateElement,
-			{title: 'Date Found', values: this.model.found, editableKey: 'data.found'}
+			{model: this.model, title: 'Date Found', values: this.model.found, editableKey: 'data.found'}
 		);
 	}
 }

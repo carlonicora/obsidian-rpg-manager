@@ -9,7 +9,7 @@ export class DateElement extends AbstractElement {
 		containerEl: HTMLElement,
 	) {
 		const infoEl = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-short clearfix'});
-		this.createTitle(data.title, infoEl);
+		this.createTitle(data.model, data.title, infoEl);
 
 		const options:any = {
 			allowInput: true,

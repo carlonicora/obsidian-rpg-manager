@@ -17,12 +17,13 @@ export class SessionHeaderView extends AbstractHeaderView implements NewHeaderVi
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 
-		this.addInfoElement(DateElement, {title: 'Session Date', values: this.model.irl, editableKey: 'data.irl'});
+		this.addInfoElement(DateElement, {model: this.model, title: 'Session Date', values: this.model.irl, editableKey: 'data.irl'});
 
 		if (this.api.settings.useSceneAnalyser) {
 			this.addInfoElement(TimeElement, {
+				model: this.model,
 				title: 'Target Duration',
 				values: this.model.targetDuration,
 				editableKey: 'data.targetDuration'

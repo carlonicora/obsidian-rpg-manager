@@ -16,10 +16,11 @@ export class ActHeaderView extends AbstractHeaderView implements NewHeaderViewIn
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 
 		if (this.api.settings.usePlotStructures) {
 			this.addInfoElement(AbtStageElement, {
+				model: this.model,
 				title: 'ABT Stage',
 				values: this.model.abtStage,
 				editableKey: 'data.abtStage'

@@ -2,6 +2,7 @@ import {CodeblockDataWorkerInterface} from "../interfaces/CodeblockDataWorkerInt
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {CodeblockDomainInterface} from "../interfaces/CodeblockDomainInterface";
 import {CodeblockKeyInterface} from "../interfaces/CodeblockKeyInterface";
+import {YamlService} from "../../yamlService/YamlService";
 
 export class CodeblockKeyWorker  implements CodeblockDataWorkerInterface {
 	constructor(
@@ -26,6 +27,8 @@ export class CodeblockKeyWorker  implements CodeblockDataWorkerInterface {
 				key = key[parts[index]];
 
 		}
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 
 	public async remove(
@@ -45,5 +48,7 @@ export class CodeblockKeyWorker  implements CodeblockDataWorkerInterface {
 				key = key[parts[index]];
 
 		}
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 }

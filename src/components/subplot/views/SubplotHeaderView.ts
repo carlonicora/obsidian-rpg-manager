@@ -12,7 +12,7 @@ export class SubplotHeaderView extends AbstractHeaderView implements NewHeaderVi
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addPlot();

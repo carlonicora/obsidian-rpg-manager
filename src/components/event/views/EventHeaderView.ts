@@ -14,11 +14,11 @@ export class EventHeaderView extends AbstractHeaderView implements NewHeaderView
 		this.addComponentOptions();
 		this.addGallery();
 
-		this.addInfoElement(LongTextElement, {title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 
 		if (this.model.campaign.fantasyCalendar !== undefined)
-			this.addInfoElement(DateElement, {title: 'Event Date', values: this.model.date, editableKey: 'data.date'});
+			this.addInfoElement(DateElement, {model: this.model, title: 'Event Date', values: this.model.date, editableKey: 'data.date'});
 		else
-			this.addInfoElement(DateElement, {title: 'Event Date', values: this.model.date, editableKey: 'data.date'});
+			this.addInfoElement(DateElement, {model: this.model, title: 'Event Date', values: this.model.date, editableKey: 'data.date'});
 	}
 }

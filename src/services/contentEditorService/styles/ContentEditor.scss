@@ -1,21 +1,21 @@
-.rpgm-content-editor{
+.rpg-manager-content-editor{
 	width: 100%;
 	min-height: 200px;
 
-	.rpgm-content-editor-abt-relative, .rpgm-content-editor-storycircle-container{
+	.rpg-manager-content-editor-abt-relative, .rpg-manager-content-editor-storycircle-container{
 		float: left;
 	}
 
-	.rpgm-content-editor-abt-relative{
+	.rpg-manager-content-editor-abt-relative{
 		width: 250px;
 	}
 
-	.rpgm-content-editor-storycircle-container{
+	.rpg-manager-content-editor-storycircle-container{
 		margin-left: 20px;
 		width: calc(100% - 270px);
 	}
 
-	.rpgm-content-editor-input {
+	.rpg-manager-content-editor-input {
 		width: 100%;
 	}
 
@@ -25,7 +25,7 @@
 	}
 }
 
-.rpgm-content-editor-button {
+.rpg-manager-content-editor-button {
 	margin-top: 30px;
 	float: right;
 }

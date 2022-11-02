@@ -47,6 +47,7 @@ export interface ModelInterface {
 	): Promise<void>;
 
 	touch(
+		force?: boolean,
 	): boolean;
 
 	validateHierarchy(

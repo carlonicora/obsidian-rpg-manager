@@ -47,8 +47,8 @@ export abstract class AbstractEditorModal extends AbstractModal {
 
 	onOpen() {
 		super.onOpen();
-		this.contentEditorContainerEl = this.rpgmContainerEl.createDiv({cls: 'rpgm-content-editor'});
-		this.contentEditorButtonContainerEl = this.rpgmContainerEl.createDiv({cls: 'rpgm-content-editor-button'});
+		this.contentEditorContainerEl = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-content-editor'});
+		this.contentEditorButtonContainerEl = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-content-editor-button'});
 
 		const contentEditorButtonEl: HTMLButtonElement = this.contentEditorButtonContainerEl.createEl('button', {text: 'Save'});
 		contentEditorButtonEl.addEventListener('click', this.saveContent.bind(this));
@@ -58,9 +58,9 @@ export abstract class AbstractEditorModal extends AbstractModal {
 		contentEl: HTMLDivElement,
 	): void {
 		if (this.isLongText) {
-			this.contentEditorEl = contentEl.createEl('textarea', {cls: 'rpgm-content-editor-input'});
+			this.contentEditorEl = contentEl.createEl('textarea', {cls: 'rpg-manager-content-editor-input'});
 		} else {
-			this.contentEditorEl = contentEl.createEl('input', {cls: 'rpgm-content-editor-input'});
+			this.contentEditorEl = contentEl.createEl('input', {cls: 'rpg-manager-content-editor-input'});
 			this.contentEditorEl.type = 'text';
 		}
 

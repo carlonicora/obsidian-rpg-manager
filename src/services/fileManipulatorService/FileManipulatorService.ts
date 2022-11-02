@@ -24,11 +24,15 @@ export class FileManipulatorService extends AbstractService implements FileManip
 		file: TFile,
 		content: string,
 	): Promise<void> {
-		const fileContent: string = await this.api.app.vault.read(file);
+		return this.read(file)
+			.then((fileManipulator: FileManipulatorInterface|undefined) => {
+				if (fileManipulator !== undefined)
+					fileManipulator.maybeWrite(content)
+						.then((response: boolean) =>{
+							return;
+						});
 
-		if (fileContent !== content)
-			this.api.app.vault.modify(file, content);
-
+			});
 	}
 
 	public patternPosition(

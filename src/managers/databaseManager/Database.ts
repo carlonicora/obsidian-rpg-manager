@@ -279,7 +279,7 @@ export class Database extends Component implements DatabaseInterface {
 	public async onSave(
 		file: TFile,
 	): Promise<void> {
-		let component:ModelInterface|undefined = this.readByPath(file.path);
+		let component:ModelInterface|undefined = await this.readByPath(file.path);
 
 		try {
 			const isNewComponent = component === undefined;

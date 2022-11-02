@@ -4,9 +4,12 @@ import {StoryCirclePlot} from "../plots/StoryCirclePlot";
 import {Component, MarkdownRenderer, setIcon} from "obsidian";
 import {AbtInterface} from "../interfaces/AbtInterface";
 import {StoryCircleInterface} from "../interfaces/StoryCircleInterface";
+import {ContentEditorService} from "../../contentEditorService/ContentEditorService";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export class PlotView extends AbstractView {
 	public render(
+		model: ModelInterface,
 		plot: AbtInterface|StoryCircleInterface,
 		containerEl: HTMLElement,
 	): void {
@@ -16,38 +19,42 @@ export class PlotView extends AbstractView {
 
 		if (plot instanceof AbtPlot) {
 			plotContainerTitleEl.textContent = 'ABT Plot';
-			this._renderAbtPlot(plot, plotContainerDetailsEl);
+			this._renderAbtPlot(model, plot, plotContainerDetailsEl);
 		} else if (plot instanceof StoryCirclePlot){
 			plotContainerTitleEl.textContent = 'Story Circle Plot';
-			this._renderStoryCirclePlot(plot, plotContainerDetailsEl);
+			this._renderStoryCirclePlot(model, plot, plotContainerDetailsEl);
 		}
 	}
 
 	private _renderAbtPlot(
+		model: ModelInterface,
 		plot: AbtPlot,
 		containerEl: HTMLElement,
 	): void {
-		this._renderPlotElement('Need', plot.need, containerEl);
-		this._renderPlotElement('And', plot.and, containerEl);
-		this._renderPlotElement('But', plot.but, containerEl);
-		this._renderPlotElement('Therefore', plot.therefore, containerEl);
+		this._renderPlotElement(model, 'plot.abt.need', 'Need', plot.need, containerEl);
+		this._renderPlotElement(model, 'plot.abt.and', 'And', plot.and, containerEl);
+		this._renderPlotElement(model, 'plot.abt.but', 'But', plot.but, containerEl);
+		this._renderPlotElement(model, 'plot.abt.therefore', 'Therefore', plot.therefore, containerEl);
 	}
 
 	private _renderStoryCirclePlot(
+		model: ModelInterface,
 		plot: StoryCirclePlot,
 		containerEl: HTMLElement,
 	): void {
-		this._renderPlotElement('You', plot.you, containerEl);
-		this._renderPlotElement('Need', plot.need, containerEl);
-		this._renderPlotElement('Go', plot.go, containerEl);
-		this._renderPlotElement('Search', plot.search, containerEl);
-		this._renderPlotElement('Find', plot.find, containerEl);
-		this._renderPlotElement('Take', plot.take, containerEl);
-		this._renderPlotElement('Return', plot.return, containerEl);
-		this._renderPlotElement('Change', plot.change, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.you', 'You', plot.you, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.need', 'Need', plot.need, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.go', 'Go', plot.go, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.search', 'Search', plot.search, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.find', 'Find', plot.find, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.take', 'Take', plot.take, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.return', 'Return', plot.return, containerEl);
+		this._renderPlotElement(model, 'plot.storycircle.change', 'Change', plot.change, containerEl);
 	}
 
 	private _renderPlotElement(
+		model: ModelInterface,
+		editableField: string,
 		title: string,
 		description: string,
 		containerEl: HTMLElement,
@@ -66,5 +73,9 @@ export class PlotView extends AbstractView {
 
 		const plotEditorEl: HTMLDivElement = plotElementContainerEl.createDiv({cls: 'rpg-manager-header-container-info-plot-container-elements-container-editor'});
 		setIcon(plotEditorEl, 'edit');
+
+		plotEditorEl.addEventListener('click', () => {
+			this.api.service(ContentEditorService).open(model, editableField);
+		});
 	}
 }

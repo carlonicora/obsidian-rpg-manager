@@ -1,8 +1,6 @@
 import {FileManipulatorInterface} from "./interfaces/FileManipulatorInterface";
 import {CachedMetadata, TFile} from "obsidian";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {ComponentType} from "../../core/enums/ComponentType";
-import {RunningTimeService} from "../runningTimeService/RunningTimeService";
 
 export class FileManipulator implements FileManipulatorInterface {
 	private _fileContent: string;
@@ -29,26 +27,10 @@ export class FileManipulator implements FileManipulatorInterface {
 	public async maybeWrite(
 		content: string,
 	): Promise<boolean> {
-		if (content === this._fileContent)
-			return true;
+		if (content !== this._fileContent)
+			await this._api.app.vault.modify(this._file, content);
 
-		return this._api.app.vault.modify(this._file, content)
-			.then(() => {
-				return this._api.database.onSave(this._file)
-					.then(() => {
-						const model = this._api.database.readByPath(this._file.path);
-						if (model !== undefined) {
-							model.touch();
-
-							if (model.id.type === ComponentType.Scene)
-								this._api.service(RunningTimeService).updateMedianTimes();
-
-						}
-
-						this._api.app.workspace.trigger("rpgmanager:force-refresh-staticViews");
-						return true;
-					});
-			});
+		return true;
 	}
 
 	public async read(

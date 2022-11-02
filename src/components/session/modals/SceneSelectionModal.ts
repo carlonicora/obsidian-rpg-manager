@@ -1,9 +1,8 @@
-import {TAbstractFile, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {SessionInterface} from "../interfaces/SessionInterface";
-import {DatabaseInitialiser} from "../../../managers/databaseManager/DatabaseInitialiser";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
@@ -13,7 +12,7 @@ import {CodeblockService} from "../../../services/codeblockService/CodeblockServ
 
 export class SceneSelectionModal extends AbstractModal {
 	private _availableScenes:SceneInterface[];
-	private _scenesEls: Map<string, HTMLInputElement>;
+	private _scenesEls: Map<TFile, HTMLInputElement>;
 	private _initialScenesEls: Map<string, boolean>;
 	private _actSelectorEl: HTMLSelectElement;
 	private _sessionContainerEl: HTMLDivElement;
@@ -24,7 +23,7 @@ export class SceneSelectionModal extends AbstractModal {
 		private _session: SessionInterface,
 	) {
 		super(api);
-		this._scenesEls = new Map<string, HTMLInputElement>();
+		this._scenesEls = new Map<TFile, HTMLInputElement>();
 		this._loadAvailableScenes();
 	}
 
@@ -32,10 +31,10 @@ export class SceneSelectionModal extends AbstractModal {
 		super.onOpen();
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.addClass('rpgm-modal');
+		contentEl.addClass('rpg-manager-modal');
 		contentEl.createEl('h2', {text: 'SceneModel Selector'});
 		contentEl.createEl('p', {text: 'Select the scenes to add to the session "' + this._session.file.basename + '"'});
-		const actSelectorContainerEl = contentEl.createDiv('selector');
+		const actSelectorContainerEl = contentEl.createDiv();
 		actSelectorContainerEl.createDiv({text: 'Limit scenes to a specific act'});
 		this._actSelectorEl = actSelectorContainerEl.createEl('select');
 		this._actSelectorEl.createEl('option', {
@@ -65,24 +64,17 @@ export class SceneSelectionModal extends AbstractModal {
 			this._populateAvailableScenes();
 		});
 
-		this._sessionContainerEl = contentEl.createDiv();
+		this._sessionContainerEl = contentEl.createDiv({cls: 'rpg-manager-modal-scene-container'});
 		this._populateAvailableScenes();
 
 		const scenesSelectionButtonEl = contentEl.createEl('button', {text: 'Add selected scenes to session "' + this._session.file.basename + '"'});
 
 		scenesSelectionButtonEl.addEventListener("click", () => {
-			return this._addScenes()
+			this._addScenes()
 				.then(() => {
-					this._session.readMetadata()
-						.then(() => {
-							DatabaseInitialiser.reinitialiseRelationships(this._session, this.api.database);
-						});
-						return;
-				})
-				.then(() => {
-					this.app.workspace.trigger("rpgmanager:refresh-views");
+					this._session.touch(true);
+					this.app.workspace.trigger("rpgmanager:force-refresh-views");
 					this.close();
-					return;
 				});
 		});
 	}
@@ -134,7 +126,7 @@ export class SceneSelectionModal extends AbstractModal {
 		}
 
 		this._availableScenes.forEach((scene: SceneInterface) => {
-			if (!this._scenesEls.has(scene.file.path)) {
+			if (!this._scenesEls.has(scene.file)) {
 				const checkboxDiv = this._sessionContainerEl.createDiv();
 				const checkbox = checkboxDiv.createEl('input');
 				checkbox.type = 'checkbox';
@@ -143,7 +135,7 @@ export class SceneSelectionModal extends AbstractModal {
 
 				if (scene.session?.id.sessionId === this._session.id.sessionId) {
 					checkbox.checked = true;
-					this._scenesEls.set(scene.file.path, checkbox);
+					this._scenesEls.set(scene.file, checkbox);
 					if (populateInitialScenes)
 						this._initialScenesEls.set(scene.file.path, checkbox.checked);
 
@@ -151,7 +143,7 @@ export class SceneSelectionModal extends AbstractModal {
 
 				checkbox.addEventListener('change', () => {
 					if (checkbox.checked){
-						this._scenesEls.set(scene.file.path, checkbox);
+						this._scenesEls.set(scene.file, checkbox);
 					}
 				});
 
@@ -163,20 +155,16 @@ export class SceneSelectionModal extends AbstractModal {
 
 	private async _addScenes(
 	): Promise<void> {
-		this._scenesEls.forEach((sceneEl: HTMLInputElement, path: string) => {
-			const initialSceneCheked = this._initialScenesEls.get(path);
+		for (const [file, sceneEl] of this._scenesEls){
+			const initialSceneCheked = await this._initialScenesEls.get(file.path);
 
 			if (initialSceneCheked === undefined || sceneEl.checked !== initialSceneCheked) {
-				const file: TAbstractFile | null = this.app.vault.getAbstractFileByPath(path);
-				if (file != null && file instanceof TFile) {
-					this.api.service(CodeblockService).addOrUpdate(
-						'data.sessionId',
-						(sceneEl.checked === true ? (this._session.id.sessionId ?? '') : ''),
-						file,
-					);
-				}
+				await this.api.service(CodeblockService).addOrUpdate(
+					'data.sessionId',
+					(sceneEl.checked === true ? this._session.id.stringID : ''),
+					file,
+				);
 			}
-		});
-		return;
+		}
 	}
 }

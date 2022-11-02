@@ -1111,6 +1111,9 @@ span.flatpickr-weekday {
 .rpg-manager-modal h2.rpgm-modal-title {
   text-align: center;
 }
+.rpg-manager-modal .rpg-manager-modal-scene-container {
+  margin: 30px;
+}
 .rpg-manager-modal .rpg-manager-modal-grid {
   display: flex;
   gap: 20px;
@@ -1240,6 +1243,33 @@ span.flatpickr-weekday {
 
 .popover .rpg-manager-component-option {
   display: none;
+}
+
+.rpg-manager-content-editor {
+  width: 100%;
+  min-height: 200px;
+}
+.rpg-manager-content-editor .rpg-manager-content-editor-abt-relative, .rpg-manager-content-editor .rpg-manager-content-editor-storycircle-container {
+  float: left;
+}
+.rpg-manager-content-editor .rpg-manager-content-editor-abt-relative {
+  width: 250px;
+}
+.rpg-manager-content-editor .rpg-manager-content-editor-storycircle-container {
+  margin-left: 20px;
+  width: calc(100% - 270px);
+}
+.rpg-manager-content-editor .rpg-manager-content-editor-input {
+  width: 100%;
+}
+.rpg-manager-content-editor textarea {
+  width: 100%;
+  height: 200px;
+}
+
+.rpg-manager-content-editor-button {
+  margin-top: 30px;
+  float: right;
 }
 
 .rpg-manager-image-carousel {

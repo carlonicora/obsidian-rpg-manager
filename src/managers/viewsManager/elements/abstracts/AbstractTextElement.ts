@@ -10,7 +10,7 @@ export abstract class AbstractTextElement extends AbstractElement {
 	): void {
 		const infoEl = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container rpg-manager-header-container-info-data-container-' + (isLong ? 'long' : 'short') + ' clearfix'});
 
-		this.createTitle(data.title, infoEl, data.editableKey);
+		this.createTitle(data.model, data.title, infoEl, data.editableKey);
 
 		let contentClass = 'rpg-manager-header-container-info-data-container-content';
 
