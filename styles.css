@@ -2684,3 +2684,80 @@ span.flatpickr-weekday {
 .c100.orange.dark:hover > span {
   color: #e08833;
 }
+
+.modal-content .rpg-manager-modal-relationships {
+  border: solid 1px var(--background-modifier-border);
+  width: 100%;
+  min-height: var(--modal-max-height);
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-navigation {
+  width: 100%;
+  padding: 20px;
+  border-bottom: solid 1px var(--background-modifier-border);
+  display: flex;
+  gap: 25px;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-navigation .separator, .modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-navigation .link {
+  float: left;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container {
+  width: 100%;
+  padding: 20px;
+  min-height: var(--modal-max-height);
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationship-select {
+  position: relative;
+  margin: 20px;
+  float: left;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationship-select select {
+  background-color: var(--background-secondary);
+  border-bottom: solid 1px var(--background-modifier-border);
+  border-radius: 0;
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: none;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationship-select select:hover {
+  box-shadow: none;
+  background-color: var(--interactive-hover);
+  cursor: pointer;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships {
+  margin-top: 20px;
+  min-height: 400px;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table {
+  width: 100%;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr:nth-child(odd) {
+  background-color: var(--background-primary-alt);
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td {
+  height: 30px;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td input {
+  margin: 0px 15px;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td input:disabled, .modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td select:disabled {
+  background-color: var(--background-modifier-border);
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.label {
+  padding: 0px 10px;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.label span {
+  font-size: 0.8em;
+  font-style: italic;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.description {
+  max-width: 50%;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.description p {
+  font-size: 0.8em;
+}
+.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.selector select {
+  background-color: var(--background-secondary);
+  min-width: 10px;
+  width: 100%;
+}

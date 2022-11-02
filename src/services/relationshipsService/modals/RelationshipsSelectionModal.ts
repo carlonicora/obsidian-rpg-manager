@@ -11,10 +11,16 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {RelationshipService} from "../RelationshipService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";
 import {SorterService} from "../../sorterService/SorterService";
+import {GalleryViewType} from "../../galleryService/enums/GalleryViewType";
 
 export class RelationshipsSelectionModal extends AbstractModal {
 	private _relationshipsEl: HTMLDivElement;
 	private _relationshipTypeSelectorEl: HTMLSelectElement;
+	private _navigationEl: HTMLDivElement;
+	private _selectedType: ComponentType|undefined = undefined;
+
+	protected maxWidth = true;
+	protected title: string = 'Relationship Selector';
 
 	private _availableRelationships: Map<ComponentType, ComponentType[]> = new Map<ComponentType, ComponentType[]>([
 		[ComponentType.Campaign, []],
@@ -50,23 +56,55 @@ export class RelationshipsSelectionModal extends AbstractModal {
 	onOpen() {
 		super.onOpen();
 
-		const {contentEl} = this;
-		contentEl.empty();
-		this.modalEl.style.width = 'var(--modal-max-width)';
+		this.rpgmContainerEl.addClass('rpg-manager-modal-relationships');
 
-		const relationshipsModalEl = contentEl.createDiv({cls: 'rpgm-modal-relationshipsService'});
+		this._navigationEl = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-modal-relationships-navigation'});
+		this._addNavigation();
 
-		relationshipsModalEl.createEl('h2', {text: 'Relationship Selector'});
+		const searchEl: HTMLDivElement = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-modal-relationships-navigation'});
+		this._componentSearcher(searchEl);
 
-		const relationshipShortlistenersContainerEl: HTMLDivElement = relationshipsModalEl.createDiv({cls: 'clearfix'});
+		const relationshipsModalEl = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-modal-relationships-container clearfix'});
 
-		this._requiredRelationshipType(relationshipShortlistenersContainerEl);
-		this._componentSearcher(relationshipShortlistenersContainerEl);
+		// this._requiredRelationshipType(relationshipShortlistenersContainerEl);
+		// this._componentSearcher(relationshipShortlistenersContainerEl);
 
 		this._relationshipsEl = relationshipsModalEl.createDiv({cls:'relationships', text: ''});
 		this._addElementsToList();
 	}
 
+	private _addNavigation(
+	): void {
+		const availableRelationships = this._availableRelationships.get(this._currentComponent.id.type);
+
+		this._addLinkWithFunction(
+			this._navigationEl,
+			'Existing',
+			() => {
+				this._relationshipsEl.empty();
+				this._selectedType = undefined;
+				this._addElementsToList();
+			}
+		);
+
+		if (availableRelationships !== undefined && availableRelationships.length > 0) {
+			availableRelationships.forEach((type: ComponentType) => {
+				this._addSeparator(this._navigationEl);
+
+				this._addLinkWithFunction(
+					this._navigationEl,
+					ComponentType[type] + 's',
+					() => {
+						this._relationshipsEl.empty();
+						this._selectedType = type;
+						this._addElementsToList(type);
+					}
+				);
+			});
+		}
+	}
+
+	/*
 	private _requiredRelationshipType(
 		contentEl: HTMLElement,
 	): void {
@@ -97,21 +135,18 @@ export class RelationshipsSelectionModal extends AbstractModal {
 		}
 	}
 
+	 */
+
 	private _componentSearcher(
 		contentEl: HTMLElement,
 	): void {
 		const componentSearchContainerEl: HTMLDivElement = contentEl.createDiv({cls: 'relationship-select'});
-
-		const searchTitle = this._relationshipTypeSelectorEl.value === '' ? 'Search a specific Component' : 'Search a specific ' + ComponentType[this._relationshipTypeSelectorEl.value as keyof typeof ComponentType] ;
-		componentSearchContainerEl.createDiv().createEl('label', {text: searchTitle});
+		componentSearchContainerEl.createDiv().createEl('label', {text: 'Search'});
 
 		const searchTermEl: HTMLInputElement = componentSearchContainerEl.createEl('input', {type: 'text'});
 		searchTermEl.addEventListener('keyup', () => {
 			this._relationshipsEl.empty();
-			let value: ComponentType|undefined = undefined;
-
-			if (this._relationshipTypeSelectorEl.value !== '') value = (+this._relationshipTypeSelectorEl.value);
-			this._addElementsToList(value, searchTermEl.value);
+			this._addElementsToList(this._selectedType, searchTermEl.value);
 		});
 	}
 
@@ -376,5 +411,24 @@ export class RelationshipsSelectionModal extends AbstractModal {
 		});
 
 		return  response;
+	}
+
+	private _addSeparator(
+		containerEl: HTMLDivElement|HTMLSpanElement,
+	): void {
+		containerEl.createSpan({cls: 'separator', text: ' | '});
+	}
+
+	private _addLinkWithFunction(
+		containerEl: HTMLDivElement|HTMLSpanElement,
+		text: string,
+		fn: any,
+		isLast = false,
+	): void {
+		const containerSpanEl: HTMLSpanElement = containerEl.createSpan({cls: 'link'});
+		if (isLast) containerSpanEl.addClass('clearfix');
+
+		const anchorEl: HTMLAnchorElement = containerSpanEl.createEl('a', {href: '#', text: text});
+		anchorEl.addEventListener('click', fn.bind(this));
 	}
 }
