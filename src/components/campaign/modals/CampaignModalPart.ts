@@ -15,7 +15,7 @@ export class CampaignModalPart extends AbstractModalPart {
 	private _campaignErrorEl: HTMLParagraphElement;
 	private _childEl: HTMLDivElement;
 
-	private _currentDateEl: HTMLInputElement;
+	// private _currentDateEl: HTMLInputElement;
 
 	constructor(
 		api: RpgManagerApiInterface,
@@ -195,8 +195,10 @@ export class CampaignModalPart extends AbstractModalPart {
 	}
 
 	public prepareAdditionalInformation(): any {
+		/*
 		return {
 			current: this._currentDateEl.value,
 		};
+		*/
 	}
 }

@@ -31,21 +31,21 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 	}
 
 	get currentAdventureId(): IdInterface|undefined {
-		if (this.metadata.data.currentAdventureId === undefined || this.metadata.data.currentAdventureId === '')
+		if (this.metadata.data.currentAdventureId == undefined || this.metadata.data.currentAdventureId === '')
 			return undefined;
 
 		return this.api.service(IdService).createFromID(this.metadata.data.currentAdventureId);
 	}
 
 	get currentActId(): IdInterface|undefined {
-		if (this.metadata.data.currentActId === undefined || this.metadata.data.currentActId === '')
+		if (this.metadata.data.currentActId == undefined || this.metadata.data.currentActId === '')
 			return undefined;
 
 		return this.api.service(IdService).createFromID(this.metadata.data.currentActId);
 	}
 
 	get currentSessionId(): IdInterface|undefined {
-		if (this.metadata.data.currentSessionId === undefined || this.metadata.data.currentSessionId === '')
+		if (this.metadata.data.currentSessionId == undefined || this.metadata.data.currentSessionId === '')
 			return undefined;
 
 		return this.api.service(IdService).createFromID(this.metadata.data.currentSessionId);
