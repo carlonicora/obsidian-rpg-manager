@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {ClueTemplate} from "./templates/ClueTemplate";
 import {ClueRelationshipView} from "./views/ClueRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {ClueModalPart} from "./modals/ClueModalPart";
 
 export class ClueComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [ClueModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

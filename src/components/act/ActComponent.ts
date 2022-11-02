@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {ActTemplate} from "./templates/ActTemplate";
 import {ActRelationshipView} from "./views/ActRelationshipView";
+import {ActModalPart} from "./modals/ActModalPart";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
 
 export class ActComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [ActModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

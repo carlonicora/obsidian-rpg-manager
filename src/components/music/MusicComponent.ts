@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {MusicTemplate} from "./templates/MusicTemplate";
 import {MusicRelationshipView} from "./views/MusicRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {MusicModalPart} from "./modals/MusicModalPart";
 
 export class MusicComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [MusicModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

@@ -13,7 +13,7 @@ export enum SceneType {
 export const sceneTypeDescription: Map<SceneType, string> = new Map<SceneType, string>([
 	[SceneType.Action, 'Action: the pcs have to do something (active)'],
 	[SceneType.Combat, 'Combat: fight scene (active)'],
-	[SceneType.Encounter, 'Encounter: An NPC in involved (active)'],
+	[SceneType.Encounter, 'Encounter: An NPC in involved'],
 	[SceneType.Exposition, 'Exposition: Storyteller showtime'],
 	[SceneType.Investigation, 'Investigation: Pcs analyse a scene (active)'],
 	[SceneType.Planning, 'Planning: Pcs plans something (not exciteable)'],
@@ -24,7 +24,7 @@ export const sceneTypeDescription: Map<SceneType, string> = new Map<SceneType, s
 export const activeSceneTypes: Map<SceneType, boolean> = new Map<SceneType, boolean>([
 	[SceneType.Action, true],
 	[SceneType.Combat, true],
-	[SceneType.Encounter, true],
+	[SceneType.Encounter, false],
 	[SceneType.Exposition, false],
 	[SceneType.Investigation, true],
 	[SceneType.Planning, false],

@@ -1,0 +1,72 @@
+.rpg-manager-modal {
+	display: block;
+	padding: 20px;
+
+	h2.rpgm-modal-title {
+		text-align: center;
+	}
+
+	.rpg-manager-modal-grid {
+		display: flex;
+		gap: 20px;
+	}
+
+	.rpg-manager-modal-grid-navigation {
+		display: flex;
+		flex-direction: column;
+		gap: 25px;
+		flex: 1 .5 auto;
+		margin-bottom: 30px;
+
+		label {
+			color: var(--text-muted);
+		}
+
+		p.error {
+			color: var(--text-error);
+
+			display: none;
+			font-size: 0.9em;
+			font-weight: 200;
+			margin: 0px;
+			padding: 0px;
+			margin-top: -10px;
+		}
+	}
+
+	.rpg-manager-modal-grid-navigation > .createFrontMatterOnly {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.rpg-manager-modal-grid-additional-elements {
+		border: solid 1px var(--background-modifier-border);
+		display: none;
+		padding: 25px;
+		padding-top: 0;
+		min-width: 250px;
+	}
+
+	.rpg-manager-modal-grid-navigation-group {
+		display: flex;
+	}
+
+	.rpg-manager-modal-grid-navigation-group-container {
+		width: 100%;
+	}
+
+	.rpg-manager-modal-grid-navigation-group-title {
+		writing-mode: vertical-rl;
+		transform: rotate(180deg);
+		white-space: nowrap;
+		display: inline-block;
+		overflow: visible;
+
+		margin-right: 10px;
+		padding: 10px;
+		padding-right: 0;
+
+		border-left: solid 1px var(--background-modifier-border);
+	}
+}

@@ -89,10 +89,9 @@ export class AdventureModalPart extends AbstractModalPart {
 	private _selectAdventureElements(
 		containerEl: HTMLElement
 	): void {
-		const groupElement = containerEl.createDiv({cls: 'group'});
-		groupElement.createDiv({cls: 'title', text: 'Adventure'});
-		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
-		groupElement.createDiv({cls: 'clear'});
+		const groupElement = containerEl.createDiv({cls: 'rpg-manager-modal-grid-navigation-group clearfix'});
+		groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-title', text: 'Adventure'});
+		const selectionContainerEl = groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-container'});
 		this._adventureEl = selectionContainerEl.createEl('select');
 
 		if (this._adventures.length > 1) {

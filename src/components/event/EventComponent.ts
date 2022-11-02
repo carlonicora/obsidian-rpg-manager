@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {EventTemplate} from "./templates/EventTemplate";
 import {EventRelationshipView} from "./views/EventRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {EventModalPart} from "./modals/EventModalPart";
 
 export class EventComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [EventModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

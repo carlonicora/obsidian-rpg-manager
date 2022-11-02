@@ -88,7 +88,7 @@ export class CreationModal extends Modal implements ModalInterface {
 
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.addClass('rpgm-modal');
+		contentEl.addClass('rpg-manager-modal');
 
 		if (!this._create && this.app.workspace.getActiveViewOfType(MarkdownView) == null){
 			contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Error'});
@@ -99,9 +99,9 @@ export class CreationModal extends Modal implements ModalInterface {
 		contentEl.createEl('h2', {cls: 'rpgm-modal-title', text: 'Create New ' + ComponentType[this.type]});
 
 		//Navigation & Additional Info
-		const gridEl = contentEl.createDiv({cls: 'rpgm-grid'});
-		const navigationEl = gridEl.createDiv({cls: 'navigation'});
-		this.additionalInformationEl = gridEl.createDiv({cls: 'additionalElements'});
+		const gridEl = contentEl.createDiv({cls: 'rpg-manager-modal-grid'});
+		const navigationEl = gridEl.createDiv({cls: 'rpg-manager-modal-grid-navigation'});
+		this.additionalInformationEl = gridEl.createDiv({cls: 'rpg-manager-modal-grid-additional-elements'});
 
 		//Title Input
 		const titleEl = navigationEl.createDiv({cls: 'rpgm-input-title'});

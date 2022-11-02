@@ -133,11 +133,10 @@ export class CampaignModalPart extends AbstractModalPart {
 	private _selectCampaignElements(
 		containerEl: HTMLElement
 	): void {
-		const groupElement = containerEl.createDiv({cls: 'group'});
+		const groupElement = containerEl.createDiv({cls: 'rpg-manager-modal-grid-navigation-group clearfix'});
 
-		groupElement.createDiv({cls: 'title', text: 'Campaign'});
-		const selectionContainerEl = groupElement.createDiv({cls: 'container'});
-		groupElement.createDiv({cls: 'clear'});
+		groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-title', text: 'Campaign'});
+		const selectionContainerEl = groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-container'});
 
 		this._campaignEl = selectionContainerEl.createEl('select');
 		if (this._campaigns.length > 1) {

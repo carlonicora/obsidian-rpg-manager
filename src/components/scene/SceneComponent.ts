@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {SceneTemplate} from "./templates/SceneTemplate";
 import {SceneRelationshipView} from "./views/SceneRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {SceneModalPart} from "./modals/SceneModalPart";
 
 export class SceneComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [SceneModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

@@ -6,6 +6,7 @@ import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterfac
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalInterface} from "../../core/interfaces/ModalInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
+import {ModalPartClassInterface} from "../modalsManager/interfaces/ModalPartClassInterface";
 
 export class ComponentsManager implements ComponentsManagerInterface {
 	private _components: Map<ClassInterface<any>, ComponentInterface> = new Map<ClassInterface<any>, ComponentInterface>();
@@ -39,9 +40,11 @@ export class ComponentsManager implements ComponentsManagerInterface {
 			this._api.modals.register(modal, component.campaignSettings, component.type);
 		});
 
-		component.modalParts.forEach((modalPart: ClassInterface<ModalPartInterface>) => {
+		component.modalParts.forEach((modalPart: ModalPartClassInterface<ModalPartInterface>) => {
 			this._api.modals.registerPartial(modalPart, component.campaignSettings, component.type);
 		});
+
+		this._api.templates.register(component.template, component.campaignSettings, component.type);
 
 		component.views.forEach((viewType:ViewType, view: ViewClassInterface) => {
 			this._api.views.register(view, viewType, component.type, component.campaignSettings);

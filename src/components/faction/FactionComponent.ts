@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {FactionTemplate} from "./templates/FactionTemplate";
 import {FactionRelationshipView} from "./views/FactionRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {FactionModalPart} from "./modals/FactionModalPart";
 
 export class FactionComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [FactionModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {AdventureTemplate} from "./templates/AdventureTemplate";
 import {AdvenureRelationshipView} from "./views/AdvenureRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {AdventureModalPart} from "./modals/AdventureModalPart";
 
 export class AdventureComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [AdventureModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {

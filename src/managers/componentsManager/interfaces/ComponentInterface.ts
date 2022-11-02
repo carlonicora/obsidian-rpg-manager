@@ -8,10 +8,11 @@ import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 import {ModalPartInterface} from "../../../core/interfaces/ModalPartInterface";
 import {TemplateClassInterface} from "../../templatesManager/interfaces/TemplateClassInterface";
 import {TemplateInterface} from "../../templatesManager/interfaces/TemplateInterface";
+import {ModalPartClassInterface} from "../../modalsManager/interfaces/ModalPartClassInterface";
 
 export interface ComponentInterface {
 	get campaignSettings(): CampaignSetting;
-	get modalParts(): ClassInterface<ModalPartInterface>[];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[];
 	get modals(): ClassInterface<ModalInterface>[];
 	get model(): ClassInterface<ModelInterface>;
 	get template(): TemplateClassInterface<TemplateInterface>;

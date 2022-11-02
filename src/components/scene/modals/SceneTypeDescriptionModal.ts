@@ -22,7 +22,7 @@ const sceneTypeDescription: SceneTypeInformation[] = [
 			'An **Encounter** scene type is a scene in which the player characters have a social encounter with '+
 		'one or more NPCs. These type of scenes are usually for social gatherings, to receive information, but they do ' +
 		'not include the player characters having to obtain something: for that there is the **Social Combat** type od scenes',
-		isActive: true},
+		isActive: false},
 	{title: 'Exposition',
 		description: '*The storyteller introduce a change of scenery*\n' +
 			'An **Exposition** scene type is a storyteller-lead scene in which the storyteller present something ' +

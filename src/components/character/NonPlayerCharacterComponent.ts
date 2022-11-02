@@ -13,14 +13,16 @@ import {TemplateClassInterface} from "../../managers/templatesManager/interfaces
 import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 import {NonPlayerCharacterTemplate} from "./templates/NonPlayerCharacterTemplate";
 import {NonPlayerCharacterRelationshipView} from "./views/NonPlayerCharacterRelationshipView";
+import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
+import {NonPlayerCharacterModalPart} from "./modals/NonPlayerCharacterModalPart";
 
 export class NonPlayerCharacterComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
 		return CampaignSetting.Agnostic;
 	}
 
-	get modalParts(): ClassInterface<ModalPartInterface>[] {
-		return [];
+	get modalParts(): ModalPartClassInterface<ModalPartInterface>[] {
+		return [NonPlayerCharacterModalPart];
 	}
 
 	get modals(): ClassInterface<ModalInterface>[] {
