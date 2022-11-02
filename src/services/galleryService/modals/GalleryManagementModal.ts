@@ -1,7 +1,6 @@
 import {GalleryViewType} from "../enums/GalleryViewType";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
-import {GalleryViewInterface} from "../interfaces/GalleryViewInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {GalleryServiceInterface} from "../interfaces/GalleryServiceInterface";
 
