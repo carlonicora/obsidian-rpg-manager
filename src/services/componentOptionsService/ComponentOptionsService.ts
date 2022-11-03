@@ -9,6 +9,7 @@ import {GalleryService} from "../galleryService/GalleryService";
 import {CampaignModel} from "../../components/campaign/models/CampaignModel";
 import {SessionModel} from "../../components/session/models/SessionModel";
 import {SceneSelectionModal} from "../../components/session/modals/SceneSelectionModal";
+import {CodeblockService} from "../codeblockService/CodeblockService";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
@@ -56,10 +57,9 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		if (!model.isComplete) {
 			this._addSeparator(containerEl);
 
-			//TODO edit onclick
 			this._addFunctionality(containerEl, 'Complete')
 				.addEventListener("click", () => {
-					new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
+					this.api.service(CodeblockService).remove('data.complete');
 				});
 
 		}

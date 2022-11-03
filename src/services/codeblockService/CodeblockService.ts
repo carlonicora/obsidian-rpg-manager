@@ -13,8 +13,6 @@ import {CodeblockRelationshipWorker} from "./workers/CodeblockRelationshipWorker
 import {CodeblockKeyWorker} from "./workers/CodeblockKeyWorker";
 import {ImageService} from "../imageService/ImageService";
 import {CodeblockRunningWorker} from "./workers/CodeblockRunningWorker";
-import {DatabaseInitialiser} from "../../managers/databaseManager/DatabaseInitialiser";
-import {DatabaseInterface} from "../../managers/databaseManager/interfaces/DatabaseInterface";
 import {Md5} from "ts-md5";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 
