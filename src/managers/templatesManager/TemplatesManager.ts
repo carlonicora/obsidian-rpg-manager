@@ -4,6 +4,8 @@ import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {TemplateInterface} from "./interfaces/TemplateInterface";
 import {TemplateClassInterface} from "./interfaces/TemplateClassInterface";
+import {LoggerService} from "../../services/loggerService/LoggerService";
+import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 
 export class TemplatesManager implements TemplatesManagerInterface {
 	private _templates: Map<string, TemplateClassInterface<TemplateInterface>> = new Map<string, TemplateClassInterface<TemplateInterface>>();
@@ -42,15 +44,18 @@ export class TemplatesManager implements TemplatesManagerInterface {
 				additionalInformation,
 			);
 
-		//TODO: Change empty error
-		if (campaignSettings === CampaignSetting.Agnostic)
-			throw new Error('');
+		if (campaignSettings === CampaignSetting.Agnostic) {
+			this._api.service(LoggerService).createError(LogMessageType.System, 'The requested element (' + ComponentType[type] + ') does not have a creation template');
+			throw new Error('The requested element (' + ComponentType[type] + ') does not have a creation template');
+		}
+
 
 		templateClass = this._templates.get(this._getIdentifier(type, CampaignSetting.Agnostic));
 
-		//TODO: Change empty error
-		if (templateClass === undefined)
-			throw new Error('');
+		if (templateClass === undefined) {
+			this._api.service(LoggerService).createError(LogMessageType.System, 'The requested element (' + ComponentType[type] + ') does not have a creation template');
+			throw new Error('The requested element (' + ComponentType[type] + ') does not have a creation template');
+		}
 
 		return this._initialiseTemplate(
 			templateClass,

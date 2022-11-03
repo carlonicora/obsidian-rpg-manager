@@ -6,6 +6,8 @@ import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterfac
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
 import {ModalPartClassInterface} from "../modalsManager/interfaces/ModalPartClassInterface";
+import {LoggerService} from "../../services/loggerService/LoggerService";
+import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 
 export class ComponentsManager implements ComponentsManagerInterface {
 	private _components: Map<ClassInterface<any>, ComponentInterface> = new Map<ClassInterface<any>, ComponentInterface>();
@@ -20,10 +22,10 @@ export class ComponentsManager implements ComponentsManagerInterface {
 	): T {
 		const response = this._components.get(component) as T;
 
-		//TODO change the empty error
-		if (response === undefined)
-			throw new Error('');
-
+		if (response === undefined) {
+			this._api.service(LoggerService).createError(LogMessageType.System, 'The requested component (' + component.name + ') does not exist');
+			throw new Error('The requested component (' + component.name + ') does not exist');
+		}
 		return response;
 	}
 

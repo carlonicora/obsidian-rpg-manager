@@ -17,7 +17,7 @@ export class ReleaseNoteView extends AbstractStaticView{
 	): Promise<void> {
 		this.rpgmContentEl.empty();
 
-		const releaseNotes = await this.api.fetchers.get(ReleaseNoteFetcher).fetchMarkdown();
+		const releaseNotes = await this.api.fetcher(ReleaseNoteFetcher).fetchMarkdown();
 
 		if (releaseNotes != null) {
 			MarkdownRenderer.renderMarkdown(

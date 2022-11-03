@@ -114,10 +114,15 @@ export class DatabaseInitialiser {
 		file: TFile
 	): Promise<IdInterface|undefined> {
 		const metadata = this._api.app.metadataCache.getFileCache(file);
-		if (metadata == undefined) return undefined;
-		if (metadata.sections == undefined || metadata.sections.length === 0) return undefined;
+
+		if (metadata == undefined)
+			return undefined;
+
+		if (metadata.sections == undefined || metadata.sections.length === 0)
+			return undefined;
 
 		const content: string = await this._api.app.vault.read(file);
+
 		const contentArray: string[] = content.split('\n');
 		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
 			const section = metadata.sections[sectionIndex];

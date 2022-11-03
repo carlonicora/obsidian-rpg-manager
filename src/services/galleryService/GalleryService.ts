@@ -10,6 +10,8 @@ import {GalleryAddRemoteModalView} from "./views/modals/GalleryAddRemoteModalVie
 import {GalleryUploadModalView} from "./views/modals/GalleryUploadModalView";
 import {GalleryViewInterface} from "./interfaces/GalleryViewInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
+import {LoggerService} from "../loggerService/LoggerService";
+import {LogMessageType} from "../loggerService/enums/LogMessageType";
 
 export class GalleryService extends AbstractService implements GalleryServiceInterface, ServiceInterface {
 	private _imageExtensions: string[] = ["jpeg", "jpg", "png", "webp"];
@@ -33,9 +35,10 @@ export class GalleryService extends AbstractService implements GalleryServiceInt
 	): GalleryViewInterface {
 		const view = this.views.get(type);
 
-		//TODO clear empty error
-		if (view === undefined)
-			throw new Error('');
+		if (view === undefined) {
+			this.api.service(LoggerService).createError(LogMessageType.System, 'The requested gallery view (' + GalleryViewType[type] + ') does not exist');
+			throw new Error('The requested gallery view (' + GalleryViewType[type] + ') does not exist');
+		}
 
 		const response: GalleryViewInterface = new view(this.api, this);
 		response.model = model;

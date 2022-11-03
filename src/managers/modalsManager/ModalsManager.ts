@@ -6,6 +6,8 @@ import {ModalsManagerInterface} from "./interfaces/ModalsManagerInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartClassInterface} from "./interfaces/ModalPartClassInterface";
+import {LoggerService} from "../../services/loggerService/LoggerService";
+import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 
 export class ModalsManager implements ModalsManagerInterface {
 	private _modals: Map<string,ClassInterface<ModalInterface>> = new Map<string, ClassInterface<ModalInterface>>();
@@ -26,15 +28,17 @@ export class ModalsManager implements ModalsManagerInterface {
 		if (modalPartClass !== undefined)
 			return this._initialiseComponentModalPart(modalPartClass, modal);
 
-		//TODO: Change empty error
-		if (campaignSettings === CampaignSetting.Agnostic)
-			throw new Error('');
+		if (campaignSettings === CampaignSetting.Agnostic) {
+			this._api.service(LoggerService).createError(LogMessageType.System, 'The requested element (' + ComponentType[type] + ') does not have a creation modal');
+			throw new Error('The requested element (' + ComponentType[type] + ') does not have a creation modal');
+		}
 
 		modalPartClass = this._modalParts.get(this._getIdentifier(CampaignSetting.Agnostic, type));
 
-		//TODO: Change empty error
-		if (modalPartClass === undefined)
-			throw new Error('');
+		if (modalPartClass === undefined) {
+			this._api.service(LoggerService).createError(LogMessageType.System, 'The requested element (' + ComponentType[type] + ') does not have a creation modal');
+			throw new Error('The requested element (' + ComponentType[type] + ') does not have a creation modal');
+		}
 
 		return this._initialiseComponentModalPart(modalPartClass, modal);
 	}

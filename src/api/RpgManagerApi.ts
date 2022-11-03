@@ -27,6 +27,8 @@ import {StaticViewsManagerInterface} from "../managers/staticViewsManager/interf
 import {StaticViewsManager} from "../managers/staticViewsManager/StaticViewsManager";
 import {DatabaseManagerInterface} from "../managers/databaseManager/interfaces/DatabaseManagerInterface";
 import {DatabaseManager} from "../managers/databaseManager/DatabaseManager";
+import {LoggerService} from "../services/loggerService/LoggerService";
+import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -143,9 +145,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	): T {
 		const response = this._fetchers.get(fetcher);
 
-		//TODO change the empty error
-		if (response === undefined)
-			throw new Error('');
+		if (response === undefined) {
+			this.service(LoggerService).createError(LogMessageType.System, 'The requested fetcher (' + fetcher.name + ') does not exist');
+			throw new Error('The requested fetcher (' + fetcher.name + ') does not exist');
+		}
 
 		return response;
 	}
@@ -155,9 +158,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	): T {
 		const response = this._services.get(service);
 
-		//TODO change the empty error
-		if (response === undefined)
-			throw new Error('');
+		if (response === undefined) {
+			this.service(LoggerService).createError(LogMessageType.System, 'The requested service (' + service.name + ') does not exist');
+			throw new Error('The requested service (' + service.name + ') does not exist');
+		}
 
 		return response;
 	}

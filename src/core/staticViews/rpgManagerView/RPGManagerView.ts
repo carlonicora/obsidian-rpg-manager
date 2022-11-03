@@ -49,7 +49,7 @@ export class RPGManagerView extends AbstractStaticView {
 		this.rpgmContentEl.removeClass('rpgm-view');
 		this.rpgmContentEl.addClass('rpg-manager-right-view');
 		this.rpgmContentEl.empty();
-		this.rpgmContentEl.createEl('h2', {text: 'RPG Manager'})
+		this.rpgmContentEl.createEl('h2', {text: 'RPG Manager'});
 
 		this._addCreators();
 

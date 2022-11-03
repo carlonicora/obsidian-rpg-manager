@@ -18,6 +18,8 @@ import {
 import {
 	RpgManagerAdvancedSettingsListsInterface
 } from "../../settings/interfaces/RpgManagerAdvancedSettingsListsInterface";
+import {LoggerService} from "../loggerService/LoggerService";
+import {LogMessageType} from "../loggerService/enums/LogMessageType";
 
 export class RelationshipService extends AbstractService implements RelationshipServiceInterface, ServiceInterface {
 	public createRelationship(
@@ -128,9 +130,10 @@ export class RelationshipService extends AbstractService implements Relationship
 				break;
 		}
 
-		//TODO change the empty error
-		if (response === undefined)
-			throw new Error('');
+		if (response === undefined) {
+			this.api.service(LoggerService).createError(LogMessageType.System, 'The requested list (' + listName + ') does not exist');
+			throw new Error('The requested list (' + listName + ') does not exist');
+		}
 
 		return response;
 	}

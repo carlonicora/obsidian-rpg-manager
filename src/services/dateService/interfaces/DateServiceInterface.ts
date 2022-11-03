@@ -21,11 +21,6 @@ export interface DateServiceInterface {
 		component: ModelInterface,
 	): number|undefined;
 
-	formatHoursMinutes(
-		durationInMinutes?: number,
-	): string;
-
-
 	formatMinutesSeconds(
 		durationInSeconds?: number,
 	): string;

@@ -18,7 +18,6 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		containerEl: HTMLElement
 	): void {
 		if (model instanceof CampaignModel){
-			//TODO edit onclick
 			this._addFunctionality(containerEl, 'Timeline')
 				.addEventListener("click", () => {
 					this.api.staticViews.create(StaticViewType.Timeline, [model.id]);

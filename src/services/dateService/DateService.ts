@@ -120,11 +120,4 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 
 		return duration.toString();
 	}
-
-	public formatHoursMinutes(
-		durationInSeconds?: number,
-	): string {
-		//todo implement
-		return '';
-	}
 }
