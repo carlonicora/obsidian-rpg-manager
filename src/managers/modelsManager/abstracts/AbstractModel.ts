@@ -194,6 +194,7 @@ export abstract class AbstractModel implements ModelInterface {
 		return this.api.service(CodeblockService).read(this.file)
 			.then((metadata: ControllerMetadataDataInterface) => {
 				this.metadata = metadata;
+				this._relationships = new RelationshipList();
 				this.initialiseData();
 				return this.initialiseRelationships()
 					.then(() => {
