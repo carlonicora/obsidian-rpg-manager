@@ -153,27 +153,27 @@ export class TimelineView extends AbstractStaticView implements View {
 		this.rpgmContentEl.empty();
 
 		if (this._campaign.images.length > 0) {
-			const bannerContainer = this.rpgmContentEl.createDiv({cls: 'rpg-container'});
+			const bannerContainer = this.rpgmContentEl.createDiv({cls: 'rpg-manager-timeline'});
 
-			const header = bannerContainer.createDiv({cls: 'rpgm-header'});
+			const header = bannerContainer.createDiv({cls: 'rpg-manager-timeline-header'});
 			header.style.backgroundImage = 'url(\'' + this._campaign.images[0].src + '\')';
 
-			const overlay = header.createDiv({cls: 'rpgm-header-overlay'});
-			overlay.createDiv({cls: 'rpgm-header-title', text: 'Timeline'});
+			const overlay = header.createDiv({cls: 'rpg-manager-timeline-header-overlay'});
+			overlay.createDiv({cls: 'rpg-manager-timeline-header-overlay-title', text: 'Timeline'});
 
-			overlay.createDiv({cls: 'rpgm-campaign-name', text: this._campaign.file.basename});
+			overlay.createDiv({cls: 'rpg-manager-timeline-header-overlay-name', text: this._campaign.file.basename});
 			const campaignDate = this.api.service(DateService).getReadableDate(this._campaign.date, this._campaign) ?? '';
-			overlay.createDiv({cls: 'rpgm-current-date', text: (campaignDate !== undefined ? campaignDate : '')});
+			overlay.createDiv({cls: 'rpg-manager-timeline-header-overlay-date', text: (campaignDate !== undefined ? campaignDate : '')});
 		} else {
 			this.rpgmContentEl.createEl('h1', {text: this._campaign.file.basename});
 		}
 
-		const timelineEl = this.rpgmContentEl.createDiv({cls: 'rpgm-new-timeline'});
+		const timelineEl = this.rpgmContentEl.createDiv({cls: 'rpg-manager-timeline-content'});
 		const listEl = timelineEl.createEl('ul');
 
 		this._elements.forEach((timeline: TimelineElementInterface) => {
 			const itemEl = listEl.createEl('li', {cls: timeline.type});
-			const contentEl = itemEl.createDiv({cls: 'content'});
+			const contentEl = itemEl.createDiv({cls: 'rpg-manager-timeline-content-element'});
 
 			/** DATE **/
 			contentEl.createEl('span', {cls: timeline.type, text: timeline.type.toString() + ': ' + timeline.date + (timeline.time !== '00:00' ? ' @ ' + timeline.time : '')});

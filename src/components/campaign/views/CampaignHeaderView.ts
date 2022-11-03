@@ -18,6 +18,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 	public render(
 	): void {
 		this.addTitle();
+		this.addComponentOptions();
 
 		const adventures = this.api.database.readList<AdventureInterface>(ComponentType.Adventure, this.model.id)
 			.sort(this.api.service(SorterService).create<AdventureInterface>([

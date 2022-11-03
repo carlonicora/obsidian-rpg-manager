@@ -1211,6 +1211,110 @@ textarea:hover {
   display: block;
 }
 
+.rpg-manager-timeline-header {
+  background-size: cover;
+  color: var(--rpg-manager-colour-background);
+  position: relative;
+  min-height: 350px;
+  height: 350px;
+}
+.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay {
+  margin-bottom: -50px;
+  box-sizing: border-box;
+  background: rgba(128, 128, 128, 0.5);
+  min-height: 350px;
+}
+.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay .rpg-manager-timeline-header-overlay-title {
+  font-size: 4em;
+  display: inline-block;
+  padding-left: 30px;
+  width: 100%;
+  margin-top: 50px;
+}
+.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay .rpg-manager-timeline-header-overlay-name {
+  display: inline-block;
+  padding-left: 55px;
+  width: 100%;
+  font-size: 1.6em;
+}
+.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay .rpg-manager-timeline-header-overlay-date {
+  display: inline-block;
+  padding-left: 55px;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.6em;
+  letter-spacing: 2px;
+  width: 100%;
+}
+
+.rpg-manager-timeline-content {
+  padding: 30px 20px;
+}
+.rpg-manager-timeline-content ul {
+  list-style-type: none;
+  border-left: 1px solid var(--rpg-manager-colour-border);
+  padding: 10px 5px;
+  margin-top: -30px;
+}
+.rpg-manager-timeline-content ul li {
+  position: relative;
+}
+.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element {
+  padding-left: 10px;
+  font-weight: 200;
+  margin-bottom: 20px;
+}
+.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element span {
+  display: inline-block;
+  text-align: left;
+  font-size: 0.9em;
+  font-variant: all-small-caps;
+}
+.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element h3 {
+  color: var(--rpg-manager-colour-text-link);
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element div > p {
+  font-size: 0.8em;
+  margin: 0px;
+}
+.rpg-manager-timeline-content ul li:before {
+  position: absolute;
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color: var(--code-property);
+  border-radius: 50%;
+  left: -13px;
+  top: 28px;
+  transition: 0.5s;
+}
+.rpg-manager-timeline-content ul span.clue {
+  color: var(--code-property);
+}
+.rpg-manager-timeline-content ul span.death {
+  color: var(--text-error);
+}
+.rpg-manager-timeline-content ul span.session {
+  color: var(--background-modifier-success);
+}
+.rpg-manager-timeline-content ul span.event {
+  color: var(--interactive-accent);
+}
+.rpg-manager-timeline-content ul li.clue::before {
+  background-color: var(--code-property);
+}
+.rpg-manager-timeline-content ul li.death::before {
+  background-color: var(--text-error);
+}
+.rpg-manager-timeline-content ul li.session::before {
+  background-color: var(--background-modifier-success);
+}
+.rpg-manager-timeline-content ul li.event::before {
+  background-color: var(--interactive-accent);
+}
+
 .rpg-manager-header-container-info-analyser {
   border-top: solid 1px var(--rpg-manager-colour-border);
   padding: 20px;
