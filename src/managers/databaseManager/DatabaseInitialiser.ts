@@ -124,6 +124,21 @@ export class DatabaseInitialiser {
 		const content: string = await this._api.app.vault.read(file);
 
 		const contentArray: string[] = content.split('\n');
+
+		let isRpgManagerDataExisting = false;
+		let isRpgManagerIDExisting = false;
+		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++) {
+			const section = metadata.sections[sectionIndex];
+			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID')
+				isRpgManagerIDExisting = true;
+
+			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerData')
+				isRpgManagerDataExisting = true;
+		}
+
+		if (!isRpgManagerDataExisting || !isRpgManagerIDExisting)
+			return undefined;
+
 		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
 			const section = metadata.sections[sectionIndex];
 			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
