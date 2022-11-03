@@ -1,16 +1,17 @@
-@use "src/styles/global";
-@use "src/styles/input";
-@use "src/styles/header";
-@use "src/styles/relationships";
 @use "src/styles/flatpickr";
+@use "src/styles/global";
+@use "src/styles/header";
+@use "src/styles/input";
 @use "src/styles/modal";
+@use "src/styles/relationships";
+@use "src/styles/staticViewes";
 
+@use "src/services/analyserService/styles/AnalyserService";
+@use "src/services/analyserService/styles/Circle";
 @use "src/services/breadcrumbService/styles/BreadcrumbService";
 @use "src/services/componentOptionsService/styles/ComponentOptionService";
 @use "src/services/contentEditorService/styles/ContentEditor";
 @use "src/services/galleryService/styles/GalleryService";
-@use "src/services/plotsService/styles/PlotService";
 @use "src/services/idService/styles/IdService";
-@use "src/services/analyserService/styles/AnalyserService";
-@use "src/services/analyserService/styles/Circle";
+@use "src/services/plotsService/styles/PlotService";
 @use "src/services/relationshipsService/styles/RelationshipService";

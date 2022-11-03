@@ -29,209 +29,132 @@ export class RPGManagerView extends AbstractStaticView {
 	): void {
 		super.initialise([]);
 		const campaigns = this.api.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.id.type === ComponentType.Campaign);
+
 		this._hasCampaigns = campaigns.length > 0;
-		if (campaigns.length === 1) {
+		if (campaigns.length === 1)
 			this._currentCampaign = campaigns[0];
-		} else {
+		else
 			this._currentCampaign = undefined;
-		}
 
 		const file:TFile|null = this.app.workspace.getActiveFile();
-		if (file != null){
+		if (file != null)
 			this._currentComponent = this.api.database.readByPath(file.path);
-		} else {
+		else
 			this._currentComponent = undefined;
-		}
+
 	}
 
 	public async render(
 	): Promise<void> {
 		this.rpgmContentEl.removeClass('rpgm-view');
-		this.rpgmContentEl.addClass('rpgm-right-view');
+		this.rpgmContentEl.addClass('rpg-manager-right-view');
 		this.rpgmContentEl.empty();
+		this.rpgmContentEl.createEl('h2', {text: 'RPG Manager'})
 
-		this._verticalTabHeaderEl = this.rpgmContentEl.createDiv({cls: 'vertical-tab-header'});
-		this._verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title  title', text: 'RPG Manager'});
+		this._addCreators();
 
-		this._addCreationLinks();
+		this._incompleteListEl = this.rpgmContentEl.createDiv();
 		this._addIncompleteComponents();
-		this._addToDoList();
+
 		this._addReleaseNotes();
 
 		return Promise.resolve(undefined);
 	}
 
-	private async _addIncompleteComponents(
-	): Promise<void> {
-		const groupEl = this._verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title'});
+	private _addTitle(
+		containerEl: HTMLElement,
+		title: string,
+		defaultOpen?: boolean,
+	): HTMLDivElement {
+		const titleElcontainerEl = containerEl.createDiv({cls: 'rpg-manager-right-view-title clearfix'});
+		const response: HTMLDivElement = containerEl.createDiv({cls: 'rpg-manager-right-view-container'});
 
-		const arrowEl: HTMLSpanElement = groupEl.createSpan();
-		arrowEl.style.marginRight = '10px';
-		setIcon(arrowEl, 'openClose');
-		const titleEl = groupEl.createSpan({text: 'Incomplete Components'});
+		if (defaultOpen) {
+			setIcon(titleElcontainerEl, 'chevron-down');
+			titleElcontainerEl.addClass('open');
+			response.addClass('open');
+		} else {
+			setIcon(titleElcontainerEl, 'chevron-right');
+			titleElcontainerEl.addClass('closed');
+			response.addClass('closed');
+		}
 
-		const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
+		titleElcontainerEl.createEl('h3', {text: title});
 
-		this._incompleteListEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
-		this._incompleteListEl.style.display = 'none';
+		titleElcontainerEl.addEventListener('click', () => {
+			titleElcontainerEl.empty();
+			if (titleElcontainerEl.hasClass('open')) {
+				titleElcontainerEl.removeClass('open');
+				response.removeClass('open');
+				titleElcontainerEl.addClass('closed');
+				response.addClass('closed');
 
-		arrowEl.addEventListener('click', () => {
-			if (this._incompleteListEl.style.display === 'none'){
-				this._incompleteListEl.style.display = '';
-				arrowIconEl.style.transform = 'rotate(90deg)';
+
+				setIcon(titleElcontainerEl, 'chevron-right');
 			} else {
-				this._incompleteListEl.style.display = 'none';
-				arrowIconEl.style.transform = 'rotate(0deg)';
+				titleElcontainerEl.removeClass('closed');
+				response.removeClass('closed');
+				titleElcontainerEl.addClass('open');
+				response.addClass('open');
+
+				setIcon(titleElcontainerEl, 'chevron-down');
 			}
+
+			titleElcontainerEl.createEl('h3', {text: title});
 		});
 
-		titleEl.addEventListener('click', () => {
-			if (this._incompleteListEl.style.display === 'none'){
-				this._incompleteListEl.style.display = '';
-				arrowIconEl.style.transform = 'rotate(90deg)';
-			} else {
-				this._incompleteListEl.style.display = 'none';
-				arrowIconEl.style.transform = 'rotate(0deg)';
-			}
-		});
-
-		this._addIncompleteComponentList();
-		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._addIncompleteComponentList.bind(this)));
+		return response;
 	}
 
-	private async _addIncompleteComponentList(
-	): Promise<void> {
-		this._incompleteListEl.empty();
-		const components: ModelInterface[] = this.api.database.read<ModelInterface>((component: ModelInterface) => component.isComplete === false);
-		components.forEach((component: ModelInterface) => {
-			const itemEl = this._incompleteListEl.createDiv({cls: 'vertical-tab-nav-item', text: component.file.basename});
-
-			itemEl.addEventListener('click', () => {
-				this.app.workspace.getLeaf(false).openFile(component.file);
-			});
-		});
-	}
-
-	private async _addReleaseNotes(
-	): Promise<void> {
-		const groupEl = this._verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title', text: 'Release Notes'});
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
-		const itemEl = groupItemEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Read Release Notes'});
-		itemEl.addEventListener('click', () => {
-			this.api.staticViews.create(StaticViewType.ReleaseNote);
-		});
-	}
-
-	private _addToDoList(
+	private _addCreators(
 	): void {
-		const groupEl = this._verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title'});
+		const containerEl: HTMLDivElement = this._addTitle(this.rpgmContentEl, 'Create new...', true);
 
-		const arrowEl: HTMLSpanElement = groupEl.createSpan();
-		arrowEl.style.marginRight = '10px';
-		setIcon(arrowEl, 'openClose');
-		const titleEl = groupEl.createSpan({text: 'To Do List'});
-
-		const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
-
-		arrowEl.addEventListener('click', () => {
-			if (this._incompleteListEl.style.display === 'none'){
-				this._incompleteListEl.style.display = '';
-				arrowIconEl.style.transform = 'rotate(90deg)';
-			} else {
-				this._incompleteListEl.style.display = 'none';
-				arrowIconEl.style.transform = 'rotate(0deg)';
-			}
-		});
-
-		titleEl.addEventListener('click', () => {
-			if (this._incompleteListEl.style.display === 'none'){
-				this._incompleteListEl.style.display = '';
-				arrowIconEl.style.transform = 'rotate(90deg)';
-			} else {
-				this._incompleteListEl.style.display = 'none';
-				arrowIconEl.style.transform = 'rotate(0deg)';
-			}
-		});
-
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
-		groupItemEl.style.display = 'none';
-		this._loadToDo(groupItemEl);
-	}
-
-	private _addCreationLinks(
-	): void {
-		const groupEl = this._verticalTabHeaderEl.createDiv({cls: 'vertical-tab-headers-group-title', text: 'Create New Components'});
-		const groupItemEl = groupEl.createDiv({cls: 'vertical-tab-headers-group-items'});
-
-		this._createElementListItem(ComponentType.Campaign, groupItemEl);
+		this._createElementListItem(ComponentType.Campaign, containerEl);
 		if (this._hasCampaigns) {
 			Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((typeString:string) => {
 				const type: ComponentType = ComponentType[typeString as keyof typeof ComponentType];
 				if (type !== ComponentType.Campaign){
-					this._createElementListItem(type, groupItemEl);
+					this._createElementListItem(type, containerEl);
 				}
 			});
 		}
-	}
-
-	private async _loadToDo(
-		containerEl: HTMLDivElement
-	): Promise<void> {
-		const components: ModelInterface[] = this.api.database.read<ModelInterface>((component: ModelInterface) => true);
-
-		let firstToDoFound = false;
-
-		components.forEach((component: ModelInterface) => {
-			this.app.vault.read(component.file)
-				.then((content: string) => {
-					const contentArray: string[] = content.split('\n');
-					contentArray.forEach((line: string) => {
-						if (line.trimStart().startsWith('- [ ]')) {
-							if (!firstToDoFound){
-								firstToDoFound = true;
-								containerEl.empty();
-							}
-
-							line = line
-								.replaceAll('- [ ]', '')
-								.replaceAll('*', '');
-
-							let finalLine = line;
-
-							while (line.indexOf('[[') !== -1){
-								line = line.substring(line.indexOf('[[') + 2);
-								const endLinkIndex = line.indexOf(']]');
-								if (endLinkIndex === -1) break;
-
-								const nameAndAlias = line.substring(0, endLinkIndex);
-								const aliasIndex = nameAndAlias.indexOf('|');
-								if (aliasIndex === -1){
-									finalLine = finalLine.replaceAll('[[' + nameAndAlias + ']]', nameAndAlias);
-								} else {
-									finalLine = finalLine.replaceAll('[[' +  nameAndAlias+ ']]', nameAndAlias.substring(0, aliasIndex));
-								}
-							}
-
-							const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text:finalLine});
-
-							itemEl.addEventListener('click', () => {
-								this.app.workspace.getLeaf(false).openFile(component.file);
-							});
-						}
-					});
-				});
-		});
-
 	}
 
 	private _createElementListItem(
 		type: ComponentType,
 		containerEl: HTMLDivElement,
 	): void {
-		const itemEl = containerEl.createDiv({cls: 'vertical-tab-nav-item', text: 'Create new ' + ComponentType[type]});
+		const itemEl = containerEl.createDiv({cls: 'rpg-manager-right-view-container-element', text: ComponentType[type]});
 		itemEl.addEventListener("click", () => {
 			this._openCreationModal(type);
 		});
+	}
+
+	private async _addIncompleteComponents(
+	): Promise<void> {
+		this._incompleteListEl.empty();
+
+		const containerEl: HTMLDivElement = this._addTitle(this._incompleteListEl, 'Incomplete elements', false);
+
+		const components: ModelInterface[] = this.api.database.read<ModelInterface>((component: ModelInterface) => component.isComplete === false);
+		components.forEach((component: ModelInterface) => {
+			const itemEl = containerEl.createDiv({cls: 'rpg-manager-right-view-container-element', text: component.file.basename});
+			itemEl.addEventListener('click', () => {
+				this.app.workspace.getLeaf(false).openFile(component.file);
+			});
+		});
+
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._addIncompleteComponents.bind(this)));
+	}
+
+	private async _addReleaseNotes(
+	): Promise<void> {
+		const containerEl: HTMLDivElement = this._addTitle(this.rpgmContentEl, 'Help', false);
+		containerEl.createDiv({cls: 'rpg-manager-right-view-container-element', text: 'Release notes'})
+			.addEventListener('click', () => {
+				this.api.staticViews.create(StaticViewType.ReleaseNote);
+			});
 	}
 
 	private _openCreationModal(
