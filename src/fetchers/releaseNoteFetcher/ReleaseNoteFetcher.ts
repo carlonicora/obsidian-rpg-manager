@@ -7,7 +7,11 @@ export class ReleaseNoteFetcher extends AbstractFetcher implements MarkdownFetch
 	public async fetchMarkdown(
 	): Promise<string | null | undefined> {
 		const apiResponse: any|undefined = await fetch(this.fetchUrl);
-		if (apiResponse === undefined) return undefined;
+
+		console.log(apiResponse)
+
+		if (apiResponse === undefined)
+			return undefined;
 
 		const response = await apiResponse.text();
 

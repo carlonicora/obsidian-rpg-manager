@@ -490,7 +490,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				if (frontmatterMetadata?.dates?.dob != undefined) metadata.data.dob = frontmatterMetadata.dates.dob;
 				if (frontmatterMetadata?.dates?.death != undefined) metadata.data.death = frontmatterMetadata.dates.death;
 				if (frontmatterMetadata?.pronoun != undefined) metadata.data.pronoun = frontmatterMetadata.dates.pronoun;
-				if (frontmatterMetadata?.goals != undefined) metadata.data.pronoun = frontmatterMetadata.goals;
+				if (frontmatterMetadata?.goals != undefined) metadata.data.goals = frontmatterMetadata.goals;
 				break;
 		}
 
