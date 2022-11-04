@@ -11,6 +11,8 @@ import {SessionModel} from "../../components/session/models/SessionModel";
 import {SceneSelectionModal} from "../../components/session/modals/SceneSelectionModal";
 import {CodeblockService} from "../codeblockService/CodeblockService";
 import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticViewType";
+import {AdventureModel} from "../../components/adventure/models/AdventureModel";
+import {AdventurePlotWizardService} from "../adventurePlotWizardService/AdventurePlotWizardService";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
@@ -24,6 +26,15 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				});
 
 		} else {
+			if (model instanceof AdventureModel) {
+				this._addFunctionality(containerEl, 'Wizard')
+					.addEventListener("click", () => {
+						this.api.service(AdventurePlotWizardService).open(model.id);
+					});
+
+				this._addSeparator(containerEl);
+			}
+
 			this._addFunctionality(containerEl, 'Relationship')
 				.addEventListener("click", () => {
 					new RelationshipsSelectionModal(this.api, model).open();
