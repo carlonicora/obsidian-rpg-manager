@@ -14,7 +14,7 @@ export class NavigationPart implements WizardNavigationPartInterface {
 			const dotEl: HTMLDivElement = navigationEl.createDiv({cls: 'rpg-manager-wizard-navigation-elements-dot', text: (index + 1).toString()});
 			dotEl.addEventListener('click', () => {
 				this._moveFn(index);
-			})
+			});
 
 			this._circles.push(
 				dotEl

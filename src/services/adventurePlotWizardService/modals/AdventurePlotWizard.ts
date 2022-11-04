@@ -1,5 +1,4 @@
 import {AbstractWizardModal} from "../../../managers/modalsManager/abstracts/AbstractWizardModal";
-import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
 import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
@@ -8,7 +7,7 @@ import {StepDescriptionModal} from "./steps/StepDescriptionModal";
 import {StepDescriptionAndCluesModal} from "./steps/StepDescriptionAndCluesModal";
 
 export class AdventurePlotWizard extends AbstractWizardModal {
-	protected steps: number = 8;
+	protected steps = 8;
 
 	private _steps: Map<number, WizardPartInterface> = new Map<number, WizardPartInterface>();
 

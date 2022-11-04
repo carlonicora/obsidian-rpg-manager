@@ -8,6 +8,8 @@ import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractM
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {IdService} from "../IdService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";
+import {ActInterface} from "../../../components/act/interfaces/ActInterface";
+import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 
 export class IdSwitcherModal extends AbstractModal {
 	private _id: IdInterface;
@@ -126,8 +128,48 @@ export class IdSwitcherModal extends AbstractModal {
 
 	private async _save(
 	): Promise<void>{
-		this.api.service(CodeblockService).replaceID(this._file, this._newId.stringID);
+		await this.api.service(CodeblockService).replaceID(this._file, this._newId.stringID);
+
+		if (this._id.type === ComponentType.Adventure || this._id.type === ComponentType.Act)
+			await this._updateChildIds(this._id, this._newId, this._file);
+
 		this.close();
+	}
+
+	private async _updateChildIds(
+		id: IdInterface,
+		newId: IdInterface,
+		file: TFile
+	): Promise<void> {
+		if (id.type === ComponentType.Adventure){
+			const acts = this.api.database.readList<ActInterface>(ComponentType.Act, id);
+
+			if (acts.length > 0) {
+				for (let index=0; index<acts.length; index++){
+					if (newId.adventureId !== undefined) {
+						const oldId = this.api.service(IdService).createFromID(acts[index].id.stringID);
+						acts[index].id.replaceId(ComponentType.Campaign, newId.campaignId);
+						acts[index].id.replaceId(ComponentType.Adventure, newId.adventureId);
+						await this.api.service(CodeblockService).replaceID(acts[index].file, acts[index].id.stringID);
+
+						await this._updateChildIds(oldId, acts[index].id, acts[index].file);
+					}
+				}
+			}
+		} else if (id.type === ComponentType.Act){
+			const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, id);
+
+			if (scenes.length > 0){
+				for (let index=0; index<scenes.length; index++){
+					if (newId.adventureId !== undefined && newId.actId !== undefined) {
+						scenes[index].id.replaceId(ComponentType.Campaign, newId.campaignId);
+						scenes[index].id.replaceId(ComponentType.Adventure, newId.adventureId);
+						scenes[index].id.replaceId(ComponentType.Act, newId.actId);
+						await this.api.service(CodeblockService).replaceID(scenes[index].file, scenes[index].id.stringID);
+					}
+				}
+			}
+		}
 	}
 
 	private _addSelector(

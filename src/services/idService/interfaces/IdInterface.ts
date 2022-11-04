@@ -53,5 +53,10 @@ export interface IdInterface {
 		type: ComponentType,
 	): number|undefined;
 
+	replaceId(
+		type: ComponentType,
+		id: number,
+	): void;
+
 	get stringID(): string;
 }

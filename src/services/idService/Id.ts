@@ -233,4 +233,14 @@ export class Id  implements IdInterface{
 
 		throw new TagMisconfiguredError(this._api, this);
 	}
+
+	public replaceId(
+		type: ComponentType,
+		id: number,
+	): void {
+		const idValue = this.tagMap.get(type);
+		if (idValue !== undefined)
+			idValue.value = id;
+
+	}
 }

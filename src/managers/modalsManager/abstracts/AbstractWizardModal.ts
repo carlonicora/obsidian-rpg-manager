@@ -48,7 +48,7 @@ export abstract class AbstractWizardModal extends Modal {
 
 		this._wizardNavigationEl = wizardEl.createDiv({cls: 'rpg-manager-wizard-navigation'});
 
-		const mainContentEl = wizardEl.createDiv({cls: 'rpg-manager-wizard-main clearfix'})
+		const mainContentEl = wizardEl.createDiv({cls: 'rpg-manager-wizard-main clearfix'});
 		this._wizardRecapEl = mainContentEl.createDiv({cls: 'rpg-manager-wizard-main-recap'});
 		this._wizardContentEl = mainContentEl.createDiv({cls: 'rpg-manager-wizard-main-content clearfix'});
 
@@ -69,7 +69,7 @@ export abstract class AbstractWizardModal extends Modal {
 
 		this._updateNavigation(newStep);
 		this._updateRecap(this._wizardRecapEl);
-		this._updateButtons(newStep)
+		this._updateButtons(newStep);
 
 		this._render(newStep);
 
