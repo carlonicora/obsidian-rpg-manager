@@ -23,7 +23,7 @@ export class Controller extends MarkdownRenderChild {
 	private _componentVersion: number|undefined = undefined;
 	private _currentComponent: ModelInterface;
 	private _isActive = false;
-	private _views: Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType, title?: string}>;
+	private _views: Map<string, {viewClassInterface: ViewClassInterface, type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType, title?: string}>;
 
 	constructor(
 		private _api: RpgManagerApiInterface,
@@ -34,7 +34,7 @@ export class Controller extends MarkdownRenderChild {
 	) {
 		super(container);
 
-		this._views = new Map<ViewClassInterface, {type: ViewType, relatedType?: ComponentType; relationshipType?: RelationshipType}>();
+		this._views = new Map<string, {viewClassInterface: ViewClassInterface, type: ViewType, relatedType?: ComponentType; relationshipType?: RelationshipType}>();
 
 		this.registerEvent(this._api.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
 
@@ -105,38 +105,71 @@ export class Controller extends MarkdownRenderChild {
 		if (yamlSource.models.header !== undefined) {
 			const viewClass = this._api.views.create(ViewType.Header, this._currentComponent.id.type, this._currentComponent.campaignSettings);
 			if (viewClass !== undefined)
-				this._views.set(viewClass, {type: ViewType.Header});
+				this._views.set(this._createModelIdentifier(ViewType.Header, this._currentComponent.id.type), {viewClassInterface: viewClass, type: ViewType.Header});
 
 		}
 
 		if (yamlSource.models.lists !== undefined) {
-			Object.entries(yamlSource.models.lists).forEach(([relationshipType, value]: [string, ControllerMetadataModelElementInterface]) => {
+			Object.entries(yamlSource.models.lists).forEach(([relationshipType, value]: [string, ControllerMetadataModelElementInterface|ControllerMetadataModelElementInterface[]|null]) => {
 				const componentType: ComponentType|undefined = this._api.service(RelationshipService).getComponentTypeFromListName(relationshipType);
 
-				let requiredRelationship: RelationshipType | undefined = undefined;
-				let relationshipTitle: string|undefined = undefined;
-
-				if (value != undefined){
-					requiredRelationship = value.relationship ? this._api.service(RelationshipService).getTypeFromString(value.relationship) : undefined;
-					relationshipTitle = value.title;
-				}
-
-				if (componentType !== undefined) {
-					const viewClass = this._api.views.create(ViewType.Relationships, componentType, this._currentComponent.campaignSettings);
-
-					if (viewClass !== undefined)
-						this._views.set(
-							viewClass,
-							{
-								type: ViewType.Relationships,
-								relatedType: componentType,
-								relationshipType: requiredRelationship,
-								title: relationshipTitle,
-							}
-						);
-
+				if (Array.isArray(value)) {
+					for (let index=0; index<value.length; index++){
+						this._loadRelationshipModel(componentType, relationshipType, value[index]);
+					}
+				} else {
+					this._loadRelationshipModel(componentType, relationshipType, value);
 				}
 			});
+		}
+	}
+
+	private _createModelIdentifier(
+		viewType: ViewType,
+		componentType: ComponentType,
+		relatedType?: ComponentType,
+		relationshipType?: RelationshipType,
+	): string {
+		let response = viewType.toString() + '-';
+		response += componentType.toString() + '-';
+
+		if (relatedType !== undefined)
+			response += relatedType.toString() + '-';
+
+		if (relationshipType !== undefined)
+			response += relationshipType.toString() + '-';
+
+		return response;
+	}
+
+	private _loadRelationshipModel(
+		componentType: ComponentType|undefined,
+		relationshipType: string,
+		value: ControllerMetadataModelElementInterface|null,
+	): void {
+		let requiredRelationship: RelationshipType | undefined = undefined;
+		let relationshipTitle: string|undefined = undefined;
+
+		if (value != undefined){
+			requiredRelationship = value.relationship ? this._api.service(RelationshipService).getTypeFromString(value.relationship) : undefined;
+			relationshipTitle = value.title;
+		}
+
+		if (componentType !== undefined) {
+			const viewClass = this._api.views.create(ViewType.Relationships, componentType, this._currentComponent.campaignSettings);
+
+			if (viewClass !== undefined)
+				this._views.set(
+					this._createModelIdentifier(ViewType.Header, this._currentComponent.id.type, componentType, requiredRelationship),
+					{
+						viewClassInterface: viewClass,
+						type: ViewType.Relationships,
+						relatedType: componentType,
+						relationshipType: requiredRelationship,
+						title: relationshipTitle,
+					}
+				);
+
 		}
 	}
 
@@ -159,14 +192,14 @@ export class Controller extends MarkdownRenderChild {
 		if (await this._initialise()) {
 			this.containerEl.empty();
 
-			this._views.forEach((viewClassDetails: {type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType, title?: string}, viewClass: ViewClassInterface) => {
+			this._views.forEach((viewClassDetails: {viewClassInterface: ViewClassInterface, type: ViewType, relatedType?: ComponentType, relationshipType?: RelationshipType, title?: string}, identifier: string) => {
 				let view: StaticViewInterface|undefined = undefined;
 
 				if (viewClassDetails.type === ViewType.Header){
-					view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
+					view = new viewClassDetails.viewClassInterface(this._api, this._currentComponent, this.containerEl, this._sourcePath);
 				} else {
 					if (viewClassDetails.relatedType !== undefined) {
-						view = new viewClass(this._api, this._currentComponent, this.containerEl, this._sourcePath);
+						view = new viewClassDetails.viewClassInterface(this._api, this._currentComponent, this.containerEl, this._sourcePath);
 						(<RelationshipsViewInterface>view).relatedComponentType = viewClassDetails.relatedType;
 						(<RelationshipsViewInterface>view).relationshipType = viewClassDetails.relationshipType;
 						(<RelationshipsViewInterface>view).relationshipTitle = viewClassDetails.title;

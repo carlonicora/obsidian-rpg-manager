@@ -187,6 +187,18 @@ export abstract class AbstractModel implements ModelInterface {
 				}
 			});
 		}
+
+		const recordset = this.api.database.recordset;
+		for (let index=0; index<recordset.length; index++){
+			const relationships = recordset[index].getRelationships().relationships;
+			for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
+				const relationship: RelationshipInterface = relationships[relationshipIndex];
+
+				if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID){
+					this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+				}
+			}
+		}
 	}
 
 	public async readMetadata(

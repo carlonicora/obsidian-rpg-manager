@@ -64,8 +64,11 @@ export class RelationshipService extends AbstractService implements Relationship
 		component: ModelInterface,
 		relationship: RelationshipInterface,
 	): RelationshipInterface|undefined {
-		if (component.stage === ComponentStage.Plot || component.stage === ComponentStage.Run) return undefined;
-		if (relationship.component !== null && component.file.path === relationship.component?.file.path) return undefined;
+		if (component.stage === ComponentStage.Plot || component.stage === ComponentStage.Run)
+			return undefined;
+
+		if (relationship.component !== null && component.file.path === relationship.component?.file.path)
+			return undefined;
 
 		let reverseRelationshipType: RelationshipType|undefined = undefined;
 		switch (relationship.type){
@@ -77,11 +80,13 @@ export class RelationshipService extends AbstractService implements Relationship
 				break;
 		}
 
-		if (reverseRelationshipType === undefined) return undefined;
+		if (reverseRelationshipType === undefined)
+			return undefined;
 
 		const response = new Relationship(reverseRelationshipType, component.file.path, undefined, component, true);
 
-		if (relationship.component !== undefined) relationship.component.getRelationships().add(response);
+		if (relationship.component !== undefined)
+			relationship.component.getRelationships().add(response);
 
 		return response;
 	}
