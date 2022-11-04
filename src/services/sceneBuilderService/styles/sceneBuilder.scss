@@ -1,4 +1,4 @@
-.rpgm-scene-builder-confirmation {
+.rpg-manager-scene-builder-confirmation {
 	display: none;
 	position: absolute;
 	z-index: 1;
@@ -14,7 +14,7 @@
 	font-weight: 200;
 }
 
-.rpgm-scene-builder {
+.rpg-manager-scene-builder {
 	.scenes-container {
 		table {
 			width: 100%;
@@ -38,7 +38,7 @@
 		}
 	}
 
-	.rpgm-scene-builder-confirmation-button {
+	.rpg-manager-scene-builder-confirmation-button {
 		margin-top: 30px;
 		float: right;
 	}

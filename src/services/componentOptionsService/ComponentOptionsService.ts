@@ -13,6 +13,9 @@ import {CodeblockService} from "../codeblockService/CodeblockService";
 import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticViewType";
 import {AdventureModel} from "../../components/adventure/models/AdventureModel";
 import {AdventurePlotWizardService} from "../adventurePlotWizardService/AdventurePlotWizardService";
+import {ActModel} from "../../components/act/models/ActModel";
+import {SceneBuilderService} from "../sceneBuilderService/SceneBuilderService";
+import {ComponentType} from "../../core/enums/ComponentType";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
@@ -62,6 +65,20 @@ export class ComponentOptionsService extends AbstractService implements Componen
 						new SceneSelectionModal(this.api, model).open();
 					});
 
+			}
+
+			if (model instanceof ActModel) {
+				const scenes = this.api.database.readList(ComponentType.Scene, model.id);
+
+				if (scenes.length === 0) {
+					this._addSeparator(containerEl);
+
+					this._addFunctionality(containerEl, 'Scene Builder')
+						.addEventListener("click", () => {
+							this.api.service(SceneBuilderService).open(model);
+						});
+
+				}
 			}
 		}
 

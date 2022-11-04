@@ -25,7 +25,7 @@ export class SceneBuilderModal extends AbstractModal {
 	) {
 		super(api);
 		this.maxWidth = true;
-		this.title = 'SceneModel Builder';
+		this.title = 'Scene Builder';
 
 		this._emptyLines = new Map<number, boolean>();
 		this._idCounter = 0;
@@ -41,19 +41,15 @@ export class SceneBuilderModal extends AbstractModal {
 		this.modalEl.style.width = 'var(--modal-max-width)';
 		this.modalEl.style.minHeight = 'var(--modal-max-height)';
 
-		const editorDeletedContainerEl = this.rpgmContainerEl.createDiv({cls: 'rpgm-scene-builder-confirmation'});
+		const editorDeletedContainerEl = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-scene-builder-confirmation'});
 		editorDeletedContainerEl.createDiv({text: 'The scenes for ' + this._act.file.basename + ' have been created'});
-		editorDeletedContainerEl.createDiv({text: 'Click to return to the act'});
-		editorDeletedContainerEl.addEventListener('click', () => {
-			this.close();
-		});
 
-		const sceneBuilderContainerEl: HTMLDivElement = this.rpgmContainerEl.createDiv({cls: 'rpgm-scene-builder'});
-		this._analyserContainerEl = sceneBuilderContainerEl.createDiv({cls: 'rpgm-scene-builder-analyser'});
+		const sceneBuilderContainerEl: HTMLDivElement = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-scene-builder'});
+		this._analyserContainerEl = sceneBuilderContainerEl.createDiv({cls: 'rpg-manager-scene-builder-analyser'});
 
 		const scenesContainerEl = sceneBuilderContainerEl.createDiv({cls: 'scenes-container'});
 
-		const buttonContainerEl: HTMLDivElement = sceneBuilderContainerEl.createDiv({cls: 'rpgm-scene-builder-confirmation-button'});
+		const buttonContainerEl: HTMLDivElement = sceneBuilderContainerEl.createDiv({cls: 'rpg-manager-scene-builder-confirmation-button'});
 		this._createScenesButtonEl = buttonContainerEl.createEl('button', {text: 'Create Scenes for act ' + this._act.file.basename});
 		this._createScenesButtonEl.disabled = true;
 		this._createScenesButtonEl.addEventListener('click', () => {
@@ -75,7 +71,6 @@ export class SceneBuilderModal extends AbstractModal {
 				sceneId = scene.id.sceneId + 1;
 		});
 
-
 		for (let index=0; index<this._scenesContainerEl.rows.length; index++){
 			const line = this._scenesContainerEl.rows[index];
 			if (line.dataset.id === undefined)
@@ -90,7 +85,7 @@ export class SceneBuilderModal extends AbstractModal {
 			if (type !== '')
 				sceneType = this.api.service(AnalyserService).getSceneType(type);
 
-			const title = 'a' + this._act.id.id + 's' + sceneId.toString() + ' - ' + (<HTMLInputElement>line.cells[0].childNodes[0]).value;
+			const title = (<HTMLInputElement>line.cells[0].childNodes[0]).value;
 
 			this.api.service(FileCreationService).silentCreate(
 				ComponentType.Scene,
@@ -109,6 +104,8 @@ export class SceneBuilderModal extends AbstractModal {
 
 			sceneId++;
 		}
+
+		this.close();
 	}
 
 	private async _refreshAnalyser(
