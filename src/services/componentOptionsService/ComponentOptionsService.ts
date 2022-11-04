@@ -50,13 +50,6 @@ export class ComponentOptionsService extends AbstractService implements Componen
 					new IdSwitcherModal(this.api, model.file).open();
 				});
 
-			this._addSeparator(containerEl);
-
-			this._addFunctionality(containerEl, 'Gallery')
-				.addEventListener("click", () => {
-					new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
-				});
-
 			if (model instanceof SessionModel) {
 				this._addSeparator(containerEl);
 
@@ -81,6 +74,13 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				}
 			}
 		}
+
+		this._addSeparator(containerEl);
+
+		this._addFunctionality(containerEl, 'Gallery')
+			.addEventListener("click", () => {
+				new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
+			});
 
 		if (!model.isComplete) {
 			this._addSeparator(containerEl);
