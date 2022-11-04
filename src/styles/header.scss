@@ -1,0 +1,147 @@
+.rpg-manager-header {
+	.rpg-manager-header-container {
+		width: 100%;
+		border: 1px solid var(--rpg-manager-colour-border);
+		margin-bottom: 40px;
+
+		.rpg-manager-header-container-title {
+			width: 100%;
+			font-weight: 400;
+			font-size: 2em;
+			border-bottom: 1px solid var(--rpg-manager-colour-border);
+			text-align: center;
+			min-height: 4em;
+			position: relative;
+
+			.rpg-manager-header-container-title-name {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%);
+			}
+
+			.rpg-manager-header-container-title-overlay {
+				content: '';
+				top: 0;
+				right: 0;
+				bottom: 100%;
+				left: 100%;
+				background-color: rgba(128, 128, 128, 0.5);
+				min-height: 350px;
+
+				.rpg-manager-header-container-title-name {
+					color: var(--color-base-00);
+				}
+			}
+		}
+
+		.rpg-manager-header-container-info {
+			padding: 10px;
+
+			.rpg-manager-header-container-info-data {
+				width: calc(100% - 310px);
+				float: left;
+
+				.rpg-manager-header-container-info-data-container {
+					margin-bottom: 10px;
+					padding-bottom: 10px;
+
+
+					.rpg-manager-header-container-info-data-container-edit {
+						float: right;
+						width: 25px;
+						display: none;
+						cursor: pointer;
+						color: var(--rpg-manager-colour-text-link);
+					}
+
+					.rpg-manager-header-container-info-data-container-title,
+					.rpg-manager-header-container-info-data-container-title-editable {
+						font-variant: small-caps;
+						font-size: 0.8em;
+						color: var(--rpg-manager-colour-text-very-light);
+						float: left;
+					}
+
+					.rpg-manager-header-container-info-data-container-content,
+					.rpg-manager-header-container-info-data-container-content-editable{
+						.rpg-manager-header-container-info-data-container-content-link {
+							font-size: 0.8em;
+							padding: 2px 12px;
+						}
+
+						p {
+							margin: 0px;
+						}
+
+						.flatpickr {
+							margin-top: 0px;
+						}
+					}
+
+					.rpg-manager-header-container-info-data-container-title-editable,
+					.rpg-manager-header-container-info-data-container-content-editable {
+						width: calc(100% - 30px);
+					}
+				}
+
+				.rpg-manager-header-container-info-data-container-long, {
+					.rpg-manager-header-container-info-data-container-title {
+						width: 100%;
+					}
+
+					.rpg-manager-header-container-info-data-container-content {
+						width: 100%;
+					}
+				}
+
+				.rpg-manager-header-container-info-data-container-short {
+					.rpg-manager-header-container-info-data-container-title,
+					.rpg-manager-header-container-info-data-container-title-editable {
+						width: 100px;
+					}
+
+					.rpg-manager-header-container-info-data-container-content,
+					.rpg-manager-header-container-info-data-container-content-editable {
+						float: left;
+					}
+
+					.rpg-manager-header-container-info-data-container-content {
+						width: calc(100% - 100px);
+					}
+
+					.rpg-manager-header-container-info-data-container-content-editable {
+						width: calc(100% - 130px);
+					}
+				}
+
+				.rpg-manager-header-container-info-data-container-editable:hover {
+					background-color: var(--rpg-manager-colour-background);
+
+					.rpg-manager-header-container-info-data-container-edit {
+						display: block;
+					}
+				}
+
+			}
+
+			.rpg-manager-header-container-info-gallery {
+				width: 300px;
+				float: right;
+			}
+
+			rpg-manager-header-container-info-analysis{
+
+			}
+		}
+
+		.rpg-manager-header-container-info-no-gallery {
+			.rpg-manager-header-container-info-data {
+				width: 100%;
+			}
+			.rpg-manager-header-container-info-gallery{
+				width: 0px;
+			}
+		}
+	}
+}

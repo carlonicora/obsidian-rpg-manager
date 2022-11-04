@@ -1,0 +1,36 @@
+.rpgm-scene-builder-confirmation {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  color: var(--text-on-accent);
+  text-align: center;
+  padding-top: 25%;
+  font-size: 2em;
+  font-weight: 200;
+}
+
+.rpgm-scene-builder .scenes-container table {
+  width: 100%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-title {
+  width: 20%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-goal {
+  width: 50%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-type {
+  width: 20%;
+}
+.rpgm-scene-builder .scenes-container table tr > td.scenes-container-table-exciting {
+  width: 10%;
+  text-align: center;
+}
+.rpgm-scene-builder .rpgm-scene-builder-confirmation-button {
+  margin-top: 30px;
+  float: right;
+}

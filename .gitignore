@@ -26,3 +26,6 @@ build.sh
 merge.sh
 versionPatch.sh
 versionMinor.sh
+
+# Exclude css file in src
+src/**/*.css

@@ -1,15 +1,14 @@
-import {App, Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
+import {Plugin_2, PluginSettingTab, TAbstractFile, TFolder} from "obsidian";
 import {SettingsUpdater} from "./SettingsUpdater";
-import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
+import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {SettingsFactory} from "./factories/SettingsFactory";
-import {
-	RpgManagerAdvancedSettingsInterface,
-	RpgManagerAdvancedSettingsListsInterface, rpgManagerDefaultSettings,
-	RpgManagerSettingsInterface
-} from "./RpgManagerSettingsInterface";
 import {SettingType} from "./enums/SettingType";
 import {SettingInterface} from "./interfaces/SettingsInterface";
-import {tableFieldName} from "../views/enums/TableField";
+import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
+import {tableFieldName} from "../services/relationshipsService/enums/TableField";
+import {RpgManagerAdvancedSettingsInterface} from "./interfaces/RpgManagerAdvancedSettingsInterface";
+import {RpgManagerAdvancedSettingsListsInterface} from "./interfaces/RpgManagerAdvancedSettingsListsInterface";
+import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./interfaces/RpgManagerSettingsInterface";
 
 export class RpgManagerSettings extends PluginSettingTab {
 	private _plugin: RpgManagerInterface;
@@ -22,10 +21,10 @@ export class RpgManagerSettings extends PluginSettingTab {
 	private _advancedSettingsDescription: Map<string, {title: string, description: string}> = new Map<string, {title: string, description: string}>();
 
 	constructor(
-		app: App,
+		private _api: RpgManagerApiInterface,
 	) {
 		super(
-			app,
+			_api.app,
 			(<unknown>app.plugins.getPlugin('rpg-manager')) as Plugin_2,
 		);
 
@@ -40,22 +39,22 @@ export class RpgManagerSettings extends PluginSettingTab {
 		this._map.set(SettingType.templateFolder, {title: 'Template folder', value: this._plugin.settings.templateFolder, placeholder: 'Template Folder'});
 		this._map.set(SettingType.imagesFolder, {title: 'Images folder', value: this._plugin.settings.imagesFolder, placeholder: 'Images Folder'});
 		this._map.set(SettingType.usePlotStructures, {title: 'Abt/Story Circle plot structure', value: this._plugin.settings.usePlotStructures, placeholder: ''});
-		this._map.set(SettingType.useSceneAnalyser, {title: 'Scene Analyser', value: this._plugin.settings.useSceneAnalyser, placeholder: ''});
+		this._map.set(SettingType.useSceneAnalyser, {title: 'SceneModel Analyser', value: this._plugin.settings.useSceneAnalyser, placeholder: ''});
 
-		this._advancedSettingsDescription.set('ActList', {title: 'Act List', description: 'Select which fields you would like to see when displaying a list of Acts'});
-		this._advancedSettingsDescription.set('AdventureList', {title: 'Adventure List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
-		this._advancedSettingsDescription.set('CharacterList', {title: 'Player Character List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
-		this._advancedSettingsDescription.set('ClueList', {title: 'Clue List', description: 'Select which fields you would like to see when displaying a list of Clues'});
-		this._advancedSettingsDescription.set('EventList', {title: 'Event List', description: 'Select which fields you would like to see when displaying a list of Events'});
-		this._advancedSettingsDescription.set('FactionList', {title: 'Faction List', description: 'Select which fields you would like to see when displaying a list of Factions'});
-		this._advancedSettingsDescription.set('LocationList', {title: 'Location List', description: 'Select which fields you would like to see when displaying a list of Locations'});
-		this._advancedSettingsDescription.set('MusicList', {title: 'Music List', description: 'Select which fields you would like to see when displaying a list of Musics'});
-		this._advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player Character List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
-		this._advancedSettingsDescription.set('SceneList', {title: 'Scene List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
-		this._advancedSettingsDescription.set('SessionList', {title: 'Session List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
-		this._advancedSettingsDescription.set('SubplotList', {title: 'Subplot List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
+		this._advancedSettingsDescription.set('ActList', {title: 'ActModel List', description: 'Select which fields you would like to see when displaying a list of Acts'});
+		this._advancedSettingsDescription.set('AdventureList', {title: 'AdventureModel List', description: 'Select which fields you would like to see when displaying a list of Adventures'});
+		this._advancedSettingsDescription.set('CharacterList', {title: 'Player CharacterModel List', description: 'Select which fields you would like to see when displaying a list of Player characters'});
+		this._advancedSettingsDescription.set('ClueList', {title: 'ClueModel List', description: 'Select which fields you would like to see when displaying a list of Clues'});
+		this._advancedSettingsDescription.set('EventList', {title: 'EventModel List', description: 'Select which fields you would like to see when displaying a list of Events'});
+		this._advancedSettingsDescription.set('FactionList', {title: 'FactionModel List', description: 'Select which fields you would like to see when displaying a list of Factions'});
+		this._advancedSettingsDescription.set('LocationList', {title: 'LocationModel List', description: 'Select which fields you would like to see when displaying a list of Locations'});
+		this._advancedSettingsDescription.set('MusicList', {title: 'MusicModel List', description: 'Select which fields you would like to see when displaying a list of Musics'});
+		this._advancedSettingsDescription.set('NonPlayerCharacterList', {title: 'Non Player CharacterModel List', description: 'Select which fields you would like to see when displaying a list of Non Player Characters'});
+		this._advancedSettingsDescription.set('SceneList', {title: 'SceneModel List', description: 'Select which fields you would like to see when displaying a list of Scenes'});
+		this._advancedSettingsDescription.set('SessionList', {title: 'SessionModel List', description: 'Select which fields you would like to see when displaying a list of Sessions'});
+		this._advancedSettingsDescription.set('SubplotList', {title: 'SubplotModel List', description: 'Select which fields you would like to see when displaying a list of Subplots'});
 
-		this._settingsUpdater = new SettingsUpdater(this.app);
+		this._settingsUpdater = new SettingsUpdater(this._api);
 		this._settingsFactory = new SettingsFactory(this.app, this._plugin, this._map, this.containerEl);
 	}
 
@@ -91,7 +90,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			SettingType.templateFolder,
 			`Select the folder in which you keep the templates for RPG Manager.`,
 			this._folderMap,
-		)
+		);
 
 		this._settingsFactory.createToggleSetting(
 			SettingType.automaticMove,
@@ -111,13 +110,13 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 	private _loadImagesSettings(
 	): void {
-		this._settingsFactory.createHeader('Images Management', 3, 'Manage where you store the galleries for all your campaigns');
+		this._settingsFactory.createHeader('Images Management', 3, 'Manage where you store the galleryService for all your campaigns');
 
 		this._settingsFactory.createDropdownSetting(
 			SettingType.imagesFolder,
 			`Select the folder in which you keep the images for RPG Manager. Leave it empty if you want to use the default Obsidian Attachment folder. RPG Manager scans every subfolder in the one you selected`,
 			this._folderMap,
-		)
+		);
 	}
 
 	private _createFolderMap(
@@ -190,8 +189,8 @@ export class RpgManagerSettings extends PluginSettingTab {
 					index,
 					type,
 					listSettingFieldCheckboxEl.checked,
-				)
-			})
+				);
+			});
 		}
 	}
 

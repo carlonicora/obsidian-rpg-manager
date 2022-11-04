@@ -1,6 +1,11 @@
-import {FetcherInterface} from "../interfaces/FetcherInterface";
-import {AbstractRpgManager} from "../../abstracts/AbstractRpgManager";
+import {FetcherInterface} from "../../managers/fetchersManager/interfaces/FetcherInterface";
+import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 
-export class AbstractFetcher extends AbstractRpgManager implements FetcherInterface{
+export class AbstractFetcher implements FetcherInterface{
 	public fetchUrl: string;
+
+	constructor(
+		protected api: RpgManagerApiInterface,
+	) {
+	}
 }

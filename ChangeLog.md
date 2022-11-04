@@ -7,7 +7,7 @@ Version 3.1 is a minor upgrade to RPG Manager, focusing on providing support for
 component**.
 
 - Added support for multiple images
-- Updated Scene Analyser to show better analysis
+- Updated SceneModel Analyser to show better analysis
 - Enhanced the metadata writer to avoid issues with links in text
 - Fixed a bug that showed incorrect dates based on users' timezone 
 - Fixed a bug that prevented new component being created on mobile platforms
@@ -19,7 +19,7 @@ Version 3.0 is another major upgrade to RPG Manager and it focused on three area
 - Data simplification
 - Tag Removal
 - Speed
-- The addition of the Scene Analyser
+- The addition of the SceneModel Analyser
 
 In order to use the newest version, RPG Manager needs to update all your `components` to make them compatible with the
 newest version. When you open RPG Manager v3.0 for the first time, you will be prompted to upgrade your vault. Please
@@ -29,9 +29,9 @@ Also, as the changes are extremely extensive, please make sure to read the [docu
 
 **Whats' new?**
 - RPG Manager does not require specific tags any longer. Everything has been moved away from your frontmatter!
-- Scene Analyser: your personal Machine Learning tool to help you balance your acts and sessions
-- Added Scene Types to support Scene analyser
-- Added Scene timing during games to track scenes durations
+- SceneModel Analyser: your personal Machine Learning tool to help you balance your acts and sessions
+- Added SceneModel Types to support SceneModel analyser
+- Added SceneModel timing during games to track scenes durations
 - Cleanup of the data from the frontmatter
 - Codeblock rewrite: all the codeblocks have been updated to be more flexible
 - List of current adventure, act and session added to campaign
@@ -64,7 +64,7 @@ after all the notes are relevant for the session itself.
 - When you update the plugin, the tags will be updated to reflect this change!
 - In the Rpg Manager code blocks (_normal ones, not the navigation_), you can now exclude specific lists by adding a 
 tag `exclude` below the type of code block to avoid showing the specific list.
-- A new type of component has been added: **Subplot**. A subplot helps you organising Events and Clues in logical 
+- A new type of component has been added: **SubplotModel**. A subplot helps you organising Events and Clues in logical 
 order. This makes accessing the information you need easier and faster. Moreover, having a list of subplots in a 
 campaign makes it easy to foresee your players' decisions when they encounter Clues related to a specific subplot.
 - The settings have been updated and you can now decide which fields to show in each list. Jump in the settings to know 
@@ -100,18 +100,18 @@ exclude: [type1, type2, ...]
 ```
 
 The supported types are:
-- Adventure
-- Act
-- Scene
-- Session
-- Character
-- NonPlayerCharacter
-- Location
-- Event
-- Clue
-- Faction
-- Music
-- Subplot
+- AdventureModel
+- ActModel
+- SceneModel
+- SessionModel
+- CharacterModel
+- NonPlayerCharacterComponent
+- LocationModel
+- EventModel
+- ClueModel
+- FactionModel
+- MusicModel
+- SubplotModel
 
 ## Version 1.2: Relationships Update
 _2022-09-19_
@@ -143,7 +143,7 @@ vault, that will be used and the `image` frontmatter will be ignored.
 ## version 1.2
 _2022-09-12_
 
-`Music` element added.
+`MusicModel` element added.
 
 ## version 1.1
 _2022-09-12_

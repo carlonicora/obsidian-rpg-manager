@@ -60,9 +60,9 @@ RPG Manager allows the use of two specific plot structures to simplify the plott
 [Story Circle](documentation/plots/storycircle.md). These two supports to writing plots are available by switching on 
 the functionality in the settings of RPG Manager.
 
-## Scene Analyser
+## SceneModel Analyser
 
-From `v3.0`, RPG Manager comes with a tool called [Scene Analyser](documentation/analyser/index.md). This is a tool 
+From `v3.0`, RPG Manager comes with a tool called [SceneModel Analyser](documentation/analyser/index.md). This is a tool 
 that analyses the scene you wrote and creates a report on your [acts](documentation/components/act.md) and 
 [sessions](documentation/components/session.md). This report tells you if there are problems with the group of scenes 
 making up an act or a scene and is an important tool to provide feedback you can use to tweak your sessions to make 

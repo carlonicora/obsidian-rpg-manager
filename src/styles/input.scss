@@ -6,6 +6,7 @@ input[type=checkbox] {
 	margin: 0;
 }
 
+/*
 select, input[type=text] {
 	border: none;
 	border-bottom: solid 1px var(--background-modifier-border);
@@ -15,10 +16,11 @@ select, input[type=text] {
 	box-shadow: 0 0 0 0 transparent;
 }
 
+
+
 select:hover, input:hover, textarea:hover {
 	box-shadow: none;
 	background-color: var(--interactive-hover);
-	cursor: pointer;
 	background-color: var(--background-secondary);
 }
 
@@ -29,7 +31,7 @@ select, select:focus, input[type=text]:focus, textarea:focus {
 	width: 100%;
 	box-shadow: 0 0 0 0 transparent;
 }
-
+ */
 textarea {
 	border: solid 1px var(--background-modifier-border);
 	border-radius: 0;
@@ -58,4 +60,28 @@ button {
 		background-color: var(--background-primary-alt);
 		cursor: not-allowed;
 	}
+}
+
+
+select, input[type=text] {
+	width: 100%;
+	display: block;
+	padding: 6px 12px;
+	border: solid 1px var(--rpg-manager-colour-border);
+	border-radius: 4px;
+	margin: 0;
+}
+
+select,
+select:focus,
+select:hover,
+input[type=text],
+input[type=text]:focus,
+input[type=text]:hover,
+textarea,
+textarea:focus,
+textarea:hover {
+	box-shadow: 0 0 0 0 transparent;
+	border-color: var(--rpg-manager-colour-border);
+	box-shadow: none;
 }
