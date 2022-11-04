@@ -72,7 +72,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		this._cellClass.set(TableField.SceneType, ['smaller']);
 		this._cellClass.set(TableField.Found, ['smaller']);
 		this._cellClass.set(TableField.Name, ['inline']);
-		this._cellClass.set(TableField.Synopsis, ['inline']);
+		//this._cellClass.set(TableField.Synopsis, ['inline']);
 		this._cellClass.set(TableField.Image, ['image']);
 	}
 
