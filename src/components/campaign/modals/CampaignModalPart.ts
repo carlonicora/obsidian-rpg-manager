@@ -109,6 +109,8 @@ export class CampaignModalPart extends AbstractModalPart {
 			}
 		});
 
+		this.modal.campaignSetting = CampaignSetting.Agnostic;
+		/*
 		containerEl.createEl('label', {text: 'Select CampaignModel Settings'});
 		this._campaignSettingsEl = containerEl.createEl('select');
 
@@ -128,6 +130,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaignSettingsEl.addEventListener('change', (e: Event) => {
 			this._selectSetting();
 		});
+		*/
 	}
 
 	private _selectCampaignElements(
@@ -165,10 +168,12 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaignErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
+	/*
 	private _selectSetting(
 	): void {
 		this.modal.campaignSetting = CampaignSetting[this._campaignSettingsEl.value as keyof typeof CampaignSetting];
 	}
+	*/
 
 	private _selectCampaign(
 	): void {
