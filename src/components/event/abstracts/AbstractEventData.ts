@@ -3,6 +3,7 @@ import {EventDataInterface} from "../interfaces/EventDataInterface";
 import {EventMetadataInterface} from "../interfaces/EventMetadataInterface";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 import {DateService} from "../../../services/dateService/DateService";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export abstract class AbstractEventData extends AbstractModel implements EventDataInterface {
 	protected metadata: EventMetadataInterface;
@@ -10,7 +11,7 @@ export abstract class AbstractEventData extends AbstractModel implements EventDa
 	get date(): DateInterface | undefined {
 		return this.api.service(DateService).getDate(
 			this.metadata.data?.date,
-			this.frontmatter['fc-dateService'],
+			FantasyCalendarCategory.Event,
 			this,
 		);
 	}

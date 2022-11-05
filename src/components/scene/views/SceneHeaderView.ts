@@ -16,6 +16,9 @@ import {AnalyserService} from "../../../services/analyserService/AnalyserService
 import {AbtStage} from "../../../services/plotsService/enums/AbtStage";
 import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
 import {StoryCircleStage} from "../../../services/plotsService/enums/StoryCircleStage";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -30,7 +33,7 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Trigger', values: this.model.trigger ?? '<span class="missing">Trigger Missing</span>', editableKey: 'data.trigger'});
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Action', values: this.model.action ?? '<span class="missing">Action Missing</span>', editableKey: 'data.action'});
 
-		this.addInfoElement(DateElement, {model: this.model, title: 'Scene Date', values: this.model.date, editableKey: 'data.date'});
+		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Scene Date', values: this.model.date, category: FantasyCalendarCategory.Scene, editableKey: 'data.date'});
 
 		const sessions = this.api.database.read((session: SessionInterface) =>
 			session.id.type === ComponentType.Session &&

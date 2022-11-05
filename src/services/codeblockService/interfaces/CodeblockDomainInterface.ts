@@ -10,4 +10,5 @@ export interface CodeblockDomainInterface {
 	codeblockEnd: EditorPosition;
 	codeblockContent: string;
 	originalCodeblockContent: string;
+	isFrontmatter: boolean,
 }

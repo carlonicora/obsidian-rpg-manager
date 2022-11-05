@@ -5,6 +5,7 @@ import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextE
 import {ShortTextElement} from "../../../managers/viewsManager/elements/ShortTextElement";
 import {DateElement} from "../../../services/dateService/views/elements/DateElement";
 import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: ClueInterface;
@@ -22,7 +23,7 @@ export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewI
 			this.model.campaign.fantasyCalendar !== undefined
 				? FantasyCalendarElement
 				: DateElement,
-			{model: this.model, title: 'Date Found', values: this.model.found, editableKey: 'data.found'}
+			{model: this.model, title: 'Date Found', values: this.model.found, category: FantasyCalendarCategory.ClueFound, editableKey: 'data.found'}
 		);
 	}
 }

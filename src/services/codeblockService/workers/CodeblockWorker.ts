@@ -21,6 +21,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 	}
 
 	public async readContent(
+		isFrontmatter: boolean,
 		file?: TFile,
 		codeblockName = 'RpgManagerData',
 	): Promise<CodeblockDomainInterface|undefined> {
@@ -48,7 +49,14 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			let codeblockData: SectionCache|undefined = undefined;
 			for (let index=0; index<(cache?.sections?.length ?? 0); index++){
 				codeblockData = await (cache?.sections !== undefined ? cache.sections[index] : undefined);
-				if (codeblockData !== undefined && editor.getLine(codeblockData.position.start.line) === '```' + codeblockName){
+				if (
+					codeblockData !== undefined &&
+					(
+						(!isFrontmatter && editor.getLine(codeblockData.position.start.line) === '```' + codeblockName) ||
+						(isFrontmatter && codeblockData.type === 'yaml')
+					)
+
+				){
 					codeblockStart = {line: codeblockData.position.start.line + 1, ch: 0};
 					codeblockEnd = {line: codeblockData.position.end.line, ch: 0};
 					codeblockContent = await editor.getRange(codeblockStart, codeblockEnd);
@@ -68,7 +76,13 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			let codeblockData: SectionCache|undefined = undefined;
 			for (let index=0; index<(cache?.sections?.length ?? 0); index++) {
 				codeblockData = await (cache?.sections !== undefined ? cache.sections[index] : undefined);
-				if (codeblockData !== undefined && fileContentLines[codeblockData.position.start.line] === '```' + codeblockName){
+				if (
+					codeblockData !== undefined &&
+					(
+						(!isFrontmatter && fileContentLines[codeblockData.position.start.line] === '```' + codeblockName) ||
+						(isFrontmatter && codeblockData.type === 'yaml')
+					)
+				){
 					codeblockStart = {line: codeblockData.position.start.line + 1, ch: 0};
 					codeblockEnd = {line: codeblockData.position.end.line, ch: 0};
 
@@ -106,6 +120,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			codeblockEnd: codeblockEnd,
 			codeblockContent: codeblockContent,
 			originalCodeblockContent: codeblockContent,
+			isFrontmatter: isFrontmatter,
 		};
 
 		return response;
@@ -179,6 +194,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			codeblockEnd: codeblockEnd,
 			codeblockContent: codeblockContent,
 			originalCodeblockContent: codeblockContent,
+			isFrontmatter: false,
 		};
 
 		return response;

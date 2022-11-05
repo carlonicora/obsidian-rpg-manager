@@ -9,6 +9,12 @@ export interface CodeblockServiceInterface {
 		file?: TFile,
 	): Promise<void>;
 
+	addOrUpdateFrontmatter(
+		key: string,
+		value?: string|boolean|number,
+		file?: TFile,
+	): Promise<void>;
+
 	addOrUpdateImage(
 		path: string,
 		caption: string,
@@ -31,6 +37,11 @@ export interface CodeblockServiceInterface {
 	): Promise<void>;
 
 	remove(
+		key: string,
+		file?: TFile,
+	): Promise<void>;
+
+	removeFrontmatter(
 		key: string,
 		file?: TFile,
 	): Promise<void>;

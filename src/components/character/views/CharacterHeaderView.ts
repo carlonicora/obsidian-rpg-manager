@@ -5,6 +5,9 @@ import {LongTextElement} from "../../../managers/viewsManager/elements/LongTextE
 import {ShortTextElement} from "../../../managers/viewsManager/elements/ShortTextElement";
 import {DateService} from "../../../services/dateService/DateService";
 import {DateElement} from "../../../services/dateService/views/elements/DateElement";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export class CharacterHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CharacterInterface;
@@ -22,9 +25,8 @@ export class CharacterHeaderView extends AbstractHeaderView implements NewHeader
 		if (this.model.age !== undefined)
 			this.addInfoElement(ShortTextElement, {model: this.model, title: 'Age', values: this.model.age.toString()});
 
-		//this.addInfoElement(ShortTextElement, {model: this.model, title: 'Status', values: this.model.isDead ? 'dead' : 'alive'});
-		this.addInfoElement(DateElement, {model: this.model, title: 'Date of Birth', values: this.model.dob, editableKey: 'data.dob'});
-		this.addInfoElement(DateElement, {model: this.model, title: 'Date of Death', values: this.model.death, editableKey: 'data.death'});
+		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Date of Birth', values: this.model.dob, category: FantasyCalendarCategory.Birth, editableKey: 'data.dob'});
+		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Date of Death', values: this.model.death, category: FantasyCalendarCategory.Death, editableKey: 'data.death'});
 
 		if (this.model.death != null) {
 			let death = this.api.service(DateService).getReadableDate(this.model.death, this.model);

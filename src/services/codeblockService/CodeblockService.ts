@@ -31,7 +31,23 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		value?: string|boolean|number,
 		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);
+
+		if (domain === undefined)
+			return undefined;
+
+		const dataWorker = await new CodeblockKeyWorker(this.api);
+		await dataWorker.addOrUpdate(domain, {key: key, value: value});
+
+		await this._worker.updateContent(domain);
+	}
+
+	public async addOrUpdateFrontmatter(
+		key: string,
+		value?: string|boolean|number,
+		file?: TFile,
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(true, file);
 
 		if (domain === undefined)
 			return undefined;
@@ -47,7 +63,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		caption: string,
 		file?: TFile,
 	): Promise<ImageInterface | undefined> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);
 		if (domain === undefined)
 			return undefined;
 
@@ -64,7 +80,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		relationship: RelationshipInterface,
 		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);
 		if (domain === undefined)
 			return;
 
@@ -78,7 +94,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		file: TFile,
 		id: string,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file, 'RpgManagerID');
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file, 'RpgManagerID');
 
 		if (domain === undefined)
 			return;
@@ -100,7 +116,21 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		key: string,
 		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);
+		if (domain === undefined)
+			return undefined;
+
+		const dataWorker = await new CodeblockKeyWorker(this.api);
+		await dataWorker.remove(domain, key);
+
+		this._worker.updateContent(domain);
+	}
+
+	public async removeFrontmatter(
+		key: string,
+		file?: TFile,
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(true, file);
 		if (domain === undefined)
 			return undefined;
 
@@ -114,7 +144,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		file?: TFile,
 		codeblockName = 'RpgManagerData',
 	): Promise<any> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file, codeblockName);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file, codeblockName);
 
 		return domain?.codeblock;
 	}
@@ -123,7 +153,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		path: string,
 		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);
 		if (domain === undefined)
 			return;
 
@@ -137,7 +167,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		path: string,
 		file?: TFile,
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(file);
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);
 		if (domain === undefined)
 			return;
 
@@ -149,7 +179,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 	public async selectRpgManagerData(
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false);
 
 		if (domain === undefined || domain.editor === undefined)
 			return;
@@ -163,7 +193,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 	public async startRunningTime(
 	): Promise<void> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent();
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false);
 
 		if (domain === undefined || domain.editor === undefined)
 			return;
@@ -183,7 +213,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 			domain = await this._worker.tryReadOpenContent(file);
 
 		if (domain === undefined)
-			domain = await this._worker.readContent(file);
+			domain = await this._worker.readContent(false, file);
 
 		if (domain === undefined || domain.editor === undefined)
 			return;

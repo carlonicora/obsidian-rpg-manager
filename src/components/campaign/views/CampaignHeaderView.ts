@@ -11,6 +11,9 @@ import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 import {DateElement} from "../../../services/dateService/views/elements/DateElement";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CampaignInterface;
@@ -42,7 +45,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			]));
 		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
 
-		this.addInfoElement(DateElement, {model: this.model, title: 'Current Date', values: this.model.date, editableKey: 'data.date'});
+		this.addInfoElement(this.model.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Current Date', values: this.model.date, category: FantasyCalendarCategory.CurrentDate, editableKey: 'data.date'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addPlot();

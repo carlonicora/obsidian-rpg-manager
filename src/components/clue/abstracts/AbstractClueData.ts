@@ -3,6 +3,7 @@ import {ClueDataInterface} from "../interfaces/ClueDataInterface";
 import {ClueMetadataInterface} from "../interfaces/ClueMetadataInterface";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 import {DateService} from "../../../services/dateService/DateService";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export abstract class AbstractClueData extends AbstractModel implements ClueDataInterface {
 	protected metadata: ClueMetadataInterface;
@@ -16,7 +17,7 @@ export abstract class AbstractClueData extends AbstractModel implements ClueData
 
 		return this.api.service(DateService).getDate(
 			this.metadata.data?.found,
-			this.frontmatter['fc-dateService'],
+			FantasyCalendarCategory.ClueFound,
 			this,
 		);
 	}

@@ -7,6 +7,7 @@ import {DateService} from "../../../services/dateService/DateService";
 import {PlotService} from "../../../services/plotsService/PlotService";
 import {AnalyserService} from "../../../services/analyserService/AnalyserService";
 import {SceneType} from "../../../services/analyserService/enums/SceneType";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export abstract class AbstractSceneData extends AbstractModel implements SceneDataInterface {
 	protected metadata: SceneMetadataInterface;
@@ -32,7 +33,7 @@ export abstract class AbstractSceneData extends AbstractModel implements SceneDa
 	get date(): DateInterface | undefined {
 		return this.api.service(DateService).getDate(
 			this.metadata.data?.date,
-			this.frontmatter['fc-dateService'],
+			FantasyCalendarCategory.Scene,
 			this,
 		);
 	}

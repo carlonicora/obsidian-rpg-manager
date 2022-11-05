@@ -1,11 +1,11 @@
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {DateInterface} from "./DateInterface";
-import {FantasyCalendarDateInterface} from "../../fantasyCalendarService/interfaces/FantasyCalendarDateInterface";
+import {FantasyCalendarCategory} from "../../fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export interface DateServiceInterface {
 	getDate(
 		metadataDate: string|undefined,
-		frontmatterDate: FantasyCalendarDateInterface|undefined,
+		fantasyCalendarCategory: FantasyCalendarCategory|undefined,
 		component: ModelInterface,
 	): DateInterface|undefined;
 

@@ -11,6 +11,7 @@ import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
 import {IdService} from "../../../services/idService/IdService";
 import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;
@@ -19,7 +20,7 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		if (this.calendar === CalendarType.Gregorian)
 			return this.api.service(DateService).getDate(
 				this.metadata.data?.date,
-				undefined,
+				FantasyCalendarCategory.CurrentDate,
 				this,
 			);
 
@@ -53,10 +54,6 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 	get calendar(): CalendarType {
 		if (this.frontmatter['fc-calendar'] === undefined)
-			return CalendarType.Gregorian;
-
-		const fantasyCalendarService = this.api.service(FantasyCalendarService);
-		if (fantasyCalendarService === undefined)
 			return CalendarType.Gregorian;
 
 		return CalendarType.FantasyCalendar;

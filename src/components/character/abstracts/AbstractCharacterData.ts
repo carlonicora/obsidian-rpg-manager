@@ -5,6 +5,7 @@ import {CharacterMetadataInterface} from "../interfaces/CharacterMetadataInterfa
 import {PronounService} from "../../../services/pronounService/PronounService";
 import {DateService} from "../../../services/dateService/DateService";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
+import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
 export class AbstractCharacterData extends AbstractModel implements CharacterDataInterface {
 	protected metadata: CharacterMetadataInterface;
@@ -12,7 +13,7 @@ export class AbstractCharacterData extends AbstractModel implements CharacterDat
 	public get death(): DateInterface | undefined {
 		return this.api.service(DateService).getDate(
 			this.metadata.data?.death,
-			this.frontmatter['fc-dateService'],
+			FantasyCalendarCategory.Death,
 			this,
 		);
 	}
@@ -20,7 +21,7 @@ export class AbstractCharacterData extends AbstractModel implements CharacterDat
 	public get dob(): DateInterface | undefined {
 		return this.api.service(DateService).getDate(
 			this.metadata.data?.dob,
-			this.frontmatter['fc-dateService'],
+			FantasyCalendarCategory.Birth,
 			this,
 		);
 	}

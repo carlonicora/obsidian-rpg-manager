@@ -6,28 +6,52 @@ import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInter
 import {CalendarType} from "./enums/CalendarType";
 import {DateTime} from "luxon";
 import {FantasyCalendarDateInterface} from "../fantasyCalendarService/interfaces/FantasyCalendarDateInterface";
+import {FantasyCalendarCategory} from "../fantasyCalendarService/enums/FantasyCalendarCategory";
+import {Event, EventCategory} from "obsidian-fantasy-calendar";
 
 export class DateService extends AbstractService implements ServiceInterface, DateServiceInterface {
 	public getDate(
 		metadataDate: string|undefined,
-		frontmatterDate: FantasyCalendarDateInterface|undefined,
+		fantasyCalendarCategory: FantasyCalendarCategory|undefined,
 		component: ModelInterface,
 	): DateInterface|undefined {
-		if ((metadataDate == undefined || metadataDate === '') && frontmatterDate === undefined)
+		if ((metadataDate == undefined || metadataDate === '') && fantasyCalendarCategory === undefined)
 			return undefined;
 
 		const isFantasyCalendar: boolean = (component.campaign.calendar === CalendarType.FantasyCalendar);
 		let responseDate: Date|FantasyCalendarDateInterface|undefined;
 
 		if (isFantasyCalendar) {
-			if (frontmatterDate === undefined)
-				return undefined;
-
 			const calendar = component.campaign.fantasyCalendar;
 			if (calendar === undefined)
 				return undefined;
 
-			responseDate = frontmatterDate as FantasyCalendarDateInterface;
+			let events: Event[] = [];
+
+			if (fantasyCalendarCategory === FantasyCalendarCategory.CurrentDate){
+				responseDate = calendar.current as FantasyCalendarDateInterface;
+
+				if (responseDate === undefined || responseDate.year === undefined)
+					return undefined;
+
+			} else {
+				const categories = calendar.categories.filter((category: EventCategory) =>
+					category.name === fantasyCalendarCategory
+				);
+
+				if (categories.length === 0)
+					return undefined;
+
+				events = calendar.events.filter((event: any) =>
+					event.note === component.file.path &&
+					event.category === categories[0].id
+				);
+
+				if (events.length !== 1)
+					return undefined;
+
+				responseDate = events[0].date as FantasyCalendarDateInterface;
+			}
 		} else {
 			if (metadataDate == undefined || metadataDate === '')
 				return undefined;
@@ -35,7 +59,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 			responseDate = DateTime.fromISO(metadataDate.toString()).toJSDate();
 		}
 
-		return {date: responseDate, isFantasyCalendar: isFantasyCalendar};
+		return {date: responseDate, isFantasyCalendar: isFantasyCalendar, category: fantasyCalendarCategory};
 	}
 
 	public getReadableDate(
