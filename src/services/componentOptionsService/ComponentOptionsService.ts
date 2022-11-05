@@ -29,7 +29,6 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				});
 
 		} else {
-			/*
 			if (model instanceof AdventureModel) {
 				this._addFunctionality(containerEl, 'Wizard')
 					.addEventListener("click", () => {
@@ -38,7 +37,6 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 				this._addSeparator(containerEl);
 			}
-			*/
 
 			this._addFunctionality(containerEl, 'Relationship')
 				.addEventListener("click", () => {
