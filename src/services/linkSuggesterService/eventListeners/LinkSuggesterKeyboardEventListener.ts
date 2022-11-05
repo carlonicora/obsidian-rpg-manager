@@ -15,7 +15,7 @@ export class LinkSuggesterKeyboardEventListener implements LinkSuggesterEventLis
 	private _handleKeyPress(
 		evt: KeyboardEvent
 	): void {
-		if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown' || evt.key === 'Enter' || evt.key === 'Escape') {
+		if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown' || evt.key === 'Enter' || evt.key === 'Escape' || evt.key === 'Tab') {
 			evt.preventDefault();
 			switch (evt.key) {
 				case "ArrowDown":
@@ -25,7 +25,10 @@ export class LinkSuggesterKeyboardEventListener implements LinkSuggesterEventLis
 					this._handler.moveUp();
 					break;
 				case "Enter":
-					this._handler.select();
+					this._handler.select(false);
+					break;
+				case "Tab":
+					this._handler.select(true);
 					break;
 				case "Escape":
 					this._handler.hide();

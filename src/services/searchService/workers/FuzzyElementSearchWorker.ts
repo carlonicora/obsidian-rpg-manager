@@ -15,45 +15,66 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 
 	public search(
 		term: string,
+		searchOnlyAliases?: string,
 	): Array<SearchResultInterface> {
 		const response: Array<SearchResultInterface> = [];
 
-		const query = prepareQuery(term);
+		let query = prepareQuery(term);
 
 		const matches: Map<string, SearchResultInterface> = new Map<string, SearchResultInterface>();
 
 
-		this._api.database.read(
-			(element: ModelInterface) =>
-				element.id.campaignId === this._element.id.campaignId
-		).forEach((element: ModelInterface) => {
-			if (element.alias.length > 0){
-				element.alias.forEach((alias: string) => {
-					const fuzzySearchResult = fuzzySearch(query, alias);
-					if (fuzzySearchResult != null && fuzzySearchResult.matches != null && fuzzySearchResult.score < 0){
-						matches.set(element.file.path + alias, {
-							title: alias,
-							file: element.file,
-							alias: alias,
-							fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
-							fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
-							resultScoring: fuzzySearchResult,
-						});
-					}
-				});
-			}
+		if (searchOnlyAliases === undefined) {
+			this._api.database.read(
+				(element: ModelInterface) =>
+					element.id.campaignId === this._element.id.campaignId
+			).forEach((element: ModelInterface) => {
+				if (element.alias.length > 0) {
+					element.alias.forEach((alias: string) => {
+						const fuzzySearchResult = fuzzySearch(query, alias);
+						if (fuzzySearchResult != null && fuzzySearchResult.matches != null && fuzzySearchResult.score < 0) {
+							matches.set(element.file.path + alias, {
+								title: alias,
+								file: element.file,
+								alias: alias,
+								fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
+								fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
+								resultScoring: fuzzySearchResult,
+							});
+						}
+					});
+				}
 
-			const fuzzySearchResult = fuzzySearch(query, element.file.basename);
-			if (fuzzySearchResult != null && fuzzySearchResult.matches !== null && fuzzySearchResult.score < 0) {
-				matches.set(element.file.path, {
-					title: element.file.basename,
+				const fuzzySearchResult = fuzzySearch(query, element.file.basename);
+				if (fuzzySearchResult != null && fuzzySearchResult.matches !== null && fuzzySearchResult.score < 0) {
+					matches.set(element.file.path, {
+						title: element.file.basename,
+						file: element.file,
+						fancyTitle: this.setFancyName(element.file.basename, fuzzySearchResult, true),
+						fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
+						resultScoring: fuzzySearchResult,
+					});
+				}
+			});
+		} else {
+			query = prepareQuery(searchOnlyAliases);
+			const element = this._api.database.readByBaseName(term);
+
+			if (element === undefined)
+				return [];
+
+			element.alias.forEach((alias: string) => {
+				const fuzzySearchResult = fuzzySearch(query, alias);
+				matches.set(element.file.path + alias, {
+					title: alias,
 					file: element.file,
-					fancyTitle: this.setFancyName(element.file.basename, fuzzySearchResult, true),
-					fancySubtitle: this.setFancyName(element.file.path, fuzzySearch(query, element.file.path), false),
+					alias: alias,
+					fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
+					fancySubtitle: this.setFancyName(element.file.basename, null, false),
 					resultScoring: fuzzySearchResult,
 				});
-			}
-		});
+			});
+		}
 
 		if (matches.size === 0)
 			return [];

@@ -13,6 +13,7 @@ export class SearchService extends AbstractService implements SearchServiceInter
 		term: string,
 		type: SearchType = SearchType.FuzzyFileSearch,
 		element?: ModelInterface,
+		searchOnlyAliases?: string,
 	): Array<SearchResultInterface> {
 		let worker: SearchWorkerInterface;
 
@@ -29,6 +30,6 @@ export class SearchService extends AbstractService implements SearchServiceInter
 				break;
 		}
 
-		return worker.search(term);
+		return worker.search(term, searchOnlyAliases);
 	}
 }

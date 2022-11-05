@@ -70,7 +70,7 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 
 			suggestionItemEl.addEventListener('click', () => {
 				this._currentIndex = index;
-				this.select();
+				this.select(false);
 			});
 
 			const suggestionContentEl = suggestionItemEl.createDiv({cls: 'suggestion-content'});
@@ -185,6 +185,7 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 	}
 
 	public select(
+		stayInside: boolean,
 	): void {
 		if (this._currentIndex >= this._results.length)
 			return;
@@ -199,7 +200,15 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 			this._isListeningToKeyboard = false;
 		}
 
-		this._handler.confirmSelection(selectedResult);
+		let position: number = selectedResult.file.basename.length;
+
+		if (selectedResult.alias === selectedResult.title)
+			position += selectedResult.alias.length +1;
+
+		if (!stayInside)
+			position += 2;
+
+		this._handler.confirmSelection(selectedResult, position);
 		this.hide();
 	}
 

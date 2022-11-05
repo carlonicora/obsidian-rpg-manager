@@ -7,5 +7,6 @@ export interface SearchServiceInterface {
 		term: string,
 		type: SearchType,
 		element?: ModelInterface,
+		searchOnlyAliases?: string,
 	): Array<SearchResultInterface>;
 }
