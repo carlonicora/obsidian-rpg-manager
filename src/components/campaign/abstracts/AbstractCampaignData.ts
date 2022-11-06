@@ -12,6 +12,7 @@ import {DateInterface} from "../../../services/dateService/interfaces/DateInterf
 import {IdService} from "../../../services/idService/IdService";
 import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
+import {ComponentType} from "../../../core/enums/ComponentType";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;
@@ -35,21 +36,52 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		if (this.metadata.data.currentAdventureId == undefined || this.metadata.data.currentAdventureId === '')
 			return undefined;
 
-		return this.api.service(IdService).createFromID(this.metadata.data.currentAdventureId);
+		let response: IdInterface|undefined = undefined;
+		try {
+			response = this.api.service(IdService).createFromID(this.metadata.data.currentAdventureId);
+		} catch (e) {
+			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
+				const [type, campaignId, adventureId] = this.metadata.data.currentAdventureId.split('/');
+				response = this.api.service(IdService).create(ComponentType.Adventure, campaignId, adventureId);
+				console.warn(response.stringID);
+			}
+		}
+
+		return response;
 	}
 
 	get currentActId(): IdInterface|undefined {
 		if (this.metadata.data.currentActId == undefined || this.metadata.data.currentActId === '')
 			return undefined;
 
-		return this.api.service(IdService).createFromID(this.metadata.data.currentActId);
+		let response: IdInterface|undefined = undefined;
+		try {
+			response = this.api.service(IdService).createFromID(this.metadata.data.currentActId);
+		} catch (e) {
+			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
+				const [type, campaignId, adventureId, actId] = this.metadata.data.currentActId.split('/');
+				response = this.api.service(IdService).create(ComponentType.Act, campaignId, adventureId, actId);
+			}
+		}
+
+		return response;
 	}
 
 	get currentSessionId(): IdInterface|undefined {
 		if (this.metadata.data.currentSessionId == undefined || this.metadata.data.currentSessionId === '')
 			return undefined;
 
-		return this.api.service(IdService).createFromID(this.metadata.data.currentSessionId);
+		let response: IdInterface|undefined = undefined;
+		try {
+			response = this.api.service(IdService).createFromID(this.metadata.data.currentSessionId);
+		} catch (e) {
+			if (this.metadata.data.currentSessionId.indexOf('-') === -1){
+				const [type, campaignId, sessionId] = this.metadata.data.currentSessionId.split('/');
+				response = this.api.service(IdService).create(ComponentType.Session, campaignId, undefined, undefined, undefined, sessionId);
+			}
+		}
+
+		return response;
 	}
 
 	get calendar(): CalendarType {

@@ -29,7 +29,8 @@ export class IdService extends AbstractService implements IdServiceInterface, Se
 			existingTag,
 		);
 
-		if (campaignSettings !== undefined) response.campaignSettings = campaignSettings;
+		if (campaignSettings !== undefined)
+			response.campaignSettings = campaignSettings;
 
 		return response;
 	}
