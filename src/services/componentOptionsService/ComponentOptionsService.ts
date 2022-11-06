@@ -11,8 +11,6 @@ import {SessionModel} from "../../components/session/models/SessionModel";
 import {SceneSelectionModal} from "../../components/session/modals/SceneSelectionModal";
 import {CodeblockService} from "../codeblockService/CodeblockService";
 import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticViewType";
-import {AdventureModel} from "../../components/adventure/models/AdventureModel";
-import {AdventurePlotWizardService} from "../adventurePlotWizardService/AdventurePlotWizardService";
 import {ActModel} from "../../components/act/models/ActModel";
 import {SceneBuilderService} from "../sceneBuilderService/SceneBuilderService";
 import {ComponentType} from "../../core/enums/ComponentType";
