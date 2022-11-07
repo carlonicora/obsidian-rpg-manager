@@ -215,7 +215,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		if (domain === undefined)
 			domain = await this._worker.readContent(false, file);
 
-		if (domain === undefined || domain.editor === undefined)
+		if (domain === undefined)
 			return;
 
 		const dataWorker = await new CodeblockRunningWorker(this.api);

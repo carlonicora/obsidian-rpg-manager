@@ -6,10 +6,11 @@ import {ServiceInterface} from "../../managers/servicesManager/interfaces/Servic
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {SceneType} from "../analyserService/enums/SceneType";
 import {CodeblockService} from "../codeblockService/CodeblockService";
-import {TFile} from "obsidian";
+import {MarkdownView, TFile, WorkspaceLeaf} from "obsidian";
+import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 
 export class RunningTimeService extends AbstractService implements RunningTimeServiceInterface, ServiceInterface {
-	public currentlyRunningScene: SceneInterface|undefined = undefined;
+	private _currentlyRunningScene: SceneInterface|undefined = undefined;
 
 	private _medianDefaultTimes: Map<SceneType, number[]> = new Map<SceneType, number[]>([
 		[SceneType.Action, [15*60]],
@@ -32,37 +33,39 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 
 	public get isTimerRunning(
 	): boolean {
-		return this.currentlyRunningScene !== undefined;
+		return this._currentlyRunningScene !== undefined;
 	}
 
 	public isCurrentlyRunningScene(
 		scene: SceneInterface,
 	): boolean {
-		if (this.currentlyRunningScene === undefined) return false;
+		if (this._currentlyRunningScene === undefined)
+			return false;
 
-		return this.currentlyRunningScene.id === scene.id;
+		return this._currentlyRunningScene.id === scene.id;
 	}
 
 	public async startScene(
 		scene: SceneInterface,
 	): Promise<void> {
-		if (this.currentlyRunningScene !== undefined)
-			await this.stopScene(this.currentlyRunningScene, this.currentlyRunningScene.file);
+		if (this._currentlyRunningScene !== undefined)
+			await this.stopScene(this._currentlyRunningScene);
 
-		this.currentlyRunningScene = scene;
+		this._currentlyRunningScene = scene;
 
 		this.api.service(CodeblockService).startRunningTime();
 	}
 
 	public async stopScene(
 		scene: SceneInterface,
-		file?: TFile,
 	): Promise<void> {
-		if (this.currentlyRunningScene === undefined)
-			return;
+		if (scene.isCurrentlyRunning) {
+			this.api.service(CodeblockService).stopRunningTime(scene.file);
 
-		this.api.service(CodeblockService).stopRunningTime(file);
-		this.currentlyRunningScene = undefined;
+			if (this._currentlyRunningScene !== undefined && this._currentlyRunningScene.id.stringID === scene.id.stringID)
+				this._currentlyRunningScene = undefined;
+
+		}
 	}
 
 	public async updateMedianTimes(
@@ -81,10 +84,9 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		);
 
 		await scenes.forEach((scene: SceneInterface) => {
-			if (isStartup && scene.isCurrentlyRunning) {
-				this.currentlyRunningScene = scene;
-				this.stopScene(scene, scene.file);
-			}
+			if (isStartup && scene.isCurrentlyRunning)
+				this.stopScene(scene);
+
 			if (scene.sceneType !== undefined && scene.currentDuration !== undefined && scene.currentDuration !== 0) {
 				const campaignMedians: Map<SceneType, number[]> | undefined = this.medianTimes.get(scene.id.campaignId);
 				if (campaignMedians !== undefined) {
@@ -95,6 +97,8 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 				}
 			}
 		});
+
+		this.api.app.workspace.on('active-leaf-change', this._stopClosedLeaf.bind(this));
 	}
 
 	public getTypeExpectedDuration(
@@ -119,5 +123,28 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		} else {
 			return previousDurations[(previousDurations.length-1)/2];
 		}
+	}
+
+	private async _stopClosedLeaf(
+	): Promise<void> {
+		if (!this.isTimerRunning)
+			return;
+
+		let isCurrentlyRunningSceneOpen = false;
+		this.api.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
+			if (leaf.view instanceof MarkdownView) {
+				const file = leaf.view?.file;
+				if (file !== undefined) {
+					const component: ModelInterface | undefined = this.api.database.readByPath(file.path);
+					if (component !== undefined && component.id.type === ComponentType.Scene && this.isCurrentlyRunningScene(<SceneInterface>component))
+						isCurrentlyRunningSceneOpen = true;
+
+				}
+			}
+		});
+
+		if (!isCurrentlyRunningSceneOpen && this._currentlyRunningScene !== undefined)
+			this.stopScene(this._currentlyRunningScene);
+
 	}
 }

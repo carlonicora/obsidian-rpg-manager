@@ -41,14 +41,15 @@ export class Database extends Component implements DatabaseInterface {
 	public async ready(
 	): Promise<void> {
 		this._isDatabaseReady = true;
+		this._api.app.workspace.trigger("rpgmanager:database-ready");
+		this._api.service(RunningTimeService).updateMedianTimes(true);
+
 		this.registerEvent(this._api.app.metadataCache.on('resolve', (file: TFile) => this.onSave(file)));
 		this.registerEvent(this._api.app.vault.on('rename', (file: TFile, oldPath: string) => this._onRename(file, oldPath)));
 		this.registerEvent(this._api.app.vault.on('delete', (file: TFile) => this._onDelete(file)));
 
 		this._api.app.workspace.trigger("rpgmanager:index-complete");
 		this._api.app.workspace.trigger("rpgmanager:force-refresh-views");
-
-		this._api.service(RunningTimeService).updateMedianTimes(true);
 	}
 
 	get isReady(

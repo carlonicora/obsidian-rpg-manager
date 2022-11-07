@@ -1,15 +1,10 @@
-import {
-	addIcon,
-	Component,
-	MarkdownPostProcessorContext,
-	MarkdownView,
-	Plugin,
-	setIcon,
-	WorkspaceLeaf
-} from 'obsidian';
+import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, setIcon, WorkspaceLeaf} from 'obsidian';
 import {ComponentType} from "./core/enums/ComponentType";
 import {CreationModal} from "./core/modals/CreationModal";
-import {rpgManagerDefaultSettings, RpgManagerSettingsInterface} from "./settings/interfaces/RpgManagerSettingsInterface";
+import {
+	rpgManagerDefaultSettings,
+	RpgManagerSettingsInterface
+} from "./settings/interfaces/RpgManagerSettingsInterface";
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
 import {DatabaseInterface} from "./managers/databaseManager/interfaces/DatabaseInterface";
@@ -90,6 +85,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 	): Promise<void> {
 		this._registerCodeBlock();
 		this._registerCommands();
+		this.registerEvent(this.api.app.workspace.on("rpgmanager:database-ready", this._onDatabaseReady.bind(this)));
 
 		DatabaseInitialiser.initialise(this.api)
 			.then((database: DatabaseInterface) => {
@@ -97,47 +93,22 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 				this.api.service(LoggerService).info(LogMessageType.Database, 'Database Initialised', this.api.database);
 
-				this._registerEvents();
-
-				this.app.workspace.trigger("rpgmanager:refresh-views");
-
-				this.app.workspace.on('active-leaf-change', (leaf: WorkspaceLeaf) => {
-					if (this.api.service(RunningTimeService).isTimerRunning) {
-						let isCurrentlyRunningSceneOpen = false;
-						this.app.workspace.iterateAllLeaves((leaf: WorkspaceLeaf) => {
-							if (leaf.view instanceof MarkdownView) {
-								const file = leaf.view?.file;
-								if (file !== undefined) {
-									const component: ModelInterface|undefined = this.api.database.readByPath(file.path);
-									if (
-										component !== undefined &&
-										component.id.type === ComponentType.Scene &&
-										this.api.service(RunningTimeService).isCurrentlyRunningScene(<SceneInterface>component)
-									) {
-										isCurrentlyRunningSceneOpen = true;
-									}
-								}
-							}
-						});
-
-						if (!isCurrentlyRunningSceneOpen) {
-							const currentlyRunningScene = this.api.service(RunningTimeService).currentlyRunningScene;
-
-							if (currentlyRunningScene !== undefined)
-								this.api.service(RunningTimeService).stopScene(currentlyRunningScene);
-						}
-
-					}
-				});
-
-				if (this._isVersionUpdated) {
-					this.api.staticViews.create(StaticViewType.ReleaseNote);
-				} else {
-					this.app.workspace.detachLeavesOfType(StaticViewType.ReleaseNote.toString());
-				}
-
 				return;
 			});
+	}
+
+	private async _onDatabaseReady(
+	): Promise<void> {
+		this.api.service(LoggerService).info(LogMessageType.Database, 'Database Ready', this.api.database);
+
+		this._registerEvents();
+		this.app.workspace.trigger("rpgmanager:refresh-views");
+
+		if (this._isVersionUpdated) {
+			this.api.staticViews.create(StaticViewType.ReleaseNote);
+		} else {
+			this.app.workspace.detachLeavesOfType(StaticViewType.ReleaseNote.toString());
+		}
 	}
 
 	async onunload() {
