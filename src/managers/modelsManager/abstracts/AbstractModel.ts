@@ -172,6 +172,7 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public async initialiseRelationships(
+		reinitialiseReverseRelationships: boolean = false,
 	): Promise<void> {
 		if (this.metadata.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
@@ -188,27 +189,33 @@ export abstract class AbstractModel implements ModelInterface {
 			});
 		}
 
-		const recordset = this.api.database.recordset;
-		for (let index=0; index<recordset.length; index++){
-			const relationships = recordset[index].getRelationships().relationships;
-			for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
-				const relationship: RelationshipInterface = relationships[relationshipIndex];
+		if (reinitialiseReverseRelationships) {
+			const recordset = this.api.database.recordset;
+			for (let index = 0; index < recordset.length; index++) {
+				const relationships = recordset[index].getRelationships().relationships;
+				for (let relationshipIndex = 0; relationshipIndex < relationships.length; relationshipIndex++) {
+					const relationship: RelationshipInterface = relationships[relationshipIndex];
 
-				if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID){
-					this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+					if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID) {
+						this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+					}
 				}
 			}
 		}
 	}
 
 	public async readMetadata(
+		initialiseRelationships: boolean = true,
 	): Promise<void> {
 		return this.api.service(CodeblockService).read(this.file)
 			.then((metadata: ControllerMetadataDataInterface) => {
 				this.metadata = metadata;
+				if (!initialiseRelationships)
+					return;
+
 				this._relationships = new RelationshipList();
 				this.initialiseData();
-				return this.initialiseRelationships()
+				return this.initialiseRelationships(true)
 					.then(() => {
 						return;
 					});

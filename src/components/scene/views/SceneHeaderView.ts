@@ -66,7 +66,7 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 				values: {isRunning: this.model.isCurrentlyRunning, scene: this.model}
 			});
 
-			if (this.model.currentDuration > 0)
+			if (this.model.currentDuration > 0 || this.model.isCurrentlyRunning)
 				this.addInfoElement(RuntimeDurationElement, {
 					model: this.model,
 					title: 'Duration',
