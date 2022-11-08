@@ -9,4 +9,8 @@ export interface ServiceManagerInterface {
 	register<T extends ServiceInterface>(
 		serviceClass: ClassInterface<T>
 	): void;
+
+	deregister<T extends ServiceInterface>(
+		serviceClass: ClassInterface<T>
+	): void;
 }
