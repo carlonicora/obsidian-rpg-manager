@@ -46,6 +46,7 @@ declare module "obsidian" {
 		on(name: "rpgmanager:force-refresh-views", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:index-complete", callback: () => void, ctx?: any): EventRef;
 		on(name: "fantasy-calendars-settings-loaded", callback: () => void, ctx?: any): EventRef;
+		on(name: "fantasy-calendars-updated", callback: () => void, ctx?: any): EventRef;
 		on(name: "fantasy-calendars-event-update", callback: (tree: CalendarEventTree) => any): EventRef;
 	}
 }
