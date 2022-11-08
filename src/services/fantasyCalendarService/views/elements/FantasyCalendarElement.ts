@@ -1,19 +1,23 @@
 import {AbstractElement} from "../../../../managers/viewsManager/abstracts/AbstractElement";
 import {DateElementDataInterface} from "../../../dateService/views/elements/interfaces/DateElementDataInterface";
-import {
-	FantasyCalendarDateInterface
-} from "../../interfaces/FantasyCalendarDateInterface";
+import {FantasyCalendarDateInterface} from "../../interfaces/FantasyCalendarDateInterface";
 import {FantasyCalendarService} from "../../FantasyCalendarService";
 import {Event, EventCategory} from "obsidian-fantasy-calendar";
 import {FantasyCalendarCategory} from "../../enums/FantasyCalendarCategory";
+import {DateService} from "../../../dateService/DateService";
+import {FantasyCalendarDatePicker} from "../../picker/FantasyCalendarDatePicker";
 
 export class FantasyCalendarElement extends AbstractElement {
 	private _event: any;
+	private _data: DateElementDataInterface;
+	private _inputEl: HTMLInputElement;
 
 	render(
 		data: DateElementDataInterface,
 		containerEl: HTMLElement,
 	) {
+		this._data = data;
+
 		const calendar = data.model.campaign.fantasyCalendar;
 		if (calendar === undefined)
 			return;
@@ -24,36 +28,42 @@ export class FantasyCalendarElement extends AbstractElement {
 		const contentEl = infoEl.createDiv({cls: 'rpg-manager-header-container-info-data-container-content clearfix'});
 
 		let dateValue = '';
-		if (data.values !== undefined && data.values.date !== undefined) {
-			const fantasyCalendarDate:FantasyCalendarDateInterface = data.values.date as FantasyCalendarDateInterface;
-			dateValue = fantasyCalendarDate.year.toString() +
-				'-' +
-				(fantasyCalendarDate.month + 1).toString() +
-				'-' +
-				fantasyCalendarDate.day.toString();
-		}
+		if (data.values !== undefined && data.values.date !== undefined && data.model.campaign.fantasyCalendar !== undefined)
+			dateValue = this.api.service(FantasyCalendarService).getDay(data.values.date as FantasyCalendarDateInterface, data.model.campaign.fantasyCalendar).displayDate;
 
-		const inputEl = contentEl.createEl('input');
-		inputEl.type = 'text';
-		inputEl.value = dateValue;
+		this._inputEl = contentEl.createEl('input');
+		this._inputEl.type = 'text';
+		this._inputEl.value = dateValue;
+		new FantasyCalendarDatePicker(
+			this.api,
+			this._inputEl,
+			data.model,
+			this._saveDate.bind(this),
+			data.values?.date as FantasyCalendarDateInterface
+		);
 
-		inputEl.addEventListener('focusout', () => {
-			this._saveDate(data, inputEl.value);
+		/*
+		this._inputEl.addEventListener('focusout', () => {
+			this._saveDate(this._inputEl.value);
 		});
+
+		 */
 	}
 
 	private async _saveDate(
-		data: DateElementDataInterface,
 		newDate: string,
 	): Promise<void> {
-		if (data.values?.category === undefined && data.category === undefined)
+		if (newDate == undefined || newDate === '')
 			return;
 
-		const categoryName = data.values?.category ?? data.category;
+		if (this._data.values?.category === undefined && this._data.category === undefined)
+			return;
+
+		const categoryName = this._data.values?.category ?? this._data.category;
 		if (categoryName === undefined)
 			return;
 
-		const calendar = data.model.campaign.fantasyCalendar;
+		const calendar = this._data.model.campaign.fantasyCalendar;
 		if (calendar === undefined)
 			return;
 
@@ -65,33 +75,41 @@ export class FantasyCalendarElement extends AbstractElement {
 			categories = [await this.api.service(FantasyCalendarService).addCategory(categoryName, calendar)];
 
 		const events: Event[] = calendar.events.filter((event: Event) =>
-			event.note === data.model.file.path &&
+			event.note === this._data.model.file.path &&
 			event.category === categories[0].id
 		);
 
 		if (newDate === '' && events.length > 0){
 			for (let index=0; index<calendar.events.length; index++){
-				if (calendar.events[index].note === data.model.file.path && calendar.events[index].category === categories[0].id){
+				if (calendar.events[index].note === this._data.model.file.path && calendar.events[index].category === categories[0].id){
 					calendar.events.splice(index, 1);
 					break;
 				}
 			}
 		} else {
-			const [inputYear, inputMonth, inputDay] = newDate.split('-');
+			const [monthName, dirtyDay, yearNumber] = newDate.split(' ');
+			const day = dirtyDay.replace(/\D/g,'');
+
 			if (
-				inputYear == undefined ||
-				inputMonth == undefined ||
-				inputDay == undefined ||
-				!Number.isInteger(+inputYear) ||
-				!Number.isInteger(+inputMonth) ||
-				!Number.isInteger(+inputDay)
+				monthName == undefined ||
+				day == undefined ||
+				yearNumber == undefined ||
+				!Number.isInteger(+yearNumber) ||
+				monthName === '' ||
+				day === ''
 			)
 				return;
 
-			if (calendar.static.months.length < +inputMonth)
-				return;
+			const newFantasyCalendarDay = this.api.service(FantasyCalendarService).getDay(
+				{year: +yearNumber, month: monthName, day: +day},
+				calendar,
+			);
 
-			if (calendar.static.months[+inputMonth - 1].length < +inputDay)
+			if (
+				(<FantasyCalendarDateInterface>this._data.values?.date)?.year === newFantasyCalendarDay.date.year &&
+				(<FantasyCalendarDateInterface>this._data.values?.date)?.month === newFantasyCalendarDay.date.month &&
+				(<FantasyCalendarDateInterface>this._data.values?.date)?.day === newFantasyCalendarDay.date.day
+			)
 				return;
 
 			let event: Event | undefined = undefined;
@@ -99,13 +117,9 @@ export class FantasyCalendarElement extends AbstractElement {
 			if (events.length === 1) {
 				event = events[0];
 
-				event.date = {
-					month: +inputMonth - 1,
-					day: +inputDay,
-					year: +inputYear,
-				};
+				event.date = newFantasyCalendarDay.date;
 			} else {
-				let name = data.model.file.basename;
+				let name = this._data.model.file.basename;
 
 				switch (categoryName) {
 					case FantasyCalendarCategory.Death:
@@ -122,26 +136,35 @@ export class FantasyCalendarElement extends AbstractElement {
 						break;
 				}
 
-				event = {
-					auto: false,
-					id: 'ID_RPGM_' + Date.now().toString(),
-					name: name,
-					note: data.model.file.path,
-					category: categories[0].id,
-					description: '',
-					date: {
-						month: +inputMonth - 1,
-						day: +inputDay,
-						year: +inputYear,
-					},
-				};
+				if (categoryName === FantasyCalendarCategory.CurrentDate){
+					calendar.current = newFantasyCalendarDay.date;
+				} else {
+					event = {
+						auto: false,
+						id: 'ID_RPGM_' + Date.now().toString(),
+						name: name,
+						note: this._data.model.file.path,
+						category: categories[0].id,
+						description: '',
+						date: newFantasyCalendarDay.date,
+					};
 
-				calendar.events.push(event);
+					calendar.events.push(event);
+				}
 			}
+
+			this._data.values = this.api.service(DateService).getDate(
+				newFantasyCalendarDay.date.year + '-' + newFantasyCalendarDay.date.month + '-' + newFantasyCalendarDay.date.day,
+				FantasyCalendarCategory.Scene,
+				this._data.model,
+			);
 		}
 
-		this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
-		data.model.touch(true);
+		if (categoryName !== FantasyCalendarCategory.CurrentDate)
+			this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
+
+		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
+		this._data.model.touch(true);
 		this.api.app.workspace.trigger("rpgmanager:refresh-views");
 		this.api.app.workspace.trigger("fantasy-calendars-updated");
 	}

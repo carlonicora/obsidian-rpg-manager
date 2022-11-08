@@ -3,6 +3,8 @@ import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
 import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
 import {API} from "obsidian-fantasy-calendar";
 
+export type CalendarEventTree = Map<string, Set<number>>;
+
 declare global {
 	interface Window {
 		RpgManagerAPI?: RpgManagerApiInterface,
@@ -39,9 +41,12 @@ declare module "obsidian" {
 	}
 
 	interface Workspace {
+		on(name: "rpgmanager:database-ready", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:refresh-views", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:force-refresh-views", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:index-complete", callback: () => void, ctx?: any): EventRef;
 		on(name: "fantasy-calendars-settings-loaded", callback: () => void, ctx?: any): EventRef;
+		on(name: "fantasy-calendars-updated", callback: () => void, ctx?: any): EventRef;
+		on(name: "fantasy-calendars-event-update", callback: (tree: CalendarEventTree) => any): EventRef;
 	}
 }

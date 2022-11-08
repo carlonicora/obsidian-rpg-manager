@@ -258,7 +258,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 			case TableField.Index:
 				return index.toString();
 			case TableField.Synopsis:
-				return (description !== undefined && description !== '')
+				return (description != undefined && description !== '')
 					? description
 					: model.synopsis ?? '';
 			case TableField.Image:

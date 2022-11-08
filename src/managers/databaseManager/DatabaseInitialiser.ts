@@ -69,7 +69,7 @@ export class DatabaseInitialiser {
 		const metadata: Promise<void>[] = [];
 		await components.forEach((component: ModelInterface) => {
 			try {
-				metadata.push(component.readMetadata());
+				metadata.push(component.readMetadata(false));
 			} catch (e) {
 				this._misconfiguredTags.set(component.file, e);
 			}

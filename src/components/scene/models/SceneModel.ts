@@ -44,11 +44,28 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get currentDuration(): number {
-		return (this.metadata.data?.duration !== undefined ? this.metadata.data.duration : 0);
+		if (this.metadata.data?.durations === undefined || this.metadata.data?.durations.length === 0)
+			return 0;
+
+		let response = 0;
+
+		for (let index=0; index<this.metadata.data.durations.length; index++){
+			const duration = this.metadata.data.durations[index];
+
+			if (duration.indexOf('-') === -1)
+				continue;
+
+			const [start, end] = duration.split('-');
+			response += (+end - +start);
+		}
+
+		return response;
 	}
 
 	get duration(): string {
-		if (this.currentDuration === 0) return '00:00';
+		if (this.currentDuration === 0)
+			return '00:00';
+
 		const hours: number = Math.floor(this.currentDuration / (60 * 60));
 		const minutes: number = Math.floor((this.currentDuration - (hours * 60 * 60))/60);
 

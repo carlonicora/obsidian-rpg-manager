@@ -1,6 +1,7 @@
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {CodeblockDataWorkerInterface} from "../interfaces/CodeblockDataWorkerInterface";
 import {CodeblockDomainInterface} from "../interfaces/CodeblockDomainInterface";
+import {YamlService} from "../../yamlService/YamlService";
 
 export class CodeblockRunningWorker implements CodeblockDataWorkerInterface {
 	constructor(
@@ -24,6 +25,8 @@ export class CodeblockRunningWorker implements CodeblockDataWorkerInterface {
 		}
 
 		durations.push(Math.floor(Date.now()/1000).toString());
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 
 	public async remove(
@@ -32,6 +35,8 @@ export class CodeblockRunningWorker implements CodeblockDataWorkerInterface {
 	): Promise<void> {
 		const durations: string[] = domain.codeblock.data.durations;
 
+		let totalDuration = 0;
+
 		for (let index=0; index<durations.length; index++){
 			if (durations[index].indexOf('-') === -1){
 				const end:number = Math.floor(Date.now()/1000);
@@ -39,14 +44,15 @@ export class CodeblockRunningWorker implements CodeblockDataWorkerInterface {
 
 				durations[index] = durations[index] + '-' + end.toString();
 
-				if (domain.codeblock.data.duration === undefined){
-					domain.codeblock.data.duration = 0;
-				}
-
-				domain.codeblock.data.duration += (end - start);
-
-				break;
+				totalDuration += (end - start);
+			} else {
+				const [start, end] = durations[index].split('-');
+				totalDuration += +end - +start;
 			}
 		}
+
+		domain.codeblock.data.duration = totalDuration;
+
+		domain.codeblockContent = this._api.service(YamlService).stringify(domain.codeblock);
 	}
 }

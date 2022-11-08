@@ -1,9 +1,7 @@
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {SceneType} from "../../analyserService/enums/SceneType";
-import {TFile} from "obsidian";
 
 export interface RunningTimeServiceInterface {
-	currentlyRunningScene: SceneInterface|undefined;
 	medianTimes: Map<number, Map<SceneType, number[]>>;
 
 	get isTimerRunning(): boolean;
@@ -23,7 +21,6 @@ export interface RunningTimeServiceInterface {
 
 	stopScene(
 		scene: SceneInterface,
-		file?: TFile,
 	): Promise<void>;
 
 	updateMedianTimes(

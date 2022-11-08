@@ -41,9 +41,11 @@ export interface ModelInterface {
 	): Promise<void>;
 
 	initialiseRelationships(
+		reinitialiseReverseRelationships?: boolean,
 	): Promise<void>
 
 	readMetadata(
+		initialiseRelationships?: boolean,
 	): Promise<void>;
 
 	touch(

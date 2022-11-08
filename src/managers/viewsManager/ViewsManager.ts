@@ -43,6 +43,8 @@ export class ViewsManager implements ViewsManagerInterface {
 	public getElement<T extends ElementInterface>(
 		elementClass: ClassInterface<T>,
 	): ElementInterface {
+		return new elementClass(this._api);
+		/*
 		let response: ElementInterface | undefined = this._elements.get(elementClass);
 
 		if (response === undefined) {
@@ -51,6 +53,7 @@ export class ViewsManager implements ViewsManagerInterface {
 		}
 
 		return response;
+		*/
 	}
 
 	public async register(

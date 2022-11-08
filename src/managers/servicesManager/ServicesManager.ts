@@ -12,6 +12,12 @@ export class ServicesManager implements ServiceManagerInterface{
 	) {
 	}
 
+	public deregister<T extends ServiceInterface>(
+		serviceClass: ClassInterface<T>
+	): void {
+		this._services.delete(serviceClass);
+	}
+
 	public get<T extends ServiceInterface>(
 		service: ClassInterface<T>
 	): T|undefined {

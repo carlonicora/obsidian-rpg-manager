@@ -7,8 +7,7 @@ import {TimeElement} from "../../../services/dateService/views/elements/TimeElem
 import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
 import {AnalyserService} from "../../../services/analyserService/AnalyserService";
 import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
-import {CalendarType} from "../../../services/dateService/enums/CalendarType";
-import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
+import {AbtStageElement} from "../../../services/plotsService/views/elements/AbtStageElement";
 
 export class SessionHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SessionInterface;
@@ -21,7 +20,10 @@ export class SessionHeaderView extends AbstractHeaderView implements NewHeaderVi
 		this.addGallery();
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 
-		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Session Date', values: this.model.irl, editableKey: 'data.irl'});
+		this.addInfoElement(DateElement, {model: this.model, title: 'Session Date', values: this.model.irl, editableKey: 'data.irl'});
+
+		if (this.api.settings.usePlotStructures)
+			this.addInfoElement(AbtStageElement, {model: this.model, title: 'ABT Stage', values: this.model.abtStage, editableKey: 'data.abtStage'});
 
 		if (this.api.settings.useSceneAnalyser) {
 			this.addInfoElement(TimeElement, {

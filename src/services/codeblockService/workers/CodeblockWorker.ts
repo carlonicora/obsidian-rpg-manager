@@ -128,7 +128,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 
 	public async tryReadOpenContent(
 		file: TFile,
-		codeblockName?: string,
+		codeblockName = 'RpgManagerData',
 	): Promise<CodeblockDomainInterface|undefined> {
 		let editor: Editor|undefined = undefined;
 		let cache: CachedMetadata|null = null;
@@ -139,7 +139,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 
 		const activeViews: MarkdownView[] = [];
 
-		this._api.app.workspace.iterateRootLeaves((leaf: WorkspaceLeaf) => {
+		await this._api.app.workspace.iterateRootLeaves((leaf: WorkspaceLeaf) => {
 			try {
 				if ((<MarkdownView>leaf.view).file === file)
 					activeViews.push(<MarkdownView>leaf.view);
@@ -153,8 +153,13 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 			return undefined;
 
 		const activeView: MarkdownView = activeViews[0];
+		const newfile = await activeView.file;
+
+		if (newfile.path !== file.path)
+			return undefined;
+
 		editor = await activeView.editor;
-		file = await activeView.file;
+
 		const fileContent: string = await this._api.app.vault.read(file);
 		cache = await this._api.app.metadataCache.getFileCache(file);
 
