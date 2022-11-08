@@ -807,6 +807,10 @@ span.flatpickr-weekday {
     transform: translate3d(0, 0, 0);
   }
 }
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  display: inline-block;
+}
+
 body {
   --rpg-manager-colour-border: var(--background-modifier-border);
   --rpg-manager-colour-text-light: var(--text-muted);
