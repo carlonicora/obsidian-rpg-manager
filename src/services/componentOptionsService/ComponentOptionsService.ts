@@ -14,13 +14,15 @@ import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticView
 import {ActModel} from "../../components/act/models/ActModel";
 import {SceneBuilderService} from "../sceneBuilderService/SceneBuilderService";
 import {ComponentType} from "../../core/enums/ComponentType";
+import {AdventurePlotWizardService} from "../adventurePlotWizardService/AdventurePlotWizardService";
+import {AdventureModel} from "../../components/adventure/models/AdventureModel";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
 		model: ModelInterface,
 		containerEl: HTMLElement
 	): void {
-		if (model instanceof CampaignModel){
+		if (model instanceof CampaignModel) {
 			this._addFunctionality(containerEl, 'Timeline')
 				.addEventListener("click", () => {
 					this.api.staticViews.create(StaticViewType.Timeline, [model.id]);
@@ -43,7 +45,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 			this._addSeparator(containerEl);
 
-			this._addFunctionality(containerEl,'Move')
+			this._addFunctionality(containerEl, 'Move')
 				.addEventListener("click", () => {
 					new IdSwitcherModal(this.api, model.file).open();
 				});
@@ -95,7 +97,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		containerEl: HTMLElement,
 		description: string,
 	): HTMLDivElement {
-		return  containerEl.createDiv({cls: 'option', text: description});
+		return containerEl.createDiv({cls: 'option', text: description});
 	}
 
 	private _addSeparator(
