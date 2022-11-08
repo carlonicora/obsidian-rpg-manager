@@ -46,4 +46,8 @@ export class ContentEditorModal extends AbstractEditorModal {
 		this.addElements(this.contentEditorContainerEl);
 		this.autocompletionHelper = this.api.service(LinkSuggesterService).createHandler(this.contentEditorEl, this.component);
 	}
+
+	onClose() {
+		super.onClose();
+	}
 }

@@ -20,8 +20,79 @@ import {
 } from "../../settings/interfaces/RpgManagerAdvancedSettingsListsInterface";
 import {LoggerService} from "../loggerService/LoggerService";
 import {LogMessageType} from "../loggerService/enums/LogMessageType";
+import {
+	ControllerMetadataDataInterface
+} from "../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
 
 export class RelationshipService extends AbstractService implements RelationshipServiceInterface, ServiceInterface {
+	public async addRelationshipsFromContent(
+		fileContent: string,
+		metadata: ControllerMetadataDataInterface,
+		stage: ComponentStage,
+	): Promise<void> {
+		if (metadata.relationships == undefined)
+			metadata.relationships = [];
+
+		let content = fileContent;
+		let indexOfRelationship: number = content.indexOf('[[');
+		while (indexOfRelationship !== -1){
+			content = content.substring(content.indexOf('[[') + 2);
+			const endLinkIndex = content.indexOf(']]');
+			if (endLinkIndex === -1) break;
+
+			const nameAndAlias = content.substring(0, endLinkIndex);
+			const aliasIndex = nameAndAlias.indexOf('|');
+			let basename: string;
+			if (aliasIndex === -1){
+				basename = nameAndAlias;
+			} else {
+				basename = nameAndAlias.substring(0, aliasIndex);
+			}
+
+			let path: string|undefined = undefined;
+			const allFiles = this.api.app.vault.getMarkdownFiles();
+			for (let filesIndex=0; filesIndex<allFiles.length; filesIndex++){
+				if (allFiles[filesIndex].basename === basename){
+					path = allFiles[filesIndex].path;
+					break;
+				}
+			}
+
+			if (path !== undefined) {
+				let relationshipAlreadyExists = false;
+				for(let relationshipsIndex=0; relationshipsIndex<metadata.relationships.length; relationshipsIndex++){
+					if (metadata.relationships[relationshipsIndex].path === path) {
+						relationshipAlreadyExists = true;
+						break;
+					}
+				}
+
+				if (!relationshipAlreadyExists) {
+					let relationship: RelationshipType | undefined = undefined;
+					if (stage === ComponentStage.Run || stage === ComponentStage.Plot) {
+						relationship = RelationshipType.Unidirectional;
+					} else {
+						relationship = RelationshipType.Bidirectional;
+					}
+
+					metadata.relationships?.push({
+						type: this.getReadableRelationshipType(relationship),
+						path: path,
+						isInContent: true,
+					});
+				}
+			} else {
+				metadata.relationships?.push({
+					type: undefined,
+					path: basename,
+					isInContent: true,
+				});
+			}
+
+			indexOfRelationship = content.indexOf('[[');
+		}
+	}
+
 	public createRelationship(
 		type: RelationshipType,
 		path: string,

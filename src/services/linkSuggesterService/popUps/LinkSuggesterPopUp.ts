@@ -65,7 +65,8 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 
 			suggestionItemEl.addEventListener('mouseout', () => {
 				suggestionItemEl.removeClass('is-selected');
-				(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
+				if (this._currentIndex !== undefined && this._suggestionEl.childNodes[this._currentIndex] != undefined)
+					(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
 			});
 
 			suggestionItemEl.addEventListener('click', () => {

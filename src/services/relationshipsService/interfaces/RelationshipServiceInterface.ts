@@ -7,8 +7,18 @@ import {
 	ControllerMetadataRelationshipInterface
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {TableField} from "../enums/TableField";
+import {
+	ControllerMetadataDataInterface
+} from "../../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
+import {ComponentStage} from "../../../core/enums/ComponentStage";
 
 export interface RelationshipServiceInterface {
+	addRelationshipsFromContent(
+		fileContent: string,
+		metadata: ControllerMetadataDataInterface,
+		stage: ComponentStage,
+	): Promise<void>;
+
 	createRelationship(
 		type: RelationshipType,
 		path: string,

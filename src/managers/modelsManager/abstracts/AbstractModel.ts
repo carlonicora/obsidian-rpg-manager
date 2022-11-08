@@ -7,7 +7,6 @@ import {StoryCircleInterface} from "../../../services/plotsService/interfaces/St
 import {StoryCirclePlot} from "../../../services/plotsService/plots/StoryCirclePlot";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
 import {RelationshipList} from "../../../services/relationshipsService/RelationshipList";
-import {ControllerMetadataDataInterface} from "../../controllerManager/interfaces/ControllerMetadataDataInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../controllerManager/interfaces/ControllerMetadataRelationshipInterface";
@@ -27,6 +26,7 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 import {ImageService} from "../../../services/imageService/ImageService";
+import {CodeblockDomainInterface} from "../../../services/codeblockService/interfaces/CodeblockDomainInterface";
 
 export abstract class AbstractModel implements ModelInterface {
 	public id: IdInterface;
@@ -172,9 +172,8 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public async initialiseRelationships(
-		reinitialiseReverseRelationships = false,
 	): Promise<void> {
-		if (this.metadata.relationships !== undefined){
+		if (this.metadata?.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 				if (relationshipMetadata.path !== this.file.path) {
 					const relationship = this.api.service(RelationshipService).createRelationshipFromMetadata(relationshipMetadata);
@@ -188,41 +187,45 @@ export abstract class AbstractModel implements ModelInterface {
 				}
 			});
 		}
-
-		if (reinitialiseReverseRelationships) {
-			const recordset = this.api.database.recordset;
-			for (let index = 0; index < recordset.length; index++) {
-				const relationships = recordset[index].getRelationships().relationships;
-				for (let relationshipIndex = 0; relationshipIndex < relationships.length; relationshipIndex++) {
-					const relationship: RelationshipInterface = relationships[relationshipIndex];
-
-					if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID) {
-						this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
-					}
-				}
-			}
-		}
 	}
 
 	public async readMetadata(
 		initialiseRelationships = true,
 	): Promise<void> {
 		return this.api.service(CodeblockService).read(this.file)
-			.then((metadata: ControllerMetadataDataInterface) => {
-				this.metadata = metadata;
-				if (!initialiseRelationships)
-					return;
+			.then((domain: CodeblockDomainInterface) => {
+				this.api.service(RelationshipService).addRelationshipsFromContent(
+					domain.originalFileContent,
+					domain.codeblock,
+					this.stage,
+				);
 
-				this._relationships = new RelationshipList();
-				this.initialiseData();
-				return this.initialiseRelationships(true)
+				this.metadata = domain.codeblock;
+
+				return this.initialiseRelationships()
 					.then(() => {
 						return;
 					});
+
 			})
 			.catch((e) => {
 				if (e.message === 'INVALID YAML') return;
 			});
+	}
+
+	public async reinitialiseRelationships(
+	): Promise<void> {
+		const recordset = this.api.database.recordset;
+		for (let index = 0; index < recordset.length; index++) {
+			const relationships = recordset[index].getRelationships().relationships;
+			for (let relationshipIndex = 0; relationshipIndex < relationships.length; relationshipIndex++) {
+				const relationship: RelationshipInterface = relationships[relationshipIndex];
+
+				if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID) {
+					this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+				}
+			}
+		}
 	}
 
 	public touch(

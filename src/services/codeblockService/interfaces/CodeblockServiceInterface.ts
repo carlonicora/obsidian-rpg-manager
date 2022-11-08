@@ -1,6 +1,7 @@
 import {RelationshipInterface} from "../../relationshipsService/interfaces/RelationshipInterface";
 import {ImageInterface} from "../../galleryService/interfaces/ImageInterface";
 import {TFile} from "obsidian";
+import {CodeblockDomainInterface} from "./CodeblockDomainInterface";
 
 export interface CodeblockServiceInterface {
 	addOrUpdate(
@@ -29,7 +30,7 @@ export interface CodeblockServiceInterface {
 	read(
 		file?: TFile,
 		codeblockName?: string,
-	): Promise<any>;
+	): Promise<CodeblockDomainInterface|undefined>;
 
 	replaceID(
 		file: TFile,
