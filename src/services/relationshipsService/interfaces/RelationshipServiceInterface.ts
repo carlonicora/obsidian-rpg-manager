@@ -30,7 +30,6 @@ export interface RelationshipServiceInterface {
 
 	createRelationshipFromMetadata(
 		relationship: ControllerMetadataRelationshipInterface,
-		existingRelationships?: RelationshipListInterface,
 	): RelationshipInterface;
 
 	createRelationshipFromReverse(
@@ -49,8 +48,6 @@ export interface RelationshipServiceInterface {
 	getTypeFromString(
 		readableRelationshipType: string,
 	): RelationshipType;
-
-
 
 	getTableFields(
 		relationshipComponentType: ComponentType,

@@ -60,10 +60,7 @@ export class AllComponentManipulatorService extends AbstractService implements A
 
 		component.readMetadata()
 			.then(() =>{
-				component.initialiseRelationships()
-					.then(() => {
-						component.reinitialiseRelationships();
-					});
+				component.addReverseRelationships();
 			});
 	}
 }

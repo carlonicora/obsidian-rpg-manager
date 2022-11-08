@@ -140,7 +140,9 @@ export class RelationshipsSelectionModal extends AbstractModal {
 
 				if (relationship !== undefined) {
 					checkboxEl.checked = true;
-					if (relationship.isInContent || relationship.type === RelationshipType.Parent) checkboxEl.disabled = true;
+
+					if (relationship.isInContent || relationship.type === RelationshipType.Parent || relationship.isAlsoInContent)
+						checkboxEl.disabled = true;
 				}
 
 				if (relationship !== undefined) checkboxEl.checked = true;
@@ -296,6 +298,10 @@ export class RelationshipsSelectionModal extends AbstractModal {
 			this.api.service(CodeblockService).addOrUpdateRelationship(newRelationship);
 		} else {
 			this.api.service(CodeblockService).removeRelationship(relatedComponent.file.path);
+
+			if (existingRelationship !== undefined)
+				this._currentComponent.getRelationships().remove(existingRelationship);
+
 		}
 	}
 

@@ -264,9 +264,12 @@ export class Database extends Component implements DatabaseInterface {
 
 		if (oldBaseName !== undefined && component !== undefined && metadata != null) {
 			await this._replaceFileContent(file, oldBaseName, newBaseName);
-			await component.readMetadata();
 
-			DatabaseInitialiser.reinitialiseRelationships(component, this)
+			await component.readMetadata();
+			component.addReverseRelationships()
+
+
+			//DatabaseInitialiser.reinitialiseRelationships(component, this)
 				.then(() => {
 					if (this._api.app.workspace.getActiveFile()?.path === file.path){
 						this._api.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
@@ -293,9 +296,13 @@ export class Database extends Component implements DatabaseInterface {
 				return;
 
 			await component.readMetadata();
-			await component.validateHierarchy();
+
+			if (!isNewComponent)
+				await component.addReverseRelationships();
 
 			if (isNewComponent && (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot)) {
+				await component.validateHierarchy();
+
 				let error: RpgErrorInterface | undefined = undefined;
 				try {
 					const duplicate = this.readSingle(component.id.type, component.id);
@@ -310,14 +317,10 @@ export class Database extends Component implements DatabaseInterface {
 			}
 
 			await this.create(component);
+			if (!isNewComponent)
+				await component.touch();
 
-			DatabaseInitialiser.reinitialiseRelationships(component, this)
-				.then(() => {
-					if (component !== undefined && !isNewComponent)
-						component.touch();
-
-					this._api.app.workspace.trigger("rpgmanager:refresh-views");
-				});
+			this._api.app.workspace.trigger("rpgmanager:refresh-views");
 		} catch (e) {
 			if (e instanceof AbstractRpgManagerError) {
 				new DatabaseErrorModal(this._api, undefined, e, file).open();

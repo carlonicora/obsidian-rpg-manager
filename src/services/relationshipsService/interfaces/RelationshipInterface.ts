@@ -7,4 +7,5 @@ export interface RelationshipInterface {
 	description?: string|undefined,
 	component?: ModelInterface|undefined,
 	isInContent: boolean,
+	isAlsoInContent?: boolean,
 }

@@ -27,31 +27,49 @@ export class RelationshipList implements RelationshipListInterface {
 
 	public add(
 		relationship: RelationshipInterface,
-		checkExistence = true,
+		model?: ModelInterface
 	): void {
 		const indexOfExistingRelationship = this._getIndexOfExistingRelationship(relationship.path);
 
-		if (!checkExistence) {
-			if (indexOfExistingRelationship !== -1) this.relationships.splice(indexOfExistingRelationship, 1);
-			this.relationships.push(relationship);
-			return;
-		}
-
 		let existingRelationship: RelationshipInterface|undefined = undefined;
-		if (indexOfExistingRelationship !== -1) existingRelationship = this.getByPath(relationship.path);
+
+		if (indexOfExistingRelationship !== -1)
+			existingRelationship = this.getByPath(relationship.path);
 
 		if (indexOfExistingRelationship !== -1 && existingRelationship !== undefined) {
 			if (
-				(relationship.type !== RelationshipType.Reversed && existingRelationship?.type === RelationshipType.Reversed) ||
+				relationship.type === RelationshipType.Parent ||
+				(relationship.type !== RelationshipType.Reversed && existingRelationship.type === RelationshipType.Reversed) ||
+				(!relationship.isInContent && existingRelationship.isInContent) ||
 				(relationship.type === existingRelationship.type)
 			){
-				if (indexOfExistingRelationship !== -1) this.relationships.splice(indexOfExistingRelationship, 1);
+				if (relationship.isInContent && !this.relationships[indexOfExistingRelationship].isInContent) {
+					this.relationships[indexOfExistingRelationship].isAlsoInContent = true;
+					return;
+				}
+
+				this.relationships.splice(indexOfExistingRelationship, 1);
 				this.relationships.push(relationship);
-				return;
 			}
 		} else {
 			this.relationships.push(relationship);
 		}
+	}
+
+	public remove(
+		relationship: RelationshipInterface,
+	): void {
+		const indexOfExistingRelationship = this._getIndexOfExistingRelationship(relationship.path);
+
+		if (indexOfExistingRelationship === -1)
+			return;
+
+		const existingRelationship = this.getByPath(relationship.path);
+
+		if (existingRelationship === undefined || existingRelationship.isAlsoInContent)
+			return;
+
+		this.relationships.splice(indexOfExistingRelationship, 1);
 	}
 
 	public getByPath(

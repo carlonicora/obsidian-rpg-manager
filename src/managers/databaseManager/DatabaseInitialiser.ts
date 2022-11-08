@@ -71,7 +71,7 @@ export class DatabaseInitialiser {
 		const metadata: Promise<void>[] = [];
 		await components.forEach((component: ModelInterface) => {
 			try {
-				metadata.push(component.readMetadata(false));
+				metadata.push(component.readMetadata());
 			} catch (e) {
 				this._misconfiguredTags.set(component.file, e);
 			}
@@ -161,10 +161,16 @@ export class DatabaseInitialiser {
 		return Promise.all(relationshipsInitialisation)
 			.then(() => {
 				for (let index=0; index<database.recordset.length; index++){
-					const relationships = database.recordset[index].getRelationships(database).relationships;
+					const model = database.recordset[index];
+					const relationships = model.getRelationships(database).relationships;
 					for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
-						if (relationships[relationshipIndex].component !== undefined){
-							this._api.service(RelationshipService).createRelationshipFromReverse(database.recordset[index], relationships[relationshipIndex]);
+						const relationship = relationships[relationshipIndex];
+
+						if (relationship.component !== undefined){
+							const newRelationship: RelationshipInterface|undefined = this._api.service(RelationshipService).createRelationshipFromReverse(model, relationship);
+
+							if (newRelationship !== undefined)
+								relationship.component.getRelationships(database).add(newRelationship, model);
 						}
 					}
 				}
@@ -174,34 +180,6 @@ export class DatabaseInitialiser {
 				}
 
 				return;
-			});
-	}
-
-	public static async reinitialiseRelationships(
-		component: ModelInterface,
-		database: DatabaseInterface,
-	): Promise<void> {
-		return component.initialiseRelationships()
-			.then(() => {
-				return component.reinitialiseRelationships()
-					.then(() => {
-						const relationships = component.getRelationships();
-						if (component.touch()) {
-							relationships.forEach((relationship: RelationshipInterface) => {
-								if (relationship.component === undefined)
-									this._api.service(RelationshipService).createRelationshipFromReverse(component, relationship);
-
-							});
-
-							database.recordset.forEach((component: ModelInterface) => {
-								component.getRelationships(database);
-								component.touch();
-							});
-						}
-
-						return;
-					});
-
 			});
 	}
 }

@@ -35,6 +35,7 @@ export class RelationshipService extends AbstractService implements Relationship
 
 		let content = fileContent;
 		let indexOfRelationship: number = content.indexOf('[[');
+
 		while (indexOfRelationship !== -1){
 			content = content.substring(content.indexOf('[[') + 2);
 			const endLinkIndex = content.indexOf(']]');
@@ -109,14 +110,14 @@ export class RelationshipService extends AbstractService implements Relationship
 			isInContent,
 		);
 
-		if (existingRelationships !== undefined) existingRelationships.add(response);
+		if (existingRelationships !== undefined)
+			existingRelationships.add(response);
 
 		return response;
 	}
 
 	public createRelationshipFromMetadata(
 		relationship: ControllerMetadataRelationshipInterface,
-		existingRelationships:RelationshipListInterface|undefined = undefined,
 	): RelationshipInterface {
 		const response = new Relationship(
 			(relationship.type !== undefined ? this.getTypeFromString(relationship.type) : RelationshipType.Undefined),
@@ -125,8 +126,6 @@ export class RelationshipService extends AbstractService implements Relationship
 			undefined,
 			relationship.isInContent ?? false,
 		);
-
-		if (existingRelationships !== undefined) existingRelationships.add(response);
 
 		return response;
 	}
@@ -154,10 +153,7 @@ export class RelationshipService extends AbstractService implements Relationship
 		if (reverseRelationshipType === undefined)
 			return undefined;
 
-		const response = new Relationship(reverseRelationshipType, component.file.path, undefined, component, true);
-
-		if (relationship.component !== undefined)
-			relationship.component.getRelationships().add(response);
+		const response = new Relationship(reverseRelationshipType, component.file.path, undefined, component, false);
 
 		return response;
 	}

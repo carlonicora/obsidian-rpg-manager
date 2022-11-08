@@ -10,7 +10,11 @@ export interface RelationshipListInterface {
 
 	add(
 		relationship: RelationshipInterface,
-		checkExistence?: boolean,
+		model?: ModelInterface
+	): void;
+
+	remove(
+		relationship: RelationshipInterface,
 	): void;
 
 	getByPath(

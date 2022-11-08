@@ -173,16 +173,14 @@ export abstract class AbstractModel implements ModelInterface {
 
 	public async initialiseRelationships(
 	): Promise<void> {
+		this._relationships = new RelationshipList();
 		if (this.metadata?.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
 				if (relationshipMetadata.path !== this.file.path) {
 					const relationship = this.api.service(RelationshipService).createRelationshipFromMetadata(relationshipMetadata);
 
 					if (relationship !== undefined)
-						this._relationships.add(
-							relationship,
-							false,
-						);
+						this._relationships.add(relationship);
 
 				}
 			});
@@ -190,7 +188,6 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public async readMetadata(
-		initialiseRelationships = true,
 	): Promise<void> {
 		return this.api.service(CodeblockService).read(this.file)
 			.then((domain: CodeblockDomainInterface) => {
@@ -213,7 +210,7 @@ export abstract class AbstractModel implements ModelInterface {
 			});
 	}
 
-	public async reinitialiseRelationships(
+	public async addReverseRelationships(
 	): Promise<void> {
 		const recordset = this.api.database.recordset;
 		for (let index = 0; index < recordset.length; index++) {
@@ -222,7 +219,11 @@ export abstract class AbstractModel implements ModelInterface {
 				const relationship: RelationshipInterface = relationships[relationshipIndex];
 
 				if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID) {
-					this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+					const newRelationship: RelationshipInterface|undefined = this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+
+					if (newRelationship !== undefined)
+						relationship.component.getRelationships().add(newRelationship);
+
 				}
 			}
 		}
