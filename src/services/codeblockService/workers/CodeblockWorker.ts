@@ -128,7 +128,7 @@ export class CodeblockWorker implements CodeblockWorkerInterface {
 
 	public async tryReadOpenContent(
 		file: TFile,
-		codeblockName: string = 'RpgManagerData',
+		codeblockName = 'RpgManagerData',
 	): Promise<CodeblockDomainInterface|undefined> {
 		let editor: Editor|undefined = undefined;
 		let cache: CachedMetadata|null = null;

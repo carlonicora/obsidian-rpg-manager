@@ -7,9 +7,6 @@ import {TimeElement} from "../../../services/dateService/views/elements/TimeElem
 import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
 import {AnalyserService} from "../../../services/analyserService/AnalyserService";
 import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
-import {CalendarType} from "../../../services/dateService/enums/CalendarType";
-import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
-import {StoryCircleStageElement} from "../../../services/plotsService/views/elements/StoryCircleStageElement";
 import {AbtStageElement} from "../../../services/plotsService/views/elements/AbtStageElement";
 
 export class SessionHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {

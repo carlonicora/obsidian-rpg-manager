@@ -6,7 +6,7 @@ import {ServiceInterface} from "../../managers/servicesManager/interfaces/Servic
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {SceneType} from "../analyserService/enums/SceneType";
 import {CodeblockService} from "../codeblockService/CodeblockService";
-import {MarkdownView, TFile, WorkspaceLeaf} from "obsidian";
+import {MarkdownView, WorkspaceLeaf} from "obsidian";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 
 export class RunningTimeService extends AbstractService implements RunningTimeServiceInterface, ServiceInterface {

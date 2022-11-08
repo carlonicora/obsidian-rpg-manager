@@ -1,9 +1,11 @@
 import {FantasyCalendarServiceInterface} from "./interfaces/FantasyCalendarServiceInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
-import {Calendar, EventCategory} from "obsidian-fantasy-calendar";
+import {Calendar, Day, EventCategory} from "obsidian-fantasy-calendar";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {FantasyCalendarCategory} from "./enums/FantasyCalendarCategory";
+import {FantasyCalendarDateInterface} from "./interfaces/FantasyCalendarDateInterface";
+import {FantasyCalendarTextualDateInterface} from "./interfaces/FantasyCalendarTextualDateInterface";
 
 export class FantasyCalendarService extends AbstractService implements FantasyCalendarServiceInterface, ServiceInterface{
 	private _isReady: boolean;
@@ -70,5 +72,12 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 		this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
 
 		return fantasyCalendarCategory;
+	}
+
+	public getDay(
+		date: FantasyCalendarDateInterface|FantasyCalendarTextualDateInterface,
+		calendar: Calendar,
+	): Day {
+		return this.api.app.plugins.getPlugin('fantasy-calendar').api.getDay(date as any, calendar);
 	}
 }

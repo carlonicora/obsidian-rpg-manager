@@ -172,7 +172,7 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public async initialiseRelationships(
-		reinitialiseReverseRelationships: boolean = false,
+		reinitialiseReverseRelationships = false,
 	): Promise<void> {
 		if (this.metadata.relationships !== undefined){
 			await this.metadata.relationships.forEach((relationshipMetadata: ControllerMetadataRelationshipInterface) => {
@@ -205,7 +205,7 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public async readMetadata(
-		initialiseRelationships: boolean = true,
+		initialiseRelationships = true,
 	): Promise<void> {
 		return this.api.service(CodeblockService).read(this.file)
 			.then((metadata: ControllerMetadataDataInterface) => {

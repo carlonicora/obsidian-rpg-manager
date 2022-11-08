@@ -1,6 +1,5 @@
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {SceneType} from "../../analyserService/enums/SceneType";
-import {TFile} from "obsidian";
 
 export interface RunningTimeServiceInterface {
 	medianTimes: Map<number, Map<SceneType, number[]>>;

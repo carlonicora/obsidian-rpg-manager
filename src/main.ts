@@ -1,4 +1,4 @@
-import {addIcon, Component, MarkdownPostProcessorContext, MarkdownView, Plugin, setIcon, WorkspaceLeaf} from 'obsidian';
+import {addIcon, Component, MarkdownPostProcessorContext, Plugin, setIcon} from 'obsidian';
 import {ComponentType} from "./core/enums/ComponentType";
 import {CreationModal} from "./core/modals/CreationModal";
 import {
@@ -8,16 +8,13 @@ import {
 import {RpgManagerSettings} from "./settings/RpgManagerSettings";
 import {RpgManagerInterface} from "./core/interfaces/RpgManagerInterface";
 import {DatabaseInterface} from "./managers/databaseManager/interfaces/DatabaseInterface";
-import {ModelInterface} from "./managers/modelsManager/interfaces/ModelInterface";
 import {DatabaseInitialiser} from "./managers/databaseManager/DatabaseInitialiser";
-import {SceneInterface} from "./components/scene/interfaces/SceneInterface";
 import {RpgManagerApiInterface} from "./api/interfaces/RpgManagerApiInterface";
 import {RpgManagerApi} from "./api/RpgManagerApi";
 import {DatabaseUpdater} from "./core/updater/DatabaseUpdater";
 import {StaticViewType} from "./managers/staticViewsManager/enums/StaticViewType";
 import {UpdaterModal} from "./core/updater/modals/UpdaterModal";
 import {LoggerService} from "./services/loggerService/LoggerService";
-import {RunningTimeService} from "./services/runningTimeService/RunningTimeService";
 import {LogMessageType} from "./services/loggerService/enums/LogMessageType";
 import {CodeblockService} from "./services/codeblockService/CodeblockService";
 import {RPGManagerView} from "./core/staticViews/rpgManagerView/RPGManagerView";
