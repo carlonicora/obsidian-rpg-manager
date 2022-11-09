@@ -108,11 +108,11 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			const youText = this._steps.get(1)?.data?.description;
 			const goText = this._steps.get(2)?.data?.description;
 			const findText = this._steps.get(3)?.data?.description;
-			const changeText = this._steps.get(4)?.data?.description;
+			const returnText = this._steps.get(4)?.data?.description;
 			const needText = this._steps.get(5)?.data?.description;
 			const searchText = this._steps.get(6)?.data?.description;
 			const takeText = this._steps.get(7)?.data?.description;
-			const returnText = this._steps.get(8)?.data?.description;
+			const changeText = this._steps.get(8)?.data?.description;
 
 			this._youEl.textContent = (youText ? youText.substring(0, 20) + '...' : '');
 			this._needEl.textContent = (needText ? needText.substring(0, 20) + '...' : '');

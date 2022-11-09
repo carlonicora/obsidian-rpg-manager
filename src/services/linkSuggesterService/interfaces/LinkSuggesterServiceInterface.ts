@@ -6,4 +6,9 @@ export interface LinkSuggesterServiceInterface {
 		editorEl: HTMLInputElement|HTMLTextAreaElement,
 		model: ModelInterface,
 	): LinkSuggesterHandlerInterface;
+
+	createSimplifiedHandler(
+		editorEl: HTMLInputElement|HTMLTextAreaElement,
+		model: ModelInterface,
+	): LinkSuggesterHandlerInterface;
 }

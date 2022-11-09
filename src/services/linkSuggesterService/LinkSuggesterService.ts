@@ -4,6 +4,7 @@ import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterfac
 import {LinkSuggesterHandlerInterface} from "./interfaces/LinkSuggesterHandlerInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterHandler} from "./handlers/LinkSuggesterHandler";
+import {SimplifiedLinkSuggestionHandler} from "./handlers/SimplifiedLinkSuggestionHandler";
 
 export class LinkSuggesterService implements LinkSuggesterServiceInterface, ServiceInterface {
 	constructor(
@@ -16,5 +17,12 @@ export class LinkSuggesterService implements LinkSuggesterServiceInterface, Serv
 		model: ModelInterface,
 	): LinkSuggesterHandlerInterface {
 		return new LinkSuggesterHandler(this._api, editorEl, model);
+	}
+
+	public createSimplifiedHandler(
+		editorEl: HTMLInputElement|HTMLTextAreaElement,
+		model: ModelInterface,
+	): LinkSuggesterHandlerInterface {
+		return new SimplifiedLinkSuggestionHandler(this._api, editorEl, model);
 	}
 }

@@ -1374,17 +1374,41 @@ textarea:hover {
 .rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content {
   float: left;
   width: calc(100% - 200px);
-  padding-left: 50px;
+  padding-left: 25px;
 }
 .rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content textarea {
   width: 100%;
   min-height: 200px;
 }
 .rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content .rpg-manager-wizard-main-content-title,
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-title {
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-title,
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container-clues-title {
   font-variant: small-caps;
   font-size: 0.8em;
   color: var(--rpg-manager-colour-text-very-light);
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container {
+  width: 100%;
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text {
+  width: 100%;
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text {
+  width: 50%;
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text,
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text {
+  float: left;
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues {
+  float: right;
+  width: 50%;
+  padding-left: 25px;
+  padding-top: 10px;
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues textarea {
+  width: 100%;
+  min-height: 120px;
 }
 .rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-buttons {
   width: 100%;

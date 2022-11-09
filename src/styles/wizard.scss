@@ -61,7 +61,7 @@
 			.rpg-manager-wizard-main-content {
 				float: left;
 				width: calc(100% - 200px);
-				padding-left: 50px;
+				padding-left: 25px;
 
 				textarea {
 					width: 100%;
@@ -70,11 +70,42 @@
 			}
 
 			.rpg-manager-wizard-main-content .rpg-manager-wizard-main-content-title,
-			.rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-title {
+			.rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-title,
+			.rpg-manager-wizard-main-content-container-clues-title{
 				font-variant: small-caps;
 				font-size: 0.8em;
 				color: var(--rpg-manager-colour-text-very-light);
 			}
+
+			.rpg-manager-wizard-main-content-container {
+				width: 100%;
+
+				.rpg-manager-wizard-main-content-container-text {
+					width: 100%;
+				}
+
+				.rpg-manager-wizard-main-content-container-clues-text {
+					width: 50%;
+				}
+
+				.rpg-manager-wizard-main-content-container-text,
+				.rpg-manager-wizard-main-content-container-clues-text{
+					float: left;
+				}
+
+				.rpg-manager-wizard-main-content-container-clues {
+					float: right;
+					width: 50%;
+					padding-left: 25px;
+					padding-top: 10px;
+
+					textarea {
+						width: 100%;
+						min-height: 120px;
+					}
+				}
+			}
+
 		}
 
 		.rpg-manager-wizard-buttons {

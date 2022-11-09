@@ -57,7 +57,10 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 			suggestionItemEl.addEventListener('mouseenter', () => {
 				if (this._mouseOverIndex !== index) {
 					suggestionItemEl.addClass('is-selected');
-					(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).removeClass('is-selected');
+
+					if (this._currentIndex !== undefined && this._suggestionEl.childNodes[this._currentIndex] != undefined)
+						(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).removeClass('is-selected');
+
 					this._mouseOverIndex = index;
 					this._currentIndex = index;
 				}
@@ -67,6 +70,7 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 				suggestionItemEl.removeClass('is-selected');
 				if (this._currentIndex !== undefined && this._suggestionEl.childNodes[this._currentIndex] != undefined)
 					(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
+
 			});
 
 			suggestionItemEl.addEventListener('click', () => {
@@ -111,7 +115,9 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 		suggestionContainerEl.style.left = left + 'px';
 		suggestionContainerEl.style.top = top - suggestionContainerEl.clientHeight + 'px';
 
-		(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
+		if (this._currentIndex !== undefined && this._suggestionEl.childNodes[this._currentIndex] != undefined)
+			(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
+
 	}
 
 	clear(): void {
@@ -134,11 +140,12 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 
 	public async moveUp(
 	): Promise<void> {
-		if (this._currentIndex === 0)
+		if (this._currentIndex === 0 || this._currentIndex === undefined)
 			return;
 
 		(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).removeClass('is-selected');
 		this._currentIndex--;
+
 		(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
 
 		this._ensureSelectedItemVisibility();
@@ -152,8 +159,12 @@ export class LinkSuggesterPopUp implements LinkSuggesterSearchResultPopUpInterfa
 		if (this._currentIndex === this._results.length -1)
 			return;
 
+		if (this._currentIndex === undefined)
+			return;
+
 		(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).removeClass('is-selected');
 		this._currentIndex++;
+
 		(<HTMLDivElement>this._suggestionEl.childNodes[this._currentIndex]).addClass('is-selected');
 
 		this._ensureSelectedItemVisibility();
