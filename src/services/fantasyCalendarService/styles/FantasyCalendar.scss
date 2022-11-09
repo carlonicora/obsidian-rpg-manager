@@ -2,7 +2,7 @@
 	position: absolute;
 	min-width: 300px;
 	padding: 10px;
-	background-color: var(--bg1);
+	background-color: var(--background-primary);
 	border: solid 1px var(--rpg-manager-colour-border);
 	z-index: 1;
 
@@ -133,6 +133,15 @@
 						-webkit-box-pack: center;
 						justify-content: center;
 						text-align: center;
+					}
+
+					.rpg-manager-fantasy-calendar-picker-month-day-today {
+						border: solid 1px var(--rpg-manager-colour-border);
+					}
+
+					.rpg-manager-fantasy-calendar-picker-month-day-selected {
+						background: var(--rpg-manager-colour-background);
+						box-shadow: none;
 					}
 				}
 			}

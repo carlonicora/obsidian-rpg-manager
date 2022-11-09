@@ -18,7 +18,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 		if ((metadataDate == undefined || metadataDate === '') && fantasyCalendarCategory === undefined)
 			return undefined;
 
-		const isFantasyCalendar: boolean = (component.campaign.calendar === CalendarType.FantasyCalendar);
+		const isFantasyCalendar: boolean = (component.campaign.calendar === CalendarType.FantasyCalendar) && fantasyCalendarCategory !== undefined;
 		let responseDate: Date|FantasyCalendarDateInterface|undefined;
 
 		if (isFantasyCalendar) {

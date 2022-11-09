@@ -6,6 +6,7 @@ import {Event, EventCategory} from "obsidian-fantasy-calendar";
 import {FantasyCalendarCategory} from "../../enums/FantasyCalendarCategory";
 import {DateService} from "../../../dateService/DateService";
 import {FantasyCalendarDatePicker} from "../../picker/FantasyCalendarDatePicker";
+import {randomUUID} from "crypto";
 
 export class FantasyCalendarElement extends AbstractElement {
 	private _event: any;
@@ -31,29 +32,31 @@ export class FantasyCalendarElement extends AbstractElement {
 		if (data.values !== undefined && data.values.date !== undefined && data.model.campaign.fantasyCalendar !== undefined)
 			dateValue = this.api.service(FantasyCalendarService).getDay(data.values.date as FantasyCalendarDateInterface, data.model.campaign.fantasyCalendar).displayDate;
 
-		this._inputEl = contentEl.createEl('input');
+		const id = randomUUID();
+
+		this._inputEl = contentEl.createEl('input', {cls: 'rpg-manager-fantasy-calendar-picker-launcher ' + id});
 		this._inputEl.type = 'text';
 		this._inputEl.value = dateValue;
-		new FantasyCalendarDatePicker(
+
+		const picker:FantasyCalendarDatePicker = new FantasyCalendarDatePicker(
 			this.api,
 			this._inputEl,
+			id,
 			data.model,
 			this._saveDate.bind(this),
 			data.values?.date as FantasyCalendarDateInterface
 		);
 
-		/*
-		this._inputEl.addEventListener('focusout', () => {
+		this._inputEl.addEventListener('change', () => {
 			this._saveDate(this._inputEl.value);
+			picker.hide();
 		});
-
-		 */
 	}
 
 	private async _saveDate(
 		newDate: string,
 	): Promise<void> {
-		if (newDate == undefined || newDate === '')
+		if (newDate == undefined)
 			return;
 
 		if (this._data.values?.category === undefined && this._data.category === undefined)
@@ -161,12 +164,10 @@ export class FantasyCalendarElement extends AbstractElement {
 			);
 		}
 
-		this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar()
-			.then(() => {
-				this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
-				this._data.model.touch(true);
-				this.api.app.workspace.trigger("rpgmanager:refresh-views");
-				this.api.app.workspace.trigger("fantasy-calendars-updated");
-			});
+		await this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
+
+		this._data.model.touch(true);
+		this.api.app.workspace.trigger("rpgmanager:refresh-views");
+		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
 	}
 }

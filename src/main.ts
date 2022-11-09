@@ -88,7 +88,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 			.then((database: DatabaseInterface) => {
 				this.api.database = database;
 
-				this.api.service(LoggerService).info(LogMessageType.Database, 'Database Initialised', this.api.database);
+				// this.api.service(LoggerService).info(LogMessageType.Database, 'Database Initialised', this.api.database);
 
 				return;
 			});
@@ -96,7 +96,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	private async _onDatabaseReady(
 	): Promise<void> {
-		this.api.service(LoggerService).info(LogMessageType.Database, 'Database Ready', this.api.database);
+		// this.api.service(LoggerService).info(LogMessageType.Database, 'Database Ready', this.api.database);
 
 		this._registerEvents();
 		this.app.workspace.trigger("rpgmanager:refresh-views");
