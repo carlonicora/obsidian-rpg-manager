@@ -1,5 +1,39 @@
 # RPG Manager Change Log
 
+## Version 3.2
+_2022-11-09_
+
+Version 3.2 is a minor upgrade bringing three new features to RPG Manager.
+
+- Fantasy Calendar Integration
+- Scene Builder
+- Editor Window
+
+### Fantasy Calendar
+
+RPG Manager now supports dates created and managed by 
+[Fantasy Calendar](https://github.com/fantasycalendar/obsidian-fantasy-calendar). 
+In order to activate the functionality in one of your campaigns, just add the frontmatter key
+
+```yaml
+fc-calendar: "YOUR CALENDAR NAME HERE"
+```
+
+and all the dates of your campaign will be saved in Fantasy Calendar.
+Please note: RPG Manager will not store your dates in the frontmatter, but will delegate their management directly to 
+Fantasy Calendar.
+
+### Scene Builder
+
+If you use the `Scene Analyser`, this new feature will bring a smile to your face. From an `act` without scenes, you 
+can now open a window where to plot all your scenes in a useful form which will help you plotting all your scenes with
+an integrated `Analyser` to show you if your act is balanced and its expected duration!
+
+### Editor Window
+
+Let's stop editing a temperamental YAML, shall we? With RPG Manager 3.2 all the editable texts (_like the Synopsis_) 
+will now be opened in a modal window where you can write in a comfortable text area with link autocompletion!
+
 ## Version 3.1
 _2022-10-18_
 
