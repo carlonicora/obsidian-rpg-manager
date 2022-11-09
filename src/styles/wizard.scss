@@ -20,7 +20,7 @@
 				padding-top: 24px;
 
 				.rpg-manager-wizard-navigation-elements-dot {
-					background-color: var(--bg1);
+					background-color: var(--background-primary);
 					border: solid 1px var(--rpg-manager-colour-border);
 					margin-top: -40px;
 					width: 30px;
@@ -35,7 +35,7 @@
 
 				.rpg-manager-wizard-navigation-elements-dot-active {
 					background-color: var(--code-property);
-					color: var(--bg1);
+					color: var(--background-primary);
 				}
 			}
 		}

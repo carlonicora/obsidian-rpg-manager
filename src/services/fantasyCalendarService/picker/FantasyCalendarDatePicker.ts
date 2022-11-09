@@ -7,6 +7,8 @@ import {FantasyCalendarService} from "../FantasyCalendarService";
 export class FantasyCalendarDatePicker {
 	private _calendar: Calendar;
 
+	private _listener: EventListener = (evt:MouseEvent) => this._eventMaybeClose(evt);
+
 	private _pickerEl: HTMLDivElement|undefined;
 	private _monthContainerEl: HTMLDivElement;
 	private _monthSelectorEl: HTMLSelectElement;
@@ -19,6 +21,7 @@ export class FantasyCalendarDatePicker {
 	constructor(
 		private _api: RpgManagerApiInterface,
 		private _containerEl: HTMLInputElement,
+		private _id: string,
 		private _model: ModelInterface,
 		private _saver: any,
 		private _currentDate?: FantasyCalendarDateInterface,
@@ -38,23 +41,40 @@ export class FantasyCalendarDatePicker {
 		this._width = (300/this._calendar.static.weekdays.length).toString() + 'px';
 		this._height = (300/this._calendar.static.weekdays.length) > 39 ? '39px' : (300/this._calendar.static.weekdays.length).toString() + 'px';
 
-
 		this._containerEl.addEventListener('focusin', this._show.bind(this));
+	}
+
+	private _eventMaybeClose(
+		evt: MouseEvent
+	): void {
+		const clickedClassName: EventTarget|null = evt.target;
+		if (clickedClassName == null)
+			this.hide();
+
+		const inPicker: boolean = (<HTMLElement>clickedClassName).className.indexOf(this._id) !== -1;
+
+		if (!inPicker)
+			this.hide();
 	}
 
 	private async _show(
 	): Promise<void> {
 		this._pickerEl = document.createElement('div');
 		this._pickerEl.addClass('rpg-manager-fantasy-calendar-picker');
-		const pickerContainerEl: HTMLDivElement = this._pickerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-container'});
+		this._pickerEl.addClass(this._id);
+		const pickerContainerEl: HTMLDivElement = this._pickerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-container ' + this._id});
 
 		this._addNavigatorContainer(pickerContainerEl);
 		this._addMonthContainer(pickerContainerEl);
 
-		this._containerEl.parentElement?.append(this._pickerEl as Node);
+		document.body.append(this._pickerEl as Node);
+
+		this._pickerEl.style.left = this._containerEl.getBoundingClientRect().left.toString() + 'px';
+		this._pickerEl.style.top = (this._containerEl.getBoundingClientRect().top + this._containerEl.offsetHeight).toString() + 'px';
+
 		this._loadMonth();
 
-		this._pickerEl.addEventListener('focusout', this._hide.bind(this));
+		document.body.addEventListener('click', this._listener);
 	}
 
 	private _save(
@@ -62,13 +82,15 @@ export class FantasyCalendarDatePicker {
 	): void {
 		this._containerEl.value = this._api.service(FantasyCalendarService).getDay(date, this._calendar).displayDate;
 		this._saver(this._containerEl.value);
-		this._hide();
+		this.hide();
 	}
 
-	private async _hide(
+	public async hide(
 	): Promise<void> {
 		if (this._pickerEl === undefined)
 			return;
+
+		document.body.removeEventListener('click', this._listener);
 
 		this._pickerEl.remove();
 		this._pickerEl = undefined;
@@ -77,13 +99,13 @@ export class FantasyCalendarDatePicker {
 	private _addNavigatorContainer(
 		containerEl: HTMLDivElement,
 	): void {
-		const navigationContainerEl: HTMLDivElement = containerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation clearfix'});
+		const navigationContainerEl: HTMLDivElement = containerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation clearfix ' + this._id});
 
-		const previousMonthElement: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-previous', text: '<'});
+		const previousMonthElement: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-previous ' + this._id, text: '<'});
 		previousMonthElement.addEventListener('click', this._previousMonth.bind(this));
 
-		const monthSelectorContainerEl: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-month-container'});
-		this._monthSelectorEl = monthSelectorContainerEl.createEl('select', {cls: 'rpg-manager-fantasy-calendar-picker-navigation-month-selector'});
+		const monthSelectorContainerEl: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-month-container ' + this._id});
+		this._monthSelectorEl = monthSelectorContainerEl.createEl('select', {cls: 'rpg-manager-fantasy-calendar-picker-navigation-month-selector ' + this._id});
 		this._monthSelectorEl.addEventListener('change', () => {
 			this._loadMonth();
 		});
@@ -98,23 +120,35 @@ export class FantasyCalendarDatePicker {
 		if (this._currentDate !== undefined)
 			this._monthSelectorEl.selectedIndex = this._currentDate.month;
 
-		const nextMonthElement: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-next', text: '>'});
+		const nextMonthElement: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-next ' + this._id, text: '>'});
 		nextMonthElement.addEventListener('click', this._nextMonth.bind(this));
 
-		const yearSelectorContainer: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-year-container'});
+		const yearSelectorContainer: HTMLDivElement = navigationContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-year-container ' + this._id});
 
-		this._yearSelectorEl = yearSelectorContainer.createEl('input', {cls: 'rpg-manager-fantasy-calendar-picker-navigation-year', type: 'text', value: this._currentDate !== undefined ? this._currentDate.year.toString() : ''});
+		this._yearSelectorEl = yearSelectorContainer.createEl('input', {cls: 'rpg-manager-fantasy-calendar-picker-navigation-year ' + this._id, type: 'number', value: this._currentDate !== undefined ? this._currentDate.year.toString() : ''});
 		this._yearSelectorEl.addEventListener('focusout', () => {
 			this._loadMonth();
 		});
+		this._yearSelectorEl.addEventListener('keyup', (evt: KeyboardEvent) => {
+			if (evt.key === 'Tab') {
+				evt.preventDefault();
+				this._loadMonth();
+			}
+			if (evt.key === 'Enter'){
+				this._loadMonth();
+			}
+		});
+		this._yearSelectorEl.addEventListener('change', (evt: KeyboardEvent) => {
+			this._loadMonth();
+		});
 
-		const addYear = yearSelectorContainer.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-year-add', text: '+'});
+		const addYear = yearSelectorContainer.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-year-add ' + this._id, text: '+'});
 		addYear.addEventListener('click', () => {
 			this._yearSelectorEl.value = (+this._yearSelectorEl.value + 1).toString();
 			this._loadMonth();
 		});
 
-		const removeYear = yearSelectorContainer.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-year-remove', text: '-'});
+		const removeYear = yearSelectorContainer.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-navigation-year-remove ' + this._id, text: '-'});
 		removeYear.addEventListener('click', () => {
 			this._yearSelectorEl.value = (+this._yearSelectorEl.value - 1).toString();
 			this._loadMonth();
@@ -124,7 +158,7 @@ export class FantasyCalendarDatePicker {
 	private _addMonthContainer(
 		containerEl: HTMLDivElement,
 	): void {
-		this._monthContainerEl = containerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month'});
+		this._monthContainerEl = containerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month ' + this._id});
 	}
 
 	private _previousMonth(
@@ -160,11 +194,11 @@ export class FantasyCalendarDatePicker {
 		const month: Month = this._calendar.static.months[+this._monthSelectorEl.value];
 
 
-		const weekdaysEl: HTMLDivElement = this._monthContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-weekdays'});
-		const weekdayContainerEl: HTMLDivElement = weekdaysEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-weekday-container'});
+		const weekdaysEl: HTMLDivElement = this._monthContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-weekdays ' + this._id});
+		const weekdayContainerEl: HTMLDivElement = weekdaysEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-weekday-container ' + this._id});
 
 		weekdays.forEach((day: any) => {
-			const weekdayEl: HTMLSpanElement = weekdayContainerEl.createSpan({cls: 'rpg-manager-fantasy-calendar-picker-month-weekday', text: day.name.substring(0,3)});
+			const weekdayEl: HTMLSpanElement = weekdayContainerEl.createSpan({cls: 'rpg-manager-fantasy-calendar-picker-month-weekday ' + this._id, text: day.name.substring(0,3)});
 			this._setDayStyle(weekdayEl);
 		});
 
@@ -174,20 +208,28 @@ export class FantasyCalendarDatePicker {
 		let dayOfTheWeek = 0;
 		const firstDay = this._api.service(FantasyCalendarService).getDay({year: +this._yearSelectorEl.value, month: +this._monthSelectorEl.value, day: 1}, this._calendar);
 
-		const daysEl: HTMLDivElement =  this._monthContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-days'});
-		const dayContainerEl: HTMLDivElement = daysEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-day-container'});
+		const daysEl: HTMLDivElement =  this._monthContainerEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-days ' + this._id});
+		const dayContainerEl: HTMLDivElement = daysEl.createDiv({cls: 'rpg-manager-fantasy-calendar-picker-month-day-container ' + this._id});
 
 		while (dayCount < month.length) {
-			const dayEl: HTMLSpanElement = dayContainerEl.createSpan({cls: 'rpg-manager-fantasy-calendar-picker-month-day'});
+			const dayEl: HTMLSpanElement = dayContainerEl.createSpan({cls: 'rpg-manager-fantasy-calendar-picker-month-day ' + this._id});
 			let date = {
 				year: +this._yearSelectorEl.value,
 				month: +this._monthSelectorEl.value,
 				day: dayCount + 1,
 			};
+
 			if (awaitWeekStart && firstDay.weekday > dayOfTheWeek) {
 				date = this._removeDays(date.year, date.month, firstDay.weekday - dayOfTheWeek);
 				dayEl.addClass('rpg-manager-fantasy-calendar-picker-previous-month-day');
+				dayEl.addClass(this._id);
 			} else {
+				if (this._currentDate?.year === date.year && this._currentDate?.month === date.month && this._currentDate?.day === date.day)
+					dayEl.addClass('rpg-manager-fantasy-calendar-picker-month-day-selected');
+
+				if (this._calendar.current.year === date.year && this._calendar.current.month === date.month && this._calendar.current.day === date.day)
+					dayEl.addClass('rpg-manager-fantasy-calendar-picker-month-day-today');
+
 				awaitWeekStart = false;
 				dayCount++;
 			}
@@ -206,9 +248,10 @@ export class FantasyCalendarDatePicker {
 		while (dayOfTheWeek % daysInAWeek !== 0){
 			additionalDays++;
 			const newDate = this._addDays(+this._yearSelectorEl.value, +this._monthSelectorEl.value, additionalDays);
-			const dayEl: HTMLSpanElement = dayContainerEl.createSpan({cls: 'rpg-manager-fantasy-calendar-picker-month-day'});
+			const dayEl: HTMLSpanElement = dayContainerEl.createSpan({cls: 'rpg-manager-fantasy-calendar-picker-month-day ' + this._id});
 			dayEl.textContent = newDate.day.toString();
 			dayEl.addClass('rpg-manager-fantasy-calendar-picker-previous-month-day');
+			dayEl.addClass(this._id);
 			this._setDayStyle(dayEl);
 
 			dayEl.addEventListener('click', () => {
