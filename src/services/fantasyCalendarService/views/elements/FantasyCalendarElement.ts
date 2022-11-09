@@ -138,6 +138,7 @@ export class FantasyCalendarElement extends AbstractElement {
 
 				if (categoryName === FantasyCalendarCategory.CurrentDate){
 					calendar.current = newFantasyCalendarDay.date;
+
 				} else {
 					event = {
 						auto: false,
@@ -160,12 +161,12 @@ export class FantasyCalendarElement extends AbstractElement {
 			);
 		}
 
-		if (categoryName !== FantasyCalendarCategory.CurrentDate)
-			this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
-
-		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
-		this._data.model.touch(true);
-		this.api.app.workspace.trigger("rpgmanager:refresh-views");
-		this.api.app.workspace.trigger("fantasy-calendars-updated");
+		this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar()
+			.then(() => {
+				this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
+				this._data.model.touch(true);
+				this.api.app.workspace.trigger("rpgmanager:refresh-views");
+				this.api.app.workspace.trigger("fantasy-calendars-updated");
+			});
 	}
 }
