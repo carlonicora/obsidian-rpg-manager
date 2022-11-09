@@ -1,4 +1,4 @@
-import {parseYaml, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {RpgErrorInterface} from "../../core/errors/interfaces/RpgErrorInterface";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
@@ -15,6 +15,8 @@ import {IdService} from "../../services/idService/IdService";
 import {RelationshipService} from "../../services/relationshipsService/RelationshipService";
 import {LoggerService} from "../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
+import {CodeblockService} from "../../services/codeblockService/CodeblockService";
+import {CodeblockDomainInterface} from "../../services/codeblockService/interfaces/CodeblockDomainInterface";
 
 export class DatabaseInitialiser {
 	private static _misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
@@ -69,7 +71,7 @@ export class DatabaseInitialiser {
 		const metadata: Promise<void>[] = [];
 		await components.forEach((component: ModelInterface) => {
 			try {
-				metadata.push(component.readMetadata(false));
+				metadata.push(component.readMetadata());
 			} catch (e) {
 				this._misconfiguredTags.set(component.file, e);
 			}
@@ -113,48 +115,17 @@ export class DatabaseInitialiser {
 	public static async readID(
 		file: TFile
 	): Promise<IdInterface|undefined> {
-		const metadata = this._api.app.metadataCache.getFileCache(file);
+		const codeblockDomain: CodeblockDomainInterface|undefined = await this._api.service(CodeblockService).read(file, 'RpgManagerID');
 
-		if (metadata == undefined)
+		if (codeblockDomain === undefined || codeblockDomain?.codeblock?.id === undefined)
 			return undefined;
 
-		if (metadata.sections == undefined || metadata.sections.length === 0)
-			return undefined;
+		const response = this._api.service(IdService).createFromID(codeblockDomain.codeblock.id);
 
-		const content: string = await this._api.app.vault.read(file);
+		if (Md5.hashStr(codeblockDomain.codeblock.id) !== codeblockDomain.codeblock.checksum)
+			throw new InvalidIdChecksumError(this._api, response);
 
-		const contentArray: string[] = content.split('\n');
-
-		let isRpgManagerDataExisting = false;
-		let isRpgManagerIDExisting = false;
-		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++) {
-			const section = metadata.sections[sectionIndex];
-			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID')
-				isRpgManagerIDExisting = true;
-
-			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerData')
-				isRpgManagerDataExisting = true;
-		}
-
-		if (!isRpgManagerDataExisting || !isRpgManagerIDExisting)
-			return undefined;
-
-		for (let sectionIndex=0; sectionIndex<metadata.sections.length; sectionIndex++){
-			const section = metadata.sections[sectionIndex];
-			if (section.type === 'code' && contentArray[section.position.start.line] === '```RpgManagerID'){
-				const rpgManagerIdContent: string[] = contentArray.slice(section.position.start.line + 1, section.position.end.line);
-				const rpgManagerID: {id: string, checksum: string} = parseYaml(rpgManagerIdContent.join('\n'));
-
-				const response = this._api.service(IdService).createFromID(rpgManagerID.id);
-
-				if (Md5.hashStr(rpgManagerID.id) !== rpgManagerID.checksum)
-					throw new InvalidIdChecksumError(this._api, response);
-
-				return response;
-			}
-		}
-
-		return undefined;
+		return response;
 	}
 
 	/**
@@ -190,39 +161,22 @@ export class DatabaseInitialiser {
 		return Promise.all(relationshipsInitialisation)
 			.then(() => {
 				for (let index=0; index<database.recordset.length; index++){
-					const relationships = database.recordset[index].getRelationships(database).relationships;
+					const model = database.recordset[index];
+					const relationships = model.getRelationships(database).relationships;
 					for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
-						if (relationships[relationshipIndex].component !== undefined){
-							this._api.service(RelationshipService).createRelationshipFromReverse(database.recordset[index], relationships[relationshipIndex]);
+						const relationship = relationships[relationshipIndex];
+
+						if (relationship.component !== undefined){
+							const newRelationship: RelationshipInterface|undefined = this._api.service(RelationshipService).createRelationshipFromReverse(model, relationship);
+
+							if (newRelationship !== undefined)
+								relationship.component.getRelationships(database).add(newRelationship, model);
 						}
 					}
 				}
 
 				for (let index=0; index<database.recordset.length; index++){
 					database.recordset[index].touch();
-				}
-
-				return;
-			});
-	}
-
-	public static async reinitialiseRelationships(
-		component: ModelInterface,
-		database: DatabaseInterface,
-	): Promise<void> {
-		return component.initialiseRelationships()
-			.then(() => {
-				const relationships = component.getRelationships();
-				if (component.touch()) {
-					relationships.forEach((relationship: RelationshipInterface) => {
-						if (relationship.component === undefined)
-							this._api.service(RelationshipService).createRelationshipFromReverse(component, relationship);
-					});
-
-					database.recordset.forEach((component: ModelInterface) => {
-						component.getRelationships(database);
-						component.touch();
-					});
 				}
 
 				return;

@@ -3,6 +3,8 @@ import {RelationshipType} from "./enums/RelationshipType";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 
 export class Relationship implements RelationshipInterface {
+	public isAlsoInContent?: boolean;
+
 	constructor(
 		public type: RelationshipType,
 		public path: string,

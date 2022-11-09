@@ -143,10 +143,10 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 	public async read(
 		file?: TFile,
 		codeblockName = 'RpgManagerData',
-	): Promise<any> {
+	): Promise<CodeblockDomainInterface|undefined> {
 		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file, codeblockName);
 
-		return domain?.codeblock;
+		return domain;
 	}
 
 	public async removeImage(
