@@ -14,7 +14,7 @@ import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticView
 import {ActModel} from "../../components/act/models/ActModel";
 import {SceneBuilderService} from "../sceneBuilderService/SceneBuilderService";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {AdventurePlotWizardService} from "../adventurePlotWizardService/AdventurePlotWizardService";
+import {PlotWizardService} from "../plotWizardService/PlotWizardService";
 import {AdventureModel} from "../../components/adventure/models/AdventureModel";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
@@ -32,7 +32,36 @@ export class ComponentOptionsService extends AbstractService implements Componen
 			if (model instanceof AdventureModel) {
 				this._addFunctionality(containerEl, 'Wizard')
 					.addEventListener("click", () => {
-						this.api.service(AdventurePlotWizardService).open(model.id);
+						this.api.service(PlotWizardService).openAdventureWizard(model.id);
+					});
+
+				this._addSeparator(containerEl);
+			}
+
+			if (model instanceof ActModel) {
+				this._addFunctionality(containerEl, 'Wizard')
+					.addEventListener("click", () => {
+						this.api.service(PlotWizardService).openActWizard(model.id);
+					});
+
+				this._addSeparator(containerEl);
+
+				const scenes = this.api.database.readList(ComponentType.Scene, model.id);
+
+				if (scenes.length === 0) {
+					this._addFunctionality(containerEl, 'Scene Builder')
+						.addEventListener("click", () => {
+							this.api.service(SceneBuilderService).open(model);
+						});
+
+					this._addSeparator(containerEl);
+				}
+			}
+
+			if (model instanceof SessionModel) {
+				this._addFunctionality(containerEl, 'Manage Scenes')
+					.addEventListener("click", () => {
+						new SceneSelectionModal(this.api, model).open();
 					});
 
 				this._addSeparator(containerEl);
@@ -50,29 +79,6 @@ export class ComponentOptionsService extends AbstractService implements Componen
 					new IdSwitcherModal(this.api, model.file).open();
 				});
 
-			if (model instanceof SessionModel) {
-				this._addSeparator(containerEl);
-
-				this._addFunctionality(containerEl, 'Manage Scenes')
-					.addEventListener("click", () => {
-						new SceneSelectionModal(this.api, model).open();
-					});
-
-			}
-
-			if (model instanceof ActModel) {
-				const scenes = this.api.database.readList(ComponentType.Scene, model.id);
-
-				if (scenes.length === 0) {
-					this._addSeparator(containerEl);
-
-					this._addFunctionality(containerEl, 'Scene Builder')
-						.addEventListener("click", () => {
-							this.api.service(SceneBuilderService).open(model);
-						});
-
-				}
-			}
 		}
 
 		this._addSeparator(containerEl);

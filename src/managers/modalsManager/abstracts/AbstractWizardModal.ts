@@ -3,6 +3,7 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {WizardPartInterface} from "../interfaces/WizardPartInterface";
 import {WizardNavigationPartInterface} from "../interfaces/WizardNavigationPartInterface";
 import {NavigationPart} from "../parts/NavigationPart";
+import {WizardDataClueInterface} from "../interfaces/WizardDataClueInterface";
 
 export abstract class AbstractWizardModal extends Modal {
 	protected steps: number;
@@ -122,6 +123,33 @@ export abstract class AbstractWizardModal extends Modal {
 			this._nextButtonEl.textContent = 'Create Plot';
 		else
 			this._nextButtonEl.textContent = 'Next >';
+	}
+
+	protected getClueHint(
+		clue?: WizardDataClueInterface,
+	): string {
+		if (clue === undefined || clue.name === undefined || clue.name === '')
+			return '';
+
+		let response = '(*information "[[' + clue.name + ']]"';
+
+		if (clue.leads !== undefined && clue.leads.length > 0) {
+			let leads = '';
+
+			for (let index=0; index<clue.leads.length; index++){
+				leads += ' [[' + clue.leads[index] + ']],';
+			}
+
+			if (leads !== ''){
+				leads = leads.substring(0, leads.length - 1);
+
+				response += ' available from' + leads;
+			}
+		}
+
+		response += '*)';
+
+		return response;
 	}
 
 	private async _render(

@@ -41,7 +41,7 @@ import {SceneBuilderService} from "../services/sceneBuilderService/SceneBuilderS
 import {ImageService} from "../services/imageService/ImageService";
 import {ContentEditorService} from "../services/contentEditorService/ContentEditorService";
 import {LinkSuggesterService} from "../services/linkSuggesterService/LinkSuggesterService";
-import {AdventurePlotWizardService} from "../services/adventurePlotWizardService/AdventurePlotWizardService";
+import {PlotWizardService} from "../services/plotWizardService/PlotWizardService";
 
 export class Bootstrapper {
 	public static initialise(
@@ -73,7 +73,7 @@ export class Bootstrapper {
 	private static _addServices(
 		api: RpgManagerApiInterface,
 	): void {
-		api.services.register(AdventurePlotWizardService);
+		api.services.register(PlotWizardService);
 		api.services.register(AllComponentManipulatorService);
 		api.services.register(AnalyserService);
 		api.services.register(BreadcrumbService);

@@ -6,6 +6,7 @@ import {LinkSuggesterSearchResultPopUpInterface} from "../interfaces/LinkSuggest
 import {SearchService} from "../../searchService/SearchService";
 import {SearchType} from "../../searchService/enums/SearchType";
 import {SearchResultInterface} from "../../searchService/interfaces/SearchResultInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
 
 export class SimplifiedLinkSuggestionHandler implements LinkSuggesterHandlerInterface {
 	private _displayer: LinkSuggesterSearchResultPopUpInterface;
@@ -16,6 +17,7 @@ export class SimplifiedLinkSuggestionHandler implements LinkSuggesterHandlerInte
 		private _api: RpgManagerApiInterface,
 		private _containerEl: HTMLInputElement|HTMLTextAreaElement,
 		private _component: ModelInterface,
+		private _type?: ComponentType,
 	) {
 		this._containerEl.addEventListener('keyup', this._inputEvent.bind(this));
 		this._displayer = new LinkSuggesterPopUp(this._api, this);
@@ -49,7 +51,7 @@ export class SimplifiedLinkSuggestionHandler implements LinkSuggesterHandlerInte
 		this._previousSearch = this._containerEl.value;
 
 		this._displayer.fill(
-			this._api.service(SearchService).search(this._containerEl.value, SearchType.FuzzyElementSearch, this._component) ?? [],
+			this._api.service(SearchService).search(this._containerEl.value, SearchType.FuzzyElementSearch, this._component, undefined, this._type) ?? [],
 			this._containerEl.getBoundingClientRect().top + this._containerEl.offsetHeight,
 			this._containerEl.getBoundingClientRect().left,
 		);

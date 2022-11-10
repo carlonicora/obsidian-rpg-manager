@@ -1,6 +1,7 @@
 import {AbstractStepModal} from "../../abstracts/AbstractStepModal";
 import {WizardPartInterface} from "../../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {LinkSuggesterService} from "../../../linkSuggesterService/LinkSuggesterService";
+import {ComponentType} from "../../../../core/enums/ComponentType";
 
 export class StepDescriptionAndCluesModal extends AbstractStepModal implements WizardPartInterface {
 	private _clueTitleEl: HTMLInputElement;
@@ -16,10 +17,27 @@ export class StepDescriptionAndCluesModal extends AbstractStepModal implements W
 		const cluesContainerEl: HTMLDivElement = dataContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues'});
 		cluesContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues-title-container rpg-manager-wizard-main-content-container-clues-title', text: 'Clue'});
 		this._clueTitleEl = cluesContainerEl.createEl('input', {cls: 'rpg-manager-wizard-main-content-container-clues-title-input', type: 'text', placeholder: 'Title of the clue', value: this.information?.clue?.name ?? ''});
+		this.api.service(LinkSuggesterService).createSimplifiedHandler(this._clueTitleEl, this.adventure);
+
+		this._clueTitleEl.addEventListener('change', () => {
+			const clue = this.api.database.readByBaseName(this._clueTitleEl.value);
+
+			if (clue === undefined){
+				this._clueDescriptionEl.value = '';
+				this._clueDescriptionEl.disabled = false;
+				this._clueDescriptionEl.focus();
+			} else {
+				this._clueDescriptionEl.value = clue.synopsis ?? '';
+				this._clueDescriptionEl.disabled = true;
+			}
+		});
+
 		this._clueDescriptionEl = cluesContainerEl.createEl('textarea', {
 			cls: 'rpg-manager-wizard-main-content-container-clues-title-description',
 			text: this.information?.clue?.description ?? '',
 		});
+		this._clueDescriptionEl.disabled = true;
+
 		this._clueDescriptionEl.placeholder = 'Synopsis of the clue';
 		this.api.service(LinkSuggesterService).createHandler(this._clueDescriptionEl, this.adventure);
 		cluesContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues-lead-container-title rpg-manager-wizard-main-content-container-clues-title', text: 'Where can the clue be found?'});

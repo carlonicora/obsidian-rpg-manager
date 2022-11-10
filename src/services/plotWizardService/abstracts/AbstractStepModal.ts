@@ -38,7 +38,7 @@ export abstract class AbstractStepModal implements WizardPartInterface {
 
 		const descriptionContainerEl = dataContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-' + (containsClues ? 'clues-' : '') + 'text'});
 		this.descriptionEl = descriptionContainerEl.createEl('textarea', {
-			cls: 'rpg-manager-wizard-main-content-container',
+			cls: 'rpg-manager-wizard-main-content-container-textarea',
 			text: this.information?.description ?? this.existingDescription ?? ''
 		});
 		this.api.service(LinkSuggesterService).createHandler(this.descriptionEl, this.adventure);

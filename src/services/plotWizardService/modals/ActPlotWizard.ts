@@ -1,31 +1,31 @@
 import {AbstractWizardModal} from "../../../managers/modalsManager/abstracts/AbstractWizardModal";
+import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
+import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
-import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
 import {StepIntroductionModal} from "./steps/StepIntroductionModal";
 import {StepDescriptionModal} from "./steps/StepDescriptionModal";
 import {StepDescriptionAndCluesModal} from "./steps/StepDescriptionAndCluesModal";
-import {CodeblockService} from "../../codeblockService/CodeblockService";
-import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
-import {ComponentType} from "../../../core/enums/ComponentType";
+import {Component, MarkdownRenderer} from "obsidian";
 import {CodeblockDomainInterface} from "../../codeblockService/interfaces/CodeblockDomainInterface";
+import {CodeblockService} from "../../codeblockService/CodeblockService";
 import {
 	ControllerMetadataDataInterface
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
 import {WizardDataClueInterface} from "../../../managers/modalsManager/interfaces/WizardDataClueInterface";
-import {FileCreationService} from "../../fileCreationService/FileCreationService";
-import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
-import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
-import {Component, MarkdownRenderer} from "obsidian";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import {FileCreationService} from "../../fileCreationService/FileCreationService";
+import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 
-export class AdventurePlotWizard extends AbstractWizardModal {
+export class ActPlotWizard extends AbstractWizardModal {
 	protected steps = 8;
 
-	private _adventure: AdventureInterface;
-	private _steps: Map<number, WizardPartInterface> = new Map<number, WizardPartInterface>();
+	private _act: ActInterface;
+	private _steps: Map<number, WizardPartInterface>;
 
 	private _youEl: HTMLDivElement;
 	private _needEl: HTMLDivElement;
@@ -38,73 +38,74 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 
 	constructor(
 		api: RpgManagerApiInterface,
-		private _adventureId: IdInterface,
+		private _actId: IdInterface,
 	) {
 		super(api);
 
-		this._adventure = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this._adventureId);
+		this._act = this.api.database.readSingle<ActInterface>(ComponentType.Act, this._actId);
 
+		this._steps = new Map<number, WizardPartInterface>();
 		this._steps.set(0, new StepIntroductionModal(
 			this.api,
-			this._adventureId,
+			this._actId,
 			'Adventure Creation Wizard',
 			'',
 		));
 		this._steps.set(1, new StepDescriptionModal(
 			this.api,
-			this._adventureId,
+			this._actId,
 			'What\'s the initial status of the player characters?',
 			'What is the current status of the player characters? Where they are in the story and what they have decided to do at the end of the previous session?',
-			this._adventure.storyCircle.you ?? '',
+			this._act.storyCircle.you ?? '',
 		));
 		this._steps.set(2, new StepDescriptionModal(
 			this.api,
-			this._adventureId,
-			'What do they feel as their goal for the adventure?',
-			'What do the player characters think they should achive in the adventure? This is the perceived goal.',
-			this._adventure.storyCircle.go ?? '',
+			this._actId,
+			'What do they feel as their goal for the act?',
+			'What do the player characters think they should achive in the act? This is the perceived goal.',
+			this._act.storyCircle.go ?? '',
 		));
 		this._steps.set(3, new StepDescriptionModal(
 			this.api,
-			this._adventureId,
+			this._actId,
 			'What happens when they reach their goal?',
 			'What do the player characters realise when they achieve their perceived goal?',
-			this._adventure.storyCircle.find ?? '',
+			this._act.storyCircle.find ?? '',
 		));
 		this._steps.set(4, new StepDescriptionModal(
 			this.api,
-			this._adventureId,
-			'What is the true goal of the adventure?',
-			'What is the real goal of the adventure?',
-			this._adventure.storyCircle.return ?? '',
+			this._actId,
+			'What is the true goal of the act?',
+			'What is the real goal of the act?',
+			this._act.storyCircle.return ?? '',
 		));
 		this._steps.set(5, new StepDescriptionModal(
 			this.api,
-			this._adventureId,
+			this._actId,
 			'What does convince the player characters to achieve their perceived goal?',
 			'What happens to convince the player characters to try and achieve the perceived goal?',
-			this._adventure.storyCircle.need ?? '',
+			this._act.storyCircle.need ?? '',
 		));
 		this._steps.set(6, new StepDescriptionAndCluesModal(
 			this.api,
-			this._adventureId,
+			this._actId,
 			'How can they reach their perceived goal?',
 			'What clue will lead the player characters to reach their perceived goal?',
-			this._adventure.storyCircle.search ?? '',
+			this._act.storyCircle.search ?? '',
 		));
 		this._steps.set(7, new StepDescriptionAndCluesModal(
 			this.api,
-			this._adventureId,
-			'When they realise the true goal of the adventure, how can they reach it?',
+			this._actId,
+			'When they realise the true goal of the act, how can they reach it?',
 			'When they pay the price, what is the clue that will lead them to the real goal?',
-			this._adventure.storyCircle.take ?? '',
+			this._act.storyCircle.take ?? '',
 		));
 		this._steps.set(8, new StepDescriptionModal(
 			this.api,
-			this._adventureId,
-			'How are they going to triump and reach the true goal of the adventure?',
+			this._actId,
+			'How are they going to triump and reach the true goal of the act?',
 			'How are they going to triumph?',
-			this._adventure.storyCircle.change ?? '',
+			this._act.storyCircle.change ?? '',
 		));
 	}
 
@@ -149,14 +150,14 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			this._changeEl.addEventListener('click', () => {this.move(8);});
 		}
 
-		this._addRecapElement(this._youEl, this._steps.get(1)?.data?.description, this._adventure.storyCircle.you);
-		this._addRecapElement(this._needEl, this._steps.get(5)?.data?.description, this._adventure.storyCircle.need);
-		this._addRecapElement(this._goEl, this._steps.get(2)?.data?.description, this._adventure.storyCircle.go);
-		this._addRecapElement(this._searchEl, this._steps.get(6)?.data?.description, this._adventure.storyCircle.search);
-		this._addRecapElement(this._findEl, this._steps.get(3)?.data?.description, this._adventure.storyCircle.find);
-		this._addRecapElement(this._takeEl, this._steps.get(7)?.data?.description, this._adventure.storyCircle.take);
-		this._addRecapElement(this._returnEl, this._steps.get(4)?.data?.description, this._adventure.storyCircle.return);
-		this._addRecapElement(this._changeEl, this._steps.get(8)?.data?.description, this._adventure.storyCircle.change);
+		this._addRecapElement(this._youEl, this._steps.get(1)?.data?.description, this._act.storyCircle.you);
+		this._addRecapElement(this._needEl, this._steps.get(5)?.data?.description, this._act.storyCircle.need);
+		this._addRecapElement(this._goEl, this._steps.get(2)?.data?.description, this._act.storyCircle.go);
+		this._addRecapElement(this._searchEl, this._steps.get(6)?.data?.description, this._act.storyCircle.search);
+		this._addRecapElement(this._findEl, this._steps.get(3)?.data?.description, this._act.storyCircle.find);
+		this._addRecapElement(this._takeEl, this._steps.get(7)?.data?.description, this._act.storyCircle.take);
+		this._addRecapElement(this._returnEl, this._steps.get(4)?.data?.description, this._act.storyCircle.return);
+		this._addRecapElement(this._changeEl, this._steps.get(8)?.data?.description, this._act.storyCircle.change);
 	}
 
 	private _addRecapElement(
@@ -180,8 +181,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 
 	protected async create(
 	): Promise<void> {
-		const adventure: AdventureInterface = await this.api.database.readSingle(ComponentType.Adventure, this._adventureId);
-		const codeblockDomain: CodeblockDomainInterface|undefined = await this.api.service(CodeblockService).read(adventure.file);
+		const codeblockDomain: CodeblockDomainInterface|undefined = await this.api.service(CodeblockService).read(this._act.file);
 
 		if (codeblockDomain === undefined)
 			return ;
@@ -213,45 +213,18 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 
 
 		codeblock.plot.storycircle = {
-			you: (this._steps.get(1)?.data?.description ?? this._adventure.storyCircle.you ?? ''),
-			need: (this._steps.get(5)?.data?.description ?? this._adventure.storyCircle.need ?? ''),
-			go: (this._steps.get(2)?.data?.description ?? this._adventure.storyCircle.go ?? ''),
-			search: (this._steps.get(6)?.data?.description ?? this._adventure.storyCircle.search ?? '') + this._getClueHint(this._steps.get(6)?.data?.clue),
-			find: (this._steps.get(3)?.data?.description ?? this._adventure.storyCircle.find ?? ''),
-			take: (this._steps.get(7)?.data?.description ?? this._adventure.storyCircle.take ?? '') + this._getClueHint(this._steps.get(7)?.data?.clue),
-			return: (this._steps.get(4)?.data?.description ?? this._adventure.storyCircle.return ?? ''),
-			change: (this._steps.get(8)?.data?.description ?? this._adventure.storyCircle.change ?? ''),
+			you: (this._steps.get(1)?.data?.description ?? this._act.storyCircle.you ?? ''),
+			need: (this._steps.get(5)?.data?.description ?? this._act.storyCircle.need ?? ''),
+			go: (this._steps.get(2)?.data?.description ?? this._act.storyCircle.go ?? ''),
+			search: (this._steps.get(6)?.data?.description ?? this._act.storyCircle.search ?? '') + this.getClueHint(this._steps.get(6)?.data?.clue),
+			find: (this._steps.get(3)?.data?.description ?? this._act.storyCircle.find ?? ''),
+			take: (this._steps.get(7)?.data?.description ?? this._act.storyCircle.take ?? '') + this.getClueHint(this._steps.get(7)?.data?.clue),
+			return: (this._steps.get(4)?.data?.description ?? this._act.storyCircle.return ?? ''),
+			change: (this._steps.get(8)?.data?.description ?? this._act.storyCircle.change ?? ''),
 		};
 
 		this.api.service(CodeblockService).updateDomain(codeblockDomain);
 		this.close();
-	}
-
-	private _getClueHint(
-		clue?: WizardDataClueInterface,
-	): string {
-		if (clue === undefined || clue.name === undefined || clue.name === '')
-			return '';
-
-		let response = '(*information "[[' + clue.name + ']]"';
-
-		if (clue.leads !== undefined && clue.leads.length > 0) {
-			let leads = '';
-
-			for (let index=0; index<clue.leads.length; index++){
-				leads += ' [[' + clue.leads[index] + ']],';
-			}
-
-			if (leads !== ''){
-				leads = leads.substring(0, leads.length - 1);
-
-				response += ' available from' + leads;
-			}
-		}
-
-		response += '*)';
-
-		return response;
 	}
 
 	private async _createClue(
@@ -287,9 +260,9 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this.api.service(FileCreationService).silentCreate(
 			ComponentType.Clue,
 			data.name,
-			this._adventureId.campaignId,
-			undefined,
-			undefined,
+			this._actId.campaignId,
+			this._actId.adventureId,
+			this._actId.id,
 			undefined,
 			undefined,
 			additionalInformation

@@ -1,14 +1,16 @@
 import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
-import {fuzzySearch, prepareQuery} from "obsidian";
+import {Component, fuzzySearch, prepareQuery} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {ComponentType} from "../../../core/enums/ComponentType";
 
 export class FuzzyElementSearchWorker extends AbstractSearchWorker implements SearchWorkerInterface {
 	constructor(
 		private _api: RpgManagerApiInterface,
 		private _element: ModelInterface,
+		private _type?: ComponentType,
 	) {
 		super();
 	}
@@ -23,11 +25,11 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 
 		const matches: Map<string, SearchResultInterface> = new Map<string, SearchResultInterface>();
 
-
 		if (searchOnlyAliases === undefined) {
 			this._api.database.read(
 				(element: ModelInterface) =>
-					element.id.campaignId === this._element.id.campaignId
+					element.id.campaignId === this._element.id.campaignId &&
+					(this._type !== undefined ? element.id.type === this._type : true)
 			).forEach((element: ModelInterface) => {
 				if (element.alias.length > 0) {
 					element.alias.forEach((alias: string) => {

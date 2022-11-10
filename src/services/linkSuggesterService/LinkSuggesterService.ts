@@ -5,6 +5,7 @@ import {LinkSuggesterHandlerInterface} from "./interfaces/LinkSuggesterHandlerIn
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterHandler} from "./handlers/LinkSuggesterHandler";
 import {SimplifiedLinkSuggestionHandler} from "./handlers/SimplifiedLinkSuggestionHandler";
+import {ComponentType} from "../../core/enums/ComponentType";
 
 export class LinkSuggesterService implements LinkSuggesterServiceInterface, ServiceInterface {
 	constructor(
@@ -15,14 +16,16 @@ export class LinkSuggesterService implements LinkSuggesterServiceInterface, Serv
 	public createHandler(
 		editorEl: HTMLInputElement|HTMLTextAreaElement,
 		model: ModelInterface,
+		type?: ComponentType,
 	): LinkSuggesterHandlerInterface {
-		return new LinkSuggesterHandler(this._api, editorEl, model);
+		return new LinkSuggesterHandler(this._api, editorEl, model, type);
 	}
 
 	public createSimplifiedHandler(
 		editorEl: HTMLInputElement|HTMLTextAreaElement,
 		model: ModelInterface,
+		type?: ComponentType,
 	): LinkSuggesterHandlerInterface {
-		return new SimplifiedLinkSuggestionHandler(this._api, editorEl, model);
+		return new SimplifiedLinkSuggestionHandler(this._api, editorEl, model, type);
 	}
 }

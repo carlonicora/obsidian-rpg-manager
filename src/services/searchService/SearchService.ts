@@ -7,6 +7,7 @@ import {SearchWorkerInterface} from "./interfaces/SearchWorkerInterface";
 import {FuzzyFileSearchWorker} from "./workers/FuzzyFileSearchWorker";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {FuzzyElementSearchWorker} from "./workers/FuzzyElementSearchWorker";
+import {ComponentType} from "../../core/enums/ComponentType";
 
 export class SearchService extends AbstractService implements SearchServiceInterface, ServiceInterface {
 	public search(
@@ -14,6 +15,7 @@ export class SearchService extends AbstractService implements SearchServiceInter
 		type: SearchType = SearchType.FuzzyFileSearch,
 		element?: ModelInterface,
 		searchOnlyAliases?: string,
+		componentType?: ComponentType,
 	): Array<SearchResultInterface> {
 		let worker: SearchWorkerInterface;
 
@@ -23,7 +25,7 @@ export class SearchService extends AbstractService implements SearchServiceInter
 				break;
 			case SearchType.FuzzyElementSearch:
 				if (element !== undefined)
-					worker = new FuzzyElementSearchWorker(this.api, element);
+					worker = new FuzzyElementSearchWorker(this.api, element, componentType);
 				else
 					worker = new FuzzyFileSearchWorker(this.api);
 
