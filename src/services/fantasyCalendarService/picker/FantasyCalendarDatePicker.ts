@@ -280,24 +280,32 @@ export class FantasyCalendarDatePicker {
 		month: number,
 		daysToRemove: number,
 	): FantasyCalendarDateInterface {
-		let newDays = 0;
-		let newMonth: number = (month === 0 ? this._calendar.static.months.length  : month - 1);
 		let newYear: number = month === 0 ? year - 1 : year;
-		let newMonthDetails: Month = this._calendar.static.months[newMonth];
-		if (newMonthDetails.length <= daysToRemove) {
-			newMonth = (newMonth === 0 ? this._calendar.static.months.length : newMonth - 1);
-			newYear = (newMonth === 0 ? newYear - 1 : newYear);
-			newDays = daysToRemove - newMonthDetails.length + 1;
-			newMonthDetails = this._calendar.static.months[newMonth];
-			newDays = newMonthDetails.length - newDays + 1;
-		} else {
-			newDays = newMonthDetails.length - daysToRemove + 1;
+		let newMonth: number = month === 0 ? this._calendar.static.months.length : month -1;
+		let newDay: number = this._calendar.static.months[newMonth].length;
+
+		daysToRemove--;
+
+		while (daysToRemove > 0){
+			if (newDay === 1) {
+				if (newMonth === 0){
+					newYear--;
+					newMonth = this._calendar.static.months.length;
+				} else {
+					newMonth--;
+				}
+				newDay = this._calendar.static.months[newMonth].length
+			} else {
+				newDay--;
+			}
+
+			daysToRemove--;
 		}
 
 		return {
 			year: newYear,
 			month: newMonth,
-			day: newDays,
+			day: newDay,
 		};
 	}
 
@@ -306,17 +314,25 @@ export class FantasyCalendarDatePicker {
 		month: number,
 		daysToAdd: number,
 	): FantasyCalendarDateInterface {
-		let newDay: number = daysToAdd;
+		let newDay: number = 1;
 		let newMonth: number = month === this._calendar.static.months.length ? 0 : month + 1;
 		let newYear: number = month === this._calendar.static.months.length ? year + 1 : year;
 
-		const newMonthDetails: Month = this._calendar.static.months[newMonth];
-		if (newDay > newMonthDetails.length) {
-			newDay = newMonthDetails.length - newDay;
-			if (newMonth === this._calendar.static.months.length) {
-				newMonth = 0;
-				newYear = newYear + 1;
+		daysToAdd--;
+
+		while (daysToAdd > 0){
+			if (newDay === this._calendar.static.months[newMonth].length){
+				if (newMonth === this._calendar.static.months.length){
+					newMonth = 0;
+					newYear++
+				} else {
+					newMonth++;
+				}
+				newDay = 1;
+			} else {
+				newDay++;
 			}
+			daysToAdd--;
 		}
 
 		return {
