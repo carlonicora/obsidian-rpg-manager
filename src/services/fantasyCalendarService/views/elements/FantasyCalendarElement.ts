@@ -172,7 +172,7 @@ export class FantasyCalendarElement extends AbstractElement {
 
 		setTimeout(() => {
 				this.api.app.workspace.trigger("fantasy-calendars-settings-loaded");
-				this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar)
+				this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
 			}
 			,
 			1000,

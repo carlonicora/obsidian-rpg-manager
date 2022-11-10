@@ -14,8 +14,6 @@ import {RpgManagerApi} from "./api/RpgManagerApi";
 import {DatabaseUpdater} from "./core/updater/DatabaseUpdater";
 import {StaticViewType} from "./managers/staticViewsManager/enums/StaticViewType";
 import {UpdaterModal} from "./core/updater/modals/UpdaterModal";
-import {LoggerService} from "./services/loggerService/LoggerService";
-import {LogMessageType} from "./services/loggerService/enums/LogMessageType";
 import {CodeblockService} from "./services/codeblockService/CodeblockService";
 import {RPGManagerView} from "./core/staticViews/rpgManagerView/RPGManagerView";
 import {ReleaseNoteView} from "./core/staticViews/releaseNoteView/ReleaseNoteView";
