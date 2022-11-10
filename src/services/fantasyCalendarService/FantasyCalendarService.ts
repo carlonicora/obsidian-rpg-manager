@@ -51,7 +51,7 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 				if (event.note == null || event.category == null)
 					continue;
 
-				const model: ModelInterface | undefined = this.api.database.readByBaseName(event.note);
+				const model: ModelInterface | undefined = this.api.database.readByPath(event.note + '.md');
 				if (model === undefined)
 					continue;
 
