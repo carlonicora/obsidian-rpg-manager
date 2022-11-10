@@ -54,14 +54,14 @@ export abstract class AbstractWizardModal extends Modal {
 
 		this._wizardButtonEl = wizardEl.createDiv({cls: 'rpg-manager-wizard-buttons'});
 
-		this._move(0);
+		this.move(0);
 	}
 
 	close() {
 		super.close();
 	}
 
-	private async _move(
+	public async move(
 		newStep: number,
 	): Promise<void> {
 		if (this._currentPartInterface !== undefined)
@@ -81,7 +81,7 @@ export abstract class AbstractWizardModal extends Modal {
 		newStep: number,
 	): Promise<void> {
 		if (!this.isInitialised)
-			this._navigationPart = new NavigationPart(this.steps, this._wizardNavigationEl, this._move.bind(this));
+			this._navigationPart = new NavigationPart(this.steps, this._wizardNavigationEl, this.move.bind(this));
 
 		this._navigationPart.render(newStep);
 	}
@@ -95,7 +95,7 @@ export abstract class AbstractWizardModal extends Modal {
 
 			this._backButtonEl.addEventListener('click', () => {
 				if (this._currentStep !== 0)
-					this._move(this._currentStep - 1);
+					this.move(this._currentStep - 1);
 
 			});
 
@@ -106,7 +106,7 @@ export abstract class AbstractWizardModal extends Modal {
 
 					this.create();
 				} else {
-					this._move(this._currentStep + 1);
+					this.move(this._currentStep + 1);
 				}
 			});
 		}

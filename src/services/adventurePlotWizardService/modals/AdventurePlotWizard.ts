@@ -19,6 +19,7 @@ import {
 	ControllerMetadataRelationshipInterface
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
 import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
+import {Component, MarkdownRenderer} from "obsidian";
 
 export class AdventurePlotWizard extends AbstractWizardModal {
 	protected steps = 8;
@@ -46,53 +47,62 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(0, new StepIntroductionModal(
 			this.api,
 			this._adventureId,
+			'Adventure Creation Wizard',
 			'',
 		));
 		this._steps.set(1, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'What\'s the initial status of the player characters?',
 			'What is the current status of the player characters? Where they are in the story and what they have decided to do at the end of the previous session?',
 			this._adventure.storyCircle.you ?? '',
 		));
 		this._steps.set(2, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
-			'What the player characters will think they should achive in the adventure? This is the perceived goal.',
+			'What do they feel as their goal for the adventure?',
+			'What do the player characters think they should achive in the adventure? This is the perceived goal.',
 			this._adventure.storyCircle.go ?? '',
 		));
 		this._steps.set(3, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'What happens when they reach their goal?',
 			'What do the player characters realise when they achieve their perceived goal?',
 			this._adventure.storyCircle.find ?? '',
 		));
 		this._steps.set(4, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'What is the true goal of the adventure?',
 			'What is the real goal of the adventure?',
 			this._adventure.storyCircle.return ?? '',
 		));
 		this._steps.set(5, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'What does convince the player characters to achieve their perceived goal?',
 			'What happens to convince the player characters to try and achieve the perceived goal?',
 			this._adventure.storyCircle.need ?? '',
 		));
 		this._steps.set(6, new StepDescriptionAndCluesModal(
 			this.api,
 			this._adventureId,
+			'How can they reach their perceived goal?',
 			'What clue will lead the player characters to reach their perceived goal?',
 			this._adventure.storyCircle.search ?? '',
 		));
 		this._steps.set(7, new StepDescriptionAndCluesModal(
 			this.api,
 			this._adventureId,
+			'When they realise the true goal of the adventure, how can they reach it?',
 			'When they pay the price, what is the clue that will lead them to the real goal?',
 			this._adventure.storyCircle.take ?? '',
 		));
 		this._steps.set(8, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'How are they going to triump and reach the true goal of the adventure?',
 			'How are they going to triumph?',
 			this._adventure.storyCircle.change ?? '',
 		));
@@ -115,39 +125,57 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		if (!this.isInitialised) {
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'You'});
 			this._youEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._youEl.addEventListener('click', () => {this.move(1);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Need'});
 			this._needEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._needEl.addEventListener('click', () => {this.move(5);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Go'});
 			this._goEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._goEl.addEventListener('click', () => {this.move(2);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Search'});
 			this._searchEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._searchEl.addEventListener('click', () => {this.move(6);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Find'});
 			this._findEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._findEl.addEventListener('click', () => {this.move(3);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Take'});
 			this._takeEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._takeEl.addEventListener('click', () => {this.move(7);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Return'});
 			this._returnEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
+			this._returnEl.addEventListener('click', () => {this.move(4);});
 			containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-title', text: 'Change'});
 			this._changeEl = containerEl.createDiv({cls: 'rpg-manager-wizard-main-recap-description'});
-		} else {
-			const youText = this._steps.get(1)?.data?.description;
-			const needText = this._steps.get(5)?.data?.description;
-			const goText = this._steps.get(2)?.data?.description;
-			const searchText = this._steps.get(6)?.data?.description;
-			const findText = this._steps.get(3)?.data?.description;
-			const takeText = this._steps.get(7)?.data?.description;
-			const returnText = this._steps.get(4)?.data?.description;
-			const changeText = this._steps.get(8)?.data?.description;
-
-			this._youEl.textContent = (youText ? youText.substring(0, 20) + '...' : '');
-			this._needEl.textContent = (needText ? needText.substring(0, 20) + '...' : '');
-			this._goEl.textContent = (goText ? goText.substring(0, 20) + '...' : '');
-			this._searchEl.textContent = (searchText ? searchText.substring(0, 20) + '...' : '');
-			this._findEl.textContent = (findText ? findText.substring(0, 20) + '...' : '');
-			this._takeEl.textContent = (takeText ? takeText.substring(0, 20) + '...' : '');
-			this._returnEl.textContent = (returnText ? returnText.substring(0, 20) + '...' : '');
-			this._changeEl.textContent = (changeText ? changeText.substring(0, 20) + '...' : '');
+			this._changeEl.addEventListener('click', () => {this.move(8);});
 		}
+
+		this._addRecapElement(this._youEl, this._steps.get(1)?.data?.description, this._adventure.storyCircle.you);
+		this._addRecapElement(this._needEl, this._steps.get(5)?.data?.description, this._adventure.storyCircle.need);
+		this._addRecapElement(this._goEl, this._steps.get(2)?.data?.description, this._adventure.storyCircle.go);
+		this._addRecapElement(this._searchEl, this._steps.get(6)?.data?.description, this._adventure.storyCircle.search);
+		this._addRecapElement(this._findEl, this._steps.get(3)?.data?.description, this._adventure.storyCircle.find);
+		this._addRecapElement(this._takeEl, this._steps.get(7)?.data?.description, this._adventure.storyCircle.take);
+		this._addRecapElement(this._returnEl, this._steps.get(4)?.data?.description, this._adventure.storyCircle.return);
+		this._addRecapElement(this._changeEl, this._steps.get(8)?.data?.description, this._adventure.storyCircle.change);
+	}
+
+	private _addRecapElement(
+		containerEl: HTMLDivElement,
+		newContent?: string,
+		oldContent?: string,
+	): void {
+		containerEl.empty();
+		let  content = (newContent ?? oldContent ?? '');
+
+		if (content.length > 60)
+			content = content.substring(0, 57) + '...';
+
+		MarkdownRenderer.renderMarkdown(
+			content,
+			containerEl,
+			'',
+			null as unknown as Component,
+		)
 	}
 
 	protected async create(

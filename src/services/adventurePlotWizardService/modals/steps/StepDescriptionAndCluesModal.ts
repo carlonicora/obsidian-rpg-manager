@@ -11,14 +11,7 @@ export class StepDescriptionAndCluesModal extends AbstractStepModal implements W
 	public async render(
 		containerEl: HTMLDivElement,
 	): Promise<void> {
-		const dataContainerEl: HTMLDivElement = super.getContainer(containerEl);
-
-		const descriptionContainerEl: HTMLDivElement = dataContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues-text'});
-		this.descriptionEl = descriptionContainerEl.createEl('textarea', {
-			cls: 'rpg-manager-wizard-main-content-container',
-			text: this.information?.description ?? this.existingDescription ??  '',
-		});
-		this.api.service(LinkSuggesterService).createHandler(this.descriptionEl, this.adventure);
+		const dataContainerEl: HTMLDivElement = super.getContainer(containerEl, true);
 
 		const cluesContainerEl: HTMLDivElement = dataContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues'});
 		cluesContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues-title-container rpg-manager-wizard-main-content-container-clues-title', text: 'Clue'});

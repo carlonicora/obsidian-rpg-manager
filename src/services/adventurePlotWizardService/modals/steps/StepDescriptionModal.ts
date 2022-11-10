@@ -6,14 +6,7 @@ export class StepDescriptionModal extends AbstractStepModal implements WizardPar
 	public async render(
 		containerEl: HTMLDivElement,
 	): Promise<void> {
-		const dataContainerEl: HTMLDivElement = super.getContainer(containerEl);
-
-		const descriptionContainerEl = dataContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-text'});
-		this.descriptionEl = descriptionContainerEl.createEl('textarea', {
-			cls: 'rpg-manager-wizard-main-content-container',
-			text: this.information?.description ?? this.existingDescription ?? ''
-		});
-		this.api.service(LinkSuggesterService).createHandler(this.descriptionEl, this.adventure);
+		super.getContainer(containerEl, false);
 	}
 
 	public async save(
