@@ -48,8 +48,15 @@ export class ActPlotWizard extends AbstractWizardModal {
 		this._steps.set(0, new StepIntroductionModal(
 			this.api,
 			this._actId,
-			'Adventure Creation Wizard',
-			'',
+			'Plot Creation Wizard - Act',
+			`The **plot creation wizard** is a simple wizard that helps you create a more consistent plot without worrying about knowing anything about ABT or StoryCircle.
+			Just follow the prompt in the next few pages and the plot will be organised for you.
+			
+			The plot is structured to provide an **interesting** storyline for your player characters, identifying two main goals for the act. The first goal is what they player characters believe they need; however, when they reach it, they realise the real goal is another one. THis storytelling structure create tension in the game, which is more pleasurable than a linear one.
+			*Keep into consideration Luke Skywalker. When he left Tatooine, he thought he should have saved Princess Leia. However, when her saved her, he realised that the Empire has a planet killer station, the Death Star, he would have to try and destroy. The logic is the same, and in storytelling, it **works**1*
+			
+			Two moment in the plot of an *act* offer the possibility to identify a **clue** around which you can create a better story. The suggestion is to make your act as interesting as possible, identifying three other eleemnts (*mainly Non Player Characters and Locations*) where the player characters can learn about the clue.
+			These clue generally mark a moment of passage for the player characters.`,
 		));
 		this._steps.set(1, new StepDescriptionModal(
 			this.api,
