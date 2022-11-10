@@ -10,6 +10,7 @@ import {RunningTimeService} from "../../runningTimeService/RunningTimeService";
 import {AnalyserDataImportInterface} from "../../analyserService/interfaces/AnalyserDataImportInterface";
 import {AnalyserReportType} from "../../analyserService/enums/AnalyserReportType";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
+import {SceneDataMetadataInterface} from "../../../components/scene/interfaces/SceneDataMetadataInterface";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -87,6 +88,12 @@ export class SceneBuilderModal extends AbstractModal {
 
 			const title = (<HTMLInputElement>line.cells[0].childNodes[0]).value;
 
+			const data: SceneDataMetadataInterface = {
+				synopsis: (<HTMLInputElement>line.cells[1].childNodes[0]).value,
+				sceneType: sceneType !== undefined ? this.api.service(AnalyserService).getReadableSceneType(sceneType) : '',
+				isActedUpon: (<HTMLInputElement>line.cells[3].childNodes[0]).checked,
+			};
+
 			this.api.service(FileCreationService).silentCreate(
 				ComponentType.Scene,
 				title,
@@ -96,9 +103,7 @@ export class SceneBuilderModal extends AbstractModal {
 				sceneId,
 				undefined,
 				{
-					synopsis: (<HTMLInputElement>line.cells[1].childNodes[0]).value,
-					sceneType: sceneType !== undefined ? this.api.service(AnalyserService).getReadableSceneType(sceneType) : '',
-					isActedUpon: (<HTMLInputElement>line.cells[3].childNodes[0]).checked,
+					data: data,
 				}
 			);
 

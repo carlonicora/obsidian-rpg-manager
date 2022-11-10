@@ -100,10 +100,14 @@ export abstract class AbstractWizardModal extends Modal {
 			});
 
 			this._nextButtonEl.addEventListener('click', () => {
-				if (this._currentStep === this.steps)
+				if (this._currentStep === this.steps) {
+					if (this._currentPartInterface !== undefined)
+						this._currentPartInterface.save();
+
 					this.create();
-				else
+				} else {
 					this._move(this._currentStep + 1);
+				}
 			});
 		}
 

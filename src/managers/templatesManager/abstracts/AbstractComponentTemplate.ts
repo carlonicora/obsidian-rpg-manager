@@ -20,9 +20,11 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {TagService} from "../../../services/tagService/TagService";
 import {YamlService} from "../../../services/yamlService/YamlService";
 import {FileContentManager} from "../workers/FileContentManager";
+import {ComponentDataMetadataInterface} from "../../../core/interfaces/ComponentDataMetadataInterface";
 
 export abstract class AbstractComponentTemplate implements TemplateInterface {
 	protected internalTemplate: ComponentNotesInterface|undefined;
+	protected data: ComponentDataMetadataInterface|undefined;
 
 	constructor(
 		protected api: RpgManagerApiInterface,
@@ -33,8 +35,10 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 		protected actId: number|undefined,
 		protected sceneId: number|undefined,
 		protected sessionId: number|undefined,
-		protected additionalInformation: any|null,
+		protected additionalInformation?: ControllerMetadataDataInterface,
 	) {
+		if (additionalInformation !== undefined)
+			this.data = additionalInformation.data as ComponentDataMetadataInterface;
 	}
 
 	public async generateData(
@@ -231,6 +235,15 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 	protected generateRpgManagerDataCodeBlock(
 		metadata: ControllerMetadataDataInterface,
 	): string {
+		if (this.data?.synopsis !== undefined)
+			(<ComponentDataMetadataInterface>metadata.data).synopsis = this.data.synopsis;
+
+		if (this.data?.images !== undefined)
+			(<ComponentDataMetadataInterface>metadata.data).images = this.data.images;
+
+		if (this.additionalInformation?.relationships !== undefined)
+			metadata.relationships = this.additionalInformation.relationships;
+
 		let response = '```RpgManagerData\n';
 		response += this.api.service(YamlService).stringify(metadata);
 		response += '```\n';

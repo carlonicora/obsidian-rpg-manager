@@ -1,6 +1,7 @@
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {TFile} from "obsidian";
 
 export interface FileCreationServiceInterface {
 	create(
@@ -27,5 +28,5 @@ export interface FileCreationServiceInterface {
 		sessionId?: number|undefined,
 		additionalInformation?: any|undefined,
 		openView?: boolean,
-	): Promise<void>;
+	): Promise<TFile>;
 }

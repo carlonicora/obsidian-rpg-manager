@@ -13,6 +13,7 @@ export abstract class AbstractStepModal implements WizardPartInterface {
 		protected api: RpgManagerApiInterface,
 		protected adventureId: IdInterface,
 		protected description: string,
+		protected existingDescription?: string,
 	) {
 	}
 

@@ -2,6 +2,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {TemplateInterface} from "./TemplateInterface";
 import {TemplateClassInterface} from "./TemplateClassInterface";
+import {ControllerMetadataDataInterface} from "../../controllerManager/interfaces/ControllerMetadataDataInterface";
 
 export interface TemplatesManagerInterface {
 	get(
@@ -14,7 +15,7 @@ export interface TemplatesManagerInterface {
 		actId?: number,
 		sceneId?: number,
 		sessionId?: number,
-		additionalInformation?: any,
+		additionalInformation?: ControllerMetadataDataInterface,
 	): TemplateInterface;
 
 	register<T extends TemplateInterface>(

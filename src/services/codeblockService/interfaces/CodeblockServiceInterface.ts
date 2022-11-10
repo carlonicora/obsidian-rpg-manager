@@ -27,6 +27,11 @@ export interface CodeblockServiceInterface {
 		file?: TFile,
 	): Promise<void>;
 
+	addOrUpdateRelationshipInCodeblock(
+		relationship: RelationshipInterface,
+		domain: CodeblockDomainInterface,
+	): Promise<void>;
+
 	read(
 		file?: TFile,
 		codeblockName?: string,
@@ -65,5 +70,9 @@ export interface CodeblockServiceInterface {
 
 	stopRunningTime(
 		file?: TFile,
+	): Promise<void>;
+
+	updateDomain(
+		domain: CodeblockDomainInterface,
 	): Promise<void>;
 }

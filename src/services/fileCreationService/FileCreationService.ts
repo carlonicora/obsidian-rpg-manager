@@ -1,4 +1,4 @@
-import {MarkdownView} from "obsidian";
+import {MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {FileCreationServiceInterface} from "./interfaces/FileCreationServiceInterface";
@@ -7,6 +7,9 @@ import {CampaignInterface} from "../../components/campaign/interfaces/CampaignIn
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {IdService} from "../idService/IdService";
+import {
+	ControllerMetadataDataInterface
+} from "../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
 
 const path = require('path');
 
@@ -22,7 +25,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 		actId: IdInterface|undefined=undefined,
 		sceneId: IdInterface|undefined=undefined,
 		sessionId: IdInterface|undefined=undefined,
-		additionalInformation: any|null=null,
+		additionalInformation?: ControllerMetadataDataInterface,
 	): Promise<void> {
 		let pathSeparator = '';
 
@@ -102,9 +105,9 @@ export class FileCreationService extends AbstractService implements FileCreation
 		actId: number|undefined=undefined,
 		sceneId: number|undefined=undefined,
 		sessionId: number|undefined=undefined,
-		additionalInformation: any|undefined=undefined,
+		additionalInformation: ControllerMetadataDataInterface|undefined=undefined,
 		openView?: boolean,
-	): Promise<void> {
+	): Promise<TFile> {
 		let folder = '';
 		let settings = CampaignSetting.Agnostic;
 
@@ -124,7 +127,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			folder = campaign.folder;
 		}
 
-		const template = this.api.templates.get(
+		const template = await this.api.templates.get(
 			settings,
 			type,
 			'internal' + ComponentType[type],
@@ -140,12 +143,14 @@ export class FileCreationService extends AbstractService implements FileCreation
 		const fileName = await this._generateFilePath(type, folder, name, '/');
 
 		const data: string = await template.generateData();
-		const newFile = await app.vault.create(fileName, data);
+		const newFile: TFile = await app.vault.create(fileName, data);
 
 		if (openView) {
 			const leaf = app.workspace.getLeaf(true);
 			await leaf.openFile(newFile);
 		}
+
+		return newFile;
 	}
 
 	private async _generateFilePath(

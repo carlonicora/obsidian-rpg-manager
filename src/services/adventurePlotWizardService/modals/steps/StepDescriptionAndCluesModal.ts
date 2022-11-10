@@ -16,7 +16,7 @@ export class StepDescriptionAndCluesModal extends AbstractStepModal implements W
 		const descriptionContainerEl: HTMLDivElement = dataContainerEl.createDiv({cls: 'rpg-manager-wizard-main-content-container-clues-text'});
 		this.descriptionEl = descriptionContainerEl.createEl('textarea', {
 			cls: 'rpg-manager-wizard-main-content-container',
-			text: this.information?.description ?? ''
+			text: this.information?.description ?? this.existingDescription ??  '',
 		});
 		this.api.service(LinkSuggesterService).createHandler(this.descriptionEl, this.adventure);
 

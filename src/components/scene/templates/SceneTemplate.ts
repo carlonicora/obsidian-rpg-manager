@@ -6,23 +6,23 @@ import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
+import {SceneDataMetadataInterface} from "../interfaces/SceneDataMetadataInterface";
 
 export class SceneTemplate extends AbstractComponentTemplate {
+	protected data: SceneDataMetadataInterface|undefined;
+
 	protected generateDataCodeBlock(
 	): string {
-		let synopsis = '';
+		const synopsis = '';
 		let sceneType = '';
 		let isActedUpon = false;
 
 		if (this.additionalInformation !== undefined){
-			if (this.additionalInformation?.synopsis !== undefined)
-				synopsis = this.additionalInformation.synopsis;
+			if (this.data?.sceneType !== undefined)
+				sceneType = this.data.sceneType;
 
-			if (this.additionalInformation?.sceneType !== undefined)
-				sceneType = this.additionalInformation.sceneType;
-
-			if (this.additionalInformation?.isActedUpon !== undefined)
-				isActedUpon = this.additionalInformation.isActedUpon;
+			if (this.data?.isActedUpon !== undefined)
+				isActedUpon = this.data.isActedUpon;
 		}
 
 		const metadata: SceneMetadataInterface = {

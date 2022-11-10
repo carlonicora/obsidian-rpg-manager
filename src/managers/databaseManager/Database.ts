@@ -317,8 +317,7 @@ export class Database extends Component implements DatabaseInterface {
 			}
 
 			await this.create(component);
-			if (!isNewComponent)
-				await component.touch();
+			await component.touch();
 
 			this._api.app.workspace.trigger("rpgmanager:refresh-views");
 		} catch (e) {

@@ -15,6 +15,7 @@ import {ImageService} from "../imageService/ImageService";
 import {CodeblockRunningWorker} from "./workers/CodeblockRunningWorker";
 import {Md5} from "ts-md5";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
+import {YamlService} from "../yamlService/YamlService";
 
 export class CodeblockService extends AbstractService implements CodeblockServiceInterface, ServiceInterface {
 	private _worker: CodeblockWorkerInterface;
@@ -90,6 +91,14 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		this._worker.updateContent(domain);
 	}
 
+	public async addOrUpdateRelationshipInCodeblock(
+		relationship: RelationshipInterface,
+		domain: CodeblockDomainInterface,
+	): Promise<void> {
+		const dataWorker = await new CodeblockRelationshipWorker(this.api);
+		dataWorker.addOrUpdate(domain, relationship);
+	}
+
 	public async replaceID(
 		file: TFile,
 		id: string,
@@ -144,9 +153,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		file?: TFile,
 		codeblockName = 'RpgManagerData',
 	): Promise<CodeblockDomainInterface|undefined> {
-		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file, codeblockName);
-
-		return domain;
+		return this._worker.readContent(false, file, codeblockName);
 	}
 
 	public async removeImage(
@@ -222,5 +229,12 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		dataWorker.remove(domain, '');
 
 		this._worker.updateContent(domain);
+	}
+
+	public async updateDomain(
+		domain: CodeblockDomainInterface,
+	): Promise<void> {
+		domain.codeblockContent = await this.api.service(YamlService).stringify(domain.codeblock);
+		await this._worker.updateContent(domain);
 	}
 }

@@ -347,10 +347,10 @@ export class RelationshipsSelectionModal extends AbstractModal {
 			});
 
 			if (!matches.has(component.id)) {
-
 				const fuzzySearchResult = fuzzySearch(query, component.file.basename + ' ' + component.synopsis);
 				if (fuzzySearchResult != null && fuzzySearchResult.matches !== null)
 					matches.set(component.id, {component: component, result: fuzzySearchResult});
+
 			}
 		});
 
