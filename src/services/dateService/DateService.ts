@@ -43,7 +43,7 @@ export class DateService extends AbstractService implements ServiceInterface, Da
 					return undefined;
 
 				events = calendar.events.filter((event: any) =>
-					event.note === component.file.path &&
+					event.note === component.file.basename &&
 					event.category === categories[0].id
 				);
 

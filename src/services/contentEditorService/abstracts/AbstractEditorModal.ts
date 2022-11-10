@@ -78,6 +78,7 @@ export abstract class AbstractEditorModal extends AbstractModal {
 			.replaceAll('"', '\\"')
 			.replaceAll('\n', '\\n');
 
+		console.log(this.editableField)
 		this.api.service(CodeblockService).addOrUpdate(
 			this.editableField,
 			value,

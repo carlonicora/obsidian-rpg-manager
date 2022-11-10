@@ -78,7 +78,7 @@ export class FantasyCalendarElement extends AbstractElement {
 			categories = [await this.api.service(FantasyCalendarService).addCategory(categoryName, calendar)];
 
 		const events: Event[] = calendar.events.filter((event: Event) =>
-			event.note === this._data.model.file.path &&
+			event.note === this._data.model.file.basename &&
 			event.category === categories[0].id
 		);
 
@@ -147,7 +147,7 @@ export class FantasyCalendarElement extends AbstractElement {
 						auto: false,
 						id: 'ID_RPGM_' + Date.now().toString(),
 						name: name,
-						note: this._data.model.file.path,
+						note: this._data.model.file.basename,
 						category: categories[0].id,
 						description: '',
 						date: newFantasyCalendarDay.date,
@@ -164,10 +164,10 @@ export class FantasyCalendarElement extends AbstractElement {
 			);
 		}
 
-		await this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
+		await this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar()
 
+		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
 		this._data.model.touch(true);
 		this.api.app.workspace.trigger("rpgmanager:refresh-views");
-		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
 	}
 }
