@@ -1,13 +1,14 @@
 # RPG Manager Change Log
 
 ## Version 3.2
-_2022-11-09_
+_2022-11-10_
 
 Version 3.2 is a minor upgrade bringing three new features to RPG Manager.
 
 - Fantasy Calendar Integration
 - Scene Builder
 - Editor Window
+- UI Improvements
 
 ### Fantasy Calendar
 
@@ -23,16 +24,30 @@ and all the dates of your campaign will be saved in Fantasy Calendar.
 Please note: RPG Manager will not store your dates in the frontmatter, but will delegate their management directly to 
 Fantasy Calendar.
 
+![](screenshots/3.2/3.2-Fantasy Calendar.jpg)
+
 ### Scene Builder
 
 If you use the `Scene Analyser`, this new feature will bring a smile to your face. From an `act` without scenes, you 
 can now open a window where to plot all your scenes in a useful form which will help you plotting all your scenes with
 an integrated `Analyser` to show you if your act is balanced and its expected duration!
 
+![](screenshots/3.2/3.2-Scene Builder.jpg)
+
 ### Editor Window
 
 Let's stop editing a temperamental YAML, shall we? With RPG Manager 3.2 all the editable texts (_like the Synopsis_) 
 will now be opened in a modal window where you can write in a comfortable text area with link autocompletion!
+
+![](screenshots/3.2/3.2-UI Enhancements.jpg)
+
+### UI Improvements
+
+The layout has been improved to create a better user experience. All the `element` functionalities have been grouped in 
+an are below the title, where you can quickly access them. Additionally, the information on each `element` have been 
+aligned to avoid confusion.
+
+![](screenshots/3.2/3.2-UI Enhancements.jpg)
 
 ## Version 3.1
 _2022-10-18_
