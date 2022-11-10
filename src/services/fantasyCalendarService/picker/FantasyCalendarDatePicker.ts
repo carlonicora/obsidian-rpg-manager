@@ -48,10 +48,16 @@ export class FantasyCalendarDatePicker {
 		evt: MouseEvent
 	): void {
 		const clickedClassName: EventTarget|null = evt.target;
+
 		if (clickedClassName == null)
 			this.hide();
 
-		const inPicker: boolean = (<HTMLElement>clickedClassName).className.indexOf(this._id) !== -1;
+		let inPicker: boolean = true;
+		try {
+			inPicker = (<HTMLElement>clickedClassName).className.indexOf(this._id) !== -1;
+		} catch (e) {
+			inPicker = false;
+		}
 
 		if (!inPicker)
 			this.hide();
@@ -87,13 +93,20 @@ export class FantasyCalendarDatePicker {
 
 	public async hide(
 	): Promise<void> {
+		document.body.removeEventListener('click', this._listener);
+
 		if (this._pickerEl === undefined)
 			return;
 
-		document.body.removeEventListener('click', this._listener);
-
 		this._pickerEl.remove();
 		this._pickerEl = undefined;
+
+		const possiblePickers: HTMLCollectionOf<Element> = document.getElementsByClassName(this._id);
+
+		for (let index=0; index<possiblePickers.length; index++){
+			if (possiblePickers[index].hasClass('rpg-manager-fantasy-calendar-picker'))
+				possiblePickers[index].remove();
+		}
 	}
 
 	private _addNavigatorContainer(
