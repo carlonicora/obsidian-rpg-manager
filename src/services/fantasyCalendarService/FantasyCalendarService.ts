@@ -27,6 +27,7 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 
 		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-settings-loaded", this.ready.bind(this),));
 		this.registerEvent(this.api.app.workspace.on("rpgmanager:database-ready", this._dbReady.bind(this),));
+
 		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-updated", this._fantasyCalendarUpdated.bind(this)));
 	}
 
@@ -50,7 +51,7 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 				if (event.note == null || event.category == null)
 					continue;
 
-				const model: ModelInterface | undefined = this.api.database.readByPath(event.note);
+				const model: ModelInterface | undefined = this.api.database.readByPath(event.note + '.md');
 				if (model === undefined)
 					continue;
 

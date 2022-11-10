@@ -52,7 +52,7 @@ export class FantasyCalendarDatePicker {
 		if (clickedClassName == null)
 			this.hide();
 
-		let inPicker: boolean = true;
+		let inPicker = true;
 		try {
 			inPicker = (<HTMLElement>clickedClassName).className.indexOf(this._id) !== -1;
 		} catch (e) {

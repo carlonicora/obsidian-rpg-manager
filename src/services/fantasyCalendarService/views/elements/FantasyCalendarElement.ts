@@ -78,13 +78,13 @@ export class FantasyCalendarElement extends AbstractElement {
 			categories = [await this.api.service(FantasyCalendarService).addCategory(categoryName, calendar)];
 
 		const events: Event[] = calendar.events.filter((event: Event) =>
-			event.note === this._data.model.file.path &&
+			event.note === this._data.model.file.path.slice(0,-3) &&
 			event.category === categories[0].id
 		);
 
 		if (newDate === '' && events.length > 0){
 			for (let index=0; index<calendar.events.length; index++){
-				if (calendar.events[index].note === this._data.model.file.path && calendar.events[index].category === categories[0].id){
+				if (calendar.events[index].note === this._data.model.file.path.slice(0,-3) && calendar.events[index].category === categories[0].id){
 					calendar.events.splice(index, 1);
 					break;
 				}
@@ -147,7 +147,7 @@ export class FantasyCalendarElement extends AbstractElement {
 						auto: false,
 						id: 'ID_RPGM_' + Date.now().toString(),
 						name: name,
-						note: this._data.model.file.path,
+						note: this._data.model.file.path.slice(0,-3),
 						category: categories[0].id,
 						description: '',
 						date: newFantasyCalendarDay.date,
@@ -166,8 +166,16 @@ export class FantasyCalendarElement extends AbstractElement {
 
 		await this.api.app.plugins.getPlugin('fantasy-calendar').saveCalendar();
 
+		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
 		this._data.model.touch(true);
 		this.api.app.workspace.trigger("rpgmanager:refresh-views");
-		this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
+
+		setTimeout(() => {
+				this.api.app.workspace.trigger("fantasy-calendars-settings-loaded");
+				this.api.app.plugins.getPlugin('fantasy-calendar').api.getHelper(calendar).update(calendar);
+			}
+			,
+			1000,
+		);
 	}
 }
