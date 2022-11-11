@@ -37,7 +37,7 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 		protected sessionId: number|undefined,
 		protected additionalInformation?: ControllerMetadataDataInterface,
 	) {
-		if (additionalInformation !== undefined)
+		if (additionalInformation?.data !== undefined)
 			this.data = additionalInformation.data as ComponentDataMetadataInterface;
 	}
 
