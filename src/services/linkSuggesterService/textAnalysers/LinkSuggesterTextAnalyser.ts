@@ -4,6 +4,7 @@ export class LinkSuggesterTextAnalyser implements LinkSuggesterTextAnalyserInter
 	public _cursorPosition: number;
 	public fullText: string;
 	public linkText?: string;
+	public lengthBeforeStart: number
 	public searchStartPosition?: number;
 	public searchTerm: string;
 	public alias?: string;
@@ -17,6 +18,7 @@ export class LinkSuggesterTextAnalyser implements LinkSuggesterTextAnalyserInter
 		this.searchTerm = '';
 		this.aliasSearch = undefined;
 		this.isAlreadyClosed = false;
+		this.lengthBeforeStart = 0;
 	}
 
 	public replace(
@@ -62,6 +64,8 @@ export class LinkSuggesterTextAnalyser implements LinkSuggesterTextAnalyserInter
 
 		if (this.searchStartPosition === undefined)
 			return false;
+		else
+			this.lengthBeforeStart = this.searchStartPosition;
 
 		this.searchTerm = this.fullText.substring(this.searchStartPosition, this._cursorPosition);
 

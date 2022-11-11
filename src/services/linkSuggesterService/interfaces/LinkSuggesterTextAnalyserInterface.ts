@@ -4,6 +4,7 @@ export interface LinkSuggesterTextAnalyserInterface {
 	fullText: string;
 	alias?: string;
 	aliasSearch?: string;
+	lengthBeforeStart: number;
 	searchStartPosition?: number;
 	isAlreadyClosed: boolean;
 

@@ -96,7 +96,7 @@ export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
 			this._analyser.replace(result.file.basename);
 
 		this._containerEl.value = this._analyser.fullText;
-		this._containerEl.selectionStart = (this._analyser.searchStartPosition ?? 0) + position + 2;
+		this._containerEl.selectionStart = this._analyser.lengthBeforeStart + (this._analyser.searchStartPosition ?? 0) + position;
 		this._containerEl.selectionEnd = this._containerEl.selectionStart;
 		this._containerEl.focus();
 	}
