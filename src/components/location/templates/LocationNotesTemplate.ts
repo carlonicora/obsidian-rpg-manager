@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class LocationNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### LocationModel Details\n' +
+			'### Location Details\n' +
 			' - \n\n' +
 			'---\n';
 	}

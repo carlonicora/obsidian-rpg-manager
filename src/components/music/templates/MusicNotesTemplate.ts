@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class MusicNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### MusicModel Details\n' +
+			'### Music Details\n' +
 			' - \n\n' +
 			'---\n';
 	}

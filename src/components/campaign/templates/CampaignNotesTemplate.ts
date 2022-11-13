@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class CampaignNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### CampaignModel Notes\n' +
+			'### Campaign Notes\n' +
 			' - \n\n' +
 			'---\n';
 	}
