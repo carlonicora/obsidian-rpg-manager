@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class SceneNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### SceneModel Notes\n' +
+			'### Scene Notes\n' +
 			' - \n\n' +
 			'---\n';
 	}

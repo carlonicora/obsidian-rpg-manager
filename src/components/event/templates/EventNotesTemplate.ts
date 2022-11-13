@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class EventNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### EventModel Details\n' +
+			'### Event Details\n' +
 			' - \n\n' +
 			'---\n';
 	}

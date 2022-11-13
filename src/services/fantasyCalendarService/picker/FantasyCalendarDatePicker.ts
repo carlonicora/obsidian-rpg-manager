@@ -294,7 +294,7 @@ export class FantasyCalendarDatePicker {
 				} else {
 					newMonth--;
 				}
-				newDay = this._calendar.static.months[newMonth].length
+				newDay = this._calendar.static.months[newMonth].length;
 			} else {
 				newDay--;
 			}
@@ -314,7 +314,7 @@ export class FantasyCalendarDatePicker {
 		month: number,
 		daysToAdd: number,
 	): FantasyCalendarDateInterface {
-		let newDay: number = 1;
+		let newDay = 1;
 		let newMonth: number = month === this._calendar.static.months.length ? 0 : month + 1;
 		let newYear: number = month === this._calendar.static.months.length ? year + 1 : year;
 
@@ -324,7 +324,7 @@ export class FantasyCalendarDatePicker {
 			if (newDay === this._calendar.static.months[newMonth].length){
 				if (newMonth === this._calendar.static.months.length){
 					newMonth = 0;
-					newYear++
+					newYear++;
 				} else {
 					newMonth++;
 				}

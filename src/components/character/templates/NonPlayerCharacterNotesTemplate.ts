@@ -4,9 +4,9 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class NonPlayerCharacterNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### Non Player CharacterModel Notes\n' +
+			'### Non Player Character Notes\n' +
 			' - \n\n' +
-			'### Non Player CharacterModel Story\n' +
+			'### Non Player Character Story\n' +
 			' - \n\n' +
 			'---\n';
 	}

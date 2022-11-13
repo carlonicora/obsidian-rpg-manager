@@ -27,19 +27,19 @@ use the same type of structure.
 
 | Component                | Default Tag    | Required id(s)                               |
 |--------------------------|----------------|----------------------------------------------|
-| **CampaignModel**             | rpgm/campaign  | {campaignId}                                 |   
-| **AdventureModel**            | rpgm/adventure | {campaignId}/{adventureId}                   |
-| **ActModel**                  | rpgm/act       | {campaignId}/{adventureId}/{actId}           |
-| **SceneModel**                | rpgm/scene     | {campaignId}/{adventureId}/{actId}/{sceneId} |
-| **SessionModel**              | rpgm/session   | {campaignId}                                 |
-| **SubplotModel**              | rpgm/subplot   | {campaignId}                                 |
-| **Player CharacterModel**     | rpgm/pc        | {campaignId}                                 |
-| **Non Player CharacterModel** | rpgm/npc       | {campaignId}                                 |
-| **EventModel**                | rpgm/event     | {campaignId}                                 |
-| **ClueModel**                 | rpgm/clue      | {campaignId}                                 |
-| **FactionModel**              | rpgm/faction   | {campaignId}                                 |
-| **LocationModel**             | rpgm/location  | {campaignId}                                 |
-| **MusicModel**                | rpgm/music     | {campaignId}                                 |
+| **Campaign**             | rpgm/campaign  | {campaignId}                                 |   
+| **Adventure**            | rpgm/adventure | {campaignId}/{adventureId}                   |
+| **Act**                  | rpgm/act       | {campaignId}/{adventureId}/{actId}           |
+| **Scene**                | rpgm/scene     | {campaignId}/{adventureId}/{actId}/{sceneId} |
+| **Session**              | rpgm/session   | {campaignId}                                 |
+| **Subplot**              | rpgm/subplot   | {campaignId}                                 |
+| **Player Character**     | rpgm/pc        | {campaignId}                                 |
+| **Non Player Character** | rpgm/npc       | {campaignId}                                 |
+| **Event**                | rpgm/event     | {campaignId}                                 |
+| **Clue**                 | rpgm/clue      | {campaignId}                                 |
+| **Faction**              | rpgm/faction   | {campaignId}                                 |
+| **Location**             | rpgm/location  | {campaignId}                                 |
+| **Music**                | rpgm/music     | {campaignId}                                 |
 
 
 ### Additional frontmatter metadata

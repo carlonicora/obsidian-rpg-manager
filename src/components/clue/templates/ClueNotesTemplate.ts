@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class ClueNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### ClueModel Details\n' +
+			'### Clue Details\n' +
 			' - \n\n' +
 			'---\n';
 	}

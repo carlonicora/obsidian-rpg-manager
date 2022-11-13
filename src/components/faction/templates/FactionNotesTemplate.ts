@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class FactionNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### FactionModel Details\n' +
+			'### Faction Details\n' +
 			' - \n\n' +
 			'---\n';
 	}

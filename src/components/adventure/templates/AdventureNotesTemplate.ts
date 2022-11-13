@@ -4,7 +4,7 @@ import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/
 export class AdventureNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### AdventureModel Notes\n' +
+			'### Adventure Notes\n' +
 			' - \n\n' +
 			'---\n';
 	}
