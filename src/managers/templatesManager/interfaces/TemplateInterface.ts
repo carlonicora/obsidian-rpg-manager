@@ -1,3 +1,7 @@
+import {TFile} from "obsidian";
+
 export interface TemplateInterface {
-	generateData(): Promise<string>;
+	generateData(
+		existingFile?: TFile,
+	): Promise<string>;
 }

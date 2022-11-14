@@ -18,7 +18,9 @@ export abstract class AbstractComponentNoteTemplate implements ComponentNotesInt
 		protected sessionId: number|undefined,
 		protected additionalInformation: any|undefined,
 	) {
-		if (campaignId !== undefined) this.id = this.api.service(IdService).create(this.type, campaignId, adventureId, actId, sceneId, sessionId);
+		if (campaignId !== undefined)
+			this.id = this.api.service(IdService).create(this.type, campaignId, adventureId, actId, sceneId, sessionId);
+
 	}
 	
 	abstract getContent(): string;

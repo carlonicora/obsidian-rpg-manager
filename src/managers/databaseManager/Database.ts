@@ -288,9 +288,8 @@ export class Database extends Component implements DatabaseInterface {
 		try {
 			const isNewComponent = component === undefined;
 
-			if (component === undefined) {
+			if (component === undefined)
 				component = await DatabaseInitialiser.createComponent(this._api, file);
-			}
 
 			if (component === undefined)
 				return;
@@ -317,6 +316,7 @@ export class Database extends Component implements DatabaseInterface {
 			}
 
 			await this.create(component);
+
 			await component.touch();
 
 			this._api.app.workspace.trigger("rpgmanager:refresh-views");
