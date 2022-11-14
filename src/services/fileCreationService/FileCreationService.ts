@@ -1,4 +1,4 @@
-import {MarkdownView} from "obsidian";
+import {Editor, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {FileCreationServiceInterface} from "./interfaces/FileCreationServiceInterface";
@@ -7,6 +7,7 @@ import {CampaignInterface} from "../../components/campaign/interfaces/CampaignIn
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {IdService} from "../idService/IdService";
+import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 
 const path = require('path');
 
@@ -56,8 +57,17 @@ export class FileCreationService extends AbstractService implements FileCreation
 		);
 
 		const fileName = await this._generateFilePath(type, folder, name, pathSeparator);
+		let file: TFile|undefined = undefined;
 
-		template.generateData()
+		if (!create) {
+			const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeView != null)
+				file = activeView.file;
+
+		}
+
+
+		template.generateData(file)
 			.then((data: string) => {
 				if (create) {
 					this._createNewFile(data, fileName);
@@ -84,9 +94,27 @@ export class FileCreationService extends AbstractService implements FileCreation
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		if (activeView != null) {
 			const editor = activeView.editor;
-			editor.setValue(data + '\n' + editor.getValue());
-
 			let file = activeView.file;
+
+			let currentValue = editor.getValue();
+
+			const metadata = this.api.app.metadataCache.getFileCache(file);
+			if (metadata != undefined && metadata.sections != undefined && metadata.sections.length > 0) {
+				if (metadata.sections[0].type === 'yaml') {
+					const editor: Editor = activeView.editor;
+
+					const codeblockStart = {line: metadata.sections[0].position.start.line + 1, ch: 0};
+					const codeblockEnd = {line: metadata.sections[0].position.end.line, ch: 0};
+					const codeblockContent = await editor.getRange(codeblockStart, codeblockEnd);
+
+					console.warn(codeblockContent);
+					console.log(currentValue);
+					currentValue = currentValue.replace('---\n' + codeblockContent + '---', '');
+				}
+			}
+
+			editor.setValue(data + '\n' + currentValue);
+
 			await this.api.app.fileManager.renameFile(file, fileName);
 			file = activeView.file;
 

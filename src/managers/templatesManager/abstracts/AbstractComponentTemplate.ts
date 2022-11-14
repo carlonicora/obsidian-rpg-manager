@@ -20,6 +20,8 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {TagService} from "../../../services/tagService/TagService";
 import {YamlService} from "../../../services/yamlService/YamlService";
 import {FileContentManager} from "../workers/FileContentManager";
+import {Editor, MarkdownView, parseYaml, TFile} from "obsidian";
+import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 
 export abstract class AbstractComponentTemplate implements TemplateInterface {
 	protected internalTemplate: ComponentNotesInterface|undefined;
@@ -38,6 +40,7 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 	}
 
 	public async generateData(
+		existingFile?: TFile,
 	): Promise<string> {
 		let templateFrontmatter: any|undefined;
 		let templateContent: string|undefined;
@@ -99,6 +102,25 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 
 		this.addFrontmatterData(frontmatter);
 		this._mergeFrontmatters(frontmatter, templateFrontmatter);
+
+		if (existingFile !== undefined){
+			const activeView: MarkdownView|null = app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeView != undefined) {
+				const metadata = this.api.app.metadataCache.getFileCache(existingFile);
+				if (metadata != undefined && metadata.sections != undefined && metadata.sections.length > 0) {
+					if (metadata.sections[0].type === 'yaml') {
+						const editor: Editor = activeView.editor;
+
+						const codeblockStart = {line: metadata.sections[0].position.start.line + 1, ch: 0};
+						const codeblockEnd = {line: metadata.sections[0].position.end.line, ch: 0};
+						const codeblockContent = await editor.getRange(codeblockStart, codeblockEnd);
+
+						const frontmatterFromFile = await parseYaml(codeblockContent);
+						this._mergeFrontmatters(frontmatter, frontmatterFromFile);
+					}
+				}
+			}
+		}
 
 		const dataCodeblock: string = this.generateDataCodeBlock();
 		const initialCodeblock: string = this.generateInitialCodeBlock();
