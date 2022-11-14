@@ -1,4 +1,14 @@
-import {addIcon, Component, MarkdownPostProcessorContext, Plugin, setIcon} from 'obsidian';
+import {
+	addIcon,
+	Component,
+	Editor,
+	EditorPosition,
+	MarkdownPostProcessorContext,
+	MarkdownView,
+	Menu,
+	Plugin,
+	setIcon, TFile
+} from 'obsidian';
 import {ComponentType} from "./core/enums/ComponentType";
 import {CreationModal} from "./core/modals/CreationModal";
 import {
@@ -181,6 +191,55 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	private _registerCommands(
 	): void {
+		this.registerEvent(
+			this.app.workspace.on("editor-menu", (menu: Menu, editor: Editor, view: MarkdownView) => {
+				const cursor: EditorPosition = editor.getCursor();
+				const lineBefore: string = editor.getLine(cursor.line).substring(0, cursor.ch);
+				const lastOpen = lineBefore.lastIndexOf('[[');
+				const lastClosed = lineBefore.lastIndexOf(']]');
+
+				if (lastOpen !== -1 && (lastClosed === -1 || lastClosed < lastOpen)){
+					const lineAfter: string = editor.getLine(cursor.line).substring(cursor.ch);
+					const firstOpen = lineAfter.indexOf('[[');
+					const firstClosed = lineAfter.indexOf(']]');
+
+					if (firstClosed !== -1 || (firstClosed < firstOpen)){
+						const selectedBaseName = lineBefore.substring(lastOpen + 2) + lineAfter.substring(0, firstClosed);
+
+						const files: TFile[] = this.app.vault.getMarkdownFiles();
+						let fileExists = false;
+
+						for (let index=0; index<files.length; index++){
+							if (files[index].basename === selectedBaseName) {
+								fileExists = true;
+								break;
+							}
+						}
+
+						if (!fileExists) {
+							menu.addSeparator();
+
+							Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
+								menu.addItem((item) => {
+									item
+										.setTitle("Create new " + type)
+										.setIcon("dice")
+										.onClick(async () => {
+											new CreationModal(
+												this.api,
+												ComponentType[type as keyof typeof ComponentType],
+												true,
+												selectedBaseName,
+											).open();
+										});
+								});
+							});
+						}
+					}
+				}
+			})
+		);
+
 		Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 			this.addCommand({
 				id: "rpg-manager-create-" + type.toLowerCase(),

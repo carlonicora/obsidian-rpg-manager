@@ -7,7 +7,6 @@ import {CampaignInterface} from "../../components/campaign/interfaces/CampaignIn
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {IdService} from "../idService/IdService";
-import {TemplateInterface} from "../../managers/templatesManager/interfaces/TemplateInterface";
 
 const path = require('path');
 
