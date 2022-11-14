@@ -107,8 +107,6 @@ export class FileCreationService extends AbstractService implements FileCreation
 					const codeblockEnd = {line: metadata.sections[0].position.end.line, ch: 0};
 					const codeblockContent = await editor.getRange(codeblockStart, codeblockEnd);
 
-					console.warn(codeblockContent);
-					console.log(currentValue);
 					currentValue = currentValue.replace('---\n' + codeblockContent + '---', '');
 				}
 			}
