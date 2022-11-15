@@ -90,7 +90,10 @@ export class FantasyCalendarElement extends AbstractElement {
 				}
 			}
 		} else {
-			const [monthName, dirtyDay, yearNumber] = newDate.split(' ');
+			const [monthAndDay, yearNumber] = newDate.split(',');
+			const monthSeparator = monthAndDay.lastIndexOf(' ');
+			const monthName = monthAndDay.substring(0, monthSeparator);
+			const dirtyDay = monthAndDay.substring(monthSeparator);
 			const day = dirtyDay.replace(/\D/g,'');
 
 			if (
