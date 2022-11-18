@@ -59,7 +59,7 @@ export abstract class AbstractModel implements ModelInterface {
 		if (metadata == null)
 			return response;
 
-		if (metadata.frontmatter?.alias != undefined) {
+		if (metadata?.frontmatter?.alias != undefined && metadata.frontmatter.alias.length > 0) {
 			metadata.frontmatter.alias.forEach((alias: string) => {
 				response.push(alias);
 			});
