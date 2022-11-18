@@ -1,11 +1,11 @@
 import {
 	addIcon,
 	Component,
-	Editor, editorEditorField, EditorPosition,
+	Editor,
+	EditorPosition,
 	MarkdownPostProcessorContext,
 	MarkdownView,
 	Menu,
-	Notice,
 	Plugin,
 	setIcon, TFile
 } from 'obsidian';
@@ -85,6 +85,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 		if (!requiresUpdate)
 			this.initialise();
+
 	}
 
 	public async initialise(
