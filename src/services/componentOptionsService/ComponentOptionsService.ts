@@ -93,7 +93,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 			this._addFunctionality(containerEl, 'Complete')
 				.addEventListener("click", () => {
-					this.api.service(CodeblockService).remove('data.complete');
+					this.api.service(CodeblockService).addOrUpdate('data.complete', true);
 				});
 
 		}

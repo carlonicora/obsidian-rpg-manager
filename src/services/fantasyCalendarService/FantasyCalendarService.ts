@@ -12,6 +12,7 @@ import {EventInterface} from "../../components/event/interfaces/EventInterface";
 import {CharacterInterface} from "../../components/character/interfaces/CharacterInterface";
 import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {ClueInterface} from "../../components/clue/interfaces/ClueInterface";
+import {debounce} from "obsidian";
 
 export class FantasyCalendarService extends AbstractService implements FantasyCalendarServiceInterface, ServiceInterface{
 	private _isReady: boolean;
@@ -25,14 +26,19 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 		this._isReady = false;
 		this._isDatabaseReady = false;
 
-		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-settings-loaded", this.ready.bind(this),));
+		this._fantasyCalendarUpdated = debounce(this._fantasyCalendarUpdated, 250, true) as unknown as () => Promise<void>;
+
 		this.registerEvent(this.api.app.workspace.on("rpgmanager:database-ready", this._dbReady.bind(this),));
 
+		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-settings-loaded", this.ready.bind(this),));
 		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-updated", this._fantasyCalendarUpdated.bind(this)));
 	}
 
 	private _fantasyCalendarUpdated(
 	): void {
+		if (this._events === undefined)
+			return;
+
 		const calendars = this.calendars;
 
 		let anyUpdate = false;
