@@ -89,9 +89,11 @@ export class DatabaseUpdater {
 		let updater = await this._versionsHistory.get(previousVersionMajorMinor);
 		while (updater !== undefined){
 			response = true;
-			if (!empty) {
+			if (!empty && versionMap[updater.previousVersion as keyof typeof versionMap] !== undefined) {
 				const worker: DatabaseUpdateWorkerInterface = await new versionMap[updater.previousVersion as keyof typeof versionMap](this._api);
-				if (reporter !== undefined) reporter.setUpdater(this._previousVersion, this._currentVersion);
+				if (reporter !== undefined)
+					reporter.setUpdater(this._previousVersion, this._currentVersion);
+
 				await worker.run(reporter);
 			}
 

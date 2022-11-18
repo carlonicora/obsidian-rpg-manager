@@ -22,13 +22,21 @@ export class V1_3_to_2_0_worker extends AbstractDatabaseWorker implements Databa
 
 		for (let index = 0; index < files.length; index++) {
 			const content = await this.api.app.vault.read(files[index]);
-			fileMap.set(files[index], content);
 
-			if (content.indexOf('```RpgManager\nact') !== -1) wasAlreadyUpdated = true;
+			if (content.indexOf('```RpgManager') !== -1 && content.indexOf('```RpgManagerID') === -1) {
+				fileMap.set(files[index], content);
+
+				if (content.indexOf('```RpgManager\nact') !== -1)
+					wasAlreadyUpdated = true;
+
+			}
 		}
 
 		if (!wasAlreadyUpdated) {
 			for (let index = 0; index < files.length; index++) {
+				if (fileMap.get(files[index]) === undefined)
+					continue;
+
 				const content = await this.api.app.vault.read(files[index]);
 
 				const newFileContent = await content

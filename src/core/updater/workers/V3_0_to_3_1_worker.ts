@@ -15,20 +15,29 @@ export class V3_0_to_3_1_worker extends AbstractDatabaseWorker implements Databa
 		this.api.service(LoggerService).warning(LogMessageType.Updater, 'Updating RPG Manager from v3.0 to v3.1');
 
 		const files: TFile[] = await this.api.app.vault.getMarkdownFiles();
-		if (reporter !== undefined) reporter.setFileCount(files.length);
+
+		if (reporter !== undefined)
+			reporter.setFileCount(files.length);
+
 		for (let filesIndex=0; filesIndex<files.length; filesIndex++) {
 			const file: TFile = files[filesIndex];
 			const cachedMetadata: CachedMetadata|null = this.api.app.metadataCache.getFileCache(file);
+
 			if (cachedMetadata == null) {
-				if (reporter !== undefined) reporter.addFileUpdated();
+				if (reporter !== undefined)
+					reporter.addFileUpdated();
+
 				continue;
 			}
 
-			let fileContent = await this.api.app.vault.read(file);
+			let fileContent = await this.api.app.vault.read(file).catch(() => {return ''});
+
 			const fileContentArray = fileContent.split('\n');
 
 			if (fileContent.indexOf('```RpgManagerData') === -1){
-				if (reporter !== undefined) reporter.addFileUpdated();
+				if (reporter !== undefined)
+					reporter.addFileUpdated();
+
 				continue;
 			}
 
