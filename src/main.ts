@@ -83,7 +83,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 			}
 		}
 
-		if (!requiresUpdate) this.initialise();
+		if (!requiresUpdate)
+			this.initialise();
 	}
 
 	public async initialise(
