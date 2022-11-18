@@ -27,12 +27,13 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 
 		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-settings-loaded", this.ready.bind(this),));
 		this.registerEvent(this.api.app.workspace.on("rpgmanager:database-ready", this._dbReady.bind(this),));
-
-		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-updated", this._fantasyCalendarUpdated.bind(this)));
 	}
 
 	private _fantasyCalendarUpdated(
 	): void {
+		if (this._events === undefined)
+			return;
+
 		const calendars = this.calendars;
 
 		let anyUpdate = false;
@@ -159,6 +160,8 @@ export class FantasyCalendarService extends AbstractService implements FantasyCa
 				});
 			}
 		});
+
+		this.registerEvent(this.api.app.workspace.on("fantasy-calendars-updated", this._fantasyCalendarUpdated.bind(this)));
 	}
 
 	get calendars(): Calendar[] {
