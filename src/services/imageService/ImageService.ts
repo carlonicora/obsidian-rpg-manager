@@ -24,7 +24,7 @@ export class ImageService extends AbstractService implements ImageServiceInterfa
 	private _getImageLocation(
 		path: string
 	): string|undefined {
-		if (path.startsWith('http'))
+		if (path.trim().toLowerCase().startsWith('http'))
 			return path;
 
 		if (this.api.app.vault.getAbstractFileByPath(path) === undefined)
