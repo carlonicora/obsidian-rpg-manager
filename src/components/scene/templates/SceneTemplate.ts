@@ -16,6 +16,7 @@ export class SceneTemplate extends AbstractComponentTemplate {
 		const synopsis = '';
 		let sceneType = '';
 		let isActedUpon = false;
+		let storyCircleStage = '';
 
 		if (this.additionalInformation !== undefined){
 			if (this.data?.sceneType !== undefined)
@@ -23,6 +24,9 @@ export class SceneTemplate extends AbstractComponentTemplate {
 
 			if (this.data?.isActedUpon !== undefined)
 				isActedUpon = this.data.isActedUpon;
+
+			if (this.data?.storyCircleStage !== undefined)
+				storyCircleStage = this.data.storyCircleStage;
 		}
 
 		const metadata: SceneMetadataInterface = {
@@ -37,7 +41,7 @@ export class SceneTemplate extends AbstractComponentTemplate {
 				isActedUpon: isActedUpon,
 				duration: 0,
 				durations: [],
-				storyCircleStage: ''
+				storyCircleStage: storyCircleStage,
 			}
 		};
 

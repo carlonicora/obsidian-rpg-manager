@@ -11,6 +11,8 @@ import {AnalyserDataImportInterface} from "../../analyserService/interfaces/Anal
 import {AnalyserReportType} from "../../analyserService/enums/AnalyserReportType";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
 import {SceneDataMetadataInterface} from "../../../components/scene/interfaces/SceneDataMetadataInterface";
+import {Component, MarkdownRenderer} from "obsidian";
+import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -46,6 +48,10 @@ export class SceneBuilderModal extends AbstractModal {
 		editorDeletedContainerEl.createDiv({text: 'The scenes for ' + this._act.file.basename + ' have been created'});
 
 		const sceneBuilderContainerEl: HTMLDivElement = this.rpgmContainerEl.createDiv({cls: 'rpg-manager-scene-builder'});
+
+		if (this.api.settings.usePlotStructures)
+			this._addPlot(sceneBuilderContainerEl);
+
 		this._analyserContainerEl = sceneBuilderContainerEl.createDiv({cls: 'rpg-manager-scene-builder-analyser'});
 
 		const scenesContainerEl = sceneBuilderContainerEl.createDiv({cls: 'scenes-container'});
@@ -72,6 +78,11 @@ export class SceneBuilderModal extends AbstractModal {
 				sceneId = scene.id.sceneId + 1;
 		});
 
+		let indexOfSelect = 2;
+
+		if (this.api.settings.usePlotStructures)
+			indexOfSelect = 3;
+
 		for (let index=0; index<this._scenesContainerEl.rows.length; index++){
 			const line = this._scenesContainerEl.rows[index];
 			if (line.dataset.id === undefined)
@@ -82,17 +93,21 @@ export class SceneBuilderModal extends AbstractModal {
 
 			let sceneType: SceneType|undefined;
 
-			const type = (<HTMLSelectElement>line.cells[2].childNodes[0]).value;
+			const type = (<HTMLSelectElement>line.cells[indexOfSelect].childNodes[0]).value;
 			if (type !== '')
 				sceneType = this.api.service(AnalyserService).getSceneType(type);
 
 			const title = (<HTMLInputElement>line.cells[0].childNodes[0]).value;
 
 			const data: SceneDataMetadataInterface = {
-				synopsis: (<HTMLInputElement>line.cells[1].childNodes[0]).value,
+				synopsis: (<HTMLInputElement>line.cells[indexOfSelect-1].childNodes[0]).value,
 				sceneType: sceneType !== undefined ? this.api.service(AnalyserService).getReadableSceneType(sceneType) : '',
-				isActedUpon: (<HTMLInputElement>line.cells[3].childNodes[0]).checked,
+				isActedUpon: (<HTMLInputElement>line.cells[indexOfSelect+1].childNodes[0]).checked,
 			};
+
+			if (this.api.settings.usePlotStructures){
+				data.storyCircleStage = (<HTMLSelectElement>line.cells[1].childNodes[0]).value;
+			}
 
 			this.api.service(FileCreationService).silentCreate(
 				ComponentType.Scene,
@@ -120,13 +135,18 @@ export class SceneBuilderModal extends AbstractModal {
 		const data: Array<AnalyserDataImportInterface> = [];
 
 		for (let index=0; index<this._scenesContainerEl.rows.length;index++) {
+			let indexOfSelect = 2;
+
+			if (this.api.settings.usePlotStructures)
+				indexOfSelect = 3;
+
 			const cells: HTMLCollectionOf<HTMLTableCellElement> = this._scenesContainerEl.rows[index].cells;
-			const type = (<HTMLSelectElement>cells[2].childNodes[0]).value;
+			const type = (<HTMLSelectElement>cells[indexOfSelect].childNodes[0]).value;
 			if (type !== '') {
 				const sceneType: SceneType = this.api.service(AnalyserService).getSceneType(type);
 
 				data.push({
-					isExciting: (<HTMLInputElement>cells[3].childNodes[0]).checked,
+					isExciting: (<HTMLInputElement>cells[indexOfSelect + 1].childNodes[0]).checked,
 					isActive: sceneType !== undefined ? (activeSceneTypes.get(sceneType) ?? false) : false,
 					expectedDuration: sceneType !== undefined ? this.api.service(RunningTimeService).getTypeExpectedDuration(this._act.id.campaignId, sceneType) : 0,
 					type: sceneType,
@@ -149,18 +169,60 @@ export class SceneBuilderModal extends AbstractModal {
 
 		const titleCellEl:HTMLTableCellElement = rowEl.insertCell();
 		titleCellEl.addClass('scenes-container-table-title');
+
+		let plotStageSelectionEl: HTMLSelectElement|undefined = undefined;
+
+		if (this.api.settings.usePlotStructures) {
+			const plotStageCellEl: HTMLTableCellElement = rowEl.insertCell();
+			plotStageCellEl.addClass('scenes-container-table-stage');
+			plotStageSelectionEl = plotStageCellEl.createEl('select');
+			plotStageSelectionEl.createEl("option", {
+				text: '',
+				value: '',
+			});
+
+			Object.keys(StoryCircleStage).filter((v) => isNaN(Number(v))).forEach((type, index) => {
+				if (plotStageSelectionEl !== undefined)
+					plotStageSelectionEl.createEl("option", {
+						text: type,
+						value: type,
+					});
+
+			});
+
+			plotStageSelectionEl.addEventListener('change', () => {
+				this._updateEmptyLines(
+					id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+					true
+				);
+				this._refreshAnalyser();
+			});
+		}
+
 		const goalCellEl:HTMLTableCellElement = rowEl.insertCell();
 		goalCellEl.addClass('scenes-container-table-goal');
+
 		const typeCellEl:HTMLTableCellElement = rowEl.insertCell();
 		typeCellEl.addClass('scenes-container-table-type');
+
 		const excitingCellEl:HTMLTableCellElement = rowEl.insertCell();
 		excitingCellEl.addClass('scenes-container-table-exciting');
 
 		const titleInputEl: HTMLInputElement = titleCellEl.createEl('input');
 		titleInputEl.type = 'text';
+
 		const goalInputEl: HTMLInputElement = goalCellEl.createEl('input');
 		goalInputEl.type = 'text';
+
 		const typeSelectionEl: HTMLSelectElement = typeCellEl.createEl('select');
+
 		const excitementCheckboxEl: HTMLInputElement = excitingCellEl.createEl('input');
 
 		this.api.service(LinkSuggesterService).createHandler(goalInputEl, this._act);
@@ -184,7 +246,8 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false &&
+					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
 				),
 			);
 		});
@@ -196,7 +259,8 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false &&
+					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
 				),
 				true,
 			);
@@ -209,7 +273,8 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false &&
+					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
 				),
 			);
 		});
@@ -221,7 +286,8 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false &&
+					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
 				),
 				true,
 			);
@@ -234,7 +300,8 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false &&
+					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
 				),
 				true
 			);
@@ -248,7 +315,8 @@ export class SceneBuilderModal extends AbstractModal {
 					titleInputEl.value === '' &&
 					goalInputEl.value === '' &&
 					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false
+					excitementCheckboxEl.checked === false &&
+					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
 				),
 				true
 			);
@@ -299,6 +367,13 @@ export class SceneBuilderModal extends AbstractModal {
 		titleCellEl.textContent = 'Title';
 		titleCellEl.addClass('scenes-container-table-title');
 
+		if (this.api.settings.usePlotStructures) {
+			const plotStageCellEl: HTMLTableCellElement = titleRowEl.insertCell();
+			plotStageCellEl.textContent = 'Stage';
+			plotStageCellEl.addClass('scenes-container-table-stage');
+		}
+
+
 		const goalCellEl: HTMLTableCellElement = titleRowEl.insertCell();
 		goalCellEl.textContent = 'Goal';
 		goalCellEl.addClass('scenes-container-table-goal');
@@ -313,5 +388,38 @@ export class SceneBuilderModal extends AbstractModal {
 
 		this._scenesContainerEl = scenesTableEl.createTBody();
 		this._addSceneLine();
+	}
+
+	private _addPlot(
+		containerEl: HTMLDivElement,
+	): void {
+		const plotContainerEl: HTMLDivElement = containerEl.createDiv({cls: 'rpg-manager-scene-builder-plot'});
+
+		this._addPlotElement('You', this._act.storyCircle.you, plotContainerEl);
+		this._addPlotElement('Need', this._act.storyCircle.need, plotContainerEl);
+		this._addPlotElement('Go', this._act.storyCircle.go, plotContainerEl);
+		this._addPlotElement('Search', this._act.storyCircle.search, plotContainerEl);
+		this._addPlotElement('Find', this._act.storyCircle.find, plotContainerEl);
+		this._addPlotElement('Take', this._act.storyCircle.take, plotContainerEl);
+		this._addPlotElement('Return', this._act.storyCircle.return, plotContainerEl);
+		this._addPlotElement('Change', this._act.storyCircle.change, plotContainerEl);
+	}
+
+	private _addPlotElement(
+		title: string,
+		content: string,
+		containerEl: HTMLDivElement,
+	): void {
+		const plotContainerEl: HTMLDivElement = containerEl.createDiv({cls:'rpg-manager-scene-builder-plot-line clearfix'});
+
+		plotContainerEl.createDiv({cls: 'rpg-manager-scene-builder-plot-line-title', text: title});
+		const plotContentEl: HTMLDivElement = plotContainerEl.createDiv({cls: 'rpg-manager-scene-builder-plot-line-description'});
+
+		MarkdownRenderer.renderMarkdown(
+			content,
+			plotContentEl,
+			'',
+			null as unknown as Component,
+		);
 	}
 }

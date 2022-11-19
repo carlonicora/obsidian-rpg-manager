@@ -1,5 +1,4 @@
 import {AbstractWizardModal} from "../../../managers/modalsManager/abstracts/AbstractWizardModal";
-import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
 import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {IdInterface} from "../../idService/interfaces/IdInterface";
@@ -183,7 +182,7 @@ export class ActPlotWizard extends AbstractWizardModal {
 			containerEl,
 			'',
 			null as unknown as Component,
-		)
+		);
 	}
 
 	protected async create(

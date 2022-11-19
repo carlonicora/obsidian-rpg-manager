@@ -1,6 +1,5 @@
 import {AbstractStepModal} from "../../abstracts/AbstractStepModal";
 import {WizardPartInterface} from "../../../../managers/modalsManager/interfaces/WizardPartInterface";
-import {LinkSuggesterService} from "../../../linkSuggesterService/LinkSuggesterService";
 
 export class StepDescriptionModal extends AbstractStepModal implements WizardPartInterface {
 	public async render(

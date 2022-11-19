@@ -18,7 +18,6 @@ import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelIn
 import {
 	ControllerMetadataRelationshipInterface
 } from "../../../managers/controllerManager/interfaces/ControllerMetadataRelationshipInterface";
-import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
 import {Component, MarkdownRenderer} from "obsidian";
 
 export class AdventurePlotWizard extends AbstractWizardModal {
@@ -182,7 +181,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			containerEl,
 			'',
 			null as unknown as Component,
-		)
+		);
 	}
 
 	protected async create(

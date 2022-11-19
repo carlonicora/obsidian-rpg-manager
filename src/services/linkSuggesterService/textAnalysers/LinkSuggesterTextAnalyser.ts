@@ -4,7 +4,7 @@ export class LinkSuggesterTextAnalyser implements LinkSuggesterTextAnalyserInter
 	public _cursorPosition: number;
 	public fullText: string;
 	public linkText?: string;
-	public lengthBeforeStart: number
+	public lengthBeforeStart: number;
 	public searchStartPosition?: number;
 	public searchTerm: string;
 	public alias?: string;

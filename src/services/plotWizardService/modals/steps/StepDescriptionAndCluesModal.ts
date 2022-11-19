@@ -1,7 +1,6 @@
 import {AbstractStepModal} from "../../abstracts/AbstractStepModal";
 import {WizardPartInterface} from "../../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {LinkSuggesterService} from "../../../linkSuggesterService/LinkSuggesterService";
-import {ComponentType} from "../../../../core/enums/ComponentType";
 
 export class StepDescriptionAndCluesModal extends AbstractStepModal implements WizardPartInterface {
 	private _clueTitleEl: HTMLInputElement;

@@ -1,5 +1,5 @@
 import {SearchWorkerInterface} from "../interfaces/SearchWorkerInterface";
-import {Component, fuzzySearch, prepareQuery} from "obsidian";
+import {fuzzySearch, prepareQuery} from "obsidian";
 import {SearchResultInterface} from "../interfaces/SearchResultInterface";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractSearchWorker} from "../abstracts/AbstractSearchWorker";

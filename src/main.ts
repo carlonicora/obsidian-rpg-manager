@@ -198,7 +198,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 				const cursor: EditorPosition = editor.getCursor();
 				const lineBefore: string = editor.getLine(cursor.line).substring(0, cursor.ch);
 				const lastOpen = lineBefore.lastIndexOf('[[');
-				const lastClosed = lineBefore.lastIndexOf(']]')
+				const lastClosed = lineBefore.lastIndexOf(']]');
 
 				if (lastOpen !== -1 && (lastClosed === -1 || lastClosed < lastOpen)){
 					const lineAfter: string = editor.getLine(cursor.line).substring(cursor.ch);
@@ -208,7 +208,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 					if (firstClosed !== -1 || (firstClosed < firstOpen)){
 						const selectedBaseName = lineBefore.substring(lastOpen + 2) + lineAfter.substring(0, firstClosed);
 
-						const files: TFile[] = this.app.vault.getMarkdownFiles()
+						const files: TFile[] = this.app.vault.getMarkdownFiles();
 						let fileExists = false;
 
 						for (let index=0; index<files.length; index++){

@@ -17,14 +17,20 @@
 .rpg-manager-scene-builder .scenes-container table {
   width: 100%;
 }
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-title {
+.rpg-manager-scene-builder .scenes-container table tbody > tr > td.scenes-container-table-title,
+.rpg-manager-scene-builder .scenes-container table thead > tr > td.scenes-container-table-title {
   width: 20%;
 }
 .rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-goal {
   width: 50%;
 }
 .rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-type {
-  width: 20%;
+  width: 100px;
+  max-width: 100px;
+}
+.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-type select {
+  width: 100px;
+  max-width: 100px;
 }
 .rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-exciting {
   width: 10%;

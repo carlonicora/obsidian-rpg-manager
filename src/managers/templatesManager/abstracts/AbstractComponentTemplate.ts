@@ -21,7 +21,6 @@ import {TagService} from "../../../services/tagService/TagService";
 import {YamlService} from "../../../services/yamlService/YamlService";
 import {FileContentManager} from "../workers/FileContentManager";
 import {Editor, MarkdownView, parseYaml, TFile} from "obsidian";
-import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 import {ComponentDataMetadataInterface} from "../../../core/interfaces/ComponentDataMetadataInterface";
 
 export abstract class AbstractComponentTemplate implements TemplateInterface {
