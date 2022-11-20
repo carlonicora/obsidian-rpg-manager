@@ -116,4 +116,12 @@ export class UpdaterModal extends Modal implements DatabaseUpdaterReporterInterf
 		this._currentCounter++;
 		if (this._currentEl !== undefined) this._currentEl.textContent = this._currentCounter.toString();
 	}
+
+	public async refreshFileCount(
+	): Promise<void> {
+		this._currentCounter = 0;
+
+		if (this._currentEl !== undefined)
+			this._currentEl.textContent = this._currentCounter.toString();
+	}
 }
