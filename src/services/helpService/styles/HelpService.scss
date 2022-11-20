@@ -1,0 +1,23 @@
+.rpg-manager-help {
+	font-size: 10px;
+	font-weight: 100;
+	color: var(--rpg-manager-colour-text-light);
+	padding: 2px 10px 2px 0px;
+	margin-left: 10px;
+}
+
+.rpg-manager-help-content-container {
+	position: absolute;
+	min-width: 300px;
+	padding: 10px;
+	background-color: var(--background-primary);
+	border: solid 1px var(--rpg-manager-colour-border);
+	z-index: 1;
+
+	.rpg-manager-help-content {
+		position: relative;
+		width: 100%;
+		font-size: 0.9em;
+		font-weight: 300;
+	}
+}
