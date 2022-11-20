@@ -1,4 +1,4 @@
-import {CachedMetadata, MarkdownView, Modal, TFile} from "obsidian";
+import {CachedMetadata, MarkdownView, Modal, Scope, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {IdInterface} from "../../services/idService/interfaces/IdInterface";
@@ -48,6 +48,12 @@ export class CreationModal extends Modal implements ModalInterface {
 		actId: number|undefined = undefined,
 	) {
 		super(app);
+
+		this.scope = new Scope();
+
+		this.scope.register([], "Escape", evt => {
+			evt.preventDefault();
+		});
 
 		if (campaignId !== undefined) {
 			const campaign:IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, campaignId);

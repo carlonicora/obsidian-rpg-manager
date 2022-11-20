@@ -5,6 +5,7 @@ import {LinkSuggesterHandlerInterface} from "../../linkSuggesterService/interfac
 import {CodeblockService} from "../../codeblockService/CodeblockService";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {ContentEditorServiceInterface} from "../interfaces/ContentEditorServiceInterface";
+import {Scope} from "obsidian";
 
 export abstract class AbstractEditorModal extends AbstractModal {
 	protected contentEditorEl: HTMLTextAreaElement|HTMLInputElement;

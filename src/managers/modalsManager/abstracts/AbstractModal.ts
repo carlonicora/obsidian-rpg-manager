@@ -1,4 +1,4 @@
-import {Modal} from "obsidian";
+import {Modal, Scope} from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export class AbstractModal extends Modal {
@@ -10,6 +10,12 @@ export class AbstractModal extends Modal {
 		protected api: RpgManagerApiInterface,
 	) {
 		super(api.app);
+
+		this.scope = new Scope();
+
+		this.scope.register([], "Escape", evt => {
+			evt.preventDefault();
+		});
 	}
 
 	onOpen() {

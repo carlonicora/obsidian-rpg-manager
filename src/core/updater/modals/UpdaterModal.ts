@@ -1,4 +1,4 @@
-import {Component, MarkdownRenderer, Modal} from "obsidian";
+import {Component, MarkdownRenderer, Modal, Scope} from "obsidian";
 import {DatabaseUpdater} from "../DatabaseUpdater";
 import {DatabaseUpdaterReporterInterface} from "../interfaces/DatabaseUpdaterReporterInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
@@ -16,6 +16,12 @@ export class UpdaterModal extends Modal implements DatabaseUpdaterReporterInterf
 		private _updater: DatabaseUpdater,
 	) {
 		super(_api.app);
+
+		this.scope = new Scope();
+
+		this.scope.register([], "Escape", evt => {
+			evt.preventDefault();
+		});
 	}
 
 	public onOpen() {

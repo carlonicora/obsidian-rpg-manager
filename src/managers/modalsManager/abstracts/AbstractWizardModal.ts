@@ -1,4 +1,4 @@
-import {Modal} from "obsidian";
+import {Modal, Scope} from "obsidian";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {WizardPartInterface} from "../interfaces/WizardPartInterface";
 import {WizardNavigationPartInterface} from "../interfaces/WizardNavigationPartInterface";
@@ -28,6 +28,12 @@ export abstract class AbstractWizardModal extends Modal {
 		protected api: RpgManagerApiInterface,
 	) {
 		super(api.app);
+
+		this.scope = new Scope();
+
+		this.scope.register([], "Escape", evt => {
+			evt.preventDefault();
+		});
 
 		this._currentStep = 0;
 		this.isInitialised = false;

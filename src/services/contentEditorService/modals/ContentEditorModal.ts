@@ -4,6 +4,7 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
 import {ContentEditorServiceInterface} from "../interfaces/ContentEditorServiceInterface";
+import {Scope} from "obsidian";
 
 export class ContentEditorModal extends AbstractEditorModal {
 	constructor(
