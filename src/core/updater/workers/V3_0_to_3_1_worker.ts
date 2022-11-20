@@ -30,7 +30,7 @@ export class V3_0_to_3_1_worker extends AbstractDatabaseWorker implements Databa
 				continue;
 			}
 
-			let fileContent = await this.api.app.vault.read(file).catch(() => {return ''});
+			let fileContent = await this.api.app.vault.read(file).catch(() => {return '';});
 
 			const fileContentArray = fileContent.split('\n');
 

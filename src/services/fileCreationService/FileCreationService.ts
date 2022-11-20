@@ -65,7 +65,6 @@ export class FileCreationService extends AbstractService implements FileCreation
 
 		}
 
-
 		template.generateData(file)
 			.then((data: string) => {
 				if (create) {

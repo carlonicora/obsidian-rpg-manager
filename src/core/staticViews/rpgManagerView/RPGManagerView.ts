@@ -42,6 +42,7 @@ export class RPGManagerView extends AbstractStaticView {
 		else
 			this._currentComponent = undefined;
 
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._addIncompleteComponents.bind(this)));
 	}
 
 	public async render(
@@ -144,8 +145,6 @@ export class RPGManagerView extends AbstractStaticView {
 				this.app.workspace.getLeaf(false).openFile(component.file);
 			});
 		});
-
-		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this._addIncompleteComponents.bind(this)));
 	}
 
 	private async _addReleaseNotes(

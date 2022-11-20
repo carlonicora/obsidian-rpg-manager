@@ -238,9 +238,9 @@ export class Database extends Component implements DatabaseInterface {
 	private async _onDelete(
 		file: TFile,
 	): Promise<void> {
-		if (this.delete(file.path)){
+		if (this.delete(file.path))
 			this._api.app.workspace.trigger("rpgmanager:refresh-views");
-		}
+
 	}
 
 	private async _onRename(
@@ -267,9 +267,6 @@ export class Database extends Component implements DatabaseInterface {
 
 			await component.readMetadata();
 			component.addReverseRelationships()
-
-
-			//DatabaseInitialiser.reinitialiseRelationships(component, this)
 				.then(() => {
 					if (this._api.app.workspace.getActiveFile()?.path === file.path){
 						this._api.app.workspace.getActiveViewOfType(MarkdownView)?.editor.refresh();
