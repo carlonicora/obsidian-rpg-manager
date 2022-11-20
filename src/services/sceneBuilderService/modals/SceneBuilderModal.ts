@@ -14,6 +14,8 @@ import {SceneDataMetadataInterface} from "../../../components/scene/interfaces/S
 import {Component, MarkdownRenderer} from "obsidian";
 import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
 import {PlotService} from "../../plotsService/PlotService";
+import {SorterService} from "../../sorterService/SorterService";
+import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -422,7 +424,10 @@ export class SceneBuilderModal extends AbstractModal {
 
 		this._scenesContainerEl = scenesTableEl.createTBody();
 
-		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.id);
+		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.id)
+			.sort(this.api.service(SorterService).create<SceneInterface>([
+				new SorterComparisonElement((scene: SceneInterface) => scene.id.id),
+			]));
 		if (scenes.length > 0){
 			for (let index=0; index<scenes.length; index++){
 				this._addSceneLine(scenes[index]);
