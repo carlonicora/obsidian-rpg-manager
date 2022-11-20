@@ -1,4 +1,4 @@
-import {Component, fuzzySearch, Keymap, KeymapContext, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
+import {Component, fuzzySearch, MarkdownRenderer, prepareQuery, SearchResult} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
 import {SorterType} from "../../searchService/enums/SorterType";

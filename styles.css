@@ -3240,6 +3240,13 @@ textarea:hover {
 .rpg-manager-scene-builder .scenes-container table {
   width: 100%;
 }
+.rpg-manager-scene-builder .scenes-container table tr > td > input[type=text]:disabled,
+.rpg-manager-scene-builder .scenes-container table tr > td > select:disabled {
+  color: var(--rpg-manager-colour-text-very-light);
+}
+.rpg-manager-scene-builder .scenes-container table tr > td > input[type=checkbox]:disabled {
+  background-color: var(--rpg-manager-colour-text-very-light);
+}
 .rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-title {
   width: 150px;
   max-width: 150px;

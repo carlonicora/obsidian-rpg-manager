@@ -13,7 +13,6 @@ import {CodeblockService} from "../codeblockService/CodeblockService";
 import {StaticViewType} from "../../managers/staticViewsManager/enums/StaticViewType";
 import {ActModel} from "../../components/act/models/ActModel";
 import {SceneBuilderService} from "../sceneBuilderService/SceneBuilderService";
-import {ComponentType} from "../../core/enums/ComponentType";
 import {PlotWizardService} from "../plotWizardService/PlotWizardService";
 import {AdventureModel} from "../../components/adventure/models/AdventureModel";
 
@@ -46,16 +45,16 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 				this._addSeparator(containerEl);
 
-				const scenes = this.api.database.readList(ComponentType.Scene, model.id);
+				//const scenes = this.api.database.readList(ComponentType.Scene, model.id);
 
-				if (scenes.length === 0) {
+				//if (scenes.length === 0) {
 					this._addFunctionality(containerEl, 'Scene Builder')
 						.addEventListener("click", () => {
 							this.api.service(SceneBuilderService).open(model);
 						});
 
 					this._addSeparator(containerEl);
-				}
+				//}
 			}
 
 			if (model instanceof SessionModel) {
