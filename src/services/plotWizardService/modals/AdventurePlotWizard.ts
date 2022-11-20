@@ -47,14 +47,12 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			this.api,
 			this._adventureId,
 			'Plot Creation Wizard - Adventure',
-			`The **plot creation wizard** is a simple wizard that helps you create a more consistent plot without worrying about knowing anything about ABT or StoryCircle.
-			Just follow the prompt in the next few pages and the plot will be organised for you.
+			`The **Plot Creation Wizard** is a tool that helps you create a more consistent plot without worrying about knowing anything about ABT or Storycircle mechanics. Follow the prompts in the next few pages and the plot will be organized for you.
+			The plot is structured to provide an interesting storyline for your player characters, identifying two main goals for the **Adventure**.
 			
-			The plot is structured to provide an **interesting** storyline for your player characters, identifying two main goals for the adventure. The first goal is what they player characters believe they need; however, when they reach it, they realise the real goal is another one. THis storytelling structure create tension in the game, which is more pleasurable than a linear one.
-			*Keep into consideration Luke Skywalker. When he left Tatooine, he thought he should have saved Princess Leia. However, when her saved her, he realised that the Empire has a planet killer station, the Death Star, he would have to try and destroy. The logic is the same, and in storytelling, it **works**1*
+			The first goal is what the player characters believe they want or need as the goal. The second one is the true goal of the adventure, the player characters discovers by playing. This storytelling structure creates minor narrative tension in the game, and through narrative tension you achieve variety. Take into consideration Luke Skywalker. When he left Tatooine with Obi-Wan Kenobi, he was under the impression that he was going to rescue Princess Leia and then continue to work on becoming a Jedi. However, once she was rescued from the station, he became aware that she would not be truly rescued until the station itself was destroyed. The logic is the same, and in storytelling, it works!
 			
-			Two moment in the plot of an *adventure* offer the possibility to identify a **clue** around which you can create a better story. The suggestion is to make your adventure as interesting as possible, identifying three other eleemnts (*mainly Non Player Characters and Locations*) where the player characters can learn about the clue.
-			These clue generally mark a moment of passage for the player characters.`,
+			Two areas in the plot creation wizard offer the ability to also create a Clue alongside those plot elements, which allow you to expand upon who or what your player characters will also interact with in that plot point. The suggestion is to make these types of clues as relevant and interesting as possible, and identify three other elements (*mainly Non-Player Characters and Locations*) where player characters can learn about the clue. These types of clues are meant to mark a moment of passage for the player characters in the storyline, and should be unavoidable to find`,
 		));
 		this._steps.set(1, new StepDescriptionModal(
 			this.api,
@@ -87,7 +85,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(5, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
-			'What does convince the player characters to achieve their perceived goal?',
+			'What convinces player characters to achieve their perceived goal?',
 			'What happens to convince the player characters to try and achieve the perceived goal?',
 			this._adventure.storyCircle.need ?? '',
 		));
@@ -108,7 +106,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(8, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
-			'How are they going to triump and reach the true goal of the adventure?',
+			'How are they going to triumph and reach the true goal of the adventure?',
 			'How are they going to triumph?',
 			this._adventure.storyCircle.change ?? '',
 		));
