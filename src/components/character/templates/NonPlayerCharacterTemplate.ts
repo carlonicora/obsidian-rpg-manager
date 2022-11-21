@@ -5,6 +5,8 @@ import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
+import {IndexService} from "../../../services/indexService/IndexService";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
 
 export class NonPlayerCharacterTemplate extends AbstractComponentTemplate {
 	protected generateDataCodeBlock(
@@ -48,8 +50,14 @@ export class NonPlayerCharacterTemplate extends AbstractComponentTemplate {
 	}
 
 	public generateID(
-	): string {
-		return ComponentType.NonPlayerCharacter + '-' + CampaignSetting.Agnostic + '-' + this.campaignId;
+	): IndexDataInterface {
+		return {
+			type: ComponentType.NonPlayerCharacter,
+			campaignSettings: CampaignSetting.Agnostic,
+			id: this.api.service(IndexService).createUUID(),
+			campaignId: this.campaignId,
+			positionInParent: 0,
+		};
 	}
 }
 

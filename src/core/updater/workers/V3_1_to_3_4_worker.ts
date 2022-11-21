@@ -1,9 +1,7 @@
 import {AbstractDatabaseWorker} from "../abstracts/AbstractDatabaseWorker";
 import {DatabaseUpdateWorkerInterface} from "../interfaces/DatabaseUpdateWorkerInterface";
 import {DatabaseUpdaterReporterInterface} from "../interfaces/DatabaseUpdaterReporterInterface";
-import {LoggerService} from "../../../services/loggerService/LoggerService";
-import {LogMessageType} from "../../../services/loggerService/enums/LogMessageType";
-import {CachedMetadata, SectionCache, TFile} from "obsidian";
+import {TFile} from "obsidian";
 import {ComponentType} from "../../enums/ComponentType";
 
 export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {

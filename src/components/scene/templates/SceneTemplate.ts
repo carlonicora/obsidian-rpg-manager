@@ -7,6 +7,12 @@ import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
 import {SceneDataMetadataInterface} from "../interfaces/SceneDataMetadataInterface";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {IndexService} from "../../../services/indexService/IndexService";
+import {SceneInterface} from "../interfaces/SceneInterface";
 
 export class SceneTemplate extends AbstractComponentTemplate {
 	protected data: SceneDataMetadataInterface|undefined;
@@ -93,8 +99,34 @@ export class SceneTemplate extends AbstractComponentTemplate {
 	}
 
 	public generateID(
-	): string {
-		return ComponentType.Scene + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId;
+	): IndexDataInterface {
+		const previousScenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
+			scene.index.type === ComponentType.Scene &&
+			scene.index.campaignId === this.campaignId &&
+			scene.index.adventureId === this.adventureId &&
+			scene.index.actId === this.actId
+		).sort(
+			this.api.service(SorterService).create<SceneInterface>([
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent, SorterType.Descending),
+			])
+		);
+
+		const positionInParent = previousScenes.length === 0 ?
+			0 :
+			previousScenes[0].index.positionInParent + 1;
+
+		if (this.sceneId === undefined)
+			this.sceneId = this.api.service(IndexService).createUUID();
+
+		return {
+			type: ComponentType.Scene,
+			campaignSettings: CampaignSetting.Agnostic,
+			id: this.sceneId,
+			campaignId: this.campaignId,
+			adventureId: this.adventureId,
+			actId: this.actId,
+			positionInParent: positionInParent,
+		};
 	}
 }
 

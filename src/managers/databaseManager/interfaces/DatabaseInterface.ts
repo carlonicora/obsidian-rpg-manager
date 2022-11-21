@@ -2,6 +2,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {TFile} from "obsidian";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
 
 export interface DatabaseInterface {
 	recordset: ModelInterface[];
@@ -31,8 +32,8 @@ export interface DatabaseInterface {
 		name: string,
 	): T|undefined;
 
-	readByStringID<T extends ModelInterface>(
-		stringID: string
+	readByIndex<T extends ModelInterface>(
+		index: IndexDataInterface,
 	): T|undefined;
 
 	readByBaseName<T extends ModelInterface>(

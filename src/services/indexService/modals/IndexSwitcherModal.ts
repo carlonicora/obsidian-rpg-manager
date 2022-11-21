@@ -1,15 +1,7 @@
 import {TFile} from "obsidian";
-import {ComponentType} from "../../../core/enums/ComponentType";
 import {IndexInterface} from "../interfaces/IndexInterface";
-import {DatabaseInitialiser} from "../../../managers/databaseManager/DatabaseInitialiser";
-import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
-import {InvalidIdChecksumError} from "../../../core/errors/InvalidIdChecksumError";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IndexService} from "../IndexService";
-import {CodeblockService} from "../../codeblockService/CodeblockService";
-import {ActInterface} from "../../../components/act/interfaces/ActInterface";
-import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 
 export class IndexSwitcherModal extends AbstractModal {
 	private _id: IndexInterface;
@@ -25,6 +17,8 @@ export class IndexSwitcherModal extends AbstractModal {
 		super(api);
 		this.title = 'Component ID Updater';
 	}
+
+	/*
 
 	onClose() {
 		super.onClose();
@@ -128,7 +122,7 @@ export class IndexSwitcherModal extends AbstractModal {
 			if (acts.length > 0) {
 				for (let index=0; index<acts.length; index++){
 					if (newId.adventureId !== undefined) {
-						const oldId = this.api.service(IndexService).createFromID(acts[index].index.stringID);
+						const oldId = this.api.service(IndexService).createFromIndex(acts[index].index.stringID);
 						acts[index].index.replaceId(ComponentType.Campaign, newId.campaignId);
 						acts[index].index.replaceId(ComponentType.Adventure, newId.adventureId);
 						await this.api.service(CodeblockService).replaceID(acts[index].file, acts[index].index.stringID);
@@ -381,4 +375,6 @@ export class IndexSwitcherModal extends AbstractModal {
 			(actId !== undefined ? component.index.actId === actId : true)
 		);
 	}
+
+	 */
 }

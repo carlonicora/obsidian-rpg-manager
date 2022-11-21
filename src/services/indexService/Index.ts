@@ -5,7 +5,6 @@ import {TagMisconfiguredError} from "../../core/errors/TagMisconfiguredError";
 import {IndexInterface} from "./interfaces/IndexInterface";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {TagService} from "../tagService/TagService";
 
 export class Index implements IndexInterface {
 	public tagMap: Map<ComponentType, IndexTagValueInterface>;
@@ -15,6 +14,7 @@ export class Index implements IndexInterface {
 	constructor(
 		private _api: RpgManagerApiInterface,
 		public type: ComponentType,
+		private _id: string,
 		campaignId?: string,
 		adventureId?: string,
 		actId?: string,
@@ -31,6 +31,7 @@ export class Index implements IndexInterface {
 		this._generateTagValue(ComponentType.Session, sessionId);
 	}
 
+	//TODO Remove
 	get stringID(
 	): string{
 		let response = this.type + '-' + this.campaignSettings + '-' + this.campaignId;
@@ -52,50 +53,13 @@ export class Index implements IndexInterface {
 
 	public get id(
 	): string {
-		const response:string|undefined = this.tagMap.get(this.type)?.value;
-		if (response === undefined) throw new Error('');
-
-		return response;
+		return this._id;
 	}
 
 	public set id(
 		id: string,
 	) {
-		const tagValue:IndexTagValueInterface|undefined = this.tagMap.get(this.type);
-
-		if (tagValue !== undefined) {
-			tagValue.value = id;
-			tagValue.status = IndexTagStatus.Valid;
-		}
-	}
-
-	public get tag(
-	): string {
-		if (this._existingTag !== undefined) return this._existingTag;
-
-		const tag = this._api.service(TagService).dataSettings.get(this.type);
-		if (tag === undefined) throw new Error('');
-
-		let ids = '';
-		let id:string|undefined;
-		switch (this.type){
-			case ComponentType.Scene:
-				id = this.tagMap.get(ComponentType.Scene)?.value;
-				if (id !== undefined) ids = '/' + id + ids;
-			case ComponentType.Act:
-				id = this.tagMap.get(ComponentType.Act)?.value;
-				if (id !== undefined) ids = '/' + id + ids;
-			case ComponentType.Adventure:
-			case ComponentType.Session:
-				id = this.tagMap.get(this.type === ComponentType.Session ? ComponentType.Session : ComponentType.Adventure)?.value;
-				if (id !== undefined) ids = '/' + id + ids;
-			default:
-				id = this.tagMap.get(ComponentType.Campaign)?.value;
-				if (id !== undefined) ids = '/' + id + ids;
-				break;
-		}
-
-		return tag + ids;
+		this._id = id;
 	}
 
 	get campaignId(
@@ -125,28 +89,6 @@ export class Index implements IndexInterface {
 	get sessionId(
 	): string|undefined {
 		return this.getTypeValue(ComponentType.Session);
-	}
-
-	get stringValue(
-	): string {
-		let response = '';
-
-		switch(this.type){
-			case ComponentType.Scene:
-				response = '/' + (this.tagMap.get(ComponentType.Scene)?.value ?? '');
-			case ComponentType.Act:
-				response = '/' + (this.tagMap.get(ComponentType.Act)?.value ?? '') + response;
-			case ComponentType.Adventure:
-				response = '/' + (this.tagMap.get(ComponentType.Adventure)?.value ?? '') + response;
-				break;
-			case ComponentType.Session:
-				response = '/' + (this.tagMap.get(ComponentType.Session)?.value ?? '') + response;
-				break;
-		}
-
-		response = this.type + '/' + (this.tagMap.get(ComponentType.Campaign)?.value ?? '') + response;
-
-		return response;
 	}
 
 	private _generateTagValue(

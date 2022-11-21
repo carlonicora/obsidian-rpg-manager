@@ -71,7 +71,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 					new RelationshipsSelectionModal(this.api, model).open();
 				});
 
-			if (model !instanceof CampaignModel) {
+			if (model instanceof CampaignModel === false) {
 				this._addSeparator(containerEl);
 
 				this._addFunctionality(containerEl, 'Move')

@@ -16,9 +16,6 @@ export interface IndexInterface {
 		id: string,
 	);
 
-	get tag(
-	): string;
-
 	get campaignId(
 	): string;
 
@@ -36,9 +33,6 @@ export interface IndexInterface {
 
 	get isValid(
 	): boolean;
-
-	get stringValue(
-	): string;
 
 	isTypeValid(
 		type: ComponentType,

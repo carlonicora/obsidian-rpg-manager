@@ -38,7 +38,8 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 		let response: IndexInterface|undefined = undefined;
 		try {
-			response = this.api.service(IndexService).createFromID(this.metadata.data.currentAdventureId);
+			//TODO CHANGE TO SOMETHING ELSE
+			response = this.api.service(IndexService).createFromIndex(this.metadata.data.currentAdventureId);
 		} catch (e) {
 			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
 				const [, campaignId, adventureId] = this.metadata.data.currentAdventureId.split('/');
@@ -55,7 +56,8 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 		let response: IndexInterface|undefined = undefined;
 		try {
-			response = this.api.service(IndexService).createFromID(this.metadata.data.currentActId);
+			//TODO CHANGE TO SOMETHING ELSE
+			response = this.api.service(IndexService).createFromIndex(this.metadata.data.currentActId);
 		} catch (e) {
 			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
 				const [, campaignId, adventureId, actId] = this.metadata.data.currentActId.split('/');
@@ -72,12 +74,12 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 		let response: IndexInterface|undefined = undefined;
 		try {
-			response = this.api.service(IndexService).createFromID(this.metadata.data.currentSessionId);
+			//TODO CHANGE TO SOMETHING ELSE
+			response = this.api.service(IndexService).createFromIndex(this.metadata.data.currentSessionId);
 		} catch (e) {
-			if (this.metadata.data.currentSessionId.indexOf('-') === -1){
-				const [, campaignId, sessionId] = this.metadata.data.currentSessionId.split('/');
-				response = this.api.service(IndexService).create(ComponentType.Session, campaignId, undefined, undefined, undefined, sessionId);
-			}
+			if (this.metadata.data.currentSessionId.indexOf('-') === -1)
+				response = this.api.service(IndexService).create(ComponentType.Session, this.metadata.data.currentSessionId, this.campaign.index.id);
+
 		}
 
 		return response;

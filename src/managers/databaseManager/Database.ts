@@ -22,6 +22,7 @@ import {
 	AllComponentManipulatorService
 } from "../../services/allComponentManipulatorService/AllComponentManipulatorService";
 import {IndexService} from "../../services/indexService/IndexService";
+import {IndexDataInterface} from "../../services/indexService/interfaces/IndexDataInterface";
 
 export class Database extends Component implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];
@@ -81,10 +82,10 @@ export class Database extends Component implements DatabaseInterface {
 		return (<unknown>this.recordset.filter((query !== null ? query : true))) as T[];
 	}
 
-	public readByStringID<T extends ModelInterface>(
-		stringID: string
+	public readByIndex<T extends ModelInterface>(
+		index: IndexDataInterface
 	): T|undefined {
-		const id = this._api.service(IndexService).createFromID(stringID);
+		const id = this._api.service(IndexService).createFromIndex(index);
 		return this.readSingle<T>(id.type, id);
 	}
 

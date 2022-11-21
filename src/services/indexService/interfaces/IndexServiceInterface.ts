@@ -1,10 +1,12 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {IndexInterface} from "./IndexInterface";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
+import {IndexDataInterface} from "./IndexDataInterface";
 
 export interface IndexServiceInterface {
 	create(
 		type: ComponentType,
+		id: string,
 		campaignId: string,
 		adventureId?: string,
 		actId?: string,
@@ -15,19 +17,8 @@ export interface IndexServiceInterface {
 		campaignSettings?: CampaignSetting,
 	): IndexInterface;
 
-	/*
-	createFromTag(
-		tag: string,
-	): IndexInterface;
-
-	createFromTags(
-		tags: string[],
-	): IndexInterface;
-	*/
-
-	createFromID(
-		ID: string,
-		checksum?: string,
+	createFromIndex(
+		index: IndexDataInterface,
 	): IndexInterface;
 
 	createUUID(

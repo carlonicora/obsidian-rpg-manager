@@ -1,17 +1,11 @@
 import {SectionCache} from "obsidian";
 import {DatabaseUpdateWorkerInterface} from "./interfaces/DatabaseUpdateWorkerInterface";
-import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
-import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
-import {V2_0_to_3_0_worker} from "./workers/V2_0_to_3_0_worker";
 import {DatabaseUpdaterReporterInterface} from "./interfaces/DatabaseUpdaterReporterInterface";
 import {V3_0_to_3_1_worker} from "./workers/V3_0_to_3_1_worker";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {V3_1_to_3_4_worker} from "./workers/V3_1_to_3_4_worker";
 
 const versionMap = {
-	'1.2': V1_2_to_1_3_worker,
-	'1.3': V1_3_to_2_0_worker,
-	'2.0': V2_0_to_3_0_worker,
 	'3.0': V3_0_to_3_1_worker,
 	'3.3': V3_1_to_3_4_worker,
 };
@@ -30,9 +24,6 @@ export class DatabaseUpdater {
 		private _currentVersion: string,
 	) {
 		this._versionsHistory = new Map<string, VersionHistoryElementInterface>();
-		this._versionsHistory.set('1.2', {previousVersion: '1.2', nextVersion: '1.3'});
-		this._versionsHistory.set('1.3', {previousVersion: '1.3', nextVersion: '2.0'});
-		this._versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '3.0'});
 		this._versionsHistory.set('3.0', {previousVersion: '3.0', nextVersion: '3.1'});
 		this._versionsHistory.set('3.1', {previousVersion: '3.1', nextVersion: '3.2'});
 		this._versionsHistory.set('3.2', {previousVersion: '3.2', nextVersion: '3.3'});

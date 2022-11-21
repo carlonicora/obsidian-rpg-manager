@@ -141,27 +141,16 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		if (this.metadata?.data?.sessionId === undefined || this.metadata.data.sessionId === '')
 			return undefined;
 
-		let response: SessionInterface[] = [];
+		const sessions: SessionInterface[] = this.api.database.read<SessionInterface>((session: SessionInterface) =>
+			session.index.type === ComponentType.Session &&
+			session.index.campaignId === this.index.campaignId &&
+			session.index.sessionId === this.metadata.data?.sessionId
+		);
 
-		if (typeof this.metadata.data.sessionId === 'number') {
-			response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
-				session.index.type === ComponentType.Session &&
-				session.index.campaignId === this.index.campaignId &&
-				session.index.sessionId === this.metadata.data?.sessionId
-			);
-		} else {
-			try {
-				const session: SessionInterface | undefined = this.api.database.readByStringID(this.metadata.data.sessionId);
-				if (session !== undefined)
-					response = [session];
+		if (sessions.length !== 1)
+			return undefined;
 
-			} catch (e) {
-				response = [];
-			}
-
-		}
-
-		return response[0] ?? undefined;
+		return sessions[0];
 	}
 
 	private _adjacentScene(

@@ -7,7 +7,6 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 
 export class ActModalPart extends AbstractModalPart {
 	private _acts: ActInterface[];
-	private _allAct:ActInterface[];
 	private _actEl: HTMLSelectElement;
 	private _actErrorEl: HTMLParagraphElement;
 	private _childEl: HTMLDivElement;
@@ -18,22 +17,11 @@ export class ActModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 
-		if (this.modal.actId === undefined) {
-			this.modal.actId = this.api.service(IndexService).create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
-			this.modal.actId.id = this.api.service(IndexService).createUUID();
-		}
-
-		this._allAct = this.api.database.read<ActInterface>(
-			(component: ActInterface) =>
-				component.index.type === ComponentType.Act &&
-				component.index.campaignId === this.modal.campaignId.id
-		);
-
 		this._acts = this.api.database.read<ActInterface>(
 			(component: ActInterface) =>
 				component.index.type === ComponentType.Act &&
-				component.index.campaignId === this.modal.campaignId.id &&
-				component.index.adventureId === this.modal.adventureId?.id
+				component.index.campaignId === this.modal.campaignId &&
+				component.index.adventureId === this.modal.adventureId
 		);
 	}
 
@@ -42,8 +30,8 @@ export class ActModalPart extends AbstractModalPart {
 	): Promise<void> {
 		const actEl = contentEl.createDiv({cls: 'actContainer'});
 
-		if (this.modal.type === ComponentType.Act){
-			this._addNewActElements(actEl);
+		if (this.modal.type === ComponentType.Act) {
+			this.addAdditionalElements();
 		} else {
 			if (this._acts.length === 0){
 				const mainContent = this.modal.getContentEl();
@@ -80,20 +68,10 @@ export class ActModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.actId?.id === '')
-			this.modal.actId.id = this.api.service(IndexService).createUUID();
+		if (this.modal.actId === undefined)
+			this.modal.actId = this.api.service(IndexService).createUUID();
 
 		return true;
-	}
-
-	private _addNewActElements(
-		containerEl: HTMLElement,
-	): void {
-		this._allAct.forEach((component: ActInterface) => {
-			if (this.modal.actId !== undefined && (component.index.positionInParent ?? 0) >= (this.modal.actId.positionInParent ?? 0)) {
-				this.modal.actId.positionInParent = ((component.index.positionInParent ?? 0) + 1);
-			}
-		});
 	}
 
 	private _selectActElements(
@@ -117,7 +95,7 @@ export class ActModalPart extends AbstractModalPart {
 				value: act.index.actId?.toString(),
 			});
 
-			if (this._acts.length === 1 || this.modal.actId?.id === act.index.actId){
+			if (this._acts.length === 1 || this.modal.actId === act.index.actId){
 				actOptionEl.selected = true;
 				this._selectAct();
 			}
@@ -132,13 +110,7 @@ export class ActModalPart extends AbstractModalPart {
 
 	private _selectAct(
 	): void {
-		if (this.modal.actId === undefined) {
-			this.modal.actId = this.api.service(IndexService).create(ComponentType.Adventure, this.modal.campaignId.id, this.modal.adventureId?.id);
-		}
-
-		if (this.modal.actId !== undefined){
-			this.modal.actId.id = this._actEl.value;
-		}
+		this.modal.actId = this._actEl.value;
 
 		this._childEl.empty();
 		this.loadChild(this._childEl);

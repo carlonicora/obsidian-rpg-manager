@@ -2,7 +2,6 @@ import {ModalPartInterface} from "../../../core/interfaces/ModalPartInterface";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
-import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {FileCreationService} from "../../../services/fileCreationService/FileCreationService";
 
@@ -38,12 +37,12 @@ export abstract class AbstractModalPart implements ModalPartInterface {
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: IndexInterface,
-		adventureId: IndexInterface|undefined=undefined,
-		actId: IndexInterface|undefined=undefined,
-		sceneId: IndexInterface|undefined=undefined,
-		sessionId: IndexInterface|undefined=undefined,
-		additionalInformation: any|null=null,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		additionalInformation?: any,
 	): Promise<void> {
 		this.api.service(FileCreationService).create(
 			settings,

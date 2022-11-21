@@ -1,10 +1,7 @@
-import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
-import {IndexService} from "../../../services/indexService/IndexService";
-import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
@@ -33,7 +30,6 @@ export class CampaignModalPart extends AbstractModalPart {
 
 		if (this.modal.type === ComponentType.Campaign){
 			this.addAdditionalElements();
-			this._addNewCampaignElements(campaignEl);
 		} else {
 			if (this._campaigns.length === 0){
 				const mainContent = this.modal.getContentEl();
@@ -96,43 +92,6 @@ export class CampaignModalPart extends AbstractModalPart {
 		return true;
 	}
 
-	private _addNewCampaignElements(
-		containerEl: HTMLElement,
-	): void {
-		if (this.modal.campaignId === undefined) {
-			this.modal.campaignId = this.api.service(IndexService).create(ComponentType.Campaign, this.api.service(IndexService).createUUID());
-		}
-
-		this._campaigns.forEach((campaign: CampaignInterface) => {
-			if (this.modal.campaignId !== undefined && campaign.index.campaignId >= this.modal.campaignId.id) {
-				this.modal.campaignId.id = (campaign.index.campaignId + 1);
-			}
-		});
-
-		this.modal.campaignSetting = CampaignSetting.Agnostic;
-		/*
-		containerEl.createEl('label', {text: 'Select CampaignModel Settings'});
-		this._campaignSettingsEl = containerEl.createEl('select');
-
-		Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting: string) => {
-			const campaignSettingOption = this._campaignSettingsEl.createEl('option', {
-				text: setting,
-				value: setting,
-			});
-
-			if (setting === CampaignSetting.Agnostic.toString()){
-				campaignSettingOption.selected = true;
-			}
-		});
-
-		this._selectSetting();
-
-		this._campaignSettingsEl.addEventListener('change', (e: Event) => {
-			this._selectSetting();
-		});
-		*/
-	}
-
 	private _selectCampaignElements(
 		containerEl: HTMLElement
 	): void {
@@ -168,17 +127,9 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaignErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
-	/*
-	private _selectSetting(
-	): void {
-		this.modal.campaignSetting = CampaignSetting[this._campaignSettingsEl.value as keyof typeof CampaignSetting];
-	}
-	*/
-
 	private _selectCampaign(
 	): void {
-		const campaignId: IndexInterface|undefined = this.api.service(IndexService).create(ComponentType.Campaign, this._campaignEl.value);
-		if (campaignId !== undefined) this.modal.campaignId = campaignId;
+		this.modal.campaignId = this._campaignEl.value;
 
 		this._childEl.empty();
 		this.loadChild(this._childEl);

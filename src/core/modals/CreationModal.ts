@@ -1,11 +1,9 @@
 import {CachedMetadata, MarkdownView, Modal, Scope, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {IndexService} from "../../services/indexService/IndexService";
 import {TagService} from "../../services/tagService/TagService";
 import {ComponentNotesInterface} from "../../managers/templatesManager/interfaces/ComponentNotesInterface";
 
@@ -19,11 +17,11 @@ export class CreationModal extends Modal implements ModalInterface {
 	public additionalInformationEl: HTMLDivElement;
 	public templateEl: HTMLSelectElement;
 
-	public campaignId: IndexInterface;
-	public adventureId: IndexInterface|undefined;
-	public actId: IndexInterface|undefined;
-	public sceneId: IndexInterface|undefined;
-	public sessionId: IndexInterface|undefined;
+	public campaignId: string;
+	public adventureId?: string;
+	public actId?: string;
+	public sceneId?: string;
+	public sessionId?: string;
 	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalPartInterface;
@@ -56,15 +54,14 @@ export class CreationModal extends Modal implements ModalInterface {
 		});
 
 		if (campaignId !== undefined) {
-			const campaign:IndexInterface|undefined = this.api.service(IndexService).create(ComponentType.Campaign, campaignId);
-			if (campaign !== undefined) {
-				this.campaignId = campaign;
+			this.campaignId = campaignId;
 
-				if (adventureId !== undefined) {
-					this.adventureId = this.api.service(IndexService).create(ComponentType.Adventure, campaignId, adventureId);
+			if (adventureId !== undefined) {
+				this.adventureId = adventureId;
 
-					if (actId !== undefined) this.actId = this.api.service(IndexService).create(ComponentType.Act, campaignId, adventureId, actId);
-				}
+				if (actId !== undefined)
+					this.actId = actId;
+
 			}
 		}
 

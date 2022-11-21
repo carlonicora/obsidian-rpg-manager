@@ -18,12 +18,11 @@ export class AdventureModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 
-		if (this.modal.adventureId === undefined) {
-			this.modal.adventureId = this.api.service(IndexService).create(ComponentType.Adventure, this.modal.campaignId.id);
-			this.modal.adventureId.id = this.api.service(IndexService).createUUID();
-		}
-
-		this._adventures = this.api.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
+		this._adventures = this.api.database.read<AdventureInterface>(
+			(component: AdventureInterface) =>
+				component.index.type === ComponentType.Adventure &&
+				component.index.campaignId === this.modal.campaignId
+		);
 	}
 
 	public async addElement(
@@ -33,7 +32,6 @@ export class AdventureModalPart extends AbstractModalPart {
 
 		if (this.modal.type === ComponentType.Adventure){
 			this.addAdditionalElements();
-			this._addNewAdventureElements(adventureEl);
 		} else {
 			if (this._adventures.length === 0){
 				const mainContent = this.modal.getContentEl();
@@ -70,20 +68,10 @@ export class AdventureModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.adventureId?.id === '')
-			this.modal.adventureId.id = this.api.service(IndexService).createUUID();
+		if (this.modal.adventureId === undefined)
+			this.modal.adventureId = this.api.service(IndexService).createUUID();
 
 		return true;
-	}
-
-	private _addNewAdventureElements(
-		containerEl: HTMLElement,
-	): void {
-		this._adventures.forEach((adventure: AdventureInterface) => {
-			if (this.modal.adventureId !== undefined && (adventure.index.positionInParent ?? 0) >= (this.modal.adventureId.positionInParent ?? 0)) {
-				this.modal.adventureId.positionInParent = ((adventure.index.positionInParent ?? 0) + 1);
-			}
-		});
 	}
 
 	private _selectAdventureElements(
@@ -107,7 +95,7 @@ export class AdventureModalPart extends AbstractModalPart {
 				value: adventure.index.adventureId?.toString(),
 			});
 
-			if (this._adventures.length === 1 || this.modal.adventureId?.id === adventure.index.adventureId){
+			if (this._adventures.length === 1 || this.modal.adventureId === adventure.index.adventureId){
 				adventureOptionEl.selected = true;
 				this._selectAdventure();
 			}
@@ -122,9 +110,8 @@ export class AdventureModalPart extends AbstractModalPart {
 
 	private _selectAdventure(
 	): void {
-		if (this.modal.adventureId !== undefined){
-			this.modal.adventureId.id = this._adventureEl.value;
-		}
+		this.modal.adventureId = this._adventureEl.value;
+
 		this._childEl.empty();
 		this.loadChild(this._childEl);
 	}

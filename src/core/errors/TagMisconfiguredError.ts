@@ -1,14 +1,13 @@
-import {ComponentType} from "../enums/ComponentType";
-import {IndexTagStatus} from "../../services/indexService/enums/IndexTagStatus";
 import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {AbstractRpgManagerError} from "./abstracts/AbstractRpgManagerError";
-import {TagService} from "../../services/tagService/TagService";
 
 export class TagMisconfiguredError extends AbstractRpgManagerError {
 	public index: IndexInterface;
 
 	public showErrorMessage(
 	): string {
+		return '';
+		/*
 		let response = 'The tag `' + this.index.tag + '` is misconfigured\n' +
 			'The correct tag should be ';
 
@@ -33,10 +32,13 @@ export class TagMisconfiguredError extends AbstractRpgManagerError {
 		});
 
 		return response;
+
+		 */
 	}
 
 	public showErrorActions(
 	): string {
+		/*
 		let response = 'The tag `' + this.index.tag + '` is invalid.\n' +
 			'The following ids are either missing or invalid:\n';
 
@@ -46,5 +48,7 @@ export class TagMisconfiguredError extends AbstractRpgManagerError {
 		});
 
 		return response;
+		*/
+		return '';
 	}
 }

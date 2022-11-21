@@ -1,6 +1,5 @@
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 import {TFile} from "obsidian";
 
 export interface FileCreationServiceInterface {
@@ -10,13 +9,13 @@ export interface FileCreationServiceInterface {
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: IndexInterface,
-		adventureId?: IndexInterface|undefined,
-		actId?: IndexInterface|undefined,
-		sceneId?: IndexInterface|undefined,
-		sessionId?: IndexInterface|undefined,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
 		positionInParent?: number,
-		additionalInformation?: any|null,
+		additionalInformation?: any,
 	): Promise<void>;
 
 	silentCreate(

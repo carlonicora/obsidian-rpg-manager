@@ -1,18 +1,17 @@
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {ModalPartInterface} from "./ModalPartInterface";
 import {ComponentType} from "../enums/ComponentType";
-import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 
 export interface ModalInterface {
 	saver: ModalPartInterface
 
 	type: ComponentType;
 
-	campaignId: IndexInterface;
-	adventureId: IndexInterface|undefined;
-	actId: IndexInterface|undefined;
-	sceneId: IndexInterface|undefined;
-	sessionId: IndexInterface|undefined;
+	campaignId: string;
+	adventureId?: string;
+	actId?: string;
+	sceneId?: string;
+	sessionId?: string;
 	campaignSetting: CampaignSetting;
 
 	additionalInformationEl: HTMLDivElement;

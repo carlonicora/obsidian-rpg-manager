@@ -7,8 +7,6 @@ import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../../core/errors/ComponentDuplicatedError";
-import {Md5} from "ts-md5";
-import {InvalidIdChecksumError} from "../../core/errors/InvalidIdChecksumError";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {IndexService} from "../../services/indexService/IndexService";
 import {LoggerService} from "../../services/loggerService/LoggerService";
@@ -120,10 +118,7 @@ export class DatabaseInitialiser {
 		if (codeblockDomain === undefined || codeblockDomain?.codeblock?.id === undefined)
 			return undefined;
 
-		const response = this._api.service(IndexService).createFromID(codeblockDomain.codeblock.id);
-
-		if (Md5.hashStr(codeblockDomain.codeblock.id) !== codeblockDomain.codeblock.checksum)
-			throw new InvalidIdChecksumError(this._api, response);
+		const response = this._api.service(IndexService).createFromIndex(codeblockDomain.codeblock);
 
 		return response;
 	}
