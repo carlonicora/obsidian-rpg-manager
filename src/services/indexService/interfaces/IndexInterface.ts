@@ -1,11 +1,11 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IdTagValueInterface} from "./IdTagValueInterface";
-import {IdTagStatus} from "../enums/IdTagStatus";
+import {IndexTagValueInterface} from "./IndexTagValueInterface";
+import {IndexTagStatus} from "../enums/IndexTagStatus";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 
-export interface IdInterface {
+export interface IndexInterface {
 	type: ComponentType;
-	tagMap: Map<ComponentType, IdTagValueInterface>;
+	tagMap: Map<ComponentType, IndexTagValueInterface>;
 	campaignSettings: CampaignSetting;
 
 	get id(
@@ -44,7 +44,7 @@ export interface IdInterface {
 	): boolean;
 
 	get invalidIds(
-	): Map<ComponentType, IdTagStatus>|undefined;
+	): Map<ComponentType, IndexTagStatus>|undefined;
 
 	get possiblyNotFoundIds(
 	): Map<ComponentType, number>|undefined;

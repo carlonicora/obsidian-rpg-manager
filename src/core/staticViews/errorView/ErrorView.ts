@@ -2,7 +2,7 @@ import {Component, MarkdownRenderer, TFile} from "obsidian";
 import {RpgErrorInterface} from "../../errors/interfaces/RpgErrorInterface";
 import {AbstractStaticView} from "../../../managers/staticViewsManager/abstracts/AbstractStaticView";
 import {StaticViewType} from "../../../managers/staticViewsManager/enums/StaticViewType";
-import {IdSwitcherModal} from "../../../services/idService/modals/IdSwitcherModal";
+import {IndexSwitcherModal} from "../../../services/indexService/modals/IndexSwitcherModal";
 
 export class ErrorView extends AbstractStaticView {
 	protected viewType: string = StaticViewType.Errors.toString();
@@ -49,7 +49,7 @@ export class ErrorView extends AbstractStaticView {
 				const errorLinkEl = errorLinksEl.createEl('li');
 				const errorLinkAnchorEl = errorLinkEl.createEl('a', {href: '#', text: 'Fix the issue'});
 				errorLinkAnchorEl.addEventListener('click', () => {
-					new IdSwitcherModal(this.api, file).open();
+					new IndexSwitcherModal(this.api, file).open();
 				});
 			});
 		}

@@ -1,8 +1,8 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IdInterface} from "./IdInterface";
+import {IndexInterface} from "./IndexInterface";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 
-export interface IdServiceInterface {
+export interface IndexServiceInterface {
 	create(
 		type: ComponentType,
 		campaignId: string|number,
@@ -12,18 +12,18 @@ export interface IdServiceInterface {
 		sessionId?: string|number|undefined,
 		existingTag?: string|undefined,
 		campaignSettings?: CampaignSetting,
-	): IdInterface;
+	): IndexInterface;
 
 	createFromTag(
 		tag: string,
-	): IdInterface;
+	): IndexInterface;
 
 	createFromTags(
 		tags: string[],
-	): IdInterface;
+	): IndexInterface;
 
 	createFromID(
 		ID: string,
 		checksum?: string,
-	): IdInterface;
+	): IndexInterface;
 }

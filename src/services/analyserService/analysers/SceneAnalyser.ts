@@ -13,7 +13,7 @@ export class SceneAnalyser extends AbstractAnalyser {
 		super(api, abtStage);
 
 		this.isSingleScene = true;
-		this.addScene(this.api.database.readSingle<SceneInterface>(ComponentType.Scene, scene.id));
+		this.addScene(this.api.database.readSingle<SceneInterface>(ComponentType.Scene, scene.index));
 
 		super.ingestData();
 	}

@@ -1,11 +1,11 @@
 import {CachedMetadata, MarkdownView, Modal, Scope, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../../services/idService/IdService";
+import {IndexService} from "../../services/indexService/IndexService";
 import {TagService} from "../../services/tagService/TagService";
 import {ComponentNotesInterface} from "../../managers/templatesManager/interfaces/ComponentNotesInterface";
 
@@ -19,11 +19,11 @@ export class CreationModal extends Modal implements ModalInterface {
 	public additionalInformationEl: HTMLDivElement;
 	public templateEl: HTMLSelectElement;
 
-	public campaignId: IdInterface;
-	public adventureId: IdInterface|undefined;
-	public actId: IdInterface|undefined;
-	public sceneId: IdInterface|undefined;
-	public sessionId: IdInterface|undefined;
+	public campaignId: IndexInterface;
+	public adventureId: IndexInterface|undefined;
+	public actId: IndexInterface|undefined;
+	public sceneId: IndexInterface|undefined;
+	public sessionId: IndexInterface|undefined;
 	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalPartInterface;
@@ -56,14 +56,14 @@ export class CreationModal extends Modal implements ModalInterface {
 		});
 
 		if (campaignId !== undefined) {
-			const campaign:IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, campaignId);
+			const campaign:IndexInterface|undefined = this.api.service(IndexService).create(ComponentType.Campaign, campaignId);
 			if (campaign !== undefined) {
 				this.campaignId = campaign;
 
 				if (adventureId !== undefined) {
-					this.adventureId = this.api.service(IdService).create(ComponentType.Adventure, campaignId, adventureId);
+					this.adventureId = this.api.service(IndexService).create(ComponentType.Adventure, campaignId, adventureId);
 
-					if (actId !== undefined) this.actId = this.api.service(IdService).create(ComponentType.Act, campaignId, adventureId, actId);
+					if (actId !== undefined) this.actId = this.api.service(IndexService).create(ComponentType.Act, campaignId, adventureId, actId);
 				}
 			}
 		}

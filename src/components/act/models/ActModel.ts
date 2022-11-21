@@ -22,12 +22,12 @@ export class ActModel extends AbstractActData implements ActInterface {
 		try {
 			this.adventure.validateHierarchy();
 		} catch (e) {
-			throw new ComponentNotFoundError(this.api, this.id);
+			throw new ComponentNotFoundError(this.api, this.index);
 		}
 	}
 
 	public get adventure(): AdventureInterface {
-		const response = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
+		const response = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.index);
 
 		if (response === undefined)
 			throw new Error('');
@@ -46,15 +46,15 @@ export class ActModel extends AbstractActData implements ActInterface {
 	private _adjacentAct(
 		next: boolean,
 	): ActInterface | null {
-		const actId = this.id.actId;
+		const actId = this.index.actId;
 
 		if (actId === undefined)
 			return null;
 
 		const response = this.api.database.read<ActInterface>((act: ActInterface) =>
-			act.id.type === ComponentType.Act &&
-			act.id.campaignId === this.id.campaignId &&
-			act.id.actId === (next ? actId + 1 : actId -1)
+			act.index.type === ComponentType.Act &&
+			act.index.campaignId === this.index.campaignId &&
+			act.index.actId === (next ? actId + 1 : actId -1)
 		);
 
 		return response[0] ?? null;
@@ -66,11 +66,11 @@ export class ActModel extends AbstractActData implements ActInterface {
 		const response: RelationshipListInterface = super.getRelationships(database);
 
 		this.api.database.read<ModelInterface>((model: ModelInterface) =>
-			model.id.campaignId === this.id.campaignId &&
-			model.id.adventureId === this.id.adventureId &&
-			model.id.actId === this.id.actId
+			model.index.campaignId === this.index.campaignId &&
+			model.index.adventureId === this.index.adventureId &&
+			model.index.actId === this.index.actId
 		).forEach((model: ModelInterface) => {
-			if (model.id.type === ComponentType.Scene){
+			if (model.index.type === ComponentType.Scene){
 				model.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
 					if (sceneRelationship.component !== undefined)
 						response.add(this.api.service(RelationshipService).createRelationship(

@@ -1,14 +1,14 @@
 import {ComponentType} from "../../core/enums/ComponentType";
-import {IdTagValueInterface} from "./interfaces/IdTagValueInterface";
-import {IdTagStatus} from "./enums/IdTagStatus";
+import {IndexTagValueInterface} from "./interfaces/IndexTagValueInterface";
+import {IndexTagStatus} from "./enums/IndexTagStatus";
 import {TagMisconfiguredError} from "../../core/errors/TagMisconfiguredError";
-import {IdInterface} from "./interfaces/IdInterface";
+import {IndexInterface} from "./interfaces/IndexInterface";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {TagService} from "../tagService/TagService";
 
-export class Id  implements IdInterface{
-	public tagMap: Map<ComponentType, IdTagValueInterface>;
+export class Index implements IndexInterface{
+	public tagMap: Map<ComponentType, IndexTagValueInterface>;
 	public campaignSettings: CampaignSetting = CampaignSetting.Agnostic;
 
 	constructor(
@@ -60,11 +60,11 @@ export class Id  implements IdInterface{
 	public set id(
 		id: number,
 	) {
-		const tagValue:IdTagValueInterface|undefined = this.tagMap.get(this.type);
+		const tagValue:IndexTagValueInterface|undefined = this.tagMap.get(this.type);
 
 		if (tagValue !== undefined) {
 			tagValue.value = id;
-			tagValue.status = IdTagStatus.Valid;
+			tagValue.status = IndexTagStatus.Valid;
 		}
 	}
 
@@ -152,7 +152,7 @@ export class Id  implements IdInterface{
 		type: ComponentType,
 		value: string|undefined,
 	): void {
-		let status: IdTagStatus;
+		let status: IndexTagStatus;
 		let numericValue: number|undefined;
 
 		if (value === '' || value === undefined){
@@ -170,12 +170,12 @@ export class Id  implements IdInterface{
 					if (type === ComponentType.Session) isRequired = true;
 			}
 
-			status = isRequired ? IdTagStatus.Missing : IdTagStatus.NotRequired;
+			status = isRequired ? IndexTagStatus.Missing : IndexTagStatus.NotRequired;
 		} else {
 			if (isNaN(+value)){
-				status = IdTagStatus.Invalid;
+				status = IndexTagStatus.Invalid;
 			} else {
-				status = IdTagStatus.Valid;
+				status = IndexTagStatus.Valid;
 				numericValue = +value;
 			}
 		}
@@ -187,8 +187,8 @@ export class Id  implements IdInterface{
 	): boolean {
 		let response = true;
 
-		this.tagMap.forEach((tagValue: IdTagValueInterface, componentType:ComponentType) => {
-			if (tagValue.status === IdTagStatus.Invalid || tagValue.status === IdTagStatus.Missing) response = false;
+		this.tagMap.forEach((tagValue: IndexTagValueInterface, componentType:ComponentType) => {
+			if (tagValue.status === IndexTagStatus.Invalid || tagValue.status === IndexTagStatus.Missing) response = false;
 		});
 
 		return response;
@@ -197,15 +197,15 @@ export class Id  implements IdInterface{
 	public isTypeValid(
 		type: ComponentType,
 	): boolean {
-		return (this.tagMap.get(type)?.status === IdTagStatus.Valid || this.tagMap.get(type)?.status === IdTagStatus.NotRequired);
+		return (this.tagMap.get(type)?.status === IndexTagStatus.Valid || this.tagMap.get(type)?.status === IndexTagStatus.NotRequired);
 	}
 
 	public get invalidIds(
-	): Map<ComponentType, IdTagStatus>|undefined {
-		const response: Map<ComponentType, IdTagStatus> = new Map();
+	): Map<ComponentType, IndexTagStatus>|undefined {
+		const response: Map<ComponentType, IndexTagStatus> = new Map();
 
-		this.tagMap.forEach((tagValue: IdTagValueInterface, type: ComponentType) => {
-			if (tagValue.status === IdTagStatus.Invalid || tagValue.status === IdTagStatus.Missing) response.set(type, tagValue.status);
+		this.tagMap.forEach((tagValue: IndexTagValueInterface, type: ComponentType) => {
+			if (tagValue.status === IndexTagStatus.Invalid || tagValue.status === IndexTagStatus.Missing) response.set(type, tagValue.status);
 		});
 
 		return (response.size === 0 ? undefined : response);
@@ -215,7 +215,7 @@ export class Id  implements IdInterface{
 	): Map<ComponentType, number>|undefined {
 		const response: Map<ComponentType, number> = new Map();
 
-		this.tagMap.forEach((tagValue: IdTagValueInterface, type: ComponentType) => {
+		this.tagMap.forEach((tagValue: IndexTagValueInterface, type: ComponentType) => {
 			if (tagValue.value !== undefined) response.set(type, tagValue.value);
 		});
 
@@ -228,8 +228,8 @@ export class Id  implements IdInterface{
 		const typeValue = this.tagMap.get(type);
 		if (typeValue === undefined) throw new Error('Tag Type not found');
 
-		if (typeValue.status === IdTagStatus.Valid) return typeValue.value;
-		if (typeValue.status === IdTagStatus.NotRequired) return undefined;
+		if (typeValue.status === IndexTagStatus.Valid) return typeValue.value;
+		if (typeValue.status === IndexTagStatus.NotRequired) return undefined;
 
 		throw new TagMisconfiguredError(this._api, this);
 	}

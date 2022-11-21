@@ -9,8 +9,8 @@ import {
 import {DateService} from "../../../services/dateService/DateService";
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
-import {IdService} from "../../../services/idService/IdService";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexService} from "../../../services/indexService/IndexService";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 import {ComponentType} from "../../../core/enums/ComponentType";
 
@@ -32,51 +32,51 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		return {date: fantasyCalendar.current as FantasyCalendarDateInterface, isFantasyCalendar: true};
 	}
 
-	get currentAdventureId(): IdInterface|undefined {
+	get currentAdventureId(): IndexInterface|undefined {
 		if (this.metadata.data.currentAdventureId == undefined || this.metadata.data.currentAdventureId === '')
 			return undefined;
 
-		let response: IdInterface|undefined = undefined;
+		let response: IndexInterface|undefined = undefined;
 		try {
-			response = this.api.service(IdService).createFromID(this.metadata.data.currentAdventureId);
+			response = this.api.service(IndexService).createFromID(this.metadata.data.currentAdventureId);
 		} catch (e) {
 			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
 				const [, campaignId, adventureId] = this.metadata.data.currentAdventureId.split('/');
-				response = this.api.service(IdService).create(ComponentType.Adventure, campaignId, adventureId);
+				response = this.api.service(IndexService).create(ComponentType.Adventure, campaignId, adventureId);
 			}
 		}
 
 		return response;
 	}
 
-	get currentActId(): IdInterface|undefined {
+	get currentActId(): IndexInterface|undefined {
 		if (this.metadata.data.currentActId == undefined || this.metadata.data.currentActId === '')
 			return undefined;
 
-		let response: IdInterface|undefined = undefined;
+		let response: IndexInterface|undefined = undefined;
 		try {
-			response = this.api.service(IdService).createFromID(this.metadata.data.currentActId);
+			response = this.api.service(IndexService).createFromID(this.metadata.data.currentActId);
 		} catch (e) {
 			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
 				const [, campaignId, adventureId, actId] = this.metadata.data.currentActId.split('/');
-				response = this.api.service(IdService).create(ComponentType.Act, campaignId, adventureId, actId);
+				response = this.api.service(IndexService).create(ComponentType.Act, campaignId, adventureId, actId);
 			}
 		}
 
 		return response;
 	}
 
-	get currentSessionId(): IdInterface|undefined {
+	get currentSessionId(): IndexInterface|undefined {
 		if (this.metadata.data.currentSessionId == undefined || this.metadata.data.currentSessionId === '')
 			return undefined;
 
-		let response: IdInterface|undefined = undefined;
+		let response: IndexInterface|undefined = undefined;
 		try {
-			response = this.api.service(IdService).createFromID(this.metadata.data.currentSessionId);
+			response = this.api.service(IndexService).createFromID(this.metadata.data.currentSessionId);
 		} catch (e) {
 			if (this.metadata.data.currentSessionId.indexOf('-') === -1){
 				const [, campaignId, sessionId] = this.metadata.data.currentSessionId.split('/');
-				response = this.api.service(IdService).create(ComponentType.Session, campaignId, undefined, undefined, undefined, sessionId);
+				response = this.api.service(IndexService).create(ComponentType.Session, campaignId, undefined, undefined, undefined, sessionId);
 			}
 		}
 

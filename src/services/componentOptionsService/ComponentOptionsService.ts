@@ -3,7 +3,7 @@ import {ComponentOptionsServiceInterface} from "./interfaces/ComponentOptionsSer
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipsSelectionModal} from "../relationshipsService/modals/RelationshipsSelectionModal";
-import {IdSwitcherModal} from "../idService/modals/IdSwitcherModal";
+import {IndexSwitcherModal} from "../indexService/modals/IndexSwitcherModal";
 import {GalleryManagementModal} from "../galleryService/modals/GalleryManagementModal";
 import {GalleryService} from "../galleryService/GalleryService";
 import {CampaignModel} from "../../components/campaign/models/CampaignModel";
@@ -24,14 +24,14 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		if (model instanceof CampaignModel) {
 			this._addFunctionality(containerEl, 'Timeline')
 				.addEventListener("click", () => {
-					this.api.staticViews.create(StaticViewType.Timeline, [model.id]);
+					this.api.staticViews.create(StaticViewType.Timeline, [model.index]);
 				});
 
 		} else {
 			if (model instanceof AdventureModel) {
 				this._addFunctionality(containerEl, 'Wizard')
 					.addEventListener("click", () => {
-						this.api.service(PlotWizardService).openAdventureWizard(model.id);
+						this.api.service(PlotWizardService).openAdventureWizard(model.index);
 					});
 
 				this._addSeparator(containerEl);
@@ -40,7 +40,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 			if (model instanceof ActModel) {
 				this._addFunctionality(containerEl, 'Wizard')
 					.addEventListener("click", () => {
-						this.api.service(PlotWizardService).openActWizard(model.id);
+						this.api.service(PlotWizardService).openActWizard(model.index);
 					});
 
 				this._addSeparator(containerEl);
@@ -75,7 +75,7 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 			this._addFunctionality(containerEl, 'Move')
 				.addEventListener("click", () => {
-					new IdSwitcherModal(this.api, model.file).open();
+					new IndexSwitcherModal(this.api, model.file).open();
 				});
 
 		}

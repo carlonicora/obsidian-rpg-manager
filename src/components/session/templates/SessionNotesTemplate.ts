@@ -8,8 +8,8 @@ export class SessionNotesTemplate extends AbstractComponentNoteTemplate implemen
 
 		const characters = this.api.database.read<CharacterInterface>(
 			(character: CharacterInterface) =>
-			character.id.type === ComponentType.Character &&
-			character.id.campaignId === this.campaignId
+			character.index.type === ComponentType.Character &&
+			character.index.campaignId === this.campaignId
 		);
 
 		let possibleRecappers = '';

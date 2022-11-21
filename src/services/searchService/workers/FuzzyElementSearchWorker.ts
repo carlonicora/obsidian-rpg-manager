@@ -28,8 +28,8 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 		if (searchOnlyAliases === undefined) {
 			this._api.database.read(
 				(element: ModelInterface) =>
-					element.id.campaignId === this._element.id.campaignId &&
-					(this._type !== undefined ? element.id.type === this._type : true)
+					element.index.campaignId === this._element.index.campaignId &&
+					(this._type !== undefined ? element.index.type === this._type : true)
 			).forEach((element: ModelInterface) => {
 				if (element.alias.length > 0) {
 					element.alias.forEach((alias: string) => {

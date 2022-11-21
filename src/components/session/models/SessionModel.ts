@@ -57,15 +57,15 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 	private _adjacentSession(
 		next: boolean,
 	): SessionInterface | null {
-		const sessionId = this.id.sessionId;
+		const sessionId = this.index.sessionId;
 
 		if (sessionId === undefined)
 			return null;
 
 		const response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
-			session.id.type === ComponentType.Session &&
-			session.id.campaignId === this.id.campaignId &&
-			session.id.sessionId === (next ? sessionId + 1 : sessionId -1)
+			session.index.type === ComponentType.Session &&
+			session.index.campaignId === this.index.campaignId &&
+			session.index.sessionId === (next ? sessionId + 1 : sessionId -1)
 		);
 
 		return response[0] ?? null;
@@ -81,9 +81,9 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		});
 
 		this.api.database.read<SceneInterface>((model: SceneInterface) =>
-			model.id.campaignId === this.id.campaignId &&
+			model.index.campaignId === this.index.campaignId &&
 			model.session !== undefined &&
-			model.session.id === this.id
+			model.session.index === this.index
 		).forEach((model: SceneInterface) => {
 			model.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
 				if (sceneRelationship.component !== undefined)

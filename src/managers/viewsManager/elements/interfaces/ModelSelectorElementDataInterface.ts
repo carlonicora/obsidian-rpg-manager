@@ -1,10 +1,10 @@
 import {ElementDataInterface} from "../../interfaces/ElementDataInterface";
 import {ModelInterface} from "../../../modelsManager/interfaces/ModelInterface";
-import {IdInterface} from "../../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../../services/indexService/interfaces/IndexInterface";
 
 export interface ModelSelectorElementDataInterface extends ElementDataInterface {
 	values: {
-		id: IdInterface|undefined,
+		index: IndexInterface|undefined,
 		list: ModelInterface[],
 	};
 }

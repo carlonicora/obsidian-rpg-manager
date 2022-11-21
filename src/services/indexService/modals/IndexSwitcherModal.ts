@@ -1,19 +1,19 @@
 import {TFile} from "obsidian";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IdInterface} from "../interfaces/IdInterface";
+import {IndexInterface} from "../interfaces/IndexInterface";
 import {DatabaseInitialiser} from "../../../managers/databaseManager/DatabaseInitialiser";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {InvalidIdChecksumError} from "../../../core/errors/InvalidIdChecksumError";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../IdService";
+import {IndexService} from "../IndexService";
 import {CodeblockService} from "../../codeblockService/CodeblockService";
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 
-export class IdSwitcherModal extends AbstractModal {
-	private _id: IdInterface;
-	private _newId: IdInterface;
+export class IndexSwitcherModal extends AbstractModal {
+	private _id: IndexInterface;
+	private _newId: IndexInterface;
 	private _updateButtonEl: HTMLButtonElement;
 	private _newIdEl: HTMLInputElement;
 	private _errorIdEl: HTMLSpanElement;
@@ -35,16 +35,16 @@ export class IdSwitcherModal extends AbstractModal {
 		super.onOpen();
 
 		DatabaseInitialiser.readID(this._file)
-			.then((id: IdInterface) => {
-				this._processId(id);
+			.then((index: IndexInterface) => {
+				this._processId(index);
 			})
 			.catch((e: InvalidIdChecksumError) => {
-				if (e.id !== undefined) this._processId(e.id);
+				if (e.index !== undefined) this._processId(e.index);
 			});
 	}
 
 	private async _processId(
-		id: IdInterface,
+		id: IndexInterface,
 	): Promise<void> {
 		this._id = id;
 
@@ -62,7 +62,7 @@ export class IdSwitcherModal extends AbstractModal {
 
 		if (this._id.type === ComponentType.Campaign){
 			const newCampaignId = this._proposeNewId(ComponentType.Campaign);
-			this._newId = this.api.service(IdService).create(
+			this._newId = this.api.service(IndexService).create(
 				ComponentType.Campaign,
 				newCampaignId,
 				undefined,
@@ -98,19 +98,19 @@ export class IdSwitcherModal extends AbstractModal {
 	): void {
 		switch (this._newId.type){
 			case ComponentType.Campaign:
-				this._newId = this.api.service(IdService).create(ComponentType.Campaign, +this._newIdEl.value, undefined, undefined, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Campaign, +this._newIdEl.value, undefined, undefined, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Adventure:
-				this._newId = this.api.service(IdService).create(ComponentType.Adventure, this._newId.campaignId, +this._newIdEl.value, undefined, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Adventure, this._newId.campaignId, +this._newIdEl.value, undefined, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Act:
-				this._newId = this.api.service(IdService).create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, +this._newIdEl.value, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, +this._newIdEl.value, undefined, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Scene:
-				this._newId = this.api.service(IdService).create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, +this._newIdEl.value, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, +this._newIdEl.value, undefined, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Session:
-				this._newId = this.api.service(IdService).create(ComponentType.Session, +this._newIdEl.value, undefined, undefined, undefined, +this._newIdEl.value, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Session, +this._newIdEl.value, undefined, undefined, undefined, +this._newIdEl.value, undefined, this._id.campaignSettings);
 				break;
 			default:
 				return;
@@ -137,8 +137,8 @@ export class IdSwitcherModal extends AbstractModal {
 	}
 
 	private async _updateChildIds(
-		id: IdInterface,
-		newId: IdInterface,
+		id: IndexInterface,
+		newId: IndexInterface,
 		file: TFile
 	): Promise<void> {
 		if (id.type === ComponentType.Adventure){
@@ -147,12 +147,12 @@ export class IdSwitcherModal extends AbstractModal {
 			if (acts.length > 0) {
 				for (let index=0; index<acts.length; index++){
 					if (newId.adventureId !== undefined) {
-						const oldId = this.api.service(IdService).createFromID(acts[index].id.stringID);
-						acts[index].id.replaceId(ComponentType.Campaign, newId.campaignId);
-						acts[index].id.replaceId(ComponentType.Adventure, newId.adventureId);
-						await this.api.service(CodeblockService).replaceID(acts[index].file, acts[index].id.stringID);
+						const oldId = this.api.service(IndexService).createFromID(acts[index].index.stringID);
+						acts[index].index.replaceId(ComponentType.Campaign, newId.campaignId);
+						acts[index].index.replaceId(ComponentType.Adventure, newId.adventureId);
+						await this.api.service(CodeblockService).replaceID(acts[index].file, acts[index].index.stringID);
 
-						await this._updateChildIds(oldId, acts[index].id, acts[index].file);
+						await this._updateChildIds(oldId, acts[index].index, acts[index].file);
 					}
 				}
 			}
@@ -162,10 +162,10 @@ export class IdSwitcherModal extends AbstractModal {
 			if (scenes.length > 0){
 				for (let index=0; index<scenes.length; index++){
 					if (newId.adventureId !== undefined && newId.actId !== undefined) {
-						scenes[index].id.replaceId(ComponentType.Campaign, newId.campaignId);
-						scenes[index].id.replaceId(ComponentType.Adventure, newId.adventureId);
-						scenes[index].id.replaceId(ComponentType.Act, newId.actId);
-						await this.api.service(CodeblockService).replaceID(scenes[index].file, scenes[index].id.stringID);
+						scenes[index].index.replaceId(ComponentType.Campaign, newId.campaignId);
+						scenes[index].index.replaceId(ComponentType.Adventure, newId.adventureId);
+						scenes[index].index.replaceId(ComponentType.Act, newId.actId);
+						await this.api.service(CodeblockService).replaceID(scenes[index].file, scenes[index].index.stringID);
 					}
 				}
 			}
@@ -214,7 +214,7 @@ export class IdSwitcherModal extends AbstractModal {
 		const subContainerEl: HTMLDivElement|undefined = selectorEl.parentElement?.createDiv();
 
 		components.forEach((component: ModelInterface) => {
-			selectorEl.createEl('option', {text: component.file.basename, value: component.id.id.toString()});
+			selectorEl.createEl('option', {text: component.file.basename, value: component.index.id.toString()});
 		});
 
 		if (subContainerEl !== undefined) {
@@ -335,7 +335,7 @@ export class IdSwitcherModal extends AbstractModal {
 							if (newId !== undefined) this._addIdSelector(subContainerEl, newId.toString());
 						}
 
-						this._newId = this.api.service(IdService).create(
+						this._newId = this.api.service(IndexService).create(
 							idValues.type,
 							idValues.campaignId,
 							idValues.adventureId,
@@ -363,20 +363,20 @@ export class IdSwitcherModal extends AbstractModal {
 		let components: ModelInterface[];
 		if (type === ComponentType.Scene){
 			components = this.api.database.read<ModelInterface>((component: ModelInterface) =>
-				component.id.type === type &&
-				component.id.campaignId === campaignId &&
-				component.id.adventureId === adventureId &&
-				component.id.actId === actId
+				component.index.type === type &&
+				component.index.campaignId === campaignId &&
+				component.index.adventureId === adventureId &&
+				component.index.actId === actId
 			);
 		} else {
 			components = this.api.database.read<ModelInterface>((component: ModelInterface) =>
-				component.id.type === type &&
-				(campaignId !== undefined ? component.id.campaignId === campaignId : true)
+				component.index.type === type &&
+				(campaignId !== undefined ? component.index.campaignId === campaignId : true)
 			);
 		}
 
 		components.forEach((component: ModelInterface) => {
-			if (component.id.id >= response) response = component.id.id + 1;
+			if (component.index.id >= response) response = component.index.id + 1;
 		});
 
 		return response;
@@ -390,7 +390,7 @@ export class IdSwitcherModal extends AbstractModal {
 	): boolean {
 		const components = this._loadPossibleChildren(type, campaignId, adventureId, actId);
 
-		const match = components.filter((component: ModelInterface) => this._id.id === component.id.id);
+		const match = components.filter((component: ModelInterface) => this._id.id === component.index.id);
 
 		return match.length === 0;
 	}
@@ -402,10 +402,10 @@ export class IdSwitcherModal extends AbstractModal {
 		actId: number|undefined = undefined,
 	): ModelInterface[]{
 		return this.api.database.read<ModelInterface>((component: ModelInterface) =>
-			component.id.type === type &&
-			(campaignId !== undefined ? component.id.campaignId === campaignId : true) &&
-			(adventureId !== undefined ? component.id.adventureId === adventureId : true) &&
-			(actId !== undefined ? component.id.actId === actId : true)
+			component.index.type === type &&
+			(campaignId !== undefined ? component.index.campaignId === campaignId : true) &&
+			(adventureId !== undefined ? component.index.adventureId === adventureId : true) &&
+			(actId !== undefined ? component.index.actId === actId : true)
 		);
 	}
 }

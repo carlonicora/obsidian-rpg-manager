@@ -2,11 +2,11 @@ import {Editor, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {FileCreationServiceInterface} from "./interfaces/FileCreationServiceInterface";
-import {IdInterface} from "../idService/interfaces/IdInterface";
+import {IndexInterface} from "../indexService/interfaces/IndexInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
-import {IdService} from "../idService/IdService";
+import {IndexService} from "../indexService/IndexService";
 import {
 	ControllerMetadataDataInterface
 } from "../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
@@ -20,11 +20,11 @@ export class FileCreationService extends AbstractService implements FileCreation
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: IdInterface,
-		adventureId: IdInterface|undefined=undefined,
-		actId: IdInterface|undefined=undefined,
-		sceneId: IdInterface|undefined=undefined,
-		sessionId: IdInterface|undefined=undefined,
+		campaignId: IndexInterface,
+		adventureId: IndexInterface|undefined=undefined,
+		actId: IndexInterface|undefined=undefined,
+		sceneId: IndexInterface|undefined=undefined,
+		sessionId: IndexInterface|undefined=undefined,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): Promise<void> {
 		let pathSeparator = '';
@@ -136,7 +136,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 		let settings = CampaignSetting.Agnostic;
 
 		let campaign: CampaignInterface|undefined;
-		const id = this.api.service(IdService).create(ComponentType.Campaign, campaignId);
+		const id = this.api.service(IndexService).create(ComponentType.Campaign, campaignId);
 
 		if (id !== undefined){
 			try {

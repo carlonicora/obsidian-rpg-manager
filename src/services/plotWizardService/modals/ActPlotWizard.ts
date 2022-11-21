@@ -1,7 +1,7 @@
 import {AbstractWizardModal} from "../../../managers/modalsManager/abstracts/AbstractWizardModal";
 import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {StepIntroductionModal} from "./steps/StepIntroductionModal";
 import {StepDescriptionModal} from "./steps/StepDescriptionModal";
@@ -37,7 +37,7 @@ export class ActPlotWizard extends AbstractWizardModal {
 
 	constructor(
 		api: RpgManagerApiInterface,
-		private _actId: IdInterface,
+		private _actId: IndexInterface,
 	) {
 		super(api);
 

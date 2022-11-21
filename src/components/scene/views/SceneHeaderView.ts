@@ -36,11 +36,11 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Scene Date', values: this.model.date, category: FantasyCalendarCategory.Scene, editableKey: 'data.date'});
 
 		const sessions = this.api.database.read((session: SessionInterface) =>
-			session.id.type === ComponentType.Session &&
-			session.id.campaignId === this.model.id.campaignId
+			session.index.type === ComponentType.Session &&
+			session.index.campaignId === this.model.index.campaignId
 		);
 
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {id: this.model.session?.id, list: sessions}, editableKey: 'data.sessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {id: this.model.session?.index, list: sessions}, editableKey: 'data.sessionId'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addInfoElement(StoryCircleStageElement, {model: this.model, title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});

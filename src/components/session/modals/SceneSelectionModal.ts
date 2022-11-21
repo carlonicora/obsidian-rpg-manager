@@ -43,8 +43,8 @@ export class SceneSelectionModal extends AbstractModal {
 		});
 
 		const acts = this.api.database.read<ActInterface>((act: ActInterface) =>
-			act.id.type === ComponentType.Act &&
-			act.id.campaignId === this._session.id.campaignId
+			act.index.type === ComponentType.Act &&
+			act.index.campaignId === this._session.index.campaignId
 		).sort(this.api.service(SorterService).create<ActInterface>([
 			new SorterComparisonElement((act: ActInterface) => act.file.stat.mtime, SorterType.Descending)
 		]));
@@ -89,14 +89,14 @@ export class SceneSelectionModal extends AbstractModal {
 	): void {
 		this._availableScenes = this.api.database.read<SceneInterface>(
 			(scene: SceneInterface) =>
-				scene.id.type === ComponentType.Scene &&
-				scene.id.campaignId === this._session.id.campaignId &&
-				(this._selectedAct !== undefined ? scene.id.actId === this._selectedAct.id.actId : true) &&
-				(scene.session === undefined || scene.session?.id.sessionId === this._session.id.sessionId),
+				scene.index.type === ComponentType.Scene &&
+				scene.index.campaignId === this._session.index.campaignId &&
+				(this._selectedAct !== undefined ? scene.index.actId === this._selectedAct.index.actId : true) &&
+				(scene.session === undefined || scene.session?.index.sessionId === this._session.index.sessionId),
 		).sort(this.api.service(SorterService).create<SceneInterface>([
-			new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-			new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-			new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.index.adventureId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.index.actId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.index.sceneId),
 		]));
 	}
 
@@ -133,7 +133,7 @@ export class SceneSelectionModal extends AbstractModal {
 				checkbox.value = scene.file.path;
 				checkbox.id = scene.file.basename;
 
-				if (scene.session?.id.sessionId === this._session.id.sessionId) {
+				if (scene.session?.index.sessionId === this._session.index.sessionId) {
 					checkbox.checked = true;
 					this._scenesEls.set(scene.file, checkbox);
 					if (populateInitialScenes)
@@ -161,7 +161,7 @@ export class SceneSelectionModal extends AbstractModal {
 			if (initialSceneCheked === undefined || sceneEl.checked !== initialSceneCheked) {
 				await this.api.service(CodeblockService).addOrUpdate(
 					'data.sessionId',
-					(sceneEl.checked === true ? this._session.id.stringID : ''),
+					(sceneEl.checked === true ? this._session.index.stringID : ''),
 					file,
 				);
 			}

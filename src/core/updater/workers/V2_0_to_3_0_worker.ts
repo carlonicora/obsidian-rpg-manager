@@ -9,7 +9,7 @@ import {LoggerService} from "../../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../../services/loggerService/enums/LogMessageType";
 import {TagService} from "../../../services/tagService/TagService";
 import {YamlService} from "../../../services/yamlService/YamlService";
-import {IdService} from "../../../services/idService/IdService";
+import {IndexService} from "../../../services/indexService/IndexService";
 
 export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
 	private _campaignSettings: Map<number, CampaignSetting>;
@@ -715,7 +715,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				const tagAndType = this._getTagAndType(tags);
 				if (tagAndType !== undefined){
 					if (tagAndType.type === ComponentType.Campaign){
-						const id = this.api.service(IdService).createFromTag(tagAndType.tag);
+						const id = this.api.service(IndexService).createFromTag(tagAndType.tag);
 						try {
 							const settings = metadata?.frontmatter?.settings != undefined ?
 								CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :

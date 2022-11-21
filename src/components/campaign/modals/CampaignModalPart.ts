@@ -3,8 +3,8 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
-import {IdService} from "../../../services/idService/IdService";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexService} from "../../../services/indexService/IndexService";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
@@ -100,12 +100,12 @@ export class CampaignModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		if (this.modal.campaignId === undefined) {
-			this.modal.campaignId = this.api.service(IdService).create(ComponentType.Campaign, 1);
+			this.modal.campaignId = this.api.service(IndexService).create(ComponentType.Campaign, 1);
 		}
 
 		this._campaigns.forEach((campaign: CampaignInterface) => {
-			if (this.modal.campaignId !== undefined && campaign.id.campaignId >= this.modal.campaignId.id) {
-				this.modal.campaignId.id = (campaign.id.campaignId + 1);
+			if (this.modal.campaignId !== undefined && campaign.index.campaignId >= this.modal.campaignId.id) {
+				this.modal.campaignId.id = (campaign.index.campaignId + 1);
 			}
 		});
 
@@ -152,7 +152,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaigns.forEach((campaign: CampaignInterface) => {
 			const campaignOptionEl = this._campaignEl.createEl('option', {
 				text: campaign.file.basename,
-				value: campaign.id.campaignId.toString(),
+				value: campaign.index.campaignId.toString(),
 			});
 
 			if (this._campaigns.length === 1){
@@ -177,7 +177,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 	private _selectCampaign(
 	): void {
-		const campaignId: IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, this._campaignEl.value);
+		const campaignId: IndexInterface|undefined = this.api.service(IndexService).create(ComponentType.Campaign, this._campaignEl.value);
 		if (campaignId !== undefined) this.modal.campaignId = campaignId;
 
 		this._childEl.empty();

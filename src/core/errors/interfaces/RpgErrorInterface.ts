@@ -1,7 +1,7 @@
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 
 export interface RpgErrorInterface {
-	id: IdInterface|undefined;
+	index: IndexInterface|undefined;
 
 	getErrorTitle(
 	): string|undefined;

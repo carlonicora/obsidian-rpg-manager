@@ -103,9 +103,9 @@ export class Controller extends MarkdownRenderChild {
 		const yamlSource: ControllerMetadataInterface = parseYaml(this._source);
 
 		if (yamlSource.models.header !== undefined) {
-			const viewClass = this._api.views.create(ViewType.Header, this._currentComponent.id.type, this._currentComponent.campaignSettings);
+			const viewClass = this._api.views.create(ViewType.Header, this._currentComponent.index.type, this._currentComponent.campaignSettings);
 			if (viewClass !== undefined)
-				this._views.set(this._createModelIdentifier(ViewType.Header, this._currentComponent.id.type), {viewClassInterface: viewClass, type: ViewType.Header});
+				this._views.set(this._createModelIdentifier(ViewType.Header, this._currentComponent.index.type), {viewClassInterface: viewClass, type: ViewType.Header});
 
 		}
 
@@ -160,7 +160,7 @@ export class Controller extends MarkdownRenderChild {
 
 			if (viewClass !== undefined)
 				this._views.set(
-					this._createModelIdentifier(ViewType.Header, this._currentComponent.id.type, componentType, requiredRelationship),
+					this._createModelIdentifier(ViewType.Header, this._currentComponent.index.type, componentType, requiredRelationship),
 					{
 						viewClassInterface: viewClass,
 						type: ViewType.Relationships,

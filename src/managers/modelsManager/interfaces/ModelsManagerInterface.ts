@@ -1,13 +1,13 @@
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {ModelInterface} from "./ModelInterface";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {TFile} from "obsidian";
 import {ClassInterface} from "../../../api/interfaces/ClassInterface";
 
 export interface ModelsManagerInterface {
 	get(
-		id: IdInterface,
+		id: IndexInterface,
 		campaignSettings: CampaignSetting,
 		file: TFile,
 	): ModelInterface|undefined;

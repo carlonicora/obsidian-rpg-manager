@@ -1,13 +1,13 @@
-import {IdServiceInterface} from "./interfaces/IdServiceInterface";
+import {IndexServiceInterface} from "./interfaces/IndexServiceInterface";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {IdInterface} from "./interfaces/IdInterface";
-import {Id} from "./Id";
+import {IndexInterface} from "./interfaces/IndexInterface";
+import {Index} from "./Index";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {TagService} from "../tagService/TagService";
 
-export class IdService extends AbstractService implements IdServiceInterface, ServiceInterface {
+export class IndexService extends AbstractService implements IndexServiceInterface, ServiceInterface {
 	public create(
 		type: ComponentType,
 		campaignId: string|number|undefined,
@@ -17,8 +17,8 @@ export class IdService extends AbstractService implements IdServiceInterface, Se
 		sessionId: string|number|undefined=undefined,
 		existingTag: string|undefined=undefined,
 		campaignSettings: CampaignSetting|undefined=undefined,
-	): IdInterface {
-		const response = new Id(
+	): IndexInterface {
+		const response = new Index(
 			this.api,
 			type,
 			this._convertIdElement(campaignId),
@@ -37,7 +37,7 @@ export class IdService extends AbstractService implements IdServiceInterface, Se
 
 	public createFromTag(
 		tag: string,
-	): IdInterface {
+	): IndexInterface {
 		const type: ComponentType|undefined = this.api.service(TagService).getDataType(tag);
 		if (type === undefined) throw new Error('');
 
@@ -55,7 +55,7 @@ export class IdService extends AbstractService implements IdServiceInterface, Se
 
 	public createFromTags(
 		tags: string[],
-	): IdInterface {
+	): IndexInterface {
 		const tag: string|undefined = this.api.service(TagService).getTag(tags);
 		if (tag === undefined) throw new Error('');
 
@@ -75,7 +75,7 @@ export class IdService extends AbstractService implements IdServiceInterface, Se
 	createFromID(
 		id: string,
 		checksum?: string,
-	): IdInterface {
+	): IndexInterface {
 		const [typeString, campaignSettings, ids] = id.split('-');
 		const [campaignId, adventureIdOrSessionId, actId, sceneId] = ids.split('/');
 		const type: ComponentType = +typeString;

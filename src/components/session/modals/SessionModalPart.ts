@@ -2,7 +2,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {SessionInterface} from "../interfaces/SessionInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../../../services/idService/IdService";
+import {IndexService} from "../../../services/indexService/IndexService";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class SessionModalPart extends AbstractModalPart {
@@ -17,7 +17,7 @@ export class SessionModalPart extends AbstractModalPart {
 		modal: ModalInterface,
 	) {
 		super(api, modal);
-		this.modal.sessionId = this.api.service(IdService).create(ComponentType.Session, this.modal.campaignId.id);
+		this.modal.sessionId = this.api.service(IndexService).create(ComponentType.Session, this.modal.campaignId.id);
 		this.modal.sessionId.id = 0;
 		this._sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
@@ -49,8 +49,8 @@ export class SessionModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		this._sessions.forEach((session: SessionInterface) => {
-			if (this.modal.sessionId !== undefined && (session.id.sessionId ?? 0) >= (this.modal.sessionId.id ?? 0)) {
-				this.modal.sessionId.id = ((session.id.sessionId ?? 0) + 1);
+			if (this.modal.sessionId !== undefined && (session.index.sessionId ?? 0) >= (this.modal.sessionId.id ?? 0)) {
+				this.modal.sessionId.id = ((session.index.sessionId ?? 0) + 1);
 			}
 		});
 	}

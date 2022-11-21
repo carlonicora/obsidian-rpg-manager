@@ -1,12 +1,12 @@
 import {ComponentNotesInterface} from "../interfaces/ComponentNotesInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../../../services/idService/IdService";
+import {IndexService} from "../../../services/indexService/IndexService";
 
 export abstract class AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	protected type: ComponentType;
-	protected id: IdInterface|undefined;
+	protected id: IndexInterface|undefined;
 
 	constructor(
 		protected api: RpgManagerApiInterface,
@@ -19,7 +19,7 @@ export abstract class AbstractComponentNoteTemplate implements ComponentNotesInt
 		protected additionalInformation: any|undefined,
 	) {
 		if (campaignId !== undefined)
-			this.id = this.api.service(IdService).create(this.type, campaignId, adventureId, actId, sceneId, sessionId);
+			this.id = this.api.service(IndexService).create(this.type, campaignId, adventureId, actId, sceneId, sessionId);
 
 	}
 	

@@ -44,23 +44,23 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		this._relationshipSortingMap = new Map();
 		this._relationshipSortingMap.set(ComponentType.Event, [new SorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date)]);
 		this._relationshipSortingMap.set(ComponentType.Session, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).index.campaignId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).index.adventureId),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Adventure, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).index.campaignId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).index.adventureId),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Act, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).id.adventureId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).id.actId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.campaignId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.adventureId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.actId),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Scene, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.adventureId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.actId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.sceneId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.campaignId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.adventureId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.actId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.sceneId),
 		]);
 
 		this._cellClass.set(TableField.Date, ['smaller', 'inline']);
@@ -86,7 +86,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		this._fields = this.api.service(RelationshipService).getTableFields(this.relatedComponentType);
 		this._relationships = this.model.getRelationships().filter((relationship: RelationshipInterface) =>
 			relationship.component !== undefined &&
-			relationship.component.id.type === this.relatedComponentType &&
+			relationship.component.index.type === this.relatedComponentType &&
 			(this.relationshipType === undefined || (this.relationshipType & relationship.type) === relationship.type)
 		);
 

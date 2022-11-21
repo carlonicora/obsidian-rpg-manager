@@ -5,7 +5,7 @@ import {SorterType} from "../../searchService/enums/SorterType";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipInterface} from "../interfaces/RelationshipInterface";
 import {RelationshipType} from "../enums/RelationshipType";
-import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {RelationshipService} from "../RelationshipService";
@@ -71,7 +71,7 @@ export class RelationshipsSelectionModal extends AbstractModal {
 
 	private _addNavigation(
 	): void {
-		const availableRelationships = this._availableRelationships.get(this._currentComponent.id.type);
+		const availableRelationships = this._availableRelationships.get(this._currentComponent.index.type);
 
 		this._addLinkWithFunction(
 			this._navigationEl,
@@ -122,7 +122,7 @@ export class RelationshipsSelectionModal extends AbstractModal {
 		const components: Array<ModelInterface> = this.search(type, searchTerm);
 
 		components.forEach((component: ModelInterface) => {
-			if (component.id !== this._currentComponent.id) {
+			if (component.index !== this._currentComponent.index) {
 				const relationships: RelationshipInterface[] = this._currentComponent.getRelationships()
 					.filter((relationship: RelationshipInterface) =>
 						relationship.component?.file.basename === component.file.basename
@@ -222,13 +222,13 @@ export class RelationshipsSelectionModal extends AbstractModal {
 		containerEl.addClass('selector');
 		const availableRelationshipsType: Map<RelationshipType, string> = new Map<RelationshipType, string>();
 
-		if (this._currentComponent.id.type !== component.id.type)
+		if (this._currentComponent.index.type !== component.index.type)
 			availableRelationshipsType.set(RelationshipType.Bidirectional, this.api.service(RelationshipService).getReadableRelationshipType(RelationshipType.Bidirectional));
 
 		availableRelationshipsType.set(RelationshipType.Unidirectional,
 			this.api.service(RelationshipService).getReadableRelationshipType(RelationshipType.Unidirectional));
 
-		if (this._currentComponent.id.type === component.id.type && this._relationshipTypeAllowedChildren.has(component.id.type))
+		if (this._currentComponent.index.type === component.index.type && this._relationshipTypeAllowedChildren.has(component.index.type))
 			availableRelationshipsType.set(RelationshipType.Child, this.api.service(RelationshipService).getReadableRelationshipType(RelationshipType.Child));
 
 		const relationshipTypeSelectorEl: HTMLSelectElement = containerEl.createEl('select');
@@ -316,7 +316,7 @@ export class RelationshipsSelectionModal extends AbstractModal {
 
 		let components: ModelInterface[] = [];
 		if (type !== undefined) {
-			components = this.api.database.readList<ModelInterface>(type, this._currentComponent.id)
+			components = this.api.database.readList<ModelInterface>(type, this._currentComponent.index)
 				.sort(
 					this.api.service(SorterService).create<ModelInterface>([
 						new SorterComparisonElement((component: ModelInterface) => this._currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
@@ -337,19 +337,19 @@ export class RelationshipsSelectionModal extends AbstractModal {
 			return components;
 
 
-		const matches: Map<IdInterface, {component: ModelInterface, result?: SearchResult}> = new Map<IdInterface, {component: ModelInterface; result?: SearchResult}>();
+		const matches: Map<IndexInterface, {component: ModelInterface, result?: SearchResult}> = new Map<IndexInterface, {component: ModelInterface; result?: SearchResult}>();
 
 		const query = prepareQuery(term);
 		components.forEach((component: ModelInterface) => {
 			component.alias.forEach((alias: string) => {
 				if (alias.toLowerCase().startsWith(term.toLowerCase()))
-					matches.set(component.id, {component: component});
+					matches.set(component.index, {component: component});
 			});
 
-			if (!matches.has(component.id)) {
+			if (!matches.has(component.index)) {
 				const fuzzySearchResult = fuzzySearch(query, component.file.basename + ' ' + component.synopsis);
 				if (fuzzySearchResult != null && fuzzySearchResult.matches !== null)
-					matches.set(component.id, {component: component, result: fuzzySearchResult});
+					matches.set(component.index, {component: component, result: fuzzySearchResult});
 
 			}
 		});

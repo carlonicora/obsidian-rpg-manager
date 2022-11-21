@@ -1,5 +1,5 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {TFile} from "obsidian";
 
@@ -41,13 +41,13 @@ export interface DatabaseInterface {
 
 	readSingle<T extends ModelInterface>(
 		type: ComponentType,
-		id: IdInterface,
+		id: IndexInterface,
 		overloadId?: number|undefined,
 	): T;
 
 	readList<T extends ModelInterface>(
 		type: ComponentType,
-		id: IdInterface|undefined,
+		id: IndexInterface|undefined,
 		overloadId?: number|undefined,
 	): T[];
 

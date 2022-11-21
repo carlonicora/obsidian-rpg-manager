@@ -2,7 +2,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {SceneInterface} from "../interfaces/SceneInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../../../services/idService/IdService";
+import {IndexService} from "../../../services/indexService/IndexService";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 
 export class SceneModalPart extends AbstractModalPart {
@@ -13,7 +13,7 @@ export class SceneModalPart extends AbstractModalPart {
 		modal: ModalInterface,
 	) {
 		super(api, modal);
-		this.modal.sceneId = this.api.service(IdService).create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
+		this.modal.sceneId = this.api.service(IndexService).create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
 		this.modal.sceneId.id = 0;
 
 		if (this.modal.adventureId != null && this.modal.actId != null)
@@ -28,8 +28,8 @@ export class SceneModalPart extends AbstractModalPart {
 	): Promise<void> {
 		contentEl.createDiv({cls: 'sceneContainer'});
 		this._scenes.forEach((scene: SceneInterface) => {
-			if (this.modal.sceneId !== undefined && (scene.id.sceneId ?? 0) >= (this.modal.sceneId.id ?? 0)) {
-				this.modal.sceneId.id = ((scene.id.sceneId ?? 0) + 1);
+			if (this.modal.sceneId !== undefined && (scene.index.sceneId ?? 0) >= (this.modal.sceneId.id ?? 0)) {
+				this.modal.sceneId.id = ((scene.index.sceneId ?? 0) + 1);
 			}
 		});
 

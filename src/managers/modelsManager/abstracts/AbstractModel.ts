@@ -15,7 +15,7 @@ import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundErro
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
 import {ComponentMetadataInterface} from "../../../core/interfaces/ComponentMetadataInterface";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {CachedMetadata, TFile} from "obsidian";
 import {ComponentStage} from "../../../core/enums/ComponentStage";
 import {CampaignInterface} from "../../../components/campaign/interfaces/CampaignInterface";
@@ -29,7 +29,7 @@ import {ImageService} from "../../../services/imageService/ImageService";
 import {CodeblockDomainInterface} from "../../../services/codeblockService/interfaces/CodeblockDomainInterface";
 
 export abstract class AbstractModel implements ModelInterface {
-	public id: IdInterface;
+	public index: IndexInterface;
 	public file: TFile;
 	public stage: ComponentStage = ComponentStage.Element;
 	public version: number|undefined=undefined;
@@ -69,8 +69,8 @@ export abstract class AbstractModel implements ModelInterface {
 	}
 
 	public get campaign(): CampaignInterface {
-		if (this.id.type === ComponentType.Campaign) return <unknown>this as CampaignInterface;
-		return this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.id);
+		if (this.index.type === ComponentType.Campaign) return <unknown>this as CampaignInterface;
+		return this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, this.index);
 	}
 
 	public get campaignSettings(): CampaignSetting {
@@ -138,7 +138,7 @@ export abstract class AbstractModel implements ModelInterface {
 
 						if (maybeRelatedComponents.length === 1) {
 							/**
-							 * @TODO: what is the defaultRelationship for this.idService.type?
+							 * @TODO: what is the defaultRelationship for this.indexService.type?
 							 */
 							relationship.type = RelationshipType.Unidirectional;
 							relationship.component = maybeRelatedComponents[0];
@@ -153,11 +153,11 @@ export abstract class AbstractModel implements ModelInterface {
 
 	public initialise(
 		campaignSettings: CampaignSetting,
-		id: IdInterface,
+		id: IndexInterface,
 		file: TFile,
 	): void {
 		this._campaignSettings = campaignSettings;
-		this.id = id;
+		this.index = id;
 		this.file = file;
 
 		const metadataCache: CachedMetadata|null = this.api.app.metadataCache.getFileCache(this.file);
@@ -218,7 +218,7 @@ export abstract class AbstractModel implements ModelInterface {
 			for (let relationshipIndex = 0; relationshipIndex < relationships.length; relationshipIndex++) {
 				const relationship: RelationshipInterface = relationships[relationshipIndex];
 
-				if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID) {
+				if (relationship.component !== undefined && relationship.component.index.stringID === this.index.stringID) {
 					const newRelationship: RelationshipInterface|undefined = this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
 
 					if (newRelationship !== undefined)
@@ -267,7 +267,7 @@ export abstract class AbstractModel implements ModelInterface {
 		try {
 			this.campaign;
 		} catch (e) {
-			throw new ComponentNotFoundError(this.api, this.id);
+			throw new ComponentNotFoundError(this.api, this.index);
 		}
 	}
 }
