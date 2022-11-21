@@ -11,12 +11,13 @@ export abstract class AbstractComponentNoteTemplate implements ComponentNotesInt
 	constructor(
 		protected api: RpgManagerApiInterface,
 		protected name: string,
-		protected campaignId: number|undefined,
-		protected adventureId: number|undefined,
-		protected actId: number|undefined,
-		protected sceneId: number|undefined,
-		protected sessionId: number|undefined,
-		protected additionalInformation: any|undefined,
+		protected campaignId?: string,
+		protected adventureId?: string,
+		protected actId?: string,
+		protected sceneId?: string,
+		protected sessionId?: string,
+		protected positionInParent?: number,
+		protected additionalInformation?: any,
 	) {
 		if (campaignId !== undefined)
 			this.id = this.api.service(IndexService).create(this.type, campaignId, adventureId, actId, sceneId, sessionId);

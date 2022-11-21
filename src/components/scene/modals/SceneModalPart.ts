@@ -14,7 +14,7 @@ export class SceneModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 		this.modal.sceneId = this.api.service(IndexService).create(ComponentType.Scene, this.modal.campaignId.id, this.modal.adventureId?.id, this.modal.actId?.id);
-		this.modal.sceneId.id = 0;
+		this.modal.sceneId.id = this.api.service(IndexService).createUUID();
 
 		if (this.modal.adventureId != null && this.modal.actId != null)
 			this._scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this.modal.actId);
@@ -29,7 +29,8 @@ export class SceneModalPart extends AbstractModalPart {
 		contentEl.createDiv({cls: 'sceneContainer'});
 		this._scenes.forEach((scene: SceneInterface) => {
 			if (this.modal.sceneId !== undefined && (scene.index.sceneId ?? 0) >= (this.modal.sceneId.id ?? 0)) {
-				this.modal.sceneId.id = ((scene.index.sceneId ?? 0) + 1);
+				this.modal.sceneId.id = this.api.service(IndexService).createUUID();
+				this.modal.sceneId.positionInParent = 1;
 			}
 		});
 
@@ -44,8 +45,8 @@ export class SceneModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.sceneId?.id === 0)
-			this.modal.sceneId.id = 1;
+		if (this.modal.sceneId?.id === '')
+			this.modal.sceneId.id = this.api.service(IndexService).createUUID();
 
 		return true;
 	}

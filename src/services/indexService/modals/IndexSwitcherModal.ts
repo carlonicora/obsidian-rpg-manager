@@ -60,57 +60,38 @@ export class IndexSwitcherModal extends AbstractModal {
 
 		this._updateButtonEl.addEventListener('click', this._save.bind(this));
 
-		if (this._id.type === ComponentType.Campaign){
-			const newCampaignId = this._proposeNewId(ComponentType.Campaign);
-			this._newId = this.api.service(IndexService).create(
-				ComponentType.Campaign,
-				newCampaignId,
-				undefined,
-				undefined,
-				undefined,
-				undefined,
-				undefined,
-				this._id.campaignSettings,
-			);
+		if (this._id.type !== ComponentType.Campaign)
+			this._addSelector(formEl, ComponentType.Campaign, id.campaignId);
 
-			this._addIdSelector(formEl, newCampaignId.toString());
-
-			this._updateButtonEl.disabled = false;
-		} else {
-			this._addSelector(formEl, ComponentType.Campaign);
-		}
 	}
 
 	private _addIdSelector(
 		containerId: HTMLDivElement,
-		newId: string,
+		newPositionInParent: number,
 	): void {
 		containerId.createDiv({cls: 'input-title', text: 'New ID'});
-		containerId.createEl('div', {text: 'The proposed new ID is ' + newId + ' but you can change it if you want'});
+		containerId.createEl('div', {text: 'The proposed new ID is ' + newPositionInParent + ' but you can change it if you want'});
 		this._newIdEl = containerId.createEl('input', {type: 'text'});
 		this._errorIdEl = containerId.createSpan({text: 'The selected ID is already in use. Please select a different one'});
 		this._errorIdEl.style.display = 'none';
-		this._newIdEl.value = newId;
+		this._newIdEl.value = newPositionInParent.toString();
 		this._newIdEl.addEventListener('keyup', this._validateNewId.bind(this));
 	}
 
 	private _validateNewId(
 	): void {
 		switch (this._newId.type){
-			case ComponentType.Campaign:
-				this._newId = this.api.service(IndexService).create(ComponentType.Campaign, +this._newIdEl.value, undefined, undefined, undefined, undefined, undefined, this._id.campaignSettings);
-				break;
 			case ComponentType.Adventure:
-				this._newId = this.api.service(IndexService).create(ComponentType.Adventure, this._newId.campaignId, +this._newIdEl.value, undefined, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Adventure, this._newId.campaignId, this._newIdEl.value, undefined, undefined, undefined, this._newId.positionInParent, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Act:
-				this._newId = this.api.service(IndexService).create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, +this._newIdEl.value, undefined, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Act, this._newId.campaignId, this._newId.adventureId, this._newIdEl.value, undefined, undefined, this._newId.positionInParent, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Scene:
-				this._newId = this.api.service(IndexService).create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, +this._newIdEl.value, undefined, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Scene, this._newId.campaignId, this._newId.adventureId, this._newId.actId, this._newIdEl.value, undefined, this._newId.positionInParent, undefined, this._id.campaignSettings);
 				break;
 			case ComponentType.Session:
-				this._newId = this.api.service(IndexService).create(ComponentType.Session, +this._newIdEl.value, undefined, undefined, undefined, +this._newIdEl.value, undefined, this._id.campaignSettings);
+				this._newId = this.api.service(IndexService).create(ComponentType.Session, this._newIdEl.value, undefined, undefined, undefined, this._newIdEl.value, this._newId.positionInParent, undefined, this._id.campaignSettings);
 				break;
 			default:
 				return;
@@ -175,10 +156,10 @@ export class IndexSwitcherModal extends AbstractModal {
 	private _addSelector(
 		containerEl: HTMLDivElement,
 		type: ComponentType,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
-		sessionId: number|undefined = undefined,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sessionId?: string,
 	): void {
 		const selectorContainerEl: HTMLDivElement = containerEl.createDiv();
 		selectorContainerEl.createDiv({
@@ -204,10 +185,10 @@ export class IndexSwitcherModal extends AbstractModal {
 	private _fillSelector(
 		selectorEl: HTMLSelectElement,
 		type: ComponentType,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
-		sessionId: number|undefined = undefined,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sessionId?: string,
 	): void {
 		const components = this._loadPossibleChildren(type, campaignId, adventureId, actId);
 
@@ -225,114 +206,92 @@ export class IndexSwitcherModal extends AbstractModal {
 
 				let idValues: {
 					type: ComponentType,
-					campaignId: number,
-					adventureId?: number,
-					actId?: number,
-					sceneId?: number,
-					sessionId?: number,
+					campaignId: string,
+					adventureId?: string,
+					actId?: string,
+					sceneId?: string,
+					sessionId?: string,
+					positionInParent?: number,
 				}|undefined = undefined;
 
 				switch (type) {
 					case ComponentType.Campaign:
 						if (this._id.type === ComponentType.Adventure) {
 							try {
-								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value, adventureId: this._id.adventureId};
-								if (!this._isExistingIdValid(ComponentType.Adventure, +selectorEl.value)) hasMissingValidId = true;
+								idValues = {type: ComponentType.Adventure, campaignId: selectorEl.value, adventureId: this._id.adventureId};
+								if (!this._isExistingIdValid(ComponentType.Adventure, selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
-								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value};
+								idValues = {type: ComponentType.Adventure, campaignId: selectorEl.value};
 								hasMissingValidId = true;
 							}
 
 						} else if (this._id.type === ComponentType.Session) {
 							try {
-								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value, sessionId: this._id.sessionId};
-								if (!this._isExistingIdValid(ComponentType.Session, +selectorEl.value)) hasMissingValidId = true;
+								idValues = {type: ComponentType.Adventure, campaignId: selectorEl.value, sessionId: this._id.sessionId};
+								if (!this._isExistingIdValid(ComponentType.Session, selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
-								idValues = {type: ComponentType.Adventure, campaignId: +selectorEl.value};
+								idValues = {type: ComponentType.Adventure, campaignId: selectorEl.value};
 								hasMissingValidId = true;
 							}
 						} else if (this._id.type === ComponentType.Act || this._id.type === ComponentType.Scene) {
 							hasLoadedSomethingElse = true;
-							this._addSelector(subContainerEl, ComponentType.Adventure, +selectorEl.value);
+							this._addSelector(subContainerEl, ComponentType.Adventure, selectorEl.value);
 						} else {
-							idValues = {type: this._id.type, campaignId: +selectorEl.value};
+							idValues = {type: this._id.type, campaignId: selectorEl.value};
 						}
 						break;
 					case ComponentType.Adventure:
 						if (this._id.type === ComponentType.Act) {
 							try {
-								idValues = {type: ComponentType.Act, campaignId: campaignId ?? 0, adventureId: +selectorEl.value, actId: this._id.actId};
-								if (!this._isExistingIdValid(ComponentType.Act, campaignId, +selectorEl.value)) hasMissingValidId = true;
+								idValues = {type: ComponentType.Act, campaignId: campaignId, adventureId: selectorEl.value, actId: this._id.actId};
+								if (!this._isExistingIdValid(ComponentType.Act, campaignId, selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
-								idValues = {type: ComponentType.Act, campaignId: campaignId ?? 0, adventureId: +selectorEl.value};
+								idValues = {type: ComponentType.Act, campaignId: campaignId, adventureId: selectorEl.value};
 								hasMissingValidId = true;
 							}
 						} else if (this._id.type === ComponentType.Scene) {
 							hasLoadedSomethingElse = true;
-							this._addSelector(subContainerEl, ComponentType.Act, campaignId, +selectorEl.value);
+							this._addSelector(subContainerEl, ComponentType.Act, campaignId, selectorEl.value);
 						}
 						break;
 					case ComponentType.Act:
 						if (this._id.type === ComponentType.Scene) {
 							try {
-								idValues = {type: ComponentType.Scene, campaignId: campaignId ?? 0, adventureId: adventureId, actId: +selectorEl.value, sceneId: this._id.sceneId};
-								if (!this._isExistingIdValid(ComponentType.Scene, campaignId, adventureId, +selectorEl.value)) hasMissingValidId = true;
+								idValues = {type: ComponentType.Scene, campaignId: campaignId, adventureId: adventureId, actId: selectorEl.value, sceneId: this._id.sceneId};
+								if (!this._isExistingIdValid(ComponentType.Scene, campaignId, adventureId, selectorEl.value)) hasMissingValidId = true;
 							} catch (e) {
-								idValues = {type: ComponentType.Scene, campaignId: campaignId ?? 0, adventureId: adventureId, actId: +selectorEl.value,};
+								idValues = {type: ComponentType.Scene, campaignId: campaignId, adventureId: adventureId, actId: selectorEl.value,};
 								hasMissingValidId = true;
 							}
 						} else {
 							hasLoadedSomethingElse = true;
-							this._addSelector(subContainerEl, ComponentType.Scene, campaignId, adventureId, +selectorEl.value);
+							this._addSelector(subContainerEl, ComponentType.Scene, campaignId, adventureId, selectorEl.value);
 						}
 						break;
 				}
 
 				if (!hasLoadedSomethingElse) {
 					if (idValues !== undefined){
+						let newPositionInParent: number|undefined = undefined;
+
 						if (hasMissingValidId){
-							const newId = this._proposeNewId(idValues.type, idValues.campaignId, idValues.adventureId, idValues.actId,);
+							newPositionInParent = this._proposePositionInParent(idValues.type, idValues.campaignId, idValues.adventureId, idValues.actId,);
 
 							switch (idValues.type){
 								case ComponentType.Campaign:
-									idValues.campaignId = newId;
-									break;
 								case ComponentType.Adventure:
-									idValues.adventureId = newId;
-									break;
 								case ComponentType.Act:
-									idValues.actId = newId;
-									break;
 								case ComponentType.Scene:
-									idValues.sceneId = newId;
-									break;
 								case ComponentType.Session:
-									idValues.sessionId = newId;
+									idValues.positionInParent = newPositionInParent;
 									break;
 							}
 
-							this._addIdSelector(subContainerEl, newId.toString());
+							this._addIdSelector(subContainerEl, newPositionInParent);
 						} else {
-							let newId: number|undefined = undefined;
-							switch (idValues.type){
-								case ComponentType.Campaign:
-									newId =idValues.campaignId;
-									break;
-								case ComponentType.Adventure:
-									newId = idValues.adventureId;
-									break;
-								case ComponentType.Act:
-									newId = idValues.actId;
-									break;
-								case ComponentType.Scene:
-									newId = idValues.sceneId;
-									break;
-								case ComponentType.Session:
-									newId = idValues.sessionId;
-									break;
-							}
+							if (idValues.positionInParent !== undefined)
+								this._addIdSelector(subContainerEl, idValues.positionInParent);
 
-							if (newId !== undefined) this._addIdSelector(subContainerEl, newId.toString());
 						}
 
 						this._newId = this.api.service(IndexService).create(
@@ -342,6 +301,7 @@ export class IndexSwitcherModal extends AbstractModal {
 							idValues.actId,
 							idValues.sceneId,
 							idValues.sessionId,
+							idValues.positionInParent,
 							undefined,
 							this._id.campaignSettings,
 						);
@@ -352,12 +312,15 @@ export class IndexSwitcherModal extends AbstractModal {
 		}
 	}
 
-	private _proposeNewId(
+	private _proposePositionInParent(
 		type: ComponentType,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
 	): number {
+		if (type !== ComponentType.Scene && type !== ComponentType.Adventure && type !== ComponentType.Act && type !== ComponentType.Session)
+			return 0;
+
 		let response = 1;
 
 		let components: ModelInterface[];
@@ -376,7 +339,17 @@ export class IndexSwitcherModal extends AbstractModal {
 		}
 
 		components.forEach((component: ModelInterface) => {
-			if (component.index.id >= response) response = component.index.id + 1;
+
+			if (component.index.type === ComponentType.Scene) {
+				if (component.index.positionInParent >= response)
+					response = component.index.positionInParent + 1;
+
+			} else {
+				if (component.index.positionInParent >= response)
+					response = component.index.positionInParent + 1;
+
+			}
+
 		});
 
 		return response;
@@ -384,9 +357,9 @@ export class IndexSwitcherModal extends AbstractModal {
 
 	private _isExistingIdValid(
 		type: ComponentType,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
 	): boolean {
 		const components = this._loadPossibleChildren(type, campaignId, adventureId, actId);
 
@@ -397,9 +370,9 @@ export class IndexSwitcherModal extends AbstractModal {
 
 	private _loadPossibleChildren(
 		type: ComponentType,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
 	): ModelInterface[]{
 		return this.api.database.read<ModelInterface>((component: ModelInterface) =>
 			component.index.type === type &&

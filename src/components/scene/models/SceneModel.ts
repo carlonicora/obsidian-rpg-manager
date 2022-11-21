@@ -173,7 +173,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 			return null;
 
 		try {
-			return this.api.database.readSingle<SceneInterface>(ComponentType.Scene, this.index, (next ? sceneId + 1 : sceneId - 1));
+			return this.api.database.readNeighbour<SceneInterface>(ComponentType.Scene, this.index, !next);
 		} catch (e) {
 			return null;
 		}

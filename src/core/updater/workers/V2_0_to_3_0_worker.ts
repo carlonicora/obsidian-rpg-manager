@@ -12,14 +12,14 @@ import {YamlService} from "../../../services/yamlService/YamlService";
 import {IndexService} from "../../../services/indexService/IndexService";
 
 export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
-	private _campaignSettings: Map<number, CampaignSetting>;
+	private _campaignSettings: Map<string, CampaignSetting>;
 
 	public async run(
 		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
 	): Promise<void> {
 		this.api.service(LoggerService).warning(LogMessageType.Updater, 'Updating RPG Manager from v2.0 to v3.0');
 
-		this._campaignSettings = new Map<number, CampaignSetting>();
+		this._campaignSettings = new Map<string, CampaignSetting>();
 		this._loadCampaignSettings();
 
 		const files: TFile[] = await this.api.app.vault.getMarkdownFiles();
@@ -167,7 +167,7 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				if (!defaultTag.endsWith('/')) defaultTag += '/';
 				const tagIds = tagAndType.tag.substring(defaultTag.length);
 				const [campaignId] = tagIds.split('/');
-				let campaignSettings = this._campaignSettings.get(+campaignId);
+				let campaignSettings = this._campaignSettings.get(campaignId);
 				if (campaignSettings === undefined) campaignSettings = CampaignSetting.Agnostic;
 
 				const validator = tagAndType.tag.substring(defaultTag.length).split('/');
@@ -715,7 +715,22 @@ export class V2_0_to_3_0_worker extends AbstractDatabaseWorker implements Databa
 				const tagAndType = this._getTagAndType(tags);
 				if (tagAndType !== undefined){
 					if (tagAndType.type === ComponentType.Campaign){
-						const id = this.api.service(IndexService).createFromTag(tagAndType.tag);
+
+
+						const type: ComponentType|undefined = this.api.service(TagService).getDataType(tagAndType.tag);
+						if (type === undefined) throw new Error('');
+
+						const campaignId: string|undefined = this.api.service(TagService).getId(ComponentType.Campaign, tagAndType.tag);
+						const adventureId: string|undefined = this.api.service(TagService).getId(ComponentType.Adventure, tagAndType.tag);
+						const actId: string|undefined = this.api.service(TagService).getId(ComponentType.Act, tagAndType.tag);
+						const sceneId: string|undefined = this.api.service(TagService).getId(ComponentType.Scene, tagAndType.tag);
+						let sessionId: string | undefined = undefined;
+						if (type === ComponentType.Session) {
+							sessionId = this.api.service(TagService).getId(ComponentType.Session, tagAndType.tag);
+						}
+
+						const id = this.api.service(IndexService).create(type, campaignId, adventureId, actId, sceneId, sessionId, undefined, tagAndType.tag);
+
 						try {
 							const settings = metadata?.frontmatter?.settings != undefined ?
 								CampaignSetting[metadata.frontmatter.settings as keyof typeof CampaignSetting] :

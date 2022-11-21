@@ -54,7 +54,7 @@ export class ActModel extends AbstractActData implements ActInterface {
 		const response = this.api.database.read<ActInterface>((act: ActInterface) =>
 			act.index.type === ComponentType.Act &&
 			act.index.campaignId === this.index.campaignId &&
-			act.index.actId === (next ? actId + 1 : actId -1)
+			act.index.positionInParent === (next ? act.index.positionInParent + 1 : act.index.positionInParent -1)
 		);
 
 		return response[0] ?? null;

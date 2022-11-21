@@ -20,7 +20,7 @@ export class ActModalPart extends AbstractModalPart {
 
 		if (this.modal.actId === undefined) {
 			this.modal.actId = this.api.service(IndexService).create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
-			this.modal.actId.id = 0;
+			this.modal.actId.id = this.api.service(IndexService).createUUID();
 		}
 
 		this._allAct = this.api.database.read<ActInterface>(
@@ -80,8 +80,8 @@ export class ActModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.actId?.id === 0)
-			this.modal.actId.id = 1;
+		if (this.modal.actId?.id === '')
+			this.modal.actId.id = this.api.service(IndexService).createUUID();
 
 		return true;
 	}
@@ -90,8 +90,8 @@ export class ActModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		this._allAct.forEach((component: ActInterface) => {
-			if (this.modal.actId !== undefined && (component.index.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
-				this.modal.actId.id = ((component.index.actId ?? 0) + 1);
+			if (this.modal.actId !== undefined && (component.index.positionInParent ?? 0) >= (this.modal.actId.positionInParent ?? 0)) {
+				this.modal.actId.positionInParent = ((component.index.positionInParent ?? 0) + 1);
 			}
 		});
 	}
@@ -137,7 +137,7 @@ export class ActModalPart extends AbstractModalPart {
 		}
 
 		if (this.modal.actId !== undefined){
-			this.modal.actId.id = +this._actEl.value;
+			this.modal.actId.id = this._actEl.value;
 		}
 
 		this._childEl.empty();

@@ -6,11 +6,12 @@ export interface TemplateClassInterface<T extends TemplateInterface> {
 		api: RpgManagerApiInterface,
 		templateName: string,
 		name: string,
-		campaignId?: number,
-		adventureId?: number,
-		actId?: number,
-		sceneId?: number,
-		sessionId?: number,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
 		additionalInformation?: any,
 	): T;
 }

@@ -100,7 +100,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		if (this.modal.campaignId === undefined) {
-			this.modal.campaignId = this.api.service(IndexService).create(ComponentType.Campaign, 1);
+			this.modal.campaignId = this.api.service(IndexService).create(ComponentType.Campaign, this.api.service(IndexService).createUUID());
 		}
 
 		this._campaigns.forEach((campaign: CampaignInterface) => {

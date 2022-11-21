@@ -5,16 +5,17 @@ import {Index} from "./Index";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
-import {TagService} from "../tagService/TagService";
+import {randomUUID} from "crypto";
 
 export class IndexService extends AbstractService implements IndexServiceInterface, ServiceInterface {
 	public create(
 		type: ComponentType,
-		campaignId: string|number|undefined,
-		adventureId: string|number|undefined=undefined,
-		actId: string|number|undefined=undefined,
-		sceneId: string|number|undefined=undefined,
-		sessionId: string|number|undefined=undefined,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
 		existingTag: string|undefined=undefined,
 		campaignSettings: CampaignSetting|undefined=undefined,
 	): IndexInterface {
@@ -35,6 +36,7 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 		return response;
 	}
 
+	/*
 	public createFromTag(
 		tag: string,
 	): IndexInterface {
@@ -61,6 +63,7 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 
 		return this.createFromTag(tag);
 	}
+	*/
 
 	private _convertIdElement(
 		id: string|number|undefined,
@@ -95,5 +98,10 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 		response.campaignSettings = +campaignSettings;
 
 		return response;
+	}
+
+	public createUUID(
+	): string {
+		return randomUUID();
 	}
 }

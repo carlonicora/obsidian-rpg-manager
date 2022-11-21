@@ -2,12 +2,12 @@ import {SceneInterface} from "../../../components/scene/interfaces/SceneInterfac
 import {SceneType} from "../../analyserService/enums/SceneType";
 
 export interface RunningTimeServiceInterface {
-	medianTimes: Map<number, Map<SceneType, number[]>>;
+	medianTimes: Map<string, Map<SceneType, number[]>>;
 
 	get isTimerRunning(): boolean;
 
 	getTypeExpectedDuration(
-		campaignId: number,
+		campaignId: string,
 		type: SceneType,
 	): number;
 

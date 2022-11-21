@@ -21,11 +21,12 @@ export class TemplatesManager implements TemplatesManagerInterface {
 		type: ComponentType,
 		templateName: string,
 		name: string,
-		campaignId?: number,
-		adventureId?: number,
-		actId?: number,
-		sceneId?: number,
-		sessionId?: number,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): TemplateInterface {
 		let templateClass = this._templates.get(this._getIdentifier(type, campaignSettings));
@@ -42,6 +43,7 @@ export class TemplatesManager implements TemplatesManagerInterface {
 				actId,
 				sceneId,
 				sessionId,
+				positionInParent,
 				additionalInformation,
 			);
 
@@ -69,6 +71,7 @@ export class TemplatesManager implements TemplatesManagerInterface {
 			actId,
 			sceneId,
 			sessionId,
+			positionInParent,
 			additionalInformation,
 		);
 	}
@@ -94,11 +97,12 @@ export class TemplatesManager implements TemplatesManagerInterface {
 		type: ComponentType,
 		templateName: string,
 		name: string,
-		campaignId?: number,
-		adventureId?: number,
-		actId?: number,
-		sceneId?: number,
-		sessionId?: number,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): TemplateInterface {
 		const response = new templateClass(
@@ -110,6 +114,7 @@ export class TemplatesManager implements TemplatesManagerInterface {
 			actId,
 			sceneId,
 			sessionId,
+			positionInParent,
 			additionalInformation,
 		);
 

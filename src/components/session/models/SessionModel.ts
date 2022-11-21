@@ -57,18 +57,11 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 	private _adjacentSession(
 		next: boolean,
 	): SessionInterface | null {
-		const sessionId = this.index.sessionId;
-
-		if (sessionId === undefined)
+		try {
+			return this.api.database.readNeighbour<SessionInterface>(ComponentType.Session, this.index, !next);
+		} catch (e) {
 			return null;
-
-		const response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
-			session.index.type === ComponentType.Session &&
-			session.index.campaignId === this.index.campaignId &&
-			session.index.sessionId === (next ? sessionId + 1 : sessionId -1)
-		);
-
-		return response[0] ?? null;
+		}
 	}
 
 	getRelationships(

@@ -43,9 +43,9 @@ export class CreationModal extends Modal implements ModalInterface {
 		public type: ComponentType,
 		private _create: boolean = true,
 		private _name: string|null = null,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
 	) {
 		super(app);
 

@@ -24,9 +24,9 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		[SceneType.SocialCombat, [15*60]],
 	]);
 
-	public medianTimes: Map<number, Map<SceneType, number[]>> = new Map<number, Map<SceneType, number[]>>([
+	public medianTimes: Map<string, Map<SceneType, number[]>> = new Map<string, Map<SceneType, number[]>>([
 		[
-			0,
+			"",
 			this._medianDefaultTimes,
 		]
 	]);
@@ -102,7 +102,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 	}
 
 	public getTypeExpectedDuration(
-		campaignId: number,
+		campaignId: string,
 		type: SceneType,
 	): number {
 		const previousDurations: number[] = this.medianTimes.get(campaignId)?.get(type) ?? [];

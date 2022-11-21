@@ -15,18 +15,20 @@ export interface FileCreationServiceInterface {
 		actId?: IndexInterface|undefined,
 		sceneId?: IndexInterface|undefined,
 		sessionId?: IndexInterface|undefined,
+		positionInParent?: number,
 		additionalInformation?: any|null,
 	): Promise<void>;
 
 	silentCreate(
 		type: ComponentType,
 		name: string,
-		campaignId: number,
-		adventureId?: number|undefined,
-		actId?: number|undefined,
-		sceneId?: number|undefined,
-		sessionId?: number|undefined,
-		additionalInformation?: any|undefined,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
+		additionalInformation?: any,
 		openView?: boolean,
 	): Promise<TFile>;
 }

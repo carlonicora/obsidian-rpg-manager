@@ -7,31 +7,32 @@ export interface IndexInterface {
 	type: ComponentType;
 	tagMap: Map<ComponentType, IndexTagValueInterface>;
 	campaignSettings: CampaignSetting;
+	positionInParent: number;
 
 	get id(
-	):number;
+	):string;
 
 	set id(
-		id: number,
+		id: string,
 	);
 
 	get tag(
 	): string;
 
 	get campaignId(
-	): number;
+	): string;
 
 	get adventureId(
-	): number|undefined;
+	): string|undefined;
 
 	get actId(
-	): number|undefined;
+	): string|undefined;
 
 	get sceneId(
-	): number|undefined;
+	): string|undefined;
 
 	get sessionId(
-	): number|undefined;
+	): string|undefined;
 
 	get isValid(
 	): boolean;
@@ -47,15 +48,15 @@ export interface IndexInterface {
 	): Map<ComponentType, IndexTagStatus>|undefined;
 
 	get possiblyNotFoundIds(
-	): Map<ComponentType, number>|undefined;
+	): Map<ComponentType, string>|undefined;
 
 	getTypeValue(
 		type: ComponentType,
-	): number|undefined;
+	): string|undefined;
 
 	replaceId(
 		type: ComponentType,
-		id: number,
+		id: string,
 	): void;
 
 	get stringID(): string;

@@ -5,15 +5,17 @@ import {CampaignSetting} from "../../../components/campaign/enums/CampaignSettin
 export interface IndexServiceInterface {
 	create(
 		type: ComponentType,
-		campaignId: string|number,
-		adventureId?: string|number|undefined,
-		actId?: string|number|undefined,
-		sceneId?: string|number|undefined,
-		sessionId?: string|number|undefined,
-		existingTag?: string|undefined,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
+		existingTag?: string,
 		campaignSettings?: CampaignSetting,
 	): IndexInterface;
 
+	/*
 	createFromTag(
 		tag: string,
 	): IndexInterface;
@@ -21,9 +23,13 @@ export interface IndexServiceInterface {
 	createFromTags(
 		tags: string[],
 	): IndexInterface;
+	*/
 
 	createFromID(
 		ID: string,
 		checksum?: string,
 	): IndexInterface;
+
+	createUUID(
+	): string;
 }

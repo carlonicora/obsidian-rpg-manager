@@ -268,6 +268,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			undefined,
 			undefined,
 			undefined,
+			undefined,
 			additionalInformation
 		);
 	}

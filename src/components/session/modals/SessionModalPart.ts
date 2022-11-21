@@ -18,7 +18,7 @@ export class SessionModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 		this.modal.sessionId = this.api.service(IndexService).create(ComponentType.Session, this.modal.campaignId.id);
-		this.modal.sessionId.id = 0;
+		this.modal.sessionId.id = this.api.service(IndexService).createUUID();
 		this._sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.modal.campaignId);
 	}
 
@@ -39,8 +39,8 @@ export class SessionModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.sessionId?.id === 0)
-			this.modal.sessionId.id = 1;
+		if (this.modal.sessionId?.id === '')
+			this.modal.sessionId.id = this.api.service(IndexService).createUUID();
 
 		return true;
 	}
@@ -49,8 +49,8 @@ export class SessionModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		this._sessions.forEach((session: SessionInterface) => {
-			if (this.modal.sessionId !== undefined && (session.index.sessionId ?? 0) >= (this.modal.sessionId.id ?? 0)) {
-				this.modal.sessionId.id = ((session.index.sessionId ?? 0) + 1);
+			if (this.modal.sessionId !== undefined && (session.index.positionInParent ?? 0) >= (this.modal.sessionId.positionInParent ?? 0)) {
+				this.modal.sessionId.positionInParent = ((session.index.positionInParent ?? 0) + 1);
 			}
 		});
 	}
@@ -58,7 +58,7 @@ export class SessionModalPart extends AbstractModalPart {
 	private _selectSession(
 	): void {
 		if (this.modal.sessionId !== undefined){
-			this.modal.sessionId.id = +this._sessionEl.value;
+			this.modal.sessionId.id = this._sessionEl.value;
 		}
 		this._childEl.empty();
 		this.loadChild(this._childEl);

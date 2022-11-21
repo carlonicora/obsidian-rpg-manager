@@ -31,11 +31,12 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 		protected api: RpgManagerApiInterface,
 		protected templateName: string,
 		protected name: string,
-		protected campaignId: number|undefined,
-		protected adventureId: number|undefined,
-		protected actId: number|undefined,
-		protected sceneId: number|undefined,
-		protected sessionId: number|undefined,
+		protected campaignId?: string,
+		protected adventureId?: string,
+		protected actId?: string,
+		protected sceneId?: string,
+		protected sessionId?: string,
+		protected positionInParent?: number,
 		protected additionalInformation?: ControllerMetadataDataInterface,
 	) {
 		if (additionalInformation?.data !== undefined)
@@ -52,40 +53,40 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 			if (this.templateName.startsWith('internal')){
 				switch (ComponentType[this.templateName.substring(8) as keyof typeof ComponentType]){
 					case ComponentType.Campaign:
-						this.internalTemplate = new CampaignNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new CampaignNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Adventure:
-						this.internalTemplate = new AdventureNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new AdventureNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Act:
-						this.internalTemplate = new ActNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new ActNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Scene:
-						this.internalTemplate = new SceneNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new SceneNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Session:
-						this.internalTemplate = new SessionNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new SessionNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Character:
-						this.internalTemplate = new CharacterNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new CharacterNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.NonPlayerCharacter:
-						this.internalTemplate = new NonPlayerCharacterNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new NonPlayerCharacterNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Clue:
-						this.internalTemplate = new ClueNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new ClueNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Location:
-						this.internalTemplate = new LocationNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new LocationNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Faction:
-						this.internalTemplate = new FactionNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new FactionNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Event:
-						this.internalTemplate = new EventNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new EventNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 					case ComponentType.Subplot:
-						this.internalTemplate = new SubplotNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new SubplotNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.positionInParent, this.additionalInformation);
 						break;
 
 				}

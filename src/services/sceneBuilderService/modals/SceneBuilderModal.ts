@@ -16,6 +16,7 @@ import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
 import {PlotService} from "../../plotsService/PlotService";
 import {SorterService} from "../../sorterService/SorterService";
 import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
+import {IndexService} from "../../indexService/IndexService";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -74,11 +75,12 @@ export class SceneBuilderModal extends AbstractModal {
 
 	private async _createScenes(
 	): Promise<void> {
-		let sceneId = 1;
+		let positionInParent = 1;
 		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.index);
+
 		await scenes.forEach((scene: SceneInterface) => {
-			if (scene.index.sceneId !== undefined && scene.index.sceneId >= sceneId)
-				sceneId = scene.index.sceneId + 1;
+			if (scene.index.positionInParent >= positionInParent)
+				positionInParent = scene.index.positionInParent + 1;
 		});
 
 		let indexOfSelect = 2;
@@ -121,14 +123,15 @@ export class SceneBuilderModal extends AbstractModal {
 				this._act.index.campaignId,
 				this._act.index.adventureId,
 				this._act.index.actId,
-				sceneId,
+				this.api.service(IndexService).createUUID(),
 				undefined,
+				positionInParent,
 				{
 					data: data,
 				}
 			);
 
-			sceneId++;
+			positionInParent++;
 		}
 
 		this.close();

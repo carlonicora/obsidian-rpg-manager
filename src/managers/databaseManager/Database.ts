@@ -136,9 +136,30 @@ export class Database extends Component implements DatabaseInterface {
 	public readSingle<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface,
-		overloadId: number|undefined=undefined,
+		overloadId?: string,
 	): T {
 		const result = this.read(this._generateQuery(type, id, false, overloadId));
+
+		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
+
+		return <T>result[0];
+	}
+
+	public readNeighbour<T extends ModelInterface>(
+		type: ComponentType,
+		id: IndexInterface,
+		previous: boolean,
+	): T {
+		//const result = this.read(this._generateQuery(type, id, false, overloadId));
+		const result = this.read((model: ModelInterface) =>
+			model.index.type === type &&
+			(id.campaignId !== undefined ? model.index.campaignId === id.campaignId : true) &&
+			(id.adventureId !== undefined ? model.index.adventureId === id.adventureId : true) &&
+			(id.actId !== undefined ? model.index.actId === id.actId : true) &&
+			(id.sceneId !== undefined ? model.index.sceneId === id.sceneId : true) &&
+			(id.sessionId !== undefined ? model.index.sessionId === id.sessionId : true) &&
+			(model.index.positionInParent === (previous ? id.positionInParent - 1 : id.positionInParent + 1))
+		);
 
 		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
 
@@ -148,7 +169,7 @@ export class Database extends Component implements DatabaseInterface {
 	public readList<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface|undefined,
-		overloadId: number|undefined = undefined,
+		overloadId?: string,
 	): T[] {
 		return <T[]>this.read(
 			this._generateQuery(type, id, true, overloadId),
@@ -159,13 +180,13 @@ export class Database extends Component implements DatabaseInterface {
 		type: ComponentType,
 		id: IndexInterface|undefined,
 		isList: boolean,
-		overloadId: number|undefined=undefined,
+		overloadId?: string,
 	): any {
-		let campaignId: number | undefined = id?.campaignId;
-		let adventureId: number | undefined = id?.adventureId;
-		let actId: number | undefined = id?.actId;
-		let sceneId: number | undefined = id?.sceneId;
-		let sessionId: number | undefined = id?.sessionId;
+		let campaignId: string | undefined = id?.campaignId;
+		let adventureId: string | undefined = id?.adventureId;
+		let actId: string | undefined = id?.actId;
+		let sceneId: string | undefined = id?.sceneId;
+		let sessionId: string | undefined = id?.sessionId;
 
 		switch(type) {
 			case ComponentType.Campaign:

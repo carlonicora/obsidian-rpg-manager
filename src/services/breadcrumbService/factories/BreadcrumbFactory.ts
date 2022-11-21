@@ -9,6 +9,7 @@ import {SessionInterface} from "../../../components/session/interfaces/SessionIn
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {randomUUID} from "crypto";
 
 export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 	constructor(
@@ -71,19 +72,20 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		scene: SceneInterface,
 		fileFactory: FileCreationService,
 	){
-		const newSceneId = (scene.index.sceneId ?? 0) + 1;
+		const scenePosition = (scene.index.positionInParent ?? 0) + 1;
 
 		fileFactory.silentCreate(
 			ComponentType.Scene,
 			'a' +
 			((scene.act.index.actId ?? 0) < 10 ? '0' + scene.act.index.actId?.toString(): scene.act.index.actId?.toString()) +
 			's' +
-			(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()),
+			(scenePosition < 10 ? '0' + scenePosition.toString() : scenePosition.toString()),
 			scene.campaign.index.campaignId,
 			scene.adventure.index.adventureId,
 			scene.act.index.actId,
-			newSceneId,
+			randomUUID(),
 			undefined,
+			scenePosition,
 			undefined,
 			true,
 		);
@@ -98,12 +100,14 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		let previousAdventure: AdventureInterface|undefined;
 		let nextAdventure: AdventureInterface|undefined;
 		try {
-			previousAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) - 1);
+			//previousAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) - 1);
+			previousAdventure = this._api.database.readNeighbour<AdventureInterface>(ComponentType.Adventure, adventure.index, true);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) + 1);
+			// nextAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) + 1);
+			nextAdventure = this._api.database.readNeighbour<AdventureInterface>(ComponentType.Adventure, adventure.index, false);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -146,12 +150,14 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		let previousSession: SessionInterface|undefined;
 		let nextSession: SessionInterface|undefined;
 		try {
-			previousSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.index, (session.index.sessionId ?? 0) - 1);
+			// previousSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.index, (session.index.sessionId ?? 0) - 1);
+			previousSession = this._api.database.readNeighbour<SessionInterface>(ComponentType.Session, session.index, true);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.index, (session.index.sessionId ?? 0) + 1);
+			//nextSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.index, (session.index.sessionId ?? 0) + 1);
+			nextSession = this._api.database.readNeighbour<SessionInterface>(ComponentType.Session, session.index, false);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}

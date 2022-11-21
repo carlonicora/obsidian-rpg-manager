@@ -7,19 +7,20 @@ import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {TagService} from "../tagService/TagService";
 
-export class Index implements IndexInterface{
+export class Index implements IndexInterface {
 	public tagMap: Map<ComponentType, IndexTagValueInterface>;
 	public campaignSettings: CampaignSetting = CampaignSetting.Agnostic;
+	public positionInParent: number;
 
 	constructor(
 		private _api: RpgManagerApiInterface,
 		public type: ComponentType,
-		campaignId: string|undefined,
-		adventureId: string|undefined,
-		actId: string|undefined,
-		sceneId: string|undefined,
-		sessionId: string|undefined,
-		private _existingTag: string|undefined,
+		campaignId?: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		private _existingTag?: string,
 	) {
 		this.tagMap = new Map();
 
@@ -50,15 +51,15 @@ export class Index implements IndexInterface{
 	}
 
 	public get id(
-	): number {
-		const response:number|undefined = this.tagMap.get(this.type)?.value;
+	): string {
+		const response:string|undefined = this.tagMap.get(this.type)?.value;
 		if (response === undefined) throw new Error('');
 
 		return response;
 	}
 
 	public set id(
-		id: number,
+		id: string,
 	) {
 		const tagValue:IndexTagValueInterface|undefined = this.tagMap.get(this.type);
 
@@ -76,7 +77,7 @@ export class Index implements IndexInterface{
 		if (tag === undefined) throw new Error('');
 
 		let ids = '';
-		let id:number|undefined;
+		let id:string|undefined;
 		switch (this.type){
 			case ComponentType.Scene:
 				id = this.tagMap.get(ComponentType.Scene)?.value;
@@ -98,7 +99,7 @@ export class Index implements IndexInterface{
 	}
 
 	get campaignId(
-	): number {
+	): string {
 		const response = this.getTypeValue(ComponentType.Campaign);
 
 		if (response === undefined) throw new TagMisconfiguredError(this._api, this);
@@ -107,22 +108,22 @@ export class Index implements IndexInterface{
 	}
 
 	get adventureId(
-	): number|undefined {
+	): string|undefined {
 		return this.getTypeValue(ComponentType.Adventure);
 	}
 
 	get actId(
-	): number|undefined {
+	): string|undefined {
 		return this.getTypeValue(ComponentType.Act);
 	}
 
 	get sceneId(
-	): number|undefined {
+	): string|undefined {
 		return this.getTypeValue(ComponentType.Scene);
 	}
 
 	get sessionId(
-	): number|undefined {
+	): string|undefined {
 		return this.getTypeValue(ComponentType.Session);
 	}
 
@@ -153,7 +154,6 @@ export class Index implements IndexInterface{
 		value: string|undefined,
 	): void {
 		let status: IndexTagStatus;
-		let numericValue: number|undefined;
 
 		if (value === '' || value === undefined){
 			let isRequired = (type === ComponentType.Campaign);
@@ -172,15 +172,10 @@ export class Index implements IndexInterface{
 
 			status = isRequired ? IndexTagStatus.Missing : IndexTagStatus.NotRequired;
 		} else {
-			if (isNaN(+value)){
-				status = IndexTagStatus.Invalid;
-			} else {
-				status = IndexTagStatus.Valid;
-				numericValue = +value;
-			}
+			status = IndexTagStatus.Valid;
 		}
 
-		this.tagMap.set(type, {status: status, value: numericValue});
+		this.tagMap.set(type, {status: status, value: value});
 	}
 
 	public get isValid(
@@ -212,8 +207,8 @@ export class Index implements IndexInterface{
 	}
 
 	public get possiblyNotFoundIds(
-	): Map<ComponentType, number>|undefined {
-		const response: Map<ComponentType, number> = new Map();
+	): Map<ComponentType, string>|undefined {
+		const response: Map<ComponentType, string> = new Map();
 
 		this.tagMap.forEach((tagValue: IndexTagValueInterface, type: ComponentType) => {
 			if (tagValue.value !== undefined) response.set(type, tagValue.value);
@@ -224,7 +219,7 @@ export class Index implements IndexInterface{
 
 	public getTypeValue(
 		type: ComponentType,
-	): number|undefined {
+	): string|undefined {
 		const typeValue = this.tagMap.get(type);
 		if (typeValue === undefined) throw new Error('Tag Type not found');
 
@@ -236,7 +231,7 @@ export class Index implements IndexInterface{
 
 	public replaceId(
 		type: ComponentType,
-		id: number,
+		id: string,
 	): void {
 		const idValue = this.tagMap.get(type);
 		if (idValue !== undefined)

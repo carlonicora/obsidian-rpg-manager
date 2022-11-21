@@ -71,13 +71,15 @@ export class ComponentOptionsService extends AbstractService implements Componen
 					new RelationshipsSelectionModal(this.api, model).open();
 				});
 
-			this._addSeparator(containerEl);
+			if (model !instanceof CampaignModel) {
+				this._addSeparator(containerEl);
 
-			this._addFunctionality(containerEl, 'Move')
-				.addEventListener("click", () => {
-					new IndexSwitcherModal(this.api, model.file).open();
-				});
+				this._addFunctionality(containerEl, 'Move')
+					.addEventListener("click", () => {
+						new IndexSwitcherModal(this.api, model.file).open();
+					});
 
+			}
 		}
 
 		this._addSeparator(containerEl);

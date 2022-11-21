@@ -25,6 +25,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 		actId: IndexInterface|undefined=undefined,
 		sceneId: IndexInterface|undefined=undefined,
 		sessionId: IndexInterface|undefined=undefined,
+		positionInParent=0,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): Promise<void> {
 		let pathSeparator = '';
@@ -55,6 +56,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			actId?.id,
 			sceneId?.id,
 			sessionId?.id,
+			positionInParent,
 			additionalInformation,
 		);
 
@@ -124,12 +126,13 @@ export class FileCreationService extends AbstractService implements FileCreation
 	public async silentCreate(
 		type: ComponentType,
 		name: string,
-		campaignId: number,
-		adventureId: number|undefined=undefined,
-		actId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		additionalInformation: ControllerMetadataDataInterface|undefined=undefined,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		positionInParent?: number,
+		additionalInformation?: ControllerMetadataDataInterface,
 		openView?: boolean,
 	): Promise<TFile> {
 		let folder = '';
@@ -161,6 +164,7 @@ export class FileCreationService extends AbstractService implements FileCreation
 			actId,
 			sceneId,
 			sessionId,
+			positionInParent,
 			additionalInformation,
 		);
 

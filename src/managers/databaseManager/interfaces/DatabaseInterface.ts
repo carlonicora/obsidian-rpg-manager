@@ -42,13 +42,19 @@ export interface DatabaseInterface {
 	readSingle<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface,
-		overloadId?: number|undefined,
+		overloadId?: string,
+	): T;
+
+	readNeighbour<T extends ModelInterface>(
+		type: ComponentType,
+		id: IndexInterface,
+		previous: boolean,
 	): T;
 
 	readList<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface|undefined,
-		overloadId?: number|undefined,
+		overloadId?: string,
 	): T[];
 
 	onSave(

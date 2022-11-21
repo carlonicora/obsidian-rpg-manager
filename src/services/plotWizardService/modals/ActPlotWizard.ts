@@ -269,6 +269,7 @@ export class ActPlotWizard extends AbstractWizardModal {
 			this._actId.id,
 			undefined,
 			undefined,
+			undefined,
 			additionalInformation
 		);
 	}

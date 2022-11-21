@@ -20,7 +20,7 @@ export class AdventureModalPart extends AbstractModalPart {
 
 		if (this.modal.adventureId === undefined) {
 			this.modal.adventureId = this.api.service(IndexService).create(ComponentType.Adventure, this.modal.campaignId.id);
-			this.modal.adventureId.id = 0;
+			this.modal.adventureId.id = this.api.service(IndexService).createUUID();
 		}
 
 		this._adventures = this.api.database.readList<AdventureInterface>(ComponentType.Adventure, this.modal.campaignId);
@@ -70,8 +70,8 @@ export class AdventureModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.adventureId?.id === 0)
-			this.modal.adventureId.id = 1;
+		if (this.modal.adventureId?.id === '')
+			this.modal.adventureId.id = this.api.service(IndexService).createUUID();
 
 		return true;
 	}
@@ -80,8 +80,8 @@ export class AdventureModalPart extends AbstractModalPart {
 		containerEl: HTMLElement,
 	): void {
 		this._adventures.forEach((adventure: AdventureInterface) => {
-			if (this.modal.adventureId !== undefined && (adventure.index.adventureId ?? 0) >= (this.modal.adventureId.id ?? 0)) {
-				this.modal.adventureId.id = ((adventure.index.adventureId ?? 0) + 1);
+			if (this.modal.adventureId !== undefined && (adventure.index.positionInParent ?? 0) >= (this.modal.adventureId.positionInParent ?? 0)) {
+				this.modal.adventureId.positionInParent = ((adventure.index.positionInParent ?? 0) + 1);
 			}
 		});
 	}
@@ -123,7 +123,7 @@ export class AdventureModalPart extends AbstractModalPart {
 	private _selectAdventure(
 	): void {
 		if (this.modal.adventureId !== undefined){
-			this.modal.adventureId.id = +this._adventureEl.value;
+			this.modal.adventureId.id = this._adventureEl.value;
 		}
 		this._childEl.empty();
 		this.loadChild(this._childEl);
