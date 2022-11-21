@@ -210,21 +210,42 @@ export abstract class AbstractModel implements ModelInterface {
 			});
 	}
 
+	public async addRelationshipToRelatedElements(
+	): Promise<void> {
+		const relationships: RelationshipInterface[] = this._relationships.relationships;
+
+		for (let index=0; index<relationships.length; index++){
+			if(relationships[index].component !== undefined){
+				if (!relationships[index].component?.getRelationships().existsAlready(this)){
+					const relationship: RelationshipInterface|undefined = this.api.service(RelationshipService).createRelationshipFromReverse(this, relationships[index]);
+
+					if (relationship !== undefined) {
+						relationships[index].component?.getRelationships().add(relationship);
+
+					}
+				}
+
+				relationships[index].component?.touch();
+			}
+		}
+	}
+
 	public async addReverseRelationships(
 	): Promise<void> {
 		const recordset = this.api.database.recordset;
 		for (let index = 0; index < recordset.length; index++) {
-			const relationships = recordset[index].getRelationships().relationships;
-			for (let relationshipIndex = 0; relationshipIndex < relationships.length; relationshipIndex++) {
-				const relationship: RelationshipInterface = relationships[relationshipIndex];
+			const relationships = recordset[index].getRelationships().relationships.filter((relationship: RelationshipInterface) =>
+				relationship.component !== undefined &&
+				relationship.component.file.path === this.file.path &&
+				!this._relationships.existsAlready(recordset[index])
+			);
 
-				if (relationship.component !== undefined && relationship.component.id.stringID === this.id.stringID) {
-					const newRelationship: RelationshipInterface|undefined = this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationship);
+			if (relationships.length === 1){
+				const newRelationship: RelationshipInterface | undefined = this.api.service(RelationshipService).createRelationshipFromReverse(recordset[index], relationships[0]);
 
-					if (newRelationship !== undefined)
-						relationship.component.getRelationships().add(newRelationship);
+				if (newRelationship !== undefined)
+					this._relationships.add(newRelationship);
 
-				}
 			}
 		}
 	}
