@@ -13,6 +13,9 @@ import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterServ
 import {SceneDataMetadataInterface} from "../../../components/scene/interfaces/SceneDataMetadataInterface";
 import {Component, MarkdownRenderer} from "obsidian";
 import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
+import {PlotService} from "../../plotsService/PlotService";
+import {SorterService} from "../../sorterService/SorterService";
+import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -91,6 +94,9 @@ export class SceneBuilderModal extends AbstractModal {
 			if (this._emptyLines.has(+line.dataset.id) && this._emptyLines.get(+line.dataset.id) === true)
 				continue;
 
+			if ((<HTMLInputElement>line.cells[0].childNodes[0]).disabled === true)
+				continue;
+
 			let sceneType: SceneType|undefined;
 
 			const type = (<HTMLSelectElement>line.cells[indexOfSelect].childNodes[0]).value;
@@ -161,11 +167,12 @@ export class SceneBuilderModal extends AbstractModal {
 	}
 
 	private _addSceneLine(
+		scene?: SceneInterface,
 	): void {
 		const id = this._idCounter++;
 		const rowEl = this._scenesContainerEl.insertRow();
 		rowEl.dataset.id = id.toString();
-		this._updateEmptyLines(id, true);
+		this._updateEmptyLines(id, scene === undefined, false, scene === undefined);
 
 		const titleCellEl:HTMLTableCellElement = rowEl.insertCell();
 		titleCellEl.addClass('scenes-container-table-title');
@@ -182,28 +189,34 @@ export class SceneBuilderModal extends AbstractModal {
 			});
 
 			Object.keys(StoryCircleStage).filter((v) => isNaN(Number(v))).forEach((type, index) => {
-				if (plotStageSelectionEl !== undefined)
-					plotStageSelectionEl.createEl("option", {
+				if (plotStageSelectionEl !== undefined) {
+					const plotStageOption = plotStageSelectionEl.createEl("option", {
 						text: type,
 						value: type,
 					});
 
+					if (scene !== undefined && scene.storyCircleStage !== undefined && scene.storyCircleStage === this.api.service(PlotService).getStoryCircleStage(type)){
+						plotStageOption.selected = true;
+					}
+				}
 			});
 
-			plotStageSelectionEl.addEventListener('change', () => {
-				this._updateEmptyLines(
-					id,
-					(
-						titleInputEl.value === '' &&
-						goalInputEl.value === '' &&
-						typeSelectionEl.value === '' &&
-						excitementCheckboxEl.checked === false &&
-						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-					),
-					true
-				);
-				this._refreshAnalyser();
-			});
+			if (scene === undefined) {
+				plotStageSelectionEl.addEventListener('change', () => {
+					this._updateEmptyLines(
+						id,
+						(
+							titleInputEl.value === '' &&
+							goalInputEl.value === '' &&
+							typeSelectionEl.value === '' &&
+							excitementCheckboxEl.checked === false &&
+							(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+						),
+						true
+					);
+					this._refreshAnalyser();
+				});
+			}
 		}
 
 		const goalCellEl:HTMLTableCellElement = rowEl.insertCell();
@@ -231,103 +244,124 @@ export class SceneBuilderModal extends AbstractModal {
 		typeSelectionEl.createEl('option', {text: '', value: ''}).selected = true;
 
 		Object.keys(SceneType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
-			typeSelectionEl.createEl("option", {
+			const typeOption = typeSelectionEl.createEl("option", {
 				text: sceneTypeDescription.get(SceneType[type as keyof typeof SceneType]) ?? type,
 				value: type,
 			});
+
+			if (scene !== undefined && scene.sceneType !== undefined && scene.sceneType === SceneType[type as keyof typeof SceneType]){
+				typeOption.selected = true;
+			}
 		});
 
 		/** EXCITEMENT */
 		excitementCheckboxEl.type = 'checkbox';
 
-		titleInputEl.addEventListener('keyup', () => {
-			this._updateEmptyLines(id,
-				(
-					titleInputEl.value === '' &&
-					goalInputEl.value === '' &&
-					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false &&
-					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-				),
-			);
-		});
+		if (scene !== undefined) {
+			titleInputEl.value = scene.file.basename;
+			titleInputEl.disabled = true;
+			goalInputEl.value = scene.synopsis ?? '';
+			goalInputEl.disabled = true;
+			typeSelectionEl.disabled = true;
 
-		titleInputEl.addEventListener('focusout', () =>{
-			this._updateEmptyLines(
-				id,
-				(
-					titleInputEl.value === '' &&
-					goalInputEl.value === '' &&
-					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false &&
-					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-				),
-				true,
-			);
-		});
+			if (scene.isExciting)
+				excitementCheckboxEl.checked = true;
 
-		goalInputEl.addEventListener('keyup', () => {
-			this._updateEmptyLines(
-				id,
-				(
-					titleInputEl.value === '' &&
-					goalInputEl.value === '' &&
-					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false &&
-					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-				),
-			);
-		});
+			excitementCheckboxEl.disabled = true;
+			if (this.api.settings.usePlotStructures && plotStageSelectionEl !== undefined)
+				plotStageSelectionEl.disabled = true;
 
-		goalInputEl.addEventListener('focusout', () =>{
-			this._updateEmptyLines(
-				id,
-				(
-					titleInputEl.value === '' &&
-					goalInputEl.value === '' &&
-					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false &&
-					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-				),
-				true,
-			);
-		});
+		} else {
+			titleInputEl.addEventListener('keyup', () => {
+				this._updateEmptyLines(id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+				);
+			});
 
-		typeSelectionEl.addEventListener('change', () => {
-			this._updateEmptyLines(
-				id,
-				(
-					titleInputEl.value === '' &&
-					goalInputEl.value === '' &&
-					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false &&
-					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-				),
-				true
-			);
-			this._refreshAnalyser();
-		});
+			titleInputEl.addEventListener('focusout', () => {
+				this._updateEmptyLines(
+					id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+					true,
+				);
+			});
 
-		excitementCheckboxEl.addEventListener('change', () => {
-			this._updateEmptyLines(
-				id,
-				(
-					titleInputEl.value === '' &&
-					goalInputEl.value === '' &&
-					typeSelectionEl.value === '' &&
-					excitementCheckboxEl.checked === false &&
-					(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
-				),
-				true
-			);
-			this._refreshAnalyser();
-		});
+			goalInputEl.addEventListener('keyup', () => {
+				this._updateEmptyLines(
+					id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+				);
+			});
+
+			goalInputEl.addEventListener('focusout', () => {
+				this._updateEmptyLines(
+					id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+					true,
+				);
+			});
+
+			typeSelectionEl.addEventListener('change', () => {
+				this._updateEmptyLines(
+					id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+					true
+				);
+				this._refreshAnalyser();
+			});
+
+			excitementCheckboxEl.addEventListener('change', () => {
+				this._updateEmptyLines(
+					id,
+					(
+						titleInputEl.value === '' &&
+						goalInputEl.value === '' &&
+						typeSelectionEl.value === '' &&
+						excitementCheckboxEl.checked === false &&
+						(plotStageSelectionEl === undefined ? true : plotStageSelectionEl.value === '')
+					),
+					true
+				);
+				this._refreshAnalyser();
+			});
+		}
 	}
 
 	private _updateEmptyLines(
 		lineId: number,
 		isEmpty: boolean,
 		deleteLine = false,
+		addLineIfEmpty = true,
 	): void {
 		this._emptyLines.set(lineId, isEmpty);
 
@@ -351,7 +385,9 @@ export class SceneBuilderModal extends AbstractModal {
 
 		if (!this._hasEmptyLine) {
 			this._hasEmptyLine = true;
-			this._addSceneLine();
+			if (addLineIfEmpty)
+				this._addSceneLine();
+
 		}
 
 		this._createScenesButtonEl.disabled = (this._scenesContainerEl.rows.length < 2);
@@ -387,6 +423,19 @@ export class SceneBuilderModal extends AbstractModal {
 		excitingCellEl.addClass('scenes-container-table-exciting');
 
 		this._scenesContainerEl = scenesTableEl.createTBody();
+
+		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.id)
+			.sort(this.api.service(SorterService).create<SceneInterface>([
+				new SorterComparisonElement((scene: SceneInterface) => scene.id.id),
+			]));
+		if (scenes.length > 0){
+			for (let index=0; index<scenes.length; index++){
+				this._addSceneLine(scenes[index]);
+			}
+
+			this._refreshAnalyser();
+		}
+
 		this._addSceneLine();
 	}
 

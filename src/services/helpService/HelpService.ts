@@ -14,7 +14,7 @@ export class HelpService extends AbstractService implements ServiceInterface, He
 		const descriptionContainerEl: HTMLDivElement = document.createElement('div');
 		descriptionContainerEl.addClass('rpg-manager-help-content-container');
 
-		const descriptionContentEl: HTMLDivElement = descriptionContainerEl.createDiv({cls: 'rpg-manager-help-content'})
+		const descriptionContentEl: HTMLDivElement = descriptionContainerEl.createDiv({cls: 'rpg-manager-help-content'});
 
 		MarkdownRenderer.renderMarkdown(
 			description,

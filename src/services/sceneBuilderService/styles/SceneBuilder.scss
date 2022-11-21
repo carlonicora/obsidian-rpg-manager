@@ -19,6 +19,15 @@
 		table {
 			width: 100%;
 
+			tr > td > input[type=text]:disabled,
+			tr > td > select:disabled{
+				color: var(--rpg-manager-colour-text-very-light);
+			}
+
+			tr > td > input[type=checkbox]:disabled {
+				background-color: var(--rpg-manager-colour-text-very-light);
+			}
+
 			tr > td.scenes-container-table-title{
 				width: 150px;
 				max-width: 150px;
