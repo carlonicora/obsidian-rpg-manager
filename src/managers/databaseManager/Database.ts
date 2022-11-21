@@ -317,6 +317,8 @@ export class Database extends Component implements DatabaseInterface {
 			if (!isNewComponent)
 				await component.addReverseRelationships();
 
+			await component.addRelationshipToRelatedElements();
+
 			if (isNewComponent && (component.stage === ComponentStage.Run || component.stage === ComponentStage.Plot)) {
 				await component.validateHierarchy();
 

@@ -17,6 +17,8 @@ import {LoggerService} from "../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 import {CodeblockService} from "../../services/codeblockService/CodeblockService";
 import {CodeblockDomainInterface} from "../../services/codeblockService/interfaces/CodeblockDomainInterface";
+import {RelationshipService} from "../../services/relationshipsService/RelationshipService";
+import {RelationshipInterface} from "../../services/relationshipsService/interfaces/RelationshipInterface";
 
 export class DatabaseInitialiser {
 	private static _misconfiguredTags: Map<TFile, RpgErrorInterface> = new Map();
@@ -152,34 +154,28 @@ export class DatabaseInitialiser {
 	private static async _initialiseRelationships(
 		database: DatabaseInterface,
 	): Promise<void> {
-		const relationshipsInitialisation: Promise<void>[] = [];
 
-		database.recordset.forEach((component: ModelInterface) => {
-			relationshipsInitialisation.push(component.initialiseRelationships());
-		});
+		for (let index=0; index<database.recordset.length; index++){
+			const model = database.recordset[index];
 
-		return Promise.all(relationshipsInitialisation)
-			.then(() => {
-				for (let index=0; index<database.recordset.length; index++){
-					const model = database.recordset[index];
-					const relationships = model.getRelationships(database).relationships;
-					for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
-						const relationship = relationships[relationshipIndex];
+			const relationships = model.getRelationships(database).relationships;
 
-						if (relationship.component !== undefined){
-							const newRelationship: RelationshipInterface|undefined = this._api.service(RelationshipService).createRelationshipFromReverse(model, relationship);
+			for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
+				const relationship = relationships[relationshipIndex];
 
-							if (newRelationship !== undefined)
-								relationship.component.getRelationships(database).add(newRelationship, model);
-						}
-					}
+				if (relationship.component !== undefined && !relationship.component.getRelationships(database).existsAlready(model)){
+					const newRelationship: RelationshipInterface|undefined = this._api.service(RelationshipService).createRelationshipFromReverse(model, relationship);
+
+					if (newRelationship !== undefined)
+						relationship.component.getRelationships(database).add(newRelationship, model);
 				}
+			}
+		}
 
-				for (let index=0; index<database.recordset.length; index++){
-					database.recordset[index].touch();
-				}
+		for (let index=0; index<database.recordset.length; index++){
+			database.recordset[index].touch();
+		}
 
-				return;
-			});
+		this._api.service(LoggerService).info(LogMessageType.DatabaseInitialisation, 'hey', database);
 	}
 }

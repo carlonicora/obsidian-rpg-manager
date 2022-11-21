@@ -47,7 +47,10 @@ export interface ModelInterface {
 	): Promise<void>;
 
 	addReverseRelationships(
-	): Promise<void>
+	): Promise<void>;
+
+	addRelationshipToRelatedElements(
+	): Promise<void>;
 
 	touch(
 		force?: boolean,
