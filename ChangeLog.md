@@ -1,5 +1,22 @@
 # RPG Manager Change Log
 
+## Version 3.3
+_2022-11-23_
+
+Version 3.3 introduces Plot Wizards (_no, not Gandalf or Raistlin_). Plot Wizards simplify the creation of a 
+**Story Circle Plot** by guiding you through the steps needed to create a consistent Adventure or Act. The wizards also
+encourage the creation of clues to provide the player characters a deeper interaction with the story.
+
+![](https://github.com/carlonicora/obsidian-rpg-manager/blob/master/screenshots/3.3/3.3-Wizards.jpg)
+
+To use the Plot Wizard you have to turn on the "_ABT/Story Circle plot structure_" in the RPG Manager settings in 
+Obsidian.
+
+Other updates:
+- Link autocompletion has been enhanced
+- Modal forms are prevented from closing pressing the Escape button to avoid data loss during content editing
+- Inline help has been added to plots
+
 ## Version 3.2
 _2022-11-10_
 
