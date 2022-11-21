@@ -5,14 +5,12 @@ import {IndexInterface} from "../../services/indexService/interfaces/IndexInterf
 import {TagMisconfiguredError} from "../../core/errors/TagMisconfiguredError";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
-import {RelationshipInterface} from "../../services/relationshipsService/interfaces/RelationshipInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../../core/errors/ComponentDuplicatedError";
 import {Md5} from "ts-md5";
 import {InvalidIdChecksumError} from "../../core/errors/InvalidIdChecksumError";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {IndexService} from "../../services/indexService/IndexService";
-import {RelationshipService} from "../../services/relationshipsService/RelationshipService";
 import {LoggerService} from "../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 import {CodeblockService} from "../../services/codeblockService/CodeblockService";
