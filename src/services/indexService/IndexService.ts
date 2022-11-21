@@ -36,35 +36,6 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 		return response;
 	}
 
-	/*
-	public createFromTag(
-		tag: string,
-	): IndexInterface {
-		const type: ComponentType|undefined = this.api.service(TagService).getDataType(tag);
-		if (type === undefined) throw new Error('');
-
-		const campaignId: string|undefined = this.api.service(TagService).getId(ComponentType.Campaign, tag);
-		const adventureId: string|undefined = this.api.service(TagService).getId(ComponentType.Adventure, tag);
-		const actId: string|undefined = this.api.service(TagService).getId(ComponentType.Act, tag);
-		const sceneId: string|undefined = this.api.service(TagService).getId(ComponentType.Scene, tag);
-		let sessionId: string | undefined = undefined;
-		if (type === ComponentType.Session) {
-			sessionId = this.api.service(TagService).getId(ComponentType.Session, tag);
-		}
-
-		return this.create(type, campaignId, adventureId, actId, sceneId, sessionId, tag);
-	}
-
-	public createFromTags(
-		tags: string[],
-	): IndexInterface {
-		const tag: string|undefined = this.api.service(TagService).getTag(tags);
-		if (tag === undefined) throw new Error('');
-
-		return this.createFromTag(tag);
-	}
-	*/
-
 	private _convertIdElement(
 		id: string|number|undefined,
 	): string|undefined {
