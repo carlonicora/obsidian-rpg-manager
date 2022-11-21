@@ -137,7 +137,7 @@ export abstract class AbstractWizardModal extends Modal {
 		if (clue === undefined || clue.name === undefined || clue.name === '')
 			return '';
 
-		let response = '(*information "[[' + clue.name + ']]"';
+		let response = ' (*information [[' + clue.name + ']]';
 
 		if (clue.leads !== undefined && clue.leads.length > 0) {
 			let leads = '';
