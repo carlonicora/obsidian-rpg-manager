@@ -13,6 +13,9 @@ import {IndexService} from "../../../services/indexService/IndexService";
 import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 import {ComponentType} from "../../../core/enums/ComponentType";
+import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
+import {ActInterface} from "../../act/interfaces/ActInterface";
+import {SessionInterface} from "../../session/interfaces/SessionInterface";
 
 export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
 	protected metadata: CampaignMetadataInterface;
@@ -38,13 +41,9 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 		let response: IndexInterface|undefined = undefined;
 		try {
-			//TODO CHANGE TO SOMETHING ELSE
-			response = this.api.service(IndexService).createFromIndex(this.metadata.data.currentAdventureId);
+			response = this.api.database.readById<AdventureInterface>(this.metadata.data.currentAdventureId).index;
 		} catch (e) {
-			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
-				const [, campaignId, adventureId] = this.metadata.data.currentAdventureId.split('/');
-				response = this.api.service(IndexService).create(ComponentType.Adventure, campaignId, adventureId);
-			}
+			//no need to trigger
 		}
 
 		return response;
@@ -56,13 +55,9 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 		let response: IndexInterface|undefined = undefined;
 		try {
-			//TODO CHANGE TO SOMETHING ELSE
-			response = this.api.service(IndexService).createFromIndex(this.metadata.data.currentActId);
+			response = this.api.database.readById<ActInterface>(this.metadata.data.currentActId).index;
 		} catch (e) {
-			if (this.metadata.data.currentAdventureId.indexOf('-') === -1){
-				const [, campaignId, adventureId, actId] = this.metadata.data.currentActId.split('/');
-				response = this.api.service(IndexService).create(ComponentType.Act, campaignId, adventureId, actId);
-			}
+			//no need to trigger
 		}
 
 		return response;
@@ -74,12 +69,9 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 
 		let response: IndexInterface|undefined = undefined;
 		try {
-			//TODO CHANGE TO SOMETHING ELSE
-			response = this.api.service(IndexService).createFromIndex(this.metadata.data.currentSessionId);
+			response = this.api.database.readById<SessionInterface>(this.metadata.data.currentSessionId).index;
 		} catch (e) {
-			if (this.metadata.data.currentSessionId.indexOf('-') === -1)
-				response = this.api.service(IndexService).create(ComponentType.Session, this.metadata.data.currentSessionId, this.campaign.index.id);
-
+			//no need to trigger
 		}
 
 		return response;

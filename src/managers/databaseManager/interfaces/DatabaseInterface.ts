@@ -46,6 +46,10 @@ export interface DatabaseInterface {
 		overloadId?: string,
 	): T;
 
+	readById<T extends ModelInterface>(
+		id: string,
+	): T;
+
 	readNeighbour<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface,

@@ -40,7 +40,7 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 			session.index.campaignId === this.model.index.campaignId
 		);
 
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {id: this.model.session?.index, list: sessions}, editableKey: 'data.sessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {index: this.model.session?.index, list: sessions}, editableKey: 'data.sessionId'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addInfoElement(StoryCircleStageElement, {model: this.model, title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});

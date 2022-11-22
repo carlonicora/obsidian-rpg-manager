@@ -27,7 +27,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			.sort(this.api.service(SorterService).create<AdventureInterface>([
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Adventure', values: {id: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Adventure', values: {index: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
 
 		let acts = this.api.database.readList<ActInterface>(ComponentType.Act, this.model.index)
 			.sort(this.api.service(SorterService).create<ActInterface>([
@@ -37,13 +37,13 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 		if (this.model.currentAdventureId != undefined)
 			acts = acts.filter((act: ActInterface) => act.index.adventureId === this.model.currentAdventureId?.adventureId);
 
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Act', values: {id: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Act', values: {index: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
 
 		const sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.model.index)
 			.sort(this.api.service(SorterService).create<SessionInterface>([
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Session', values: {index: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
 
 		this.addInfoElement(this.model.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Current Date', values: this.model.date, category: FantasyCalendarCategory.CurrentDate, editableKey: 'data.date'});
 

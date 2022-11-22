@@ -146,6 +146,19 @@ export class Database extends Component implements DatabaseInterface {
 		return <T>result[0];
 	}
 
+	public readById<T extends ModelInterface>(
+		id: string,
+	): T {
+		const result = this.read((component: ModelInterface) =>
+			component.index.id === id
+		);
+
+		if (result.length !== 1)
+			throw new Error('');
+
+		return <T>result[0];
+	}
+
 	public readNeighbour<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface,
