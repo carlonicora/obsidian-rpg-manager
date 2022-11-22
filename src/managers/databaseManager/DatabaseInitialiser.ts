@@ -168,7 +168,5 @@ export class DatabaseInitialiser {
 		for (let index=0; index<database.recordset.length; index++){
 			database.recordset[index].touch();
 		}
-
-		this._api.service(LoggerService).info(LogMessageType.DatabaseInitialisation, 'hey', database);
 	}
 }

@@ -3,6 +3,7 @@ import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {IndexService} from "../../../services/indexService/IndexService";
 
 export class CampaignModalPart extends AbstractModalPart {
 	private _campaigns: CampaignInterface[];
@@ -89,6 +90,9 @@ export class CampaignModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
+		if (this.modal.campaignId === undefined)
+			this.modal.campaignId = this.api.service(IndexService).createUUID();
+
 		return true;
 	}
 
