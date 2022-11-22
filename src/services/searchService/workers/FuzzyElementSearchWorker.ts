@@ -65,17 +65,19 @@ export class FuzzyElementSearchWorker extends AbstractSearchWorker implements Se
 			if (element === undefined)
 				return [];
 
-			element.alias.forEach((alias: string) => {
-				const fuzzySearchResult = fuzzySearch(query, alias);
-				matches.set(element.file.path + alias, {
-					title: alias,
-					file: element.file,
-					alias: alias,
-					fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
-					fancySubtitle: this.setFancyName(element.file.basename, null, false),
-					resultScoring: fuzzySearchResult,
+			if (element.alias !== undefined && element.alias.length > 0) {
+				element.alias.forEach((alias: string) => {
+					const fuzzySearchResult = fuzzySearch(query, alias);
+					matches.set(element.file.path + alias, {
+						title: alias,
+						file: element.file,
+						alias: alias,
+						fancyTitle: this.setFancyName(alias, fuzzySearchResult, true),
+						fancySubtitle: this.setFancyName(element.file.basename, null, false),
+						resultScoring: fuzzySearchResult,
+					});
 				});
-			});
+			}
 		}
 
 		if (matches.size === 0)
