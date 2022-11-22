@@ -11,7 +11,6 @@ import {IndexDataInterface} from "../../../services/indexService/interfaces/Inde
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
-import {IndexService} from "../../../services/indexService/IndexService";
 import {SceneInterface} from "../interfaces/SceneInterface";
 
 export class SceneTemplate extends AbstractComponentTemplate {
@@ -106,8 +105,7 @@ export class SceneTemplate extends AbstractComponentTemplate {
 			const previousScenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
 				scene.index.type === ComponentType.Scene &&
 				scene.index.campaignId === this.campaignId &&
-				scene.index.adventureId === this.adventureId &&
-				scene.index.actId === this.actId
+				scene.index.parentId === this.parentId
 			).sort(
 				this.api.service(SorterService).create<SceneInterface>([
 					new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent, SorterType.Descending),
@@ -122,16 +120,12 @@ export class SceneTemplate extends AbstractComponentTemplate {
 			positionInParent = this.positionInParent;
 		}
 
-		if (this.sceneId === undefined)
-			this.sceneId = this.api.service(IndexService).createUUID();
-
 		return {
 			type: ComponentType.Scene,
 			campaignSettings: CampaignSetting.Agnostic,
-			id: this.sceneId,
+			id: this.id,
 			campaignId: this.campaignId,
-			adventureId: this.adventureId,
-			actId: this.actId,
+			parentId: this.parentId,
 			positionInParent: positionInParent,
 		};
 	}

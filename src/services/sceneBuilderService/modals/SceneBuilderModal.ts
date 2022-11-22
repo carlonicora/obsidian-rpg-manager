@@ -16,7 +16,6 @@ import {StoryCircleStage} from "../../plotsService/enums/StoryCircleStage";
 import {PlotService} from "../../plotsService/PlotService";
 import {SorterService} from "../../sorterService/SorterService";
 import {SorterComparisonElement} from "../../sorterService/SorterComparisonElement";
-import {IndexService} from "../../indexService/IndexService";
 
 export class SceneBuilderModal extends AbstractModal {
 	private _scenesContainerEl: HTMLTableSectionElement;
@@ -121,10 +120,7 @@ export class SceneBuilderModal extends AbstractModal {
 				ComponentType.Scene,
 				title,
 				this._act.index.campaignId,
-				this._act.index.adventureId,
-				this._act.index.actId,
-				this.api.service(IndexService).createUUID(),
-				undefined,
+				this._act.index.parentId,
 				positionInParent,
 				{
 					data: data,

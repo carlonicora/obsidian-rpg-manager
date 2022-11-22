@@ -88,7 +88,7 @@ export class ActTemplate extends AbstractComponentTemplate {
 		const previousActs = this.api.database.read<ActInterface>((act: ActInterface) =>
 			act.index.type === ComponentType.Act &&
 			act.index.campaignId === this.campaignId &&
-			act.index.adventureId === this.adventureId
+			act.index.parentId === this.parentId
 		).sort(
 			this.api.service(SorterService).create<ActInterface>([
 				new SorterComparisonElement((act: ActInterface) => act.index.positionInParent, SorterType.Descending),
@@ -99,15 +99,15 @@ export class ActTemplate extends AbstractComponentTemplate {
 			1 :
 			previousActs[0].index.positionInParent + 1;
 
-		if (this.actId === undefined)
-			this.actId = this.api.service(IndexService).createUUID();
+		if (this.id === undefined)
+			this.id = this.api.service(IndexService).createUUID();
 
 		return {
 			type: ComponentType.Act,
 			campaignSettings: CampaignSetting.Agnostic,
 			campaignId: this.campaignId,
-			adventureId: this.adventureId,
-			id: this.actId,
+			parentId: this.parentId,
+			id: this.id,
 			positionInParent: positionInParent,
 		};
 	}

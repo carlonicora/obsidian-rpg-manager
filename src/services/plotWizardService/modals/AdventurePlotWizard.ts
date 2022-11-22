@@ -264,10 +264,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			ComponentType.Clue,
 			data.name,
 			this._adventureId.campaignId,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
+			this._adventureId.campaignId,
 			undefined,
 			additionalInformation
 		);

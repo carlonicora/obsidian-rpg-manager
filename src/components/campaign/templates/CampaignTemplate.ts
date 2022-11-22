@@ -93,6 +93,7 @@ export class CampaignTemplate extends AbstractComponentTemplate {
 			campaignSettings: CampaignSetting.Agnostic,
 			id: this.campaignId,
 			campaignId: this.campaignId,
+			parentId: this.campaignId,
 			positionInParent: 0,
 		};
 	}

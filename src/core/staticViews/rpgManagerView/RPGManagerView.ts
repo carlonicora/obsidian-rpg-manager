@@ -163,7 +163,7 @@ export class RPGManagerView extends AbstractStaticView {
 
 		if (this._currentComponent !== undefined) {
 			modalOpened = true;
-			new CreationModal(this.api, type, true, null, this._currentComponent?.index.campaignId, this._currentComponent?.index.adventureId, this._currentComponent?.index.actId).open();
+			new CreationModal(this.api, type, true, null, this._currentComponent?.index.campaignId, this._currentComponent?.index.parentId).open();
 		} else if (this._currentCampaign !== undefined) {
 			modalOpened = true;
 			new CreationModal(this.api, type, true, null, this._currentCampaign?.index.campaignId).open();

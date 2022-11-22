@@ -21,7 +21,7 @@ export class ActModalPart extends AbstractModalPart {
 			(component: ActInterface) =>
 				component.index.type === ComponentType.Act &&
 				component.index.campaignId === this.modal.campaignId &&
-				component.index.adventureId === this.modal.adventureId
+				component.index.parentId === this.modal.adventureId
 		);
 	}
 

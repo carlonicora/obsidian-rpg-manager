@@ -9,15 +9,11 @@ import {randomUUID} from "crypto";
 import {IndexDataInterface} from "./interfaces/IndexDataInterface";
 
 export class IndexService extends AbstractService implements IndexServiceInterface, ServiceInterface {
-	//TODO Remove existingTag
 	public create(
 		type: ComponentType,
 		id: string,
 		campaignId: string,
-		adventureId?: string,
-		actId?: string,
-		sceneId?: string,
-		sessionId?: string,
+		parentId: string,
 		positionInParent?: number,
 		campaignSettings?: CampaignSetting,
 	): IndexInterface {
@@ -26,10 +22,7 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 			type,
 			id,
 			campaignId,
-			adventureId,
-			actId,
-			sceneId,
-			sessionId,
+			parentId,
 		);
 
 		if (positionInParent !== undefined)
@@ -48,10 +41,7 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 			index.type,
 			index.id,
 			index.campaignId,
-			index.adventureId,
-			index.actId,
-			index.sceneId,
-			index.sessionId,
+			index.parentId,
 			index.positionInParent,
 			index.campaignSettings,
 		);

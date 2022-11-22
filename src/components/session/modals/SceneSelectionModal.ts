@@ -91,12 +91,11 @@ export class SceneSelectionModal extends AbstractModal {
 			(scene: SceneInterface) =>
 				scene.index.type === ComponentType.Scene &&
 				scene.index.campaignId === this._session.index.campaignId &&
-				(this._selectedAct !== undefined ? scene.index.actId === this._selectedAct.index.actId : true) &&
-				(scene.session === undefined || scene.session?.index.sessionId === this._session.index.sessionId),
+				(this._selectedAct !== undefined ? scene.index.parentId === this._selectedAct.index.parentId : true) &&
+				(scene.session === undefined || scene.session?.index.id === this._session.index.id),
 		).sort(this.api.service(SorterService).create<SceneInterface>([
-			new SorterComparisonElement((scene: SceneInterface) => scene.index.adventureId),
-			new SorterComparisonElement((scene: SceneInterface) => scene.index.actId),
-			new SorterComparisonElement((scene: SceneInterface) => scene.index.sceneId),
+			new SorterComparisonElement((scene: SceneInterface) => scene.index.parentPosition),
+			new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent),
 		]));
 	}
 
@@ -133,7 +132,7 @@ export class SceneSelectionModal extends AbstractModal {
 				checkbox.value = scene.file.path;
 				checkbox.id = scene.file.basename;
 
-				if (scene.session?.index.sessionId === this._session.index.sessionId) {
+				if (scene.session?.index.id === this._session.index.id) {
 					checkbox.checked = true;
 					this._scenesEls.set(scene.file, checkbox);
 					if (populateInitialScenes)

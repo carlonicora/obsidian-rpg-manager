@@ -42,8 +42,7 @@ export class CreationModal extends Modal implements ModalInterface {
 		private _create: boolean = true,
 		private _name: string|null = null,
 		campaignId?: string,
-		adventureId?: string,
-		actId?: string,
+		parentId?: string,
 	) {
 		super(app);
 
@@ -56,12 +55,20 @@ export class CreationModal extends Modal implements ModalInterface {
 		if (campaignId !== undefined) {
 			this.campaignId = campaignId;
 
-			if (adventureId !== undefined) {
-				this.adventureId = adventureId;
+			if (parentId !== undefined) {
+				if (type === ComponentType.Act) {
+					this.adventureId = parentId;
+				}
 
-				if (actId !== undefined)
-					this.actId = actId;
-
+				if (type === ComponentType.Scene) {
+					this.actId = parentId;
+					try {
+						const act = this.api.database.readById(parentId);
+						this.adventureId = act.index.parentId;
+					} catch (e) {
+						//no need to do anything here
+					}
+				}
 			}
 		}
 

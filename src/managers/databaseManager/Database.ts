@@ -168,10 +168,7 @@ export class Database extends Component implements DatabaseInterface {
 		const result = this.read((model: ModelInterface) =>
 			model.index.type === type &&
 			(id.campaignId !== undefined ? model.index.campaignId === id.campaignId : true) &&
-			(id.adventureId !== undefined ? model.index.adventureId === id.adventureId : true) &&
-			(id.actId !== undefined ? model.index.actId === id.actId : true) &&
-			(id.sceneId !== undefined ? model.index.sceneId === id.sceneId : true) &&
-			(id.sessionId !== undefined ? model.index.sessionId === id.sessionId : true) &&
+			(id.parentId !== undefined ? model.index.parentId === id.parentId : true) &&
 			(model.index.positionInParent === (previous ? id.positionInParent - 1 : id.positionInParent + 1))
 		);
 
@@ -182,7 +179,7 @@ export class Database extends Component implements DatabaseInterface {
 
 	public readList<T extends ModelInterface>(
 		type: ComponentType,
-		id: IndexInterface|undefined,
+		id: IndexInterface,
 		overloadId?: string,
 	): T[] {
 		return <T[]>this.read(
@@ -192,59 +189,46 @@ export class Database extends Component implements DatabaseInterface {
 
 	private _generateQuery(
 		type: ComponentType,
-		id: IndexInterface|undefined,
+		id: IndexInterface,
 		isList: boolean,
 		overloadId?: string,
 	): any {
-		let campaignId: string | undefined = id?.campaignId;
-		let adventureId: string | undefined = id?.adventureId;
-		let actId: string | undefined = id?.actId;
-		let sceneId: string | undefined = id?.sceneId;
-		let sessionId: string | undefined = id?.sessionId;
-
 		switch(type) {
 			case ComponentType.Campaign:
-				if (overloadId !== undefined) campaignId = overloadId;
 				return (component: CampaignInterface) =>
 					(type & component.index.type) === component.index.type &&
-					(isList ? true : component.index.campaignId === campaignId);
+					(isList ? true : component.index.campaignId === overloadId);
 				break;
 			case ComponentType.Adventure:
-				if (overloadId !== undefined) adventureId = overloadId;
 				return (component: AdventureInterface) =>
 					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === campaignId &&
-					(isList ? true : component.index.adventureId === adventureId);
+					component.index.campaignId === id.campaignId &&
+					(isList ? true : component.index.id === overloadId);
 				break;
 			case ComponentType.Session:
-				if (overloadId !== undefined) sessionId = overloadId;
 				return (component: SessionInterface) =>
 					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === campaignId &&
-					(isList ? true : component.index.sessionId === sessionId);
+					component.index.campaignId === id.campaignId &&
+					(isList ? true : component.index.id === overloadId);
 				break;
 			case ComponentType.Act:
-				if (overloadId !== undefined) actId = overloadId;
 				return (component: ActInterface) =>
 					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === campaignId &&
-					(adventureId !== undefined ? component.index.adventureId === adventureId : true) &&
-					(isList ? true : component.index.actId === actId);
+					component.index.campaignId === id.campaignId &&
+					component.index.parentId === id.parentId &&
+					(isList ? true : component.index.id === overloadId);
 				break;
 			case ComponentType.Scene:
-				if (overloadId !== undefined) sceneId = overloadId;
 				return (component: SceneInterface) =>
 					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === campaignId &&
-					(adventureId !== undefined ? component.index.adventureId === adventureId : true) &&
-					component.index.actId === actId &&
-					(isList ? true : component.index.sceneId === sceneId);
+					component.index.campaignId === id.campaignId &&
+					component.index.parentId === id.parentId &&
+					(isList ? true : component.index.id === overloadId);
 				break;
 			default:
-				if (overloadId !== undefined) campaignId = overloadId;
 				return (component: ModelInterface) =>
 					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === campaignId;
+					component.index.campaignId === id.parentId;
 				break;
 		}
 	}

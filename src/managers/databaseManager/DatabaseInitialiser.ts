@@ -2,7 +2,6 @@ import {TFile} from "obsidian";
 import {RpgErrorInterface} from "../../core/errors/interfaces/RpgErrorInterface";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
 import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
-import {TagMisconfiguredError} from "../../core/errors/TagMisconfiguredError";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
@@ -134,10 +133,9 @@ export class DatabaseInitialiser {
 		file: TFile,
 	): Promise<ModelInterface|undefined> {
 		const id: IndexInterface|undefined = await this.readID(file);
-		if (id === undefined) return undefined;
 
-		if (!id.isValid)
-			throw new TagMisconfiguredError(this._api, id);
+		if (id === undefined)
+			return undefined;
 
 		const response = await api.models.get(id, id.campaignSettings, file);
 

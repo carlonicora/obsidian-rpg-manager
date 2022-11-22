@@ -8,10 +8,7 @@ export interface IndexServiceInterface {
 		type: ComponentType,
 		id: string,
 		campaignId: string,
-		adventureId?: string,
-		actId?: string,
-		sceneId?: string,
-		sessionId?: string,
+		parentId: string,
 		positionInParent?: number,
 		campaignSettings?: CampaignSetting,
 	): IndexInterface;

@@ -4,6 +4,7 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 import {IndexService} from "../../../services/indexService/IndexService";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
 	private _campaigns: CampaignInterface[];
@@ -21,7 +22,9 @@ export class CampaignModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 
-		this._campaigns = this.api.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
+		this._campaigns = this.api.database.read<CampaignInterface>((campaign: ModelInterface) =>
+			campaign.index.type === ComponentType.Campaign
+		);
 	}
 
 	public async addElement(

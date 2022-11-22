@@ -58,7 +58,7 @@ export interface DatabaseInterface {
 
 	readList<T extends ModelInterface>(
 		type: ComponentType,
-		id: IndexInterface|undefined,
+		id: IndexInterface,
 		overloadId?: string,
 	): T[];
 

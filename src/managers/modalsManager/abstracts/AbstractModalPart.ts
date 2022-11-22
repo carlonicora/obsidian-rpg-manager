@@ -44,6 +44,20 @@ export abstract class AbstractModalPart implements ModalPartInterface {
 		sessionId?: string,
 		additionalInformation?: any,
 	): Promise<void> {
+		let parentId: string|undefined = campaignId;
+
+		switch (type){
+			case ComponentType.Act:
+				parentId = adventureId;
+				break;
+			case ComponentType.Scene:
+				parentId = actId;
+				break;
+		}
+
+		if (parentId === undefined)
+			return;
+
 		this.api.service(FileCreationService).create(
 			settings,
 			type,
@@ -51,10 +65,7 @@ export abstract class AbstractModalPart implements ModalPartInterface {
 			templateName,
 			name,
 			campaignId,
-			adventureId,
-			actId,
-			sceneId,
-			sessionId,
+			parentId,
 			additionalInformation,
 		);
 

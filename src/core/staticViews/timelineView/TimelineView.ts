@@ -120,7 +120,7 @@ export class TimelineView extends AbstractStaticView implements View {
 				(scene: SceneInterface) =>
 					scene.index.type === ComponentType.Scene &&
 					scene.index.campaignId === this._campaignId.id &&
-					scene.index.sessionId === session.index.sessionId &&
+					scene.session?.index.id === session.index.id &&
 					scene.date != null
 			).sort(
 				this.api.service(SorterService).create<SceneInterface>([

@@ -52,6 +52,7 @@ export class MusicTemplate extends AbstractComponentTemplate {
 			campaignSettings: CampaignSetting.Agnostic,
 			id: this.api.service(IndexService).createUUID(),
 			campaignId: this.campaignId,
+			parentId: this.campaignId,
 			positionInParent: 0,
 		};
 	}

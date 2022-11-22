@@ -9,7 +9,6 @@ import {SessionInterface} from "../../../components/session/interfaces/SessionIn
 import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {randomUUID} from "crypto";
 
 export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 	constructor(
@@ -77,14 +76,11 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		fileFactory.silentCreate(
 			ComponentType.Scene,
 			'a' +
-			((scene.act.index.actId ?? 0) < 10 ? '0' + scene.act.index.actId?.toString(): scene.act.index.actId?.toString()) +
+			((scene.act.index.parentPosition ?? 0) < 10 ? '0' + scene.act.index.parentPosition.toString(): scene.act.index.parentPosition.toString()) +
 			's' +
 			(scenePosition < 10 ? '0' + scenePosition.toString() : scenePosition.toString()),
 			scene.campaign.index.campaignId,
-			scene.adventure.index.adventureId,
-			scene.act.index.actId,
-			randomUUID(),
-			undefined,
+			scene.act.index.id,
 			scenePosition,
 			undefined,
 			true,

@@ -31,11 +31,9 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 		protected api: RpgManagerApiInterface,
 		protected templateName: string,
 		protected name: string,
+		protected id: string,
 		protected campaignId: string,
-		protected adventureId?: string,
-		protected actId?: string,
-		protected sceneId?: string,
-		protected sessionId?: string,
+		protected parentId: string,
 		protected positionInParent?: number,
 		protected additionalInformation?: ControllerMetadataDataInterface,
 	) {

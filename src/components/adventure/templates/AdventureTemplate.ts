@@ -84,14 +84,15 @@ export class AdventureTemplate extends AbstractComponentTemplate {
 			1 :
 			previousAdventures[0].index.positionInParent + 1;
 
-		if (this.adventureId === undefined)
-			this.adventureId = this.api.service(IndexService).createUUID();
+		if (this.id === undefined)
+			this.id = this.api.service(IndexService).createUUID();
 
 		return {
 			type: ComponentType.Adventure,
 			campaignSettings: CampaignSetting.Agnostic,
-			id: this.adventureId,
+			id: this.id,
 			campaignId: this.campaignId,
+			parentId: this.parentId,
 			positionInParent: positionInParent,
 		};
 	}

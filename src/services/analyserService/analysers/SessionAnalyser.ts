@@ -24,13 +24,12 @@ export class SessionAnalyser extends AbstractAnalyser {
 			(scene: SceneInterface) =>
 				scene.index.type === ComponentType.Scene &&
 				scene.index.campaignId === session.index.campaignId &&
-				scene.session?.index.sessionId === session.index.sessionId,
+				scene.session?.index.id === session.index.id,
 		).sort(
 			this.api.service(SorterService).create<SceneInterface>([
 				new SorterComparisonElement((scene: SceneInterface) => scene.index.campaignId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.index.adventureId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.index.actId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.index.sceneId),
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.parentPosition),
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent),
 			]));
 
 		super.addScenesList(sceneList);

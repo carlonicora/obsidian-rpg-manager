@@ -10,7 +10,6 @@ import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface"
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
-import {IndexService} from "../../../services/indexService/IndexService";
 import {SessionInterface} from "../interfaces/SessionInterface";
 
 export class SessionTemplate extends AbstractComponentTemplate {
@@ -100,14 +99,12 @@ return this.generateRpgManagerCodeBlock(metadata);
 			positionInParent = this.positionInParent;
 		}
 
-		if (this.sessionId === undefined)
-			this.sessionId = this.api.service(IndexService).createUUID();
-
 		return {
 			type: ComponentType.Session,
 			campaignSettings: CampaignSetting.Agnostic,
-			id: this.sessionId,
+			id: this.id,
 			campaignId: this.campaignId,
+			parentId: this.campaignId,
 			positionInParent: positionInParent,
 		};
 	}

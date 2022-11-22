@@ -7,10 +7,10 @@ import {AbstractActData} from "../abstracts/AbstractActData";
 import {ComponentNotFoundError} from "../../../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "../../../managers/databaseManager/interfaces/DatabaseInterface";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
-import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {RelationshipInterface} from "../../../services/relationshipsService/interfaces/RelationshipInterface";
+import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 
 export class ActModel extends AbstractActData implements ActInterface {
 	protected metadata: ActMetadataInterface;
@@ -46,11 +46,6 @@ export class ActModel extends AbstractActData implements ActInterface {
 	private _adjacentAct(
 		next: boolean,
 	): ActInterface | null {
-		const actId = this.index.actId;
-
-		if (actId === undefined)
-			return null;
-
 		const response = this.api.database.read<ActInterface>((act: ActInterface) =>
 			act.index.type === ComponentType.Act &&
 			act.index.campaignId === this.index.campaignId &&
@@ -65,29 +60,27 @@ export class ActModel extends AbstractActData implements ActInterface {
 	): RelationshipListInterface {
 		const response: RelationshipListInterface = super.getRelationships(database);
 
-		this.api.database.read<ModelInterface>((model: ModelInterface) =>
-			model.index.campaignId === this.index.campaignId &&
-			model.index.adventureId === this.index.adventureId &&
-			model.index.actId === this.index.actId
-		).forEach((model: ModelInterface) => {
-			if (model.index.type === ComponentType.Scene){
-				model.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
-					if (sceneRelationship.component !== undefined)
-						response.add(this.api.service(RelationshipService).createRelationship(
-							RelationshipType.Unidirectional,
-							sceneRelationship.path,
-							undefined,
-							sceneRelationship.component,
-						));
+		this.api.database.read<SceneInterface>((scene: SceneInterface) =>
+			scene.index.type === ComponentType.Scene &&
+			scene.index.campaignId === this.index.campaignId &&
+			scene.index.parentId === this.index.id
+		).forEach((scene: SceneInterface) => {
+			scene.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
+				if (sceneRelationship.component !== undefined)
+					response.add(this.api.service(RelationshipService).createRelationship(
+						RelationshipType.Unidirectional,
+						sceneRelationship.path,
+						undefined,
+						sceneRelationship.component,
+					));
 
-				});
-			}
+			});
 
 			response.add(this.api.service(RelationshipService).createRelationship(
 				RelationshipType.Hierarchy,
-				model.file.path,
+				scene.file.path,
 				undefined,
-				model,
+				scene,
 			));
 		});
 

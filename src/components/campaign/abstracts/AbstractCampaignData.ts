@@ -9,10 +9,8 @@ import {
 import {DateService} from "../../../services/dateService/DateService";
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {DateInterface} from "../../../services/dateService/interfaces/DateInterface";
-import {IndexService} from "../../../services/indexService/IndexService";
 import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
-import {ComponentType} from "../../../core/enums/ComponentType";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";

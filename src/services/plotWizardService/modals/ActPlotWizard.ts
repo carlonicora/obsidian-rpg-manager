@@ -265,10 +265,7 @@ export class ActPlotWizard extends AbstractWizardModal {
 			ComponentType.Clue,
 			data.name,
 			this._actId.campaignId,
-			this._actId.adventureId,
-			this._actId.id,
-			undefined,
-			undefined,
+			this._actId.parentId,
 			undefined,
 			additionalInformation
 		);
