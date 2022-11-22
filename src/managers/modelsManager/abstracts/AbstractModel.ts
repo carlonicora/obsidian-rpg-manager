@@ -72,7 +72,7 @@ export abstract class AbstractModel implements ModelInterface {
 		if (this.index.type === ComponentType.Campaign)
 			return <unknown>this as CampaignInterface;
 
-		return this.api.database.readById<CampaignInterface>(this.index.id);
+		return this.api.database.readById<CampaignInterface>(this.index.campaignId);
 	}
 
 	public get campaignSettings(): CampaignSetting {
