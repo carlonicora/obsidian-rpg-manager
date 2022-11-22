@@ -197,38 +197,39 @@ export class Database extends Component implements DatabaseInterface {
 			case ComponentType.Campaign:
 				return (component: CampaignInterface) =>
 					(type & component.index.type) === component.index.type &&
-					(isList ? true : component.index.campaignId === overloadId);
+					(isList ? true : component.index.campaignId === (overloadId !== undefined ? overloadId : id.campaignId));
 				break;
 			case ComponentType.Adventure:
 				return (component: AdventureInterface) =>
 					(type & component.index.type) === component.index.type &&
 					component.index.campaignId === id.campaignId &&
-					(isList ? true : component.index.id === overloadId);
+					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
 				break;
 			case ComponentType.Session:
 				return (component: SessionInterface) =>
 					(type & component.index.type) === component.index.type &&
 					component.index.campaignId === id.campaignId &&
-					(isList ? true : component.index.id === overloadId);
+					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
 				break;
 			case ComponentType.Act:
 				return (component: ActInterface) =>
 					(type & component.index.type) === component.index.type &&
 					component.index.campaignId === id.campaignId &&
 					component.index.parentId === id.parentId &&
-					(isList ? true : component.index.id === overloadId);
+					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
 				break;
 			case ComponentType.Scene:
 				return (component: SceneInterface) =>
 					(type & component.index.type) === component.index.type &&
 					component.index.campaignId === id.campaignId &&
 					component.index.parentId === id.parentId &&
-					(isList ? true : component.index.id === overloadId);
+					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
 				break;
 			default:
 				return (component: ModelInterface) =>
 					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === id.parentId;
+					component.index.campaignId === id.campaignId &&
+					(isList ? true : (overloadId !== undefined ? overloadId : id.id));
 				break;
 		}
 	}
