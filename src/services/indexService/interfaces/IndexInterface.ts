@@ -52,6 +52,4 @@ export interface IndexInterface {
 		type: ComponentType,
 		id: string,
 	): void;
-
-	get stringID(): string;
 }

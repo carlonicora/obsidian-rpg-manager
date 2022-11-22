@@ -28,7 +28,7 @@ export class ModelSelectorElement extends AbstractElement {
 				value: model.file.path,
 			});
 
-			if (data.values.index !== undefined && data.values.index.stringID === model.index.stringID) {
+			if (data.values.index !== undefined && data.values.index.id === model.index.id) {
 				selectedModel = model;
 				sessionOptionEl.selected = true;
 			}
@@ -48,7 +48,7 @@ export class ModelSelectorElement extends AbstractElement {
 			if (selectedModel === undefined)
 				return;
 
-			this.api.service(CodeblockService).addOrUpdate(data.editableKey, selectedModel.index.stringID);
+			this.api.service(CodeblockService).addOrUpdate(data.editableKey, selectedModel.index.id);
 
 			this._addModelLink(selectedModel, contentEl);
 		});

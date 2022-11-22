@@ -62,7 +62,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		if (scene.isCurrentlyRunning) {
 			this.api.service(CodeblockService).stopRunningTime(scene.file);
 
-			if (this._currentlyRunningScene !== undefined && this._currentlyRunningScene.index.stringID === scene.index.stringID)
+			if (this._currentlyRunningScene !== undefined && this._currentlyRunningScene.index.id === scene.index.id)
 				this._currentlyRunningScene = undefined;
 
 		}

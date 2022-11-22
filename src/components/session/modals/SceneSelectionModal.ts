@@ -161,7 +161,7 @@ export class SceneSelectionModal extends AbstractModal {
 			if (initialSceneCheked === undefined || sceneEl.checked !== initialSceneCheked) {
 				await this.api.service(CodeblockService).addOrUpdate(
 					'data.sessionId',
-					(sceneEl.checked === true ? this._session.index.stringID : ''),
+					(sceneEl.checked === true ? this._session.index.id : ''),
 					file,
 				);
 			}
