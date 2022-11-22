@@ -29,7 +29,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			]));
 		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Adventure', values: {index: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
 
-		let acts = this.api.database.read<ActInterface>((model: ModelInterface) =>
+		let acts = this.api.database.read<ActInterface>((model: ActInterface) =>
 			model.index.type === ComponentType.Act &&
 			model.index.campaignId === this.model.index.id
 		).sort(this.api.service(SorterService).create<ActInterface>([
