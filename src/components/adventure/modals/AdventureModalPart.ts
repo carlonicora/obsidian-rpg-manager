@@ -92,10 +92,10 @@ export class AdventureModalPart extends AbstractModalPart {
 		this._adventures.forEach((adventure: AdventureInterface) => {
 			const adventureOptionEl = this._adventureEl.createEl('option', {
 				text: adventure.file.basename,
-				value: adventure.index.adventureId?.toString(),
+				value: adventure.index.id.toString(),
 			});
 
-			if (this._adventures.length === 1 || this.modal.adventureId === adventure.index.adventureId){
+			if (this._adventures.length === 1 || this.modal.adventureId === adventure.index.id){
 				adventureOptionEl.selected = true;
 				this._selectAdventure();
 			}

@@ -92,10 +92,10 @@ export class ActModalPart extends AbstractModalPart {
 		this._acts.forEach((act: ActInterface) => {
 			const actOptionEl = this._actEl.createEl('option', {
 				text: act.file.basename,
-				value: act.index.actId?.toString(),
+				value: act.index.id,
 			});
 
-			if (this._acts.length === 1 || this.modal.actId === act.index.actId){
+			if (this._acts.length === 1 || this.modal.actId === act.index.id){
 				actOptionEl.selected = true;
 				this._selectAct();
 			}

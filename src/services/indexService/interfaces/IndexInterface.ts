@@ -34,10 +34,6 @@ export interface IndexInterface {
 	get isValid(
 	): boolean;
 
-	isTypeValid(
-		type: ComponentType,
-	): boolean;
-
 	get invalidIds(
 	): Map<ComponentType, IndexTagStatus>|undefined;
 

@@ -111,12 +111,6 @@ export class Index implements IndexInterface {
 		return response;
 	}
 
-	public isTypeValid(
-		type: ComponentType,
-	): boolean {
-		return (this.tagMap.get(type)?.status === IndexTagStatus.Valid || this.tagMap.get(type)?.status === IndexTagStatus.NotRequired);
-	}
-
 	public get invalidIds(
 	): Map<ComponentType, IndexTagStatus>|undefined {
 		const response: Map<ComponentType, IndexTagStatus> = new Map();

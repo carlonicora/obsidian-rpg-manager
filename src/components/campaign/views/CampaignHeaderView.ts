@@ -35,7 +35,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			]));
 
 		if (this.model.currentAdventureId != undefined)
-			acts = acts.filter((act: ActInterface) => act.index.adventureId === this.model.currentAdventureId?.adventureId);
+			acts = acts.filter((act: ActInterface) => act.index.adventureId === this.model.currentAdventureId?.id);
 
 		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Act', values: {index: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
 

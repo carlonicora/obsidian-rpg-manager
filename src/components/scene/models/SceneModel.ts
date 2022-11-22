@@ -144,7 +144,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		const sessions: SessionInterface[] = this.api.database.read<SessionInterface>((session: SessionInterface) =>
 			session.index.type === ComponentType.Session &&
 			session.index.campaignId === this.index.campaignId &&
-			session.index.sessionId === this.metadata.data?.sessionId
+			session.index.id === this.metadata.data?.sessionId
 		);
 
 		if (sessions.length !== 1)
@@ -156,11 +156,6 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	private _adjacentScene(
 		next: boolean,
 	): SceneInterface | null {
-		const sceneId = this.index.sceneId;
-
-		if (sceneId === undefined)
-			return null;
-
 		try {
 			return this.api.database.readNeighbour<SceneInterface>(ComponentType.Scene, this.index, !next);
 		} catch (e) {

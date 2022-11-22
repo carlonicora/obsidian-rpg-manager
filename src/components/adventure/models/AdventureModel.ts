@@ -19,7 +19,7 @@ export class AdventureModel extends AbstractAdventureData implements AdventureIn
 
 		this.api.database.read<ModelInterface>((model: ModelInterface) =>
 			model.index.campaignId === this.index.campaignId &&
-			model.index.adventureId === this.index.adventureId
+			model.index.id === this.index.id
 		).forEach((model: ModelInterface) => {
 			response.add(this.api.service(RelationshipService).createRelationship(
 				RelationshipType.Hierarchy,
