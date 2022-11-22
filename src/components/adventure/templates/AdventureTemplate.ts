@@ -84,8 +84,6 @@ export class AdventureTemplate extends AbstractComponentTemplate {
 			1 :
 			previousAdventures[0].index.positionInParent + 1;
 
-		console.log(this.campaignId,previousAdventures,positionInParent);
-
 		if (this.adventureId === undefined)
 			this.adventureId = this.api.service(IndexService).createUUID();
 

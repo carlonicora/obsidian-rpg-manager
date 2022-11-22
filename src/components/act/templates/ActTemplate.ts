@@ -87,7 +87,8 @@ export class ActTemplate extends AbstractComponentTemplate {
 	): IndexDataInterface {
 		const previousActs = this.api.database.read<ActInterface>((act: ActInterface) =>
 			act.index.type === ComponentType.Act &&
-			act.index.campaignId === this.campaignId
+			act.index.campaignId === this.campaignId &&
+			act.index.adventureId === this.adventureId
 		).sort(
 			this.api.service(SorterService).create<ActInterface>([
 				new SorterComparisonElement((act: ActInterface) => act.index.positionInParent, SorterType.Descending),
@@ -95,7 +96,7 @@ export class ActTemplate extends AbstractComponentTemplate {
 		);
 
 		const positionInParent = previousActs.length === 0 ?
-			0 :
+			1 :
 			previousActs[0].index.positionInParent + 1;
 
 		if (this.actId === undefined)
