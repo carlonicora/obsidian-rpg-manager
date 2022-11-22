@@ -100,20 +100,27 @@ export class SceneTemplate extends AbstractComponentTemplate {
 
 	public generateID(
 	): IndexDataInterface {
-		const previousScenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
-			scene.index.type === ComponentType.Scene &&
-			scene.index.campaignId === this.campaignId &&
-			scene.index.adventureId === this.adventureId &&
-			scene.index.actId === this.actId
-		).sort(
-			this.api.service(SorterService).create<SceneInterface>([
-				new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent, SorterType.Descending),
-			])
-		);
+		let positionInParent = 1;
 
-		const positionInParent = previousScenes.length === 0 ?
-			0 :
-			previousScenes[0].index.positionInParent + 1;
+		if (this.positionInParent === undefined) {
+			const previousScenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
+				scene.index.type === ComponentType.Scene &&
+				scene.index.campaignId === this.campaignId &&
+				scene.index.adventureId === this.adventureId &&
+				scene.index.actId === this.actId
+			).sort(
+				this.api.service(SorterService).create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent, SorterType.Descending),
+				])
+			);
+
+			positionInParent = previousScenes.length === 0 ?
+				1 :
+				previousScenes[0].index.positionInParent + 1;
+
+		} else {
+			positionInParent = this.positionInParent;
+		}
 
 		if (this.sceneId === undefined)
 			this.sceneId = this.api.service(IndexService).createUUID();
