@@ -32,35 +32,24 @@ export interface DatabaseInterface {
 		name: string,
 	): T|undefined;
 
-	readByIndex<T extends ModelInterface>(
-		index: IndexDataInterface,
-	): T|undefined;
-
 	readByBaseName<T extends ModelInterface>(
 		basename: string,
 	): T|undefined;
 
-	readSingle<T extends ModelInterface>(
-		type: ComponentType,
-		id: IndexInterface,
-		overloadId?: string,
-	): T;
-
 	readById<T extends ModelInterface>(
 		id: string,
 	): T;
+
+	readChildren<T extends ModelInterface>(
+		type: ComponentType,
+		id: string,
+	): T[];
 
 	readNeighbour<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface,
 		previous: boolean,
 	): T;
-
-	readList<T extends ModelInterface>(
-		type: ComponentType,
-		id: IndexInterface,
-		overloadId?: string,
-	): T[];
 
 	onSave(
 		file: TFile,

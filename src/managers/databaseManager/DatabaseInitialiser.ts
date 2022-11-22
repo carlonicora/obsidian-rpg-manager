@@ -43,7 +43,7 @@ export class DatabaseInitialiser {
 						if (component.stage == ComponentStage.Plot || component.stage === ComponentStage.Run) {
 							let error: Error | undefined = undefined;
 							try {
-								const duplicate = response.readSingle(component.index.type, component.index);
+								const duplicate = response.readById(component.index.id);
 								error = new ComponentDuplicatedError(this._api, component.index, [duplicate], component);
 							} catch (e) {
 								//no need to trap anything here

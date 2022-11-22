@@ -17,7 +17,7 @@ export class ActAnalyser extends AbstractAnalyser {
 	) {
 		super(api, abtStage);
 
-		const sceneList = this.api.database.readList<SceneInterface>(ComponentType.Scene, act.index)
+		const sceneList = this.api.database.readChildren<SceneInterface>(ComponentType.Scene, act.index.id)
 			.sort(
 				this.api.service(SorterService).create<SceneInterface>([
 					new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent),

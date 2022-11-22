@@ -37,7 +37,7 @@ export class TimelineView extends AbstractStaticView implements View {
 		params: any[],
 	): void {
 		this._campaignId = params[0];
-		this._campaign = this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, this._campaignId);
+		this._campaign = this.api.database.readById<CampaignInterface>(this._campaignId.id);
 
 		super.initialise([]);
 

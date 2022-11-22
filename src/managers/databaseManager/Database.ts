@@ -82,13 +82,6 @@ export class Database extends Component implements DatabaseInterface {
 		return (<unknown>this.recordset.filter((query !== null ? query : true))) as T[];
 	}
 
-	public readByIndex<T extends ModelInterface>(
-		index: IndexDataInterface
-	): T|undefined {
-		const id = this._api.service(IndexService).createFromIndex(index);
-		return this.readSingle<T>(id.type, id);
-	}
-
 	public update(
 		component: ModelInterface,
 	): void {
@@ -134,18 +127,6 @@ export class Database extends Component implements DatabaseInterface {
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
-	public readSingle<T extends ModelInterface>(
-		type: ComponentType,
-		id: IndexInterface,
-		overloadId?: string,
-	): T {
-		const result = this.read(this._generateQuery(type, id, false, overloadId));
-
-		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
-
-		return <T>result[0];
-	}
-
 	public readById<T extends ModelInterface>(
 		id: string,
 	): T {
@@ -159,12 +140,21 @@ export class Database extends Component implements DatabaseInterface {
 		return <T>result[0];
 	}
 
+	public readChildren<T extends ModelInterface>(
+		type: ComponentType,
+		id: string,
+	): T[] {
+		return this.read((model: ModelInterface) =>
+			model.index.type === type &&
+			model.index.parentId === id
+		);
+	}
+
 	public readNeighbour<T extends ModelInterface>(
 		type: ComponentType,
 		id: IndexInterface,
 		previous: boolean,
 	): T {
-		//const result = this.read(this._generateQuery(type, id, false, overloadId));
 		const result = this.read((model: ModelInterface) =>
 			model.index.type === type &&
 			(id.campaignId !== undefined ? model.index.campaignId === id.campaignId : true) &&
@@ -175,63 +165,6 @@ export class Database extends Component implements DatabaseInterface {
 		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
 
 		return <T>result[0];
-	}
-
-	public readList<T extends ModelInterface>(
-		type: ComponentType,
-		id: IndexInterface,
-		overloadId?: string,
-	): T[] {
-		return <T[]>this.read(
-			this._generateQuery(type, id, true, overloadId),
-		);
-	}
-
-	private _generateQuery(
-		type: ComponentType,
-		id: IndexInterface,
-		isList: boolean,
-		overloadId?: string,
-	): any {
-		switch(type) {
-			case ComponentType.Campaign:
-				return (component: CampaignInterface) =>
-					(type & component.index.type) === component.index.type &&
-					(isList ? true : component.index.campaignId === (overloadId !== undefined ? overloadId : id.campaignId));
-				break;
-			case ComponentType.Adventure:
-				return (component: AdventureInterface) =>
-					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === id.campaignId &&
-					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
-				break;
-			case ComponentType.Session:
-				return (component: SessionInterface) =>
-					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === id.campaignId &&
-					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
-				break;
-			case ComponentType.Act:
-				return (component: ActInterface) =>
-					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === id.campaignId &&
-					component.index.parentId === id.parentId &&
-					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
-				break;
-			case ComponentType.Scene:
-				return (component: SceneInterface) =>
-					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === id.campaignId &&
-					component.index.parentId === id.parentId &&
-					(isList ? true : component.index.id === (overloadId !== undefined ? overloadId : id.id));
-				break;
-			default:
-				return (component: ModelInterface) =>
-					(type & component.index.type) === component.index.type &&
-					component.index.campaignId === id.campaignId &&
-					(isList ? true : (overloadId !== undefined ? overloadId : id.id));
-				break;
-		}
 	}
 
 	private async _replaceFileContent(
@@ -323,7 +256,7 @@ export class Database extends Component implements DatabaseInterface {
 
 				let error: RpgErrorInterface | undefined = undefined;
 				try {
-					const duplicate = this.readSingle(component.index.type, component.index);
+					const duplicate = this.readById(component.index.id);
 					error = new ComponentDuplicatedError(this._api, component.index, [duplicate], component);
 				} catch (e) {
 					//no need to trap an error here

@@ -75,7 +75,7 @@ export class SceneBuilderModal extends AbstractModal {
 	private async _createScenes(
 	): Promise<void> {
 		let positionInParent = 1;
-		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.index);
+		const scenes = this.api.database.readChildren<SceneInterface>(ComponentType.Scene, this._act.index.id);
 
 		await scenes.forEach((scene: SceneInterface) => {
 			if (scene.index.positionInParent >= positionInParent)
@@ -423,7 +423,7 @@ export class SceneBuilderModal extends AbstractModal {
 
 		this._scenesContainerEl = scenesTableEl.createTBody();
 
-		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.index)
+		const scenes = this.api.database.readChildren<SceneInterface>(ComponentType.Scene, this._act.index.id)
 			.sort(this.api.service(SorterService).create<SceneInterface>([
 				new SorterComparisonElement((scene: SceneInterface) => scene.index.id),
 			]));

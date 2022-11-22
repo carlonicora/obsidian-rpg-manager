@@ -41,7 +41,7 @@ export class ActPlotWizard extends AbstractWizardModal {
 	) {
 		super(api);
 
-		this._act = this.api.database.readSingle<ActInterface>(ComponentType.Act, this._actId);
+		this._act = this.api.database.readById<ActInterface>(this._actId.id);
 
 		this._steps = new Map<number, WizardPartInterface>();
 		this._steps.set(0, new StepIntroductionModal(

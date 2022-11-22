@@ -20,7 +20,7 @@ export abstract class AbstractStepModal implements WizardPartInterface {
 	}
 
 	protected get adventure(): AdventureInterface {
-		return this.api.database.readSingle(ComponentType.Adventure, this.adventureId);
+		return this.api.database.readById(this.adventureId.id);
 	}
 
 	public get data(): WizardDataInterface|undefined {

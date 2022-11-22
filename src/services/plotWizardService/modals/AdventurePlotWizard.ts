@@ -41,7 +41,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 	) {
 		super(api);
 
-		this._adventure = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this._adventureId);
+		this._adventure = this.api.database.readById<AdventureInterface>(this._adventureId.id);
 
 		this._steps.set(0, new StepIntroductionModal(
 			this.api,

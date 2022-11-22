@@ -17,7 +17,7 @@ export class SessionAnalyser extends AbstractAnalyser {
 	) {
 		super(api, abtStage);
 
-		const singleSession: SessionInterface = this.api.database.readSingle<SessionInterface>(ComponentType.Session, session.index);
+		const singleSession: SessionInterface = this.api.database.readById<SessionInterface>(session.index.id);
 		if (singleSession.targetDuration != undefined) this.targetDuration = singleSession.targetDuration;
 
 		const sceneList = this.api.database.read<SceneInterface>(
