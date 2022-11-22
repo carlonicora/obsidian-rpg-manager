@@ -6,7 +6,7 @@ export class ComponentNotFoundError extends AbstractRpgManagerError {
 
 	public showErrorMessage(
 	): string {
-		return '';
+		return 'COMPONENT NOT FOUND';
 		/*
 		const response = 'The tag `' + this.index.tag + '` refers to an outline that does not exist.\n';
 

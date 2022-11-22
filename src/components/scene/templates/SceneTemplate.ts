@@ -101,7 +101,7 @@ export class SceneTemplate extends AbstractComponentTemplate {
 	): IndexDataInterface {
 		let positionInParent = 1;
 
-		if (this.positionInParent === undefined) {
+		if (this.positionInParent == undefined) {
 			const previousScenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
 				scene.index.type === ComponentType.Scene &&
 				scene.index.campaignId === this.campaignId &&

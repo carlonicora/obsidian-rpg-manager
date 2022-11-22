@@ -18,7 +18,6 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	): void {
 		super.validateHierarchy();
 		try {
-			this.adventure.validateHierarchy();
 			this.act.validateHierarchy();
 		} catch (e) {
 			throw new ComponentNotFoundError(this.api, this.index);
@@ -26,21 +25,11 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	}
 
 	get act(): ActInterface {
-		const response = this.api.database.readSingle<ActInterface>(ComponentType.Act, this.index);
-
-		if (response === undefined)
-			throw new Error('');
-
-		return response;
+		return this.api.database.readById<ActInterface>(this.index.parentId);
 	}
 
 	get adventure(): AdventureInterface {
-		const response = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.index);
-
-		if (response === undefined)
-			throw new Error('');
-
-		return response;
+		return this.api.database.readById<AdventureInterface>(this.act.index.parentId);
 	}
 
 	get currentDuration(): number {

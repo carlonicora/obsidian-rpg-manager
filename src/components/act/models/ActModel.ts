@@ -27,12 +27,7 @@ export class ActModel extends AbstractActData implements ActInterface {
 	}
 
 	public get adventure(): AdventureInterface {
-		const response = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.index);
-
-		if (response === undefined)
-			throw new Error('');
-
-		return response;
+		return this.api.database.readById<AdventureInterface>(this.index.parentId);
 	}
 
 	public get nextAct(): ActInterface | null {
