@@ -4,11 +4,6 @@ import {IndexInterface} from "../../services/indexService/interfaces/IndexInterf
 import {ComponentNotFoundError} from "../../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
-import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
-import {AdventureInterface} from "../../components/adventure/interfaces/AdventureInterface";
-import {SessionInterface} from "../../components/session/interfaces/SessionInterface";
-import {ActInterface} from "../../components/act/interfaces/ActInterface";
-import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {ComponentDuplicatedError} from "../../core/errors/ComponentDuplicatedError";
 import {ComponentStage} from "../../core/enums/ComponentStage";
@@ -21,8 +16,6 @@ import {GalleryService} from "../../services/galleryService/GalleryService";
 import {
 	AllComponentManipulatorService
 } from "../../services/allComponentManipulatorService/AllComponentManipulatorService";
-import {IndexService} from "../../services/indexService/IndexService";
-import {IndexDataInterface} from "../../services/indexService/interfaces/IndexDataInterface";
 
 export class Database extends Component implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];

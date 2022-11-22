@@ -2,7 +2,6 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {TFile} from "obsidian";
-import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
 
 export interface DatabaseInterface {
 	recordset: ModelInterface[];

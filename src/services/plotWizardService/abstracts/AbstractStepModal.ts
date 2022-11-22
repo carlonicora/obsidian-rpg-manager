@@ -3,7 +3,6 @@ import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInter
 import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 import {WizardDataInterface} from "../../../managers/modalsManager/interfaces/WizardDataInterface";
 import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
-import {ComponentType} from "../../../core/enums/ComponentType";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
 
 export abstract class AbstractStepModal implements WizardPartInterface {

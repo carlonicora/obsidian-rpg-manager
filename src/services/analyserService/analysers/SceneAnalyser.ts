@@ -1,7 +1,6 @@
 import {AbstractAnalyser} from "../abstracts/AbstractAnalyser";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {AbtStage} from "../../plotsService/enums/AbtStage";
-import {ComponentType} from "../../../core/enums/ComponentType";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export class SceneAnalyser extends AbstractAnalyser {
