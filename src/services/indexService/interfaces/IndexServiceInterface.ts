@@ -13,7 +13,6 @@ export interface IndexServiceInterface {
 		sceneId?: string,
 		sessionId?: string,
 		positionInParent?: number,
-		existingTag?: string,
 		campaignSettings?: CampaignSetting,
 	): IndexInterface;
 

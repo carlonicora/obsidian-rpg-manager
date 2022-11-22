@@ -19,7 +19,6 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 		sceneId?: string,
 		sessionId?: string,
 		positionInParent?: number,
-		existingTag?: string,
 		campaignSettings?: CampaignSetting,
 	): IndexInterface {
 		const response = new Index(
@@ -31,8 +30,10 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 			actId,
 			sceneId,
 			sessionId,
-			existingTag,
 		);
+
+		if (positionInParent !== undefined)
+			response.positionInParent = positionInParent;
 
 		if (campaignSettings !== undefined)
 			response.campaignSettings = campaignSettings;
@@ -52,7 +53,6 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 			index.sceneId,
 			index.sessionId,
 			index.positionInParent,
-			undefined,
 			index.campaignSettings,
 		);
 

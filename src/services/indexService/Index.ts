@@ -20,15 +20,15 @@ export class Index implements IndexInterface {
 		actId?: string,
 		sceneId?: string,
 		sessionId?: string,
-		private _existingTag?: string,
 	) {
 		this.tagMap = new Map();
+		this.positionInParent = 1;
 
-		this._generateTagValue(ComponentType.Campaign, campaignId);
-		this._generateTagValue(ComponentType.Adventure, adventureId);
-		this._generateTagValue(ComponentType.Act, actId);
-		this._generateTagValue(ComponentType.Scene, sceneId);
-		this._generateTagValue(ComponentType.Session, sessionId);
+		this._generateTagValue(ComponentType.Campaign, (type === ComponentType.Campaign ? _id : campaignId));
+		this._generateTagValue(ComponentType.Adventure, (type === ComponentType.Adventure ? _id : adventureId));
+		this._generateTagValue(ComponentType.Act, (type === ComponentType.Act ? _id : actId));
+		this._generateTagValue(ComponentType.Scene, (type === ComponentType.Scene ? _id : sceneId));
+		this._generateTagValue(ComponentType.Session, (type === ComponentType.Session ? _id : sessionId));
 	}
 
 	//TODO Remove
