@@ -81,24 +81,30 @@ return this.generateRpgManagerCodeBlock(metadata);
 
 	public generateID(
 	): IndexDataInterface {
-		const previousSessions = this.api.database.read<AdventureInterface>((session: SessionInterface) =>
-			session.index.type === ComponentType.Session &&
-			session.index.campaignId === this.campaignId
-		).sort(
-			this.api.service(SorterService).create<SessionInterface>([
-				new SorterComparisonElement((session: SessionInterface) => session.index.positionInParent, SorterType.Descending),
-			])
-		);
+		let positionInParent = 1;
 
-		const positionInParent = previousSessions.length === 0 ?
-			0 :
-			previousSessions[0].index.positionInParent + 1;
+		if (this.positionInParent == undefined) {
+			const previousSessions = this.api.database.read<AdventureInterface>((session: SessionInterface) =>
+				session.index.type === ComponentType.Session &&
+				session.index.campaignId === this.campaignId
+			).sort(
+				this.api.service(SorterService).create<SessionInterface>([
+					new SorterComparisonElement((session: SessionInterface) => session.index.positionInParent, SorterType.Descending),
+				])
+			);
+
+			positionInParent = previousSessions.length === 0 ?
+				1 :
+				previousSessions[0].index.positionInParent + 1;
+		} else {
+			positionInParent = this.positionInParent;
+		}
 
 		if (this.sessionId === undefined)
 			this.sessionId = this.api.service(IndexService).createUUID();
 
 		return {
-			type: ComponentType.Adventure,
+			type: ComponentType.Session,
 			campaignSettings: CampaignSetting.Agnostic,
 			id: this.sessionId,
 			campaignId: this.campaignId,
