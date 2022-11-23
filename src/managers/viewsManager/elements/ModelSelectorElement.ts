@@ -44,28 +44,38 @@ export class ModelSelectorElement extends AbstractElement {
 			if (data.editableKey === undefined)
 				return;
 
-			const file: TAbstractFile|null = this.api.app.vault.getAbstractFileByPath(modelSelectorEl.value);
+			const keyValues: Map<string, string | boolean | number | undefined> = new Map<string, string | boolean | number | undefined>();
+			let previousSessionId: string | undefined = undefined;
 
-			if (file == null)
-				return;
+			if (modelSelectorEl.value === ''){
+				keyValues.set(data.editableKey, undefined);
 
-			let previousSessionId: string|undefined = undefined;
+				if (data.model instanceof SceneModel)
+					previousSessionId = data.model.session?.index.id;
+					keyValues.set('data.positionInSession', undefined);
 
-			const selectedModel: ModelInterface|undefined = this.api.database.readByPath(modelSelectorEl.value);
-			if (selectedModel === undefined)
-				return;
+				this.api.service(CodeblockService).addOrUpdateMultiple(keyValues);
+			} else {
+				const file: TAbstractFile | null = this.api.app.vault.getAbstractFileByPath(modelSelectorEl.value);
 
-			const keyValues: Map<string, string|boolean|number|undefined> = new Map<string, string | boolean | number | undefined>();
-			keyValues.set(data.editableKey, selectedModel.index.id);
+				if (file == null)
+					return;
 
-			if (data.model instanceof SceneModel) {
-				previousSessionId = data.model.session?.index.id;
-				this._addPositionInSession(selectedModel as SessionInterface, data.model, keyValues);
+				const selectedModel: ModelInterface | undefined = this.api.database.readByPath(modelSelectorEl.value);
+				if (selectedModel === undefined)
+					return;
+
+				keyValues.set(data.editableKey, selectedModel.index.id);
+
+				if (data.model instanceof SceneModel) {
+					previousSessionId = data.model.session?.index.id;
+					this._addPositionInSession(selectedModel as SessionInterface, data.model, keyValues);
+				}
+
+				this.api.service(CodeblockService).addOrUpdateMultiple(keyValues);
 			}
 
-			this.api.service(CodeblockService).addOrUpdateMultiple(keyValues);
-
-			if (previousSessionId !== undefined && previousSessionId !== selectedModel.index.id){
+			if (previousSessionId !== undefined && previousSessionId !== modelSelectorEl.value) {
 				try {
 					const previousSession = this.api.database.readById<SessionInterface>(previousSessionId);
 					previousSession.compactScenePositions(data.model.index.id);
@@ -74,26 +84,30 @@ export class ModelSelectorElement extends AbstractElement {
 				}
 			}
 
-			this._addModelLink(selectedModel, contentEl);
+			this._addModelLink(contentEl, selectedModel);
 		});
 
 		if (selectedModel !== undefined)
-			this._addModelLink(selectedModel, contentEl);
+			this._addModelLink(contentEl, selectedModel);
 
 	}
 
 	private _addModelLink(
-		model: ModelInterface,
 		containerEl: HTMLElement,
+		model?: ModelInterface,
 	): void {
-		const linkContainerEl: HTMLDivElement = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container-content-link'});
+		if (model === undefined){
+			//REMOVE
+		} else {
+			const linkContainerEl: HTMLDivElement = containerEl.createDiv({cls: 'rpg-manager-header-container-info-data-container-content-link'});
 
-		MarkdownRenderer.renderMarkdown(
-			model.link,
-			linkContainerEl,
-			'',
-			null as unknown as Component,
-		);
+			MarkdownRenderer.renderMarkdown(
+				model.link,
+				linkContainerEl,
+				'',
+				null as unknown as Component,
+			);
+		}
 	}
 
 	private _addPositionInSession(
