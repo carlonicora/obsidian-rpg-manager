@@ -16,9 +16,7 @@ import {RelationshipType} from "../../../services/relationshipsService/enums/Rel
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {RelationshipList} from "../../../services/relationshipsService/RelationshipList";
 import {SorterService} from "../../../services/sorterService/SorterService";
-import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
-import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 
 export class SessionModel extends AbstractSessionData implements SessionInterface {

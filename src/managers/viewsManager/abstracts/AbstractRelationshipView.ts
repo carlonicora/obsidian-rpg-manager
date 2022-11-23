@@ -20,7 +20,6 @@ import {SorterComparisonElement} from "../../../services/sorterService/SorterCom
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
-import {SceneModel} from "../../../components/scene/models/SceneModel";
 import {SessionModel} from "../../../components/session/models/SessionModel";
 
 export abstract class AbstractRelationshipView implements RelationshipsViewInterface {

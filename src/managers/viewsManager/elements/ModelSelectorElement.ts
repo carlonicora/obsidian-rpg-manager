@@ -7,7 +7,6 @@ import {SceneModel} from "../../../components/scene/models/SceneModel";
 import {SessionInterface} from "../../../components/session/interfaces/SessionInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {SessionModel} from "../../../components/session/models/SessionModel";
 
 export class ModelSelectorElement extends AbstractElement {
 	render(
