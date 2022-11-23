@@ -142,6 +142,11 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		return sessions[0];
 	}
 
+	get positionInSession(
+	): number|undefined {
+		return this.metadata?.data?.positionInSession;
+	}
+
 	private _adjacentScene(
 		next: boolean,
 	): SceneInterface | null {

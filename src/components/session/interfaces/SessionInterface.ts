@@ -10,4 +10,8 @@ export interface SessionInterface extends ModelInterface, PlotsInterface, Sessio
 	replaceSceneNoteList(
 		content: string[],
 	): Promise<void>;
+
+	compactScenePositions(
+		skipScene?: string,
+	): Promise<void>;
 }
