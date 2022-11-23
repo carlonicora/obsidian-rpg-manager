@@ -20,6 +20,8 @@ import {SorterComparisonElement} from "../../../services/sorterService/SorterCom
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
+import {SceneModel} from "../../../components/scene/models/SceneModel";
+import {SessionModel} from "../../../components/session/models/SessionModel";
 
 export abstract class AbstractRelationshipView implements RelationshipsViewInterface {
 	public relatedComponentType: ComponentType;
@@ -90,7 +92,14 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		);
 
 		if (this._relationships.length > 0) {
-			let sorter = this._relationshipSortingMap.get(this.relatedComponentType);
+			let sorter: SorterComparisonElementInterface[]|undefined = undefined;
+
+			if (this.relatedComponentType === ComponentType.Scene && this.model instanceof SessionModel)
+				sorter = [new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).positionInSession)];
+			else
+				sorter = this._relationshipSortingMap.get(this.relatedComponentType);
+
+
 			if (sorter === undefined)
 				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename, SorterType.Descending)];
 
