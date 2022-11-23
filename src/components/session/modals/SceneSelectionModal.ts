@@ -154,16 +154,51 @@ export class SceneSelectionModal extends AbstractModal {
 
 	private async _addScenes(
 	): Promise<void> {
+		let positionInSession = 0;
+
+		const scenes: SceneInterface[] = this.api.database.read((scene: SceneInterface) =>
+			scene.index.type === ComponentType.Scene &&
+			scene.session?.index.id === this._session.index.id,
+		);
+
+		for (let index=0; index<scenes.length; index++){
+			const scenePosition: number|undefined = scenes[index].positionInSession;
+
+			if (scenePosition !== undefined && scenePosition >= positionInSession)
+				positionInSession = scenePosition + 1;
+
+		}
+
+		if (positionInSession > 0)
+			positionInSession--;
+
+		const finalScenes: SceneInterface[] = [];
+
 		for (const [file, sceneEl] of this._scenesEls){
 			const initialSceneCheked = await this._initialScenesEls.get(file.path);
 
+			if (sceneEl.checked === true) {
+				const scene = this.api.database.readByPath<SceneInterface>(file.path);
+				if (scene !== undefined)
+					finalScenes.push(scene);
+
+			}
+
 			if (initialSceneCheked === undefined || sceneEl.checked !== initialSceneCheked) {
-				await this.api.service(CodeblockService).addOrUpdate(
-					'data.sessionId',
-					(sceneEl.checked === true ? this._session.index.id : ''),
+				if (sceneEl.checked === true)
+					positionInSession++;
+
+				const keyValues: Map<string, string | boolean | number | undefined> = new Map<string, string | boolean | number | undefined>();
+				keyValues.set('data.sessionId', (sceneEl.checked === true ? this._session.index.id : undefined));
+				keyValues.set('data.positionInSession', (sceneEl.checked === true ? positionInSession : undefined));
+
+				await this.api.service(CodeblockService).addOrUpdateMultiple(
+					keyValues,
 					file,
 				);
 			}
 		}
+
+		this._session.compactScenePositions(undefined, finalScenes);
 	}
 }

@@ -107,17 +107,24 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 
 	public async compactScenePositions(
 		skipScene?: string,
+		scenes?: SceneInterface[],
 	): Promise<void> {
-		const scenes: SceneInterface[] = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
-			scene.index.type === ComponentType.Scene &&
-			scene.session?.index.id === this.index.id &&
-			(skipScene !== undefined ? scene.index.id !== skipScene : true)
-		).sort(this.api.service(SorterService).create<SceneInterface>([
-			new SorterComparisonElement((scene: SceneInterface) => scene.positionInSession),
-		]));
+		if (scenes === undefined) {
+			scenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
+				scene.index.type === ComponentType.Scene &&
+				scene.session?.index.id === this.index.id &&
+				(skipScene !== undefined ? scene.index.id !== skipScene : true)
+			).sort(this.api.service(SorterService).create<SceneInterface>([
+				new SorterComparisonElement((scene: SceneInterface) => scene.positionInSession),
+			]));
+		}
 
-		for (let index=0; index<scenes.length; index++){
-			this.api.service(CodeblockService).addOrUpdate('data.positionInSession', index+1, scenes[index].file);
+		if (scenes !== undefined) {
+			for (let index = 0; index < scenes.length; index++) {
+				if (scenes[index].positionInSession !== index + 1) {
+					this.api.service(CodeblockService).addOrUpdate('data.positionInSession', index + 1, scenes[index].file);
+				}
+			}
 		}
 	}
 }
