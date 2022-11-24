@@ -27,6 +27,8 @@ export class ComponentOptionsService extends AbstractService implements Componen
 					this.api.staticViews.create(StaticViewType.Timeline, [model.index]);
 				});
 
+			this._addSeparator(containerEl);
+
 		} else {
 			if (model instanceof AdventureModel) {
 				this._addFunctionality(containerEl, 'Wizard')
@@ -45,16 +47,12 @@ export class ComponentOptionsService extends AbstractService implements Componen
 
 				this._addSeparator(containerEl);
 
-				//const scenes = this.api.database.readList(ComponentType.Scene, model.id);
+				this._addFunctionality(containerEl, 'Scene Builder')
+					.addEventListener("click", () => {
+						this.api.service(SceneBuilderService).open(model);
+					});
 
-				//if (scenes.length === 0) {
-					this._addFunctionality(containerEl, 'Scene Builder')
-						.addEventListener("click", () => {
-							this.api.service(SceneBuilderService).open(model);
-						});
-
-					this._addSeparator(containerEl);
-				//}
+				this._addSeparator(containerEl);
 			}
 
 			if (model instanceof SessionModel) {
@@ -66,32 +64,34 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				this._addSeparator(containerEl);
 			}
 
-			this._addFunctionality(containerEl, 'Relationship')
-				.addEventListener("click", () => {
-					new RelationshipsSelectionModal(this.api, model).open();
-				});
+			if (model instanceof AdventureModel === false) {
+				this._addFunctionality(containerEl, 'Relationship')
+					.addEventListener("click", () => {
+						new RelationshipsSelectionModal(this.api, model).open();
+					});
+
+				this._addSeparator(containerEl);
+			}
 
 			if (model instanceof CampaignModel === false) {
-				this._addSeparator(containerEl);
-
 				this._addFunctionality(containerEl, 'Move')
 					.addEventListener("click", () => {
 						new IndexSwitcherModal(this.api, model.file).open();
 					});
 
+				this._addSeparator(containerEl);
 			}
 		}
 
-		this._addSeparator(containerEl);
 
 		this._addFunctionality(containerEl, 'Gallery')
 			.addEventListener("click", () => {
 				new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
 			});
 
-		if (!model.isComplete) {
-			this._addSeparator(containerEl);
+		this._addSeparator(containerEl);
 
+		if (!model.isComplete) {
 			this._addFunctionality(containerEl, 'Complete')
 				.addEventListener("click", () => {
 					this.api.service(CodeblockService).addOrUpdate('data.complete', true);
