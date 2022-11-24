@@ -154,7 +154,7 @@ export class DatabaseInitialiser {
 			for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
 				const relationship = relationships[relationshipIndex];
 
-				if (relationship.component !== undefined && !relationship.component.getRelationships(database).existsAlready(model)){
+				if (relationship.component !== undefined){
 					const newRelationship: RelationshipInterface|undefined = this._api.service(RelationshipService).createRelationshipFromReverse(model, relationship);
 
 					if (newRelationship !== undefined)

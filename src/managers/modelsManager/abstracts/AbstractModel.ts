@@ -218,14 +218,10 @@ export abstract class AbstractModel implements ModelInterface {
 
 		for (let index=0; index<relationships.length; index++){
 			if(relationships[index].component !== undefined){
-				if (!relationships[index].component?.getRelationships().existsAlready(this)){
-					const relationship: RelationshipInterface|undefined = this.api.service(RelationshipService).createRelationshipFromReverse(this, relationships[index]);
+				const relationship: RelationshipInterface|undefined = this.api.service(RelationshipService).createRelationshipFromReverse(this, relationships[index]);
 
-					if (relationship !== undefined) {
-						relationships[index].component?.getRelationships().add(relationship);
-
-					}
-				}
+				if (relationship !== undefined)
+					relationships[index].component?.getRelationships().add(relationship);
 
 				relationships[index].component?.touch();
 			}
@@ -238,8 +234,7 @@ export abstract class AbstractModel implements ModelInterface {
 		for (let index = 0; index < recordset.length; index++) {
 			const relationships = recordset[index].getRelationships().relationships.filter((relationship: RelationshipInterface) =>
 				relationship.component !== undefined &&
-				relationship.component.file.path === this.file.path &&
-				!this._relationships.existsAlready(recordset[index])
+				relationship.component.file.path === this.file.path
 			);
 
 			if (relationships.length === 1){
