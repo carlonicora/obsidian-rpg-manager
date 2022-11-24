@@ -4,17 +4,11 @@ import {DatabaseUpdaterReporterInterface} from "./interfaces/DatabaseUpdaterRepo
 import {V3_0_to_3_1_worker} from "./workers/V3_0_to_3_1_worker";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {V3_1_to_3_4_worker} from "./workers/V3_1_to_3_4_worker";
-import {key} from "flatpickr/dist/types/locale";
 
 const versionMap = {
 	30: V3_0_to_3_1_worker,
 	33: V3_1_to_3_4_worker,
 };
-
-interface VersionHistoryElementInterface {
-	previousVersion: string,
-	nextVersion: string,
-}
 
 export class DatabaseUpdater {
 	private _updaters: DatabaseUpdateWorkerInterface[];

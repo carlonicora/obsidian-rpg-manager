@@ -5,7 +5,6 @@ import {CharacterModel} from "./models/CharacterModel";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../managers/viewsManager/interfaces/ViewClassInterface";
 import {ViewType} from "../../managers/viewsManager/enum/ViewType";
-import {CharacterHeaderView} from "./views/CharacterHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";

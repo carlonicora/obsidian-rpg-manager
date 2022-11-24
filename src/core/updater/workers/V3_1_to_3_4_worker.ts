@@ -99,7 +99,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				campaignId: id,
 				parentId: id,
 				positionInParent: 1,
-			}
+			};
 
 			campaigns[index].newIndex = newComponentId;
 
@@ -235,7 +235,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				campaignId: campaign.newIndex.campaignId,
 				parentId: campaign.newIndex.campaignId,
 				positionInParent: index+1,
-			}
+			};
 			adventures[index].newIndex = newComponentId;
 
 			await this._updateActs(adventures[index]);
@@ -276,7 +276,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				campaignId: adventure.newIndex.campaignId,
 				parentId: adventure.newIndex.id,
 				positionInParent: index+1,
-			}
+			};
 			acts[index].newIndex = newComponentId;
 
 			await this._updateScenes(acts[index]);
@@ -334,7 +334,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				campaignId: act.newIndex.campaignId,
 				parentId: act.newIndex.id,
 				positionInParent: index+1,
-			}
+			};
 			scenes[index].newIndex = newComponentId;
 		}
 	}
@@ -372,7 +372,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				campaignId: campaign.newIndex.campaignId,
 				parentId: campaign.newIndex.campaignId,
 				positionInParent: index+1,
-			}
+			};
 			sessions[index].newIndex = newComponentId;
 		}
 	}
@@ -400,7 +400,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				campaignId: campaign.newIndex.campaignId,
 				parentId: campaign.newIndex.campaignId,
 				positionInParent: 1,
-			}
+			};
 			elements[index].newIndex = newComponentId;
 		}
 	}
@@ -436,11 +436,11 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 				}
 
 				if (section.type === 'code' && fileContentArray[section.position.start.line] === '```RpgManagerID'){
-					let ID = '';
+					let indexID = '';
 					for (let index=section.position.start.line+1; index<section.position.end.line; index++){
-						ID += fileContentArray[index] + '\n';
+						indexID += fileContentArray[index] + '\n';
 					}
-					const indexData = parseYaml(ID);
+					const indexData = parseYaml(indexID);
 
 					if (indexData.id === undefined || indexData.checksum === undefined) {
 						this._fileElements.set(file, undefined);
@@ -448,7 +448,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 					} else {
 						const [type, campaignSettings, ids] = indexData.id.split('-');
 
-						let campaignId: number = 0;
+						let campaignId = 0;
 						let adventureId: number|undefined;
 						let actId: number|undefined;
 						let sceneId: number|undefined;
@@ -474,7 +474,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 
 						updaterComponent = {
 							originalContent: fileContent,
-							originalID: ID,
+							originalID: indexID,
 							type: +type,
 							campaignSettings: +campaignSettings,
 							campaignId: +campaignId,

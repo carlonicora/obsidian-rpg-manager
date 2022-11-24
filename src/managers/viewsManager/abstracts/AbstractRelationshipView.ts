@@ -18,7 +18,6 @@ import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterService} from "../../../services/sorterService/SorterService";
-import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
 import {SessionModel} from "../../../components/session/models/SessionModel";
 

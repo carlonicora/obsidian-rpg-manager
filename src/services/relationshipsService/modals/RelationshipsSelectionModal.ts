@@ -333,8 +333,6 @@ export class RelationshipsSelectionModal extends AbstractModal {
 				);
 		}
 
-		console.log(components)
-
 		if (term === undefined)
 			return components;
 
