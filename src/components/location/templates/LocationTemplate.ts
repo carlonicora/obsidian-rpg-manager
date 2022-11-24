@@ -40,6 +40,10 @@ export class LocationTemplate extends AbstractComponentTemplate {
 						{
 							relationship: "child",
 							title: "Contains"
+						},
+						{
+							relationship: "",
+							title: "Related Locations"
 						}
 					],
 				}
