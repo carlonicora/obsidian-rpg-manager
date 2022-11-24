@@ -316,7 +316,7 @@ export class RelationshipsSelectionModal extends AbstractModal {
 
 		let components: ModelInterface[] = [];
 		if (type !== undefined) {
-			components = this.api.database.readChildren<ModelInterface>(type, this._currentComponent.index.id)
+			components = this.api.database.readChildren<ModelInterface>(type, this._currentComponent.index.campaignId)
 				.sort(
 					this.api.service(SorterService).create<ModelInterface>([
 						new SorterComparisonElement((component: ModelInterface) => this._currentComponent.getRelationships().existsAlready(component), SorterType.Descending),
@@ -332,6 +332,8 @@ export class RelationshipsSelectionModal extends AbstractModal {
 					])
 				);
 		}
+
+		console.log(components)
 
 		if (term === undefined)
 			return components;
