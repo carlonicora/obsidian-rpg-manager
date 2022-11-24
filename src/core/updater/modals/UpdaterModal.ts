@@ -102,7 +102,9 @@ export class UpdaterModal extends Modal implements DatabaseUpdaterReporterInterf
 		startVersion: string,
 		endVersion: string,
 	): Promise<void> {
-		if (this._versionEl !== undefined) this._versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
+		if (this._versionEl !== undefined)
+			this._versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
+
 	}
 
 	public async setFileCount(
