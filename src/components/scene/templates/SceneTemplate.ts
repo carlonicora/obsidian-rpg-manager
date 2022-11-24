@@ -69,6 +69,9 @@ export class SceneTemplate extends AbstractComponentTemplate {
 		const metadata: ControllerMetadataInterface|ActDataInterface = {
 			models: {
 				lists: {
+					subplots: {
+						relationship: 'unidirectional',
+					},
 					musics: {
 						relationship: 'unidirectional',
 					},
