@@ -89,9 +89,9 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				new GalleryManagementModal(this.api, model, this.api.service(GalleryService)).open();
 			});
 
-		this._addSeparator(containerEl);
-
 		if (!model.isComplete) {
+			this._addSeparator(containerEl);
+
 			this._addFunctionality(containerEl, 'Complete')
 				.addEventListener("click", () => {
 					this.api.service(CodeblockService).addOrUpdate('data.complete', true);
