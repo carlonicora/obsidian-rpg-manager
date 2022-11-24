@@ -9,7 +9,7 @@ import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 
-export class CharacterHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
+export class NonPlayerCharacterHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CharacterInterface;
 
 	public render(
@@ -20,6 +20,7 @@ export class CharacterHeaderView extends AbstractHeaderView implements NewHeader
 		this.addGallery();
 
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Goals', values: this.model.goals ?? '<span class="missing">Goals Missing</span>', editableKey: 'data.goals'});
 
 		if (this.model.age !== undefined)
 			this.addInfoElement(ShortTextElement, {model: this.model, title: 'Age', values: this.model.age.toString()});
