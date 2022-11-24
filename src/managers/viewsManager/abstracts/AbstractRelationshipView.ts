@@ -100,7 +100,7 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 
 
 			if (sorter === undefined)
-				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename, SorterType.Descending)];
+				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename)];
 
 			this._relationships.sort(this.api.service(SorterService).create(sorter));
 
