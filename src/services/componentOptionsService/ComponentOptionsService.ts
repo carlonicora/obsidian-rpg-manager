@@ -3,7 +3,6 @@ import {ComponentOptionsServiceInterface} from "./interfaces/ComponentOptionsSer
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipsSelectionModal} from "../relationshipsService/modals/RelationshipsSelectionModal";
-import {IndexSwitcherModal} from "../indexService/modals/IndexSwitcherModal";
 import {GalleryManagementModal} from "../galleryService/modals/GalleryManagementModal";
 import {GalleryService} from "../galleryService/GalleryService";
 import {CampaignModel} from "../../components/campaign/models/CampaignModel";
@@ -68,15 +67,6 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				this._addFunctionality(containerEl, 'Relationship')
 					.addEventListener("click", () => {
 						new RelationshipsSelectionModal(this.api, model).open();
-					});
-
-				this._addSeparator(containerEl);
-			}
-
-			if (model instanceof CampaignModel === false) {
-				this._addFunctionality(containerEl, 'Move')
-					.addEventListener("click", () => {
-						new IndexSwitcherModal(this.api, model.file).open();
 					});
 
 				this._addSeparator(containerEl);

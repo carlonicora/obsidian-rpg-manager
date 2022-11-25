@@ -19,6 +19,8 @@ import {StoryCircleStage} from "../../../services/plotsService/enums/StoryCircle
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
+import {ParentSwitcherSelectorElement} from "../../../managers/viewsManager/elements/ParentSwitcherSelectorElement";
+import {ActInterface} from "../../act/interfaces/ActInterface";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -29,6 +31,11 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
+
+		const act: ActInterface = this.api.database.readById<ActInterface>(this.model.index.parentId);
+		const acts: ActInterface[] = this.api.database.readChildren<ActInterface>(ComponentType.Act, act.index.parentId);
+		this.addInfoElement(ParentSwitcherSelectorElement, {model: this.model, title: 'Part of Act', values: {index: this.model.index, list: acts}});
+
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Trigger', values: this.model.trigger ?? '<span class="missing">Trigger Missing</span>', editableKey: 'data.trigger'});
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Action', values: this.model.action ?? '<span class="missing">Action Missing</span>', editableKey: 'data.action'});
