@@ -15,6 +15,10 @@ import {AbstractStaticView} from "../../../managers/staticViewsManager/abstracts
 import {TimelineElement} from "./TimelineElement";
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {
+	FantasyCalendarSorterComparisonElement
+} from "../../../services/fantasyCalendarService/sorters/FantasyCalendarSorterComparisonElement";
 
 export class TimelineView extends AbstractStaticView implements View {
 	protected viewType: string = StaticViewType.Timeline.toString();
@@ -143,9 +147,15 @@ export class TimelineView extends AbstractStaticView implements View {
 			}
 		});
 
-		this._elements.sort(this.api.service(SorterService).create<TimelineElementInterface>([
-			new SorterComparisonElement((data: TimelineElementInterface) => data.fullDate)
-		]));
+		if (this._campaign.calendar === CalendarType.Gregorian) {
+			this._elements.sort(this.api.service(SorterService).create<TimelineElementInterface>([
+				new SorterComparisonElement((data: TimelineElementInterface) => data.fullDate)
+			]));
+		} else {
+			this._elements.sort(this.api.service(SorterService).create<TimelineElementInterface>([
+				new FantasyCalendarSorterComparisonElement((data: TimelineElementInterface) => data.fullDate)
+			]));
+		}
 	}
 
 	public async render(
