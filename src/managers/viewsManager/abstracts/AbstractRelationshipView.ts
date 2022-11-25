@@ -161,7 +161,9 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 
 		if (this.canBeOrdered){
 			const cell = headerRow.createEl('th');
-			setIcon(cell, 'grip-horizontal');
+			cell.addClass('rpg-manager-table-draggable-title');
+			const iconEl = cell.createSpan();
+			setIcon(iconEl, 'grip-horizontal');
 		}
 
 		this._fields.forEach((field: TableField) => {
@@ -210,9 +212,9 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 
 					if (element !== undefined) {
 						if (this.model instanceof SessionModel && element instanceof SceneModel)
-							this.api.service(CodeblockService).addOrUpdate('data.positionInSession', index, element.file)
+							this.api.service(CodeblockService).addOrUpdate('data.positionInSession', index, element.file);
 						else
-							this.api.service(CodeblockService).addOrUpdateInIndex('positionInParent', index, element.file)
+							this.api.service(CodeblockService).addOrUpdateInIndex('positionInParent', index, element.file);
 
 					}
 				} catch (e) {

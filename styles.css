@@ -1118,8 +1118,14 @@ textarea:hover {
   width: 100%;
   max-width: 100%;
 }
-.rpg-manager-table .rpg-manager-table-draggable {
+.rpg-manager-table .rpg-manager-table-draggable, .rpg-manager-table .rpg-manager-table-draggable-title {
   color: var(--rpg-manager-colour-text-light);
+}
+.rpg-manager-table .rpg-manager-table-draggable span > svg, .rpg-manager-table .rpg-manager-table-draggable-title span > svg {
+  height: var(--icon-xs);
+  width: var(--icon-xs);
+}
+.rpg-manager-table .rpg-manager-table-draggable {
   cursor: pointer;
 }
 .rpg-manager-table .rpg-manager-table-draggable span {
