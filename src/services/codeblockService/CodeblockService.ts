@@ -43,6 +43,22 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 		await this._worker.updateContent(domain);
 	}
 
+	public async addOrUpdateInIndex(
+		key: string,
+		value?: string|boolean|number,
+		file?: TFile,
+	): Promise<void> {
+		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file, 'RpgManagerID');
+
+		if (domain === undefined)
+			return undefined;
+
+		const dataWorker = await new CodeblockKeyWorker(this.api);
+		await dataWorker.addOrUpdate(domain, {key: key, value: value});
+
+		await this._worker.updateContent(domain);
+	}
+
 	public async addOrUpdateMultiple(
 		keyValues: Map<string, string|boolean|number|undefined>,
 		file?: TFile,

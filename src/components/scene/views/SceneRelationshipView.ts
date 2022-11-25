@@ -5,6 +5,8 @@ import {SceneInterface} from "../interfaces/SceneInterface";
 import {DateService} from "../../../services/dateService/DateService";
 
 export class SceneRelationshipView extends AbstractRelationshipView implements RelationshipsViewInterface {
+	protected canBeOrdered = true;
+
 	protected getFieldValue(
 		field: TableField,
 		model: SceneInterface,

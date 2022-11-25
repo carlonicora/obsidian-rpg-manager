@@ -24,6 +24,19 @@
 	width: 100%;
 	max-width: 100%;
 
+	.rpg-manager-table-draggable {
+		color: var(--rpg-manager-colour-text-light);
+		cursor: pointer;
+
+		span {
+			display: none;
+		}
+	}
+
+	.rpg-manager-table-draggable:hover > span {
+		display: block;
+	}
+
 	.inline {
 		white-space: nowrap;
 	}

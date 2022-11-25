@@ -1118,6 +1118,16 @@ textarea:hover {
   width: 100%;
   max-width: 100%;
 }
+.rpg-manager-table .rpg-manager-table-draggable {
+  color: var(--rpg-manager-colour-text-light);
+  cursor: pointer;
+}
+.rpg-manager-table .rpg-manager-table-draggable span {
+  display: none;
+}
+.rpg-manager-table .rpg-manager-table-draggable:hover > span {
+  display: block;
+}
 .rpg-manager-table .inline {
   white-space: nowrap;
 }
