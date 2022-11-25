@@ -8,7 +8,7 @@ export class Index implements IndexInterface {
 	public tagMap: Map<ComponentType, IndexTagValueInterface>;
 	public campaignSettings: CampaignSetting = CampaignSetting.Agnostic;
 	public positionInParent: number;
-	private _parentPosition: number;
+	private _parentPosition: number|undefined = undefined;
 
 	constructor(
 		private _api: RpgManagerApiInterface,
@@ -23,13 +23,6 @@ export class Index implements IndexInterface {
 		if (type === ComponentType.Campaign) {
 			this._campaignId = this._id;
 			this._parentId = this._id;
-		}
-
-		try {
-			const parent = this._api.database.readById(this._parentId);
-			this._parentPosition = parent.index.positionInParent;
-		} catch (e) {
-			this._parentPosition = 1;
 		}
 	}
 
@@ -50,6 +43,15 @@ export class Index implements IndexInterface {
 
 	get parentPosition(
 	): number {
+		if (this._parentPosition === undefined) {
+			try {
+				const parent = this._api.database.readById(this._parentId);
+				this._parentPosition = parent.index.positionInParent;
+			} catch (e) {
+				this._parentPosition = 1;
+			}
+		}
+
 		return this._parentPosition;
 	}
 }

@@ -16,15 +16,6 @@ export class Sorter implements SorterInterface {
 		}
 	}
 
-	public addComparisonElement(
-		comparisonElement: any,
-		sortType: SorterType = SorterType.Ascending,
-	): Sorter {
-		this.comparisonElements.push({comparisonElement: comparisonElement, sortType: sortType});
-
-		return this;
-	}
-
 	public getSortingFunction(
 		leftData: ModelInterface,
 		rightData: ModelInterface,
@@ -33,8 +24,13 @@ export class Sorter implements SorterInterface {
 			const comparer = this.comparisonElements[index];
 
 			if (typeof comparer.comparisonElement === 'function'){
-				if (comparer.comparisonElement(leftData) > comparer.comparisonElement(rightData)) return comparer.sortType === SorterType.Ascending ? +1 : -1;
-				if (comparer.comparisonElement(leftData) < comparer.comparisonElement(rightData)) return comparer.sortType === SorterType.Ascending ? -1 : +1;
+				const comparisonResult: number = comparer.sortFunction(leftData, rightData);
+
+				if (comparisonResult !== 0)
+					return comparisonResult;
+
+				// if (comparer.comparisonElement(leftData) > comparer.comparisonElement(rightData)) return comparer.sortType === SorterType.Ascending ? +1 : -1;
+				// if (comparer.comparisonElement(leftData) < comparer.comparisonElement(rightData)) return comparer.sortType === SorterType.Ascending ? -1 : +1;
 			} else {
 				if (this.getObjectValue(leftData, comparer.comparisonElement) > this.getObjectValue(rightData, comparer.comparisonElement)) return comparer.sortType === SorterType.Ascending ? +1 : -1;
 				if (this.getObjectValue(leftData, comparer.comparisonElement) < this.getObjectValue(rightData, comparer.comparisonElement)) return comparer.sortType === SorterType.Ascending ? -1 : +1;

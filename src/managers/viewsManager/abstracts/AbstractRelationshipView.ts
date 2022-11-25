@@ -20,6 +20,11 @@ import {SorterComparisonElement} from "../../../services/sorterService/SorterCom
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
 import {SessionModel} from "../../../components/session/models/SessionModel";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {
+	FantasyCalendarSorterComparisonElement
+} from "../../../services/fantasyCalendarService/sorters/FantasyCalendarSorterComparisonElement";
 
 export abstract class AbstractRelationshipView implements RelationshipsViewInterface {
 	public relatedComponentType: ComponentType;
@@ -42,22 +47,26 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		public sourcePath: string,
 	) {
 		this._relationshipSortingMap = new Map();
-		this._relationshipSortingMap.set(ComponentType.Event, [new SorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date)]);
+		if (this.model.campaign.calendar === CalendarType.Gregorian){
+			this._relationshipSortingMap.set(ComponentType.Event, [
+				new SorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date?.date)
+			]);
+		} else {
+			this._relationshipSortingMap.set(ComponentType.Event, [
+				new FantasyCalendarSorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date?.date)
+			]);
+		}
 		this._relationshipSortingMap.set(ComponentType.Session, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).index.campaignId),
 			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).index.positionInParent),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Adventure, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).index.campaignId),
 			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).index.positionInParent),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Act, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.campaignId),
 			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.parentPosition),
 			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.positionInParent),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Scene, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.campaignId),
 			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.parentPosition),
 			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.positionInParent),
 		]);
@@ -96,7 +105,6 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 				sorter = [new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).positionInSession)];
 			else
 				sorter = this._relationshipSortingMap.get(this.relatedComponentType);
-
 
 			if (sorter === undefined)
 				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename)];
