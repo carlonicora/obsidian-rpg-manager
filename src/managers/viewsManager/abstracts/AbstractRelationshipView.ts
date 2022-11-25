@@ -20,7 +20,6 @@ import {SorterComparisonElement} from "../../../services/sorterService/SorterCom
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
 import {SessionModel} from "../../../components/session/models/SessionModel";
-import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {
 	FantasyCalendarSorterComparisonElement
