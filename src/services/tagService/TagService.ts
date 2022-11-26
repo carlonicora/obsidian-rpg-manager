@@ -289,7 +289,7 @@ export class TagService extends AbstractService implements TagServiceInterface, 
 		if (tags == null)
 			return undefined;
 
-		let response: number = 0;
+		let response = 0;
 
 		tags.forEach((tag: string) => {
 			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Campaign].toLowerCase())) response += ComponentType.Campaign;
@@ -308,7 +308,7 @@ export class TagService extends AbstractService implements TagServiceInterface, 
 		});
 
 		if (response === 0)
-			return undefined
+			return undefined;
 
 		return response;
 	}
