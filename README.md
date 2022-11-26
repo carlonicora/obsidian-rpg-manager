@@ -25,13 +25,11 @@ For example: If you are on version 2.3 and decide to update to version 3.4, your
 
 ## Introduction
 
-RPG Manager helps you create the plot of a {story or campaign}, {organizing or organising}, and referencing elements where they are used. The plugin revolves around three main types of features:
+RPG Manager helps you create the plot of a story or campaign, organizing, and referencing elements where they are used. The plugin revolves around three main types of features:
 
-- **Plotting**: When you develop the rough sequence of events in the {story or campaign}.
+- **Plotting**: When you develop the rough sequence of events in the story or campaign.
 - **Running**: When you run play within the story such as when you are actively playing a session.
 - **Elements**: The individual pieces that may be present in your story, including non-player-characters (NPCs), locations, items, and governments.
-
-{THERE NEEDS TO BE SOMETHING HERE I DO NOT KNOW WHAT YET}
 
 ## Goals
 
@@ -39,11 +37,17 @@ The **Primary Goal** of RPG Manager is to lower the time needed to write a story
 
 These additions are optional features and can be disabled.
 
-The **Secondary Goal** of RPG Manager is to provide a story or campaign management system framework within Obsidian that is, at its core, system agnostic. It is intended to work for authors of all genres, DnD, Genesys, Sectors without Numbers, Vampire: The Masquerade, Warhammer, Warcraft, and more. If RPG Manager cannot support it, we **[want to know about it](https://github.com/carlonicora/obsidian-rpg-manager/issues)** so we can correct it.
+The **Secondary Goal** of RPG Manager is to provide a story or campaign management system framework within Obsidian that is, at its core, system agnostic. It is intended to work for authors of all genres, DnD, Genesys, Stars without Numbers, Vampire: The Masquerade, Warhammer, Warcraft, and more. If RPG Manager cannot support it, we **[want to know about it](https://github.com/carlonicora/obsidian-rpg-manager/issues)** so we can correct it.
 
 ## Features
 
-{This is where we throw some awesome features. And in a gallery of screenshots.}
+| Story-building         | Quality of Life                    | Extensibility                                                                                    |
+| :---------------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------ |
+| Auto-connected Modules | Image Gallery                      | **[Fantasy-Calendar](https://github.com/fantasycalendar/obsidian-fantasy-calendar)** Integration |
+| ABT and SC Outliner    | Relationship Linking               | API (Coming Soon)                                                                                                 |
+| Scene Analyzer         | Autolinking within Campaign (v3.3) |                                                                               |
+| Plot Wizard (v3.3)     | Drag and Drop Scenes (Coming Soon) |                                                                                                  |
+
 
 ## Installing RPG Manager from Obsidian
 
