@@ -286,24 +286,29 @@ export class TagService extends AbstractService implements TagServiceInterface, 
 	public getTemplateDataType(
 		tags: string[]|null,
 	): ComponentType|undefined {
-		if (tags == null) return undefined;
+		if (tags == null)
+			return undefined;
 
-		let response: ComponentType|undefined;
+		let response: number = 0;
+
 		tags.forEach((tag: string) => {
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Campaign].toLowerCase())) response = ComponentType.Campaign;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Adventure].toLowerCase())) response = ComponentType.Adventure;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Act].toLowerCase())) response = ComponentType.Act;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Scene].toLowerCase())) response = ComponentType.Scene;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Session].toLowerCase())) response = ComponentType.Session;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.NonPlayerCharacter].toLowerCase())) response = ComponentType.NonPlayerCharacter;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Character].toLowerCase())) response = ComponentType.Character;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Clue].toLowerCase())) response = ComponentType.Clue;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Location].toLowerCase())) response = ComponentType.Location;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Faction].toLowerCase())) response = ComponentType.Faction;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Event].toLowerCase())) response = ComponentType.Event;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Music].toLowerCase())) response = ComponentType.Music;
-			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Subplot].toLowerCase())) response = ComponentType.Subplot;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Campaign].toLowerCase())) response += ComponentType.Campaign;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Adventure].toLowerCase())) response += ComponentType.Adventure;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Act].toLowerCase())) response += ComponentType.Act;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Scene].toLowerCase())) response += ComponentType.Scene;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Session].toLowerCase())) response += ComponentType.Session;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.NonPlayerCharacter].toLowerCase())) response += ComponentType.NonPlayerCharacter;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Character].toLowerCase())) response += ComponentType.Character;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Clue].toLowerCase())) response += ComponentType.Clue;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Location].toLowerCase())) response += ComponentType.Location;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Faction].toLowerCase())) response += ComponentType.Faction;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Event].toLowerCase())) response += ComponentType.Event;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Music].toLowerCase())) response += ComponentType.Music;
+			if (tag.startsWith('rpgm/template/' + ComponentType[ComponentType.Subplot].toLowerCase())) response += ComponentType.Subplot;
 		});
+
+		if (response === 0)
+			return undefined
 
 		return response;
 	}

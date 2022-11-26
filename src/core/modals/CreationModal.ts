@@ -83,8 +83,10 @@ export class CreationModal extends Modal implements ModalInterface {
 					if (tags.length > 0) {
 						const tags = this.api.service(TagService).sanitiseTags(metadata.frontmatter?.tags);
 						const templateType = this.api.service(TagService).getTemplateDataType(tags);
-						if (templateType == undefined) this.availableGenericTemplates.push(file);
-						if (templateType === this.type) this.availableSpecificTemplates.push(file);
+
+						if (templateType == undefined || ((templateType & this.type ) === this.type))
+							this.availableGenericTemplates.push(file);
+
 					} else {
 						this.availableGenericTemplates.push(file);
 					}
