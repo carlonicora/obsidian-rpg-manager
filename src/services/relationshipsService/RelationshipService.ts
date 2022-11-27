@@ -44,9 +44,11 @@ export class RelationshipService extends AbstractService implements Relationship
 			const nameAndAlias = content.substring(0, endLinkIndex);
 			const aliasIndex = nameAndAlias.indexOf('|');
 			let basename: string;
+
 			if (aliasIndex === -1){
 				basename = nameAndAlias;
 			} else {
+				//TODO if alias is empty, do not add the relationship
 				basename = nameAndAlias.substring(0, aliasIndex);
 			}
 
