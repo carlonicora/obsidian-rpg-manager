@@ -43,6 +43,7 @@ import {ContentEditorService} from "../services/contentEditorService/ContentEdit
 import {LinkSuggesterService} from "../services/linkSuggesterService/LinkSuggesterService";
 import {PlotWizardService} from "../services/plotWizardService/PlotWizardService";
 import {HelpService} from "../services/helpService/HelpService";
+import {GraphViewService} from "../services/graphViewService/GraphViewService";
 
 export class Bootstrapper {
 	public static initialise(
@@ -85,6 +86,7 @@ export class Bootstrapper {
 		api.services.register(FileCreationService);
 		api.services.register(FileManipulatorService);
 		api.services.register(GalleryService);
+		//api.services.register(GraphViewService);
 		api.services.register(HelpService);
 		api.services.register(IndexService);
 		api.services.register(ImageService);
