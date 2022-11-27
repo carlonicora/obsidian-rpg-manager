@@ -86,7 +86,7 @@ export class Bootstrapper {
 		api.services.register(FileCreationService);
 		api.services.register(FileManipulatorService);
 		api.services.register(GalleryService);
-		//api.services.register(GraphViewService);
+		api.services.register(GraphViewService);
 		api.services.register(HelpService);
 		api.services.register(IndexService);
 		api.services.register(ImageService);

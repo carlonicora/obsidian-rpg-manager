@@ -32,7 +32,7 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 		let hiddenLinksContent = '';
 
 		const newRelationships: string[] = [];
-		const existingRelationships: string[] = [];
+		const relationshipsToRemove: string[] = [];
 		let hasExistingRelationships = false;
 
 		if (domain.codeblockEnd.line + 1 < content.length) {
@@ -40,14 +40,14 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 				if (content[index] !== ''){
 					hasExistingRelationships = true;
 					hiddenLinksContent += content[index] + '\n';
-					existingRelationships.push(content[index].substring(2, content[index].length -3).toLowerCase());
+					relationshipsToRemove.push(content[index].substring(2, content[index].length -3).toLowerCase());
 				} else {
 					hiddenLinksContent += '\n';
 				}
 			}
 		}
 
-		const existingRelationshipCount = existingRelationships.length;
+		const existingRelationshipCount = relationshipsToRemove.length;
 
 		for (let index=0; index<element.getRelationships().relationships.length; index++){
 			const relationship = element.getRelationships().relationships[index];
@@ -62,7 +62,7 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 				)
 			) {
 				this._updateAvailableRelationships(
-					existingRelationships,
+					relationshipsToRemove,
 					newRelationships,
 					relationship.component.file.basename,
 				)
@@ -70,36 +70,37 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 		}
 
 		console.log(
-			'initial existing relationships: ' + existingRelationshipCount,
-			'existing relationships: ' + existingRelationships.length,
-			'new relationships: ' + newRelationships.length,
-		);
+			relationshipsToRemove,
+			newRelationships,
+		)
+
 
 		if (
-			existingRelationships.length !== 0 ||
+			relationshipsToRemove.length !== 0 ||
 			newRelationships.length !== existingRelationshipCount
 		){
-			console.warn('Saving');
 			let newHiddenLinkContent = '';
 			for (let index=0; index<newRelationships.length; index++){
 				newHiddenLinkContent += newRelationships[index] + '\n';
 			}
 
+			if (newHiddenLinkContent !== '')
+				newHiddenLinkContent = newHiddenLinkContent.substring(0, newHiddenLinkContent.length - 1);
+
+			console.warn(newHiddenLinkContent)
+
 			let newFileContent = '';
-
-			if (hasExistingRelationships) {
-				newFileContent = domain.originalFileContent.replace(hiddenLinksContent, newHiddenLinkContent);
-			} else {
-				newFileContent = domain.originalFileContent + '\n' + newHiddenLinkContent;
+			let isInRpgManagerID = false;
+			for (let index=0; index<content.length; index++){
+				newFileContent += content[index] + '\n';
+				if (isInRpgManagerID && content[index] === '```')
+					break;
 			}
 
-			console.log(hiddenLinksContent);
-			console.warn(newFileContent)
+			newFileContent += newHiddenLinkContent;
 
-			if (newFileContent !== domain.originalFileContent) {
-				console.warn('SAVING NEW FILE', newFileContent);
+			if (newFileContent !== domain.originalFileContent)
 				this.api.app.vault.modify(file, newFileContent);
-			}
 
 		}
 	}
