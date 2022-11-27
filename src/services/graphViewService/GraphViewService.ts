@@ -29,21 +29,15 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 			return;
 
 		const content = domain.originalFileContent.split('\n');
-		let hiddenLinksContent = '';
 
 		const newRelationships: string[] = [];
 		const relationshipsToRemove: string[] = [];
-		let hasExistingRelationships = false;
 
 		if (domain.codeblockEnd.line + 1 < content.length) {
 			for (let index = domain.codeblockEnd.line + 1; index < content.length; index++) {
-				if (content[index] !== ''){
-					hasExistingRelationships = true;
-					hiddenLinksContent += content[index] + '\n';
+				if (content[index] !== '')
 					relationshipsToRemove.push(content[index].substring(2, content[index].length -3).toLowerCase());
-				} else {
-					hiddenLinksContent += '\n';
-				}
+
 			}
 		}
 
@@ -65,15 +59,9 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 					relationshipsToRemove,
 					newRelationships,
 					relationship.component.file.basename,
-				)
+				);
 			}
 		}
-
-		console.log(
-			relationshipsToRemove,
-			newRelationships,
-		)
-
 
 		if (
 			relationshipsToRemove.length !== 0 ||
@@ -87,14 +75,15 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 			if (newHiddenLinkContent !== '')
 				newHiddenLinkContent = newHiddenLinkContent.substring(0, newHiddenLinkContent.length - 1);
 
-			console.warn(newHiddenLinkContent)
-
 			let newFileContent = '';
 			let isInRpgManagerID = false;
 			for (let index=0; index<content.length; index++){
 				newFileContent += content[index] + '\n';
-				if (isInRpgManagerID && content[index] === '```')
+				if (!isInRpgManagerID && content[index] === '```RpgManagerID')
+					isInRpgManagerID = true;
+				else if (isInRpgManagerID && content[index] === '```')
 					break;
+
 			}
 
 			newFileContent += newHiddenLinkContent;
@@ -117,6 +106,6 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 			}
 		}
 
-		newRelationships.push('[[' + relationship + '|]]')
+		newRelationships.push('[[' + relationship + '|]]');
 	}
 }

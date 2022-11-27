@@ -23,7 +23,6 @@ import {LogMessageType} from "../loggerService/enums/LogMessageType";
 import {
 	ControllerMetadataDataInterface
 } from "../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
-import {base} from "w3c-keyname";
 
 export class RelationshipService extends AbstractService implements RelationshipServiceInterface, ServiceInterface {
 	public async addRelationshipsFromContent(
