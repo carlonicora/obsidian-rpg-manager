@@ -1,5 +1,5 @@
 import {RpgManagerApiInterface} from "./interfaces/RpgManagerApiInterface";
-import {App, TFile} from "obsidian";
+import {App, FileSystemAdapter, TFile} from "obsidian";
 import {ServiceManagerInterface} from "../managers/servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "../managers/servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
@@ -29,6 +29,8 @@ import {DatabaseManagerInterface} from "../managers/databaseManager/interfaces/D
 import {DatabaseManager} from "../managers/databaseManager/DatabaseManager";
 import {LoggerService} from "../services/loggerService/LoggerService";
 import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
+import i18next from "i18next";
+import Backend from 'i18next-fs-backend';
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -68,6 +70,45 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 		if (!this._root.endsWith("/"))
 			this._root += "/";
+
+		this._initialiseI18N();
+
+	}
+
+	private async _initialiseI18N(
+	): Promise<void> {
+		let basePath: string|undefined =  undefined;
+
+		if (this.app.vault.adapter instanceof FileSystemAdapter)
+			basePath = this.app.vault.adapter.getBasePath();
+		else
+			basePath = this._root;
+
+		if (basePath !== undefined) {
+			await i18next
+				.use(Backend)
+				.init({
+					initImmediate: false,
+					saveMissing: true,
+					fallbackLng: 'en',
+					lng: this.language,
+					debug: true,
+					ns: ['common', 'elements', 'errors'],
+					defaultNS: 'common',
+					backend: {
+						loadPath: basePath + `/${this.app.vault.configDir}/plugins/rpg-manager/locales/{{lng}}/{{ns}}.json`,
+					}
+				});
+
+			i18next.on('missingKey', function(lngs, namespace, key, res) {
+				console.error('Translation missing of key ' + key + ' for language ' + lngs + ' in ' + namespace);
+			});
+		}
+	}
+
+	public get language(): string {
+		// return window.localStorage.getItem('language') ?? 'en';
+		return 'it';
 	}
 
 	public get controllers(): ControllerManagerInterface {
@@ -146,8 +187,8 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		const response = this._fetchers.get(fetcher);
 
 		if (response === undefined) {
-			this.service(LoggerService).createError(LogMessageType.System, 'The requested fetcher (' + fetcher.name + ') does not exist');
-			throw new Error('The requested fetcher (' + fetcher.name + ') does not exist');
+			this.service(LoggerService).createError(LogMessageType.System, i18next.t('non_existing', {context: 'fetcher', name: fetcher.name, ns: 'errors'}));
+			throw new Error(i18next.t('non_existing', {context: 'fetcher', name: fetcher.name, ns: 'errors'}) ?? '');
 		}
 
 		return response;
@@ -159,8 +200,8 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		const response = this._services.get(service);
 
 		if (response === undefined) {
-			this.service(LoggerService).createError(LogMessageType.System, 'The requested service (' + service.name + ') does not exist');
-			throw new Error('The requested service (' + service.name + ') does not exist');
+			this.service(LoggerService).createError(LogMessageType.System, i18next.t('non_existing', {context: 'service', name: service.name, ns: 'errors'}));
+			throw new Error(i18next.t('non_existing', {context: 'service', name: service.name, ns: 'errors'}) ?? '');
 		}
 
 		return response;

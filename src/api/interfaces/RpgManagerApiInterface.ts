@@ -18,6 +18,8 @@ import {StaticViewsManagerInterface} from "../../managers/staticViewsManager/int
 export interface RpgManagerApiInterface {
 	app: App;
 
+	get language(): string;
+
 	get controllers(): ControllerManagerInterface;
 	get components(): ComponentsManagerInterface;
 	get database(): DatabaseInterface;
