@@ -207,9 +207,6 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		parent: BreadcrumbElement,
 		scene: SceneInterface
 	): BreadcrumbElement {
-		console.log(scene.act)
-		console.log(scene.adventure)
-		console.log(scene.campaign)
 		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, ComponentType.Adventure, scene.adventure);
 		const actBreadcrumb = this._generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, scene.act);
 		const sceneBreadcrumb = this._generateElementBreadcrumb(actBreadcrumb, ComponentType.Scene, scene);
