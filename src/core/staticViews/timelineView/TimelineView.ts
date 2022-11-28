@@ -109,8 +109,6 @@ export class TimelineView extends AbstractStaticView implements View {
 					synopsisOfDeath += '**Reason of Death**: ' + character.reasonOfDeath;
 				}
 
-				console.log(synopsisOfDeath);
-
 				this._elements.push(
 					new TimelineElement(
 						character.death.date,
