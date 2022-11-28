@@ -120,7 +120,7 @@ export class SceneBuilderModal extends AbstractModal {
 				ComponentType.Scene,
 				title,
 				this._act.index.campaignId,
-				this._act.index.parentId,
+				this._act.index.id,
 				positionInParent,
 				{
 					data: data,
