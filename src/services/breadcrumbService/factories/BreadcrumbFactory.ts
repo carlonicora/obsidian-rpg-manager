@@ -205,14 +205,16 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 
 	private _generateSceneBreadcrumb(
 		parent: BreadcrumbElement,
-		scene: SceneInterface
+		scene: SceneInterface,
 	): BreadcrumbElement {
+		console.log(parent)
 		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, ComponentType.Adventure, scene.adventure);
 		const actBreadcrumb = this._generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, scene.act);
 		const sceneBreadcrumb = this._generateElementBreadcrumb(actBreadcrumb, ComponentType.Scene, scene);
 
 		let previousBreadcrumb: BreadcrumbElement|null = null;
-		if (scene.previousScene != null) previousBreadcrumb = this._generateElementBreadcrumb(sceneBreadcrumb, ComponentType.Scene, scene.previousScene, '<< prev scene', true);
+		if (scene.previousScene != null)
+			previousBreadcrumb = this._generateElementBreadcrumb(sceneBreadcrumb, ComponentType.Scene, scene.previousScene, '<< prev scene', true);
 
 		let nextBreadcrumb: BreadcrumbElement|null = null;
 		if (scene.nextScene != null) {
@@ -231,6 +233,15 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 			}
 		}
 
-		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb));
+		let lastBreadcrumb = (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb))
+
+		/*
+		if (scene.session !== undefined){
+			const sessionBreadcrumb = new BreadcrumbElement(scene.session);
+			sessionBreadcrumb.isInNewLine = true;
+		}
+		*/
+
+		return lastBreadcrumb;
 	}
 }
