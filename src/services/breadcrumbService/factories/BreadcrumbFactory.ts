@@ -19,7 +19,7 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 	public create(
 		model: ModelInterface,
 	): BreadcrumbElementInterface {
-		const response = this._generateElementBreadcrumb(null, ComponentType.Campaign, model.campaign);
+		const response = this._generateElementBreadcrumb(null, model.campaign);
 
 		if (model.index.type !== ComponentType.Campaign){
 			response.mainTitle = ComponentType[model.index.type];
@@ -38,7 +38,7 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 					this._generateSceneBreadcrumb(response, model as SceneInterface);
 					break;
 				default:
-					this._generateElementBreadcrumb(response, model.index.type, model);
+					this._generateElementBreadcrumb(response, model);
 					break;
 			}
 		}
@@ -50,19 +50,20 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 
 	private _generateElementBreadcrumb(
 		parent: BreadcrumbElement|null,
-		type: ComponentType,
 		data: ModelInterface,
 		linkText: string|null = null,
 		isNewLine = false,
 	): BreadcrumbElement {
 		const response = new BreadcrumbElement(data);
-		response.link = data.link;
-		response.title = ComponentType[type];
 
-		if (linkText != null) response.linkText = linkText;
-		if (isNewLine) response.isInNewLine = isNewLine;
+		if (linkText != null)
+			response.linkText = linkText;
 
-		if (parent != null) parent.nextBreadcrumb = response;
+		if (isNewLine)
+			response.isInNewLine = isNewLine;
+
+		if (parent != null)
+			parent.nextBreadcrumb = response;
 
 		return response;
 	}
@@ -91,18 +92,16 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		parent: BreadcrumbElement,
 		adventure: AdventureInterface
 	): BreadcrumbElement {
-		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, ComponentType.Adventure, adventure);
+		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, adventure);
 
 		let previousAdventure: AdventureInterface|undefined;
 		let nextAdventure: AdventureInterface|undefined;
 		try {
-			//previousAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) - 1);
 			previousAdventure = this._api.database.readNeighbour<AdventureInterface>(ComponentType.Adventure, adventure.index, true);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			// nextAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) + 1);
 			nextAdventure = this._api.database.readNeighbour<AdventureInterface>(ComponentType.Adventure, adventure.index, false);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
@@ -113,7 +112,6 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		if (previousAdventure !== undefined) {
 			previousBreadcrumb = this._generateElementBreadcrumb(
 				adventureBreadcrumb,
-				ComponentType.Adventure,
 				previousAdventure,
 				'<< prev adventure',
 				true,
@@ -122,7 +120,6 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		if (nextAdventure !== undefined) {
 			nextBreadcrumb = this._generateElementBreadcrumb(
 				(previousBreadcrumb ?? adventureBreadcrumb),
-				ComponentType.Adventure,
 				nextAdventure,
 				'next adventure >>',
 				(previousAdventure === undefined),
@@ -141,7 +138,7 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		parent: BreadcrumbElement,
 		session: SessionInterface
 	): BreadcrumbElement {
-		const sessionBreadcrumb = this._generateElementBreadcrumb(parent, ComponentType.Session, session);
+		const sessionBreadcrumb = this._generateElementBreadcrumb(parent, session);
 
 		let previousSession: SessionInterface|undefined;
 		let nextSession: SessionInterface|undefined;
@@ -163,7 +160,6 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		if (previousSession !== undefined) {
 			previousBreadcrumb = this._generateElementBreadcrumb(
 				sessionBreadcrumb,
-				ComponentType.Session,
 				previousSession,
 				'<< prev session',
 				true,
@@ -172,7 +168,6 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		if (nextSession !== undefined) {
 			nextBreadcrumb = this._generateElementBreadcrumb(
 				(previousBreadcrumb ?? sessionBreadcrumb),
-				ComponentType.Session,
 				nextSession,
 				'next session >>',
 				(previousSession === undefined),
@@ -191,14 +186,14 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		parent: BreadcrumbElement,
 		act: ActInterface
 	): BreadcrumbElement {
-		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, ComponentType.Adventure, act.adventure);
-		const actBreadcrumb = this._generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, act);
+		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, act.adventure);
+		const actBreadcrumb = this._generateElementBreadcrumb(adventureBreadcrumb, act);
 
 		let previousBreadcrumb: BreadcrumbElement|null = null;
-		if (act.previousAct != null) previousBreadcrumb = this._generateElementBreadcrumb(actBreadcrumb, ComponentType.Act, act.previousAct, '<< prev act', true);
+		if (act.previousAct != null) previousBreadcrumb = this._generateElementBreadcrumb(actBreadcrumb, act.previousAct, '<< prev act', true);
 
 		let nextBreadcrumb: BreadcrumbElement|null = null;
-		if (act.nextAct != null) nextBreadcrumb = this._generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), ComponentType.Act, act.nextAct, 'next act >>', (previousBreadcrumb == null));
+		if (act.nextAct != null) nextBreadcrumb = this._generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb), act.nextAct, 'next act >>', (previousBreadcrumb == null));
 
 		return (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : actBreadcrumb));
 	}
@@ -207,18 +202,17 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		parent: BreadcrumbElement,
 		scene: SceneInterface,
 	): BreadcrumbElement {
-		console.log(parent)
-		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, ComponentType.Adventure, scene.adventure);
-		const actBreadcrumb = this._generateElementBreadcrumb(adventureBreadcrumb, ComponentType.Act, scene.act);
-		const sceneBreadcrumb = this._generateElementBreadcrumb(actBreadcrumb, ComponentType.Scene, scene);
+		const adventureBreadcrumb = this._generateElementBreadcrumb(parent, scene.adventure);
+		const actBreadcrumb = this._generateElementBreadcrumb(adventureBreadcrumb, scene.act);
+		const sceneBreadcrumb = this._generateElementBreadcrumb(actBreadcrumb, scene);
 
 		let previousBreadcrumb: BreadcrumbElement|null = null;
 		if (scene.previousScene != null)
-			previousBreadcrumb = this._generateElementBreadcrumb(sceneBreadcrumb, ComponentType.Scene, scene.previousScene, '<< prev scene', true);
+			previousBreadcrumb = this._generateElementBreadcrumb(sceneBreadcrumb, scene.previousScene, '<< prev scene', true);
 
 		let nextBreadcrumb: BreadcrumbElement|null = null;
 		if (scene.nextScene != null) {
-			nextBreadcrumb = this._generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), ComponentType.Scene, scene.nextScene, 'next scene >>', (previousBreadcrumb == null));
+			nextBreadcrumb = this._generateElementBreadcrumb((previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb), scene.nextScene, 'next scene >>', (previousBreadcrumb == null));
 		} else {
 			const newSceneBreadcrumb = new BreadcrumbElement(scene);
 			newSceneBreadcrumb.link = '';
@@ -235,12 +229,43 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 
 		let lastBreadcrumb = (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb))
 
-		/*
 		if (scene.session !== undefined){
 			const sessionBreadcrumb = new BreadcrumbElement(scene.session);
 			sessionBreadcrumb.isInNewLine = true;
+			lastBreadcrumb.nextBreadcrumb = sessionBreadcrumb;
+
+			lastBreadcrumb = sessionBreadcrumb;
+
+			if (scene.positionInSession !== undefined) {
+				if (scene.positionInSession > 1) {
+					const previousSceneInSession = this._api.database.read<SceneInterface>((model: SceneInterface) =>
+						model.index.type === ComponentType.Scene &&
+						model.session !== undefined &&
+						model.session.index.id === scene.session?.index.id &&
+						model.positionInSession !== undefined &&
+						scene.positionInSession !== undefined &&
+						model.positionInSession === (scene.positionInSession - 1)
+					);
+
+					if (previousSceneInSession.length === 1)
+						lastBreadcrumb = this._generateElementBreadcrumb(lastBreadcrumb, previousSceneInSession[0], '<< prev scene in session');
+
+				}
+
+				const nextSceneInSession = this._api.database.read<SceneInterface>((model: SceneInterface) =>
+					model.index.type === ComponentType.Scene &&
+					model.session !== undefined &&
+					model.session.index.id === scene.session?.index.id &&
+					model.positionInSession !== undefined &&
+					scene.positionInSession !== undefined &&
+					model.positionInSession === (scene.positionInSession +1)
+				);
+
+				if (nextSceneInSession.length === 1)
+					lastBreadcrumb = this._generateElementBreadcrumb(lastBreadcrumb, nextSceneInSession[0], 'next scene in session >>');
+
+			}
 		}
-		*/
 
 		return lastBreadcrumb;
 	}
