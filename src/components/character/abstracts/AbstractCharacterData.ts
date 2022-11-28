@@ -18,6 +18,10 @@ export class AbstractCharacterData extends AbstractModel implements CharacterDat
 		);
 	}
 
+	public get reasonOfDeath(): string|undefined {
+		return this.metadata.data?.reasonOfDeath;
+	}
+
 	public get dob(): DateInterface | undefined {
 		return this.api.service(DateService).getDate(
 			this.metadata.data?.dob,

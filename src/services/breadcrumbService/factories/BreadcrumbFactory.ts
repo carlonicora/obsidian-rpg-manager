@@ -227,7 +227,7 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 			}
 		}
 
-		let lastBreadcrumb = (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb))
+		let lastBreadcrumb = (nextBreadcrumb != null ? nextBreadcrumb : (previousBreadcrumb != null ? previousBreadcrumb : sceneBreadcrumb));
 
 		if (scene.session !== undefined){
 			const sessionBreadcrumb = new BreadcrumbElement(scene.session);

@@ -29,6 +29,8 @@ export class NonPlayerCharacterHeaderView extends AbstractHeaderView implements 
 		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Date of Death', values: this.model.death, category: FantasyCalendarCategory.Death, editableKey: 'data.death'});
 
 		if (this.model.death != null) {
+			this.addInfoElement(ShortTextElement, {model: this.model, title: 'Reason of Death', values:this.model.reasonOfDeath ?? '', editableKey: 'data.reasonOfDeath'});
+
 			let death = this.api.service(DateService).getReadableDate(this.model.death, this.model);
 			if (this.model.age !== undefined)
 				death += ' at age ' + this.model.age;

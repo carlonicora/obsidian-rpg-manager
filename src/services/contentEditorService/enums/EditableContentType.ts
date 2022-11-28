@@ -17,4 +17,5 @@ export enum EditableContentType {
 	StoryCircleTake,
 	StoryCircleReturn,
 	StoryCircleChange,
+	ReasonOfDeath,
 }

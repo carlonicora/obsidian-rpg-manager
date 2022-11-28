@@ -100,13 +100,24 @@ export class TimelineView extends AbstractStaticView implements View {
 				character.death != null,
 		).forEach((character: CharacterInterface) => {
 			if (character.death !== undefined) {
+				let synopsisOfDeath = (character.synopsis ?? '');
+
+				if (character.reasonOfDeath !== undefined) {
+					if (synopsisOfDeath !== '')
+						synopsisOfDeath += '\n';
+
+					synopsisOfDeath += '**Reason of Death**: ' + character.reasonOfDeath;
+				}
+
+				console.log(synopsisOfDeath);
+
 				this._elements.push(
 					new TimelineElement(
 						character.death.date,
 						this.api.service(DateService).getReadableDate(character.death, character) ?? '',
 						'00:00',
 						'death',
-						character.synopsis ?? '',
+						synopsisOfDeath,
 						character.file.path,
 					)
 				);

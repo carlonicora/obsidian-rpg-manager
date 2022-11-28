@@ -30,6 +30,7 @@ export class ContentEditorService extends AbstractService implements ContentEdit
 			case EditableContentType.AbtAnd:
 			case EditableContentType.AbtBut:
 			case EditableContentType.AbtTherefore:
+			case EditableContentType.ReasonOfDeath:
 				new ContentEditorModal(this.api, this, component, type, editableField, true).open();
 				return true;
 				break;
@@ -89,6 +90,9 @@ export class ContentEditorService extends AbstractService implements ContentEdit
 			case EditableContentType.Url:
 				response = (<MusicInterface>component).url;
 				break;
+			case EditableContentType.ReasonOfDeath:
+				response = (<CharacterInterface>component).reasonOfDeath;
+				break;
 			case EditableContentType.AbtNeed:
 				response = (<PlotsInterface>component).abt.need;
 				break;
@@ -136,6 +140,9 @@ export class ContentEditorService extends AbstractService implements ContentEdit
 		switch (editableField.toLowerCase()){
 			case 'data.synopsis':
 				return EditableContentType.Synopsis;
+				break;
+			case 'data.reasonofdeath':
+				return EditableContentType.ReasonOfDeath;
 				break;
 			case 'data.goals':
 				return EditableContentType.Goals;
