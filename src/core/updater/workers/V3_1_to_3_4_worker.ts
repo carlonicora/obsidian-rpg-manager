@@ -108,7 +108,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			await this._updateRemaining(campaigns[index]);
 
 			if (
-				campaigns[index].originalData.data.currentAdventureId !== undefined &&
+				campaigns[index].originalData.data.currentAdventureId != undefined &&
 				campaigns[index].originalData.data.currentAdventureId !== '' &&
 				campaigns[index].originalData.data.currentAdventureId.toString().indexOf('/') !== -1
 			) {
@@ -138,7 +138,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			}
 
 			if (
-				campaigns[index].originalData.data.currentActId !== undefined &&
+				campaigns[index].originalData.data.currentActId != undefined &&
 				campaigns[index].originalData.data.currentActId !== '' &&
 				campaigns[index].originalData.data.currentActId.toString().indexOf('/') !== -1
 			) {
@@ -171,7 +171,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			}
 
 			if (
-				campaigns[index].originalData.data.currentSessionId !== undefined &&
+				campaigns[index].originalData.data.currentSessionId != undefined &&
 				campaigns[index].originalData.data.currentSessionId !== '' &&
 				campaigns[index].originalData.data.currentSessionId.toString().indexOf('/') !== -1
 			) {
@@ -311,7 +311,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 		});
 
 		for (let index=0; index<scenes.length; index++) {
-			if (scenes[index].originalData.data.sessionId !== undefined && scenes[index].originalData.data.sessionId !== '' && scenes[index].originalData.data.sessionId.toString().indexOf('/') !== -1) {
+			if (scenes[index].originalData.data.sessionId != undefined && scenes[index].originalData.data.sessionId !== '' && scenes[index].originalData.data.sessionId.toString().indexOf('/') !== -1) {
 				const [, sessionIndex] = scenes[index].originalData.data.sessionId.split('/');
 
 				const sessions: UpdaterComponentInterface[] = this._elements.filter((component: UpdaterComponentInterface) =>
