@@ -13,7 +13,7 @@ For example: If you are on version 2.3 and decide to update to version 3.4, your
 ---
 
 > You've come to the library in search of knowledge. You want to know how something works. The tomes you need, you cannot find them. A quiet 'ahem' and
-> there stands a library with a knowing look on their face. A flick of their wrists and in outstratched palms are the tomes you have been looking for.
+> there stands a librarian with a knowing look on their face. A flick of their wrists and in outstratched palms are the tomes you have been looking for.
 >
 > As you reach for the one of texts, the librarian _tsks_. "Ah. Your kind are so predictable. They always go for that one first. Good luck."
 >
