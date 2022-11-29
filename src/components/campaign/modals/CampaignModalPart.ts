@@ -51,8 +51,8 @@ export class CampaignModalPart extends AbstractModalPart {
 						i18next.t("creation_missing_parent", {
 							ns: "elements",
 							type: i18next.t("campaign", {ns: "elements", count: 1}),
-							parent: i18next.t("adventure", {ns: "elements", count: 1}),
-							child: i18next.t("adventure", {ns: "elements", count: 1}),
+							parent: i18next.t(ComponentType[this.modal.type].toLowerCase(), {ns: "elements", count: 1}),
+							child: i18next.t(ComponentType[this.modal.type].toLowerCase(), {ns: "elements", count: 1}),
 						}) ?? ''
 				});
 			} else {

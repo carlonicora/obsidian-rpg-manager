@@ -31,5 +31,10 @@
 	"creation_missing": "{{parent}} Missing",
 	"part_of_adventure": "Part of Adventure",
 	"current": "Current {{type}}",
-	"date": "Date"
+	"date": "Date",
+	"date_of_birth": "Date of Birth",
+	"date_of_death": "Date of Death",
+	"age": "Age",
+	"reason_of_death": "Reason of Death",
+	"at_age": "at age {{age}}"
 }
