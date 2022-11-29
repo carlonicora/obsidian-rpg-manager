@@ -15,10 +15,10 @@ import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface"
 import {ActInterface} from "../../act/interfaces/ActInterface";
 import {SessionInterface} from "../../session/interfaces/SessionInterface";
 
-export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface{
+export abstract class AbstractCampaignData extends PlotsAbtOnly implements CampaignDataInterface {
 	protected metadata: CampaignMetadataInterface;
 
-	public get date(): DateInterface|undefined {
+	public get date(): DateInterface | undefined {
 		if (this.calendar === CalendarType.Gregorian)
 			return this.api.service(DateService).getDate(
 				this.metadata.data?.date,
@@ -33,11 +33,11 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		return {date: fantasyCalendar.current as FantasyCalendarDateInterface, isFantasyCalendar: true};
 	}
 
-	get currentAdventureId(): IndexInterface|undefined {
+	get currentAdventureId(): IndexInterface | undefined {
 		if (this.metadata.data.currentAdventureId == undefined || this.metadata.data.currentAdventureId === '')
 			return undefined;
 
-		let response: IndexInterface|undefined = undefined;
+		let response: IndexInterface | undefined = undefined;
 		try {
 			response = this.api.database.readById<AdventureInterface>(this.metadata.data.currentAdventureId).index;
 		} catch (e) {
@@ -47,11 +47,11 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		return response;
 	}
 
-	get currentActId(): IndexInterface|undefined {
+	get currentActId(): IndexInterface | undefined {
 		if (this.metadata.data.currentActId == undefined || this.metadata.data.currentActId === '')
 			return undefined;
 
-		let response: IndexInterface|undefined = undefined;
+		let response: IndexInterface | undefined = undefined;
 		try {
 			response = this.api.database.readById<ActInterface>(this.metadata.data.currentActId).index;
 		} catch (e) {
@@ -61,11 +61,11 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		return response;
 	}
 
-	get currentSessionId(): IndexInterface|undefined {
+	get currentSessionId(): IndexInterface | undefined {
 		if (this.metadata.data.currentSessionId == undefined || this.metadata.data.currentSessionId === '')
 			return undefined;
 
-		let response: IndexInterface|undefined = undefined;
+		let response: IndexInterface | undefined = undefined;
 		try {
 			response = this.api.database.readById<SessionInterface>(this.metadata.data.currentSessionId).index;
 		} catch (e) {
@@ -82,7 +82,7 @@ export abstract class AbstractCampaignData extends PlotsAbtOnly implements Campa
 		return CalendarType.FantasyCalendar;
 	}
 
-	get fantasyCalendar(): Calendar|undefined {
+	get fantasyCalendar(): Calendar | undefined {
 		if (this.calendar === CalendarType.Gregorian)
 			return undefined;
 

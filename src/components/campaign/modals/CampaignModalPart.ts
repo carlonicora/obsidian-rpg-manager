@@ -5,6 +5,7 @@ import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/Abstr
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 import {IndexService} from "../../../services/indexService/IndexService";
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
+import i18next from "i18next";
 
 export class CampaignModalPart extends AbstractModalPart {
 	private _campaigns: CampaignInterface[];
@@ -32,14 +33,28 @@ export class CampaignModalPart extends AbstractModalPart {
 	): Promise<void> {
 		const campaignEl = contentEl.createDiv({cls: 'campaignContainer'});
 
-		if (this.modal.type === ComponentType.Campaign){
+		if (this.modal.type === ComponentType.Campaign) {
 			this.addAdditionalElements();
 		} else {
-			if (this._campaigns.length === 0){
+			if (this._campaigns.length === 0) {
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
-				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Main campaign missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager campaign yet. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first campaign.'});
+				mainContent.createEl('h2', {
+					cls: 'rpgm-modal-title',
+					text: i18next.t("creation_missing", {
+						ns: "elements",
+						parent: i18next.t("campaign", {ns: "elements", count: 1})
+					}) ?? '',
+				});
+				mainContent.createSpan({
+					cls: '', text:
+						i18next.t("creation_missing_parent", {
+							ns: "elements",
+							type: i18next.t("campaign", {ns: "elements", count: 1}),
+							parent: i18next.t("adventure", {ns: "elements", count: 1}),
+							child: i18next.t("adventure", {ns: "elements", count: 1}),
+						}) ?? ''
+				});
 			} else {
 				this._childEl = contentEl.createDiv({cls: 'child'});
 				this._childEl.id = 'CampaignChild';
@@ -49,7 +64,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 		}
 
-		if (this.modal.type === ComponentType.Campaign){
+		if (this.modal.type === ComponentType.Campaign) {
 			this.modal.saver = this;
 		}
 	}
@@ -77,7 +92,7 @@ export class CampaignModalPart extends AbstractModalPart {
 				this.modal.adventureModal.addElement(
 					containerEl,
 				);
-			} else if (this.modal.type === ComponentType.Session){
+			} else if (this.modal.type === ComponentType.Session) {
 				this.modal.sessionModal = this.api.modals.getPartial(
 					this.modal.campaignSetting,
 					ComponentType.Session,
@@ -91,8 +106,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		}
 	}
 
-	public validate(
-	): boolean {
+	public validate(): boolean {
 		if (this.modal.campaignId === undefined)
 			this.modal.campaignId = this.api.service(IndexService).createUUID();
 
@@ -104,7 +118,10 @@ export class CampaignModalPart extends AbstractModalPart {
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'rpg-manager-modal-grid-navigation-group clearfix'});
 
-		groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-title', text: 'Campaign'});
+		groupElement.createDiv({
+			cls: 'rpg-manager-modal-grid-navigation-group-title',
+			text: i18next.t("campaign", {ns: "elements", count: 1}) ?? ''
+		});
 		const selectionContainerEl = groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-container'});
 
 		this._campaignEl = selectionContainerEl.createEl('select');
@@ -121,7 +138,7 @@ export class CampaignModalPart extends AbstractModalPart {
 				value: campaign.index.campaignId.toString(),
 			});
 
-			if (this._campaigns.length === 1){
+			if (this._campaigns.length === 1) {
 				campaignOptionEl.selected = true;
 				this._selectCampaign();
 			}
@@ -134,16 +151,14 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaignErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
-	private _selectCampaign(
-	): void {
+	private _selectCampaign(): void {
 		this.modal.campaignId = this._campaignEl.value;
 
 		this._childEl.empty();
 		this.loadChild(this._childEl);
 	}
 
-	protected async addAdditionalElements(
-	): Promise<void> {
+	protected async addAdditionalElements(): Promise<void> {
 		/*
 		if (this.modal.additionalInformationEl.style.display !== 'block') {
 			this.modal.additionalInformationEl.style.display = 'block';

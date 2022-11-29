@@ -9,26 +9,35 @@ import {AnalyserReportType} from "../../../services/analyserService/enums/Analys
 import {ParentSwitcherSelectorElement} from "../../../managers/viewsManager/elements/ParentSwitcherSelectorElement";
 import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
 import {ComponentType} from "../../../core/enums/ComponentType";
+import i18next from "i18next";
 
 export class ActHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: ActInterface;
 
-	public render(
-	): void {
+	public render(): void {
 		this.addBreadcrumb();
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
 
 		const adventures: AdventureInterface[] = this.api.database.readChildren<AdventureInterface>(ComponentType.Adventure, this.model.index.campaignId);
-		this.addInfoElement(ParentSwitcherSelectorElement, {model: this.model, title: 'Part of Adventure', values: {index: this.model.index, list: adventures}});
+		this.addInfoElement(ParentSwitcherSelectorElement, {
+			model: this.model,
+			title: i18next.t("part_of_adventure", {ns: "elements"}),
+			values: {index: this.model.index, list: adventures}
+		});
 
-		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {
+			model: this.model,
+			title: i18next.t("description"),
+			values: this.model.synopsis ?? '',
+			editableKey: 'data.synopsis'
+		});
 
 		if (this.api.settings.usePlotStructures) {
 			this.addInfoElement(AbtStageElement, {
 				model: this.model,
-				title: 'ABT Stage',
+				title: i18next.t("abt_stage"),
 				values: this.model.abtStage,
 				editableKey: 'data.abtStage'
 			});

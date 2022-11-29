@@ -1,3 +1,7 @@
 {
-
+	"note_one": "Note",
+	"note_other": "Notes",
+	"description": "Description",
+	"synopsis": "Synopsis",
+	"abt_stage": "ABT Stage"
 }

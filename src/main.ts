@@ -225,7 +225,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 							Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 								menu.addItem((item) => {
 									item
-										.setTitle("Create new " + type)
+										.setTitle(i18next.t('create_new', {type: i18next.t(type.toLowerCase(), {count: 1, ns: 'elements'}), ns: 'elements'}) ?? "Create new " + type)
 										.setIcon("dice")
 										.onClick(async () => {
 											new CreationModal(
@@ -246,7 +246,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 		Object.keys(ComponentType).filter((v) => isNaN(Number(v))).forEach((type, index) => {
 			this.addCommand({
 				id: "rpg-manager-create-" + type.toLowerCase(),
-				name: "Create a new " + type,
+				name: i18next.t('create_new', {type: i18next.t(type.toLowerCase(), {count: 1, ns: 'elements'}), ns: 'elements'}),
 				callback: () => {
 					new CreationModal(
 						this.api,
@@ -256,7 +256,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 			});
 			this.addCommand({
 				id: "rpg-manager-fill-" + type.toLowerCase(),
-				name: "Fill with " + type,
+				name: i18next.t('fill_with', {type: i18next.t(type.toLowerCase(), {count: 1, ns: 'elements'}), ns: 'elements'}),
 				callback: () => {
 					let name: string|null = null;
 					const activeFile = app.workspace.getActiveFile();

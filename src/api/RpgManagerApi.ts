@@ -107,8 +107,8 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 	}
 
 	public get language(): string {
-		// return window.localStorage.getItem('language') ?? 'en';
-		return 'it';
+		return window.localStorage.getItem('language') ?? 'en';
+		// return 'it';
 	}
 
 	public get controllers(): ControllerManagerInterface {

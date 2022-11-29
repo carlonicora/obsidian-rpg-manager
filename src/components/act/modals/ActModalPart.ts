@@ -4,6 +4,7 @@ import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
 import {IndexService} from "../../../services/indexService/IndexService";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import i18next from "i18next";
 
 export class ActModalPart extends AbstractModalPart {
 	private _acts: ActInterface[];
@@ -36,8 +37,20 @@ export class ActModalPart extends AbstractModalPart {
 			if (this._acts.length === 0){
 				const mainContent = this.modal.getContentEl();
 				mainContent.empty();
-				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text: 'Acts missing'});
-				mainContent.createSpan({cls: '', text: 'This Obsidian Vault does not contain a Rpg Manager ActModel for the selected adventure. Before creating a ' + ComponentType[this.modal.type] + ', please initialise your first act for the adventure.'});
+				mainContent.createEl('h2', {cls: 'rpgm-modal-title', text:
+					i18next.t("creation_missing_parent", {
+						ns: "elements",
+						parent: i18next.t("act", {ns: "elements", count: 2}),
+					}) ?? ''
+				});
+				mainContent.createSpan({cls: '', text:
+					i18next.t("creation_missing_parent", {
+						ns: "elements",
+						type: i18next.t("act", {ns: "elements", count: 1}),
+						parent: i18next.t("adventure", {ns: "elements", count: 1}),
+						child: i18next.t("session", {ns: "elements", count: 1}),
+					}) ?? ''
+				});
 			} else {
 				this._childEl = contentEl.createDiv({cls: 'child'});
 				this._childEl.id = 'ActChild';
@@ -78,7 +91,7 @@ export class ActModalPart extends AbstractModalPart {
 		containerEl: HTMLElement
 	): void {
 		const groupElement = containerEl.createDiv({cls: 'rpg-manager-modal-grid-navigation-group clearfix'});
-		groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-title', text: 'Act'});
+		groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-title', text: i18next.t("act", {ns: "elements", count: 1}) ?? ''});
 		const selectionContainerEl = groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-container'});
 		this._actEl = selectionContainerEl.createEl('select');
 
