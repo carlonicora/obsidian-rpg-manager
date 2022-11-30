@@ -1,5 +1,22 @@
 # RPG Manager Change Log
 
+## Version 3.4
+_2022-11-30_
+
+Version 3.4 changes the way `elements` are identified and allow Scenes to be reorganised in Acts and Session by a 
+simple drag-and-drop, and Acts to be reordered in Adventures in the same way.
+
+![](https://github.com/carlonicora/obsidian-rpg-manager/blob/master/screenshots/3.4/3.4-Reordering.jpg)
+
+It also saves all the relationships at the bottom of the note, allowing users to make the most out of the Obsidian 
+Graph View.
+
+It also fixes some bugs:
+- Unidirectional relationships do not impose a bidirectional relationship in the related element
+- Custom templates without a frontmatter are now correctly processed
+- The order of the elements in the timeline now works for Fantasy Calendar dates as well
+- The events in every list are now correctly ordered by date
+
 ## Version 3.3
 _2022-11-23_
 
