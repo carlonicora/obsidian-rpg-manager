@@ -81,6 +81,9 @@ It is recommend to reload or restart Obsidian after installing updates.
 
 My most humble thanks go to everyone who is helping RPG Manager becoming a better plugin.
 
+<a href="https://github.com/carlonicora">
+  <img src="https://github.com/carlonicora.png?size=50">
+</a>
 <a href="https://github.com/sigrunixia">
   <img src="https://github.com/sigrunixia.png?size=50">
 </a>
@@ -89,6 +92,9 @@ My most humble thanks go to everyone who is helping RPG Manager becoming a bette
 </a>
 <a href="https://github.com/x1101">
   <img src="https://github.com/x1101.png?size=50">
+</a>
+<a href="https://github.com/NinjaFocks">
+  <img src="https://github.com/NinjaFocks.png?size=50">
 </a>
 
 [We are always looking for help. Join us!](https://github.com/carlonicora/obsidian-rpg-manager/issues/151)
