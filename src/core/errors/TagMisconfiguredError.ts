@@ -1,19 +1,18 @@
-import {ComponentType} from "../enums/ComponentType";
-import {IdTagStatus} from "../../services/idService/enums/IdTagStatus";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {AbstractRpgManagerError} from "./abstracts/AbstractRpgManagerError";
-import {TagService} from "../../services/tagService/TagService";
 
 export class TagMisconfiguredError extends AbstractRpgManagerError {
-	public id: IdInterface;
+	public index: IndexInterface;
 
 	public showErrorMessage(
 	): string {
-		let response = 'The tag `' + this.id.tag + '` is misconfigured\n' +
+		return '';
+		/*
+		let response = 'The tag `' + this.index.tag + '` is misconfigured\n' +
 			'The correct tag should be ';
 
 		let requiredId = '';
-		switch (this.id.type){
+		switch (this.index.type){
 			case ComponentType.Scene:
 				requiredId = '/{sceneId}' + requiredId;
 			case ComponentType.Act:
@@ -24,27 +23,32 @@ export class TagMisconfiguredError extends AbstractRpgManagerError {
 				requiredId = '/{campaignId}' + requiredId;
 		}
 		response += '`' +
-			(this.api.service(TagService).dataSettings.get(this.id.type) ?? '')
+			(this.api.service(TagService).dataSettings.get(this.index.type) ?? '')
 			+ requiredId + '`\n';
 
-		this.id.invalidIds?.forEach((status: IdTagStatus, type: ComponentType) => {
-			response += ' - {' + ComponentType[type].toLowerCase() + 'Id} is ' +
-				(status === IdTagStatus.Missing ? 'missing' : 'not a valid numeric idService') + '\n';
+		this.index.invalidIds?.forEach((status: IndexTagStatus, type: ComponentType) => {
+			response += ' - {' + ComponentType[type].toLowerCase() + 'Index} is ' +
+				(status === IndexTagStatus.Missing ? 'missing' : 'not a valid numeric indexService') + '\n';
 		});
 
 		return response;
+
+		 */
 	}
 
 	public showErrorActions(
 	): string {
-		let response = 'The tag `' + this.id.tag + '` is invalid.\n' +
+		/*
+		let response = 'The tag `' + this.index.tag + '` is invalid.\n' +
 			'The following ids are either missing or invalid:\n';
 
-		this.id.invalidIds?.forEach((status: IdTagStatus, type: ComponentType) => {
-			response += ' - `{' + ComponentType[type].toLowerCase() + 'Id}` is ' +
-				(status === IdTagStatus.Missing ? 'missing' : 'not a valid numeric idService') + '\n';
+		this.index.invalidIds?.forEach((status: IndexTagStatus, type: ComponentType) => {
+			response += ' - `{' + ComponentType[type].toLowerCase() + 'Index}` is ' +
+				(status === IndexTagStatus.Missing ? 'missing' : 'not a valid numeric indexService') + '\n';
 		});
 
 		return response;
+		*/
+		return '';
 	}
 }

@@ -22,7 +22,7 @@ export class YouTubeImageFetcher extends AbstractFetcher implements YouTubeImage
         return this.fetchUrl +
 			'videos?key=' +
 			this.api.settings.YouTubeKey +
-			'&part=snippet&idService=' +
+			'&part=snippet&indexService=' +
 			songId;
     }
 

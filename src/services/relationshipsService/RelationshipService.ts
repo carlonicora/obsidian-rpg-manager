@@ -36,58 +36,66 @@ export class RelationshipService extends AbstractService implements Relationship
 		let content = fileContent;
 		let indexOfRelationship: number = content.indexOf('[[');
 
-		while (indexOfRelationship !== -1){
+		while (indexOfRelationship !== -1) {
 			content = content.substring(content.indexOf('[[') + 2);
 			const endLinkIndex = content.indexOf(']]');
 			if (endLinkIndex === -1) break;
 
 			const nameAndAlias = content.substring(0, endLinkIndex);
 			const aliasIndex = nameAndAlias.indexOf('|');
-			let basename: string;
-			if (aliasIndex === -1){
+			let basename: string|undefined = undefined;
+			let skipHiddenLink = false;
+
+			if (aliasIndex === -1) {
 				basename = nameAndAlias;
 			} else {
-				basename = nameAndAlias.substring(0, aliasIndex);
-			}
-
-			let path: string|undefined = undefined;
-			const allFiles = this.api.app.vault.getMarkdownFiles();
-			for (let filesIndex=0; filesIndex<allFiles.length; filesIndex++){
-				if (allFiles[filesIndex].basename === basename){
-					path = allFiles[filesIndex].path;
-					break;
+				if (nameAndAlias.substring(aliasIndex) === '|') {
+					skipHiddenLink = true;
+				} else {
+					basename = nameAndAlias.substring(0, aliasIndex);
 				}
 			}
 
-			if (path !== undefined) {
-				let relationshipAlreadyExists = false;
-				for(let relationshipsIndex=0; relationshipsIndex<metadata.relationships.length; relationshipsIndex++){
-					if (metadata.relationships[relationshipsIndex].path === path) {
-						relationshipAlreadyExists = true;
+			if (skipHiddenLink && basename !== undefined) {
+				let path: string | undefined = undefined;
+				const allFiles = this.api.app.vault.getMarkdownFiles();
+				for (let filesIndex = 0; filesIndex < allFiles.length; filesIndex++) {
+					if (allFiles[filesIndex].basename === basename) {
+						path = allFiles[filesIndex].path;
 						break;
 					}
 				}
 
-				if (!relationshipAlreadyExists) {
-					let relationship: RelationshipType | undefined = undefined;
-					if (stage === ComponentStage.Run || stage === ComponentStage.Plot) {
-						relationship = RelationshipType.Unidirectional;
-					} else {
-						relationship = RelationshipType.Bidirectional;
+				if (path !== undefined) {
+					let relationshipAlreadyExists = false;
+					for (let relationshipsIndex = 0; relationshipsIndex < metadata.relationships.length; relationshipsIndex++) {
+						if (metadata.relationships[relationshipsIndex].path === path) {
+							relationshipAlreadyExists = true;
+							break;
+						}
 					}
 
+					if (!relationshipAlreadyExists) {
+						let relationship: RelationshipType | undefined = undefined;
+						if (stage === ComponentStage.Run || stage === ComponentStage.Plot) {
+							relationship = RelationshipType.Unidirectional;
+						} else {
+							relationship = RelationshipType.Bidirectional;
+						}
+
+						metadata.relationships?.push({
+							type: this.getReadableRelationshipType(relationship),
+							path: path,
+							isInContent: true,
+						});
+					}
+				} else {
 					metadata.relationships?.push({
-						type: this.getReadableRelationshipType(relationship),
-						path: path,
+						type: undefined,
+						path: basename,
 						isInContent: true,
 					});
 				}
-			} else {
-				metadata.relationships?.push({
-					type: undefined,
-					path: basename,
-					isInContent: true,
-				});
 			}
 
 			indexOfRelationship = content.indexOf('[[');

@@ -1,11 +1,11 @@
 import {RpgErrorInterface} from "../interfaces/RpgErrorInterface";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export abstract class AbstractRpgManagerError extends Error implements RpgErrorInterface {
 	constructor(
 		public api: RpgManagerApiInterface,
-		public id: IdInterface|undefined,
+		public index: IndexInterface|undefined,
 	) {
 		super();
 	}

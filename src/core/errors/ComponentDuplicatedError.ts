@@ -1,4 +1,4 @@
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {AbstractRpgManagerError} from "./abstracts/AbstractRpgManagerError";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
@@ -6,7 +6,7 @@ import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterfac
 export class ComponentDuplicatedError extends AbstractRpgManagerError {
 	constructor(
 		api: RpgManagerApiInterface,
-		idMap: IdInterface,
+		idMap: IndexInterface,
 		private _duplication: ModelInterface[],
 		private _duplicated: ModelInterface|undefined=undefined,
 	) {
@@ -15,12 +15,12 @@ export class ComponentDuplicatedError extends AbstractRpgManagerError {
 
 	public getErrorTitle(
 	): string|undefined {
-		return 'Duplicated outline idService';
+		return 'Duplicated outline indexService';
 	}
 
 	public showErrorMessage(
 	): string {
-		let response = ''; //this.idService.tag + '\n';
+		let response = ''; //this.indexService.tag + '\n';
 
 		if (this._duplication.length > 1) {
 			this._duplication.forEach((component: ModelInterface) => {

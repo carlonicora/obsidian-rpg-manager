@@ -8,6 +8,7 @@ export interface SceneInterface extends ModelInterface, SceneDataInterface {
 	get adventure(): AdventureInterface;
 	get act(): ActInterface;
 	get session(): SessionInterface|undefined;
+	get positionInSession(): number|undefined;
 	get previousScene(): SceneInterface|null;
 	get nextScene(): SceneInterface|null;
 

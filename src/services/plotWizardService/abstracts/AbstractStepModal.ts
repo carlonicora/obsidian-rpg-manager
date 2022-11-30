@@ -1,9 +1,8 @@
 import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 import {WizardDataInterface} from "../../../managers/modalsManager/interfaces/WizardDataInterface";
 import {AdventureInterface} from "../../../components/adventure/interfaces/AdventureInterface";
-import {ComponentType} from "../../../core/enums/ComponentType";
 import {LinkSuggesterService} from "../../linkSuggesterService/LinkSuggesterService";
 
 export abstract class AbstractStepModal implements WizardPartInterface {
@@ -12,7 +11,7 @@ export abstract class AbstractStepModal implements WizardPartInterface {
 
 	constructor(
 		protected api: RpgManagerApiInterface,
-		protected adventureId: IdInterface,
+		protected adventureId: IndexInterface,
 		protected title: string,
 		protected description: string,
 		protected existingDescription?: string,
@@ -20,7 +19,7 @@ export abstract class AbstractStepModal implements WizardPartInterface {
 	}
 
 	protected get adventure(): AdventureInterface {
-		return this.api.database.readSingle(ComponentType.Adventure, this.adventureId);
+		return this.api.database.readById(this.adventureId.id);
 	}
 
 	public get data(): WizardDataInterface|undefined {

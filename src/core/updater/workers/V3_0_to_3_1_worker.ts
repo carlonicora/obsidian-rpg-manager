@@ -9,6 +9,14 @@ import {LoggerService} from "../../../services/loggerService/LoggerService";
 import {YamlService} from "../../../services/yamlService/YamlService";
 
 export class V3_0_to_3_1_worker extends AbstractDatabaseWorker implements DatabaseUpdateWorkerInterface {
+	get from(): string {
+		return '3.0';
+	}
+
+	get to(): string {
+		return '3.1';
+	}
+
 	public async run(
 		reporter: DatabaseUpdaterReporterInterface|undefined=undefined,
 	): Promise<void> {

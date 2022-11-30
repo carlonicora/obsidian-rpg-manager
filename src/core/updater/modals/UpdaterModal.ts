@@ -102,7 +102,9 @@ export class UpdaterModal extends Modal implements DatabaseUpdaterReporterInterf
 		startVersion: string,
 		endVersion: string,
 	): Promise<void> {
-		if (this._versionEl !== undefined) this._versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
+		if (this._versionEl !== undefined)
+			this._versionEl.textContent = 'Updating from version ' + startVersion + ' to ' + endVersion;
+
 	}
 
 	public async setFileCount(
@@ -115,5 +117,13 @@ export class UpdaterModal extends Modal implements DatabaseUpdaterReporterInterf
 	): Promise<void> {
 		this._currentCounter++;
 		if (this._currentEl !== undefined) this._currentEl.textContent = this._currentCounter.toString();
+	}
+
+	public async refreshFileCount(
+	): Promise<void> {
+		this._currentCounter = 0;
+
+		if (this._currentEl !== undefined)
+			this._currentEl.textContent = this._currentCounter.toString();
 	}
 }

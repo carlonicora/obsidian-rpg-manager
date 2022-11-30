@@ -19,6 +19,8 @@ import {StoryCircleStage} from "../../../services/plotsService/enums/StoryCircle
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
+import {ParentSwitcherSelectorElement} from "../../../managers/viewsManager/elements/ParentSwitcherSelectorElement";
+import {ActInterface} from "../../act/interfaces/ActInterface";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -29,18 +31,26 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
+
+		const act: ActInterface = this.api.database.readById<ActInterface>(this.model.index.parentId);
+		const acts: ActInterface[] = this.api.database.readChildren<ActInterface>(ComponentType.Act, act.index.parentId);
+		this.addInfoElement(ParentSwitcherSelectorElement, {model: this.model, title: 'Part of Act', values: {index: this.model.index, list: acts}});
+
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Trigger', values: this.model.trigger ?? '<span class="missing">Trigger Missing</span>', editableKey: 'data.trigger'});
 		this.addInfoElement(LongTextElement, {model: this.model, title: 'Action', values: this.model.action ?? '<span class="missing">Action Missing</span>', editableKey: 'data.action'});
 
-		this.addInfoElement(this.model.campaign.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Scene Date', values: this.model.date, category: FantasyCalendarCategory.Scene, editableKey: 'data.date'});
+		if (this.model.campaign.calendar === CalendarType.Gregorian)
+			this.addInfoElement(DateElement, {model: this.model, title: 'Scene Date', values: this.model.date, editableKey: 'data.date'});
+		else
+			this.addInfoElement(FantasyCalendarElement, {model: this.model, title: 'Scene Date', values: this.model.date, category: FantasyCalendarCategory.Scene, editableKey: 'data.date'});
 
 		const sessions = this.api.database.read((session: SessionInterface) =>
-			session.id.type === ComponentType.Session &&
-			session.id.campaignId === this.model.id.campaignId
+			session.index.type === ComponentType.Session &&
+			session.index.campaignId === this.model.index.campaignId
 		);
 
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {id: this.model.session?.id, list: sessions}, editableKey: 'data.sessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Session', values: {index: this.model.session?.index, list: sessions}, editableKey: 'data.sessionId'});
 
 		if (this.api.settings.usePlotStructures)
 			this.addInfoElement(StoryCircleStageElement, {model: this.model, title: 'Story Circle Stage', values: this.model.storyCircleStage, editableKey: 'data.storyCircleStage'});

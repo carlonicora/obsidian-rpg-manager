@@ -1,6 +1,5 @@
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 
 export interface ModalPartInterface {
 	addElement(
@@ -13,12 +12,12 @@ export interface ModalPartInterface {
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: IdInterface,
-		adventureId: IdInterface|undefined,
-		actId: IdInterface|undefined,
-		sceneId: IdInterface|undefined,
-		sessionId: IdInterface|undefined,
-		additionalInformation: any|null,
+		campaignId: string,
+		adventureId?: string,
+		actId?: string,
+		sceneId?: string,
+		sessionId?: string,
+		additionalInformation?: any,
 	): void;
 
 	prepareAdditionalInformation(

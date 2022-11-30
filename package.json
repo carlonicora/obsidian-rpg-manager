@@ -1,6 +1,6 @@
 {
 	"name": "rpg-manager",
-	"version": "3.3.0",
+	"version": "3.4.0",
 	"description": "A plugin to manage your Tabletop Role Playing Game campaigns for Obsidian.",
 	"main": "src/main.ts",
 	"scripts": {
@@ -29,6 +29,7 @@
 		"@testdeck/mocha": "^0.3.2",
 		"chai": "^4.3.7",
 		"flatpickr": "^4.6.13",
+		"i18next": "^22.0.6",
 		"luxon": "^3.0.4",
 		"mocha": "^10.1.0",
 		"node-fetch": "^2.6.1",

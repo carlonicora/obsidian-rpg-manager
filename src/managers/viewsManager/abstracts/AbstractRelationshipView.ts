@@ -18,22 +18,36 @@ import {ActInterface} from "../../../components/act/interfaces/ActInterface";
 import {SceneInterface} from "../../../components/scene/interfaces/SceneInterface";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterService} from "../../../services/sorterService/SorterService";
-import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {ContentEditorService} from "../../../services/contentEditorService/ContentEditorService";
+import {SessionModel} from "../../../components/session/models/SessionModel";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {
+	FantasyCalendarSorterComparisonElement
+} from "../../../services/fantasyCalendarService/sorters/FantasyCalendarSorterComparisonElement";
+import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
+import {CampaignModel} from "../../../components/campaign/models/CampaignModel";
+import {SceneModel} from "../../../components/scene/models/SceneModel";
 
 export abstract class AbstractRelationshipView implements RelationshipsViewInterface {
 	public relatedComponentType: ComponentType;
 	public relationshipType: RelationshipType|undefined;
 	public relationshipTitle: string|undefined;
 
+	protected _relationshipSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
+	protected canBeOrdered = false;
+
+	private _tableEl: HTMLTableElement;
+
+	private _draggedRow: Element|null|undefined = undefined;
+	private _initialPosition: number|undefined = undefined;
+	private _initialId: string|undefined = undefined;
+	private _newPosition: number|undefined = undefined;
+
 	private _componentSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
 	private _cellClass: Map<TableField, string[]> = new Map<TableField, string[]>();
 
 	private _fields: TableField[];
 	private _relationships: RelationshipInterface[];
-	protected _relationshipSortingMap: Map<ComponentType, SorterComparisonElementInterface[]> = new Map<ComponentType, SorterComparisonElementInterface[]>();
-
-	private _tableEl: HTMLTableElement;
 
 	constructor(
 		protected api: RpgManagerApiInterface,
@@ -42,25 +56,28 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		public sourcePath: string,
 	) {
 		this._relationshipSortingMap = new Map();
-		this._relationshipSortingMap.set(ComponentType.Event, [new SorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date)]);
+		if (this.model.campaign.calendar === CalendarType.Gregorian){
+			this._relationshipSortingMap.set(ComponentType.Event, [
+				new SorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date?.date)
+			]);
+		} else {
+			this._relationshipSortingMap.set(ComponentType.Event, [
+				new FantasyCalendarSorterComparisonElement((component: RelationshipInterface) => (<EventInterface>component.component).date?.date)
+			]);
+		}
 		this._relationshipSortingMap.set(ComponentType.Session, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SessionInterface>component.component).index.positionInParent),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Adventure, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).id.adventureId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<AdventureInterface>component.component).index.positionInParent),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Act, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).id.adventureId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).id.actId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.parentPosition),
+			new SorterComparisonElement((component: RelationshipInterface) => (<ActInterface>component.component).index.positionInParent),
 		]);
 		this._relationshipSortingMap.set(ComponentType.Scene, [
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.campaignId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.adventureId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.actId),
-			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).id.sceneId),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.parentPosition),
+			new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).index.positionInParent),
 		]);
 
 		this._cellClass.set(TableField.Date, ['smaller', 'inline']);
@@ -77,6 +94,9 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 
 	public render(
 	): void {
+		if (this.model instanceof CampaignModel && this.relatedComponentType !== ComponentType.Adventure)
+			this.canBeOrdered = false;
+
 		if (this.relationshipType === undefined)
 			this.relationshipType = RelationshipType.Reversed | RelationshipType.Bidirectional | RelationshipType.Unidirectional;
 
@@ -86,14 +106,20 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		this._fields = this.api.service(RelationshipService).getTableFields(this.relatedComponentType);
 		this._relationships = this.model.getRelationships().filter((relationship: RelationshipInterface) =>
 			relationship.component !== undefined &&
-			relationship.component.id.type === this.relatedComponentType &&
+			relationship.component.index.type === this.relatedComponentType &&
 			(this.relationshipType === undefined || (this.relationshipType & relationship.type) === relationship.type)
 		);
 
 		if (this._relationships.length > 0) {
-			let sorter = this._relationshipSortingMap.get(this.relatedComponentType);
+			let sorter: SorterComparisonElementInterface[]|undefined = undefined;
+
+			if (this.relatedComponentType === ComponentType.Scene && this.model instanceof SessionModel)
+				sorter = [new SorterComparisonElement((component: RelationshipInterface) => (<SceneInterface>component.component).positionInSession)];
+			else
+				sorter = this._relationshipSortingMap.get(this.relatedComponentType);
+
 			if (sorter === undefined)
-				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename, SorterType.Descending)];
+				sorter = [new SorterComparisonElement((relationship: RelationshipInterface) => (<ModelInterface>relationship.component).file.basename)];
 
 			this._relationships.sort(this.api.service(SorterService).create(sorter));
 
@@ -133,6 +159,13 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		const tableHeader = this._tableEl.createTHead();
 		const headerRow: HTMLTableRowElement = tableHeader.insertRow();
 
+		if (this.canBeOrdered){
+			const cell = headerRow.createEl('th');
+			cell.addClass('rpg-manager-table-draggable-title');
+			const iconEl = cell.createSpan();
+			setIcon(iconEl, 'grip-horizontal');
+		}
+
 		this._fields.forEach((field: TableField) => {
 			const cell = headerRow.createEl('th');
 
@@ -150,6 +183,83 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		headerRow.insertCell();
 	}
 
+	private _dragStart(evt: DragEvent) {
+		const target = evt.target as Element;
+
+		if (target != undefined) {
+			const initialValidPosition: string|undefined = (<HTMLElement>target).dataset.position;
+			const initialValidId: string|undefined = (<HTMLElement>target).dataset.id;
+
+			if (initialValidPosition !== undefined && initialValidId !== undefined) {
+				this._initialPosition = +initialValidPosition;
+				this._initialId = initialValidId;
+			}
+
+			this._draggedRow = target;
+		}
+	}
+
+	private _dragEnd() {
+		if (this._initialPosition === undefined || this._newPosition === undefined || this._initialId === undefined)
+			return;
+
+		for (let index=1; index<this._tableEl.rows.length; index++){
+			const originalValidPosition: string|undefined = this._tableEl.rows[index].dataset.position;
+			const originalValidId: string|undefined = this._tableEl.rows[index].dataset.id;
+			if (originalValidPosition !== undefined && originalValidId !== undefined && index !== +originalValidPosition){
+				try {
+					const element = this.api.database.readById(originalValidId);
+
+					if (element !== undefined) {
+						if (this.model instanceof SessionModel && element instanceof SceneModel)
+							this.api.service(CodeblockService).addOrUpdate('data.positionInSession', index, element.file);
+						else
+							this.api.service(CodeblockService).addOrUpdateInIndex('positionInParent', index, element.file);
+
+					}
+				} catch (e) {
+					// No need to trap
+				}
+			}
+
+			this._tableEl.rows[index].children[1].textContent = index.toString();
+		}
+	}
+
+	private _dragOver(evt: DragEvent) {
+		if (evt != undefined && this._draggedRow != undefined) {
+			evt.preventDefault();
+
+			if (evt.target != undefined) {
+				const target = evt.target as Element;
+
+				if (target.parentNode != undefined && target.parentNode.parentNode != undefined) {
+					const children = Array.from(target.parentNode.parentNode.children);
+					const parentNode: Element = target.parentNode as Element;
+
+					const newValidPosition: string|undefined = (<HTMLElement>parentNode).dataset.position;
+
+					if (newValidPosition !== undefined && +newValidPosition !== this._initialPosition)
+						this._newPosition = +newValidPosition;
+
+					if (children.indexOf(parentNode) > children.indexOf(this._draggedRow))
+						try {
+							parentNode.after(this._draggedRow);
+						} catch (e) {
+							//no need
+						}
+					else
+						try {
+							parentNode.before(this._draggedRow);
+						} catch (e) {
+							//no need
+						}
+
+				}
+			}
+		}
+	}
+
 	private _addRelationships(
 	): void {
 		const tableBody = this._tableEl.createTBody();
@@ -158,6 +268,25 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 		this._relationships.forEach((relationship: RelationshipInterface) => {
 			index++;
 			const relationshipRow: HTMLTableRowElement = tableBody.insertRow();
+			relationshipRow.dataset.id = relationship.component?.index.id;
+
+			if (this.model instanceof SessionModel && relationship.component instanceof SceneModel)
+				relationshipRow.dataset.position = (<SceneInterface>relationship.component).positionInSession?.toString();
+			else
+				relationshipRow.dataset.position = relationship.component?.index.positionInParent.toString();
+
+			if (this.canBeOrdered){
+				relationshipRow.draggable = true;
+				relationshipRow.ondragstart = this._dragStart.bind(this);
+				relationshipRow.ondragover = this._dragOver.bind(this);
+				relationshipRow.ondragend = this._dragEnd.bind(this);
+
+				const cell = relationshipRow.insertCell();
+				cell.addClass('rpg-manager-table-draggable');
+
+				const iconEl = cell.createSpan();
+				setIcon(iconEl, 'grip-horizontal');
+			}
 
 			this._fields.forEach((field: TableField) => {
 				const cell = relationshipRow.insertCell();

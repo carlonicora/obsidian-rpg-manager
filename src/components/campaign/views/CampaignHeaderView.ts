@@ -23,27 +23,29 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 		this.addTitle();
 		this.addComponentOptions();
 
-		const adventures = this.api.database.readList<AdventureInterface>(ComponentType.Adventure, this.model.id)
+		const adventures = this.api.database.readChildren<AdventureInterface>(ComponentType.Adventure, this.model.index.id)
 			.sort(this.api.service(SorterService).create<AdventureInterface>([
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Adventure', values: {id: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Adventure', values: {index: this.model.currentAdventureId, list: adventures}, editableKey: 'data.currentAdventureId'});
 
-		let acts = this.api.database.readList<ActInterface>(ComponentType.Act, this.model.id)
-			.sort(this.api.service(SorterService).create<ActInterface>([
-				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
-			]));
+		let acts = this.api.database.read<ActInterface>((model: ActInterface) =>
+			model.index.type === ComponentType.Act &&
+			model.index.campaignId === this.model.index.id
+		).sort(this.api.service(SorterService).create<ActInterface>([
+			new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
+		]));
 
 		if (this.model.currentAdventureId != undefined)
-			acts = acts.filter((act: ActInterface) => act.id.adventureId === this.model.currentAdventureId?.adventureId);
+			acts = acts.filter((act: ActInterface) => act.index.parentId === this.model.currentAdventureId?.id);
 
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Act', values: {id: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Act', values: {index: this.model.currentActId, list: acts}, editableKey: 'data.currentActId'});
 
-		const sessions = this.api.database.readList<SessionInterface>(ComponentType.Session, this.model.id)
+		const sessions = this.api.database.readChildren<SessionInterface>(ComponentType.Session, this.model.index.id)
 			.sort(this.api.service(SorterService).create<SessionInterface>([
 				new SorterComparisonElement((component: ModelInterface) => component.file.stat.mtime, SorterType.Descending),
 			]));
-		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Session', values: {id: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
+		this.addInfoElement(ModelSelectorElement, {model: this.model, title: 'Current Session', values: {index: this.model.currentSessionId, list: sessions}, editableKey: 'data.currentSessionId'});
 
 		this.addInfoElement(this.model.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {model: this.model, title: 'Current Date', values: this.model.date, category: FantasyCalendarCategory.CurrentDate, editableKey: 'data.date'});
 

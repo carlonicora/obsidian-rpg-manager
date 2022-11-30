@@ -25,7 +25,7 @@ export class CampaignModel extends AbstractCampaignData implements CampaignInter
 		const response: RelationshipListInterface = super.getRelationships(database);
 
 		this.api.database.read<ModelInterface>((model: ModelInterface) =>
-			model.id.campaignId === this.id.campaignId
+			model.index.campaignId === this.index.campaignId
 		).forEach((model: ModelInterface) => {
 			response.add(this.api.service(RelationshipService).createRelationship(
 				RelationshipType.Hierarchy,

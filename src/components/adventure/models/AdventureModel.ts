@@ -7,6 +7,8 @@ import {RelationshipListInterface} from "../../../services/relationshipsService/
 import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipService} from "../../../services/relationshipsService/RelationshipService";
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 
 export class AdventureModel extends AbstractAdventureData implements AdventureInterface {
 	protected metadata: AdventureMetadataInterface;
@@ -18,8 +20,13 @@ export class AdventureModel extends AbstractAdventureData implements AdventureIn
 		const response: RelationshipListInterface = super.getRelationships(database);
 
 		this.api.database.read<ModelInterface>((model: ModelInterface) =>
-			model.id.campaignId === this.id.campaignId &&
-			model.id.adventureId === this.id.adventureId
+			model.index.campaignId === this.index.campaignId &&
+			model.index.parentId === this.index.id
+		).sort(
+			this.api.service(SorterService).create([
+				new SorterComparisonElement((model: ModelInterface) => model.index.positionInParent),
+				new SorterComparisonElement((model: ModelInterface) => model.file.basename)
+			])
 		).forEach((model: ModelInterface) => {
 			response.add(this.api.service(RelationshipService).createRelationship(
 				RelationshipType.Hierarchy,

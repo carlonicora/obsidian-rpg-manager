@@ -1,6 +1,6 @@
 import {AbstractWizardModal} from "../../../managers/modalsManager/abstracts/AbstractWizardModal";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
-import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 import {WizardPartInterface} from "../../../managers/modalsManager/interfaces/WizardPartInterface";
 import {StepIntroductionModal} from "./steps/StepIntroductionModal";
 import {StepDescriptionModal} from "./steps/StepDescriptionModal";
@@ -37,11 +37,11 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 
 	constructor(
 		api: RpgManagerApiInterface,
-		private _adventureId: IdInterface,
+		private _adventureId: IndexInterface,
 	) {
 		super(api);
 
-		this._adventure = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this._adventureId);
+		this._adventure = this.api.database.readById<AdventureInterface>(this._adventureId.id);
 
 		this._steps.set(0, new StepIntroductionModal(
 			this.api,
@@ -264,9 +264,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 			ComponentType.Clue,
 			data.name,
 			this._adventureId.campaignId,
-			undefined,
-			undefined,
-			undefined,
+			this._adventureId.campaignId,
 			undefined,
 			additionalInformation
 		);

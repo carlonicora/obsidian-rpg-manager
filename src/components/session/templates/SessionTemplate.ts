@@ -5,6 +5,12 @@ import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
+import {AdventureInterface} from "../../adventure/interfaces/AdventureInterface";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {SessionInterface} from "../interfaces/SessionInterface";
 
 export class SessionTemplate extends AbstractComponentTemplate {
 	protected generateDataCodeBlock(
@@ -73,7 +79,33 @@ return this.generateRpgManagerCodeBlock(metadata);
 	}
 
 	public generateID(
-	): string {
-		return ComponentType.Session + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.sessionId;
+	): IndexDataInterface {
+		let positionInParent = 1;
+
+		if (this.positionInParent == undefined) {
+			const previousSessions = this.api.database.read<AdventureInterface>((session: SessionInterface) =>
+				session.index.type === ComponentType.Session &&
+				session.index.campaignId === this.campaignId
+			).sort(
+				this.api.service(SorterService).create<SessionInterface>([
+					new SorterComparisonElement((session: SessionInterface) => session.index.positionInParent, SorterType.Descending),
+				])
+			);
+
+			positionInParent = previousSessions.length === 0 ?
+				1 :
+				previousSessions[0].index.positionInParent + 1;
+		} else {
+			positionInParent = this.positionInParent;
+		}
+
+		return {
+			type: ComponentType.Session,
+			campaignSettings: CampaignSetting.Agnostic,
+			id: this.id,
+			campaignId: this.campaignId,
+			parentId: this.campaignId,
+			positionInParent: positionInParent,
+		};
 	}
 }

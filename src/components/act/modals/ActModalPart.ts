@@ -2,12 +2,11 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {ActInterface} from "../interfaces/ActInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
-import {IdService} from "../../../services/idService/IdService";
+import {IndexService} from "../../../services/indexService/IndexService";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 
 export class ActModalPart extends AbstractModalPart {
 	private _acts: ActInterface[];
-	private _allAct:ActInterface[];
 	private _actEl: HTMLSelectElement;
 	private _actErrorEl: HTMLParagraphElement;
 	private _childEl: HTMLDivElement;
@@ -18,22 +17,11 @@ export class ActModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 
-		if (this.modal.actId === undefined) {
-			this.modal.actId = this.api.service(IdService).create(ComponentType.Act, this.modal.campaignId.id, this.modal.adventureId?.id);
-			this.modal.actId.id = 0;
-		}
-
-		this._allAct = this.api.database.read<ActInterface>(
-			(component: ActInterface) =>
-				component.id.type === ComponentType.Act &&
-				component.id.campaignId === this.modal.campaignId.id
-		);
-
 		this._acts = this.api.database.read<ActInterface>(
 			(component: ActInterface) =>
-				component.id.type === ComponentType.Act &&
-				component.id.campaignId === this.modal.campaignId.id &&
-				component.id.adventureId === this.modal.adventureId?.id
+				component.index.type === ComponentType.Act &&
+				component.index.campaignId === this.modal.campaignId &&
+				component.index.parentId === this.modal.adventureId
 		);
 	}
 
@@ -42,8 +30,8 @@ export class ActModalPart extends AbstractModalPart {
 	): Promise<void> {
 		const actEl = contentEl.createDiv({cls: 'actContainer'});
 
-		if (this.modal.type === ComponentType.Act){
-			this._addNewActElements(actEl);
+		if (this.modal.type === ComponentType.Act) {
+			this.addAdditionalElements();
 		} else {
 			if (this._acts.length === 0){
 				const mainContent = this.modal.getContentEl();
@@ -80,20 +68,10 @@ export class ActModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
-		if (this.modal.actId?.id === 0)
-			this.modal.actId.id = 1;
+		if (this.modal.actId === undefined)
+			this.modal.actId = this.api.service(IndexService).createUUID();
 
 		return true;
-	}
-
-	private _addNewActElements(
-		containerEl: HTMLElement,
-	): void {
-		this._allAct.forEach((component: ActInterface) => {
-			if (this.modal.actId !== undefined && (component.id.actId ?? 0) >= (this.modal.actId.id ?? 0)) {
-				this.modal.actId.id = ((component.id.actId ?? 0) + 1);
-			}
-		});
 	}
 
 	private _selectActElements(
@@ -114,10 +92,10 @@ export class ActModalPart extends AbstractModalPart {
 		this._acts.forEach((act: ActInterface) => {
 			const actOptionEl = this._actEl.createEl('option', {
 				text: act.file.basename,
-				value: act.id.actId?.toString(),
+				value: act.index.id,
 			});
 
-			if (this._acts.length === 1 || this.modal.actId?.id === act.id.actId){
+			if (this._acts.length === 1 || this.modal.actId === act.index.id){
 				actOptionEl.selected = true;
 				this._selectAct();
 			}
@@ -132,13 +110,7 @@ export class ActModalPart extends AbstractModalPart {
 
 	private _selectAct(
 	): void {
-		if (this.modal.actId === undefined) {
-			this.modal.actId = this.api.service(IdService).create(ComponentType.Adventure, this.modal.campaignId.id, this.modal.adventureId?.id);
-		}
-
-		if (this.modal.actId !== undefined){
-			this.modal.actId.id = +this._actEl.value;
-		}
+		this.modal.actId = this._actEl.value;
 
 		this._childEl.empty();
 		this.loadChild(this._childEl);

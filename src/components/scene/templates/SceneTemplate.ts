@@ -7,6 +7,11 @@ import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
 import {SceneDataMetadataInterface} from "../interfaces/SceneDataMetadataInterface";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {SceneInterface} from "../interfaces/SceneInterface";
 
 export class SceneTemplate extends AbstractComponentTemplate {
 	protected data: SceneDataMetadataInterface|undefined;
@@ -64,6 +69,9 @@ export class SceneTemplate extends AbstractComponentTemplate {
 		const metadata: ControllerMetadataInterface|ActDataInterface = {
 			models: {
 				lists: {
+					subplots: {
+						relationship: 'unidirectional',
+					},
 					musics: {
 						relationship: 'unidirectional',
 					},
@@ -93,8 +101,35 @@ export class SceneTemplate extends AbstractComponentTemplate {
 	}
 
 	public generateID(
-	): string {
-		return ComponentType.Scene + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.adventureId + '/' + this.actId + '/' + this.sceneId;
+	): IndexDataInterface {
+		let positionInParent = 1;
+
+		if (this.positionInParent == undefined) {
+			const previousScenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
+				scene.index.type === ComponentType.Scene &&
+				scene.index.campaignId === this.campaignId &&
+				scene.index.parentId === this.parentId
+			).sort(
+				this.api.service(SorterService).create<SceneInterface>([
+					new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent, SorterType.Descending),
+				])
+			);
+
+			positionInParent = previousScenes.length === 0 ?
+				1 :
+				previousScenes[0].index.positionInParent + 1;
+
+		} else {
+			positionInParent = this.positionInParent;
+		}
+
+		return {
+			type: ComponentType.Scene,
+			campaignSettings: CampaignSetting.Agnostic,
+			id: this.id,
+			campaignId: this.campaignId,
+			parentId: this.parentId,
+			positionInParent: positionInParent,
+		};
 	}
 }
-

@@ -28,7 +28,7 @@ export class RPGManagerView extends AbstractStaticView {
 		params: any[],
 	): void {
 		super.initialise([]);
-		const campaigns = this.api.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.id.type === ComponentType.Campaign);
+		const campaigns = this.api.database.read<CampaignInterface>((campaign: CampaignInterface) => campaign.index.type === ComponentType.Campaign);
 
 		this._hasCampaigns = campaigns.length > 0;
 		if (campaigns.length === 1)
@@ -163,10 +163,10 @@ export class RPGManagerView extends AbstractStaticView {
 
 		if (this._currentComponent !== undefined) {
 			modalOpened = true;
-			new CreationModal(this.api, type, true, null, this._currentComponent?.id.campaignId, this._currentComponent?.id.adventureId, this._currentComponent?.id.actId).open();
+			new CreationModal(this.api, type, true, null, this._currentComponent?.index.campaignId, this._currentComponent?.index.parentId).open();
 		} else if (this._currentCampaign !== undefined) {
 			modalOpened = true;
-			new CreationModal(this.api, type, true, null, this._currentCampaign?.id.campaignId).open();
+			new CreationModal(this.api, type, true, null, this._currentCampaign?.index.campaignId).open();
 		}
 
 		if (!modalOpened){

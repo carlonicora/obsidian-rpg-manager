@@ -2,7 +2,7 @@ import {DatabaseInterface} from "../../databaseManager/interfaces/DatabaseInterf
 import {AbtInterface} from "../../../services/plotsService/interfaces/AbtInterface";
 import {StoryCircleInterface} from "../../../services/plotsService/interfaces/StoryCircleInterface";
 import {RelationshipListInterface} from "../../../services/relationshipsService/interfaces/RelationshipListInterface";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {TFile} from "obsidian";
 import {ComponentStage} from "../../../core/enums/ComponentStage";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
@@ -10,7 +10,7 @@ import {CampaignInterface} from "../../../components/campaign/interfaces/Campaig
 import {ImageInterface} from "../../../services/galleryService/interfaces/ImageInterface";
 
 export interface ModelInterface {
-	id: IdInterface;
+	index: IndexInterface;
 	file: TFile;
 	stage: ComponentStage;
 	version: number|undefined;
@@ -33,7 +33,7 @@ export interface ModelInterface {
 
 	initialise(
 		campaignSettings: CampaignSetting,
-		id: IdInterface,
+		id: IndexInterface,
 		file: TFile,
 	): void;
 

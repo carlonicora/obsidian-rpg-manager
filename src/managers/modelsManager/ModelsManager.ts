@@ -3,7 +3,7 @@ import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {TFile} from "obsidian";
 import {ModelInterface} from "./interfaces/ModelInterface";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 
@@ -17,7 +17,7 @@ export class ModelsManager implements ModelsManagerInterface {
 	}
 
 	public get(
-		id: IdInterface,
+		id: IndexInterface,
 		campaignSettings: CampaignSetting,
 		file: TFile,
 	): ModelInterface|undefined {
@@ -54,7 +54,7 @@ export class ModelsManager implements ModelsManagerInterface {
 
 	private _initialiseComponentModel(
 		modelClass: ClassInterface<ModelInterface>,
-		id: IdInterface,
+		id: IndexInterface,
 		campaignSettings: CampaignSetting,
 		file: TFile,
 	): ModelInterface {

@@ -4,6 +4,8 @@ import {TableField} from "../../../services/relationshipsService/enums/TableFiel
 import {AdventureInterface} from "../interfaces/AdventureInterface";
 
 export class AdvenureRelationshipView extends AbstractRelationshipView implements RelationshipsViewInterface {
+	protected canBeOrdered = true;
+
 	protected getFieldValue(
 		field: TableField,
 		model: AdventureInterface,

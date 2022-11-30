@@ -5,6 +5,8 @@ import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
+import {IndexService} from "../../../services/indexService/IndexService";
 
 export class EventTemplate extends AbstractComponentTemplate {
 	protected generateDataCodeBlock(
@@ -39,8 +41,15 @@ export class EventTemplate extends AbstractComponentTemplate {
 	}
 
 	public generateID(
-	): string {
-		return ComponentType.Event + '-' + CampaignSetting.Agnostic + '-' + this.campaignId;
+	): IndexDataInterface {
+		return {
+			type: ComponentType.Event,
+			campaignSettings: CampaignSetting.Agnostic,
+			id: this.api.service(IndexService).createUUID(),
+			campaignId: this.campaignId,
+			parentId: this.parentId,
+			positionInParent: 0,
+		};
 	}
 }
 

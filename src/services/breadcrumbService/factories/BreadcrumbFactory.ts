@@ -21,10 +21,10 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 	): BreadcrumbElementInterface {
 		const response = this._generateElementBreadcrumb(null, ComponentType.Campaign, model.campaign);
 
-		if (model.id.type !== ComponentType.Campaign){
-			response.mainTitle = ComponentType[model.id.type];
+		if (model.index.type !== ComponentType.Campaign){
+			response.mainTitle = ComponentType[model.index.type];
 
-			switch (model.id.type) {
+			switch (model.index.type) {
 				case ComponentType.Adventure:
 					this._generateAventureBreadcrumb(response, model as AdventureInterface);
 					break;
@@ -38,7 +38,7 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 					this._generateSceneBreadcrumb(response, model as SceneInterface);
 					break;
 				default:
-					this._generateElementBreadcrumb(response, model.id.type, model);
+					this._generateElementBreadcrumb(response, model.index.type, model);
 					break;
 			}
 		}
@@ -71,19 +71,17 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		scene: SceneInterface,
 		fileFactory: FileCreationService,
 	){
-		const newSceneId = (scene.id.sceneId ?? 0) + 1;
+		const scenePosition = (scene.index.positionInParent ?? 0) + 1;
 
 		fileFactory.silentCreate(
 			ComponentType.Scene,
 			'a' +
-			((scene.act.id.actId ?? 0) < 10 ? '0' + scene.act.id.actId?.toString(): scene.act.id.actId?.toString()) +
+			((scene.act.index.parentPosition ?? 0) < 10 ? '0' + scene.act.index.parentPosition.toString(): scene.act.index.parentPosition.toString()) +
 			's' +
-			(newSceneId < 10 ? '0' + newSceneId.toString() : newSceneId.toString()),
-			scene.campaign.id.campaignId,
-			scene.adventure.id.adventureId,
-			scene.act.id.actId,
-			newSceneId,
-			undefined,
+			(scenePosition < 10 ? '0' + scenePosition.toString() : scenePosition.toString()),
+			scene.campaign.index.campaignId,
+			scene.act.index.id,
+			scenePosition,
 			undefined,
 			true,
 		);
@@ -98,12 +96,14 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		let previousAdventure: AdventureInterface|undefined;
 		let nextAdventure: AdventureInterface|undefined;
 		try {
-			previousAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.id, (adventure.id.adventureId ?? 0) - 1);
+			//previousAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) - 1);
+			previousAdventure = this._api.database.readNeighbour<AdventureInterface>(ComponentType.Adventure, adventure.index, true);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.id, (adventure.id.adventureId ?? 0) + 1);
+			// nextAdventure = this._api.database.readSingle<AdventureInterface>(ComponentType.Adventure, adventure.index, (adventure.index.adventureId ?? 0) + 1);
+			nextAdventure = this._api.database.readNeighbour<AdventureInterface>(ComponentType.Adventure, adventure.index, false);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
@@ -146,12 +146,14 @@ export class BreadcrumbFactory implements BreadcrumbFactoryInterface {
 		let previousSession: SessionInterface|undefined;
 		let nextSession: SessionInterface|undefined;
 		try {
-			previousSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.id, (session.id.sessionId ?? 0) - 1);
+			// previousSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.index, (session.index.sessionId ?? 0) - 1);
+			previousSession = this._api.database.readNeighbour<SessionInterface>(ComponentType.Session, session.index, true);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}
 		try {
-			nextSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.id, (session.id.sessionId ?? 0) + 1);
+			//nextSession = this._api.database.readSingle<SessionInterface>(ComponentType.Session, session.index, (session.index.sessionId ?? 0) + 1);
+			nextSession = this._api.database.readNeighbour<SessionInterface>(ComponentType.Session, session.index, false);
 		} catch (e) {
 			//no need to trigger anything, previousAdventure can be null
 		}

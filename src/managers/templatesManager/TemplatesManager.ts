@@ -7,6 +7,7 @@ import {TemplateClassInterface} from "./interfaces/TemplateClassInterface";
 import {LoggerService} from "../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 import {ControllerMetadataDataInterface} from "../controllerManager/interfaces/ControllerMetadataDataInterface";
+import {IndexService} from "../../services/indexService/IndexService";
 
 export class TemplatesManager implements TemplatesManagerInterface {
 	private _templates: Map<string, TemplateClassInterface<TemplateInterface>> = new Map<string, TemplateClassInterface<TemplateInterface>>();
@@ -21,11 +22,9 @@ export class TemplatesManager implements TemplatesManagerInterface {
 		type: ComponentType,
 		templateName: string,
 		name: string,
-		campaignId?: number,
-		adventureId?: number,
-		actId?: number,
-		sceneId?: number,
-		sessionId?: number,
+		campaignId: string,
+		parentId: string,
+		positionInParent?: number,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): TemplateInterface {
 		let templateClass = this._templates.get(this._getIdentifier(type, campaignSettings));
@@ -38,10 +37,8 @@ export class TemplatesManager implements TemplatesManagerInterface {
 				templateName,
 				name,
 				campaignId,
-				adventureId,
-				actId,
-				sceneId,
-				sessionId,
+				parentId,
+				positionInParent,
 				additionalInformation,
 			);
 
@@ -65,10 +62,8 @@ export class TemplatesManager implements TemplatesManagerInterface {
 			templateName,
 			name,
 			campaignId,
-			adventureId,
-			actId,
-			sceneId,
-			sessionId,
+			parentId,
+			positionInParent,
 			additionalInformation,
 		);
 	}
@@ -94,22 +89,19 @@ export class TemplatesManager implements TemplatesManagerInterface {
 		type: ComponentType,
 		templateName: string,
 		name: string,
-		campaignId?: number,
-		adventureId?: number,
-		actId?: number,
-		sceneId?: number,
-		sessionId?: number,
+		campaignId: string,
+		parentId: string,
+		positionInParent?: number,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): TemplateInterface {
 		const response = new templateClass(
 			this._api,
 			templateName,
 			name,
+			this._api.service(IndexService).createUUID(),
 			campaignId,
-			adventureId,
-			actId,
-			sceneId,
-			sessionId,
+			parentId,
+			positionInParent,
 			additionalInformation,
 		);
 

@@ -15,6 +15,9 @@ import {RelationshipService} from "../../../services/relationshipsService/Relati
 import {RelationshipType} from "../../../services/relationshipsService/enums/RelationshipType";
 import {SceneInterface} from "../../scene/interfaces/SceneInterface";
 import {RelationshipList} from "../../../services/relationshipsService/RelationshipList";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
 
 export class SessionModel extends AbstractSessionData implements SessionInterface {
 	public stage: ComponentStage = ComponentStage.Run;
@@ -57,18 +60,11 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 	private _adjacentSession(
 		next: boolean,
 	): SessionInterface | null {
-		const sessionId = this.id.sessionId;
-
-		if (sessionId === undefined)
+		try {
+			return this.api.database.readNeighbour<SessionInterface>(ComponentType.Session, this.index, !next);
+		} catch (e) {
 			return null;
-
-		const response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
-			session.id.type === ComponentType.Session &&
-			session.id.campaignId === this.id.campaignId &&
-			session.id.sessionId === (next ? sessionId + 1 : sessionId -1)
-		);
-
-		return response[0] ?? null;
+		}
 	}
 
 	getRelationships(
@@ -81,9 +77,9 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		});
 
 		this.api.database.read<SceneInterface>((model: SceneInterface) =>
-			model.id.campaignId === this.id.campaignId &&
+			model.index.campaignId === this.index.campaignId &&
 			model.session !== undefined &&
-			model.session.id === this.id
+			model.session.index === this.index
 		).forEach((model: SceneInterface) => {
 			model.getRelationships().forEach((sceneRelationship: RelationshipInterface) => {
 				if (sceneRelationship.component !== undefined)
@@ -105,5 +101,28 @@ export class SessionModel extends AbstractSessionData implements SessionInterfac
 		});
 
 		return response;
+	}
+
+	public async compactScenePositions(
+		skipScene?: string,
+		scenes?: SceneInterface[],
+	): Promise<void> {
+		if (scenes === undefined) {
+			scenes = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
+				scene.index.type === ComponentType.Scene &&
+				scene.session?.index.id === this.index.id &&
+				(skipScene !== undefined ? scene.index.id !== skipScene : true)
+			).sort(this.api.service(SorterService).create<SceneInterface>([
+				new SorterComparisonElement((scene: SceneInterface) => scene.positionInSession),
+			]));
+		}
+
+		if (scenes !== undefined) {
+			for (let index = 0; index < scenes.length; index++) {
+				if (scenes[index].positionInSession !== index + 1) {
+					this.api.service(CodeblockService).addOrUpdate('data.positionInSession', index + 1, scenes[index].file);
+				}
+			}
+		}
 	}
 }

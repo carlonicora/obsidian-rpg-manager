@@ -1,11 +1,10 @@
-import {CampaignSetting} from "../enums/CampaignSetting";
 import {ComponentType} from "../../../core/enums/ComponentType";
 import {CampaignInterface} from "../interfaces/CampaignInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {AbstractModalPart} from "../../../managers/modalsManager/abstracts/AbstractModalPart";
-import {IdService} from "../../../services/idService/IdService";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
 import {ModalInterface} from "../../../core/interfaces/ModalInterface";
+import {IndexService} from "../../../services/indexService/IndexService";
+import {ModelInterface} from "../../../managers/modelsManager/interfaces/ModelInterface";
 
 export class CampaignModalPart extends AbstractModalPart {
 	private _campaigns: CampaignInterface[];
@@ -23,7 +22,9 @@ export class CampaignModalPart extends AbstractModalPart {
 	) {
 		super(api, modal);
 
-		this._campaigns = this.api.database.readList<CampaignInterface>(ComponentType.Campaign, undefined);
+		this._campaigns = this.api.database.read<CampaignInterface>((campaign: ModelInterface) =>
+			campaign.index.type === ComponentType.Campaign
+		);
 	}
 
 	public async addElement(
@@ -33,7 +34,6 @@ export class CampaignModalPart extends AbstractModalPart {
 
 		if (this.modal.type === ComponentType.Campaign){
 			this.addAdditionalElements();
-			this._addNewCampaignElements(campaignEl);
 		} else {
 			if (this._campaigns.length === 0){
 				const mainContent = this.modal.getContentEl();
@@ -93,44 +93,10 @@ export class CampaignModalPart extends AbstractModalPart {
 
 	public validate(
 	): boolean {
+		if (this.modal.campaignId === undefined)
+			this.modal.campaignId = this.api.service(IndexService).createUUID();
+
 		return true;
-	}
-
-	private _addNewCampaignElements(
-		containerEl: HTMLElement,
-	): void {
-		if (this.modal.campaignId === undefined) {
-			this.modal.campaignId = this.api.service(IdService).create(ComponentType.Campaign, 1);
-		}
-
-		this._campaigns.forEach((campaign: CampaignInterface) => {
-			if (this.modal.campaignId !== undefined && campaign.id.campaignId >= this.modal.campaignId.id) {
-				this.modal.campaignId.id = (campaign.id.campaignId + 1);
-			}
-		});
-
-		this.modal.campaignSetting = CampaignSetting.Agnostic;
-		/*
-		containerEl.createEl('label', {text: 'Select CampaignModel Settings'});
-		this._campaignSettingsEl = containerEl.createEl('select');
-
-		Object.keys(CampaignSetting).filter((v) => isNaN(Number(v))).forEach((setting: string) => {
-			const campaignSettingOption = this._campaignSettingsEl.createEl('option', {
-				text: setting,
-				value: setting,
-			});
-
-			if (setting === CampaignSetting.Agnostic.toString()){
-				campaignSettingOption.selected = true;
-			}
-		});
-
-		this._selectSetting();
-
-		this._campaignSettingsEl.addEventListener('change', (e: Event) => {
-			this._selectSetting();
-		});
-		*/
 	}
 
 	private _selectCampaignElements(
@@ -152,7 +118,7 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaigns.forEach((campaign: CampaignInterface) => {
 			const campaignOptionEl = this._campaignEl.createEl('option', {
 				text: campaign.file.basename,
-				value: campaign.id.campaignId.toString(),
+				value: campaign.index.campaignId.toString(),
 			});
 
 			if (this._campaigns.length === 1){
@@ -168,17 +134,9 @@ export class CampaignModalPart extends AbstractModalPart {
 		this._campaignErrorEl = containerEl.createEl('p', {cls: 'error'});
 	}
 
-	/*
-	private _selectSetting(
-	): void {
-		this.modal.campaignSetting = CampaignSetting[this._campaignSettingsEl.value as keyof typeof CampaignSetting];
-	}
-	*/
-
 	private _selectCampaign(
 	): void {
-		const campaignId: IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, this._campaignEl.value);
-		if (campaignId !== undefined) this.modal.campaignId = campaignId;
+		this.modal.campaignId = this._campaignEl.value;
 
 		this._childEl.empty();
 		this.loadChild(this._childEl);

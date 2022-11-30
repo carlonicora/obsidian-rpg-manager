@@ -7,6 +7,10 @@ export abstract class AbstractDatabaseWorker implements DatabaseUpdateWorkerInte
 	) {
 	}
 
+	public abstract get from(): string;
+
+	public abstract get to(): string;
+
 	public abstract run(
 	): Promise<void>;
 }

@@ -1,14 +1,9 @@
 import {CachedMetadata, Component, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {ComponentNotFoundError} from "../../core/errors/ComponentNotFoundError";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
-import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
-import {AdventureInterface} from "../../components/adventure/interfaces/AdventureInterface";
-import {SessionInterface} from "../../components/session/interfaces/SessionInterface";
-import {ActInterface} from "../../components/act/interfaces/ActInterface";
-import {SceneInterface} from "../../components/scene/interfaces/SceneInterface";
 import {DatabaseInitialiser} from "./DatabaseInitialiser";
 import {ComponentDuplicatedError} from "../../core/errors/ComponentDuplicatedError";
 import {ComponentStage} from "../../core/enums/ComponentStage";
@@ -21,7 +16,6 @@ import {GalleryService} from "../../services/galleryService/GalleryService";
 import {
 	AllComponentManipulatorService
 } from "../../services/allComponentManipulatorService/AllComponentManipulatorService";
-import {IdService} from "../../services/idService/IdService";
 
 export class Database extends Component implements DatabaseInterface {
 	public recordset: ModelInterface[] = [];
@@ -81,13 +75,6 @@ export class Database extends Component implements DatabaseInterface {
 		return (<unknown>this.recordset.filter((query !== null ? query : true))) as T[];
 	}
 
-	public readByStringID<T extends ModelInterface>(
-		stringID: string
-	): T|undefined {
-		const id = this._api.service(IdService).createFromID(stringID);
-		return this.readSingle<T>(id.type, id);
-	}
-
 	public update(
 		component: ModelInterface,
 	): void {
@@ -133,85 +120,44 @@ export class Database extends Component implements DatabaseInterface {
 		return ((response.length) === 1 ? <T>response[0] : undefined);
 	}
 
-	public readSingle<T extends ModelInterface>(
-		type: ComponentType,
-		id: IdInterface,
-		overloadId: number|undefined=undefined,
+	public readById<T extends ModelInterface>(
+		id: string,
 	): T {
-		const result = this.read(this._generateQuery(type, id, false, overloadId));
+		const result = this.read((component: ModelInterface) =>
+			component.index.id === id
+		);
 
-		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
+		if (result.length !== 1)
+			throw new Error('');
 
 		return <T>result[0];
 	}
 
-	public readList<T extends ModelInterface>(
+	public readChildren<T extends ModelInterface>(
 		type: ComponentType,
-		id: IdInterface|undefined,
-		overloadId: number|undefined = undefined,
+		id: string,
 	): T[] {
-		return <T[]>this.read(
-			this._generateQuery(type, id, true, overloadId),
+		return this.read((model: ModelInterface) =>
+			model.index.type === type &&
+			model.index.parentId === id
 		);
 	}
 
-	private _generateQuery(
+	public readNeighbour<T extends ModelInterface>(
 		type: ComponentType,
-		id: IdInterface|undefined,
-		isList: boolean,
-		overloadId: number|undefined=undefined,
-	): any {
-		let campaignId: number | undefined = id?.campaignId;
-		let adventureId: number | undefined = id?.adventureId;
-		let actId: number | undefined = id?.actId;
-		let sceneId: number | undefined = id?.sceneId;
-		let sessionId: number | undefined = id?.sessionId;
+		id: IndexInterface,
+		previous: boolean,
+	): T {
+		const result = this.read((model: ModelInterface) =>
+			model.index.type === type &&
+			(id.campaignId !== undefined ? model.index.campaignId === id.campaignId : true) &&
+			(id.parentId !== undefined ? model.index.parentId === id.parentId : true) &&
+			(model.index.positionInParent === (previous ? id.positionInParent - 1 : id.positionInParent + 1))
+		);
 
-		switch(type) {
-			case ComponentType.Campaign:
-				if (overloadId !== undefined) campaignId = overloadId;
-				return (component: CampaignInterface) =>
-					(type & component.id.type) === component.id.type &&
-					(isList ? true : component.id.campaignId === campaignId);
-				break;
-			case ComponentType.Adventure:
-				if (overloadId !== undefined) adventureId = overloadId;
-				return (component: AdventureInterface) =>
-					(type & component.id.type) === component.id.type &&
-					component.id.campaignId === campaignId &&
-					(isList ? true : component.id.adventureId === adventureId);
-				break;
-			case ComponentType.Session:
-				if (overloadId !== undefined) sessionId = overloadId;
-				return (component: SessionInterface) =>
-					(type & component.id.type) === component.id.type &&
-					component.id.campaignId === campaignId &&
-					(isList ? true : component.id.sessionId === sessionId);
-				break;
-			case ComponentType.Act:
-				if (overloadId !== undefined) actId = overloadId;
-				return (component: ActInterface) =>
-					(type & component.id.type) === component.id.type &&
-					component.id.campaignId === campaignId &&
-					(adventureId !== undefined ? component.id.adventureId === adventureId : true) &&
-					(isList ? true : component.id.actId === actId);
-				break;
-			case ComponentType.Scene:
-				if (overloadId !== undefined) sceneId = overloadId;
-				return (component: SceneInterface) =>
-					(type & component.id.type) === component.id.type &&
-					component.id.campaignId === campaignId &&
-					(adventureId !== undefined ? component.id.adventureId === adventureId : true) &&
-					component.id.actId === actId &&
-					(isList ? true : component.id.sceneId === sceneId);
-				break;
-			default:
-				if (overloadId !== undefined) campaignId = overloadId;
-				return (component: ModelInterface) =>
-					(type & component.id.type) === component.id.type &&
-					component.id.campaignId === campaignId;
-				break;
-		}
+		if (result.length === 0) throw new ComponentNotFoundError(this._api, id);
+
+		return <T>result[0];
 	}
 
 	private async _replaceFileContent(
@@ -303,8 +249,8 @@ export class Database extends Component implements DatabaseInterface {
 
 				let error: RpgErrorInterface | undefined = undefined;
 				try {
-					const duplicate = this.readSingle(component.id.type, component.id);
-					error = new ComponentDuplicatedError(this._api, component.id, [duplicate], component);
+					const duplicate = this.readById(component.index.id);
+					error = new ComponentDuplicatedError(this._api, component.index, [duplicate], component);
 				} catch (e) {
 					//no need to trap an error here
 				}

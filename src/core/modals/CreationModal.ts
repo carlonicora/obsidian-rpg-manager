@@ -1,11 +1,9 @@
 import {CachedMetadata, MarkdownView, Modal, Scope, TFile} from "obsidian";
 import {ComponentType} from "../enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
 import {ModalInterface} from "../interfaces/ModalInterface";
 import {ModalPartInterface} from "../interfaces/ModalPartInterface";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../../services/idService/IdService";
 import {TagService} from "../../services/tagService/TagService";
 import {ComponentNotesInterface} from "../../managers/templatesManager/interfaces/ComponentNotesInterface";
 
@@ -19,11 +17,11 @@ export class CreationModal extends Modal implements ModalInterface {
 	public additionalInformationEl: HTMLDivElement;
 	public templateEl: HTMLSelectElement;
 
-	public campaignId: IdInterface;
-	public adventureId: IdInterface|undefined;
-	public actId: IdInterface|undefined;
-	public sceneId: IdInterface|undefined;
-	public sessionId: IdInterface|undefined;
+	public campaignId: string;
+	public adventureId?: string;
+	public actId?: string;
+	public sceneId?: string;
+	public sessionId?: string;
 	public campaignSetting: CampaignSetting = CampaignSetting.Agnostic;
 
 	public campaignModal: ModalPartInterface;
@@ -43,9 +41,8 @@ export class CreationModal extends Modal implements ModalInterface {
 		public type: ComponentType,
 		private _create: boolean = true,
 		private _name: string|null = null,
-		campaignId: number|undefined = undefined,
-		adventureId: number|undefined = undefined,
-		actId: number|undefined = undefined,
+		campaignId?: string,
+		parentId?: string,
 	) {
 		super(app);
 
@@ -56,14 +53,21 @@ export class CreationModal extends Modal implements ModalInterface {
 		});
 
 		if (campaignId !== undefined) {
-			const campaign:IdInterface|undefined = this.api.service(IdService).create(ComponentType.Campaign, campaignId);
-			if (campaign !== undefined) {
-				this.campaignId = campaign;
+			this.campaignId = campaignId;
 
-				if (adventureId !== undefined) {
-					this.adventureId = this.api.service(IdService).create(ComponentType.Adventure, campaignId, adventureId);
+			if (parentId !== undefined) {
+				if (type === ComponentType.Act) {
+					this.adventureId = parentId;
+				}
 
-					if (actId !== undefined) this.actId = this.api.service(IdService).create(ComponentType.Act, campaignId, adventureId, actId);
+				if (type === ComponentType.Scene) {
+					this.actId = parentId;
+					try {
+						const act = this.api.database.readById(parentId);
+						this.adventureId = act.index.parentId;
+					} catch (e) {
+						//no need to do anything here
+					}
 				}
 			}
 		}
@@ -79,8 +83,10 @@ export class CreationModal extends Modal implements ModalInterface {
 					if (tags.length > 0) {
 						const tags = this.api.service(TagService).sanitiseTags(metadata.frontmatter?.tags);
 						const templateType = this.api.service(TagService).getTemplateDataType(tags);
-						if (templateType == undefined) this.availableGenericTemplates.push(file);
-						if (templateType === this.type) this.availableSpecificTemplates.push(file);
+
+						if (templateType == undefined || ((templateType & this.type ) === this.type))
+							this.availableGenericTemplates.push(file);
+
 					} else {
 						this.availableGenericTemplates.push(file);
 					}

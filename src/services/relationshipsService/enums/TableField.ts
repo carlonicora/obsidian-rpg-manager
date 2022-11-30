@@ -2,7 +2,7 @@ export enum TableField {
 	/**
 	 * DO NOT CHANGE OR REUSE THE IDS
 	 * They are used in the configuration.
-	 * If need to remove, do NOT reuse the same idService
+	 * If need to remove, do NOT reuse the same indexService
 	 */
 	Index=0,
 	Image=1,

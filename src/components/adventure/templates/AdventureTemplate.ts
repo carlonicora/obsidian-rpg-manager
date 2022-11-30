@@ -5,6 +5,12 @@ import {CampaignSetting} from "../../campaign/enums/CampaignSetting";
 import {
 	AbstractComponentTemplate
 } from "../../../managers/templatesManager/abstracts/AbstractComponentTemplate";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
+import {SorterService} from "../../../services/sorterService/SorterService";
+import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {SorterType} from "../../../services/searchService/enums/SorterType";
+import {IndexService} from "../../../services/indexService/IndexService";
+import {AdventureInterface} from "../interfaces/AdventureInterface";
 
 export class AdventureTemplate extends AbstractComponentTemplate {
 	protected generateDataCodeBlock(
@@ -64,7 +70,30 @@ export class AdventureTemplate extends AbstractComponentTemplate {
 	}
 
 	public generateID(
-	): string {
-		return ComponentType.Adventure + '-' + CampaignSetting.Agnostic + '-' + this.campaignId + '/' + this.adventureId;
+	): IndexDataInterface {
+		const previousAdventures = this.api.database.read<AdventureInterface>((adventure: AdventureInterface) =>
+			adventure.index.type === ComponentType.Adventure &&
+			adventure.index.campaignId === this.campaignId
+		).sort(
+			this.api.service(SorterService).create<AdventureInterface>([
+				new SorterComparisonElement((adventure: AdventureInterface) => adventure.index.positionInParent, SorterType.Descending),
+			])
+		);
+
+		const positionInParent = previousAdventures.length === 0 ?
+			1 :
+			previousAdventures[0].index.positionInParent + 1;
+
+		if (this.id === undefined)
+			this.id = this.api.service(IndexService).createUUID();
+
+		return {
+			type: ComponentType.Adventure,
+			campaignSettings: CampaignSetting.Agnostic,
+			id: this.id,
+			campaignId: this.campaignId,
+			parentId: this.parentId,
+			positionInParent: positionInParent,
+		};
 	}
 }

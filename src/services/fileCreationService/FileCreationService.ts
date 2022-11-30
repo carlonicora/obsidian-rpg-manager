@@ -2,11 +2,9 @@ import {Editor, MarkdownView, TFile} from "obsidian";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {FileCreationServiceInterface} from "./interfaces/FileCreationServiceInterface";
-import {IdInterface} from "../idService/interfaces/IdInterface";
 import {CampaignInterface} from "../../components/campaign/interfaces/CampaignInterface";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
-import {IdService} from "../idService/IdService";
 import {
 	ControllerMetadataDataInterface
 } from "../../managers/controllerManager/interfaces/ControllerMetadataDataInterface";
@@ -20,11 +18,9 @@ export class FileCreationService extends AbstractService implements FileCreation
 		create: boolean,
 		templateName: string,
 		name: string,
-		campaignId: IdInterface,
-		adventureId: IdInterface|undefined=undefined,
-		actId: IdInterface|undefined=undefined,
-		sceneId: IdInterface|undefined=undefined,
-		sessionId: IdInterface|undefined=undefined,
+		campaignId: string,
+		parentId: string,
+		positionInParent=0,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): Promise<void> {
 		let pathSeparator = '';
@@ -36,13 +32,15 @@ export class FileCreationService extends AbstractService implements FileCreation
 		}
 
 		let folder = pathSeparator;
+		const campaigns: CampaignInterface[] = this.api.database.read<CampaignInterface>(
+			(campaign: CampaignInterface) =>
+				campaign.index.type === ComponentType.Campaign &&
+				campaign.index.id === campaignId
+		);
 
-		try {
-			const campaign: CampaignInterface|undefined = this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, campaignId);
-			settings = campaign.campaignSettings;
-			folder = campaign.folder;
-		} catch (e) {
-			//no need to catch it here
+		if (campaigns.length === 1) {
+			settings = campaigns[0].campaignSettings;
+			folder = campaigns[0].folder;
 		}
 
 		const template = this.api.templates.get(
@@ -50,11 +48,9 @@ export class FileCreationService extends AbstractService implements FileCreation
 			type,
 			templateName,
 			name,
-			campaignId.id,
-			adventureId?.id,
-			actId?.id,
-			sceneId?.id,
-			sessionId?.id,
+			campaignId,
+			parentId,
+			positionInParent,
 			additionalInformation,
 		);
 
@@ -124,31 +120,24 @@ export class FileCreationService extends AbstractService implements FileCreation
 	public async silentCreate(
 		type: ComponentType,
 		name: string,
-		campaignId: number,
-		adventureId: number|undefined=undefined,
-		actId: number|undefined=undefined,
-		sceneId: number|undefined=undefined,
-		sessionId: number|undefined=undefined,
-		additionalInformation: ControllerMetadataDataInterface|undefined=undefined,
+		campaignId: string,
+		parentId: string,
+		positionInParent?: number,
+		additionalInformation?: ControllerMetadataDataInterface,
 		openView?: boolean,
 	): Promise<TFile> {
 		let folder = '';
 		let settings = CampaignSetting.Agnostic;
 
-		let campaign: CampaignInterface|undefined;
-		const id = this.api.service(IdService).create(ComponentType.Campaign, campaignId);
+		const campaigns: CampaignInterface[] = this.api.database.read<CampaignInterface>(
+			(campaign: CampaignInterface) =>
+				campaign.index.type === ComponentType.Campaign &&
+				campaign.index.id === campaignId
+		);
 
-		if (id !== undefined){
-			try {
-				campaign = this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, id);
-			} catch (e) {
-				campaign = undefined;
-			}
-		}
-
-		if (campaign !== undefined) {
-			settings = campaign.campaignSettings;
-			folder = campaign.folder;
+		if (campaigns.length === 1){
+			settings = campaigns[0].campaignSettings;
+			folder = campaigns[0].folder;
 		}
 
 		const template = await this.api.templates.get(
@@ -157,10 +146,8 @@ export class FileCreationService extends AbstractService implements FileCreation
 			'internal' + ComponentType[type],
 			name,
 			campaignId,
-			adventureId,
-			actId,
-			sceneId,
-			sessionId,
+			parentId,
+			positionInParent,
 			additionalInformation,
 		);
 

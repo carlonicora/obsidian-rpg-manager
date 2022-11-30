@@ -29,6 +29,8 @@ import {RPGManagerView} from "./core/staticViews/rpgManagerView/RPGManagerView";
 import {ReleaseNoteView} from "./core/staticViews/releaseNoteView/ReleaseNoteView";
 import {ErrorView} from "./core/staticViews/errorView/ErrorView";
 import {TimelineView} from "./core/staticViews/timelineView/TimelineView";
+import {LoggerService} from "./services/loggerService/LoggerService";
+import {LogMessageType} from "./services/loggerService/enums/LogMessageType";
 
 export default class RpgManager extends Plugin implements RpgManagerInterface{
 	private _isVersionUpdated=false;
@@ -106,7 +108,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface{
 
 	private async _onDatabaseReady(
 	): Promise<void> {
-		// this.api.service(LoggerService).info(LogMessageType.Database, 'Database Ready', this.api.database);
+		this.api.service(LoggerService).info(LogMessageType.DatabaseInitialisation, 'Database Ready', this.api.database);
 
 		this._registerEvents();
 		this.app.workspace.trigger("rpgmanager:refresh-views");

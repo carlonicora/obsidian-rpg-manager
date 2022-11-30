@@ -1,5 +1,5 @@
 import {ComponentType} from "../../../core/enums/ComponentType";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {ModelInterface} from "../../modelsManager/interfaces/ModelInterface";
 import {TFile} from "obsidian";
 
@@ -31,25 +31,24 @@ export interface DatabaseInterface {
 		name: string,
 	): T|undefined;
 
-	readByStringID<T extends ModelInterface>(
-		stringID: string
-	): T|undefined;
-
 	readByBaseName<T extends ModelInterface>(
 		basename: string,
 	): T|undefined;
 
-	readSingle<T extends ModelInterface>(
-		type: ComponentType,
-		id: IdInterface,
-		overloadId?: number|undefined,
+	readById<T extends ModelInterface>(
+		id: string,
 	): T;
 
-	readList<T extends ModelInterface>(
+	readChildren<T extends ModelInterface>(
 		type: ComponentType,
-		id: IdInterface|undefined,
-		overloadId?: number|undefined,
+		id: string,
 	): T[];
+
+	readNeighbour<T extends ModelInterface>(
+		type: ComponentType,
+		id: IndexInterface,
+		previous: boolean,
+	): T;
 
 	onSave(
 		file: TFile,

@@ -5,7 +5,6 @@ import {CharacterModel} from "./models/CharacterModel";
 import {ComponentType} from "../../core/enums/ComponentType";
 import {ViewClassInterface} from "../../managers/viewsManager/interfaces/ViewClassInterface";
 import {ViewType} from "../../managers/viewsManager/enum/ViewType";
-import {CharacterHeaderView} from "./views/CharacterHeaderView";
 import {ClassInterface} from "../../api/interfaces/ClassInterface";
 import {ModalPartInterface} from "../../core/interfaces/ModalPartInterface";
 import {TemplateClassInterface} from "../../managers/templatesManager/interfaces/TemplateClassInterface";
@@ -14,6 +13,7 @@ import {NonPlayerCharacterTemplate} from "./templates/NonPlayerCharacterTemplate
 import {NonPlayerCharacterRelationshipView} from "./views/NonPlayerCharacterRelationshipView";
 import {ModalPartClassInterface} from "../../managers/modalsManager/interfaces/ModalPartClassInterface";
 import {NonPlayerCharacterModalPart} from "./modals/NonPlayerCharacterModalPart";
+import {NonPlayerCharacterHeaderView} from "./views/NonPlayerCharacterHeaderView";
 
 export class NonPlayerCharacterComponent implements ComponentInterface {
 	public get campaignSettings(): CampaignSetting {
@@ -38,7 +38,7 @@ export class NonPlayerCharacterComponent implements ComponentInterface {
 
 	public get views(): Map<ViewClassInterface, ViewType> {
 		return new Map<ViewClassInterface, ViewType>([
-			[CharacterHeaderView, ViewType.Header],
+			[NonPlayerCharacterHeaderView, ViewType.Header],
 			[NonPlayerCharacterRelationshipView, ViewType.Relationships],
 		]);
 	}

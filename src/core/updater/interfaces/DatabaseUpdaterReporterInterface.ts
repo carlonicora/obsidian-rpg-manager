@@ -10,4 +10,7 @@ export interface DatabaseUpdaterReporterInterface {
 
 	addFileUpdated(
 	): Promise<void>;
+
+	refreshFileCount(
+	): Promise<void>;
 }

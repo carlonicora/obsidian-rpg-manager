@@ -22,6 +22,11 @@ export class FileContentManager {
 		let frontMatterStarted = false;
 		let frontMatterCompleted = false;
 
+		if (templateContentLines[0] !== '---'){
+			frontMatterStarted = true;
+			frontMatterCompleted = true;
+		}
+
 		templateContentLines.forEach((content: string) => {
 			if (!frontMatterCompleted) {
 				if (content === '---') {
@@ -38,16 +43,20 @@ export class FileContentManager {
 			} else if (!frontMatterStarted){
 				frontMatterStarted = true;
 				frontMatterCompleted = true;
-				if (this.templateContent === undefined) this.templateContent = '';
+				if (this.templateContent === undefined)
+					this.templateContent = '';
+
 				this.templateContent += content + '\n';
 			} else {
-				if (this.templateContent === undefined) this.templateContent = '';
+				if (this.templateContent === undefined)
+					this.templateContent = '';
+
 				this.templateContent += content + '\n';
 			}
 		});
 
-		if (frontmatterContent !== ''){
+		if (frontmatterContent !== '')
 			this.templateFrontMatter = parseYaml(frontmatterContent);
-		}
+
 	}
 }

@@ -10,6 +10,22 @@ export interface CodeblockServiceInterface {
 		file?: TFile,
 	): Promise<void>;
 
+	addOrUpdateInIndex(
+		key: string,
+		value?: string|boolean|number,
+		file?: TFile,
+	): Promise<void>;
+
+	addOrUpdateMultiple(
+		keyValues: Map<string, string|boolean|number|undefined>,
+		file?: TFile,
+	): Promise<void>;
+
+	addOrUpdateMultipleInIndex(
+		keyValues: Map<string, string|boolean|number|undefined>,
+		file?: TFile,
+	): Promise<void>;
+
 	addOrUpdateFrontmatter(
 		key: string,
 		value?: string|boolean|number,

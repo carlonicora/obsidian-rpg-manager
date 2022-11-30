@@ -10,11 +10,9 @@ export interface TemplatesManagerInterface {
 		type: ComponentType,
 		templateName: string,
 		name: string,
-		campaignId?: number,
-		adventureId?: number,
-		actId?: number,
-		sceneId?: number,
-		sessionId?: number,
+		campaignId: string,
+		parentId: string,
+		positionInParent?: number,
 		additionalInformation?: ControllerMetadataDataInterface,
 	): TemplateInterface;
 

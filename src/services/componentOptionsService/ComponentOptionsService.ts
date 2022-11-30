@@ -3,7 +3,6 @@ import {ComponentOptionsServiceInterface} from "./interfaces/ComponentOptionsSer
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {RelationshipsSelectionModal} from "../relationshipsService/modals/RelationshipsSelectionModal";
-import {IdSwitcherModal} from "../idService/modals/IdSwitcherModal";
 import {GalleryManagementModal} from "../galleryService/modals/GalleryManagementModal";
 import {GalleryService} from "../galleryService/GalleryService";
 import {CampaignModel} from "../../components/campaign/models/CampaignModel";
@@ -24,14 +23,16 @@ export class ComponentOptionsService extends AbstractService implements Componen
 		if (model instanceof CampaignModel) {
 			this._addFunctionality(containerEl, 'Timeline')
 				.addEventListener("click", () => {
-					this.api.staticViews.create(StaticViewType.Timeline, [model.id]);
+					this.api.staticViews.create(StaticViewType.Timeline, [model.index]);
 				});
+
+			this._addSeparator(containerEl);
 
 		} else {
 			if (model instanceof AdventureModel) {
 				this._addFunctionality(containerEl, 'Wizard')
 					.addEventListener("click", () => {
-						this.api.service(PlotWizardService).openAdventureWizard(model.id);
+						this.api.service(PlotWizardService).openAdventureWizard(model.index);
 					});
 
 				this._addSeparator(containerEl);
@@ -40,21 +41,17 @@ export class ComponentOptionsService extends AbstractService implements Componen
 			if (model instanceof ActModel) {
 				this._addFunctionality(containerEl, 'Wizard')
 					.addEventListener("click", () => {
-						this.api.service(PlotWizardService).openActWizard(model.id);
+						this.api.service(PlotWizardService).openActWizard(model.index);
 					});
 
 				this._addSeparator(containerEl);
 
-				//const scenes = this.api.database.readList(ComponentType.Scene, model.id);
+				this._addFunctionality(containerEl, 'Scene Builder')
+					.addEventListener("click", () => {
+						this.api.service(SceneBuilderService).open(model);
+					});
 
-				//if (scenes.length === 0) {
-					this._addFunctionality(containerEl, 'Scene Builder')
-						.addEventListener("click", () => {
-							this.api.service(SceneBuilderService).open(model);
-						});
-
-					this._addSeparator(containerEl);
-				//}
+				this._addSeparator(containerEl);
 			}
 
 			if (model instanceof SessionModel) {
@@ -66,21 +63,16 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				this._addSeparator(containerEl);
 			}
 
-			this._addFunctionality(containerEl, 'Relationship')
-				.addEventListener("click", () => {
-					new RelationshipsSelectionModal(this.api, model).open();
-				});
+			if (model instanceof AdventureModel === false) {
+				this._addFunctionality(containerEl, 'Relationship')
+					.addEventListener("click", () => {
+						new RelationshipsSelectionModal(this.api, model).open();
+					});
 
-			this._addSeparator(containerEl);
-
-			this._addFunctionality(containerEl, 'Move')
-				.addEventListener("click", () => {
-					new IdSwitcherModal(this.api, model.file).open();
-				});
-
+				this._addSeparator(containerEl);
+			}
 		}
 
-		this._addSeparator(containerEl);
 
 		this._addFunctionality(containerEl, 'Gallery')
 			.addEventListener("click", () => {

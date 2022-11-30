@@ -24,9 +24,9 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		[SceneType.SocialCombat, [15*60]],
 	]);
 
-	public medianTimes: Map<number, Map<SceneType, number[]>> = new Map<number, Map<SceneType, number[]>>([
+	public medianTimes: Map<string, Map<SceneType, number[]>> = new Map<string, Map<SceneType, number[]>>([
 		[
-			0,
+			"",
 			this._medianDefaultTimes,
 		]
 	]);
@@ -42,7 +42,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		if (this._currentlyRunningScene === undefined)
 			return false;
 
-		return this._currentlyRunningScene.id === scene.id;
+		return this._currentlyRunningScene.index === scene.index;
 	}
 
 	public async startScene(
@@ -62,7 +62,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		if (scene.isCurrentlyRunning) {
 			this.api.service(CodeblockService).stopRunningTime(scene.file);
 
-			if (this._currentlyRunningScene !== undefined && this._currentlyRunningScene.id.stringID === scene.id.stringID)
+			if (this._currentlyRunningScene !== undefined && this._currentlyRunningScene.index.id === scene.index.id)
 				this._currentlyRunningScene = undefined;
 
 		}
@@ -72,15 +72,15 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 		isStartup=false,
 	): Promise<void> {
 		const campaigns: CampaignInterface[] = this.api.database.read<CampaignInterface>((campaign: CampaignInterface) =>
-			campaign.id.type === ComponentType.Campaign
+			campaign.index.type === ComponentType.Campaign
 		);
 
 		for (let index=0; index<campaigns.length; index++){
-			this.medianTimes.set(campaigns[index].id.campaignId, structuredClone(this._medianDefaultTimes));
+			this.medianTimes.set(campaigns[index].index.campaignId, structuredClone(this._medianDefaultTimes));
 		}
 
 		const scenes: SceneInterface[] = this.api.database.read<SceneInterface>((scene: SceneInterface) =>
-			scene.id.type === ComponentType.Scene
+			scene.index.type === ComponentType.Scene
 		);
 
 		await scenes.forEach((scene: SceneInterface) => {
@@ -88,7 +88,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 				this.stopScene(scene);
 
 			if (scene.sceneType !== undefined && scene.currentDuration !== undefined && scene.currentDuration !== 0) {
-				const campaignMedians: Map<SceneType, number[]> | undefined = this.medianTimes.get(scene.id.campaignId);
+				const campaignMedians: Map<SceneType, number[]> | undefined = this.medianTimes.get(scene.index.campaignId);
 				if (campaignMedians !== undefined) {
 					const sessionTypeTimes: number[]|undefined = campaignMedians.get(scene.sceneType);
 					if (sessionTypeTimes !== undefined)
@@ -102,7 +102,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 	}
 
 	public getTypeExpectedDuration(
-		campaignId: number,
+		campaignId: string,
 		type: SceneType,
 	): number {
 		const previousDurations: number[] = this.medianTimes.get(campaignId)?.get(type) ?? [];
@@ -136,7 +136,7 @@ export class RunningTimeService extends AbstractService implements RunningTimeSe
 				const file = leaf.view?.file;
 				if (file !== undefined) {
 					const component: ModelInterface | undefined = this.api.database.readByPath(file.path);
-					if (component !== undefined && component.id.type === ComponentType.Scene && this.isCurrentlyRunningScene(<SceneInterface>component))
+					if (component !== undefined && component.index.type === ComponentType.Scene && this.isCurrentlyRunningScene(<SceneInterface>component))
 						isCurrentlyRunningSceneOpen = true;
 
 				}

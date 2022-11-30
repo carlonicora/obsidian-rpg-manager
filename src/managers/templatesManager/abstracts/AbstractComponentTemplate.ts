@@ -14,7 +14,6 @@ import {SessionNotesTemplate} from "../../../components/session/templates/Sessio
 import {SubplotNotesTemplate} from "../../../components/subplot/templates/SubplotNotesTemplate";
 import {ControllerMetadataDataInterface} from "../../controllerManager/interfaces/ControllerMetadataDataInterface";
 import {ControllerMetadataInterface} from "../../controllerManager/interfaces/ControllerMetadataInterface";
-import {Md5} from "ts-md5";
 import {TemplateInterface} from "../interfaces/TemplateInterface";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {TagService} from "../../../services/tagService/TagService";
@@ -22,6 +21,7 @@ import {YamlService} from "../../../services/yamlService/YamlService";
 import {FileContentManager} from "../workers/FileContentManager";
 import {Editor, MarkdownView, parseYaml, TFile} from "obsidian";
 import {ComponentDataMetadataInterface} from "../../../core/interfaces/ComponentDataMetadataInterface";
+import {IndexDataInterface} from "../../../services/indexService/interfaces/IndexDataInterface";
 
 export abstract class AbstractComponentTemplate implements TemplateInterface {
 	protected internalTemplate: ComponentNotesInterface|undefined;
@@ -31,11 +31,10 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 		protected api: RpgManagerApiInterface,
 		protected templateName: string,
 		protected name: string,
-		protected campaignId: number|undefined,
-		protected adventureId: number|undefined,
-		protected actId: number|undefined,
-		protected sceneId: number|undefined,
-		protected sessionId: number|undefined,
+		protected id: string,
+		protected campaignId: string,
+		protected parentId: string,
+		protected positionInParent?: number,
 		protected additionalInformation?: ControllerMetadataDataInterface,
 	) {
 		if (additionalInformation?.data !== undefined)
@@ -52,40 +51,40 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 			if (this.templateName.startsWith('internal')){
 				switch (ComponentType[this.templateName.substring(8) as keyof typeof ComponentType]){
 					case ComponentType.Campaign:
-						this.internalTemplate = new CampaignNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new CampaignNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Adventure:
-						this.internalTemplate = new AdventureNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new AdventureNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Act:
-						this.internalTemplate = new ActNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new ActNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Scene:
-						this.internalTemplate = new SceneNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new SceneNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Session:
-						this.internalTemplate = new SessionNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new SessionNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Character:
-						this.internalTemplate = new CharacterNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new CharacterNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.NonPlayerCharacter:
-						this.internalTemplate = new NonPlayerCharacterNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new NonPlayerCharacterNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Clue:
-						this.internalTemplate = new ClueNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new ClueNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Location:
-						this.internalTemplate = new LocationNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new LocationNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Faction:
-						this.internalTemplate = new FactionNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new FactionNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Event:
-						this.internalTemplate = new EventNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new EventNotesTemplate(this.api, this.campaignId);
 						break;
 					case ComponentType.Subplot:
-						this.internalTemplate = new SubplotNotesTemplate(this.api, this.name, this.campaignId, this.adventureId, this.actId, this.sceneId, this.sessionId, this.additionalInformation);
+						this.internalTemplate = new SubplotNotesTemplate(this.api, this.campaignId);
 						break;
 
 				}
@@ -248,10 +247,8 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 		return undefined;
 	}
 
-	protected generateID(
-	): string {
-		return '';
-	}
+	protected abstract generateID(
+	): IndexDataInterface;
 
 	protected generateRpgManagerDataCodeBlock(
 		metadata: ControllerMetadataDataInterface,
@@ -283,16 +280,11 @@ export abstract class AbstractComponentTemplate implements TemplateInterface {
 	}
 
 	protected generateRpgManagerIDCodeBlock(
-		id: string,
+		index: IndexDataInterface,
 	): string {
-		const metadata = {
-			id: id,
-			checksum: Md5.hashStr(id),
-		};
-
 		let response = '```RpgManagerID\n';
 		response += '### DO NOT EDIT MANUALLY IF NOT INSTRUCTED TO DO SO ###\n';
-		response += this.api.service(YamlService).stringify(metadata);
+		response += this.api.service(YamlService).stringify(index);
 		response += '```\n';
 
 		return response;

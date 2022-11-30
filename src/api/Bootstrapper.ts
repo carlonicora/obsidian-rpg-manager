@@ -21,7 +21,7 @@ import {ComponentOptionsService} from "../services/componentOptionsService/Compo
 import {FileCreationService} from "../services/fileCreationService/FileCreationService";
 import {FileManipulatorService} from "../services/fileManipulatorService/FileManipulatorService";
 import {GalleryService} from "../services/galleryService/GalleryService";
-import {IdService} from "../services/idService/IdService";
+import {IndexService} from "../services/indexService/IndexService";
 import {PronounService} from "../services/pronounService/PronounService";
 import {RelationshipService} from "../services/relationshipsService/RelationshipService";
 import {RunningTimeService} from "../services/runningTimeService/RunningTimeService";
@@ -43,6 +43,7 @@ import {ContentEditorService} from "../services/contentEditorService/ContentEdit
 import {LinkSuggesterService} from "../services/linkSuggesterService/LinkSuggesterService";
 import {PlotWizardService} from "../services/plotWizardService/PlotWizardService";
 import {HelpService} from "../services/helpService/HelpService";
+import {GraphViewService} from "../services/graphViewService/GraphViewService";
 
 export class Bootstrapper {
 	public static initialise(
@@ -85,8 +86,9 @@ export class Bootstrapper {
 		api.services.register(FileCreationService);
 		api.services.register(FileManipulatorService);
 		api.services.register(GalleryService);
+		api.services.register(GraphViewService);
 		api.services.register(HelpService);
-		api.services.register(IdService);
+		api.services.register(IndexService);
 		api.services.register(ImageService);
 		api.services.register(LinkSuggesterService);
 		api.services.register(LoggerService);

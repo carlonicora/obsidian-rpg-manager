@@ -1,38 +1,24 @@
 import {SectionCache} from "obsidian";
 import {DatabaseUpdateWorkerInterface} from "./interfaces/DatabaseUpdateWorkerInterface";
-import {V1_2_to_1_3_worker} from "./workers/V1_2_to_1_3_worker";
-import {V1_3_to_2_0_worker} from "./workers/V1_3_to_2_0_worker";
-import {V2_0_to_3_0_worker} from "./workers/V2_0_to_3_0_worker";
 import {DatabaseUpdaterReporterInterface} from "./interfaces/DatabaseUpdaterReporterInterface";
 import {V3_0_to_3_1_worker} from "./workers/V3_0_to_3_1_worker";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {V3_1_to_3_4_worker} from "./workers/V3_1_to_3_4_worker";
 
 const versionMap = {
-	'1.2': V1_2_to_1_3_worker,
-	'1.3': V1_3_to_2_0_worker,
-	'2.0': V2_0_to_3_0_worker,
-	'3.0': V3_0_to_3_1_worker,
+	30: V3_0_to_3_1_worker,
+	33: V3_1_to_3_4_worker,
 };
 
-interface VersionHistoryElementInterface {
-	previousVersion: string,
-	nextVersion: string,
-}
-
 export class DatabaseUpdater {
-	private _versionsHistory: Map<string, VersionHistoryElementInterface>;
+	private _updaters: DatabaseUpdateWorkerInterface[];
 
 	constructor(
 		private _api: RpgManagerApiInterface,
 		private _previousVersion: string,
 		private _currentVersion: string,
 	) {
-		this._versionsHistory = new Map<string, VersionHistoryElementInterface>();
-		this._versionsHistory.set('1.2', {previousVersion: '1.2', nextVersion: '1.3'});
-		this._versionsHistory.set('1.3', {previousVersion: '1.3', nextVersion: '2.0'});
-		this._versionsHistory.set('2.0', {previousVersion: '2.0', nextVersion: '3.0'});
-		this._versionsHistory.set('3.0', {previousVersion: '3.0', nextVersion: '3.1'});
-		this._versionsHistory.set('3.1', {previousVersion: '3.1', nextVersion: '3.2'});
+		this._updaters = [];
 	}
 
 	public get newVersion(): string {
@@ -43,9 +29,10 @@ export class DatabaseUpdater {
 		return this._previousVersion;
 	}
 
-	public async requiresDatabaseUpdate(
-	): Promise<boolean> {
-		if (this._previousVersion === '') this._previousVersion = '1.2';
+	private _loadUpdaters(
+	): void {
+		if (this._previousVersion === '')
+			this._previousVersion = '3.0';
 
 		const previousVersionMajorMinor: string|undefined = this._getMajorMinor(this._previousVersion);
 		const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
@@ -54,18 +41,32 @@ export class DatabaseUpdater {
 			previousVersionMajorMinor === undefined ||
 			currentVersionMajorMinor === undefined ||
 			previousVersionMajorMinor === currentVersionMajorMinor
-		) return false;
+		) return;
+
+		let currentVersion: number = +previousVersionMajorMinor*10;
+		const maxVersion: number = +currentVersionMajorMinor*10;
+
+		while (currentVersion < maxVersion){
+			const updaterInterface = versionMap[currentVersion as keyof typeof versionMap];
+			if (updaterInterface !== undefined)
+				this._updaters.push(new updaterInterface(this._api));
+
+			currentVersion++;
+		}
+	}
+
+	public async requiresDatabaseUpdate(
+	): Promise<boolean> {
+		await this._loadUpdaters();
 
 		if (await this._isVaultEmptyOfRpgManagerComponents()) {
 			const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
 			await this._api.plugin.updateSettings({previousVersion: currentVersionMajorMinor});
+			this._updaters = [];
 			return false;
 		}
 
-		if (this._versionsHistory.get(previousVersionMajorMinor) === undefined)
-			return false;
-
-		return versionMap[previousVersionMajorMinor as keyof typeof versionMap] !== undefined;
+		return this._updaters.length !== 0;
 	}
 
 	public async update(
@@ -73,34 +74,28 @@ export class DatabaseUpdater {
 	): Promise<boolean> {
 		let response = false;
 
-		if (this._previousVersion === '') this._previousVersion = '1.2';
-
-		const previousVersionMajorMinor: string|undefined = this._getMajorMinor(this._previousVersion);
-		const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
-
-		if (
-			previousVersionMajorMinor === undefined ||
-			currentVersionMajorMinor === undefined ||
-			previousVersionMajorMinor === currentVersionMajorMinor
-		) return false;
-
-		const empty = await this._isVaultEmptyOfRpgManagerComponents();
-
-		let updater = await this._versionsHistory.get(previousVersionMajorMinor);
-		while (updater !== undefined){
+		if (this._updaters.length > 0) {
 			response = true;
-			if (!empty && versionMap[updater.previousVersion as keyof typeof versionMap] !== undefined) {
-				const worker: DatabaseUpdateWorkerInterface = await new versionMap[updater.previousVersion as keyof typeof versionMap](this._api);
-				if (reporter !== undefined)
-					reporter.setUpdater(this._previousVersion, this._currentVersion);
 
-				await worker.run(reporter);
+			let worker: DatabaseUpdateWorkerInterface|undefined;
+
+			for (let index = 0; index < this._updaters.length; index++) {
+				worker = this._updaters[index];
+
+				if (worker !== undefined) {
+					if (reporter !== undefined)
+						reporter.setUpdater(worker.from, worker.to);
+
+					await worker.run(reporter);
+				}
 			}
 
-			updater = await this._versionsHistory.get(updater.nextVersion);
+			if (worker !== undefined)
+				await this._api.plugin.updateSettings({previousVersion: worker.to});
+
 		}
 
-		await this._api.plugin.updateSettings({previousVersion: currentVersionMajorMinor});
+
 
 		return response;
 	}
@@ -129,7 +124,8 @@ export class DatabaseUpdater {
 	): string|undefined {
 		const versionParts = version.split('.');
 
-		if (versionParts.length < 2) return undefined;
+		if (versionParts.length < 2)
+			return undefined;
 
 		return versionParts[0] + '.' + versionParts[1];
 	}

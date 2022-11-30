@@ -1,5 +1,5 @@
 import {ComponentType} from "../../enums/ComponentType";
-import {IdInterface} from "../../../services/idService/interfaces/IdInterface";
+import {IndexInterface} from "../../../services/indexService/interfaces/IndexInterface";
 import {Component, MarkdownRenderer, TAbstractFile, TFile, View, WorkspaceLeaf} from "obsidian";
 import {CampaignInterface} from "../../../components/campaign/interfaces/CampaignInterface";
 import {EventInterface} from "../../../components/event/interfaces/EventInterface";
@@ -15,13 +15,17 @@ import {AbstractStaticView} from "../../../managers/staticViewsManager/abstracts
 import {TimelineElement} from "./TimelineElement";
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
+import {CalendarType} from "../../../services/dateService/enums/CalendarType";
+import {
+	FantasyCalendarSorterComparisonElement
+} from "../../../services/fantasyCalendarService/sorters/FantasyCalendarSorterComparisonElement";
 
 export class TimelineView extends AbstractStaticView implements View {
 	protected viewType: string = StaticViewType.Timeline.toString();
 	protected displayText = 'RPG Manager Timeline';
 	public icon = 'd20';
 
-	private _campaignId: IdInterface;
+	private _campaignId: IndexInterface;
 	private _campaign: CampaignInterface;
 
 	private _elements: TimelineElementInterface[];
@@ -37,7 +41,7 @@ export class TimelineView extends AbstractStaticView implements View {
 		params: any[],
 	): void {
 		this._campaignId = params[0];
-		this._campaign = this.api.database.readSingle<CampaignInterface>(ComponentType.Campaign, this._campaignId);
+		this._campaign = this.api.database.readById<CampaignInterface>(this._campaignId.id);
 
 		super.initialise([]);
 
@@ -45,8 +49,8 @@ export class TimelineView extends AbstractStaticView implements View {
 
 		this.api.database.read<EventInterface>(
 			(event: EventInterface) =>
-				event.id.type === ComponentType.Event &&
-				event.id.campaignId === this._campaignId.id &&
+				event.index.type === ComponentType.Event &&
+				event.index.campaignId === this._campaignId.id &&
 				event.date != null,
 		).forEach((event: EventInterface) => {
 			if (event.date !== undefined) {
@@ -70,8 +74,8 @@ export class TimelineView extends AbstractStaticView implements View {
 
 		this.api.database.read<ClueInterface>(
 			(clue: ClueInterface) =>
-				clue.id.type === ComponentType.Clue &&
-				clue.id.campaignId === this._campaignId.id &&
+				clue.index.type === ComponentType.Clue &&
+				clue.index.campaignId === this._campaignId.id &&
 				clue.found != null,
 		).forEach((clue: ClueInterface) => {
 			if (clue.found != null) {
@@ -91,8 +95,8 @@ export class TimelineView extends AbstractStaticView implements View {
 
 		this.api.database.read<CharacterInterface>(
 			(character: CharacterInterface) =>
-				((ComponentType.Character | ComponentType.NonPlayerCharacter) & character.id.type) === character.id.type &&
-				character.id.campaignId === this._campaignId.id &&
+				((ComponentType.Character | ComponentType.NonPlayerCharacter) & character.index.type) === character.index.type &&
+				character.index.campaignId === this._campaignId.id &&
 				character.death != null,
 		).forEach((character: CharacterInterface) => {
 			if (character.death !== undefined) {
@@ -111,16 +115,16 @@ export class TimelineView extends AbstractStaticView implements View {
 
 		const sessions = this.api.database.read<SessionInterface>(
 			(session: SessionInterface) =>
-				ComponentType.Session === session.id.type &&
-				session.id.campaignId === this._campaignId.id
+				ComponentType.Session === session.index.type &&
+				session.index.campaignId === this._campaignId.id
 		);
 
 		sessions.forEach((session: SessionInterface) => {
 			const scenes = this.api.database.read<SceneInterface>(
 				(scene: SceneInterface) =>
-					scene.id.type === ComponentType.Scene &&
-					scene.id.campaignId === this._campaignId.id &&
-					scene.id.sessionId === session.id.sessionId &&
+					scene.index.type === ComponentType.Scene &&
+					scene.index.campaignId === this._campaignId.id &&
+					scene.session?.index.id === session.index.id &&
 					scene.date != null
 			).sort(
 				this.api.service(SorterService).create<SceneInterface>([
@@ -143,9 +147,15 @@ export class TimelineView extends AbstractStaticView implements View {
 			}
 		});
 
-		this._elements.sort(this.api.service(SorterService).create<TimelineElementInterface>([
-			new SorterComparisonElement((data: TimelineElementInterface) => data.fullDate)
-		]));
+		if (this._campaign.calendar === CalendarType.Gregorian) {
+			this._elements.sort(this.api.service(SorterService).create<TimelineElementInterface>([
+				new SorterComparisonElement((data: TimelineElementInterface) => data.fullDate)
+			]));
+		} else {
+			this._elements.sort(this.api.service(SorterService).create<TimelineElementInterface>([
+				new FantasyCalendarSorterComparisonElement((data: TimelineElementInterface) => data.fullDate)
+			]));
+		}
 	}
 
 	public async render(

@@ -7,7 +7,7 @@ export class InvalidIdChecksumError extends AbstractRpgManagerError {
 	}
 
 	showErrorMessage(): string {
-		return 'The ID used in the ' + (this.id?.type !== undefined ? ComponentType[this.id.type] : 'file') + ' has been changed manually and is invalid';
+		return 'The ID used in the ' + (this.index?.type !== undefined ? ComponentType[this.index.type] : 'file') + ' has been changed manually and is invalid';
 	}
 
 }

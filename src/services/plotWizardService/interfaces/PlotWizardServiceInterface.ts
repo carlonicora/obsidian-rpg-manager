@@ -1,11 +1,11 @@
-import {IdInterface} from "../../idService/interfaces/IdInterface";
+import {IndexInterface} from "../../indexService/interfaces/IndexInterface";
 
 export interface PlotWizardServiceInterface {
 	openAdventureWizard(
-		adventureId: IdInterface,
+		adventureId: IndexInterface,
 	): Promise<void>;
 
 	openActWizard(
-		actId: IdInterface,
+		actId: IndexInterface,
 	): Promise<void>;
 }

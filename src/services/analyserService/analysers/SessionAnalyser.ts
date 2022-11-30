@@ -17,20 +17,19 @@ export class SessionAnalyser extends AbstractAnalyser {
 	) {
 		super(api, abtStage);
 
-		const singleSession: SessionInterface = this.api.database.readSingle<SessionInterface>(ComponentType.Session, session.id);
+		const singleSession: SessionInterface = this.api.database.readById<SessionInterface>(session.index.id);
 		if (singleSession.targetDuration != undefined) this.targetDuration = singleSession.targetDuration;
 
 		const sceneList = this.api.database.read<SceneInterface>(
 			(scene: SceneInterface) =>
-				scene.id.type === ComponentType.Scene &&
-				scene.id.campaignId === session.id.campaignId &&
-				scene.session?.id.sessionId === session.id.sessionId,
+				scene.index.type === ComponentType.Scene &&
+				scene.index.campaignId === session.index.campaignId &&
+				scene.session?.index.id === session.index.id,
 		).sort(
 			this.api.service(SorterService).create<SceneInterface>([
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.campaignId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.adventureId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.actId),
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.sceneId),
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.campaignId),
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.parentPosition),
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.positionInParent),
 			]));
 
 		super.addScenesList(sceneList);

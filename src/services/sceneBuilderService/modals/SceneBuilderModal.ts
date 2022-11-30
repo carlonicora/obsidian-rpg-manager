@@ -74,11 +74,12 @@ export class SceneBuilderModal extends AbstractModal {
 
 	private async _createScenes(
 	): Promise<void> {
-		let sceneId = 1;
-		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.id);
+		let positionInParent = 1;
+		const scenes = this.api.database.readChildren<SceneInterface>(ComponentType.Scene, this._act.index.id);
+
 		await scenes.forEach((scene: SceneInterface) => {
-			if (scene.id.sceneId !== undefined && scene.id.sceneId >= sceneId)
-				sceneId = scene.id.sceneId + 1;
+			if (scene.index.positionInParent >= positionInParent)
+				positionInParent = scene.index.positionInParent + 1;
 		});
 
 		let indexOfSelect = 2;
@@ -118,17 +119,15 @@ export class SceneBuilderModal extends AbstractModal {
 			this.api.service(FileCreationService).silentCreate(
 				ComponentType.Scene,
 				title,
-				this._act.id.campaignId,
-				this._act.id.adventureId,
-				this._act.id.actId,
-				sceneId,
-				undefined,
+				this._act.index.campaignId,
+				this._act.index.id,
+				positionInParent,
 				{
 					data: data,
 				}
 			);
 
-			sceneId++;
+			positionInParent++;
 		}
 
 		this.close();
@@ -154,7 +153,7 @@ export class SceneBuilderModal extends AbstractModal {
 				data.push({
 					isExciting: (<HTMLInputElement>cells[indexOfSelect + 1].childNodes[0]).checked,
 					isActive: sceneType !== undefined ? (activeSceneTypes.get(sceneType) ?? false) : false,
-					expectedDuration: sceneType !== undefined ? this.api.service(RunningTimeService).getTypeExpectedDuration(this._act.id.campaignId, sceneType) : 0,
+					expectedDuration: sceneType !== undefined ? this.api.service(RunningTimeService).getTypeExpectedDuration(this._act.index.campaignId, sceneType) : 0,
 					type: sceneType,
 				});
 			}
@@ -424,9 +423,9 @@ export class SceneBuilderModal extends AbstractModal {
 
 		this._scenesContainerEl = scenesTableEl.createTBody();
 
-		const scenes = this.api.database.readList<SceneInterface>(ComponentType.Scene, this._act.id)
+		const scenes = this.api.database.readChildren<SceneInterface>(ComponentType.Scene, this._act.index.id)
 			.sort(this.api.service(SorterService).create<SceneInterface>([
-				new SorterComparisonElement((scene: SceneInterface) => scene.id.id),
+				new SorterComparisonElement((scene: SceneInterface) => scene.index.id),
 			]));
 		if (scenes.length > 0){
 			for (let index=0; index<scenes.length; index++){

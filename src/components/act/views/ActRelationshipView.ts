@@ -4,6 +4,8 @@ import {TableField} from "../../../services/relationshipsService/enums/TableFiel
 import {ActInterface} from "../interfaces/ActInterface";
 
 export class ActRelationshipView extends AbstractRelationshipView implements RelationshipsViewInterface {
+	protected canBeOrdered = true;
+
 	protected getFieldValue(
 		field: TableField,
 		model: ActInterface,

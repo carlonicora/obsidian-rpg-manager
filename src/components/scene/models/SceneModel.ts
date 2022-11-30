@@ -18,29 +18,18 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 	): void {
 		super.validateHierarchy();
 		try {
-			this.adventure.validateHierarchy();
 			this.act.validateHierarchy();
 		} catch (e) {
-			throw new ComponentNotFoundError(this.api, this.id);
+			throw new ComponentNotFoundError(this.api, this.index);
 		}
 	}
 
 	get act(): ActInterface {
-		const response = this.api.database.readSingle<ActInterface>(ComponentType.Act, this.id);
-
-		if (response === undefined)
-			throw new Error('');
-
-		return response;
+		return this.api.database.readById<ActInterface>(this.index.parentId);
 	}
 
 	get adventure(): AdventureInterface {
-		const response = this.api.database.readSingle<AdventureInterface>(ComponentType.Adventure, this.id);
-
-		if (response === undefined)
-			throw new Error('');
-
-		return response;
+		return this.api.database.readById<AdventureInterface>(this.act.index.parentId);
 	}
 
 	get currentDuration(): number {
@@ -78,7 +67,7 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		if (this.sceneType == undefined)
 			return 0;
 
-		const previousDurations: number[] = this.api.service(RunningTimeService).medianTimes.get(this.id.campaignId)?.get(this.sceneType) ?? [];
+		const previousDurations: number[] = this.api.service(RunningTimeService).medianTimes.get(this.index.campaignId)?.get(this.sceneType) ?? [];
 		previousDurations.sort((left: number, right: number) => {
 			if (left > right) return +1;
 			if (left < right) return -1;
@@ -141,39 +130,28 @@ export class SceneModel extends AbstractSceneData implements SceneInterface {
 		if (this.metadata?.data?.sessionId === undefined || this.metadata.data.sessionId === '')
 			return undefined;
 
-		let response: SessionInterface[] = [];
+		const sessions: SessionInterface[] = this.api.database.read<SessionInterface>((session: SessionInterface) =>
+			session.index.type === ComponentType.Session &&
+			session.index.campaignId === this.index.campaignId &&
+			session.index.id === this.metadata.data?.sessionId
+		);
 
-		if (typeof this.metadata.data.sessionId === 'number') {
-			response = this.api.database.read<SessionInterface>((session: SessionInterface) =>
-				session.id.type === ComponentType.Session &&
-				session.id.campaignId === this.id.campaignId &&
-				session.id.sessionId === this.metadata.data?.sessionId
-			);
-		} else {
-			try {
-				const session: SessionInterface | undefined = this.api.database.readByStringID(this.metadata.data.sessionId);
-				if (session !== undefined)
-					response = [session];
+		if (sessions.length !== 1)
+			return undefined;
 
-			} catch (e) {
-				response = [];
-			}
+		return sessions[0];
+	}
 
-		}
-
-		return response[0] ?? undefined;
+	get positionInSession(
+	): number|undefined {
+		return this.metadata?.data?.positionInSession;
 	}
 
 	private _adjacentScene(
 		next: boolean,
 	): SceneInterface | null {
-		const sceneId = this.id.sceneId;
-
-		if (sceneId === undefined)
-			return null;
-
 		try {
-			return this.api.database.readSingle<SceneInterface>(ComponentType.Scene, this.id, (next ? sceneId + 1 : sceneId - 1));
+			return this.api.database.readNeighbour<SceneInterface>(ComponentType.Scene, this.index, !next);
 		} catch (e) {
 			return null;
 		}

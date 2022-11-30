@@ -1,16 +1,13 @@
 import {TFile} from "obsidian";
 import {RpgErrorInterface} from "../../core/errors/interfaces/RpgErrorInterface";
 import {DatabaseErrorModal} from "./modals/DatabaseErrorModal";
-import {IdInterface} from "../../services/idService/interfaces/IdInterface";
-import {TagMisconfiguredError} from "../../core/errors/TagMisconfiguredError";
+import {IndexInterface} from "../../services/indexService/interfaces/IndexInterface";
 import {ModelInterface} from "../modelsManager/interfaces/ModelInterface";
 import {DatabaseInterface} from "./interfaces/DatabaseInterface";
 import {ComponentStage} from "../../core/enums/ComponentStage";
 import {ComponentDuplicatedError} from "../../core/errors/ComponentDuplicatedError";
-import {Md5} from "ts-md5";
-import {InvalidIdChecksumError} from "../../core/errors/InvalidIdChecksumError";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
-import {IdService} from "../../services/idService/IdService";
+import {IndexService} from "../../services/indexService/IndexService";
 import {LoggerService} from "../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../services/loggerService/enums/LogMessageType";
 import {CodeblockService} from "../../services/codeblockService/CodeblockService";
@@ -46,8 +43,8 @@ export class DatabaseInitialiser {
 						if (component.stage == ComponentStage.Plot || component.stage === ComponentStage.Run) {
 							let error: Error | undefined = undefined;
 							try {
-								const duplicate = response.readSingle(component.id.type, component.id);
-								error = new ComponentDuplicatedError(this._api, component.id, [duplicate], component);
+								const duplicate = response.readById(component.index.id);
+								error = new ComponentDuplicatedError(this._api, component.index, [duplicate], component);
 							} catch (e) {
 								//no need to trap anything here
 							}
@@ -114,16 +111,13 @@ export class DatabaseInitialiser {
 
 	public static async readID(
 		file: TFile
-	): Promise<IdInterface|undefined> {
+	): Promise<IndexInterface|undefined> {
 		const codeblockDomain: CodeblockDomainInterface|undefined = await this._api.service(CodeblockService).read(file, 'RpgManagerID');
 
 		if (codeblockDomain === undefined || codeblockDomain?.codeblock?.id === undefined)
 			return undefined;
 
-		const response = this._api.service(IdService).createFromID(codeblockDomain.codeblock.id);
-
-		if (Md5.hashStr(codeblockDomain.codeblock.id) !== codeblockDomain.codeblock.checksum)
-			throw new InvalidIdChecksumError(this._api, response);
+		const response = this._api.service(IndexService).createFromIndex(codeblockDomain.codeblock);
 
 		return response;
 	}
@@ -138,11 +132,10 @@ export class DatabaseInitialiser {
 		api: RpgManagerApiInterface,
 		file: TFile,
 	): Promise<ModelInterface|undefined> {
-		const id: IdInterface|undefined = await this.readID(file);
-		if (id === undefined) return undefined;
+		const id: IndexInterface|undefined = await this.readID(file);
 
-		if (!id.isValid)
-			throw new TagMisconfiguredError(this._api, id);
+		if (id === undefined)
+			return undefined;
 
 		const response = await api.models.get(id, id.campaignSettings, file);
 
@@ -161,7 +154,7 @@ export class DatabaseInitialiser {
 			for (let relationshipIndex=0; relationshipIndex<relationships.length; relationshipIndex++){
 				const relationship = relationships[relationshipIndex];
 
-				if (relationship.component !== undefined && !relationship.component.getRelationships(database).existsAlready(model)){
+				if (relationship.component !== undefined){
 					const newRelationship: RelationshipInterface|undefined = this._api.service(RelationshipService).createRelationshipFromReverse(model, relationship);
 
 					if (newRelationship !== undefined)
@@ -173,7 +166,5 @@ export class DatabaseInitialiser {
 		for (let index=0; index<database.recordset.length; index++){
 			database.recordset[index].touch();
 		}
-
-		this._api.service(LoggerService).info(LogMessageType.DatabaseInitialisation, 'hey', database);
 	}
 }

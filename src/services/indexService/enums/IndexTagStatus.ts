@@ -1,4 +1,4 @@
-export enum IdTagStatus {
+export enum IndexTagStatus {
 	Valid,
 	Invalid,
 	Missing,
