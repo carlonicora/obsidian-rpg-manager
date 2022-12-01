@@ -7,6 +7,7 @@ export class StepIntroductionModal extends AbstractStepModal implements WizardPa
 		containerEl: HTMLDivElement,
 	): Promise<void> {
 		containerEl.createEl('h2', {cls: 'rpg-manager-wizard-main-content-header', text: this.title});
+		containerEl.createEl('h3', {cls: 'rpg-manager-wizard-main-content-header', text: this.subtitle});
 		const introductionEl: HTMLDivElement = containerEl.createDiv();
 
 		MarkdownRenderer.renderMarkdown(

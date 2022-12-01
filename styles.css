@@ -1412,6 +1412,11 @@ textarea:hover {
 .rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text textarea {
   width: 100%;
   min-height: 200px;
+  font-size: 1.1em;
+}
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text .rpg-manager-wizard-main-supporting-content,
+.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text .rpg-manager-wizard-main-supporting-content {
+  font-size: 0.9em;
 }
 .rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text {
   width: 100%;

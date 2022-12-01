@@ -46,7 +46,8 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(0, new StepIntroductionModal(
 			this.api,
 			this._adventureId,
-			'Plot Creation Wizard - Adventure',
+			'Plot Creation Wizard',
+			'Adventure',
 			`The **Plot Creation Wizard** is a tool that helps you create a more consistent plot without worrying about knowing anything about ABT or Storycircle mechanics. Follow the prompts in the next few pages and the plot will be organized for you.
 			The plot is structured to provide an interesting storyline for your player characters, identifying two main goals for the **Adventure**.
 			
@@ -57,6 +58,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(1, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'Initial status',
 			'What\'s the initial status of the player characters?',
 			'What is the current status of the player characters? Where they are in the story and what they have decided to do at the end of the previous session?',
 			this._adventure.storyCircle.you ?? '',
@@ -64,6 +66,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(2, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'Perceived Goal',
 			'What do they feel as their goal for the adventure?',
 			'What do the player characters think they should achive in the adventure? This is the perceived goal.',
 			this._adventure.storyCircle.go ?? '',
@@ -71,6 +74,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(3, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'Realisation',
 			'What happens when they reach their goal?',
 			'What do the player characters realise when they achieve their perceived goal?',
 			this._adventure.storyCircle.find ?? '',
@@ -78,6 +82,7 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(4, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'True Goal',
 			'What is the true goal of the adventure?',
 			'What is the real goal of the adventure?',
 			this._adventure.storyCircle.return ?? '',
@@ -85,30 +90,38 @@ export class AdventurePlotWizard extends AbstractWizardModal {
 		this._steps.set(5, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'Plot Hook',
 			'What convinces player characters to achieve their perceived goal?',
 			'What happens to convince the player characters to try and achieve the perceived goal?',
 			this._adventure.storyCircle.need ?? '',
+			this._steps.get(2),
 		));
 		this._steps.set(6, new StepDescriptionAndCluesModal(
 			this.api,
 			this._adventureId,
+			'Road of Trials',
 			'How can they reach their perceived goal?',
 			'What clue will lead the player characters to reach their perceived goal?',
 			this._adventure.storyCircle.search ?? '',
+			this._steps.get(2),
 		));
 		this._steps.set(7, new StepDescriptionAndCluesModal(
 			this.api,
 			this._adventureId,
+			'Changing',
 			'When they realise the true goal of the adventure, how can they reach it?',
 			'When they pay the price, what is the clue that will lead them to the real goal?',
 			this._adventure.storyCircle.take ?? '',
+			this._steps.get(4),
 		));
 		this._steps.set(8, new StepDescriptionModal(
 			this.api,
 			this._adventureId,
+			'Success',
 			'How are they going to triumph and reach the true goal of the adventure?',
 			'How are they going to triumph?',
 			this._adventure.storyCircle.change ?? '',
+			this._steps.get(4),
 		));
 	}
 
