@@ -16,7 +16,7 @@ export class ClueHeaderView extends AbstractHeaderView implements NewHeaderViewI
 		this.addTitle();
 		this.addComponentOptions();
 		this.addGallery();
-		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>', editableKey: 'data.synopsis'});
+		this.addInfoElement(LongTextElement, {model: this.model, title: 'Description', values: this.model.synopsis ?? '', editableKey: 'data.synopsis'});
 		this.addInfoElement(ShortTextElement, {model: this.model, title: 'Found', values: this.model.found ? 'Yes' : 'No', editableKey: 'data.synopsis'});
 
 		this.addInfoElement(
