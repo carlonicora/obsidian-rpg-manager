@@ -26,5 +26,6 @@
 	"subplot_one": "Sottotrama",
 	"subplot_other": "Sottotrame",
 	"create_new": "Crea un/a nuovo/a {{type}}",
-	"fill_with": "Aggiungi un/a nuovo/a {{type}} alla nota aperta"
+	"fill_with": "Aggiungi un/a nuovo/a {{type}} alla nota aperta",
+	"current": "{{type}} attuale"
 }

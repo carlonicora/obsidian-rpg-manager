@@ -93,7 +93,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 					fallbackLng: 'en',
 					lng: this.language,
 					debug: true,
-					ns: ['common', 'elements', 'errors'],
+					ns: ['common', 'elements', 'errors', 'services'],
 					defaultNS: 'common',
 					backend: {
 						loadPath: basePath + `/${this.app.vault.configDir}/plugins/rpg-manager/locales/{{lng}}/{{ns}}.json`,
