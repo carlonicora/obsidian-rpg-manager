@@ -1,4 +1,5 @@
 import {ComponentDataMetadataInterface} from "../../../core/interfaces/ComponentDataMetadataInterface";
+import {SceneFeedbackInterface} from "./SceneFeedbackInterface";
 
 export interface SceneDataMetadataInterface extends ComponentDataMetadataInterface {
 	sessionId?: string | number | undefined;
@@ -11,4 +12,5 @@ export interface SceneDataMetadataInterface extends ComponentDataMetadataInterfa
 	duration?: number | undefined;
 	durations?: string[] | undefined;
 	storyCircleStage?: 'you' | 'need' | 'go' | 'search' | 'find' | 'take' | 'return' | 'change' | string | undefined;
+	feedback?: SceneFeedbackInterface;
 }

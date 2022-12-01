@@ -10,6 +10,7 @@ import {ClassInterface} from "../../../api/interfaces/ClassInterface";
 import {PlotService} from "../../../services/plotsService/PlotService";
 import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
 import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
+import {FeedbackElement} from "../../../components/scene/views/elements/FeedbackElement";
 
 export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 	private _breadcumbContainerEl: HTMLDivElement;
@@ -20,6 +21,7 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 	private _galleryContainerEl: HTMLDivElement;
 	private _infoContainerEl: HTMLDivElement;
 	private _plotContainerEl: HTMLDivElement;
+	private _sceneFeedbackEl: HTMLDivElement;
 	private _analyserContainerEl: HTMLDivElement;
 
 	constructor(
@@ -41,6 +43,7 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 		this._galleryContainerEl = this._headerInfoAndGalleryEl.createDiv({cls: 'rpg-manager-header-container-info-gallery'});
 
 		this._plotContainerEl = this._headerContainerEl.createDiv({cls: ''});
+		this._sceneFeedbackEl = this._headerContainerEl.createDiv({cls: ''});
 		this._analyserContainerEl = this._headerContainerEl.createDiv({cls: ''});
 	}
 
@@ -99,5 +102,21 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 		const element: ElementInterface = this.api.views.getElement(elementClass);
 
 		element.render(data, this._infoContainerEl);
+	}
+
+	protected addSceneFeedbackElement(
+	): void {
+		if (!this._sceneFeedbackEl.hasClass('rpgm-scene-feedback'))
+			this._sceneFeedbackEl.addClass('rpgm-scene-feedback');
+
+		const element: ElementInterface = this.api.views.getElement(FeedbackElement);
+		element.render(
+			{
+				model: this.model,
+				title: 'Scene Feedback',
+				values: {}
+			},
+			this._sceneFeedbackEl
+		)
 	}
 }

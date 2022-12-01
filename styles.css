@@ -1445,6 +1445,11 @@ textarea:hover {
   width: 100px;
 }
 
+.rpgm-scene-feedback {
+  border-top: solid 1px var(--rpg-manager-colour-border);
+  padding: 20px;
+}
+
 .rpg-manager-header-container-info-analyser {
   border-top: solid 1px var(--rpg-manager-colour-border);
   padding: 20px;

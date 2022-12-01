@@ -19,7 +19,6 @@ export abstract class AbstractStepModal implements WizardPartInterface {
 		protected existingDescription?: string,
 		protected supportingPart?: WizardPartInterface,
 	) {
-		console.log(supportingPart);
 	}
 
 	protected get adventure(): AdventureInterface {

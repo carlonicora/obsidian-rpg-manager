@@ -8,6 +8,7 @@ import {PlotService} from "../../../services/plotsService/PlotService";
 import {AnalyserService} from "../../../services/analyserService/AnalyserService";
 import {SceneType} from "../../../services/analyserService/enums/SceneType";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
+import {SceneFeedbackInterface} from "../interfaces/SceneFeedbackInterface";
 
 export abstract class AbstractSceneData extends AbstractModel implements SceneDataInterface {
 	protected metadata: SceneMetadataInterface;
@@ -19,6 +20,10 @@ export abstract class AbstractSceneData extends AbstractModel implements SceneDa
 			return undefined;
 
 		return response;
+	}
+
+	public get feedback(): SceneFeedbackInterface|undefined{
+		return this.metadata?.data?.feedback;
 	}
 
 	public get trigger(): string | undefined {

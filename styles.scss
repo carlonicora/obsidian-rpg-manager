@@ -8,6 +8,8 @@
 @use "src/styles/timeline";
 @use "src/styles/wizard";
 
+@use "src/components/scene/styles/Scene";
+
 @use "src/services/analyserService/styles/AnalyserService";
 @use "src/services/analyserService/styles/Circle";
 @use "src/services/breadcrumbService/styles/BreadcrumbService";
