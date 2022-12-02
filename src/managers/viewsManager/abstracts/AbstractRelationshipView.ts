@@ -94,7 +94,11 @@ export abstract class AbstractRelationshipView implements RelationshipsViewInter
 
 	public render(
 	): void {
-		if (this.model instanceof CampaignModel && this.relatedComponentType !== ComponentType.Adventure)
+		if (
+			this.model instanceof CampaignModel &&
+			this.relatedComponentType !== ComponentType.Adventure &&
+			this.relatedComponentType !== ComponentType.Session
+		)
 			this.canBeOrdered = false;
 
 		if (this.relationshipType === undefined)
