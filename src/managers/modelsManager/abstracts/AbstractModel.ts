@@ -40,6 +40,7 @@ export abstract class AbstractModel implements ModelInterface {
 	private _relationships: RelationshipListInterface = new RelationshipList();
 	private _previousMetadata: string|Int32Array|undefined;
 	private _previousRelationships: string|Int32Array|undefined;
+	private _previousIndex: string|Int32Array|undefined;
 	private _previousRelationshipsStringified: any[];
 	private _campaignSettings: CampaignSetting;
 
@@ -251,10 +252,7 @@ export abstract class AbstractModel implements ModelInterface {
 		force?: boolean,
 	): boolean {
 		if (force) {
-			if (this.version === undefined)
-				this.version = 0;
-
-			this.version++;
+			this.version = Date.now();
 
 			return true;
 		}
@@ -264,15 +262,17 @@ export abstract class AbstractModel implements ModelInterface {
 		const metadataMd5 = md5.end();
 		const relationshipsMd5 = this._relationships.md5();
 
-		if (this._previousMetadata !== metadataMd5 || this._previousRelationships !== relationshipsMd5){
+		if (
+			this._previousMetadata !== metadataMd5 ||
+			this._previousRelationships !== relationshipsMd5 ||
+			this._previousIndex !== this.index.checksum
+		){
 			this._previousMetadata = metadataMd5;
 			this._previousRelationships = relationshipsMd5;
 			this._previousRelationshipsStringified = structuredClone(this._relationships.stringified);
+			this._previousIndex = this.index.checksum;
 
-			if (this.version === undefined)
-				this.version = 0;
-
-			this.version++;
+			this.version = Date.now();
 
 			return true;
 		}

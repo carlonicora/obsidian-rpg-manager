@@ -3,6 +3,7 @@ import {IndexTagValueInterface} from "./interfaces/IndexTagValueInterface";
 import {IndexInterface} from "./interfaces/IndexInterface";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
+import {Md5} from "ts-md5";
 
 export class Index implements IndexInterface {
 	public tagMap: Map<ComponentType, IndexTagValueInterface>;
@@ -53,5 +54,20 @@ export class Index implements IndexInterface {
 		}
 
 		return this._parentPosition;
+	}
+
+	get checksum(
+	): string|Int32Array|undefined {
+		const md5 = new Md5();
+		md5.appendStr(this._id);
+		md5.appendStr(this._campaignId);
+		md5.appendStr(this._parentId);
+		md5.appendStr(this.positionInParent.toString());
+		md5.appendStr(this.campaignSettings.toString());
+		md5.appendStr(this.type.toString());
+
+		const response = md5.end();
+
+		return response;
 	}
 }
