@@ -56,7 +56,7 @@ export class RelationshipService extends AbstractService implements Relationship
 				}
 			}
 
-			if (skipHiddenLink && basename !== undefined) {
+			if (!skipHiddenLink && basename !== undefined) {
 				let path: string | undefined = undefined;
 				const allFiles = this.api.app.vault.getMarkdownFiles();
 				for (let filesIndex = 0; filesIndex < allFiles.length; filesIndex++) {
