@@ -32,11 +32,14 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 
 		const newRelationships: string[] = [];
 		const relationshipsToRemove: string[] = [];
+		const additionalContent: string[] = [];
 
 		if (domain.codeblockEnd.line + 1 < content.length) {
 			for (let index = domain.codeblockEnd.line + 1; index < content.length; index++) {
-				if (content[index] !== '')
-					relationshipsToRemove.push(content[index].substring(2, content[index].length -3).toLowerCase());
+				if (content[index].startsWith('[[') && content[index].endsWith('|]]'))
+					relationshipsToRemove.push(content[index].substring(2, content[index].length - 3).toLowerCase());
+				else
+					additionalContent.push(content[index]);
 
 			}
 		}
@@ -87,6 +90,9 @@ export class GraphViewService extends AbstractService implements GraphViewServic
 			}
 
 			newFileContent += newHiddenLinkContent;
+
+			if (additionalContent.length > 0)
+				newFileContent += '\n' + additionalContent.join('\n');
 
 			if (newFileContent !== domain.originalFileContent)
 				this.api.app.vault.modify(file, newFileContent);
