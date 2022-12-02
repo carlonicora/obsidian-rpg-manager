@@ -106,8 +106,8 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 
 	protected addSceneFeedbackElement(
 	): void {
-		if (!this._sceneFeedbackEl.hasClass('rpgm-scene-feedback'))
-			this._sceneFeedbackEl.addClass('rpgm-scene-feedback');
+		if (!this._sceneFeedbackEl.hasClass('rpgm-scene-feedback-container'))
+			this._sceneFeedbackEl.addClass('rpgm-scene-feedback-container');
 
 		const element: ElementInterface = this.api.views.getElement(FeedbackElement);
 		element.render(

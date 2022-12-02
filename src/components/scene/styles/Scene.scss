@@ -1,4 +1,25 @@
-.rpgm-scene-feedback {
+.rpgm-scene-feedback-container {
 	border-top: solid 1px var(--rpg-manager-colour-border);
 	padding: 20px;
+
+	.rpgm-scene-feedback {
+		margin-left: 20px;
+		padding: 10px;
+		background-color: var(--rpg-manager-colour-background);
+
+		.rpg-manager-scene-feedback {
+			position: relative;
+
+			h4 {
+				margin-bottom: 0;
+			}
+
+			textarea {
+				width: 100%;
+				min-height: 200px;
+			}
+
+
+		}
+	}
 }

@@ -1445,9 +1445,24 @@ textarea:hover {
   width: 100px;
 }
 
-.rpgm-scene-feedback {
+.rpgm-scene-feedback-container {
   border-top: solid 1px var(--rpg-manager-colour-border);
   padding: 20px;
+}
+.rpgm-scene-feedback-container .rpgm-scene-feedback {
+  margin-left: 20px;
+  padding: 10px;
+  background-color: var(--rpg-manager-colour-background);
+}
+.rpgm-scene-feedback-container .rpgm-scene-feedback .rpg-manager-scene-feedback {
+  position: relative;
+}
+.rpgm-scene-feedback-container .rpgm-scene-feedback .rpg-manager-scene-feedback h4 {
+  margin-bottom: 0;
+}
+.rpgm-scene-feedback-container .rpgm-scene-feedback .rpg-manager-scene-feedback textarea {
+  width: 100%;
+  min-height: 200px;
 }
 
 .rpg-manager-header-container-info-analyser {
