@@ -8,6 +8,7 @@ import {DateElement} from "../../../services/dateService/views/elements/DateElem
 import {CalendarType} from "../../../services/dateService/enums/CalendarType";
 import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/views/elements/FantasyCalendarElement";
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
+import {PronounElement} from "./elements/PronounElement";
 
 export class CharacterHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: CharacterInterface;
@@ -23,6 +24,19 @@ export class CharacterHeaderView extends AbstractHeaderView implements NewHeader
 			title: 'Description',
 			values: this.model.synopsis ?? '',
 			editableKey: 'data.synopsis'
+		});
+		this.addInfoElement(LongTextElement, {
+			model: this.model,
+			title: 'Description',
+			values: this.model.synopsis ?? '<span class="missing">Synopsis Missing</span>',
+			editableKey: 'data.synopsis'
+		});
+
+		this.addInfoElement(PronounElement, {
+			model: this.model,
+			title: 'Pronoun',
+			values: this.model.pronoun,
+			editableKey: 'data.pronoun',
 		});
 
 		if (this.model.age !== undefined)

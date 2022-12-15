@@ -5,6 +5,8 @@ import {SessionInterface} from "../interfaces/SessionInterface";
 import {DateService} from "../../../services/dateService/DateService";
 
 export class SessionRelationshipView extends AbstractRelationshipView implements RelationshipsViewInterface {
+	protected canBeOrdered = true;
+
 	protected getFieldValue(
 		field: TableField,
 		model: SessionInterface,

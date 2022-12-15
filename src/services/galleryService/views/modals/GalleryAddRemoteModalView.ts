@@ -39,7 +39,7 @@ export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalV
 			const imageEl = new Image();
 
 			for (let index=0; index<this.model.images.length; index++){
-				if (this._urlEl.value.toLowerCase() === this.model.images[index].src.toLowerCase()){
+				if (this._urlEl.value === this.model.images[index].src){
 					this._errorEl.style.display = '';
 					this._errorEl.textContent = 'The URL to the image is invalid.';
 					return;
@@ -53,7 +53,7 @@ export class GalleryAddRemoteModalView extends AbstractConfirmationGalleryModalV
 			};
 
 			imageEl.onload = (evt: Event) => {
-				this.api.service(CodeblockService).addOrUpdateImage(this._urlEl.value.toLowerCase(), '')
+				this.api.service(CodeblockService).addOrUpdateImage(this._urlEl.value, '')
 					.then((image: ImageInterface|undefined) => {
 						if (image !== undefined) {
 							this.selectedImage = image;

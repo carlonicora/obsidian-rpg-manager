@@ -19,4 +19,7 @@ export interface IndexInterface {
 
 	get parentPosition(
 	): number;
+
+	get checksum(
+	): string|Int32Array|undefined;
 }

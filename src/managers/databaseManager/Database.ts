@@ -237,6 +237,11 @@ export class Database extends Component implements DatabaseInterface {
 			if (component === undefined)
 				return;
 
+			const newId: IndexInterface|undefined = await DatabaseInitialiser.readID(file);
+
+			if (newId !== undefined && component?.index.checksum !== newId.checksum)
+				component.index = newId;
+
 			await component.readMetadata();
 
 			if (!isNewComponent)
