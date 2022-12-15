@@ -18,7 +18,7 @@ export class CodeblockImageWorker implements CodeblockDataWorkerInterface {
 		if ((<ComponentMetadataInterface>domain.codeblock).data === undefined)
 			(<ComponentMetadataInterface>domain.codeblock).data = {};
 
-		if ((<ComponentMetadataInterface>domain.codeblock).data.images === undefined)
+		if ((<ComponentMetadataInterface>domain.codeblock).data.images == undefined)
 			(<ComponentMetadataInterface>domain.codeblock).data.images = [];
 
 		let found: number | undefined;
