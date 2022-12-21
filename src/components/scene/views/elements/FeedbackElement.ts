@@ -5,6 +5,7 @@ import {setIcon} from "obsidian";
 import {ComponentType} from "../../../../core/enums/ComponentType";
 import i18next from "i18next";
 import {LinkSuggesterService} from "../../../../services/linkSuggesterService/LinkSuggesterService";
+import {CodeblockService} from "../../../../services/codeblockService/CodeblockService";
 
 export class FeedbackElement extends AbstractElement {
 	private _data: ElementDataInterface;
@@ -44,8 +45,6 @@ export class FeedbackElement extends AbstractElement {
 
 		const arrowIconEl: HTMLElement = arrowEl.children[0] as HTMLElement;
 
-		// arrowIconEl.style.transform = 'rotate(90deg)';
-
 		this._titleEl.createSpan({text: this._data.title});
 
 		this._titleEl.addEventListener('click', () => {
@@ -78,6 +77,11 @@ export class FeedbackElement extends AbstractElement {
 			this._feedbackNotesEl.textContent = this._scene.feedback.notes;
 
 		this.api.service(LinkSuggesterService).createHandler(this._feedbackNotesEl, this._scene, ComponentType.Scene);
+
+		feedbackNotesEl.createEl('button', {text: 'try me'})
+			.addEventListener('click', () => {
+				this.api.service(CodeblockService).addOrUpdate('data.feedback.notes', this._feedbackNotesEl.value);
+			});
 	}
 
 	private _addFeedbackAsPlotted(
