@@ -1,4 +1,12 @@
-{
+export const itCommon = {
+	"note_one": "Note",
+	"note_other": "Notes",
+	"description": "Description",
+	"synopsis": "Synopsis",
+	"abt_stage": "ABT Stage"
+}
+
+export const itElements = {
 	"campaign_one": "Campaign",
 	"campaign_other": "Campaigns",
 	"adventure_one": "Adventure",
@@ -37,4 +45,13 @@
 	"age": "Age",
 	"reason_of_death": "Reason of Death",
 	"at_age": "at age {{age}}"
+}
+
+export const itErrors = {
+	"non_existing_fetcher": "The requested fetcher ({{name}}) does not exist",
+	"non_existing_service": "The requested service ({{name}}) does not exist"
+}
+
+export const itServices = {
+
 }

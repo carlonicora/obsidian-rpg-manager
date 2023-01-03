@@ -30,7 +30,7 @@ import {DatabaseManager} from "../managers/databaseManager/DatabaseManager";
 import {LoggerService} from "../services/loggerService/LoggerService";
 import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
 import i18next from "i18next";
-import Backend from 'i18next-fs-backend';
+import {enCommon, enElements, enErrors, enServices} from "./languages/en";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -77,33 +77,26 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 
 	private async _initialiseI18N(
 	): Promise<void> {
-		let basePath: string|undefined =  undefined;
-
-		if (this.app.vault.adapter instanceof FileSystemAdapter)
-			basePath = this.app.vault.adapter.getBasePath();
-		else
-			basePath = this._root;
-
-		if (basePath !== undefined) {
-			await i18next
-				.use(Backend)
-				.init({
-					initImmediate: false,
-					saveMissing: true,
-					fallbackLng: 'en',
-					lng: this.language,
-					debug: true,
-					ns: ['common', 'elements', 'errors', 'services'],
-					defaultNS: 'common',
-					backend: {
-						loadPath: basePath + `/${this.app.vault.configDir}/plugins/rpg-manager/locales/{{lng}}/{{ns}}.json`,
-					}
-				});
-
-			i18next.on('missingKey', function(lngs, namespace, key, res) {
-				console.error('Translation missing of key ' + key + ' for language ' + lngs + ' in ' + namespace);
+		await i18next
+			.init({
+				initImmediate: false,
+				saveMissing: true,
+				fallbackLng: 'en',
+				lng: this.language,
+				debug: true,
+				ns: ['common', 'elements', 'errors', 'services'],
+				defaultNS: 'common',
+				resources: {},
 			});
-		}
+
+		i18next.on('missingKey', function(lngs, namespace, key, res) {
+			console.error('Translation missing of key ' + key + ' for language ' + lngs + ' in ' + namespace);
+		});
+
+		i18next.addResourceBundle("en", "common", enCommon);
+		i18next.addResourceBundle("en", "elements", enElements);
+		i18next.addResourceBundle("en", "errors", enErrors);
+		i18next.addResourceBundle("en", "services", enServices);
 	}
 
 	public get language(): string {

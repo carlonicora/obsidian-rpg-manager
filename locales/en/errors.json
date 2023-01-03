@@ -1,4 +1,0 @@
-{
-	"non_existing_fetcher": "The requested fetcher ({{name}}) does not exist",
-	"non_existing_service": "The requested service ({{name}}) does not exist"
-}
