@@ -6,8 +6,8 @@ import {ComponentType} from "../../enums/ComponentType";
 import {LoggerService} from "../../../services/loggerService/LoggerService";
 import {LogMessageType} from "../../../services/loggerService/enums/LogMessageType";
 import {CampaignSetting} from "../../../components/campaign/enums/CampaignSetting";
-import {randomUUID} from "crypto";
 import {YamlService} from "../../../services/yamlService/YamlService";
+import {v4 as uuidv4} from "uuid";
 
 interface UpdaterComponentInterface {
 	originalContent: string,
@@ -91,7 +91,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 		);
 
 		for (let index=0; index<campaigns.length; index++){
-			const id = randomUUID();
+			const id = uuidv4();
 			const newComponentId: UpdaterComponentNewInterface = {
 				type: campaigns[index].type,
 				campaignSettings: campaigns[index].campaignSettings,
@@ -231,7 +231,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			const newComponentId: UpdaterComponentNewInterface = {
 				type: adventures[index].type,
 				campaignSettings: adventures[index].campaignSettings,
-				id: randomUUID(),
+				id: uuidv4(),
 				campaignId: campaign.newIndex.campaignId,
 				parentId: campaign.newIndex.campaignId,
 				positionInParent: index+1,
@@ -272,7 +272,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			const newComponentId: UpdaterComponentNewInterface = {
 				type: acts[index].type,
 				campaignSettings: acts[index].campaignSettings,
-				id: randomUUID(),
+				id: uuidv4(),
 				campaignId: adventure.newIndex.campaignId,
 				parentId: adventure.newIndex.id,
 				positionInParent: index+1,
@@ -330,7 +330,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			const newComponentId: UpdaterComponentNewInterface = {
 				type: scenes[index].type,
 				campaignSettings: scenes[index].campaignSettings,
-				id: randomUUID(),
+				id: uuidv4(),
 				campaignId: act.newIndex.campaignId,
 				parentId: act.newIndex.id,
 				positionInParent: index+1,
@@ -368,7 +368,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			const newComponentId: UpdaterComponentNewInterface = {
 				type: sessions[index].type,
 				campaignSettings: sessions[index].campaignSettings,
-				id: randomUUID(),
+				id: uuidv4(),
 				campaignId: campaign.newIndex.campaignId,
 				parentId: campaign.newIndex.campaignId,
 				positionInParent: index+1,
@@ -396,7 +396,7 @@ export class V3_1_to_3_4_worker extends AbstractDatabaseWorker implements Databa
 			const newComponentId: UpdaterComponentNewInterface = {
 				type: elements[index].type,
 				campaignSettings: elements[index].campaignSettings,
-				id: randomUUID(),
+				id: uuidv4(),
 				campaignId: campaign.newIndex.campaignId,
 				parentId: campaign.newIndex.campaignId,
 				positionInParent: 1,
