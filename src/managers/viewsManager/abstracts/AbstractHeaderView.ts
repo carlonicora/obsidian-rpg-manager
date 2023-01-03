@@ -117,6 +117,6 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 				values: {}
 			},
 			this._sceneFeedbackEl
-		)
+		);
 	}
 }

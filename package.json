@@ -6,8 +6,7 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json",
-		"test": "rm -rf test/functional/vaults/empty_vault && npm run build && mkdir -p test/functional/vaults/empty_vault/.obsidian/plugins/rpg-manager && cp manifest.json styles.css main.js test/functional/vaults/empty_vault/.obsidian/plugins/rpg-manager && npx wdio run wdio.conf.js"
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
 	"keywords": [],
 	"author": "Carlo Nicora",
@@ -31,12 +30,7 @@
 		"i18next": "^22.0.6",
 		"i18next-fs-backend": "^2.0.1",
 		"luxon": "^3.0.4",
-		"mocha": "^10.1.0",
-		"node-fetch": "^2.6.1",
-		"nyc": "^15.1.0",
 		"ts-md5": "^1.3.1",
-		"ts-mockito": "^2.6.1",
-		"ts-node": "^10.9.1",
 		"uuid": "^9.0.0"
 	}
 }

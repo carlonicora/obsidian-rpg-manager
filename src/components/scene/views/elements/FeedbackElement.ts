@@ -28,7 +28,7 @@ export class FeedbackElement extends AbstractElement {
 		this._feedbackContainerEl.style.display = 'none';
 
 		this._addTitle();
-		this._addFeedback()
+		this._addFeedback();
 
 	}
 
