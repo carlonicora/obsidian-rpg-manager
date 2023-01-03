@@ -7,8 +7,8 @@ import {SorterService} from "../../../services/sorterService/SorterService";
 import {SorterComparisonElement} from "../../../services/sorterService/SorterComparisonElement";
 import {SorterType} from "../../../services/searchService/enums/SorterType";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
-import {randomUUID} from "crypto";
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
+import {v4 as uuidv4} from "uuid";
 
 export class ParentSwitcherSelectorElement extends AbstractElement {
 	private _id: string;
@@ -17,7 +17,7 @@ export class ParentSwitcherSelectorElement extends AbstractElement {
 		protected api: RpgManagerApiInterface,
 	) {
 		super(api);
-		this._id = randomUUID();
+		this._id = uuidv4();
 	}
 
 	render(

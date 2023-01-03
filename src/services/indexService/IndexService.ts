@@ -5,8 +5,8 @@ import {Index} from "./Index";
 import {CampaignSetting} from "../../components/campaign/enums/CampaignSetting";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
-import {randomUUID} from "crypto";
 import {IndexDataInterface} from "./interfaces/IndexDataInterface";
+import {v4 as uuidv4} from "uuid";
 
 export class IndexService extends AbstractService implements IndexServiceInterface, ServiceInterface {
 	public create(
@@ -51,6 +51,6 @@ export class IndexService extends AbstractService implements IndexServiceInterfa
 
 	public createUUID(
 	): string {
-		return randomUUID();
+		return uuidv4();
 	}
 }

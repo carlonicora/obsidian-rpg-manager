@@ -6,7 +6,7 @@ import {Event, EventCategory} from "obsidian-fantasy-calendar";
 import {FantasyCalendarCategory} from "../../enums/FantasyCalendarCategory";
 import {DateService} from "../../../dateService/DateService";
 import {FantasyCalendarDatePicker} from "../../picker/FantasyCalendarDatePicker";
-import {randomUUID} from "crypto";
+import { v4 as uuidv4 } from 'uuid';
 
 export class FantasyCalendarElement extends AbstractElement {
 	private _event: any;
@@ -32,7 +32,7 @@ export class FantasyCalendarElement extends AbstractElement {
 		if (data.values !== undefined && data.values.date !== undefined && data.model.campaign.fantasyCalendar !== undefined)
 			dateValue = this.api.service(FantasyCalendarService).getDay(data.values.date as FantasyCalendarDateInterface, data.model.campaign.fantasyCalendar).displayDate;
 
-		const id = randomUUID();
+		const id = uuidv4();
 
 		this._inputEl = contentEl.createEl('input', {cls: 'rpg-manager-fantasy-calendar-picker-launcher ' + id});
 		this._inputEl.type = 'text';
