@@ -29,7 +29,7 @@ export class CodeblockService extends AbstractService implements CodeblockServic
 
 	public async addOrUpdate(
 		key: string,
-		value?: string|boolean|number,
+		value?: string|boolean|number|any,
 		file?: TFile,
 	): Promise<void> {
 		const domain: CodeblockDomainInterface | undefined = await this._worker.readContent(false, file);

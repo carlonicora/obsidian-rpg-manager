@@ -29,4 +29,11 @@ export class ServicesManager implements ServiceManagerInterface{
 	): void {
 		this._services.set(serviceClass, new serviceClass(this._api));
 	}
+
+	async destroy(
+	): Promise<void> {
+		this._services.forEach((service: ServiceInterface) => {
+			service.destroy();
+		})
+	}
 }

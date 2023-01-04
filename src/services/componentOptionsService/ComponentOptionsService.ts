@@ -14,6 +14,8 @@ import {ActModel} from "../../components/act/models/ActModel";
 import {SceneBuilderService} from "../sceneBuilderService/SceneBuilderService";
 import {PlotWizardService} from "../plotWizardService/PlotWizardService";
 import {AdventureModel} from "../../components/adventure/models/AdventureModel";
+import {SceneModel} from "../../components/scene/models/SceneModel";
+import {SceneFeedbackService} from "../sceneFeedbackService/SceneFeedbackService";
 
 export class ComponentOptionsService extends AbstractService implements ComponentOptionsServiceInterface, ServiceInterface {
 	public render(
@@ -67,6 +69,15 @@ export class ComponentOptionsService extends AbstractService implements Componen
 				this._addFunctionality(containerEl, 'Relationship')
 					.addEventListener("click", () => {
 						new RelationshipsSelectionModal(this.api, model).open();
+					});
+
+				this._addSeparator(containerEl);
+			}
+
+			if (model instanceof SceneModel) {
+				this._addFunctionality(containerEl, 'Feedback')
+					.addEventListener("click", () => {
+						this.api.service(SceneFeedbackService).openFeedback(model);
 					});
 
 				this._addSeparator(containerEl);

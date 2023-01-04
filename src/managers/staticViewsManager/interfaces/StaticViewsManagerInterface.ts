@@ -5,4 +5,10 @@ export interface StaticViewsManagerInterface {
 		type: StaticViewType,
 		params?: any[],
 	): Promise<void>;
+
+	createGeneric(
+		type: string,
+		inRightSplit: boolean,
+		params?: any[],
+	): Promise<void>;
 }

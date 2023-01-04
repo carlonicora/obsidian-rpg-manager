@@ -8,4 +8,8 @@ export class AbstractService extends Component implements ServiceInterface{
 	) {
 		super();
 	}
+
+	async destroy(
+	): Promise<void> {
+	}
 }

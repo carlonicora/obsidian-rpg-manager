@@ -6,19 +6,15 @@ import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInter
 import {LinkSuggesterHandler} from "./handlers/LinkSuggesterHandler";
 import {SimplifiedLinkSuggestionHandler} from "./handlers/SimplifiedLinkSuggestionHandler";
 import {ComponentType} from "../../core/enums/ComponentType";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 
-export class LinkSuggesterService implements LinkSuggesterServiceInterface, ServiceInterface {
-	constructor(
-		private _api: RpgManagerApiInterface
-	) {
-	}
-
+export class LinkSuggesterService extends AbstractService implements LinkSuggesterServiceInterface, ServiceInterface {
 	public createHandler(
 		editorEl: HTMLInputElement|HTMLTextAreaElement,
 		model: ModelInterface,
 		type?: ComponentType,
 	): LinkSuggesterHandlerInterface {
-		return new LinkSuggesterHandler(this._api, editorEl, model, type);
+		return new LinkSuggesterHandler(this.api, editorEl, model, type);
 	}
 
 	public createSimplifiedHandler(
@@ -26,6 +22,6 @@ export class LinkSuggesterService implements LinkSuggesterServiceInterface, Serv
 		model: ModelInterface,
 		type?: ComponentType,
 	): LinkSuggesterHandlerInterface {
-		return new SimplifiedLinkSuggestionHandler(this._api, editorEl, model, type);
+		return new SimplifiedLinkSuggestionHandler(this.api, editorEl, model, type);
 	}
 }

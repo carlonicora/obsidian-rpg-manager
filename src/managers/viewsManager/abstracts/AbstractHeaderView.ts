@@ -10,7 +10,6 @@ import {ClassInterface} from "../../../api/interfaces/ClassInterface";
 import {PlotService} from "../../../services/plotsService/PlotService";
 import {AnalyserInterface} from "../../../services/analyserService/interfaces/AnalyserInterface";
 import {AnalyserReportType} from "../../../services/analyserService/enums/AnalyserReportType";
-import {FeedbackElement} from "../../../components/scene/views/elements/FeedbackElement";
 
 export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 	private _breadcumbContainerEl: HTMLDivElement;
@@ -102,21 +101,5 @@ export abstract class AbstractHeaderView implements NewHeaderViewInterface {
 		const element: ElementInterface = this.api.views.getElement(elementClass);
 
 		element.render(data, this._infoContainerEl);
-	}
-
-	protected addSceneFeedbackElement(
-	): void {
-		if (!this._sceneFeedbackEl.hasClass('rpgm-scene-feedback-container'))
-			this._sceneFeedbackEl.addClass('rpgm-scene-feedback-container');
-
-		const element: ElementInterface = this.api.views.getElement(FeedbackElement);
-		element.render(
-			{
-				model: this.model,
-				title: 'Scene Feedback',
-				values: {}
-			},
-			this._sceneFeedbackEl
-		);
 	}
 }

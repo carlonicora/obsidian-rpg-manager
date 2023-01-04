@@ -44,6 +44,7 @@ import {LinkSuggesterService} from "../services/linkSuggesterService/LinkSuggest
 import {PlotWizardService} from "../services/plotWizardService/PlotWizardService";
 import {HelpService} from "../services/helpService/HelpService";
 import {GraphViewService} from "../services/graphViewService/GraphViewService";
+import {SceneFeedbackService} from "../services/sceneFeedbackService/SceneFeedbackService";
 
 export class Bootstrapper {
 	public static initialise(
@@ -97,6 +98,7 @@ export class Bootstrapper {
 		api.services.register(RelationshipService);
 		api.services.register(RunningTimeService);
 		api.services.register(SceneBuilderService);
+		api.services.register(SceneFeedbackService);
 		api.services.register(SearchService);
 		api.services.register(SorterService);
 		api.services.register(TagService);

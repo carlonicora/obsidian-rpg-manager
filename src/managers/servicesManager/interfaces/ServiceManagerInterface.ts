@@ -13,4 +13,6 @@ export interface ServiceManagerInterface {
 	deregister<T extends ServiceInterface>(
 		serviceClass: ClassInterface<T>
 	): void;
+
+	destroy(): Promise<void>;
 }

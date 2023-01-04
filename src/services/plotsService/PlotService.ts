@@ -4,13 +4,9 @@ import {AbtStage} from "./enums/AbtStage";
 import {StoryCircleStage} from "./enums/StoryCircleStage";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {PlotView} from "./views/PlotView";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 
-export class PlotService implements PlotServiceInterface, ServiceInterface {
-	constructor(
-		protected api: RpgManagerApiInterface,
-	) {
-	}
-
+export class PlotService extends AbstractService implements PlotServiceInterface, ServiceInterface {
 	public getAbtStage(
 		readableAbtStage: string,
 	): AbtStage {

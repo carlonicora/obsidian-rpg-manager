@@ -5,7 +5,7 @@ import {DatabaseInterface} from "../../managers/databaseManager/interfaces/Datab
 import {ControllerManagerInterface} from "../../managers/controllerManager/interfaces/ControllerManagerInterface";
 import {RpgManagerSettingsInterface} from "../../settings/interfaces/RpgManagerSettingsInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
-import {App} from "obsidian";
+import {App, Plugin_2} from "obsidian";
 import {RpgManagerInterface} from "../../core/interfaces/RpgManagerInterface";
 import {ClassInterface} from "./ClassInterface";
 import {ModalsManagerInterface} from "../../managers/modalsManager/interfaces/ModalsManagerInterface";
@@ -18,6 +18,8 @@ import {StaticViewsManagerInterface} from "../../managers/staticViewsManager/int
 export interface RpgManagerApiInterface {
 	app: App;
 
+	destroy(): Promise<void>;
+
 	get language(): string;
 
 	get controllers(): ControllerManagerInterface;
@@ -27,7 +29,7 @@ export interface RpgManagerApiInterface {
 	get fetchers(): FetchersManagerInterface;
 	get modals(): ModalsManagerInterface;
 	get models(): ModelsManagerInterface;
-	get plugin(): RpgManagerInterface;
+	get plugin(): RpgManagerInterface|Plugin_2;
 	get root(): string;
 	get services(): ServiceManagerInterface;
 	get settings(): RpgManagerSettingsInterface;

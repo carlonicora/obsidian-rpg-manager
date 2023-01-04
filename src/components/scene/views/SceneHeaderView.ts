@@ -21,7 +21,6 @@ import {FantasyCalendarElement} from "../../../services/fantasyCalendarService/v
 import {FantasyCalendarCategory} from "../../../services/fantasyCalendarService/enums/FantasyCalendarCategory";
 import {ParentSwitcherSelectorElement} from "../../../managers/viewsManager/elements/ParentSwitcherSelectorElement";
 import {ActInterface} from "../../act/interfaces/ActInterface";
-import {FeedbackElement} from "./elements/FeedbackElement";
 
 export class SceneHeaderView extends AbstractHeaderView implements NewHeaderViewInterface {
 	public model: SceneInterface;
@@ -104,8 +103,6 @@ export class SceneHeaderView extends AbstractHeaderView implements NewHeaderView
 					abtStage = AbtStage.Therefore;
 					break;
 			}
-
-			this.addSceneFeedbackElement();
 
 			if (abtStage !== undefined) {
 				const analyser: AnalyserInterface = this.api.service(AnalyserService).createScene(this.model, abtStage);

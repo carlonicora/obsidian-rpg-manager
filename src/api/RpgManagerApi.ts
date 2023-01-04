@@ -1,5 +1,5 @@
 import {RpgManagerApiInterface} from "./interfaces/RpgManagerApiInterface";
-import {App, FileSystemAdapter, TFile} from "obsidian";
+import {App, FileSystemAdapter, Plugin_2, TFile} from "obsidian";
 import {ServiceManagerInterface} from "../managers/servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "../managers/servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
@@ -72,7 +72,10 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 			this._root += "/";
 
 		this._initialiseI18N();
+	}
 
+	async destroy(): Promise<void> {
+		this._services.destroy();
 	}
 
 	private async _initialiseI18N(
@@ -132,7 +135,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		return this._models;
 	}
 
-	public get plugin(): RpgManagerInterface {
+	public get plugin(): RpgManagerInterface|Plugin_2 {
 		return this._plugin;
 	}
 

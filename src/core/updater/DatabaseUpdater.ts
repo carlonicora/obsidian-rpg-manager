@@ -4,6 +4,7 @@ import {DatabaseUpdaterReporterInterface} from "./interfaces/DatabaseUpdaterRepo
 import {V3_0_to_3_1_worker} from "./workers/V3_0_to_3_1_worker";
 import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {V3_1_to_3_4_worker} from "./workers/V3_1_to_3_4_worker";
+import {RpgManagerInterface} from "../interfaces/RpgManagerInterface";
 
 const versionMap = {
 	30: V3_0_to_3_1_worker,
@@ -61,7 +62,7 @@ export class DatabaseUpdater {
 
 		if (await this._isVaultEmptyOfRpgManagerComponents()) {
 			const currentVersionMajorMinor = this._getMajorMinor(this._currentVersion);
-			await this._api.plugin.updateSettings({previousVersion: currentVersionMajorMinor});
+			await (<RpgManagerInterface>this._api.plugin).updateSettings({previousVersion: currentVersionMajorMinor});
 			this._updaters = [];
 			return false;
 		}
@@ -91,7 +92,7 @@ export class DatabaseUpdater {
 			}
 
 			if (worker !== undefined)
-				await this._api.plugin.updateSettings({previousVersion: worker.to});
+				await (<RpgManagerInterface>this._api.plugin).updateSettings({previousVersion: worker.to});
 
 		}
 

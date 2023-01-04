@@ -1,7 +1,9 @@
 import {DiceType} from "./enums/DiceType";
 import {DiceResult} from "./DiceResult";
+import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
+import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 
-export class DiceService {
+export class DiceService extends AbstractService implements ServiceInterface{
 	public roll(
 		numberOfDices: number,
 		diceType: DiceType,

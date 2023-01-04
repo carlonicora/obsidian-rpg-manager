@@ -45,4 +45,31 @@ export class StaticViewsManager implements StaticViewsManagerInterface {
 		view.initialise(params);
 		view.render();
 	}
+
+	async createGeneric(
+		type: string,
+		inRightSplit: boolean,
+		params: any[] = [],
+	): Promise<void> {
+		this._api.app.workspace.detachLeavesOfType(type);
+		if (inRightSplit === true) {
+			await this._api.app.workspace.getRightLeaf(false).setViewState({
+				type: type,
+				active: true,
+			});
+		} else {
+			await this._api.app.workspace.getLeaf(true).setViewState({
+				type: type,
+				active: true,
+			});
+		}
+
+		const leaf: WorkspaceLeaf = this._api.app.workspace.getLeavesOfType(type.toString())[0];
+		const view: AbstractStaticView = leaf.view as AbstractStaticView;
+
+		this._api.app.workspace.revealLeaf(leaf);
+
+		view.initialise(params);
+		view.render();
+	}
 }
