@@ -1,6 +1,5 @@
 import {LinkSuggesterServiceInterface} from "./interfaces/LinkSuggesterServiceInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
-import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {LinkSuggesterHandlerInterface} from "./interfaces/LinkSuggesterHandlerInterface";
 import {ModelInterface} from "../../managers/modelsManager/interfaces/ModelInterface";
 import {LinkSuggesterHandler} from "./handlers/LinkSuggesterHandler";

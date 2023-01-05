@@ -8,7 +8,7 @@ import {setIcon} from "obsidian";
 import {CharacterInterface} from "../../../components/character/interfaces/CharacterInterface";
 
 export class SceneFeedbackView extends AbstractStaticView {
-	protected viewType: string = "SceneFeedbackView";
+	protected viewType = "SceneFeedbackView";
 	protected displayText = "Scene Feedback";
 	public icon = 'd20';
 

@@ -2,7 +2,6 @@ import {PlotServiceInterface} from "./interfaces/PlotServiceInterface";
 import {ServiceInterface} from "../../managers/servicesManager/interfaces/ServiceInterface";
 import {AbtStage} from "./enums/AbtStage";
 import {StoryCircleStage} from "./enums/StoryCircleStage";
-import {RpgManagerApiInterface} from "../../api/interfaces/RpgManagerApiInterface";
 import {PlotView} from "./views/PlotView";
 import {AbstractService} from "../../managers/servicesManager/abstracts/AbstractService";
 

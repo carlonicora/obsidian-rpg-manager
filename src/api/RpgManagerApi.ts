@@ -1,5 +1,5 @@
 import {RpgManagerApiInterface} from "./interfaces/RpgManagerApiInterface";
-import {App, FileSystemAdapter, Plugin_2, TFile} from "obsidian";
+import {App, Plugin_2, TFile} from "obsidian";
 import {ServiceManagerInterface} from "../managers/servicesManager/interfaces/ServiceManagerInterface";
 import {ServicesManager} from "../managers/servicesManager/ServicesManager";
 import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";

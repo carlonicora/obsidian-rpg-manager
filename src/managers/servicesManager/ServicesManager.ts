@@ -34,6 +34,6 @@ export class ServicesManager implements ServiceManagerInterface{
 	): Promise<void> {
 		this._services.forEach((service: ServiceInterface) => {
 			service.destroy();
-		})
+		});
 	}
 }

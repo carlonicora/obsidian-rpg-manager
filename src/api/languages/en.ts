@@ -4,7 +4,7 @@ export const enCommon = {
 	"description": "Description",
 	"synopsis": "Synopsis",
 	"abt_stage": "ABT Stage"
-}
+};
 
 export const enElements = {
 	"campaign_one": "Campaign",
@@ -45,13 +45,13 @@ export const enElements = {
 	"age": "Age",
 	"reason_of_death": "Reason of Death",
 	"at_age": "at age {{age}}"
-}
+};
 
 export const enErrors = {
 	"non_existing_fetcher": "The requested fetcher ({{name}}) does not exist",
 	"non_existing_service": "The requested service ({{name}}) does not exist"
-}
+};
 
 export const enServices = {
 
-}
+};

@@ -1445,24 +1445,55 @@ textarea:hover {
   width: 100px;
 }
 
-.rpgm-scene-feedback-container {
-  border-top: solid 1px var(--rpg-manager-colour-border);
+.rpg-manager-feedbackview {
+  border: solid 1px var(--rpg-manager-colour-border);
   padding: 20px;
+  font-style: italic;
 }
-.rpgm-scene-feedback-container .rpgm-scene-feedback {
-  margin-left: 20px;
-  padding: 10px;
-  background-color: var(--rpg-manager-colour-background);
+.rpg-manager-feedbackview .rpg-manager-feedbackview-title {
+  border-bottom: solid 1px var(--rpg-manager-colour-border);
 }
-.rpgm-scene-feedback-container .rpgm-scene-feedback .rpg-manager-scene-feedback {
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container {
+  margin-top: 10px;
   position: relative;
 }
-.rpgm-scene-feedback-container .rpgm-scene-feedback .rpg-manager-scene-feedback h4 {
-  margin-bottom: 0;
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title {
+  font-weight: 300;
 }
-.rpgm-scene-feedback-container .rpgm-scene-feedback .rpg-manager-scene-feedback textarea {
-  width: 100%;
-  min-height: 200px;
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title span {
+  float: left;
+  margin-right: 10px;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title span p {
+  margin: 0px;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title .rpg-manager-feedbackview-container-title-actionable {
+  cursor: pointer;
+  float: right;
+  font-size: 0.8em;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note-action, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional {
+  font-size: 0.8em;
+  margin-left: 10px;
+  padding-left: 10px;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note p, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note-action p, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional p {
+  margin: 0px;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional {
+  padding-top: 10px;
+  position: relative;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional .rpg-manager-feedbackview-container-additional-title, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional .rpg-manager-feedbackview-container-additional-value {
+  float: left;
+  font-weight: 300;
+}
+.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional .rpg-manager-feedbackview-container-additional-value {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 20px;
+  font-weight: bold;
+  --icon-size: 1em;
 }
 
 .rpg-manager-header-container-info-analyser {
