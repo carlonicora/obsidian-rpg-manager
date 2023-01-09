@@ -37,19 +37,28 @@ export class LinkSuggesterHandler implements LinkSuggesterHandlerInterface {
 		if (this._containerEl.selectionStart === this._containerEl.selectionEnd)
 			return;
 
-		if ((evt.metaKey || evt.ctrlKey) && evt.key === 'b')
+		if ((evt.metaKey || evt.ctrlKey) && evt.key === 'b') {
+			const end = this._containerEl.selectionEnd;
 			this._containerEl.value = this._containerEl.value.substring(0, this._containerEl.selectionStart) +
 				'**' +
 				this._containerEl.value.substring(this._containerEl.selectionStart, this._containerEl.selectionEnd) +
 				'**' +
+				this._containerEl.value.substring(this._containerEl.selectionEnd);
+			this._containerEl.selectionStart = end + 5;
+			this._containerEl.selectionEnd = end + 5;
+		}
+
+		if ((evt.metaKey || evt.ctrlKey) && evt.key === 'i') {
+			const end = this._containerEl.selectionEnd;
+			this._containerEl.value = this._containerEl.value.substring(0, this._containerEl.selectionStart) +
+				'*' +
+				this._containerEl.value.substring(this._containerEl.selectionStart, this._containerEl.selectionEnd) +
+				'*' +
 				this._containerEl.value.substring(this._containerEl.selectionEnd);
 
-		if ((evt.metaKey || evt.ctrlKey) && evt.key === 'i')
-			this._containerEl.value = this._containerEl.value.substring(0, this._containerEl.selectionStart) +
-				'*' +
-				this._containerEl.value.substring(this._containerEl.selectionStart, this._containerEl.selectionEnd) +
-				'*' +
-				this._containerEl.value.substring(this._containerEl.selectionEnd);
+			this._containerEl.selectionStart = end + 2;
+			this._containerEl.selectionEnd = end + 2;
+		}
 	}
 
 	private _inputEvent(

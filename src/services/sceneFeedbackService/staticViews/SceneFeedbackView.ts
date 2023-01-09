@@ -63,7 +63,8 @@ export class SceneFeedbackView extends AbstractStaticView {
 		if (this._scene.feedback?.notes !== undefined)
 			this._feedbackNotesEl.textContent = this._scene.feedback.notes;
 
-		this.api.service(LinkSuggesterService).createHandler(this._feedbackNotesEl, this._scene, ComponentType.Scene);
+		// this.api.service(LinkSuggesterService).createHandler(this._feedbackNotesEl, this._scene, ComponentType.Scene);
+		this.api.service(LinkSuggesterService).createHandler(this._feedbackNotesEl, this._scene);
 
 		feedbackNotesEl.createEl('button', {text: 'Save feedback'})
 			.addEventListener('click', () => {
