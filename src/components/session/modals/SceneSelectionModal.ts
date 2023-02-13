@@ -9,6 +9,7 @@ import {AbstractModal} from "../../../managers/modalsManager/abstracts/AbstractM
 import {RpgManagerApiInterface} from "../../../api/interfaces/RpgManagerApiInterface";
 import {SorterService} from "../../../services/sorterService/SorterService";
 import {CodeblockService} from "../../../services/codeblockService/CodeblockService";
+import i18next from "i18next";
 
 export class SceneSelectionModal extends AbstractModal {
 	private _availableScenes:SceneInterface[];
@@ -32,10 +33,10 @@ export class SceneSelectionModal extends AbstractModal {
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.addClass('rpg-manager-modal');
-		contentEl.createEl('h2', {text: 'SceneModel Selector'});
-		contentEl.createEl('p', {text: 'Select the scenes to add to the session "' + this._session.file.basename + '"'});
+		contentEl.createEl('h2', {text: i18next.t("scene_selector") ?? ''});
+		contentEl.createEl('p', {text: i18next.t("scene_selector_description") ?? '' + '"' + this._session.file.basename + '"'});
 		const actSelectorContainerEl = contentEl.createDiv();
-		actSelectorContainerEl.createDiv({text: 'Limit scenes to a specific act'});
+		actSelectorContainerEl.createDiv({text: i18next.t("scene_selector_limit") ?? ''});
 		this._actSelectorEl = actSelectorContainerEl.createEl('select');
 		this._actSelectorEl.createEl('option', {
 			text: '',
@@ -67,7 +68,7 @@ export class SceneSelectionModal extends AbstractModal {
 		this._sessionContainerEl = contentEl.createDiv({cls: 'rpg-manager-modal-scene-container'});
 		this._populateAvailableScenes();
 
-		const scenesSelectionButtonEl = contentEl.createEl('button', {text: 'Add selected scenes to session "' + this._session.file.basename + '"'});
+		const scenesSelectionButtonEl = contentEl.createEl('button', {text: i18next.t("scene_selector_add") ?? '"' + this._session.file.basename + '"'});
 
 		scenesSelectionButtonEl.addEventListener("click", () => {
 			this._addScenes()

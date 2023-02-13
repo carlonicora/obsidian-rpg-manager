@@ -23,7 +23,7 @@ export class ActHeaderView extends AbstractHeaderView implements NewHeaderViewIn
 		const adventures: AdventureInterface[] = this.api.database.readChildren<AdventureInterface>(ComponentType.Adventure, this.model.index.campaignId);
 		this.addInfoElement(ParentSwitcherSelectorElement, {
 			model: this.model,
-			title: i18next.t("part_of_adventure", {ns: "elements"}),
+			title: i18next.t("part_of_adventure"),
 			values: {index: this.model.index, list: adventures}
 		});
 

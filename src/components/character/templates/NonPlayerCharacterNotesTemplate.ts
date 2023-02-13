@@ -5,9 +5,9 @@ import i18next from "i18next";
 export class NonPlayerCharacterNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### ' + i18next.t("nonplayercharacter", {count: 1}) + ' ' + i18next.t("note", {count: 2}) + '\n' +
+			'### ' + i18next.t("nonplayercharacter_notes") + '\n' +
 			' - \n\n' +
-			'### Non Player Character Story\n' +
+			'### ' + i18next.t("nonplayercharacter_backstory") + '\n' +
 			' - \n\n' +
 			'---\n';
 	}

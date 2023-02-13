@@ -2,6 +2,7 @@ import {ComponentType} from "../../../core/enums/ComponentType";
 import {CharacterInterface} from "../../character/interfaces/CharacterInterface";
 import {ComponentNotesInterface} from "../../../managers/templatesManager/interfaces/ComponentNotesInterface";
 import {AbstractComponentNoteTemplate} from "../../../managers/templatesManager/abstracts/AbstractComponentNoteTemplate";
+import i18next from "i18next";
 
 export class SessionNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
@@ -19,12 +20,12 @@ export class SessionNotesTemplate extends AbstractComponentNoteTemplate implemen
 
 		possibleRecappers = possibleRecappers.substring(0, possibleRecappers.length-1);
 		let response = '---\n' +
-			'### SessionModel Notes\n\n' +
-			'Previous SessionModel Recap: ' + possibleRecappers + '\n\n' +
-			'### Storyteller Diary\n' +
+			'### ' + i18next.t("session_notes") + '\n\n' +
+			i18next.t("session_recap") + ": " + possibleRecappers + '\n\n' +
+			'### ' + i18next.t("storyteller_notes") + '\n' +
 			'-\n\n' +
-			'### End of SessionModel Feedbacks\n';
-		response += this._generateFeedback('Storyteller');
+			'### ' + i18next.t("session_feedback") + '\n';
+		response += this._generateFeedback(i18next.t("storyteller"));
 
 		(characters || []).forEach((character: CharacterInterface) => {
 			response += this._generateFeedback(character.link);
@@ -37,8 +38,8 @@ export class SessionNotesTemplate extends AbstractComponentNoteTemplate implemen
 		characterName: string,
 	): string {
 		return characterName + '\n' +
-			'- **Notes**: \n' +
-			'- **Wish**: \n' +
-			'- **Rose**: \n\n';
+			'- **' + i18next.t("note", {count: 2}) + '**: \n' +
+			'- **' + i18next.t("wish") + '**: \n' +
+			'- **' + i18next.t("rose") + '**: \n\n';
 	}
 }

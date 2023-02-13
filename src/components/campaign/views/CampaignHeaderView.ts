@@ -29,7 +29,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			]));
 		this.addInfoElement(ModelSelectorElement, {
 			model: this.model,
-			title: i18next.t("current", {ns: "elements", type: i18next.t("adventure", {ns: "elements", count: 1})}),
+			title: i18next.t("current", {type: i18next.t("adventure", {count: 1})}),
 			values: {index: this.model.currentAdventureId, list: adventures},
 			editableKey: 'data.currentAdventureId'
 		});
@@ -46,7 +46,7 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 
 		this.addInfoElement(ModelSelectorElement, {
 			model: this.model,
-			title: i18next.t("current", {ns: "elements", type: i18next.t("act", {ns: "elements", count: 1})}),
+			title: i18next.t("current", {type: i18next.t("act", {count: 1})}),
 			values: {index: this.model.currentActId, list: acts},
 			editableKey: 'data.currentActId'
 		});
@@ -57,14 +57,14 @@ export class CampaignHeaderView extends AbstractHeaderView implements NewHeaderV
 			]));
 		this.addInfoElement(ModelSelectorElement, {
 			model: this.model,
-			title: i18next.t("current", {ns: "elements", type: i18next.t("session", {ns: "elements", count: 1})}),
+			title: i18next.t("current", {type: i18next.t("session", {count: 1})}),
 			values: {index: this.model.currentSessionId, list: sessions},
 			editableKey: 'data.currentSessionId'
 		});
 
 		this.addInfoElement(this.model.calendar === CalendarType.Gregorian ? DateElement : FantasyCalendarElement, {
 			model: this.model,
-			title: i18next.t("current", {ns: "elements", type: i18next.t("date", {ns: "elements"})}),
+			title: i18next.t("current", {type: i18next.t("date")}),
 			values: this.model.date,
 			category: FantasyCalendarCategory.CurrentDate,
 			editableKey: 'data.date'

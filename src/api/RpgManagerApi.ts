@@ -30,7 +30,7 @@ import {DatabaseManager} from "../managers/databaseManager/DatabaseManager";
 import {LoggerService} from "../services/loggerService/LoggerService";
 import {LogMessageType} from "../services/loggerService/enums/LogMessageType";
 import i18next from "i18next";
-import {enCommon, enElements, enErrors, enServices} from "./languages/en";
+import {enCommon, enErrors, enServices} from "./languages/en";
 
 export class RpgManagerApi implements RpgManagerApiInterface {
 	private _controllers: ControllerManagerInterface;
@@ -87,7 +87,7 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 				fallbackLng: 'en',
 				lng: this.language,
 				debug: true,
-				ns: ['common', 'elements', 'errors', 'services'],
+				ns: ['common', 'errors', 'services'],
 				defaultNS: 'common',
 				resources: {},
 			});
@@ -97,7 +97,6 @@ export class RpgManagerApi implements RpgManagerApiInterface {
 		});
 
 		i18next.addResourceBundle("en", "common", enCommon);
-		i18next.addResourceBundle("en", "elements", enElements);
 		i18next.addResourceBundle("en", "errors", enErrors);
 		i18next.addResourceBundle("en", "services", enServices);
 	}

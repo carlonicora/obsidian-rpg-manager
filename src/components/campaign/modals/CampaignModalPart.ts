@@ -42,17 +42,15 @@ export class CampaignModalPart extends AbstractModalPart {
 				mainContent.createEl('h2', {
 					cls: 'rpgm-modal-title',
 					text: i18next.t("creation_missing", {
-						ns: "elements",
-						parent: i18next.t("campaign", {ns: "elements", count: 1})
+						parent: i18next.t("campaign", {count: 1})
 					}) ?? '',
 				});
 				mainContent.createSpan({
 					cls: '', text:
 						i18next.t("creation_missing_parent", {
-							ns: "elements",
-							type: i18next.t("campaign", {ns: "elements", count: 1}),
-							parent: i18next.t(ComponentType[this.modal.type].toLowerCase(), {ns: "elements", count: 1}),
-							child: i18next.t(ComponentType[this.modal.type].toLowerCase(), {ns: "elements", count: 1}),
+							type: i18next.t("campaign", {count: 1}),
+							parent: i18next.t(ComponentType[this.modal.type].toLowerCase(), {count: 1}),
+							child: i18next.t(ComponentType[this.modal.type].toLowerCase(), {count: 1}),
 						}) ?? ''
 				});
 			} else {
@@ -120,7 +118,7 @@ export class CampaignModalPart extends AbstractModalPart {
 
 		groupElement.createDiv({
 			cls: 'rpg-manager-modal-grid-navigation-group-title',
-			text: i18next.t("campaign", {ns: "elements", count: 1}) ?? ''
+			text: i18next.t("campaign", {count: 1}) ?? ''
 		});
 		const selectionContainerEl = groupElement.createDiv({cls: 'rpg-manager-modal-grid-navigation-group-container'});
 

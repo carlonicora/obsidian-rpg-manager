@@ -7,7 +7,7 @@ import i18next from "i18next";
 export class CampaignNotesTemplate extends AbstractComponentNoteTemplate implements ComponentNotesInterface {
 	public getContent(): string {
 		return '---\n' +
-			'### ' + i18next.t("campaign", {count: 1}) + ' ' + i18next.t("note", {count: 2}) + '\n' +
+			'### ' + i18next.t("campaign_notes") + '\n' +
 			' - \n\n' +
 			'---\n';
 	}
