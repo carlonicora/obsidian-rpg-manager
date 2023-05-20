@@ -46,7 +46,6 @@ body:
        Please provide us with the exact steps to reproduce the issue. 
        The more detail you provide, the easier it will be for us to narrow down and fix the bug. 
        Please ensure that you paste in codeblocks and/or queries as text, rather than screenshots.
-       Format your pasted text as described in Give us Text to copy. 
        We will not accept bug reports that require anyone to re-type text from screenshots or descriptive text.
        Please note that if you're a Mac user, a Safari bug might strip newlines from your text.
       placeholder: |
