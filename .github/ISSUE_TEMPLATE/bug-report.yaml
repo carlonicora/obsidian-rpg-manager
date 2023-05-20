@@ -1,9 +1,9 @@
 name: Bug Report
 description: File a bug report
-labels: bug
+labels: Bug
 title: "[Bug]: "
 assignees:
- - Valentine195
+ - carlonicora
 body:
   - type: markdown
     attributes:
@@ -11,7 +11,6 @@ body:
         ## Before you begin
         Make sure to use the latest version of the plugin.
         If you face any issues after installing, updating, or reloading the plugin, try restarting Obsidian before reporting the bug.
-        Also, please make sure you **read and understand the **[guide for good bug reports](https://plugins.javalent.com/support/report-bug)**.
 
   - type: checkboxes
     id: duplicate-issues
@@ -90,7 +89,7 @@ body:
     attributes:
       label: Plugin Version
       description: Which plugin version are you using?
-      placeholder: 3.6.3
+      placeholder: x.x.x
     validations:
       required: true
 
