@@ -1,6 +1,6 @@
 name: Code Report
 description: Report an Update to Code
-labels: code
+labels: Code
 title: "[Code]: "
 assignees:
  - Sigrunixia
