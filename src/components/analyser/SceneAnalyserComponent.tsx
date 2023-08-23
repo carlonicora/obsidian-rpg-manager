@@ -94,7 +94,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 			)}
 
 			<div className="w-full !mt-3 mb-2 text-center">
-				{t("variety")}: {analysis.variety}%
+				{t("analyser.variety")}: {analysis.variety}%
 			</div>
 			<LineIndicator value={analysis.variety} />
 			{getContext(analysis.variety) && (
