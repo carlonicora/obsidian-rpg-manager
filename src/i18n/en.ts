@@ -1,4 +1,4 @@
-export const i18nEng = {
+export const i18nEn = {
 	elements: {
 		campaign_one: "Campaign",
 		campaign_other: "Campaigns",
