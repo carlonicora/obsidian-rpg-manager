@@ -1,10 +1,10 @@
 {
 	"id": "rpg-manager",
 	"name": "RPG Manager",
-	"version": "3.5.0-1",
-	"minAppVersion": "0.15.0",
-	"description": "A plugin to manage your Tabletop Role Playing Game campaigns for Obsidian.",
-	"author": "Carlo Nicora <carlo@carlonicora.com>",
+	"version": "4.0.0-1",
+	"minAppVersion": "1.4.0",
+	"description": "Manage your Tabletop Role Playing Game Campaigns in Obsidian",
+	"author": "Carlo Nicora",
 	"authorUrl": "https://carlonicora.com",
 	"isDesktopOnly": false
 }

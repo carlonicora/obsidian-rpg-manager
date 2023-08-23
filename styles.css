@@ -1,3 +1,1722 @@
+/*
+! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com
+*/
+
+/*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  /* 1 */
+  border-width: 0;
+  /* 2 */
+  border-style: solid;
+  /* 2 */
+  border-color: #e5e7eb;
+  /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+*/
+
+html {
+  line-height: 1.5;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -moz-tab-size: 4;
+  /* 3 */
+  -o-tab-size: 4;
+     tab-size: 4;
+  /* 3 */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
+  font-variation-settings: normal;
+  /* 6 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0;
+  /* 1 */
+  line-height: inherit;
+  /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  border-top-width: 1px;
+  /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
+*/
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+table {
+  text-indent: 0;
+  /* 1 */
+  border-color: inherit;
+  /* 2 */
+  border-collapse: collapse;
+  /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  /* 1 */
+  font-feature-settings: inherit;
+  /* 1 */
+  font-variation-settings: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  font-weight: inherit;
+  /* 1 */
+  line-height: inherit;
+  /* 1 */
+  color: inherit;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+  padding: 0;
+  /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  /* 1 */
+  background-color: transparent;
+  /* 2 */
+  background-image: none;
+  /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type='search'] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+
+dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1;
+  /* 1 */
+  color: #9ca3af;
+  /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  /* 1 */
+  color: #9ca3af;
+  /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  /* 1 */
+  vertical-align: middle;
+  /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+
+[hidden] {
+  display: none;
+}
+
+*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.inset-0 {
+  inset: 0px;
+}
+
+.left-0 {
+  left: 0px;
+}
+
+.left-0\.5 {
+  left: 0.125rem;
+}
+
+.left-1\/2 {
+  left: 50%;
+}
+
+.left-\[-9999px\] {
+  left: -9999px;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.right-3 {
+  right: 0.75rem;
+}
+
+.top-0 {
+  top: 0px;
+}
+
+.top-0\.5 {
+  top: 0.125rem;
+}
+
+.top-1\/2 {
+  top: 50%;
+}
+
+.top-3 {
+  top: 0.75rem;
+}
+
+.top-\[-9999px\] {
+  top: -9999px;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-\[9999\] {
+  z-index: 9999;
+}
+
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
+.col-span-3 {
+  grid-column: span 3 / span 3;
+}
+
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+
+.col-span-5 {
+  grid-column: span 5 / span 5;
+}
+
+.col-span-6 {
+  grid-column: span 6 / span 6;
+}
+
+.\!m-0 {
+  margin: 0px !important;
+}
+
+.\!m-2 {
+  margin: 0.5rem !important;
+}
+
+.m-1 {
+  margin: 0.25rem;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+
+.m-3 {
+  margin: 0.75rem;
+}
+
+.m-4 {
+  margin: 1rem;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.\!mb-0 {
+  margin-bottom: 0px !important;
+}
+
+.\!mb-1 {
+  margin-bottom: 0.25rem !important;
+}
+
+.\!mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.\!mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+.\!mb-5 {
+  margin-bottom: 1.25rem !important;
+}
+
+.\!mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
+.\!ml-0 {
+  margin-left: 0px !important;
+}
+
+.\!ml-3 {
+  margin-left: 0.75rem !important;
+}
+
+.\!mt-0 {
+  margin-top: 0px !important;
+}
+
+.\!mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+.\!mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.\!mt-3 {
+  margin-top: 0.75rem !important;
+}
+
+.\!mt-5 {
+  margin-top: 1.25rem !important;
+}
+
+.\!mt-\[-1\.25rem\] {
+  margin-top: -1.25rem !important;
+}
+
+.-ml-8 {
+  margin-left: -2rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.ml-3 {
+  margin-left: 0.75rem;
+}
+
+.ml-5 {
+  margin-left: 1.25rem;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
+.mr-5 {
+  margin-right: 1.25rem;
+}
+
+.mr-6 {
+  margin-right: 1.5rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.hidden {
+  display: none;
+}
+
+.h-32 {
+  height: 8rem;
+}
+
+.h-4 {
+  height: 1rem;
+}
+
+.h-48 {
+  height: 12rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+.h-7 {
+  height: 1.75rem;
+}
+
+.h-\[2px\] {
+  height: 2px;
+}
+
+.h-\[350px\] {
+  height: 350px;
+}
+
+.h-\[40px\] {
+  height: 40px;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.max-h-0 {
+  max-height: 0px;
+}
+
+.max-h-32 {
+  max-height: 8rem;
+}
+
+.max-h-\[40px\] {
+  max-height: 40px;
+}
+
+.max-h-full {
+  max-height: 100%;
+}
+
+.min-h-\[1\.75rem\] {
+  min-height: 1.75rem;
+}
+
+.min-h-\[100px\] {
+  min-height: 100px;
+}
+
+.min-h-\[2em\] {
+  min-height: 2em;
+}
+
+.min-h-\[3rem\] {
+  min-height: 3rem;
+}
+
+.min-h-full {
+  min-height: 100%;
+}
+
+.w-1\/2 {
+  width: 50%;
+}
+
+.w-28 {
+  width: 7rem;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.w-4 {
+  width: 1rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.w-48 {
+  width: 12rem;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.w-64 {
+  width: 16rem;
+}
+
+.w-8 {
+  width: 2rem;
+}
+
+.w-\[12px\] {
+  width: 12px;
+}
+
+.w-\[200px\] {
+  width: 200px;
+}
+
+.w-\[20px\] {
+  width: 20px;
+}
+
+.w-\[350px\] {
+  width: 350px;
+}
+
+.w-\[36px\] {
+  width: 36px;
+}
+
+.w-\[40px\] {
+  width: 40px;
+}
+
+.w-\[50px\] {
+  width: 50px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.min-w-\[16rem\] {
+  min-width: 16rem;
+}
+
+.min-w-\[1rem\] {
+  min-width: 1rem;
+}
+
+.min-w-\[200px\] {
+  min-width: 200px;
+}
+
+.min-w-\[60px\] {
+  min-width: 60px;
+}
+
+.min-w-\[7rem\] {
+  min-width: 7rem;
+}
+
+.min-w-\[8rem\] {
+  min-width: 8rem;
+}
+
+.min-w-full {
+  min-width: 100%;
+}
+
+.max-w-\[10rem\] {
+  max-width: 10rem;
+}
+
+.max-w-\[12px\] {
+  max-width: 12px;
+}
+
+.max-w-\[20px\] {
+  max-width: 20px;
+}
+
+.max-w-\[36px\] {
+  max-width: 36px;
+}
+
+.max-w-\[40px\] {
+  max-width: 40px;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.flex-none {
+  flex: none;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.-translate-y-1\/2 {
+  --tw-translate-y: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-x-3 {
+  --tw-translate-x: 0.75rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.transform-gpu {
+  transform: translate3d(var(--tw-translate-x), var(--tw-translate-y), 0) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.\!cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-help {
+  cursor: help;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+
+.cursor-zoom-out {
+  cursor: zoom-out;
+}
+
+.resize-none {
+  resize: none;
+}
+
+.list-inside {
+  list-style-position: inside;
+}
+
+.list-disc {
+  list-style-type: disc;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-10 {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.grid-cols-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.whitespace-pre {
+  white-space: pre;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.rounded-sm {
+  border-radius: 0.125rem;
+}
+
+.rounded-tl-lg {
+  border-top-left-radius: 0.5rem;
+}
+
+.rounded-tr-lg {
+  border-top-right-radius: 0.5rem;
+}
+
+.\!border {
+  border-width: 1px !important;
+}
+
+.\!border-0 {
+  border-width: 0px !important;
+}
+
+.border {
+  border-width: 1px;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+}
+
+.border-r {
+  border-right-width: 1px;
+}
+
+.border-dashed {
+  border-style: dashed;
+}
+
+.\!border-\[--background-modifier-border\] {
+  border-color: var(--background-modifier-border) !important;
+}
+
+.\!border-green-600 {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(22 163 74 / var(--tw-border-opacity)) !important;
+}
+
+.\!border-transparent {
+  border-color: transparent !important;
+}
+
+.border-\[--background-modifier-border\] {
+  border-color: var(--background-modifier-border);
+}
+
+.border-\[--background-primary-alt\] {
+  border-color: var(--background-primary-alt);
+}
+
+.border-transparent {
+  border-color: transparent;
+}
+
+.border-b-\[--background-modifier-border\] {
+  border-bottom-color: var(--background-modifier-border);
+}
+
+.border-r-\[--background-modifier-border\] {
+  border-right-color: var(--background-modifier-border);
+}
+
+.\!bg-green-100 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity)) !important;
+}
+
+.\!bg-transparent {
+  background-color: transparent !important;
+}
+
+.bg-\[--background-modifier-border\] {
+  background-color: var(--background-modifier-border);
+}
+
+.bg-\[--background-primary-alt\] {
+  background-color: var(--background-primary-alt);
+}
+
+.bg-\[--background-primary\] {
+  background-color: var(--background-primary);
+}
+
+.bg-\[--background-secondary\] {
+  background-color: var(--background-secondary);
+}
+
+.bg-\[--interactive-accent\] {
+  background-color: var(--interactive-accent);
+}
+
+.bg-\[--text-error\] {
+  background-color: var(--text-error);
+}
+
+.bg-\[--text-normal\] {
+  background-color: var(--text-normal);
+}
+
+.bg-\[--text-success\] {
+  background-color: var(--text-success);
+}
+
+.bg-\[--text-warning\] {
+  background-color: var(--text-warning);
+}
+
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+.bg-opacity-100 {
+  --tw-bg-opacity: 1;
+}
+
+.bg-opacity-50 {
+  --tw-bg-opacity: 0.5;
+}
+
+.bg-opacity-75 {
+  --tw-bg-opacity: 0.75;
+}
+
+.fill-current {
+  fill: currentColor;
+}
+
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.\!p-0 {
+  padding: 0px !important;
+}
+
+.\!p-1 {
+  padding: 0.25rem !important;
+}
+
+.\!p-3 {
+  padding: 0.75rem !important;
+}
+
+.p-1 {
+  padding: 0.25rem;
+}
+
+.p-10 {
+  padding: 2.5rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.p-3 {
+  padding: 0.75rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.p-5 {
+  padding: 1.25rem;
+}
+
+.\!pl-2 {
+  padding-left: 0.5rem !important;
+}
+
+.\!pr-4 {
+  padding-right: 1rem !important;
+}
+
+.pb-1 {
+  padding-bottom: 0.25rem;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem;
+}
+
+.pb-\[100\%\] {
+  padding-bottom: 100%;
+}
+
+.pb-\[56\.25\%\] {
+  padding-bottom: 56.25%;
+}
+
+.pl-0 {
+  padding-left: 0px;
+}
+
+.pl-1 {
+  padding-left: 0.25rem;
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
+}
+
+.pl-3 {
+  padding-left: 0.75rem;
+}
+
+.pr-1 {
+  padding-right: 0.25rem;
+}
+
+.pr-2 {
+  padding-right: 0.5rem;
+}
+
+.pr-3 {
+  padding-right: 0.75rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
+}
+
+.pt-2 {
+  padding-top: 0.5rem;
+}
+
+.pt-5 {
+  padding-top: 1.25rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+.align-bottom {
+  vertical-align: bottom;
+}
+
+.\!text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+
+.\!text-4xl {
+  font-size: 2.25rem !important;
+  line-height: 2.5rem !important;
+}
+
+.\!text-base {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+}
+
+.\!text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.\!font-bold {
+  font-weight: 700 !important;
+}
+
+.\!font-extralight {
+  font-weight: 200 !important;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.\!text-\[--text-faint\] {
+  color: var(--text-faint) !important;
+}
+
+.\!text-\[--text-muted\] {
+  color: var(--text-muted) !important;
+}
+
+.\!text-\[--text-normal\] {
+  color: var(--text-normal) !important;
+}
+
+.\!text-green-600 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(22 163 74 / var(--tw-text-opacity)) !important;
+}
+
+.text-\[--background-modifier-border\] {
+  color: var(--background-modifier-border);
+}
+
+.text-\[--text-accent\] {
+  color: var(--text-accent);
+}
+
+.text-\[--text-error\] {
+  color: var(--text-error);
+}
+
+.text-\[--text-faint\] {
+  color: var(--text-faint);
+}
+
+.text-\[--text-muted\] {
+  color: var(--text-muted);
+}
+
+.text-\[--text-normal\] {
+  color: var(--text-normal);
+}
+
+.text-\[--text-success\] {
+  color: var(--text-success);
+}
+
+.text-\[--text-warning\] {
+  color: var(--text-warning);
+}
+
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.\!no-underline {
+  text-decoration-line: none !important;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.\!shadow-none {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+}
+
+.shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.duration-200 {
+  transition-duration: 200ms;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.duration-500 {
+  transition-duration: 500ms;
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.markdown-preview-view.is-readable-line-width .markdown-preview-sizer > div,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-contentContainer.cm-contentContainer > .cm-content > div,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-contentContainer.cm-contentContainer > .cm-content,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer > .embedded-backlinks,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer > .inline-title,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer > .metadata-container,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer > .cm-contentContainer,
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-content,
+.cm-sizer {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.popover.hover-popover > .markdown-embed > .markdown-embed-content > .markdown-preview-view {
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+.selectBorder.selectBorder {
+  border: 1px solid transparent !important;
+}
+
+.selectBorderVisible.selectBorderVisible {
+  border: 1px solid var(--background-modifier-border) !important;
+}
+
+.markdown-content p:not(:last-child) {
+  margin-bottom: 0.75rem !important;
+}
+
+button.rpgm-primary {
+  margin-left: 0.75rem;
+  background-color: var(--interactive-accent);
+  padding: 0.75rem;
+  color: var(--text-on-accent);
+}
+
+button.rpgm-primary:hover {
+  background-color: var(--interactive-accent-hover) !important;
+}
+
+button.rpgm-secondary {
+  margin-left: 0.75rem;
+  padding: 0.75rem;
+}
+
+button.rpgm-secondary:hover {
+  background-color: var(--interactive-accent-hover) !important;
+  color: var(--text-on-accent);
+}
+
+button.rpgm-danger {
+  background-color: transparent;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--text-warning);
+}
+
+button.rpgm-danger:hover {
+  background-color: var(--text-warning);
+  color: var(--background-secondary-alt);
+}
+
 .flatpickr-calendar {
   background: transparent;
   opacity: 0;
@@ -5,7 +1724,6 @@
   text-align: center;
   visibility: hidden;
   padding: 0;
-  -webkit-animation: none;
   animation: none;
   direction: ltr;
   border: 0;
@@ -14,16 +1732,13 @@
   border-radius: 5px;
   position: absolute;
   width: 307.875px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  -ms-touch-action: manipulation;
   touch-action: manipulation;
-  background: #fff;
-  -webkit-box-shadow: 1px 0 0 #e6e6e6, -1px 0 0 #e6e6e6, 0 1px 0 #e6e6e6, 0 -1px 0 #e6e6e6, 0 3px 13px rgba(0, 0, 0, 0.08);
-  box-shadow: 1px 0 0 #e6e6e6, -1px 0 0 #e6e6e6, 0 1px 0 #e6e6e6, 0 -1px 0 #e6e6e6, 0 3px 13px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 13px rgba(0, 0, 0, 0.08);
 }
 
-.flatpickr-calendar.open, .flatpickr-calendar.inline {
+.flatpickr-calendar.open,
+.flatpickr-calendar.inline {
   opacity: 1;
   max-height: 640px;
   visibility: visible;
@@ -35,7 +1750,6 @@
 }
 
 .flatpickr-calendar.animate.open {
-  -webkit-animation: fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1);
   animation: fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -55,17 +1769,16 @@
   display: block;
 }
 
-.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n+1) .flatpickr-day.inRange:nth-child(7n+7) {
-  -webkit-box-shadow: none !important;
+.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n + 1) .flatpickr-day.inRange:nth-child(7n + 7) {
   box-shadow: none !important;
 }
 
-.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n+2) .flatpickr-day.inRange:nth-child(7n+1) {
-  -webkit-box-shadow: -2px 0 0 #e6e6e6, 5px 0 0 #e6e6e6;
+.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n + 2) .flatpickr-day.inRange:nth-child(7n + 1) {
   box-shadow: -2px 0 0 #e6e6e6, 5px 0 0 #e6e6e6;
 }
 
-.flatpickr-calendar .hasWeeks .dayContainer, .flatpickr-calendar .hasTime .dayContainer {
+.flatpickr-calendar .hasWeeks .dayContainer,
+.flatpickr-calendar .hasTime .dayContainer {
   border-bottom: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -77,14 +1790,23 @@
 
 .flatpickr-calendar.hasTime .flatpickr-time {
   height: 40px;
-  border-top: 1px solid #e6e6e6;
+  border-top: 1px solid #eceef1;
+}
+
+.flatpickr-calendar.hasTime .flatpickr-innerContainer {
+  border-bottom: 0;
+}
+
+.flatpickr-calendar.hasTime .flatpickr-time {
+  border: 1px solid #eceef1;
 }
 
 .flatpickr-calendar.noCalendar.hasTime .flatpickr-time {
   height: auto;
 }
 
-.flatpickr-calendar:before, .flatpickr-calendar:after {
+.flatpickr-calendar:before,
+.flatpickr-calendar:after {
   position: absolute;
   display: block;
   pointer-events: none;
@@ -95,12 +1817,16 @@
   left: 22px;
 }
 
-.flatpickr-calendar.rightMost:before, .flatpickr-calendar.arrowRight:before, .flatpickr-calendar.rightMost:after, .flatpickr-calendar.arrowRight:after {
+.flatpickr-calendar.rightMost:before,
+.flatpickr-calendar.arrowRight:before,
+.flatpickr-calendar.rightMost:after,
+.flatpickr-calendar.arrowRight:after {
   left: auto;
   right: 22px;
 }
 
-.flatpickr-calendar.arrowCenter:before, .flatpickr-calendar.arrowCenter:after {
+.flatpickr-calendar.arrowCenter:before,
+.flatpickr-calendar.arrowCenter:after {
   left: 50%;
   right: 50%;
 }
@@ -115,28 +1841,30 @@
   margin: 0 -4px;
 }
 
-.flatpickr-calendar.arrowTop:before, .flatpickr-calendar.arrowTop:after {
+.flatpickr-calendar.arrowTop:before,
+.flatpickr-calendar.arrowTop:after {
   bottom: 100%;
 }
 
 .flatpickr-calendar.arrowTop:before {
-  border-bottom-color: #e6e6e6;
+  border-bottom-color: #eceef1;
 }
 
 .flatpickr-calendar.arrowTop:after {
-  border-bottom-color: #fff;
+  border-bottom-color: #eceef1;
 }
 
-.flatpickr-calendar.arrowBottom:before, .flatpickr-calendar.arrowBottom:after {
+.flatpickr-calendar.arrowBottom:before,
+.flatpickr-calendar.arrowBottom:after {
   top: 100%;
 }
 
 .flatpickr-calendar.arrowBottom:before {
-  border-top-color: #e6e6e6;
+  border-top-color: #eceef1;
 }
 
 .flatpickr-calendar.arrowBottom:after {
-  border-top-color: #fff;
+  border-top-color: #eceef1;
 }
 
 .flatpickr-calendar:focus {
@@ -149,35 +1877,29 @@
 }
 
 .flatpickr-months {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
 .flatpickr-months .flatpickr-month {
-  background: transparent;
-  color: rgba(0, 0, 0, 0.9);
-  fill: rgba(0, 0, 0, 0.9);
+  border-radius: 5px 5px 0 0;
+  background: #eceef1;
+  color: #5a6171;
+  fill: #5a6171;
   height: 34px;
   line-height: 1;
   text-align: center;
   position: relative;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   overflow: hidden;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
   flex: 1;
 }
 
-.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   text-decoration: none;
   cursor: pointer;
@@ -186,41 +1908,76 @@
   height: 34px;
   padding: 10px;
   z-index: 3;
-  color: rgba(0, 0, 0, 0.9);
-  fill: rgba(0, 0, 0, 0.9);
+  color: #5a6171;
+  fill: #5a6171;
 }
 
-.flatpickr-months .flatpickr-prev-month.flatpickr-disabled, .flatpickr-months .flatpickr-next-month.flatpickr-disabled {
+.flatpickr-months .flatpickr-prev-month.flatpickr-disabled,
+.flatpickr-months .flatpickr-next-month.flatpickr-disabled {
   display: none;
 }
 
-.flatpickr-months .flatpickr-prev-month i, .flatpickr-months .flatpickr-next-month i {
+.flatpickr-months .flatpickr-prev-month i,
+.flatpickr-months .flatpickr-next-month i {
   position: relative;
 }
 
-.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month, .flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
+.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
+  /*
+		/*rtl:begin:ignore*/
+  /*
+		*/
   left: 0;
+  /*
+		/*rtl:end:ignore*/
+  /*
+		*/
 }
 
-.flatpickr-months .flatpickr-prev-month.flatpickr-next-month, .flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+/*
+		/*rtl:begin:ignore*/
+
+/*
+		/*rtl:end:ignore*/
+
+.flatpickr-months .flatpickr-prev-month.flatpickr-next-month,
+.flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+  /*
+		/*rtl:begin:ignore*/
+  /*
+		*/
   right: 0;
+  /*
+		/*rtl:end:ignore*/
+  /*
+		*/
 }
 
-.flatpickr-months .flatpickr-prev-month:hover, .flatpickr-months .flatpickr-next-month:hover {
-  color: #959ea9;
+/*
+		/*rtl:begin:ignore*/
+
+/*
+		/*rtl:end:ignore*/
+
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+  color: #bbb;
 }
 
-.flatpickr-months .flatpickr-prev-month:hover svg, .flatpickr-months .flatpickr-next-month:hover svg {
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
   fill: #f64747;
 }
 
-.flatpickr-months .flatpickr-prev-month svg, .flatpickr-months .flatpickr-next-month svg {
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
   width: 14px;
   height: 14px;
 }
 
-.flatpickr-months .flatpickr-prev-month svg path, .flatpickr-months .flatpickr-next-month svg path {
-  -webkit-transition: fill 0.1s;
+.flatpickr-months .flatpickr-prev-month svg path,
+.flatpickr-months .flatpickr-next-month svg path {
   transition: fill 0.1s;
   fill: inherit;
 }
@@ -230,7 +1987,8 @@
   height: auto;
 }
 
-.numInputWrapper input, .numInputWrapper span {
+.numInputWrapper input,
+.numInputWrapper span {
   display: inline-block;
 }
 
@@ -242,7 +2000,8 @@
   display: none;
 }
 
-.numInputWrapper input::-webkit-outer-spin-button, .numInputWrapper input::-webkit-inner-spin-button {
+.numInputWrapper input::-webkit-outer-spin-button,
+.numInputWrapper input::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
 }
@@ -256,8 +2015,7 @@
   line-height: 50%;
   opacity: 0;
   cursor: pointer;
-  border: 1px solid rgba(57, 57, 57, 0.15);
-  -webkit-box-sizing: border-box;
+  border: 1px solid rgba(72, 72, 72, 0.15);
   box-sizing: border-box;
 }
 
@@ -283,7 +2041,7 @@
 .numInputWrapper span.arrowUp:after {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-bottom: 4px solid rgba(57, 57, 57, 0.6);
+  border-bottom: 4px solid rgba(72, 72, 72, 0.6);
   top: 26%;
 }
 
@@ -294,7 +2052,7 @@
 .numInputWrapper span.arrowDown:after {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 4px solid rgba(57, 57, 57, 0.6);
+  border-top: 4px solid rgba(72, 72, 72, 0.6);
   top: 40%;
 }
 
@@ -304,7 +2062,7 @@
 }
 
 .numInputWrapper span svg path {
-  fill: rgba(0, 0, 0, 0.5);
+  fill: rgba(90, 97, 113, 0.5);
 }
 
 .numInputWrapper:hover {
@@ -328,8 +2086,7 @@
   height: 34px;
   display: inline-block;
   text-align: center;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0px, 0px, 0px);
 }
 
 .flatpickr-current-month span.cur-month {
@@ -347,21 +2104,20 @@
 
 .flatpickr-current-month .numInputWrapper {
   width: 6ch;
-  width: 7ch\0 ;
+  width: 7ch\0;
   display: inline-block;
 }
 
 .flatpickr-current-month .numInputWrapper span.arrowUp:after {
-  border-bottom-color: rgba(0, 0, 0, 0.9);
+  border-bottom-color: #5a6171;
 }
 
 .flatpickr-current-month .numInputWrapper span.arrowDown:after {
-  border-top-color: rgba(0, 0, 0, 0.9);
+  border-top-color: #5a6171;
 }
 
 .flatpickr-current-month input.cur-year {
   background: transparent;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: inherit;
   cursor: text;
@@ -385,16 +2141,17 @@
   outline: 0;
 }
 
-.flatpickr-current-month input.cur-year[disabled], .flatpickr-current-month input.cur-year[disabled]:hover {
+.flatpickr-current-month input.cur-year[disabled],
+.flatpickr-current-month input.cur-year[disabled]:hover {
   font-size: 100%;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(90, 97, 113, 0.5);
   background: transparent;
   pointer-events: none;
 }
 
 .flatpickr-current-month .flatpickr-monthDropdown-months {
   appearance: menulist;
-  background: transparent;
+  background: #eceef1;
   border: none;
   border-radius: 0;
   box-sizing: border-box;
@@ -416,7 +2173,8 @@
   width: auto;
 }
 
-.flatpickr-current-month .flatpickr-monthDropdown-months:focus, .flatpickr-current-month .flatpickr-monthDropdown-months:active {
+.flatpickr-current-month .flatpickr-monthDropdown-months:focus,
+.flatpickr-current-month .flatpickr-monthDropdown-months:active {
   outline: none;
 }
 
@@ -425,70 +2183,52 @@
 }
 
 .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
-  background-color: transparent;
+  background-color: #eceef1;
   outline: none;
   padding: 0;
 }
 
 .flatpickr-weekdays {
-  background: transparent;
+  background: #eceef1;
   text-align: center;
   overflow: hidden;
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   height: 28px;
 }
 
 .flatpickr-weekdays .flatpickr-weekdaycontainer {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
   flex: 1;
 }
 
 span.flatpickr-weekday {
   cursor: default;
   font-size: 90%;
-  background: transparent;
-  color: rgba(0, 0, 0, 0.54);
+  background: #eceef1;
+  color: #5a6171;
   line-height: 1;
   margin: 0;
   text-align: center;
   display: block;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
   flex: 1;
   font-weight: bolder;
 }
 
-.dayContainer, .flatpickr-weeks {
+.dayContainer,
+.flatpickr-weeks {
   padding: 1px 0 0 0;
 }
 
 .flatpickr-days {
   position: relative;
   overflow: hidden;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-  -ms-flex-align: start;
   align-items: flex-start;
   width: 307.875px;
+  border-left: 1px solid #eceef1;
+  border-right: 1px solid #eceef1;
 }
 
 .flatpickr-days:focus {
@@ -502,41 +2242,29 @@ span.flatpickr-weekday {
   width: 307.875px;
   min-width: 307.875px;
   max-width: 307.875px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-flex;
   display: flex;
-  -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
   -ms-flex-wrap: wrap;
-  -ms-flex-pack: justify;
-  -webkit-justify-content: space-around;
   justify-content: space-around;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0px, 0px, 0px);
   opacity: 1;
 }
 
 .dayContainer + .dayContainer {
-  -webkit-box-shadow: -1px 0 0 #e6e6e6;
-  box-shadow: -1px 0 0 #e6e6e6;
+  box-shadow: -1px 0 0 #eceef1;
 }
 
 .flatpickr-day {
   background: none;
   border: 1px solid transparent;
   border-radius: 150px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  color: #393939;
+  color: #484848;
   cursor: pointer;
   font-weight: 400;
   width: 14.2857143%;
-  -webkit-flex-basis: 14.2857143%;
-  -ms-flex-preferred-size: 14.2857143%;
   flex-basis: 14.2857143%;
   max-width: 39px;
   height: 39px;
@@ -544,77 +2272,114 @@ span.flatpickr-weekday {
   margin: 0;
   display: inline-block;
   position: relative;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   text-align: center;
 }
 
-.flatpickr-day.inRange, .flatpickr-day.prevMonthDay.inRange, .flatpickr-day.nextMonthDay.inRange, .flatpickr-day.today.inRange, .flatpickr-day.prevMonthDay.today.inRange, .flatpickr-day.nextMonthDay.today.inRange, .flatpickr-day:hover, .flatpickr-day.prevMonthDay:hover, .flatpickr-day.nextMonthDay:hover, .flatpickr-day:focus, .flatpickr-day.prevMonthDay:focus, .flatpickr-day.nextMonthDay:focus {
+.flatpickr-day.inRange,
+.flatpickr-day.prevMonthDay.inRange,
+.flatpickr-day.nextMonthDay.inRange,
+.flatpickr-day.today.inRange,
+.flatpickr-day.prevMonthDay.today.inRange,
+.flatpickr-day.nextMonthDay.today.inRange,
+.flatpickr-day:hover,
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover,
+.flatpickr-day:focus,
+.flatpickr-day.prevMonthDay:focus,
+.flatpickr-day.nextMonthDay:focus {
   cursor: pointer;
   outline: 0;
-  background: #e6e6e6;
-  border-color: #e6e6e6;
+  background: #e2e2e2;
+  border-color: #e2e2e2;
 }
 
 .flatpickr-day.today {
-  border-color: #959ea9;
+  border-color: #bbb;
 }
 
-.flatpickr-day.today:hover, .flatpickr-day.today:focus {
-  border-color: #959ea9;
-  background: #959ea9;
+.flatpickr-day.today:hover,
+.flatpickr-day.today:focus {
+  border-color: #bbb;
+  background: #bbb;
   color: #fff;
 }
 
-.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
-  background: #569ff7;
-  -webkit-box-shadow: none;
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+  background: #ff5a5f;
   box-shadow: none;
   color: #fff;
-  border-color: #569ff7;
+  border-color: #ff5a5f;
 }
 
-.flatpickr-day.selected.startRange, .flatpickr-day.startRange.startRange, .flatpickr-day.endRange.startRange {
+.flatpickr-day.selected.startRange,
+.flatpickr-day.startRange.startRange,
+.flatpickr-day.endRange.startRange {
   border-radius: 50px 0 0 50px;
 }
 
-.flatpickr-day.selected.endRange, .flatpickr-day.startRange.endRange, .flatpickr-day.endRange.endRange {
+.flatpickr-day.selected.endRange,
+.flatpickr-day.startRange.endRange,
+.flatpickr-day.endRange.endRange {
   border-radius: 0 50px 50px 0;
 }
 
-.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
-  -webkit-box-shadow: -10px 0 0 #569ff7;
-  box-shadow: -10px 0 0 #569ff7;
+.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
+.flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n + 1)),
+.flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
+  box-shadow: -10px 0 0 #ff5a5f;
 }
 
-.flatpickr-day.selected.startRange.endRange, .flatpickr-day.startRange.startRange.endRange, .flatpickr-day.endRange.startRange.endRange {
+.flatpickr-day.selected.startRange.endRange,
+.flatpickr-day.startRange.startRange.endRange,
+.flatpickr-day.endRange.startRange.endRange {
   border-radius: 50px;
 }
 
 .flatpickr-day.inRange {
   border-radius: 0;
-  -webkit-box-shadow: -5px 0 0 #e6e6e6, 5px 0 0 #e6e6e6;
-  box-shadow: -5px 0 0 #e6e6e6, 5px 0 0 #e6e6e6;
+  box-shadow: -5px 0 0 #e2e2e2, 5px 0 0 #e2e2e2;
 }
 
-.flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover, .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay, .flatpickr-day.notAllowed, .flatpickr-day.notAllowed.prevMonthDay, .flatpickr-day.notAllowed.nextMonthDay {
-  color: rgba(57, 57, 57, 0.3);
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.notAllowed,
+.flatpickr-day.notAllowed.prevMonthDay,
+.flatpickr-day.notAllowed.nextMonthDay {
+  color: rgba(72, 72, 72, 0.3);
   background: transparent;
   border-color: transparent;
   cursor: default;
 }
 
-.flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover {
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
   cursor: not-allowed;
-  color: rgba(57, 57, 57, 0.1);
+  color: rgba(72, 72, 72, 0.1);
 }
 
 .flatpickr-day.week.selected {
   border-radius: 0;
-  -webkit-box-shadow: -5px 0 0 #569ff7, 5px 0 0 #569ff7;
-  box-shadow: -5px 0 0 #569ff7, 5px 0 0 #569ff7;
+  box-shadow: -5px 0 0 #ff5a5f, 5px 0 0 #ff5a5f;
 }
 
 .flatpickr-day.hidden {
@@ -631,8 +2396,7 @@ span.flatpickr-weekday {
 
 .flatpickr-weekwrapper .flatpickr-weeks {
   padding: 0 12px;
-  -webkit-box-shadow: 1px 0 0 #e6e6e6;
-  box-shadow: 1px 0 0 #e6e6e6;
+  border-left: 1px solid #eceef1;
 }
 
 .flatpickr-weekwrapper .flatpickr-weekday {
@@ -641,11 +2405,12 @@ span.flatpickr-weekday {
   line-height: 28px;
 }
 
-.flatpickr-weekwrapper span.flatpickr-day, .flatpickr-weekwrapper span.flatpickr-day:hover {
+.flatpickr-weekwrapper span.flatpickr-day,
+.flatpickr-weekwrapper span.flatpickr-day:hover {
   display: block;
   width: 100%;
   max-width: none;
-  color: rgba(57, 57, 57, 0.3);
+  color: rgba(72, 72, 72, 0.3);
   background: transparent;
   cursor: default;
   border: none;
@@ -653,19 +2418,16 @@ span.flatpickr-weekday {
 
 .flatpickr-innerContainer {
   display: block;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   overflow: hidden;
+  background: #fff;
+  border-bottom: 1px solid #eceef1;
 }
 
 .flatpickr-rContainer {
   display: inline-block;
   padding: 0;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -676,13 +2438,11 @@ span.flatpickr-weekday {
   height: 0;
   line-height: 40px;
   max-height: 40px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   overflow: hidden;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
+  background: #fff;
+  border-radius: 0 0 5px 5px;
 }
 
 .flatpickr-time:after {
@@ -692,9 +2452,6 @@ span.flatpickr-weekday {
 }
 
 .flatpickr-time .numInputWrapper {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
   flex: 1;
   width: 40%;
   height: 40px;
@@ -702,11 +2459,11 @@ span.flatpickr-weekday {
 }
 
 .flatpickr-time .numInputWrapper span.arrowUp:after {
-  border-bottom-color: #393939;
+  border-bottom-color: #484848;
 }
 
 .flatpickr-time .numInputWrapper span.arrowDown:after {
-  border-top-color: #393939;
+  border-top-color: #484848;
 }
 
 .flatpickr-time.hasSeconds .numInputWrapper {
@@ -719,7 +2476,6 @@ span.flatpickr-weekday {
 
 .flatpickr-time input {
   background: transparent;
-  -webkit-box-shadow: none;
   box-shadow: none;
   border: 0;
   border-radius: 0;
@@ -728,10 +2484,9 @@ span.flatpickr-weekday {
   padding: 0;
   height: inherit;
   line-height: inherit;
-  color: #393939;
+  color: #484848;
   font-size: 14px;
   position: relative;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   -webkit-appearance: textfield;
   -moz-appearance: textfield;
@@ -742,7 +2497,8 @@ span.flatpickr-weekday {
   font-weight: bold;
 }
 
-.flatpickr-time input.flatpickr-minute, .flatpickr-time input.flatpickr-second {
+.flatpickr-time input.flatpickr-minute,
+.flatpickr-time input.flatpickr-second {
   font-weight: 400;
 }
 
@@ -751,19 +2507,17 @@ span.flatpickr-weekday {
   border: 0;
 }
 
-.flatpickr-time .flatpickr-time-separator, .flatpickr-time .flatpickr-am-pm {
+.flatpickr-time .flatpickr-time-separator,
+.flatpickr-time .flatpickr-am-pm {
   height: inherit;
   float: left;
   line-height: inherit;
-  color: #393939;
+  color: #484848;
   font-weight: bold;
   width: 2%;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
   align-self: center;
 }
 
@@ -775,2641 +2529,258 @@ span.flatpickr-weekday {
   font-weight: 400;
 }
 
-.flatpickr-time input:hover, .flatpickr-time .flatpickr-am-pm:hover, .flatpickr-time input:focus, .flatpickr-time .flatpickr-am-pm:focus {
-  background: #eee;
+.flatpickr-time input:hover,
+.flatpickr-time .flatpickr-am-pm:hover,
+.flatpickr-time input:focus,
+.flatpickr-time .flatpickr-am-pm:focus {
+  background: #eaeaea;
 }
 
 .flatpickr-input[readonly] {
   cursor: pointer;
 }
 
-@-webkit-keyframes fpFadeInDown {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, -20px, 0);
-    transform: translate3d(0, -20px, 0);
-  }
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
 @keyframes fpFadeInDown {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(0, -20px, 0);
     transform: translate3d(0, -20px, 0);
   }
+
   to {
     opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
 }
-.flatpickr-current-month .flatpickr-monthDropdown-months {
-  display: inline-block;
+
+span.flatpickr-day.selected {
+  font-weight: bold;
 }
 
-body {
-  --rpg-manager-colour-border: var(--background-modifier-border);
-  --rpg-manager-colour-text-light: var(--text-muted);
-  --rpg-manager-colour-text-very-light: var(--text-faint);
-  --rpg-manager-colour-text-link: var(--text-accent);
-  --rpg-manager-colour-background: var(--background-secondary);
+.hover\:scale-105:hover {
+  --tw-scale-x: 1.05;
+  --tw-scale-y: 1.05;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-span.missing {
-  font-size: 0.9em;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.rpg-manager-header .rpg-manager-header-container {
-  width: 100%;
-  border: 1px solid var(--rpg-manager-colour-border);
-  margin-bottom: 40px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-title {
-  width: 100%;
-  font-weight: 400;
-  font-size: 2em;
-  border-bottom: 1px solid var(--rpg-manager-colour-border);
-  text-align: center;
-  min-height: 4em;
-  position: relative;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-title .rpg-manager-header-container-title-name {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  transform: translate(-50%, -50%);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-title .rpg-manager-header-container-title-overlay {
-  content: "";
-  top: 0;
-  right: 0;
-  bottom: 100%;
-  left: 100%;
-  background-color: rgba(128, 128, 128, 0.5);
-  min-height: 350px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-title .rpg-manager-header-container-title-overlay .rpg-manager-header-container-title-name {
-  color: var(--color-base-00);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info {
-  padding: 10px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data {
-  width: calc(100% - 310px);
-  float: left;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-edit {
-  float: right;
-  width: 25px;
-  display: none;
-  cursor: pointer;
-  color: var(--rpg-manager-colour-text-link);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-title,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-title-editable {
-  font-variant: small-caps;
-  font-size: 0.8em;
-  color: var(--rpg-manager-colour-text-very-light);
-  float: left;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content .rpg-manager-header-container-info-data-container-content-link,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content-editable .rpg-manager-header-container-info-data-container-content-link {
-  font-size: 0.8em;
-  padding: 2px 12px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content p,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content-editable p {
-  margin: 0px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content .flatpickr,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content-editable .flatpickr {
-  margin-top: 0px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-title-editable,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container .rpg-manager-header-container-info-data-container-content-editable {
-  width: calc(100% - 30px);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-long .rpg-manager-header-container-info-data-container-title {
-  width: 100%;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-long .rpg-manager-header-container-info-data-container-content {
-  width: 100%;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-short .rpg-manager-header-container-info-data-container-title,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-short .rpg-manager-header-container-info-data-container-title-editable {
-  width: 100px;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-short .rpg-manager-header-container-info-data-container-content,
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-short .rpg-manager-header-container-info-data-container-content-editable {
-  float: left;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-short .rpg-manager-header-container-info-data-container-content {
-  width: calc(100% - 100px);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-short .rpg-manager-header-container-info-data-container-content-editable {
-  width: calc(100% - 130px);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-editable:hover {
-  background-color: var(--rpg-manager-colour-background);
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-data .rpg-manager-header-container-info-data-container-editable:hover .rpg-manager-header-container-info-data-container-edit {
-  display: block;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info .rpg-manager-header-container-info-gallery {
-  width: 300px;
-  float: right;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info-no-gallery .rpg-manager-header-container-info-data {
-  width: 100%;
-}
-.rpg-manager-header .rpg-manager-header-container .rpg-manager-header-container-info-no-gallery .rpg-manager-header-container-info-gallery {
-  width: 0px;
-}
-
-input[type=text], textarea {
-  width: 100%;
-}
-
-input[type=checkbox] {
-  margin: 0;
-}
-
-/*
-select, input[type=text] {
-	border: none;
-	border-bottom: solid 1px var(--background-modifier-border);
-	border-radius: 0;
-	box-shadow: none;
-	margin-top: 10px;
-	box-shadow: 0 0 0 0 transparent;
-}
-
-
-
-select:hover, input:hover, textarea:hover {
-	box-shadow: none;
-	background-color: var(--interactive-hover);
-	background-color: var(--background-secondary);
-}
-
-select, select:focus, input[type=text]:focus, textarea:focus {
-	border: none;
-	border-bottom: solid 1px var(--background-modifier-border);
-	border-radius: 0px;
-	width: 100%;
-	box-shadow: 0 0 0 0 transparent;
-}
- */
-textarea {
-  border: solid 1px var(--background-modifier-border);
-  border-radius: 0;
-  box-shadow: none;
-  margin-top: 10px;
-  box-shadow: 0 0 0 0 transparent;
-}
-
-textarea:focus {
-  border: solid 1px var(--background-modifier-border);
-}
-
-button {
+.hover\:cursor-pointer:hover {
   cursor: pointer;
 }
-button.danger {
-  background-color: var(--background-modifier-error);
+
+.hover\:\!border-0:hover {
+  border-width: 0px !important;
 }
-button.danger:hover {
-  background-color: var(--text-error);
-  color: var(--text-on-accent);
+
+.hover\:\!border-green-800:hover {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(22 101 52 / var(--tw-border-opacity)) !important;
 }
-button:disabled {
+
+.hover\:border-\[--background-modifier-border-hover\]:hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+.hover\:\!bg-\[--interactive-accent-hover\]:hover {
+  background-color: var(--interactive-accent-hover) !important;
+}
+
+.hover\:\!bg-green-100:hover {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity)) !important;
+}
+
+.hover\:bg-\[--background-primary-alt\]:hover {
   background-color: var(--background-primary-alt);
-  cursor: not-allowed;
 }
 
-select, input[type=text] {
-  width: 100%;
-  display: block;
-  padding: 6px 12px;
-  border: solid 1px var(--rpg-manager-colour-border);
-  border-radius: 4px;
-  margin: 0;
+.hover\:bg-\[--background-primary\]:hover {
+  background-color: var(--background-primary);
 }
 
-select,
-select:focus,
-select:hover,
-input[type=text],
-input[type=text]:focus,
-input[type=text]:hover,
-textarea,
-textarea:focus,
-textarea:hover {
-  box-shadow: 0 0 0 0 transparent;
-  border-color: var(--rpg-manager-colour-border);
-  box-shadow: none;
+.hover\:bg-\[--background-secondary\]:hover {
+  background-color: var(--background-secondary);
 }
 
-.rpg-manager-modal {
-  display: block;
-  padding: 20px;
-}
-.rpg-manager-modal h2.rpgm-modal-title {
-  text-align: center;
-}
-.rpg-manager-modal .rpg-manager-modal-scene-container {
-  margin: 30px;
-}
-.rpg-manager-modal .rpg-manager-modal-grid {
-  display: flex;
-  gap: 20px;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  flex: 1 0.5 auto;
-  margin-bottom: 30px;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation label {
-  color: var(--text-muted);
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation p.error {
-  color: var(--text-error);
-  display: none;
-  font-size: 0.9em;
-  font-weight: 200;
-  margin: 0px;
-  padding: 0px;
-  margin-top: -10px;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation > .createFrontMatterOnly {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-additional-elements {
-  border: solid 1px var(--background-modifier-border);
-  display: none;
-  padding: 25px;
-  padding-top: 0;
-  min-width: 250px;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation-group {
-  display: flex;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation-group-container {
-  width: 100%;
-}
-.rpg-manager-modal .rpg-manager-modal-grid-navigation-group-title {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  display: inline-block;
-  overflow: visible;
-  margin-right: 10px;
-  padding: 10px;
-  padding-right: 0;
-  border-left: solid 1px var(--background-modifier-border);
+.hover\:bg-gradient-to-l:hover {
+  background-image: linear-gradient(to left, var(--tw-gradient-stops));
 }
 
-.markdown-source-view.mod-cm6.is-readable-line-width .cm-embed-block > div .rpg-manager-table {
-  margin-left: 0px !important;
-  margin-right: 0px;
-  width: 100%;
-  max-width: 100%;
+.hover\:bg-gradient-to-r:hover {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
-.rpg-manager-table-header {
-  margin-bottom: 0px;
-  padding-top: 15px;
-  cursor: pointer;
-  float: left;
-  width: 100%;
+.hover\:from-black:hover {
+  --tw-gradient-from: #000 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
-.rpg-manager-table-header .rpgm-td-edit {
-  padding-left: 20px;
-  font-size: 0.7em;
-  cursor: pointer;
+
+.hover\:to-transparent:hover {
+  --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
+
+.hover\:\!text-\[--text-accent\]:hover {
+  color: var(--text-accent) !important;
+}
+
+.hover\:\!text-\[text-normal\]:hover {
+  color: text-normal !important;
+}
+
+.hover\:\!text-green-800:hover {
+  --tw-text-opacity: 1 !important;
+  color: rgb(22 101 52 / var(--tw-text-opacity)) !important;
+}
+
+.hover\:text-\[--text-accent-hover\]:hover {
+  color: var(--text-accent-hover);
+}
+
+.hover\:text-\[--text-accent\]:hover {
   color: var(--text-accent);
 }
 
-.rpg-manager-table {
-  width: 100%;
-  max-width: 100%;
-}
-.rpg-manager-table .rpg-manager-table-draggable, .rpg-manager-table .rpg-manager-table-draggable-title {
-  color: var(--rpg-manager-colour-text-light);
-}
-.rpg-manager-table .rpg-manager-table-draggable span > svg, .rpg-manager-table .rpg-manager-table-draggable-title span > svg {
-  height: var(--icon-xs);
-  width: var(--icon-xs);
-}
-.rpg-manager-table .rpg-manager-table-draggable {
-  cursor: pointer;
-}
-.rpg-manager-table .rpg-manager-table-draggable span {
-  display: none;
-}
-.rpg-manager-table .rpg-manager-table-draggable:hover > span {
-  display: block;
-}
-.rpg-manager-table .inline {
-  white-space: nowrap;
-}
-.rpg-manager-table thead {
-  border: none;
-  border-bottom: solid 1px var(--rpg-manager-colour-border);
-}
-.rpg-manager-table tr > td.image {
-  width: 50px;
-  min-width: 50px;
-}
-.rpg-manager-table tr > th {
-  white-space: nowrap;
-  border: none;
-  text-align: left;
-}
-.rpg-manager-table tr > td {
-  height: 50px;
-  border: none;
-  text-align: left;
-}
-.rpg-manager-table tr > td p {
-  margin: 0px;
-}
-.rpg-manager-table tr > td .inline {
-  white-space: nowrap;
-}
-.rpg-manager-table tbody > tr > td {
-  font-size: 0.8em;
-}
-.rpg-manager-table tbody > tr > td.rpg-manager-table-editor-container {
-  width: 20px;
-  min-width: 20px;
-  margin: 0px;
-  padding: 0px;
-}
-.rpg-manager-table tbody > tr > td.rpg-manager-table-editor-container .rpg-manager-table-editor {
-  display: none;
-  cursor: pointer;
-  margin: 0px;
-  padding: 0px;
-  color: var(--rpg-manager-colour-text-link);
-}
-.rpg-manager-table tbody > tr:hover td {
-  background-color: var(--rpg-manager-colour-background);
-}
-.rpg-manager-table tbody > tr:hover td > .rpg-manager-table-editor {
-  display: inline;
-}
-.rpg-manager-table tbody > tr > td.smaller {
-  font-size: 0.7em;
+.hover\:text-\[--text-normal\]:hover {
+  color: var(--text-normal);
 }
 
-.rpg-manager-right-view {
-  padding-top: 5px;
-  font-size: 1em;
-  height: 100%;
-  margin-bottom: 50px;
-}
-.rpg-manager-right-view h2 {
-  font-size: 1em;
-  font-weight: 400;
-}
-.rpg-manager-right-view .rpg-manager-right-view-title {
-  border-bottom: solid 1px var(--rpg-manager-colour-border);
-  margin-bottom: 0px;
-}
-.rpg-manager-right-view .rpg-manager-right-view-title h3 {
-  font-size: 0.9em;
-  font-weight: 300;
-  float: left;
-  width: calc(100% - 30px);
-  margin: 0px;
-}
-.rpg-manager-right-view .rpg-manager-right-view-title svg {
-  float: left;
-}
-.rpg-manager-right-view .rpg-manager-right-view-container {
-  margin: 0px;
-  margin-left: 20px;
-}
-.rpg-manager-right-view .rpg-manager-right-view-container .rpg-manager-right-view-container-element {
-  font-size: 0.8em;
-  font-weight: 200;
-  margin: 10px;
-}
-.rpg-manager-right-view .rpg-manager-right-view-container .rpg-manager-right-view-container-element:hover {
-  color: var(--rpg-manager-colour-text-link);
-  cursor: pointer;
-}
-.rpg-manager-right-view .rpg-manager-right-view-container.closed {
-  display: none;
-}
-.rpg-manager-right-view .rpg-manager-right-view-container.open {
-  display: block;
+.hover\:text-\[--text-on-accent\]:hover {
+  color: var(--text-on-accent);
 }
 
-.rpg-manager-timeline-header {
-  background-size: cover;
-  color: var(--rpg-manager-colour-background);
-  position: relative;
-  min-height: 350px;
-  height: 350px;
-}
-.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay {
-  margin-bottom: -50px;
-  box-sizing: border-box;
-  background: rgba(128, 128, 128, 0.5);
-  min-height: 350px;
-}
-.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay .rpg-manager-timeline-header-overlay-title {
-  font-size: 4em;
-  display: inline-block;
-  padding-left: 30px;
-  width: 100%;
-  margin-top: 50px;
-}
-.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay .rpg-manager-timeline-header-overlay-name {
-  display: inline-block;
-  padding-left: 55px;
-  width: 100%;
-  font-size: 1.6em;
-}
-.rpg-manager-timeline-header .rpg-manager-timeline-header-overlay .rpg-manager-timeline-header-overlay-date {
-  display: inline-block;
-  padding-left: 55px;
-  text-transform: uppercase;
-  font-weight: 300;
-  font-size: 0.6em;
-  letter-spacing: 2px;
-  width: 100%;
+.hover\:opacity-100:hover {
+  opacity: 1;
 }
 
-.rpg-manager-timeline-content {
-  padding: 30px 20px;
-}
-.rpg-manager-timeline-content ul {
-  list-style-type: none;
-  border-left: 1px solid var(--rpg-manager-colour-border);
-  padding: 10px 5px;
-  margin-top: -30px;
-}
-.rpg-manager-timeline-content ul li {
-  position: relative;
-}
-.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element {
-  padding-left: 10px;
-  font-weight: 200;
-  margin-bottom: 20px;
-}
-.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element span {
-  display: inline-block;
-  text-align: left;
-  font-size: 0.9em;
-  font-variant: all-small-caps;
-}
-.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element h3 {
-  color: var(--rpg-manager-colour-text-link);
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.rpg-manager-timeline-content ul li .rpg-manager-timeline-content-element div > p {
-  font-size: 0.8em;
-  margin: 0px;
-}
-.rpg-manager-timeline-content ul li:before {
-  position: absolute;
-  content: "";
-  width: 15px;
-  height: 15px;
-  background-color: var(--code-property);
-  border-radius: 50%;
-  left: -13px;
-  top: 28px;
-  transition: 0.5s;
-}
-.rpg-manager-timeline-content ul span.clue {
-  color: var(--code-property);
-}
-.rpg-manager-timeline-content ul span.death {
-  color: var(--text-error);
-}
-.rpg-manager-timeline-content ul span.session {
-  color: var(--background-modifier-success);
-}
-.rpg-manager-timeline-content ul span.event {
-  color: var(--interactive-accent);
-}
-.rpg-manager-timeline-content ul li.clue::before {
-  background-color: var(--code-property);
-}
-.rpg-manager-timeline-content ul li.death::before {
-  background-color: var(--text-error);
-}
-.rpg-manager-timeline-content ul li.session::before {
-  background-color: var(--background-modifier-success);
-}
-.rpg-manager-timeline-content ul li.event::before {
-  background-color: var(--interactive-accent);
+.hover\:opacity-50:hover {
+  opacity: 0.5;
 }
 
-.rpg-manager-modal .rpg-manager-modal-wizard {
-  min-height: 500px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-header {
-  width: 100%;
-  height: 30px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-navigation {
-  width: 100%;
-  min-height: 40px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-navigation .rpg-manager-wizard-navigation-elements {
-  width: 80%;
-  margin: 20px auto;
-  display: flex;
-  justify-content: space-between;
-  border-top: solid 1px var(--rpg-manager-colour-border);
-  padding-top: 24px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-navigation .rpg-manager-wizard-navigation-elements .rpg-manager-wizard-navigation-elements-dot {
-  background-color: var(--background-primary);
-  border: solid 1px var(--rpg-manager-colour-border);
-  margin-top: -40px;
-  width: 30px;
-  height: 30px;
-  line-height: 28px;
-  text-align: center;
-  border-radius: 50%;
-  font-size: 0.9em;
-  font-weight: 200;
-  cursor: pointer;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-navigation .rpg-manager-wizard-navigation-elements .rpg-manager-wizard-navigation-elements-dot-active {
-  background-color: var(--code-property);
-  color: var(--background-primary);
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main {
-  width: 100%;
-  min-height: 400px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-recap {
-  float: left;
-  width: 200px;
-  border: solid 1px var(--rpg-manager-colour-border);
-  padding: 10px;
-  margin-bottom: 25px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-description {
-  font-size: 0.8em;
-  font-weight: 200;
-  margin-bottom: 1em;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-description p {
-  margin: 0px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content {
-  float: left;
-  width: calc(100% - 200px);
-  padding-left: 25px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content .rpg-manager-wizard-main-content-title,
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-recap .rpg-manager-wizard-main-recap-title,
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container-clues-title {
-  font-size: 0.8em;
-  color: var(--rpg-manager-colour-text-light);
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container {
-  width: 100%;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text,
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text {
-  float: left;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text textarea,
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text textarea {
-  width: 100%;
-  min-height: 200px;
-  font-size: 1.1em;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text .rpg-manager-wizard-main-supporting-content,
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text .rpg-manager-wizard-main-supporting-content {
-  font-size: 0.9em;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-text {
-  width: 100%;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues-text {
-  width: 50%;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues {
-  float: right;
-  width: 50%;
-  padding-left: 25px;
-  padding-top: 10px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-main .rpg-manager-wizard-main-content-container .rpg-manager-wizard-main-content-container-clues textarea {
-  width: 100%;
-  min-height: 120px;
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-buttons {
-  width: 100%;
-  height: 30px;
-  border-top: solid 1px var(--rpg-manager-colour-border);
-}
-.rpg-manager-modal .rpg-manager-modal-wizard .rpg-manager-wizard-buttons button {
-  float: right;
-  margin-left: 30px;
-  width: 100px;
+.hover\:\!shadow-none:hover {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
 
-.rpg-manager-feedbackview {
-  border: solid 1px var(--rpg-manager-colour-border);
-  padding: 20px;
-  font-style: italic;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-title {
-  border-bottom: solid 1px var(--rpg-manager-colour-border);
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container {
-  margin-top: 10px;
-  position: relative;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title {
-  font-weight: 300;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title span {
-  float: left;
-  margin-right: 10px;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title span p {
-  margin: 0px;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-title .rpg-manager-feedbackview-container-title-actionable {
-  cursor: pointer;
-  float: right;
-  font-size: 0.8em;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note-action, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional {
-  font-size: 0.8em;
-  margin-left: 10px;
-  padding-left: 10px;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note p, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-note-action p, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional p {
-  margin: 0px;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional {
-  padding-top: 10px;
-  position: relative;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional .rpg-manager-feedbackview-container-additional-title, .rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional .rpg-manager-feedbackview-container-additional-value {
-  float: left;
-  font-weight: 300;
-}
-.rpg-manager-feedbackview .rpg-manager-feedbackview-container .rpg-manager-feedbackview-container-additional .rpg-manager-feedbackview-container-additional-value {
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-right: 20px;
-  font-weight: bold;
-  --icon-size: 1em;
+.focus\:\!border-\[--background-modifier-border\]:focus {
+  border-color: var(--background-modifier-border) !important;
 }
 
-.rpg-manager-header-container-info-analyser {
-  border-top: solid 1px var(--rpg-manager-colour-border);
-  padding: 20px;
+.focus\:\!shadow-none:focus {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
 
-.rpgm-new-analyser.centred {
-  text-align: center;
+.active\:border-\[--background-modifier-border-hover\]:active {
+  border-color: var(--background-modifier-border-hover);
 }
-.rpgm-new-analyser .analyser-container {
-  display: inline-block;
+
+.active\:text-green-700:active {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
 }
-.rpgm-new-analyser .analyser-container-fix {
-  min-height: 20px;
+
+.active\:shadow-none:active {
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
-.rpgm-new-analyser .analyser-container-fix.error {
-  color: var(--text-error);
-}
-.rpgm-new-analyser .analyser-container-fix.warning {
-  color: var(--code-important);
-}
-.rpgm-new-analyser .analyser-container-fix.balanced {
-  color: var(--code-property);
-}
-.rpgm-new-analyser .analyser-container-fix.perfect {
-  color: var(--text-success);
-}
-.rpgm-new-analyser .analyser-container-fix.normal {
-  color: var(--text-muted);
-}
-.rpgm-new-analyser .circle-container {
-  position: relative;
-  float: left;
-  margin: 0px 10px;
-}
-.rpgm-new-analyser .circle-container:hover {
-  cursor: pointer;
-}
-.rpgm-new-analyser .circle-container:hover .description.error {
-  color: var(--text-error);
-}
-.rpgm-new-analyser .circle-container:hover .description.warning {
-  color: var(--code-important);
-}
-.rpgm-new-analyser .circle-container:hover .description.balanced {
-  color: var(--code-property);
-}
-.rpgm-new-analyser .circle-container:hover .description.perfect {
-  color: var(--text-success);
-}
-.rpgm-new-analyser .circle-container .description {
-  font-size: 0.9em;
-}
-.rpgm-new-analyser .circle-container .c100 {
-  float: none;
-  display: inline-block;
-  margin: 0px;
-}
-.rpgm-new-analyser .circle-container .c100 .bar, .rpgm-new-analyser .circle-container .c100 .fill {
-  border-color: var(--text-faint) !important;
-}
-.rpgm-new-analyser .circle-container .c100:hover > span {
+
+.disabled\:text-\[--text-faint\]:disabled {
   color: var(--text-faint);
 }
-.rpgm-new-analyser .circle-container .c100.error .bar, .rpgm-new-analyser .circle-container .c100.error .fill {
-  border-color: var(--text-error) !important;
-}
-.rpgm-new-analyser .circle-container .c100.error:hover > span {
-  color: var(--text-error);
-}
-.rpgm-new-analyser .circle-container .c100.warning .bar, .rpgm-new-analyser .circle-container .c100.warning .fill {
-  border-color: var(--code-important) !important;
-}
-.rpgm-new-analyser .circle-container .c100.warning:hover > span {
-  color: var(--code-important);
-}
-.rpgm-new-analyser .circle-container .c100.balanced .bar, .rpgm-new-analyser .circle-container .c100.balanced .fill {
-  border-color: var(--code-property) !important;
-}
-.rpgm-new-analyser .circle-container .c100.balanced:hover > span {
-  color: var(--code-property);
-}
-.rpgm-new-analyser .circle-container .c100.perfect .bar, .rpgm-new-analyser .circle-container .c100.perfect .fill {
-  border-color: var(--text-success) !important;
-}
-.rpgm-new-analyser .circle-container .c100.perfect:hover > span {
-  color: var(--text-success);
-}
-
-.rpgm-new-analyser {
-  color: var(--text-muted);
-}
-.rpgm-new-analyser span.header, .rpgm-new-analyser ul > li > span.subtitle {
-  font-weight: 400;
-  font-size: 1em;
-}
-.rpgm-new-analyser span.header.error, .rpgm-new-analyser ul > li > span.subtitle.error {
-  color: var(--text-error);
-}
-.rpgm-new-analyser span.header.warning, .rpgm-new-analyser ul > li > span.subtitle.warning {
-  color: var(--code-important);
-}
-.rpgm-new-analyser span.header.balanced, .rpgm-new-analyser ul > li > span.subtitle.balanced {
-  color: var(--code-property);
-}
-.rpgm-new-analyser span.header.perfect, .rpgm-new-analyser ul > li > span.subtitle.perfect {
-  color: var(--text-success);
-}
-.rpgm-new-analyser ul {
-  margin: 0px;
-}
-.rpgm-new-analyser ul li {
-  list-style: none;
-  font-size: 0.8em;
-}
-.rpgm-new-analyser ul li span.subtitle {
-  font-weight: 300;
-  font-size: 1em;
-}
-.rpgm-new-analyser ul li span.description {
-  font-size: 0.9em;
-  font-style: italic;
-}
-
-/*
-.rpgm-analyser {
-	padding: 20px;
-	color: var(--text-muted);
-	border-top: solid 1px var(--background-modifier-border);
-
-	span.header {
-		font-weight: 300;
-		font-size: 0.9em;
-
-		&.error {
-			color: var(--text-error);
-		}
-
-		&.warning {
-			color: var(--code-important);
-		}
-
-		&.balanced {
-			color: var(--code-property);
-		}
-
-		&.perfect {
-			color: var(--text-success);
-		}
-	}
-
-	ul {
-		margin: 0px;
-
-		li {
-			font-size: 0.8em;
-
-			span.description {
-				font-size: 0.9em;
-				font-style: italic;
-			}
-
-			&.error {
-				color: var(--text-error);
-			}
-
-			&.warning {
-				font-weight: 300;
-				color: var(--text-error);
-			}
-		}
-	}
-}
-*/
-/****************************************************************
- *
- * CSS Percentage Circle
- * Author: Andre Firchow
- *
-*****************************************************************/
-.rect-auto, .c100.p51 .slice, .c100.p52 .slice, .c100.p53 .slice, .c100.p54 .slice, .c100.p55 .slice, .c100.p56 .slice, .c100.p57 .slice, .c100.p58 .slice, .c100.p59 .slice, .c100.p60 .slice, .c100.p61 .slice, .c100.p62 .slice, .c100.p63 .slice, .c100.p64 .slice, .c100.p65 .slice, .c100.p66 .slice, .c100.p67 .slice, .c100.p68 .slice, .c100.p69 .slice, .c100.p70 .slice, .c100.p71 .slice, .c100.p72 .slice, .c100.p73 .slice, .c100.p74 .slice, .c100.p75 .slice, .c100.p76 .slice, .c100.p77 .slice, .c100.p78 .slice, .c100.p79 .slice, .c100.p80 .slice, .c100.p81 .slice, .c100.p82 .slice, .c100.p83 .slice, .c100.p84 .slice, .c100.p85 .slice, .c100.p86 .slice, .c100.p87 .slice, .c100.p88 .slice, .c100.p89 .slice, .c100.p90 .slice, .c100.p91 .slice, .c100.p92 .slice, .c100.p93 .slice, .c100.p94 .slice, .c100.p95 .slice, .c100.p96 .slice, .c100.p97 .slice, .c100.p98 .slice, .c100.p99 .slice, .c100.p100 .slice {
-  clip: rect(auto, auto, auto, auto);
-}
-
-.pie, .c100 .bar, .c100.p51 .fill, .c100.p52 .fill, .c100.p53 .fill, .c100.p54 .fill, .c100.p55 .fill, .c100.p56 .fill, .c100.p57 .fill, .c100.p58 .fill, .c100.p59 .fill, .c100.p60 .fill, .c100.p61 .fill, .c100.p62 .fill, .c100.p63 .fill, .c100.p64 .fill, .c100.p65 .fill, .c100.p66 .fill, .c100.p67 .fill, .c100.p68 .fill, .c100.p69 .fill, .c100.p70 .fill, .c100.p71 .fill, .c100.p72 .fill, .c100.p73 .fill, .c100.p74 .fill, .c100.p75 .fill, .c100.p76 .fill, .c100.p77 .fill, .c100.p78 .fill, .c100.p79 .fill, .c100.p80 .fill, .c100.p81 .fill, .c100.p82 .fill, .c100.p83 .fill, .c100.p84 .fill, .c100.p85 .fill, .c100.p86 .fill, .c100.p87 .fill, .c100.p88 .fill, .c100.p89 .fill, .c100.p90 .fill, .c100.p91 .fill, .c100.p92 .fill, .c100.p93 .fill, .c100.p94 .fill, .c100.p95 .fill, .c100.p96 .fill, .c100.p97 .fill, .c100.p98 .fill, .c100.p99 .fill, .c100.p100 .fill {
-  position: absolute;
-  border: 0.08em solid #307bbb;
-  width: 0.84em;
-  height: 0.84em;
-  clip: rect(0em, 0.5em, 1em, 0em);
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-}
-
-.pie-fill, .c100.p51 .bar:after, .c100.p51 .fill, .c100.p52 .bar:after, .c100.p52 .fill, .c100.p53 .bar:after, .c100.p53 .fill, .c100.p54 .bar:after, .c100.p54 .fill, .c100.p55 .bar:after, .c100.p55 .fill, .c100.p56 .bar:after, .c100.p56 .fill, .c100.p57 .bar:after, .c100.p57 .fill, .c100.p58 .bar:after, .c100.p58 .fill, .c100.p59 .bar:after, .c100.p59 .fill, .c100.p60 .bar:after, .c100.p60 .fill, .c100.p61 .bar:after, .c100.p61 .fill, .c100.p62 .bar:after, .c100.p62 .fill, .c100.p63 .bar:after, .c100.p63 .fill, .c100.p64 .bar:after, .c100.p64 .fill, .c100.p65 .bar:after, .c100.p65 .fill, .c100.p66 .bar:after, .c100.p66 .fill, .c100.p67 .bar:after, .c100.p67 .fill, .c100.p68 .bar:after, .c100.p68 .fill, .c100.p69 .bar:after, .c100.p69 .fill, .c100.p70 .bar:after, .c100.p70 .fill, .c100.p71 .bar:after, .c100.p71 .fill, .c100.p72 .bar:after, .c100.p72 .fill, .c100.p73 .bar:after, .c100.p73 .fill, .c100.p74 .bar:after, .c100.p74 .fill, .c100.p75 .bar:after, .c100.p75 .fill, .c100.p76 .bar:after, .c100.p76 .fill, .c100.p77 .bar:after, .c100.p77 .fill, .c100.p78 .bar:after, .c100.p78 .fill, .c100.p79 .bar:after, .c100.p79 .fill, .c100.p80 .bar:after, .c100.p80 .fill, .c100.p81 .bar:after, .c100.p81 .fill, .c100.p82 .bar:after, .c100.p82 .fill, .c100.p83 .bar:after, .c100.p83 .fill, .c100.p84 .bar:after, .c100.p84 .fill, .c100.p85 .bar:after, .c100.p85 .fill, .c100.p86 .bar:after, .c100.p86 .fill, .c100.p87 .bar:after, .c100.p87 .fill, .c100.p88 .bar:after, .c100.p88 .fill, .c100.p89 .bar:after, .c100.p89 .fill, .c100.p90 .bar:after, .c100.p90 .fill, .c100.p91 .bar:after, .c100.p91 .fill, .c100.p92 .bar:after, .c100.p92 .fill, .c100.p93 .bar:after, .c100.p93 .fill, .c100.p94 .bar:after, .c100.p94 .fill, .c100.p95 .bar:after, .c100.p95 .fill, .c100.p96 .bar:after, .c100.p96 .fill, .c100.p97 .bar:after, .c100.p97 .fill, .c100.p98 .bar:after, .c100.p98 .fill, .c100.p99 .bar:after, .c100.p99 .fill, .c100.p100 .bar:after, .c100.p100 .fill {
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
-
-.c100 {
-  position: relative;
-  font-size: 120px;
-  width: 1em;
-  height: 1em;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  float: left;
-  margin: 0 0.1em 0.1em 0;
-  background-color: #cccccc;
-}
-
-.c100 *, .c100 *:before, .c100 *:after {
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-}
-
-.c100.center {
-  float: none;
-  margin: 0 auto;
-}
-
-.c100.big {
-  font-size: 240px;
-}
-
-.c100.small {
-  font-size: 80px;
-}
-
-.c100 > span {
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 5em;
-  line-height: 5em;
-  font-size: 0.2em;
-  color: #cccccc;
-  display: block;
-  text-align: center;
-  white-space: nowrap;
-  -webkit-transition-property: all;
-  -moz-transition-property: all;
-  -o-transition-property: all;
-  transition-property: all;
-  -webkit-transition-duration: 0.2s;
-  -moz-transition-duration: 0.2s;
-  -o-transition-duration: 0.2s;
-  transition-duration: 0.2s;
-  -webkit-transition-timing-function: ease-out;
-  -moz-transition-timing-function: ease-out;
-  -o-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-
-.c100:after {
-  position: absolute;
-  top: 0.08em;
-  left: 0.08em;
-  display: block;
-  content: " ";
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  background-color: whitesmoke;
-  width: 0.84em;
-  height: 0.84em;
-  -webkit-transition-property: all;
-  -moz-transition-property: all;
-  -o-transition-property: all;
-  transition-property: all;
-  -webkit-transition-duration: 0.2s;
-  -moz-transition-duration: 0.2s;
-  -o-transition-duration: 0.2s;
-  transition-duration: 0.2s;
-  -webkit-transition-timing-function: ease-in;
-  -moz-transition-timing-function: ease-in;
-  -o-transition-timing-function: ease-in;
-  transition-timing-function: ease-in;
-}
-
-.c100 .slice {
-  position: absolute;
-  width: 1em;
-  height: 1em;
-  clip: rect(0em, 1em, 1em, 0.5em);
-}
-
-.c100.p1 .bar {
-  -webkit-transform: rotate(3.6deg);
-  -moz-transform: rotate(3.6deg);
-  -ms-transform: rotate(3.6deg);
-  -o-transform: rotate(3.6deg);
-  transform: rotate(3.6deg);
-}
-
-.c100.p2 .bar {
-  -webkit-transform: rotate(7.2deg);
-  -moz-transform: rotate(7.2deg);
-  -ms-transform: rotate(7.2deg);
-  -o-transform: rotate(7.2deg);
-  transform: rotate(7.2deg);
-}
-
-.c100.p3 .bar {
-  -webkit-transform: rotate(10.8deg);
-  -moz-transform: rotate(10.8deg);
-  -ms-transform: rotate(10.8deg);
-  -o-transform: rotate(10.8deg);
-  transform: rotate(10.8deg);
-}
-
-.c100.p4 .bar {
-  -webkit-transform: rotate(14.4deg);
-  -moz-transform: rotate(14.4deg);
-  -ms-transform: rotate(14.4deg);
-  -o-transform: rotate(14.4deg);
-  transform: rotate(14.4deg);
-}
-
-.c100.p5 .bar {
-  -webkit-transform: rotate(18deg);
-  -moz-transform: rotate(18deg);
-  -ms-transform: rotate(18deg);
-  -o-transform: rotate(18deg);
-  transform: rotate(18deg);
-}
-
-.c100.p6 .bar {
-  -webkit-transform: rotate(21.6deg);
-  -moz-transform: rotate(21.6deg);
-  -ms-transform: rotate(21.6deg);
-  -o-transform: rotate(21.6deg);
-  transform: rotate(21.6deg);
-}
-
-.c100.p7 .bar {
-  -webkit-transform: rotate(25.2deg);
-  -moz-transform: rotate(25.2deg);
-  -ms-transform: rotate(25.2deg);
-  -o-transform: rotate(25.2deg);
-  transform: rotate(25.2deg);
-}
-
-.c100.p8 .bar {
-  -webkit-transform: rotate(28.8deg);
-  -moz-transform: rotate(28.8deg);
-  -ms-transform: rotate(28.8deg);
-  -o-transform: rotate(28.8deg);
-  transform: rotate(28.8deg);
-}
-
-.c100.p9 .bar {
-  -webkit-transform: rotate(32.4deg);
-  -moz-transform: rotate(32.4deg);
-  -ms-transform: rotate(32.4deg);
-  -o-transform: rotate(32.4deg);
-  transform: rotate(32.4deg);
-}
-
-.c100.p10 .bar {
-  -webkit-transform: rotate(36deg);
-  -moz-transform: rotate(36deg);
-  -ms-transform: rotate(36deg);
-  -o-transform: rotate(36deg);
-  transform: rotate(36deg);
-}
-
-.c100.p11 .bar {
-  -webkit-transform: rotate(39.6deg);
-  -moz-transform: rotate(39.6deg);
-  -ms-transform: rotate(39.6deg);
-  -o-transform: rotate(39.6deg);
-  transform: rotate(39.6deg);
-}
-
-.c100.p12 .bar {
-  -webkit-transform: rotate(43.2deg);
-  -moz-transform: rotate(43.2deg);
-  -ms-transform: rotate(43.2deg);
-  -o-transform: rotate(43.2deg);
-  transform: rotate(43.2deg);
-}
-
-.c100.p13 .bar {
-  -webkit-transform: rotate(46.8deg);
-  -moz-transform: rotate(46.8deg);
-  -ms-transform: rotate(46.8deg);
-  -o-transform: rotate(46.8deg);
-  transform: rotate(46.8deg);
-}
-
-.c100.p14 .bar {
-  -webkit-transform: rotate(50.4deg);
-  -moz-transform: rotate(50.4deg);
-  -ms-transform: rotate(50.4deg);
-  -o-transform: rotate(50.4deg);
-  transform: rotate(50.4deg);
-}
-
-.c100.p15 .bar {
-  -webkit-transform: rotate(54deg);
-  -moz-transform: rotate(54deg);
-  -ms-transform: rotate(54deg);
-  -o-transform: rotate(54deg);
-  transform: rotate(54deg);
-}
-
-.c100.p16 .bar {
-  -webkit-transform: rotate(57.6deg);
-  -moz-transform: rotate(57.6deg);
-  -ms-transform: rotate(57.6deg);
-  -o-transform: rotate(57.6deg);
-  transform: rotate(57.6deg);
-}
-
-.c100.p17 .bar {
-  -webkit-transform: rotate(61.2deg);
-  -moz-transform: rotate(61.2deg);
-  -ms-transform: rotate(61.2deg);
-  -o-transform: rotate(61.2deg);
-  transform: rotate(61.2deg);
-}
-
-.c100.p18 .bar {
-  -webkit-transform: rotate(64.8deg);
-  -moz-transform: rotate(64.8deg);
-  -ms-transform: rotate(64.8deg);
-  -o-transform: rotate(64.8deg);
-  transform: rotate(64.8deg);
-}
-
-.c100.p19 .bar {
-  -webkit-transform: rotate(68.4deg);
-  -moz-transform: rotate(68.4deg);
-  -ms-transform: rotate(68.4deg);
-  -o-transform: rotate(68.4deg);
-  transform: rotate(68.4deg);
-}
-
-.c100.p20 .bar {
-  -webkit-transform: rotate(72deg);
-  -moz-transform: rotate(72deg);
-  -ms-transform: rotate(72deg);
-  -o-transform: rotate(72deg);
-  transform: rotate(72deg);
-}
-
-.c100.p21 .bar {
-  -webkit-transform: rotate(75.6deg);
-  -moz-transform: rotate(75.6deg);
-  -ms-transform: rotate(75.6deg);
-  -o-transform: rotate(75.6deg);
-  transform: rotate(75.6deg);
-}
-
-.c100.p22 .bar {
-  -webkit-transform: rotate(79.2deg);
-  -moz-transform: rotate(79.2deg);
-  -ms-transform: rotate(79.2deg);
-  -o-transform: rotate(79.2deg);
-  transform: rotate(79.2deg);
-}
-
-.c100.p23 .bar {
-  -webkit-transform: rotate(82.8deg);
-  -moz-transform: rotate(82.8deg);
-  -ms-transform: rotate(82.8deg);
-  -o-transform: rotate(82.8deg);
-  transform: rotate(82.8deg);
-}
-
-.c100.p24 .bar {
-  -webkit-transform: rotate(86.4deg);
-  -moz-transform: rotate(86.4deg);
-  -ms-transform: rotate(86.4deg);
-  -o-transform: rotate(86.4deg);
-  transform: rotate(86.4deg);
-}
-
-.c100.p25 .bar {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
-
-.c100.p26 .bar {
-  -webkit-transform: rotate(93.6deg);
-  -moz-transform: rotate(93.6deg);
-  -ms-transform: rotate(93.6deg);
-  -o-transform: rotate(93.6deg);
-  transform: rotate(93.6deg);
-}
-
-.c100.p27 .bar {
-  -webkit-transform: rotate(97.2deg);
-  -moz-transform: rotate(97.2deg);
-  -ms-transform: rotate(97.2deg);
-  -o-transform: rotate(97.2deg);
-  transform: rotate(97.2deg);
-}
-
-.c100.p28 .bar {
-  -webkit-transform: rotate(100.8deg);
-  -moz-transform: rotate(100.8deg);
-  -ms-transform: rotate(100.8deg);
-  -o-transform: rotate(100.8deg);
-  transform: rotate(100.8deg);
-}
-
-.c100.p29 .bar {
-  -webkit-transform: rotate(104.4deg);
-  -moz-transform: rotate(104.4deg);
-  -ms-transform: rotate(104.4deg);
-  -o-transform: rotate(104.4deg);
-  transform: rotate(104.4deg);
-}
-
-.c100.p30 .bar {
-  -webkit-transform: rotate(108deg);
-  -moz-transform: rotate(108deg);
-  -ms-transform: rotate(108deg);
-  -o-transform: rotate(108deg);
-  transform: rotate(108deg);
-}
-
-.c100.p31 .bar {
-  -webkit-transform: rotate(111.6deg);
-  -moz-transform: rotate(111.6deg);
-  -ms-transform: rotate(111.6deg);
-  -o-transform: rotate(111.6deg);
-  transform: rotate(111.6deg);
-}
-
-.c100.p32 .bar {
-  -webkit-transform: rotate(115.2deg);
-  -moz-transform: rotate(115.2deg);
-  -ms-transform: rotate(115.2deg);
-  -o-transform: rotate(115.2deg);
-  transform: rotate(115.2deg);
-}
-
-.c100.p33 .bar {
-  -webkit-transform: rotate(118.8deg);
-  -moz-transform: rotate(118.8deg);
-  -ms-transform: rotate(118.8deg);
-  -o-transform: rotate(118.8deg);
-  transform: rotate(118.8deg);
-}
-
-.c100.p34 .bar {
-  -webkit-transform: rotate(122.4deg);
-  -moz-transform: rotate(122.4deg);
-  -ms-transform: rotate(122.4deg);
-  -o-transform: rotate(122.4deg);
-  transform: rotate(122.4deg);
-}
-
-.c100.p35 .bar {
-  -webkit-transform: rotate(126deg);
-  -moz-transform: rotate(126deg);
-  -ms-transform: rotate(126deg);
-  -o-transform: rotate(126deg);
-  transform: rotate(126deg);
-}
-
-.c100.p36 .bar {
-  -webkit-transform: rotate(129.6deg);
-  -moz-transform: rotate(129.6deg);
-  -ms-transform: rotate(129.6deg);
-  -o-transform: rotate(129.6deg);
-  transform: rotate(129.6deg);
-}
-
-.c100.p37 .bar {
-  -webkit-transform: rotate(133.2deg);
-  -moz-transform: rotate(133.2deg);
-  -ms-transform: rotate(133.2deg);
-  -o-transform: rotate(133.2deg);
-  transform: rotate(133.2deg);
-}
-
-.c100.p38 .bar {
-  -webkit-transform: rotate(136.8deg);
-  -moz-transform: rotate(136.8deg);
-  -ms-transform: rotate(136.8deg);
-  -o-transform: rotate(136.8deg);
-  transform: rotate(136.8deg);
-}
-
-.c100.p39 .bar {
-  -webkit-transform: rotate(140.4deg);
-  -moz-transform: rotate(140.4deg);
-  -ms-transform: rotate(140.4deg);
-  -o-transform: rotate(140.4deg);
-  transform: rotate(140.4deg);
-}
-
-.c100.p40 .bar {
-  -webkit-transform: rotate(144deg);
-  -moz-transform: rotate(144deg);
-  -ms-transform: rotate(144deg);
-  -o-transform: rotate(144deg);
-  transform: rotate(144deg);
-}
-
-.c100.p41 .bar {
-  -webkit-transform: rotate(147.6deg);
-  -moz-transform: rotate(147.6deg);
-  -ms-transform: rotate(147.6deg);
-  -o-transform: rotate(147.6deg);
-  transform: rotate(147.6deg);
-}
-
-.c100.p42 .bar {
-  -webkit-transform: rotate(151.2deg);
-  -moz-transform: rotate(151.2deg);
-  -ms-transform: rotate(151.2deg);
-  -o-transform: rotate(151.2deg);
-  transform: rotate(151.2deg);
-}
-
-.c100.p43 .bar {
-  -webkit-transform: rotate(154.8deg);
-  -moz-transform: rotate(154.8deg);
-  -ms-transform: rotate(154.8deg);
-  -o-transform: rotate(154.8deg);
-  transform: rotate(154.8deg);
-}
-
-.c100.p44 .bar {
-  -webkit-transform: rotate(158.4deg);
-  -moz-transform: rotate(158.4deg);
-  -ms-transform: rotate(158.4deg);
-  -o-transform: rotate(158.4deg);
-  transform: rotate(158.4deg);
-}
-
-.c100.p45 .bar {
-  -webkit-transform: rotate(162deg);
-  -moz-transform: rotate(162deg);
-  -ms-transform: rotate(162deg);
-  -o-transform: rotate(162deg);
-  transform: rotate(162deg);
-}
-
-.c100.p46 .bar {
-  -webkit-transform: rotate(165.6deg);
-  -moz-transform: rotate(165.6deg);
-  -ms-transform: rotate(165.6deg);
-  -o-transform: rotate(165.6deg);
-  transform: rotate(165.6deg);
-}
-
-.c100.p47 .bar {
-  -webkit-transform: rotate(169.2deg);
-  -moz-transform: rotate(169.2deg);
-  -ms-transform: rotate(169.2deg);
-  -o-transform: rotate(169.2deg);
-  transform: rotate(169.2deg);
-}
-
-.c100.p48 .bar {
-  -webkit-transform: rotate(172.8deg);
-  -moz-transform: rotate(172.8deg);
-  -ms-transform: rotate(172.8deg);
-  -o-transform: rotate(172.8deg);
-  transform: rotate(172.8deg);
-}
-
-.c100.p49 .bar {
-  -webkit-transform: rotate(176.4deg);
-  -moz-transform: rotate(176.4deg);
-  -ms-transform: rotate(176.4deg);
-  -o-transform: rotate(176.4deg);
-  transform: rotate(176.4deg);
-}
-
-.c100.p50 .bar {
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
-
-.c100.p51 .bar {
-  -webkit-transform: rotate(183.6deg);
-  -moz-transform: rotate(183.6deg);
-  -ms-transform: rotate(183.6deg);
-  -o-transform: rotate(183.6deg);
-  transform: rotate(183.6deg);
-}
-
-.c100.p52 .bar {
-  -webkit-transform: rotate(187.2deg);
-  -moz-transform: rotate(187.2deg);
-  -ms-transform: rotate(187.2deg);
-  -o-transform: rotate(187.2deg);
-  transform: rotate(187.2deg);
-}
-
-.c100.p53 .bar {
-  -webkit-transform: rotate(190.8deg);
-  -moz-transform: rotate(190.8deg);
-  -ms-transform: rotate(190.8deg);
-  -o-transform: rotate(190.8deg);
-  transform: rotate(190.8deg);
-}
-
-.c100.p54 .bar {
-  -webkit-transform: rotate(194.4deg);
-  -moz-transform: rotate(194.4deg);
-  -ms-transform: rotate(194.4deg);
-  -o-transform: rotate(194.4deg);
-  transform: rotate(194.4deg);
-}
-
-.c100.p55 .bar {
-  -webkit-transform: rotate(198deg);
-  -moz-transform: rotate(198deg);
-  -ms-transform: rotate(198deg);
-  -o-transform: rotate(198deg);
-  transform: rotate(198deg);
-}
-
-.c100.p56 .bar {
-  -webkit-transform: rotate(201.6deg);
-  -moz-transform: rotate(201.6deg);
-  -ms-transform: rotate(201.6deg);
-  -o-transform: rotate(201.6deg);
-  transform: rotate(201.6deg);
-}
-
-.c100.p57 .bar {
-  -webkit-transform: rotate(205.2deg);
-  -moz-transform: rotate(205.2deg);
-  -ms-transform: rotate(205.2deg);
-  -o-transform: rotate(205.2deg);
-  transform: rotate(205.2deg);
-}
-
-.c100.p58 .bar {
-  -webkit-transform: rotate(208.8deg);
-  -moz-transform: rotate(208.8deg);
-  -ms-transform: rotate(208.8deg);
-  -o-transform: rotate(208.8deg);
-  transform: rotate(208.8deg);
-}
-
-.c100.p59 .bar {
-  -webkit-transform: rotate(212.4deg);
-  -moz-transform: rotate(212.4deg);
-  -ms-transform: rotate(212.4deg);
-  -o-transform: rotate(212.4deg);
-  transform: rotate(212.4deg);
-}
-
-.c100.p60 .bar {
-  -webkit-transform: rotate(216deg);
-  -moz-transform: rotate(216deg);
-  -ms-transform: rotate(216deg);
-  -o-transform: rotate(216deg);
-  transform: rotate(216deg);
-}
-
-.c100.p61 .bar {
-  -webkit-transform: rotate(219.6deg);
-  -moz-transform: rotate(219.6deg);
-  -ms-transform: rotate(219.6deg);
-  -o-transform: rotate(219.6deg);
-  transform: rotate(219.6deg);
-}
-
-.c100.p62 .bar {
-  -webkit-transform: rotate(223.2deg);
-  -moz-transform: rotate(223.2deg);
-  -ms-transform: rotate(223.2deg);
-  -o-transform: rotate(223.2deg);
-  transform: rotate(223.2deg);
-}
-
-.c100.p63 .bar {
-  -webkit-transform: rotate(226.8deg);
-  -moz-transform: rotate(226.8deg);
-  -ms-transform: rotate(226.8deg);
-  -o-transform: rotate(226.8deg);
-  transform: rotate(226.8deg);
-}
-
-.c100.p64 .bar {
-  -webkit-transform: rotate(230.4deg);
-  -moz-transform: rotate(230.4deg);
-  -ms-transform: rotate(230.4deg);
-  -o-transform: rotate(230.4deg);
-  transform: rotate(230.4deg);
-}
-
-.c100.p65 .bar {
-  -webkit-transform: rotate(234deg);
-  -moz-transform: rotate(234deg);
-  -ms-transform: rotate(234deg);
-  -o-transform: rotate(234deg);
-  transform: rotate(234deg);
-}
-
-.c100.p66 .bar {
-  -webkit-transform: rotate(237.6deg);
-  -moz-transform: rotate(237.6deg);
-  -ms-transform: rotate(237.6deg);
-  -o-transform: rotate(237.6deg);
-  transform: rotate(237.6deg);
-}
-
-.c100.p67 .bar {
-  -webkit-transform: rotate(241.2deg);
-  -moz-transform: rotate(241.2deg);
-  -ms-transform: rotate(241.2deg);
-  -o-transform: rotate(241.2deg);
-  transform: rotate(241.2deg);
-}
-
-.c100.p68 .bar {
-  -webkit-transform: rotate(244.8deg);
-  -moz-transform: rotate(244.8deg);
-  -ms-transform: rotate(244.8deg);
-  -o-transform: rotate(244.8deg);
-  transform: rotate(244.8deg);
-}
-
-.c100.p69 .bar {
-  -webkit-transform: rotate(248.4deg);
-  -moz-transform: rotate(248.4deg);
-  -ms-transform: rotate(248.4deg);
-  -o-transform: rotate(248.4deg);
-  transform: rotate(248.4deg);
-}
-
-.c100.p70 .bar {
-  -webkit-transform: rotate(252deg);
-  -moz-transform: rotate(252deg);
-  -ms-transform: rotate(252deg);
-  -o-transform: rotate(252deg);
-  transform: rotate(252deg);
-}
-
-.c100.p71 .bar {
-  -webkit-transform: rotate(255.6deg);
-  -moz-transform: rotate(255.6deg);
-  -ms-transform: rotate(255.6deg);
-  -o-transform: rotate(255.6deg);
-  transform: rotate(255.6deg);
-}
-
-.c100.p72 .bar {
-  -webkit-transform: rotate(259.2deg);
-  -moz-transform: rotate(259.2deg);
-  -ms-transform: rotate(259.2deg);
-  -o-transform: rotate(259.2deg);
-  transform: rotate(259.2deg);
-}
-
-.c100.p73 .bar {
-  -webkit-transform: rotate(262.8deg);
-  -moz-transform: rotate(262.8deg);
-  -ms-transform: rotate(262.8deg);
-  -o-transform: rotate(262.8deg);
-  transform: rotate(262.8deg);
-}
-
-.c100.p74 .bar {
-  -webkit-transform: rotate(266.4deg);
-  -moz-transform: rotate(266.4deg);
-  -ms-transform: rotate(266.4deg);
-  -o-transform: rotate(266.4deg);
-  transform: rotate(266.4deg);
-}
-
-.c100.p75 .bar {
-  -webkit-transform: rotate(270deg);
-  -moz-transform: rotate(270deg);
-  -ms-transform: rotate(270deg);
-  -o-transform: rotate(270deg);
-  transform: rotate(270deg);
-}
-
-.c100.p76 .bar {
-  -webkit-transform: rotate(273.6deg);
-  -moz-transform: rotate(273.6deg);
-  -ms-transform: rotate(273.6deg);
-  -o-transform: rotate(273.6deg);
-  transform: rotate(273.6deg);
-}
-
-.c100.p77 .bar {
-  -webkit-transform: rotate(277.2deg);
-  -moz-transform: rotate(277.2deg);
-  -ms-transform: rotate(277.2deg);
-  -o-transform: rotate(277.2deg);
-  transform: rotate(277.2deg);
-}
-
-.c100.p78 .bar {
-  -webkit-transform: rotate(280.8deg);
-  -moz-transform: rotate(280.8deg);
-  -ms-transform: rotate(280.8deg);
-  -o-transform: rotate(280.8deg);
-  transform: rotate(280.8deg);
-}
-
-.c100.p79 .bar {
-  -webkit-transform: rotate(284.4deg);
-  -moz-transform: rotate(284.4deg);
-  -ms-transform: rotate(284.4deg);
-  -o-transform: rotate(284.4deg);
-  transform: rotate(284.4deg);
-}
-
-.c100.p80 .bar {
-  -webkit-transform: rotate(288deg);
-  -moz-transform: rotate(288deg);
-  -ms-transform: rotate(288deg);
-  -o-transform: rotate(288deg);
-  transform: rotate(288deg);
-}
-
-.c100.p81 .bar {
-  -webkit-transform: rotate(291.6deg);
-  -moz-transform: rotate(291.6deg);
-  -ms-transform: rotate(291.6deg);
-  -o-transform: rotate(291.6deg);
-  transform: rotate(291.6deg);
-}
-
-.c100.p82 .bar {
-  -webkit-transform: rotate(295.2deg);
-  -moz-transform: rotate(295.2deg);
-  -ms-transform: rotate(295.2deg);
-  -o-transform: rotate(295.2deg);
-  transform: rotate(295.2deg);
-}
-
-.c100.p83 .bar {
-  -webkit-transform: rotate(298.8deg);
-  -moz-transform: rotate(298.8deg);
-  -ms-transform: rotate(298.8deg);
-  -o-transform: rotate(298.8deg);
-  transform: rotate(298.8deg);
-}
-
-.c100.p84 .bar {
-  -webkit-transform: rotate(302.4deg);
-  -moz-transform: rotate(302.4deg);
-  -ms-transform: rotate(302.4deg);
-  -o-transform: rotate(302.4deg);
-  transform: rotate(302.4deg);
-}
-
-.c100.p85 .bar {
-  -webkit-transform: rotate(306deg);
-  -moz-transform: rotate(306deg);
-  -ms-transform: rotate(306deg);
-  -o-transform: rotate(306deg);
-  transform: rotate(306deg);
-}
-
-.c100.p86 .bar {
-  -webkit-transform: rotate(309.6deg);
-  -moz-transform: rotate(309.6deg);
-  -ms-transform: rotate(309.6deg);
-  -o-transform: rotate(309.6deg);
-  transform: rotate(309.6deg);
-}
-
-.c100.p87 .bar {
-  -webkit-transform: rotate(313.2deg);
-  -moz-transform: rotate(313.2deg);
-  -ms-transform: rotate(313.2deg);
-  -o-transform: rotate(313.2deg);
-  transform: rotate(313.2deg);
-}
-
-.c100.p88 .bar {
-  -webkit-transform: rotate(316.8deg);
-  -moz-transform: rotate(316.8deg);
-  -ms-transform: rotate(316.8deg);
-  -o-transform: rotate(316.8deg);
-  transform: rotate(316.8deg);
-}
-
-.c100.p89 .bar {
-  -webkit-transform: rotate(320.4deg);
-  -moz-transform: rotate(320.4deg);
-  -ms-transform: rotate(320.4deg);
-  -o-transform: rotate(320.4deg);
-  transform: rotate(320.4deg);
-}
-
-.c100.p90 .bar {
-  -webkit-transform: rotate(324deg);
-  -moz-transform: rotate(324deg);
-  -ms-transform: rotate(324deg);
-  -o-transform: rotate(324deg);
-  transform: rotate(324deg);
-}
-
-.c100.p91 .bar {
-  -webkit-transform: rotate(327.6deg);
-  -moz-transform: rotate(327.6deg);
-  -ms-transform: rotate(327.6deg);
-  -o-transform: rotate(327.6deg);
-  transform: rotate(327.6deg);
-}
-
-.c100.p92 .bar {
-  -webkit-transform: rotate(331.2deg);
-  -moz-transform: rotate(331.2deg);
-  -ms-transform: rotate(331.2deg);
-  -o-transform: rotate(331.2deg);
-  transform: rotate(331.2deg);
-}
-
-.c100.p93 .bar {
-  -webkit-transform: rotate(334.8deg);
-  -moz-transform: rotate(334.8deg);
-  -ms-transform: rotate(334.8deg);
-  -o-transform: rotate(334.8deg);
-  transform: rotate(334.8deg);
-}
-
-.c100.p94 .bar {
-  -webkit-transform: rotate(338.4deg);
-  -moz-transform: rotate(338.4deg);
-  -ms-transform: rotate(338.4deg);
-  -o-transform: rotate(338.4deg);
-  transform: rotate(338.4deg);
-}
-
-.c100.p95 .bar {
-  -webkit-transform: rotate(342deg);
-  -moz-transform: rotate(342deg);
-  -ms-transform: rotate(342deg);
-  -o-transform: rotate(342deg);
-  transform: rotate(342deg);
-}
-
-.c100.p96 .bar {
-  -webkit-transform: rotate(345.6deg);
-  -moz-transform: rotate(345.6deg);
-  -ms-transform: rotate(345.6deg);
-  -o-transform: rotate(345.6deg);
-  transform: rotate(345.6deg);
-}
-
-.c100.p97 .bar {
-  -webkit-transform: rotate(349.2deg);
-  -moz-transform: rotate(349.2deg);
-  -ms-transform: rotate(349.2deg);
-  -o-transform: rotate(349.2deg);
-  transform: rotate(349.2deg);
-}
-
-.c100.p98 .bar {
-  -webkit-transform: rotate(352.8deg);
-  -moz-transform: rotate(352.8deg);
-  -ms-transform: rotate(352.8deg);
-  -o-transform: rotate(352.8deg);
-  transform: rotate(352.8deg);
-}
-
-.c100.p99 .bar {
-  -webkit-transform: rotate(356.4deg);
-  -moz-transform: rotate(356.4deg);
-  -ms-transform: rotate(356.4deg);
-  -o-transform: rotate(356.4deg);
-  transform: rotate(356.4deg);
-}
-
-.c100.p100 .bar {
-  -webkit-transform: rotate(360deg);
-  -moz-transform: rotate(360deg);
-  -ms-transform: rotate(360deg);
-  -o-transform: rotate(360deg);
-  transform: rotate(360deg);
-}
-
-.c100:hover > span {
-  width: 3.33em;
-  line-height: 3.33em;
-  font-size: 0.3em;
-  color: #307bbb;
-}
-
-.c100:hover:after {
-  top: 0.04em;
-  left: 0.04em;
-  width: 0.92em;
-  height: 0.92em;
-}
-
-.c100.dark {
-  background-color: #777777;
-}
-
-.c100.dark .bar,
-.c100.dark .fill {
-  border-color: #c6ff00 !important;
-}
-
-.c100.dark > span {
-  color: #777777;
-}
-
-.c100.dark:after {
-  background-color: #666666;
-}
-
-.c100.dark:hover > span {
-  color: #c6ff00;
-}
-
-.c100.green .bar, .c100.green .fill {
-  border-color: #4db53c !important;
-}
-
-.c100.green:hover > span {
-  color: #4db53c;
-}
-
-.c100.green.dark .bar, .c100.green.dark .fill {
-  border-color: #5fd400 !important;
-}
-
-.c100.green.dark:hover > span {
-  color: #5fd400;
-}
-
-.c100.orange .bar, .c100.orange .fill {
-  border-color: #dd9d22 !important;
-}
-
-.c100.orange:hover > span {
-  color: #dd9d22;
-}
-
-.c100.orange.dark .bar, .c100.orange.dark .fill {
-  border-color: #e08833 !important;
-}
-
-.c100.orange.dark:hover > span {
-  color: #e08833;
-}
 
-.rpgm-breadcrumb {
-  width: 100%;
-  font-size: 0.9em;
-  text-align: center;
-  padding-bottom: 10px;
-  /*
-  .spaced-line {
-  	margin-top: 20px;
-
-  	.crumb > .title {
-  		text-align: center;
-  	}
-  }
-   */
-}
-.rpgm-breadcrumb .line, .rpgm-breadcrumb .spaced-line {
-  margin-left: 0%;
-  margin-right: 0%;
-}
-.rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .separator {
-  padding-right: 10px;
-  padding-left: 10px;
-}
-.rpgm-breadcrumb .line .crumb, .rpgm-breadcrumb .line .separator, .rpgm-breadcrumb .spaced-line .crumb, .rpgm-breadcrumb .spaced-line .separator {
-  display: inline-block;
-}
-.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .title, .rpgm-breadcrumb .spaced-line .separator .value {
-  text-align: left;
-}
-.rpgm-breadcrumb .line .crumb .title, .rpgm-breadcrumb .line .separator .title, .rpgm-breadcrumb .spaced-line .crumb .title, .rpgm-breadcrumb .spaced-line .separator .title {
-  font-weight: 100;
-  font-size: 0.7em;
-  font-variant-caps: small-caps;
-  color: var(--text-muted);
-}
-.rpgm-breadcrumb .line .crumb .value, .rpgm-breadcrumb .line .separator .value, .rpgm-breadcrumb .spaced-line .crumb .value, .rpgm-breadcrumb .spaced-line .separator .value {
-  font-weight: 300;
-  font-size: 0.9em;
-  text-align: left;
+.group:hover .group-hover\:visible {
+  visibility: visible;
 }
-.rpgm-breadcrumb .line .crumb .value p, .rpgm-breadcrumb .line .separator .value p, .rpgm-breadcrumb .spaced-line .crumb .value p, .rpgm-breadcrumb .spaced-line .separator .value p {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
 
-.popover .rpgm-breadcrumb {
-  display: none;
+.group:hover .group-hover\:max-h-\[100vh\] {
+  max-height: 100vh;
 }
 
-.rpg-manager-component-option {
-  width: 100%;
-  font-size: 0.9em;
-  text-align: center;
-  margin: 0px 0%;
-  padding: 10px 0px;
-  border-bottom: solid 1px var(--rpg-manager-colour-border);
-}
-.rpg-manager-component-option .option, .rpg-manager-component-option .separator {
-  display: inline-block;
+.group:hover .group-hover\:\!border-\[--background-modifier-border\] {
+  border-color: var(--background-modifier-border) !important;
 }
-.rpg-manager-component-option .separator {
-  padding-right: 10px;
-  padding-left: 10px;
-  font-weight: 100;
-}
-.rpg-manager-component-option .option {
-  text-align: left;
-  font-weight: 300;
-  font-size: 0.9em;
-  text-align: left;
-  cursor: pointer;
-  color: var(--rpg-manager-colour-text-link);
-}
 
-.popover .rpg-manager-component-option {
-  display: none;
+.group:hover .group-hover\:border-\[--background-modifier-border-hover\] {
+  border-color: var(--background-modifier-border-hover);
 }
 
-.rpg-manager-content-editor {
-  width: 100%;
-  min-height: 200px;
-}
-.rpg-manager-content-editor .rpg-manager-content-editor-abt-relative, .rpg-manager-content-editor .rpg-manager-content-editor-storycircle-container {
-  float: left;
+.group:hover .group-hover\:bg-\[--background-modifier-form-field\] {
+  background-color: var(--background-modifier-form-field);
 }
-.rpg-manager-content-editor .rpg-manager-content-editor-abt-relative {
-  width: 250px;
-}
-.rpg-manager-content-editor .rpg-manager-content-editor-storycircle-container {
-  margin-left: 20px;
-  width: calc(100% - 270px);
-}
-.rpg-manager-content-editor .rpg-manager-content-editor-input {
-  width: 100%;
-}
-.rpg-manager-content-editor textarea {
-  width: 100%;
-  height: 200px;
-}
 
-.rpg-manager-content-editor-button {
-  margin-top: 30px;
-  float: right;
+.group:hover .group-hover\:text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity));
 }
 
-.rpg-manager-fantasy-calendar-picker {
-  position: absolute;
-  min-width: 300px;
-  padding: 10px;
-  background-color: var(--background-primary);
-  border: solid 1px var(--rpg-manager-colour-border);
-  z-index: 1;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container {
-  position: relative;
-  width: 100%;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation {
-  width: 100%;
-  position: relative;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-previous,
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-month-container {
-  float: left;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-year-container {
-  width: 100px;
-  float: right;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-year-container .rpg-manager-fantasy-calendar-picker-navigation-year {
-  width: 100%;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-year-container .rpg-manager-fantasy-calendar-picker-navigation-year-add,
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-year-container .rpg-manager-fantasy-calendar-picker-navigation-year-remove {
-  position: absolute;
-  font-size: 0.8em;
-  cursor: pointer;
-  width: 15px;
-  height: 15px;
-  font-weight: bold;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-year-container .rpg-manager-fantasy-calendar-picker-navigation-year-add {
-  top: 0px;
-  right: 15px;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-year-container .rpg-manager-fantasy-calendar-picker-navigation-year-remove {
-  top: 15px;
-  right: 15px;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-next {
-  float: right;
-  margin-left: 10px;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-navigation .rpg-manager-fantasy-calendar-picker-navigation-previous {
-  margin-right: 10px;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month {
-  display: inline-block;
-  padding: 0px;
-  box-sizing: border-box;
-  z-index: 1;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-weekdays {
-  background: transparent;
-  text-align: center;
-  overflow: hidden;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  height: 28px;
-  width: 300px;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-weekdays .rpg-manager-fantasy-calendar-picker-month-weekday-container {
-  display: flex;
-  -webkit-box-flex: 1;
-  flex: 1;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-weekdays .rpg-manager-fantasy-calendar-picker-month-weekday-container .rpg-manager-fantasy-calendar-picker-month-weekday {
-  cursor: default;
-  font-size: 90%;
-  background: transparent;
-  color: rgba(0, 0, 0, 0.54);
-  line-height: 1;
-  margin: 0;
-  text-align: center;
-  display: block;
-  -webkit-box-flex: 1;
-  flex: 1;
-  font-weight: bolder;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-days {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  -webkit-box-align: start;
-  align-items: flex-start;
-  width: 300px;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-days .rpg-manager-fantasy-calendar-picker-month-day-container {
-  padding: 0;
-  outline: 0;
-  text-align: left;
-  width: 300px;
-  min-width: 300px;
-  max-width: 300px;
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  transform: translate3d(0, 0, 0);
-  opacity: 1;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-days .rpg-manager-fantasy-calendar-picker-month-day-container .rpg-manager-fantasy-calendar-picker-previous-month-day {
-  color: var(--rpg-manager-colour-text-very-light);
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-days .rpg-manager-fantasy-calendar-picker-month-day-container .rpg-manager-fantasy-calendar-picker-month-day {
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 150px;
-  box-sizing: border-box;
-  cursor: pointer;
-  font-weight: 400;
-  margin: 0;
-  display: inline-block;
-  position: relative;
-  -webkit-box-pack: center;
-  justify-content: center;
-  text-align: center;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-days .rpg-manager-fantasy-calendar-picker-month-day-container .rpg-manager-fantasy-calendar-picker-month-day-today {
-  border: solid 1px var(--rpg-manager-colour-border);
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-days .rpg-manager-fantasy-calendar-picker-month-day-container .rpg-manager-fantasy-calendar-picker-month-day-selected {
-  background: var(--rpg-manager-colour-background);
-  box-shadow: none;
-}
-.rpg-manager-fantasy-calendar-picker .rpg-manager-fantasy-calendar-picker-container .rpg-manager-fantasy-calendar-picker-month .rpg-manager-fantasy-calendar-picker-month-day-container {
-  padding: 0;
-  outline: 0;
-  text-align: left;
-  box-sizing: border-box;
-  display: inline-block;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  transform: translate3d(0, 0, 0);
+.group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }
 
-.rpg-manager-image-carousel {
-  width: 300px;
-  float: right;
-  padding: 10px;
-  border: solid 1px var(--rpg-manager-colour-border);
-  background-color: var(--rpg-manager-colour-background);
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images .rpg-manager-image-carousel-images-group {
-  width: 100%;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images .rpg-manager-image-carousel-images-group .rpg-manager-image-carousel-images-group-container {
-  width: 100%;
-  font-size: 0.9em;
-  color: var(--rpg-manager-colour-text-light);
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images .rpg-manager-image-carousel-images-group .rpg-manager-image-carousel-images-group-container img {
-  width: 280px;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images .rpg-manager-image-carousel-images-group .rpg-manager-image-carousel-images-group-container p {
-  margin-bottom: 0px;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images .rpg-manager-image-carousel-images-group-invisible {
-  display: none;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator {
-  padding: 0px 50px 10px 50px;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator .rpg-manager-image-carousel-images-navigator-counter {
-  font-size: 0.8em;
-  color: var(--rpg-manager-colour-text-very-light);
-  margin: 0 auto;
-  width: 100px;
-  text-align: center;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator .rpg-manager-image-carousel-images-navigator-previous,
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator .rpg-manager-image-carousel-images-navigator-next {
-  font-size: 0.9em;
-  cursor: pointer;
-  color: var(--rpg-manager-colour-text-link);
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator .rpg-manager-image-carousel-images-navigator-previous {
-  float: left;
-}
-.rpg-manager-image-carousel .rpg-manager-image-carousel-images-navigator .rpg-manager-image-carousel-images-navigator-next {
-  float: right;
-}
-
-.rpg-manager-modal .gallery {
-  border: solid 1px var(--background-modifier-border);
-  width: 100%;
-  min-height: var(--modal-max-height);
-}
-.rpg-manager-modal .gallery .gallery-navigation {
-  width: 100%;
-  padding: 20px;
-  border-bottom: solid 1px var(--background-modifier-border);
-  display: flex;
-  gap: 25px;
-}
-.rpg-manager-modal .gallery .gallery-navigation .separator, .rpg-manager-modal .gallery .gallery-navigation .link {
-  float: left;
-}
-.rpg-manager-modal .gallery .gallery-operations {
-  width: 100%;
-  padding: 20px;
-}
-.rpg-manager-modal .gallery .gallery-operations .dropzone {
-  border: dashed 2px var(--background-modifier-border);
-  width: calc(100% - 100px);
-  min-height: 200px;
-  margin: 50px;
-  text-align: center;
-  padding-top: 80px;
-}
-.rpg-manager-modal .gallery .gallery-operations input {
-  margin-bottom: 20px;
-}
-.rpg-manager-modal .gallery .gallery-operations .image-container {
-  max-width: 300px;
-  margin-top: 20px;
-}
-.rpg-manager-modal .gallery .gallery-operations .image-container img {
-  width: 100%;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-edit-deleted {
-  display: none;
-  position: absolute;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.6);
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  color: var(--text-on-accent);
-  text-align: center;
-  padding-top: 25%;
-  font-size: 2em;
-  font-weight: 200;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-image {
-  width: 50%;
-  float: left;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-image img {
-  width: 100%;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-editor {
-  width: 50%;
-  float: left;
-  padding: 0px 20px;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-editor label {
-  clear: both;
-  display: table;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-edit .gallery-operations-edit-editor textarea {
-  width: 100%;
-  min-height: 100px;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry-x {
-  width: 100%;
-  column-count: 3;
-  column-gap: 1em;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry-x:hover img {
-  opacity: 0.5;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry-x img {
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 1em;
-  cursor: pointer;
-  transition: all 0.8s;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry-x img:hover {
-  opacity: 1;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 1em;
-  flex-direction: row;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry:hover img {
-  opacity: 0.5;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry img {
-  position: relative;
-  width: calc(33.33% - 1em);
-  padding: 10px;
-  width: 100%;
-  display: block;
-  transition: all 0.8s;
-  cursor: pointer;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item {
-  position: relative;
-  width: calc(33.33% - 1em);
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item .gallery-operations-masonry-item-container {
-  background-color: var(--background-modifier-cover);
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item .image {
-  padding: 10px;
-  width: 100%;
-  display: block;
-  transition: all 0.8s;
-  cursor: pointer;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item:hover .image {
-  opacity: 1;
-}
-.rpg-manager-modal .gallery .gallery-operations .gallery-operations-masonry .gallery-operations-masonry-item .caption {
-  font-size: 0.9em;
-  color: var(--text-muted);
-  padding: 10px;
-}
-
-@media (max-width: 860px) {
-  .gallery-operations-masonry {
-    height: 220vw;
+@media (min-width: 640px) {
+  .sm\:col-span-1 {
+    grid-column: span 1 / span 1;
   }
-  .gallery-operations-masonry .gallery-operations-masonry-item {
-    width: 50%;
+
+  .sm\:grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
-@media (max-width: 667px) {
-  .gallery-operations-masonry {
-    height: auto;
+
+@media (min-width: 768px) {
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .gallery-operations-masonry .gallery-operations-masonry-item {
-    width: 100%;
+
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-.rpg-manager-help {
-  font-size: 10px;
-  font-weight: 100;
-  color: var(--rpg-manager-colour-text-light);
-  padding: 2px 10px 2px 0px;
-  margin-left: 10px;
-}
 
-.rpg-manager-help-content-container {
-  position: absolute;
-  min-width: 300px;
-  padding: 10px;
-  background-color: var(--background-primary);
-  border: solid 1px var(--rpg-manager-colour-border);
-  z-index: 1;
-}
-.rpg-manager-help-content-container .rpg-manager-help-content {
-  position: relative;
-  width: 100%;
-  font-size: 0.9em;
-  font-weight: 300;
-}
+@media (min-width: 1024px) {
+  .lg\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
 
-.rpg-manager-modal {
-  display: block;
-  padding: 20px;
-}
-.rpg-manager-modal .input-title {
-  font-weight: 100;
-  font-size: 0.9em;
-  font-variant-caps: small-caps;
-  color: var(--text-muted);
-  border: none;
-  text-align: left;
-  margin-top: 20px;
-}
-.rpg-manager-modal .rpgm-modal-scene-descriptions .description-container {
-  margin-top: 20px;
-  border-top: solid 1px var(--background-modifier-border);
-}
-.rpg-manager-modal .rpgm-modal-scene-descriptions .description-container div, .rpg-manager-modal .rpgm-modal-scene-descriptions .description-container span {
-  margin-left: 20px;
-}
-.rpg-manager-modal .rpgm-modal-scene-descriptions .description-container span {
-  font-style: italic;
-  font-size: 0.9em;
-}
-.rpg-manager-modal button {
-  display: block;
-  margin-top: 10px;
-}
-.rpg-manager-modal .selector {
-  margin-bottom: 30px;
-}
+  .lg\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
 
-.rpg-manager-header-container-info-plot {
-  border-top: solid 1px var(--rpg-manager-colour-border);
-  padding: 20px;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container {
-  margin-bottom: 10px;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-title {
-  font-weight: bold;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements {
-  width: 100%;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container {
-  width: 100%;
-  margin-bottom: 10px;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-title {
-  font-variant: small-caps;
-  font-size: 0.8em;
-  color: var(--rpg-manager-colour-text-very-light);
-  float: left;
-  width: 100px;
-  text-align: right;
-  padding-right: 10px;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-description {
-  width: calc(100% - 130px);
-  float: left;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-description p {
-  margin: 0px;
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container .rpg-manager-header-container-info-plot-container-elements-container-editor {
-  width: 25px;
-  float: right;
-  display: none;
-  cursor: pointer;
-  color: var(--rpg-manager-colour-text-link);
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container:hover {
-  background-color: var(--rpg-manager-colour-background);
-}
-.rpg-manager-header-container-info-plot .rpg-manager-header-container-info-plot-container .rpg-manager-header-container-info-plot-container-elements .rpg-manager-header-container-info-plot-container-elements-container:hover .rpg-manager-header-container-info-plot-container-elements-container-editor {
-  display: block;
-}
+  .lg\:col-span-3 {
+    grid-column: span 3 / span 3;
+  }
 
-.modal-content .rpg-manager-modal-relationships {
-  border: solid 1px var(--background-modifier-border);
-  width: 100%;
-  min-height: var(--modal-max-height);
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-navigation {
-  width: 100%;
-  padding: 20px;
-  border-bottom: solid 1px var(--background-modifier-border);
-  display: flex;
-  gap: 10px;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-navigation .separator, .modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-navigation .link {
-  float: left;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container {
-  width: 100%;
-  padding: 20px;
-  min-height: var(--modal-max-height);
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationship-select {
-  position: relative;
-  margin: 20px;
-  float: left;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationship-select select {
-  background-color: var(--background-secondary);
-  border-bottom: solid 1px var(--background-modifier-border);
-  border-radius: 0;
-  min-width: 150px;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: none;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationship-select select:hover {
-  box-shadow: none;
-  background-color: var(--interactive-hover);
-  cursor: pointer;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships {
-  margin-top: 20px;
-  min-height: 400px;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table {
-  width: 100%;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr:nth-child(odd) {
-  background-color: var(--background-primary-alt);
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td {
-  height: 30px;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td input {
-  margin: 0px 15px;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td input:disabled, .modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td select:disabled {
-  background-color: var(--background-modifier-border);
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.label {
-  padding: 0px 10px;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.label span {
-  font-size: 0.8em;
-  font-style: italic;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.description {
-  max-width: 50%;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.description p {
-  font-size: 0.8em;
-}
-.modal-content .rpg-manager-modal-relationships .rpg-manager-modal-relationships-container .relationships table > tbody > tr td.selector select {
-  background-color: var(--background-secondary);
-  min-width: 10px;
-  width: 100%;
-}
+  .lg\:col-span-5 {
+    grid-column: span 5 / span 5;
+  }
 
-.rpg-manager-scene-builder-confirmation {
-  display: none;
-  position: absolute;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.6);
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  color: var(--text-on-accent);
-  text-align: center;
-  padding-top: 25%;
-  font-size: 2em;
-  font-weight: 200;
-}
+  .lg\:col-span-6 {
+    grid-column: span 6 / span 6;
+  }
 
-.rpg-manager-scene-builder .scenes-container table {
-  width: 100%;
-}
-.rpg-manager-scene-builder .scenes-container table tr > td > input[type=text]:disabled,
-.rpg-manager-scene-builder .scenes-container table tr > td > select:disabled {
-  color: var(--rpg-manager-colour-text-very-light);
-}
-.rpg-manager-scene-builder .scenes-container table tr > td > input[type=checkbox]:disabled {
-  background-color: var(--rpg-manager-colour-text-very-light);
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-title {
-  width: 150px;
-  max-width: 150px;
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-stage {
-  width: 50px;
-  max-width: 50px;
-  font-size: 0.9em;
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-stage select {
-  width: 50px;
-  max-width: 50px;
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-goal {
-  width: calc(100% - 350px);
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-type {
-  width: 100px;
-  max-width: 100px;
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-type select {
-  width: 100px;
-  max-width: 100px;
-}
-.rpg-manager-scene-builder .scenes-container table tr > td.scenes-container-table-exciting {
-  width: 50px;
-  max-width: 50px;
-  text-align: center;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-confirmation-button {
-  margin-top: 30px;
-  float: right;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot {
-  width: 100%;
-  font-size: 0.9em;
-  border: solid 1px var(--rpg-manager-colour-border);
-  margin: 10px;
-  padding: 10px;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot .rpg-manager-scene-builder-plot-line {
-  position: relative;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot .rpg-manager-scene-builder-plot-line .rpg-manager-scene-builder-plot-line-title,
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot .rpg-manager-scene-builder-plot-line .rpg-manager-scene-builder-plot-line-description {
-  float: left;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot .rpg-manager-scene-builder-plot-line .rpg-manager-scene-builder-plot-line-title {
-  width: 50px;
-  max-width: 50px;
-  font-weight: 700;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot .rpg-manager-scene-builder-plot-line .rpg-manager-scene-builder-plot-line-description {
-  width: calc(100% - 50px);
-  padding-left: 20px;
-  font-weight: 300;
-}
-.rpg-manager-scene-builder .rpg-manager-scene-builder-plot .rpg-manager-scene-builder-plot-line .rpg-manager-scene-builder-plot-line-description p {
-  margin: 0;
-}
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-.rpg-manager-feedback {
-  padding-top: 5px;
-  font-size: 1em;
-  height: 100%;
-  margin-bottom: 50px;
-}
-.rpg-manager-feedback h2 {
-  font-size: 1.2em;
-  font-weight: 400;
-  font-variant: small-caps;
-  margin-top: 0px;
-}
-.rpg-manager-feedback h3 {
-  font-size: 1.1em;
-  font-weight: 300;
-  border-bottom: solid 1px var(--rpg-manager-colour-border);
-}
-.rpg-manager-feedback h4 {
-  font-size: 1em;
-  font-weight: 300;
-  margin-bottom: 0px;
-}
-.rpg-manager-feedback textarea {
-  min-height: 300px;
-}
-.rpg-manager-feedback span {
-  font-weight: 300;
-  font-size: 0.9em;
-}
-.rpg-manager-feedback select {
-  height: auto;
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-7 {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .lg\:pl-3 {
+    padding-left: 0.75rem;
+  }
 }
