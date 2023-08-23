@@ -2,9 +2,7 @@
 	"root": true,
 	"parser": "@typescript-eslint/parser",
 	"env": { "node": true },
-	"plugins": [
-		"@typescript-eslint"
-	],
+	"plugins": ["@typescript-eslint"],
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
@@ -23,25 +21,15 @@
 		"no-fallthrough": "off",
 		"@typescript-eslint/no-var-requires": "off",
 		"@typescript-eslint/no-empty-interface": "off",
-		"semi": ["error", "always", { "omitLastInOneLineBlock": false}],
-		semi-style: ["error", "last"],
+		"semi": ["error", "always", { "omitLastInOneLineBlock": false }],
 		"@typescript-eslint/naming-convention": [
 			"error",
-			{
-				"selector": "variableLike",
-				"format": ["camelCase"]
-			},
-			{
-				"selector": ["variable", "function"],
-				"format": ["camelCase"],
-				"leadingUnderscore": "allow"
-			},
 			{
 				"selector": "memberLike",
 				"modifiers": ["private"],
 				"format": ["camelCase"],
-				"leadingUnderscore": "require",
-			},
+				"leadingUnderscore": "require"
+			}
 		]
 	}
 }
