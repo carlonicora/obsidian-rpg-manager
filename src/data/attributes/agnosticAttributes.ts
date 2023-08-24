@@ -17,6 +17,8 @@ const weaknesses = { id: AttributeType.Weaknesses, type: AttributeComponentType.
 const storycircle = { id: AttributeType.StoryCircle, type: AttributeComponentType.StoryCircle };
 const type = { id: AttributeType.SceneType, type: AttributeComponentType.SceneType };
 const dob = { id: AttributeType.Dob, type: AttributeComponentType.Date };
+const dod = { id: AttributeType.Dod, type: AttributeComponentType.Date };
+
 const sceneaction = { id: AttributeType.SceneAction, type: AttributeComponentType.LongText };
 const date = { id: AttributeType.Date, type: AttributeComponentType.Date };
 const sessiondate = { id: AttributeType.SessionDate, type: AttributeComponentType.Date };
@@ -58,6 +60,7 @@ export const agnosticAttributes: Map<ElementType, AttributeInterface[]> = new Ma
 			strengths,
 			weaknesses,
 			dob,
+			dod,
 		],
 	],
 	[ElementType.Event, [description, date]],
