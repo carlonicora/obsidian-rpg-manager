@@ -19,8 +19,6 @@ export class ElementFactory {
 		const response: ElementInterface = new Element(api, file, rpgManagerBlock);
 		response.metadata = codeblockService.metadata;
 
-		//ElementFactory.addUserAttributes(response, rpgManagerBlock);
-
 		if (rpgManagerBlock.relationships != undefined && rpgManagerBlock.relationships.length > 0) {
 			rpgManagerBlock.relationships.forEach((relationshipDefinition: any) => {
 				const newRelationship: RelationshipInterface | undefined =
