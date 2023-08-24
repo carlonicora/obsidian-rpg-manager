@@ -446,11 +446,42 @@ export class RpgManagerCodeblockService {
 	}
 
 	async readInContentRelationships(): Promise<RelationshipInterface[]> {
-		await this._readMetadata();
+		await this.readCodeblock();
 
 		const response: RelationshipInterface[] = [];
 
-		let content = this._fileContent;
+		response.push(...this._getRelationshipsFromContent(this._codeblockContent, true));
+
+		const additionalRelationships = this._getRelationshipsFromContent(
+			this._fileContent.replace(this._codeblockContent, ""),
+			false
+		);
+		additionalRelationships.forEach((relationship: RelationshipInterface) => {
+			const existingRelationship: RelationshipInterface | undefined = response.find(
+				(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+			);
+			if (existingRelationship === undefined) {
+				response.push(relationship);
+			} else {
+				if (!existingRelationship.isAlsoInContent) existingRelationship.isAlsoInContent = true;
+			}
+		});
+
+		return response;
+	}
+
+	private _getRelationshipsFromContent(content: string, isInCodeblock: boolean): RelationshipInterface[] {
+		const response: RelationshipInterface[] = [];
+
+		if (isInCodeblock) {
+			const regex = /"([^"]+\.md)"/g;
+			let match;
+
+			while ((match = regex.exec(content)) !== null) {
+				response.push(RelationshipFactory.createFromCodeblock(RelationshipType.Bidirectional, match[1]));
+			}
+		}
+
 		let indexOfRelationship: number = content.indexOf("[[");
 
 		while (indexOfRelationship !== -1) {
@@ -478,8 +509,17 @@ export class RpgManagerCodeblockService {
 				const matchingFile: TFile | undefined = this._app.vault
 					.getFiles()
 					.find((file) => file.basename === basename || file.path === basename);
-				if (matchingFile !== undefined)
-					response.push(RelationshipFactory.createFromContent(RelationshipType.Bidirectional, matchingFile.path));
+
+				if (
+					matchingFile !== undefined &&
+					response.find((relationship: RelationshipInterface) => relationship.path === matchingFile.path) === undefined
+				) {
+					if (isInCodeblock) {
+						response.push(RelationshipFactory.createFromCodeblock(RelationshipType.Bidirectional, matchingFile.path));
+					} else {
+						response.push(RelationshipFactory.createFromContent(RelationshipType.Bidirectional, matchingFile.path));
+					}
+				}
 			}
 
 			indexOfRelationship = content.indexOf("[[");
