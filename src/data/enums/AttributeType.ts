@@ -14,6 +14,7 @@ export enum AttributeType {
 	StoryCircle = "storycircle",
 	SceneType = "scenetype",
 	Dob = "dob",
+	Dod = "dod",
 	SceneAction = "sceneaction",
 	Date = "date",
 	SessionDate = "sessiondate",

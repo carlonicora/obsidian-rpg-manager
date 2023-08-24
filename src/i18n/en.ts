@@ -76,6 +76,7 @@ If you want to create new ones, just click on the button and define the name and
 		storycircle: "Story Circle",
 		scenetype: "Type",
 		dob: "Date of Birth",
+		dod: "Date of Death",
 		sceneaction: "Action",
 		date: "Date",
 		sessiondate: "Session Date",

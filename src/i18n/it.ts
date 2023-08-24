@@ -76,6 +76,7 @@ Se vuoi create un nuovo attributo, clicca sul bottone e definisci il tuo uovo at
 		storycircle: "Story Circle",
 		scenetype: "Tipo",
 		dob: "Data di Nascita",
+		dod: "Data di Morte",
 		sceneaction: "Azione",
 		date: "Data",
 		sessiondate: "Data della Sessione",
