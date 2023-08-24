@@ -37,9 +37,11 @@ export default function MarkdownComponent({ value }: { value?: string }): React.
 							onClick={handleLinkClick}
 						/>
 					),
-					ul: ({ node, ordered, ...props }) => <ul {...props} className="" />,
-					ol: ({ node, ordered, ...props }) => <ol {...props} className="" />,
-					li: ({ node, ordered, ...props }) => <li {...props} className="!mb-0 list-disc list-inside" />,
+					ul: ({ node, ordered, ...props }) => <ul {...props} className="list-disc list-inside" />,
+					ol: ({ node, ordered, ...props }) => (
+						<ol {...props} style={{ listStyleType: "decimal" }} className=" list-inside" />
+					),
+					li: ({ node, ordered, ...props }) => <li {...props} className={"!mb-0"} />,
 					h2: ({ node, ...props }) => (
 						<h2
 							{...props}
