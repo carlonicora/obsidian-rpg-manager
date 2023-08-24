@@ -23,7 +23,9 @@ export default function FuzzySearchResult({
 			</div>
 			<div className="ml-2">
 				<div>{searchableElement.alias ?? searchableElement.name}</div>
-				<small>{searchableElement.type ? t(searchableElement.type, { count: 1 }) : ElementType.PlayerCharacter}</small>
+				<small>
+					{searchableElement.type ? t("elements." + searchableElement.type, { count: 1 }) : ElementType.PlayerCharacter}
+				</small>
 			</div>
 		</div>
 	);
