@@ -28,6 +28,14 @@ export class RelationshipFactory {
 		};
 	}
 
+	static createFromCodeblock(type: RelationshipType, path: string): RelationshipInterface {
+		return {
+			type: type,
+			path: path,
+			isInContent: false,
+		};
+	}
+
 	static createFromContent(type: RelationshipType, path: string): RelationshipInterface {
 		return {
 			type: type,
