@@ -11,7 +11,7 @@ export class InternationalisationService {
 			.use(I18nextBrowserLanguageDetector)
 			.init({
 				initImmediate: false,
-				lng: window.localStorage.getItem("language"),
+				lng: window.localStorage.getItem("language") ?? "en",
 				fallbackLng: "en",
 				debug: true,
 				interpolation: {
