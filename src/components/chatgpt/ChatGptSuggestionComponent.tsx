@@ -35,7 +35,6 @@ export default function ChatGptSuggestionComponent({
 	const [message, setMessage] = React.useState<string>("Retrieving suggestions from ChatGPT...");
 
 	const selectSuggestion = (suggestion: string) => {
-		setSuggestions(undefined);
 		applySuggestions(suggestion);
 	};
 
