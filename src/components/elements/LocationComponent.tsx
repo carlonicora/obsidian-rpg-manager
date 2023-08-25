@@ -12,7 +12,7 @@ export default function LocationComponent({
 }): React.ReactElement {
 	return (
 		<>
-			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-primary-alt]}">
+			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]}">
 				<MainV1Component element={element} isInPopover={isInPopover} />
 				{isInPopover === false && element.relationships.length > 0 && (
 					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">

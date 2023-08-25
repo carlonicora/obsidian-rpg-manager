@@ -1253,10 +1253,6 @@ video {
   border-color: var(--background-modifier-border);
 }
 
-.border-\[--background-primary-alt\] {
-  border-color: var(--background-primary-alt);
-}
-
 .border-transparent {
   border-color: transparent;
 }

@@ -24,7 +24,7 @@ export default function SubplotComponent({
 
 	return (
 		<>
-			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-primary-alt]">
+			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
 				{element.images.length > 0 && (
 					<div className="max-h-32 h-32 overflow-hidden">

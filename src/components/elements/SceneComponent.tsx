@@ -22,7 +22,7 @@ export default function SceneComponent({
 
 	return (
 		<>
-			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-primary-alt]">
+			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
 				<div className={`gap-3 !mb-3 grid grid-cols-1 ${isInPopover ? "" : "sm:grid-cols-1 lg:grid-cols-6"}`}>
 					<div className={`${isInPopover ? "" : "lg:col-span-2"}`}>
