@@ -104,13 +104,17 @@ export class FileCreationService {
 			pathSeparator = "/";
 		}
 
-		let response = "Campaigns";
+		let response = this._api.settings.automaticMove ? "Campaigns" : "";
 
 		if (this._type === ElementType.Campaign) {
 			response += pathSeparator + this._name;
 			this._createFolder(response);
 
 			return response + pathSeparator + this._name + ".md";
+		} else if (this._campaignPath !== undefined && this._api.settings.automaticMove === false) {
+			const campaign: ElementInterface = this._api.get(this._campaignPath) as ElementInterface;
+
+			return campaign.file.parent.path + pathSeparator + this._name + ".md";
 		}
 
 		response += pathSeparator + this._campaign.name;

@@ -5,6 +5,7 @@ export interface RpgManagerSettingsInterface {
 	chatGptKey: string | undefined;
 	templatesFolder: string | undefined;
 	assetsFolder: string | undefined;
+	automaticMove: boolean;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -13,6 +14,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	chatGptKey: undefined,
 	templatesFolder: undefined,
 	assetsFolder: undefined,
+	automaticMove: false,
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
@@ -39,9 +41,23 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		this._createFolderMap();
 
+		this._automaticMoveSettings();
 		this._templateFolderSettings();
 		this._assetsFolderSettings();
 		this._chatGptSettings();
+	}
+
+	private async _automaticMoveSettings(): Promise<void> {
+		this.containerEl.createEl("h2", { text: "Automatically organise elements in foldersTemplate Folder" });
+		this.containerEl.createEl("p", {
+			text: "Keeps your structure organised by creating subfolders for your Elements.",
+		});
+
+		new Setting(this.containerEl).setName("Keep Element Organised").addToggle((toggle) => {
+			toggle.setValue(this._plugin.settings.automaticMove).onChange(async (value) => {
+				await this.saveSettings({ automaticMove: value });
+			});
+		});
 	}
 
 	private async _templateFolderSettings(): Promise<void> {
