@@ -381,6 +381,7 @@ export default function NonPlayerCharacterWizardComponent({
 						name={element ? element?.name : name}
 						chatGpt={chatGpt.current}
 						campaignPath={campaignPath}
+						setOverlay={setShowOverlay}
 					/>
 				</div>
 			</div>

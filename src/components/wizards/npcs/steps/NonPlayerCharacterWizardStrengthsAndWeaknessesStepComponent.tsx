@@ -12,10 +12,12 @@ export default function NonPlayerCharacterWizardStrengthsAndWeaknessesStepCompon
 	name,
 	campaignPath,
 	chatGpt,
+	setOverlay,
 }: {
 	name: string;
 	campaignPath?: string;
 	chatGpt?: ChatGptNonPlayerCharacterModel;
+	setOverlay: (show: boolean) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const wizardData = useWizard();
@@ -29,7 +31,11 @@ export default function NonPlayerCharacterWizardStrengthsAndWeaknessesStepCompon
 	const requestStrengthsSuggestions = async () => {
 		setRetrievingStrengthsSuggestions(true);
 		try {
-			const suggestedStrengths: string[] = await chatGpt.getStrenghts();
+			setOverlay(true);
+			const suggestedStrengths: string[] = await chatGpt.getStrenghts().then((value: string[]) => {
+				setOverlay(false);
+				return value;
+			});
 
 			let strengthValue = 0;
 
@@ -52,7 +58,11 @@ export default function NonPlayerCharacterWizardStrengthsAndWeaknessesStepCompon
 	const requestWeaknessesSuggestions = async () => {
 		setRetrievingWeaknessesSuggestions(true);
 		try {
-			const suggestedWeaknesses: string[] = await chatGpt.getWeaknesses();
+			setOverlay(true);
+			const suggestedWeaknesses: string[] = await chatGpt.getWeaknesses().then((value: string[]) => {
+				setOverlay(false);
+				return value;
+			});
 
 			let weaknessValue = 0;
 

@@ -9,10 +9,12 @@ export default function NonPlayerCharacterWizardArcStepComponent({
 	name,
 	campaignPath,
 	chatGpt,
+	setOverlay,
 }: {
 	name: string;
 	campaignPath?: string;
 	chatGpt?: ChatGptNonPlayerCharacterModel;
+	setOverlay: (show: boolean) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 

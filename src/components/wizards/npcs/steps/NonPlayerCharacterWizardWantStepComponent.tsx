@@ -10,10 +10,12 @@ export default function NonPlayerCharacterWizardWantStepComponent({
 	name,
 	campaignPath,
 	chatGpt,
+	setOverlay,
 }: {
 	name: string;
 	campaignPath?: string;
 	chatGpt?: ChatGptNonPlayerCharacterModel;
+	setOverlay: (show: boolean) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const wizardData = useWizard();
@@ -35,7 +37,11 @@ export default function NonPlayerCharacterWizardWantStepComponent({
 
 	async function generateSuggestions(): Promise<string[]> {
 		try {
-			return await chatGpt.getWant();
+			setOverlay(true);
+			return chatGpt.getWant().then((value: string[]) => {
+				setOverlay(false);
+				return value;
+			});
 		} catch (error) {
 			console.error("Failed to fetch behaviour:", error);
 		}

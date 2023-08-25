@@ -10,10 +10,12 @@ export default function NonPlayerCharacterWizardBeliefsStepComponent({
 	name,
 	campaignPath,
 	chatGpt,
+	setOverlay,
 }: {
 	name: string;
 	campaignPath?: string;
 	chatGpt?: ChatGptNonPlayerCharacterModel;
+	setOverlay: (show: boolean) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const wizardData = useWizard();
@@ -35,7 +37,11 @@ export default function NonPlayerCharacterWizardBeliefsStepComponent({
 
 	async function generateSuggestions(): Promise<string[]> {
 		try {
-			return await chatGpt.getBeliefs();
+			setOverlay(true);
+			return chatGpt.getBeliefs().then((values: string[]) => {
+				setOverlay(false);
+				return values;
+			});
 		} catch (error) {
 			console.error("Failed to fetch beliefs:", error);
 		}
