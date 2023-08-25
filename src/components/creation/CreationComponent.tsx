@@ -7,6 +7,7 @@ import { SystemType } from "src/data/enums/SystemType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { FileCreationService } from "src/services/FileCreationService";
 import { useApi } from "../../hooks/useApi";
+import ChapterWizardComponent from "../wizards/chapters/ChapterWizardComponent";
 import NonPlayerCharacterWizardComponent from "../wizards/npcs/NonPlayerCharacterWizardComponent";
 import CreationBaseComponent from "./CreationBaseComponent";
 
@@ -14,10 +15,12 @@ export default function CreationComponent({
 	type,
 	currentNote,
 	controller,
+	close,
 }: {
 	type?: ElementType;
 	currentNote?: TFile;
 	controller: Modal;
+	close: () => void;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
 
@@ -97,6 +100,16 @@ export default function CreationComponent({
 
 	let wizardTypeComponent: React.ReactElement | undefined = undefined;
 	switch (selectedType) {
+		case ElementType.Chapter:
+			wizardTypeComponent = React.createElement(ChapterWizardComponent, {
+				element: undefined,
+				name: name,
+				campaign: api.get(campaignPath) as ElementInterface,
+				close: undefined,
+				returnData: setData,
+			});
+
+			break;
 		case ElementType.NonPlayerCharacter:
 			wizardTypeComponent = React.createElement(NonPlayerCharacterWizardComponent, {
 				element: undefined,
@@ -124,6 +137,7 @@ export default function CreationComponent({
 			currentNote={currentNote}
 			setId={setId}
 			hasWizard={wizardComponent !== undefined}
+			closeModal={close}
 		/>
 	);
 }

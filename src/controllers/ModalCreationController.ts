@@ -39,6 +39,7 @@ export class ModalCreationController extends Modal {
 			type: this._type,
 			currentNote: file,
 			controller: this,
+			close: this.close.bind(this),
 		});
 		const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
 

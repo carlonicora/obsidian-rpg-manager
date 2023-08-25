@@ -16,6 +16,7 @@ export default function CreationBaseComponent({
 	currentNote,
 	setId,
 	hasWizard,
+	closeModal,
 }: {
 	initialType?: ElementType;
 	currentNote?: TFile;
@@ -29,6 +30,7 @@ export default function CreationBaseComponent({
 		positionInParent?: number
 	) => Promise<void>;
 	hasWizard: boolean;
+	closeModal: () => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
@@ -200,7 +202,7 @@ export default function CreationBaseComponent({
 				</div>
 			</div>
 			<div className="flex justify-end pt-5">
-				<button className="rpgm-secondary pl-3 pr-3 mr-6" onClick={() => close()}>
+				<button className="rpgm-secondary pl-3 pr-3 mr-6" onClick={closeModal}>
 					{t("buttons.cancel")}
 				</button>
 				{hasWizard && (
