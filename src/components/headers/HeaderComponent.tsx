@@ -35,8 +35,8 @@ export default function HeaderComponent({
 			<div className="!m-0 flex flex-col justify-center items-center">
 				<h1 className="!text-4xl !font-extralight">{element.name}</h1>
 				{!isInPopover && (
-					<div className="!font-extralight text-[--text-faint] grid grid-cols-5">
-						<div className="text-center">
+					<div className="!font-extralight text-[--text-faint] grid grid-cols-12">
+						<div className="text-center col-span-4">
 							{previousElement ? (
 								<a
 									href={previousElement.path}
@@ -49,9 +49,9 @@ export default function HeaderComponent({
 							)}
 						</div>
 						<div className="text-center">{previousElement ? <>|</> : <>&nbsp;</>}</div>
-						<div className="text-center">{t("elements." + element.type, { count: 1 })}</div>
+						<div className="text-center col-span-2">{t("elements." + element.type, { count: 1 })}</div>
 						<div className="text-center">{nextElement ? <>|</> : <>&nbsp;</>}</div>
-						<div className="text-center">
+						<div className="text-center col-span-4">
 							{nextElement ? (
 								<a
 									href={nextElement.path}
