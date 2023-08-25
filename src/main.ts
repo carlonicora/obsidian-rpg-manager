@@ -4,6 +4,7 @@ import { RpgManagerInterface } from "./RpgManagerInterface";
 import { ElementType } from "./data/enums/ElementType";
 import { ElementInterface } from "./data/interfaces/ElementInterface";
 import { DatabaseFactory } from "./factories/DatabaseFactory";
+import { ServiceFactory } from "./factories/ServiceFactory";
 import { InternationalisationService } from "./services/InternationalisationService";
 import { PluginServices } from "./services/PluginServices";
 import { taskService } from "./services/taskService/TaskService";
@@ -78,6 +79,9 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 		DatabaseFactory.create(app, this).then((database: ElementInterface[]) => {
 			this._database = database;
+
+			ServiceFactory.initialise(app, this);
+
 			this._taskService = new taskService(this._database);
 
 			console.info("RpgManager " + this.manifest.version + " loaded");

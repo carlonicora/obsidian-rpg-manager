@@ -1,16 +1,13 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
-import { useApi } from "src/hooks/useApi";
-import { SceneAnalyserService } from "src/services/sceneAnalyserService/SceneAnalyserService";
+import { ServiceFactory } from "src/factories/ServiceFactory";
 import { SceneAnalysisInterface } from "src/services/sceneAnalyserService/interfaces/SceneAnalysisInterface";
 
 export default function SceneAnalyserComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
-	const api: RpgManagerInterface = useApi();
 
-	const sceneAnalyser = new SceneAnalyserService(api);
+	const sceneAnalyser = ServiceFactory.createSceneAnalyserService();
 	const analysis: SceneAnalysisInterface = sceneAnalyser.analyseSession(element);
 
 	const getLineColor = (value: number): string => {
