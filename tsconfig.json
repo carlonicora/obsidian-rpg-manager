@@ -11,7 +11,10 @@
 		"noImplicitAny": true,
 		"moduleResolution": "node",
 		"importHelpers": true,
-		"lib": ["dom", "esnext"]
+		"lib": ["dom", "esnext"],
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
 	"include": ["**/*.ts", "**/*.tsx"]
 }
