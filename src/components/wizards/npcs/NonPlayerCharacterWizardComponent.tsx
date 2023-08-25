@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
+import ChatGptOverlay from "src/components/chatgpt/ChatGptOverlay";
 import { ArcType } from "src/data/enums/ArcType";
 import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementType } from "src/data/enums/ElementType";
@@ -94,35 +95,6 @@ function navigator({
 				})}
 			</ul>
 		</>
-	);
-}
-
-function Overlay(): React.ReactElement {
-	const { t } = useTranslation();
-
-	const [currentMessage, setCurrentMessage] = React.useState<string>(
-		(t("chatgpt.messages", { returnObjects: true }) as string[])[0]
-	);
-
-	React.useEffect(() => {
-		const interval = setInterval(() => {
-			const randomMessage = (t("chatgpt.messages", { returnObjects: true }) as string[])[
-				Math.floor(Math.random() * ((t("chatgpt.messages", { returnObjects: true }) as string[]).length - 1)) + 1
-			];
-			setCurrentMessage(randomMessage);
-		}, 5000);
-
-		return () => clearInterval(interval);
-	}, []);
-
-	return (
-		<div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 p-4">
-			<div className="text-center space-y-4">
-				<div className="text-2xl text-white font-semibold">{t("chatgpt.ovelaytitle")}</div>
-				<div className="text-xl text-white">{t("chatgpt.ovelaydescription")}</div>
-				<div className="text-white">{currentMessage}</div>
-			</div>
-		</div>
 	);
 }
 
@@ -395,7 +367,7 @@ export default function NonPlayerCharacterWizardComponent({
 
 	return (
 		<div className="relative">
-			{showOverlay && <Overlay />}
+			{showOverlay && <ChatGptOverlay />}
 			<h2 className="!m-0 !text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
 				{t("wizards.npc.title")}
 			</h2>

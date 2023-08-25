@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
+import ChatGptOverlay from "src/components/chatgpt/ChatGptOverlay";
 import MarkdownComponent from "src/components/markdowns/MarkdownComponent";
 import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementType } from "src/data/enums/ElementType";
@@ -33,6 +34,8 @@ function EditComponent({
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
 
+	const [showOverlay, setShowOverlay] = React.useState<boolean>(false);
+
 	const [sensoryImprint, setSensoryImprint] = React.useState<SensoryImprintInterface>(
 		attribute.value as SensoryImprintInterface
 	);
@@ -55,6 +58,8 @@ function EditComponent({
 
 	const handleGeneration = () => {
 		if (chatGpt === undefined) return;
+
+		setShowOverlay(true);
 
 		if (element.attribute(AttributeType.Description).isSet)
 			chatGpt.description = element.attribute(AttributeType.Description).value as string;
@@ -79,7 +84,7 @@ function EditComponent({
 
 			setSensoryImprint(newSensoryImprint);
 
-			console.log(newSensoryImprint);
+			setShowOverlay(false);
 		});
 	};
 
@@ -118,7 +123,8 @@ function EditComponent({
 	};
 
 	return (
-		<div className="w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg">
+		<div className="relative w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg">
+			{showOverlay && <ChatGptOverlay />}
 			<div className="w-full flex justify-center mb-3">
 				<h3 className="!m-0 !p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
 			</div>
