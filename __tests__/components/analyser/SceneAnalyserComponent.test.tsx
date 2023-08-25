@@ -25,4 +25,64 @@ describe("Scene Analyser Component", () => {
 		expect(screen.getByText("70%")).toBeInTheDocument();
 		expect(screen.getByText("1h 00'")).toBeInTheDocument();
 	});
+
+	test("displays a score of 9 as error", () => {
+		const mockElement = mockSession1;
+
+		(ServiceFactory.createSceneAnalyserService as jest.Mock).mockReturnValue({
+			analyseSession: () => ({
+				score: 9,
+				expectedDuration: 3600,
+				activity: 30,
+				excitement: 20,
+				interest: 40,
+				variety: 50,
+			}),
+		});
+
+		render(<SceneAnalyserComponent element={mockElement} />);
+
+		const scoreElement = screen.getByText("9%");
+		expect(scoreElement).toHaveClass("text-[--text-error]");
+	});
+
+	test("displays a score of 53 as warning", () => {
+		const mockElement = mockSession1;
+
+		(ServiceFactory.createSceneAnalyserService as jest.Mock).mockReturnValue({
+			analyseSession: () => ({
+				score: 53,
+				expectedDuration: 3600,
+				activity: 30,
+				excitement: 20,
+				interest: 40,
+				variety: 50,
+			}),
+		});
+
+		render(<SceneAnalyserComponent element={mockElement} />);
+
+		const scoreElement = screen.getByText("53%");
+		expect(scoreElement).toHaveClass("text-[--text-warning]");
+	});
+
+	test("displays a score of 89 as success", () => {
+		const mockElement = mockSession1;
+
+		(ServiceFactory.createSceneAnalyserService as jest.Mock).mockReturnValue({
+			analyseSession: () => ({
+				score: 89,
+				expectedDuration: 3600,
+				activity: 30,
+				excitement: 20,
+				interest: 40,
+				variety: 50,
+			}),
+		});
+
+		render(<SceneAnalyserComponent element={mockElement} />);
+
+		const scoreElement = screen.getByText("89%");
+		expect(scoreElement).toHaveClass("text-[--text-success]");
+	});
 });
