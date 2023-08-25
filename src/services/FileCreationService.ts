@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { App, MarkdownView, TAbstractFile, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementType } from "src/data/enums/ElementType";
@@ -63,8 +64,8 @@ export class FileCreationService {
 			{
 				id: uuidv4(),
 				priority: 1,
-				name: "Complete " + this._type,
-				description: "Complete " + this._type + " " + this._name,
+				name: i18next.t("tasks.complete", { context: this._type }),
+				description: i18next.t("tasks.complete", { context: this._type }) + " " + this._name,
 				type: TaskType.Creation,
 				status: TaskStatusType.Proposed,
 			},
