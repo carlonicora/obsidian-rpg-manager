@@ -1,3 +1,4 @@
+import { OptionView } from "@/views/OptionsView";
 import i18n from "i18next";
 import { MarkdownView, Plugin_2, TFile, WorkspaceLeaf } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -11,6 +12,21 @@ import { EditorPositionService } from "./EditorPositionService";
 import { TimerService } from "./TimerService";
 
 export class PluginServices {
+	static async createView(): Promise<void> {
+		app.workspace.detachLeavesOfType("rpg-manager-options");
+		await app.workspace.getRightLeaf(false).setViewState({
+			type: "rpg-manager-options",
+			active: true,
+		});
+
+		const leaf: WorkspaceLeaf = app.workspace.getLeavesOfType("rpg-manager-options")[0];
+		const view: OptionView = leaf.view as OptionView;
+
+		app.workspace.revealLeaf(leaf);
+
+		view.render();
+	}
+
 	static async registerProcessors(rpgm: RpgManagerInterface): Promise<void> {
 		(rpgm as unknown as Plugin_2).registerMarkdownCodeBlockProcessor("RpgManager4", async (source: string, el, ctx) => {
 			ctx.addChild(new Controller(rpgm, ctx.sourcePath, el, source));
@@ -19,6 +35,7 @@ export class PluginServices {
 
 	static async registerEvents(rpgm: RpgManagerInterface, database: ElementInterface[]): Promise<void> {
 		app.workspace.on("active-leaf-change", (leaf: WorkspaceLeaf | null) => {
+			app.workspace.trigger("rpgmanager:refresh-option-view");
 			if (TimerService.runningScene === undefined) return;
 
 			let sceneFound = false;

@@ -13,7 +13,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
 
-export default function OptionsComponent({ element }: { element: ElementInterface }): React.ReactElement {
+export default function OptionsViewComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
 
@@ -69,58 +69,55 @@ export default function OptionsComponent({ element }: { element: ElementInterfac
 	};
 
 	return (
-		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs">
-			<h2 className="!m-0 !text-2xl !font-bold border-b border-b-[--background-modifier-border]">
-				{t("options.option", { count: 2 })}
-			</h2>
-			<h3 className="!text-xl !font-extralight !mt-5 !mb-1">{t("elements." + element.type, { count: 1 })}</h3>
-			<ul className="!p-1 !m-0">
+		<>
+			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
+				<h3 className="!text-xl !font-extralight !mb-1">{t("options.option", { count: 2 })}</h3>
 				{hasWizard && (
-					<li
-						className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside"
+					<div
+						className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 						onClick={openWizard}
 					>
 						{t("options.wizard")}
-					</li>
+					</div>
 				)}
-				<li
-					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside"
+				<div
+					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 					onClick={addRelationship}
 				>
 					{t("create.add", { context: "relationship" })}
-				</li>
-				<li
-					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside"
+				</div>
+				<div
+					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 					onClick={openGallery}
 				>
 					{t("gallery.title")}
-				</li>
-				<li
-					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside"
+				</div>
+				<div
+					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 					onClick={createCustomAttribute}
 				>
 					{t("attributes.custom")}
-				</li>
-			</ul>
-			<h3 className="!mt-5 !mb-2 !text-xl !font-extralight">{t("attributes.attribute", { count: 2 })}</h3>
-			<ul className="!p-0 !m-0">
+				</div>
+			</div>
+			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-1">
+				<h3 className="!mb-3 !text-xl !font-extralight">{t("attributes.attribute", { count: 2 })}</h3>
 				{availableAttributes
 					.filter(
 						(attribute: AttributeInterface) =>
 							attribute.id !== AttributeType.Description && attribute.id !== AttributeType.Duration
 					)
 					.map((attribute: AttributeInterface, index: number) => (
-						<li
+						<div
+							className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 							key={index}
-							className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside"
 							onClick={addAttribute(attribute)}
 						>
 							{attribute.isCustom === true
 								? attribute.customName ?? attribute.id.substring(1)
 								: t("attributes." + attribute.id)}
-						</li>
+						</div>
 					))}
-			</ul>
-		</div>
+			</div>
+		</>
 	);
 }
