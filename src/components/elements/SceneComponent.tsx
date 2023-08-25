@@ -7,7 +7,6 @@ import DurationAttributeComponent from "../attributes/types/DurationAttributeCom
 import ImageAndDescriptionComponent from "../groups/ImageAndDescriptionComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
-import OptionsComponent from "../options/OptionsComponent";
 import RelationshipsComponent from "../relationships/RelationshipsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
@@ -24,8 +23,8 @@ export default function SceneComponent({
 		<>
 			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
-				<div className={`gap-3 !mb-3 grid grid-cols-1 ${isInPopover ? "" : "sm:grid-cols-1 lg:grid-cols-6"}`}>
-					<div className={`${isInPopover ? "" : "lg:col-span-2"}`}>
+				<div className={`gap-3 !mb-3 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5`}>
+					<div className={`lg:col-span-2`}>
 						<ImageAndDescriptionComponent
 							element={element}
 							isInPopover={isInPopover}
@@ -33,10 +32,9 @@ export default function SceneComponent({
 							showParent={true}
 						/>
 					</div>
-					<div className={`${isInPopover ? "" : "lg:col-span-3"}`}>
+					<div className={`lg:col-span-3`}>
 						<AttributeListComponent element={element} isEditable={!isInPopover} />
 					</div>
-					{isInPopover === false && <OptionsComponent element={element} />}
 				</div>
 				<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
 					<DurationAttributeComponent element={element} attribute={attribute} isEditable={!isInPopover} />

@@ -6,7 +6,6 @@ import DescriptionAttributeComponent from "../attributes/types/DescriptionAttrib
 import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
-import OptionsComponent from "../options/OptionsComponent";
 import RelationshipsComponent from "../relationships/RelationshipsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
@@ -22,12 +21,8 @@ export default function EventComponent({
 			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
 				{element.images.length > 0 && <BannerComponent image={element.images[0]} />}
-				<div className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-6 gap-3 !mb-3}`}>
-					<div
-						className={`${
-							isInPopover ? "col-span-6 sm:col-span-1 lg:col-span-6" : "col-span-5 sm:col-span-1 lg:col-span-5"
-						}`}
-					>
+				<div className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-3 !mb-3}`}>
+					<div className={`col-span-5 sm:col-span-1 lg:col-span-5`}>
 						<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 !mb-3">
 							<DescriptionAttributeComponent
 								element={element}
@@ -37,8 +32,6 @@ export default function EventComponent({
 						</div>
 						<AttributeListComponent element={element} isEditable={!isInPopover} />
 					</div>
-
-					{isInPopover === false && <OptionsComponent element={element} />}
 				</div>
 				{element.images.length > 1 && (
 					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">

@@ -6,7 +6,6 @@ import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprint
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import ImageComponent from "../images/ImageComponent";
-import OptionsComponent from "../options/OptionsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
 export default function MainV1Component({
@@ -26,8 +25,8 @@ export default function MainV1Component({
 					isEditable={!isInPopover}
 				/>
 			)}
-			<div className={`gap-3 !mb-3 grid grid-cols-1 ${isInPopover ? "" : "sm:grid-cols-1 lg:grid-cols-6"}`}>
-				<div className={`grid ${isInPopover ? "grid-cols-1" : "lg:col-span-5 lg:grid-cols-5"} gap-3`}>
+			<div className={`gap-3 !mb-3 grid grid-cols-1`}>
+				<div className={`grid grid-cols-1 gap-3`}>
 					{element.images.length > 0 && (
 						<div
 							className={`${
@@ -38,9 +37,7 @@ export default function MainV1Component({
 						</div>
 					)}
 					<div
-						className={`${
-							isInPopover ? "col-span-1" : element.images.length > 0 ? "lg:col-span-3" : "lg:col-span-5"
-						} rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] !mt-0`}
+						className={`col-span-1 rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] !mt-0`}
 					>
 						<DescriptionAttributeComponent
 							element={element}
@@ -52,7 +49,6 @@ export default function MainV1Component({
 						<AttributeListComponent element={element} isEditable={!isInPopover} />
 					</div>
 				</div>
-				{isInPopover === false && <OptionsComponent element={element} />}
 			</div>
 			{element.images.length > 0 && (
 				<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
