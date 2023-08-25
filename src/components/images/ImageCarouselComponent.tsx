@@ -2,6 +2,7 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { ImageInterface } from "src/data/interfaces/ImageInterface";
+import MarkdownComponent from "../markdowns/MarkdownComponent";
 
 export default function ImageCarouselComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
@@ -60,7 +61,9 @@ export default function ImageCarouselComponent({ element }: { element: ElementIn
 						onClick={() => setClickedImage(undefined)}
 					>
 						<img src={clickedImage.src} alt={clickedImage.caption} className="max-w-full max-h-full" />
-						<div className="text-white text-center text-xl mt-5">{clickedImage.caption}</div>
+						<div className="text-white text-center text-xl mt-5">
+							<MarkdownComponent value={clickedImage.caption} />
+						</div>
 					</div>
 				)}
 			</div>
