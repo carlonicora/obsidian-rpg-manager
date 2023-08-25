@@ -320,7 +320,8 @@ export class RpgManagerCodeblockService {
 		const oldBaseName = oldPath.split("/").pop().substring(0, oldPath.split("/").pop().lastIndexOf("."));
 
 		let newContent = this._fileContent.replaceAll(oldPath, toFile.path);
-		if (oldBaseName !== toFile.basename) newContent = newContent.replaceAll(oldBaseName, toFile.basename);
+		if (oldBaseName !== toFile.basename && newContent.indexOf("|" + oldBaseName) !== -1)
+			newContent = newContent.replaceAll("|" + oldBaseName, "|" + toFile.basename);
 
 		this._modifyFileContent(newContent);
 	}
