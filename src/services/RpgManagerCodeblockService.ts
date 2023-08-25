@@ -315,15 +315,17 @@ export class RpgManagerCodeblockService {
 	async updateRelationshipsPaths(toFile: TFile, oldPath: string): Promise<void> {
 		await this._readMetadata();
 
-		if (this._fileContent.indexOf(oldPath) === -1) return;
+		if (this._codeblockContent.indexOf(oldPath) === -1) return;
 
 		const oldBaseName = oldPath.split("/").pop().substring(0, oldPath.split("/").pop().lastIndexOf("."));
 
-		let newContent = this._fileContent.replaceAll(oldPath, toFile.path);
-		if (oldBaseName !== toFile.basename && newContent.indexOf("|" + oldBaseName) !== -1)
-			newContent = newContent.replaceAll("|" + oldBaseName, "|" + toFile.basename);
+		let newCodeblockContent = this._codeblockContent.replaceAll(oldPath, toFile.path);
+		if (oldBaseName !== toFile.basename && newCodeblockContent.indexOf("|" + oldBaseName) !== -1)
+			newCodeblockContent = newCodeblockContent.replaceAll("|" + oldBaseName, "|" + toFile.basename);
 
-		this._modifyFileContent(newContent);
+		const content = this._fileContent.replace(this._codeblockContent, newCodeblockContent);
+
+		this._modifyFileContent(content);
 	}
 
 	async addImage(path: string, caption: string): Promise<void> {
