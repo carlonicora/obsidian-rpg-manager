@@ -37,6 +37,12 @@ function EditComponent({
 		attribute.value as SensoryImprintInterface
 	);
 
+	const [sight, setSight] = React.useState<string>(attribute?.value?.sight ?? "");
+	const [hear, setHear] = React.useState<string>(attribute?.value?.hear ?? "");
+	const [smell, setSmell] = React.useState<string>(attribute?.value?.smell ?? "");
+	const [touch, setTouch] = React.useState<string>(attribute?.value?.touch ?? "");
+	const [taste, setTaste] = React.useState<string>(attribute?.value?.taste ?? "");
+
 	let chatGpt: ChatGptNonPlayerCharacterModel | undefined = undefined;
 
 	if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "") {
@@ -64,7 +70,16 @@ function EditComponent({
 				touch: sensoryImprint[3],
 				taste: sensoryImprint[4],
 			};
+
+			setSight(newSensoryImprint.sight ?? "");
+			setHear(newSensoryImprint.hear ?? "");
+			setSmell(newSensoryImprint.smell ?? "");
+			setTouch(newSensoryImprint.touch ?? "");
+			setTaste(newSensoryImprint.taste ?? "");
+
 			setSensoryImprint(newSensoryImprint);
+
+			console.log(newSensoryImprint);
 		});
 	};
 
@@ -114,8 +129,8 @@ function EditComponent({
 					</div>
 					<div className="flex justify-center">
 						<TextAreaComponent
-							key={sensoryImprint.sight}
-							initialValue={sensoryImprint.sight}
+							key={"sight:" + sight}
+							initialValue={sight}
 							onChange={handleSightChange}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
@@ -127,8 +142,8 @@ function EditComponent({
 					</div>
 					<div className="flex justify-center">
 						<TextAreaComponent
-							key={sensoryImprint.hear}
-							initialValue={sensoryImprint.hear}
+							key={"hear:" + hear}
+							initialValue={hear}
 							onChange={handleHearChange}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
@@ -140,8 +155,8 @@ function EditComponent({
 					</div>
 					<div className="flex justify-center">
 						<TextAreaComponent
-							key={sensoryImprint.smell}
-							initialValue={sensoryImprint.smell}
+							key={"smell:" + smell}
+							initialValue={smell}
 							onChange={handleSmellChange}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
@@ -153,8 +168,8 @@ function EditComponent({
 					</div>
 					<div className="flex justify-center">
 						<TextAreaComponent
-							key={sensoryImprint.touch}
-							initialValue={sensoryImprint.touch}
+							key={"touch:" + touch}
+							initialValue={touch}
 							onChange={handleTouchChange}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
@@ -166,15 +181,15 @@ function EditComponent({
 					</div>
 					<div className="flex justify-center">
 						<TextAreaComponent
-							key={sensoryImprint.taste}
-							initialValue={sensoryImprint.taste}
+							key={"taste:" + taste}
+							initialValue={taste}
 							onChange={handleTasteChange}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
 					</div>
 				</div>
 			</div>
-			<div className={`w-full flex justify-end`}>
+			<div className={`w-full flex justify-end mt-3`}>
 				<button className="rpgm-danger" onClick={handleDelete}>
 					{t("buttons.delete")}
 				</button>
