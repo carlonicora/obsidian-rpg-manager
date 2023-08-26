@@ -1,3 +1,4 @@
+import { HelperService } from "@/services/HelperService";
 import { TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -54,13 +55,6 @@ export default function CreationBaseComponent({
 		setName(currentNote.basename);
 	}
 
-	function getPositionInParent(elements: ElementInterface[]): number {
-		if (elements.length === 0) return 1;
-
-		const highestPositionInParent = Math.max(...elements.map((element: ElementInterface) => element.positionInParent));
-		return highestPositionInParent + 1;
-	}
-
 	if (type !== undefined) {
 		if (type !== ElementType.Campaign) {
 			campaigns = api.get(undefined, undefined, ElementType.Campaign) as ElementInterface[];
@@ -82,7 +76,9 @@ export default function CreationBaseComponent({
 				if (parentPath === undefined && campaign !== undefined) setParentPath(campaign.path);
 
 				if (positionInParent === undefined) {
-					setPositionInParent(getPositionInParent(api.get(undefined, campaign, type) as ElementInterface[]));
+					setPositionInParent(
+						HelperService.getPositionInParent(api.get(undefined, campaign, type) as ElementInterface[])
+					);
 				}
 			}
 
@@ -101,7 +97,9 @@ export default function CreationBaseComponent({
 
 					if (positionInParent === undefined) {
 						setPositionInParent(
-							getPositionInParent(api.get(undefined, campaign, ElementType.Session, session) as ElementInterface[])
+							HelperService.getPositionInParent(
+								api.get(undefined, campaign, ElementType.Session, session) as ElementInterface[]
+							)
 						);
 					}
 				}
@@ -122,7 +120,7 @@ export default function CreationBaseComponent({
 
 					if (positionInParent === undefined) {
 						setPositionInParent(
-							getPositionInParent(api.get(undefined, campaign, type, adventure) as ElementInterface[])
+							HelperService.getPositionInParent(api.get(undefined, campaign, type, adventure) as ElementInterface[])
 						);
 					}
 				}
