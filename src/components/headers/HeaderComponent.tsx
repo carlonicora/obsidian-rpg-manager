@@ -29,7 +29,7 @@ export default function HeaderComponent({
 
 	return (
 		<>
-			<div className="!m-0 flex justify-end p-1 text-[--text-faint] absolute right-0 !mt-[-1.25rem]">
+			<div className="!m-0 flex justify-end p-1 text-[--text-faint] absolute right-0 !mt-[-1.25rem] text-xs">
 				Rpg Manager {api.version}
 			</div>
 			<div className="!m-0 flex flex-col justify-center items-center">
