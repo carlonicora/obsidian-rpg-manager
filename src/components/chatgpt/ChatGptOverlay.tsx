@@ -23,7 +23,7 @@ const Spinner: React.FC = () => (
 );
 */
 
-export default function ChatGptOverlay(): React.ReactElement {
+export default function ChatGptOverlay({ type }: { type: string }): React.ReactElement {
 	const { t } = useTranslation();
 
 	const [currentMessage, setCurrentMessage] = React.useState<string>(
@@ -44,7 +44,7 @@ export default function ChatGptOverlay(): React.ReactElement {
 	return (
 		<div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 p-4">
 			<div className="text-center space-y-4">
-				<div className="text-2xl text-white font-semibold">{t("chatgpt.overlaytitle")}</div>
+				<div className="text-2xl text-white font-semibold">{t("chatgpt.overlaytitle", { context: type })}</div>
 				<div className="text-xl text-white">{t("chatgpt.overlaydescription")}</div>
 				<div className="text-white">{currentMessage}</div>
 			</div>

@@ -124,7 +124,7 @@ function EditComponent({
 
 	return (
 		<div className="relative w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg">
-			{showOverlay && <ChatGptOverlay />}
+			{showOverlay && <ChatGptOverlay type="sensoryimprint" />}
 			<div className="w-full flex justify-center mb-3">
 				<h3 className="!m-0 !p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
 			</div>
