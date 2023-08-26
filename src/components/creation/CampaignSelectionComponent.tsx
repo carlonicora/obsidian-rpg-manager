@@ -26,7 +26,7 @@ export default function CampaignSelectionComponent({
 	};
 
 	return (
-		<div className="min-w-[200px] w-[200px]">
+		<div className="max-w-md mb-3">
 			<div className="font-bold">{t("create.select", { context: ElementType.Campaign })}</div>
 			<select onChange={(e) => setSelectedCampaign(e.target.value)} className="w-full">
 				{campaigns.length > 1 && <option value=""></option>}

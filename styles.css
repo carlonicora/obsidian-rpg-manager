@@ -932,10 +932,6 @@ video {
   width: 12px;
 }
 
-.w-\[200px\] {
-  width: 200px;
-}
-
 .w-\[20px\] {
   width: 20px;
 }
@@ -966,10 +962,6 @@ video {
 
 .min-w-\[1rem\] {
   min-width: 1rem;
-}
-
-.min-w-\[200px\] {
-  min-width: 200px;
 }
 
 .min-w-\[60px\] {
@@ -1010,6 +1002,10 @@ video {
 
 .max-w-full {
   max-width: 100%;
+}
+
+.max-w-md {
+  max-width: 28rem;
 }
 
 .flex-1 {

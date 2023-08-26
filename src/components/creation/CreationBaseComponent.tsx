@@ -11,6 +11,7 @@ import AdventureSelectionComponent from "./AdventureSelectionComponent";
 import CampaignSelectionComponent from "./CampaignSelectionComponent";
 import CreationTypeSelectionComponent from "./CreationTypeSelectionComponent";
 import SessionSelectionComponent from "./SessionSelectionComponent";
+import TemplateSelectionComponent from "./TemplateSelectionComponent";
 
 export default function CreationBaseComponent({
 	initialType,
@@ -28,7 +29,8 @@ export default function CreationBaseComponent({
 		system: SystemType,
 		campaignPath: string,
 		parentPath?: string,
-		positionInParent?: number
+		positionInParent?: number,
+		template?: string
 	) => Promise<void>;
 	hasWizard: boolean;
 	closeModal: () => void;
@@ -43,6 +45,7 @@ export default function CreationBaseComponent({
 	const [name, setName] = React.useState<string | undefined>(undefined);
 	const [error, setError] = React.useState<string | undefined>(undefined);
 	const [system, setSystem] = React.useState<SystemType | undefined>(undefined);
+	const [template, setTemplate] = React.useState<string | undefined>(undefined);
 
 	let campaigns: ElementInterface[] = [];
 	let campaign: ElementInterface | undefined = undefined;
@@ -142,7 +145,7 @@ export default function CreationBaseComponent({
 			return;
 		}
 
-		setId(launchWizard, type, name, system, campaignPath, parentPath, positionInParent);
+		setId(launchWizard, type, name, system, campaignPath, parentPath, positionInParent, template);
 	};
 
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -172,7 +175,12 @@ export default function CreationBaseComponent({
 				</div>
 				<div className="p-3 col-span-4">
 					{error && <div>{error}</div>}
-					{type === undefined && <CreationTypeSelectionComponent setType={setType} />}
+					{type === undefined ? (
+						<CreationTypeSelectionComponent setType={setType} />
+					) : (
+						<TemplateSelectionComponent setTemplate={setTemplate} />
+					)}
+
 					{type !== undefined && type !== ElementType.Campaign && (
 						<CampaignSelectionComponent campaigns={campaigns} setCampaign={setCampaignPath} setSystem={setSystem} />
 					)}
@@ -183,7 +191,7 @@ export default function CreationBaseComponent({
 						<AdventureSelectionComponent adventures={adventures} setAdventurePath={setParentPath} />
 					)}
 					{type !== undefined && (
-						<div className="min-w-[200px] w-[200px]">
+						<div className="max-w-md">
 							<div className="font-bold">{t("name")}</div>
 							<input
 								onKeyDown={handleKeyDown}

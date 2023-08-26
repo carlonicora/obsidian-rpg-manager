@@ -251,6 +251,7 @@ If you want to create new ones, just click on the button and define the name and
 		select_adventure: "Select Adventure",
 		select_session: "Select Session",
 		select_type: "Select the type of element you want to create",
+		select_template: "Select the template for your element",
 	},
 	chatgpt: {
 		overlaytitle_nonplayercharacter: "Automatically Generating your Character",

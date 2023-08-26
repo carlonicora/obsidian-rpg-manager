@@ -28,7 +28,8 @@ export class FileCreationService {
 		private _parentPath?: string,
 		positionInParent?: number,
 		attributes?: any[],
-		relationships?: RelationshipInterface[]
+		relationships?: RelationshipInterface[],
+		private _template?: string
 	) {
 		const id: IdInterface = {
 			type: this._type,
@@ -85,8 +86,17 @@ export class FileCreationService {
 	}
 
 	async create(open: boolean): Promise<TFile | undefined> {
+		let content = this._rpgManagerCodeBlock;
+
+		if (this._template !== undefined) {
+			const templateFile: TFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
+			const templateContent = await this._app.vault.read(templateFile);
+
+			content = templateContent.replace("```RpgManager4```", content).replace("```RpgManager4\n```", content);
+		}
+
 		const fileName = await this._generateFilePath();
-		const newFile = await app.vault.create(fileName, this._rpgManagerCodeBlock);
+		const newFile = await app.vault.create(fileName, content);
 		const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
 		const leaf = app.workspace.getLeaf(currentLeaf != null);
 		// open ? await leaf.openFile(newFile) : leaf.detach();

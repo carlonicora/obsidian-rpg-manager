@@ -31,6 +31,7 @@ export default function CreationComponent({
 	const [campaignPath, setCampaignPath] = React.useState<string | undefined>(undefined);
 	const [parentPath, setParentPath] = React.useState<string | undefined>(undefined);
 	const [positionInParent, setPositionInParent] = React.useState<number | undefined>(undefined);
+	const [template, setTemplate] = React.useState<string | undefined>(undefined);
 
 	async function setId(
 		launchWizard: boolean,
@@ -39,7 +40,8 @@ export default function CreationComponent({
 		passedSystem: SystemType,
 		passedCampaignPath: string,
 		passedParentPath?: string,
-		passedPositionInParent?: number
+		passedPositionInParent?: number,
+		passedTemplate?: string
 	): Promise<void> {
 		if (launchWizard) {
 			setSelectedType(passedType);
@@ -48,6 +50,7 @@ export default function CreationComponent({
 			setCampaignPath(passedCampaignPath);
 			if (passedParentPath) setParentPath(passedParentPath);
 			if (passedPositionInParent) setPositionInParent(passedPositionInParent);
+			if (passedTemplate) setTemplate(passedTemplate);
 			setInWizard(true);
 		} else {
 			create(
@@ -57,7 +60,8 @@ export default function CreationComponent({
 				passedSystem,
 				passedCampaignPath,
 				passedParentPath,
-				passedPositionInParent
+				passedPositionInParent,
+				passedTemplate
 			);
 		}
 	}
@@ -73,7 +77,8 @@ export default function CreationComponent({
 		passedSystem?: SystemType,
 		passedCampaignPath?: string,
 		passedParentPath?: string,
-		passedPositionInParent?: number
+		passedPositionInParent?: number,
+		passedTemplate?: string
 	): Promise<void> {
 		const fileCreator = new FileCreationService(
 			app,
@@ -84,7 +89,9 @@ export default function CreationComponent({
 			passedCampaignPath ?? campaignPath,
 			passedParentPath ?? parentPath,
 			passedPositionInParent ?? positionInParent,
-			attributes
+			attributes,
+			undefined,
+			passedTemplate ?? template
 		);
 
 		if (currentNote !== undefined) {
