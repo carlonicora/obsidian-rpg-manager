@@ -59,6 +59,79 @@ export class RpgManagerCodeblockService {
 		this._app.vault.modify(this._file, content);
 	}
 
+	async update(values: any): Promise<void> {
+		const codeblock = await this.readCodeblock();
+		if (codeblock === undefined) return;
+
+		if (codeblock.data == undefined) codeblock.data = {};
+		if (codeblock.relationships == undefined) codeblock.relationships = [];
+		if (codeblock.images == undefined) codeblock.images = [];
+		if (codeblock.tasks == undefined) codeblock.tasks = [];
+
+		if (values.data !== undefined) {
+			Object.keys(values.data).forEach((key: string) => {
+				codeblock.data[key] = values.data[key];
+			});
+		}
+
+		if (values.relationships !== undefined) {
+			values.relationships.forEach((relationship: RelationshipInterface) => {
+				const existingRelationship: RelationshipInterface | undefined = codeblock.relationships.find(
+					(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+				);
+				if (existingRelationship === undefined) {
+					codeblock.relationships.push({
+						type: relationship.type,
+						path: relationship.path,
+					});
+				} else {
+					existingRelationship.type = relationship.type;
+				}
+			});
+		}
+
+		if (values.images !== undefined) {
+			values.images.forEach((image: any) => {
+				const existingImage: any | undefined = codeblock.images.find(
+					(existingImage: any) => existingImage.path === image.path
+				);
+				if (existingImage === undefined) {
+					codeblock.images.push({
+						path: image.path,
+						caption: image.caption,
+					});
+				} else {
+					existingImage.caption = image.caption;
+				}
+			});
+		}
+
+		if (values.tasks !== undefined) {
+			values.tasks.forEach((task: any) => {
+				const existingTask: any | undefined = codeblock.tasks.find((existingTask: any) => existingTask.id === task.id);
+				if (existingTask === undefined) {
+					codeblock.tasks.push({
+						id: task.id,
+						priority: task.priority,
+						name: task.name,
+						description: task.description,
+						complete: task.complete,
+					});
+				} else {
+					existingTask.priority = task.priority;
+					existingTask.name = task.name;
+					existingTask.description = task.description;
+					existingTask.complete = task.complete;
+				}
+			});
+		}
+
+		const yamlService: YamlService = new YamlService();
+		const codeblockContent: string = yamlService.stringify(codeblock);
+
+		this._modifyFileContent(this._fileContent.replace(this._codeblockContent, codeblockContent));
+	}
+
 	async updateRelationshipInContent(relationships: RelationshipInterface[]): Promise<void> {
 		await this._readMetadata();
 		if (this._metadata === null) return undefined;
@@ -246,7 +319,7 @@ export class RpgManagerCodeblockService {
 
 		if (codeblock.data == undefined) codeblock.data = {};
 
-		attributes.forEach((attribute: { name: string; value?: string | boolean | number }) => {
+		attributes.forEach((attribute: { name: string; value?: string | boolean | number | [] | any }) => {
 			if (attribute.value !== undefined) {
 				codeblock.data[attribute.name] = attribute.value;
 			} else {
