@@ -16,8 +16,6 @@ import {
 } from "./settings/RpgManagerSettings";
 import { OptionView } from "./views/OptionsView";
 
-//TODO: remove optins from UI
-//TODO: complete chapter wizard
 //TODO: add OGAS to NPC
 //TODO: Add story circle stage help on hover
 //TODO: Add Google Maps or Javalent mapa
