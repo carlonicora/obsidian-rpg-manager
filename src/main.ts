@@ -17,7 +17,6 @@ import {
 import { OptionView } from "./views/OptionsView";
 
 //TODO: add OGAS to NPC
-//TODO: Add story circle stage help on hover
 //TODO: Add Google Maps or Javalent mapa
 
 export default class RpgManager extends Plugin implements RpgManagerInterface {

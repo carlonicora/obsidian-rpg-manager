@@ -1,3 +1,4 @@
+import { ElementType } from "@/data/enums/ElementType";
 import {
 	App,
 	CachedMetadata,
@@ -135,6 +136,19 @@ export class RpgManagerCodeblockService {
 	async updateRelationshipInContent(relationships: RelationshipInterface[]): Promise<void> {
 		await this._readMetadata();
 		if (this._metadata === null) return undefined;
+
+		const element = this._api.get(this._file.path) as ElementInterface;
+
+		if (
+			[
+				ElementType.Campaign,
+				ElementType.Adventure,
+				ElementType.Chapter,
+				ElementType.Session,
+				ElementType.Scene,
+			].includes(element.type)
+		)
+			return;
 
 		const relationshipsNotInContent = relationships.filter(
 			(relationship: RelationshipInterface) =>
