@@ -1,3 +1,4 @@
+import { RelationshipInterface } from "@/data/interfaces/RelationshipInterface";
 import i18next from "i18next";
 import { App, MarkdownView, TAbstractFile, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -26,7 +27,8 @@ export class FileCreationService {
 		private _campaignPath?: string,
 		private _parentPath?: string,
 		positionInParent?: number,
-		attributes?: any
+		attributes?: any[],
+		relationships?: RelationshipInterface[]
 	) {
 		const id: IdInterface = {
 			type: this._type,
@@ -50,13 +52,18 @@ export class FileCreationService {
 			this._codeblock.data = {};
 
 			attributes.forEach((attribute: { name: string; value: string | boolean | number }) => {
-				if (attribute.value !== undefined && attribute.value !== "") {
-					if (typeof attribute.value === "string") {
-						this._codeblock.data[attribute.name] = attribute.value;
-					} else {
-						this._codeblock.data[attribute.name] = attribute.value;
-					}
-				}
+				if (attribute.value) this._codeblock.data[attribute.name] = attribute.value;
+			});
+		}
+
+		if (relationships !== undefined) {
+			this._codeblock.relationships = [];
+
+			relationships.forEach((relationship: RelationshipInterface) => {
+				this._codeblock.relationships.push({
+					type: relationship.type,
+					path: relationship.path,
+				});
 			});
 		}
 
@@ -82,7 +89,8 @@ export class FileCreationService {
 		const newFile = await app.vault.create(fileName, this._rpgManagerCodeBlock);
 		const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
 		const leaf = app.workspace.getLeaf(currentLeaf != null);
-		open ? await leaf.openFile(newFile) : leaf.detach();
+		// open ? await leaf.openFile(newFile) : leaf.detach();
+		open && (await leaf.openFile(newFile));
 
 		return newFile;
 	}
