@@ -9,12 +9,14 @@ export default function TextAreaComponent({
 	className,
 	onChange,
 	onBlur,
+	forceFocus,
 }: {
 	initialValue?: string;
 	campaignPath: string;
 	className?: string;
 	onChange: (value: string) => void;
 	onBlur?: (value: string) => void;
+	forceFocus?: boolean;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
 
@@ -34,7 +36,7 @@ export default function TextAreaComponent({
 
 	React.useEffect(() => {
 		resizeTextArea();
-		textAreaRef.current?.focus();
+		if (forceFocus) textAreaRef.current?.focus();
 	}, []);
 
 	const handleNewRelationship = () => {
