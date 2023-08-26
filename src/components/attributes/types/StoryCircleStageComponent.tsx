@@ -1,3 +1,5 @@
+import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -25,6 +27,7 @@ export default function StoryCircleStageComponent({
 
 	const [value, setValue] = React.useState<string>(attribute?.value?.[stage.toLowerCase()] ?? "");
 	const [editing, setEditing] = React.useState<boolean>(false);
+	const [showHelp, setShowHelp] = React.useState<boolean>(false);
 
 	function reset(): void {
 		setValue(attribute?.value?.[stage.toLowerCase()] ?? "");
@@ -88,8 +91,21 @@ export default function StoryCircleStageComponent({
 
 	return (
 		<>
-			<div className={`!font-bold ${isEditable && "sm:col-span-1 lg:col-span-1"}`}>{stage}</div>
+			<div className={`!font-bold ${isEditable && "sm:col-span-1 lg:col-span-1"}`}>
+				<div>{stage}</div>
+				<div
+					className="text-xs cursor-pointer text-[--color-base-25] hover:text-[--text-accent-hover]"
+					onClick={() => setShowHelp(!showHelp)}
+				>
+					<FontAwesomeIcon icon={faCircleQuestion} />
+				</div>
+			</div>
 			{content}
+			{showHelp && (
+				<div className="col-span-full mb-3 p-3 rounded-lg bg-[--background-primary-alt] text-sm">
+					<MarkdownComponent value={t("storycircle.description", { context: stage.toLocaleLowerCase() })} />
+				</div>
+			)}
 		</>
 	);
 }

@@ -11,7 +11,6 @@ import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import HierarchyComponent from "../hierarchies/HierarchyComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
-import OptionsComponent from "../options/OptionsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
 export default function CampaignComponent({
@@ -39,8 +38,6 @@ export default function CampaignComponent({
 						</div>
 						<AttributeListComponent element={element} isEditable={!isInPopover} />
 					</div>
-
-					{isInPopover === false && <OptionsComponent element={element} />}
 				</div>
 				{storyCircle && storyCircle.isSet && (
 					<div className="col-span-1 sm:col-span-1 lg:col-span-6">
