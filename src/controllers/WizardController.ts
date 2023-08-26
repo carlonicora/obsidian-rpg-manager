@@ -1,3 +1,5 @@
+import ChapterWizardComponent from "@/components/wizards/chapters/ChapterWizardComponent";
+import { ElementType } from "@/data/enums/ElementType";
 import { App, Modal, Scope } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
@@ -26,10 +28,18 @@ export class WizardController extends Modal {
 		const root: Root = createRoot(contentEl);
 		this.modalEl.style.width = "var(--modal-max-width)";
 
-		const wizardComponent = createElement(NonPlayerCharacterWizardComponent, {
-			element: this._element,
-			close: this.close.bind(this),
-		});
+		let wizardComponent: React.ReactElement;
+		if (this._element.type === ElementType.NonPlayerCharacter) {
+			wizardComponent = createElement(NonPlayerCharacterWizardComponent, {
+				element: this._element,
+				close: this.close.bind(this),
+			});
+		} else if (this._element.type === ElementType.Chapter) {
+			wizardComponent = createElement(ChapterWizardComponent, {
+				element: this._element,
+				close: this.close.bind(this),
+			});
+		}
 
 		const wizardProvider = createElement(WizardContext.Provider, { value: {} }, wizardComponent);
 		const reactComponent = createElement(ApiContext.Provider, { value: this._api }, wizardProvider);
