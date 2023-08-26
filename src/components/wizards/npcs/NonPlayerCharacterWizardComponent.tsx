@@ -1,3 +1,4 @@
+import { StepComponentInterface } from "@/data/interfaces/StepComponentInterface";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -13,6 +14,7 @@ import { useApi } from "src/hooks/useApi";
 import { useWizard } from "src/hooks/useWizard";
 import { ChatGptNonPlayerCharacterModel } from "src/services/ChatGptService/models/ChatGptNonPlayerCharacterModel";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
+import WizardNavigatorComponent from "../WizardNavigatorComponent";
 import NonPlayerCharacterWizardArcStepComponent from "./steps/NonPlayerCharacterWizardArcStepComponent";
 import NonPlayerCharacterWizardBehaviourStepComponent from "./steps/NonPlayerCharacterWizardBehaviourStepComponent";
 import NonPlayerCharacterWizardBeliefsStepComponent from "./steps/NonPlayerCharacterWizardBeliefsStepComponent";
@@ -24,12 +26,6 @@ import NonPlayerCharacterWizardOppositionStepComponent from "./steps/NonPlayerCh
 import NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent from "./steps/NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent";
 import NonPlayerCharacterWizardTypeStepComponent from "./steps/NonPlayerCharacterWizardTypeStepComponent";
 import NonPlayerCharacterWizardWantStepComponent from "./steps/NonPlayerCharacterWizardWantStepComponent";
-
-interface StepComponentInterface {
-	name: string;
-	component: any;
-	chatGptId?: string;
-}
 
 const initialStepComponents: StepComponentInterface[] = [
 	{ name: "Type", component: NonPlayerCharacterWizardTypeStepComponent },
@@ -65,38 +61,6 @@ const minimalStepComponents: StepComponentInterface[] = [
 	{ name: "Behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
 	{ name: "Want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
 ];
-
-function navigator({
-	steps,
-	step,
-	setStep,
-}: {
-	steps: StepComponentInterface[];
-	step: number;
-	setStep: (step: number) => void;
-}): React.ReactElement {
-	return (
-		<>
-			<ul className="!p-0 !m-0 !mt-3 !mb-3">
-				{steps.map((stepComponent: StepComponentInterface, index: number) => {
-					return (
-						<li
-							key={index}
-							className={
-								step > index ? "text-[--text-normal]" : "text-[--text-muted] hover:text-[--text-accent] cursor-pointer"
-							}
-							onClick={() => {
-								setStep(index + 1);
-							}}
-						>
-							{stepComponent.name}
-						</li>
-					);
-				})}
-			</ul>
-		</>
-	);
-}
 
 export default function NonPlayerCharacterWizardComponent({
 	element,
@@ -318,7 +282,6 @@ export default function NonPlayerCharacterWizardComponent({
 		}
 
 		if (step === 1) {
-			console.log(wizardData.nonplayercharactertype);
 			if (wizardData.nonplayercharactertype === NonPlayerCharacterType.Extra) {
 				setStepsType(minimalStepComponents);
 			} else {
@@ -367,13 +330,13 @@ export default function NonPlayerCharacterWizardComponent({
 
 	return (
 		<div className="relative">
-			{showOverlay && <ChatGptOverlay />}
+			{showOverlay && <ChatGptOverlay type={ElementType.NonPlayerCharacter} />}
 			<h2 className="!m-0 !text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
 				{t("wizards.npc.title")}
 			</h2>
 			<div className="grid grid-cols-5 border-b border-b-[--background-modifier-border]">
 				<div className="col-span-1 border-r border-r-[--background-modifier-border]">
-					{navigator({ steps: stepsType, step: step, setStep: setStep })}
+					{WizardNavigatorComponent({ steps: stepsType, step: step, setStep: setStep })}
 				</div>
 				<div className="p-3 col-span-4">
 					<CurrentStepComponent.component
