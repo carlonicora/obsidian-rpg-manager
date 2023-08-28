@@ -50,6 +50,20 @@ describe("Scene Analyser Component", () => {
 		expect(scoreElement).toHaveClass("text-[--text-success]");
 	});
 
+	test("displays an activity score of 11 as error", () => {
+		const mockElement = mockSession1;
+
+		(ServiceFactory.createSceneAnalyserService as jest.Mock).mockReturnValue({
+			analyseSession: () => ({
+				activity: 11,
+			}),
+		});
+
+		render(<SceneAnalyserComponent element={mockElement} />);
+
+		screen.getByText("analyser.activity: 11%");
+	});
+
 	it("renders correctly for a given analysis score", () => {
 		const mockElement = mockSession1;
 

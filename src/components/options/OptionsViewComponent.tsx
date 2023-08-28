@@ -1,3 +1,4 @@
+import { FileUploadService } from "@/services/FileUploadService";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -16,6 +17,41 @@ import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockServ
 export default function OptionsViewComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+
+	const [isDragging, setIsDragging] = React.useState(false);
+
+	React.useEffect(() => {
+		let dragCounter = 0;
+
+		const handleWindowDragEnter = (event: DragEvent) => {
+			event.preventDefault();
+			dragCounter++;
+			setIsDragging(true);
+		};
+
+		const handleWindowDragLeave = () => {
+			dragCounter--;
+			if (dragCounter === 0) {
+				setIsDragging(false);
+			}
+		};
+
+		const handleWindowDrop = (event: DragEvent) => {
+			event.preventDefault();
+			dragCounter = 0;
+			setIsDragging(false);
+		};
+
+		window.addEventListener("dragenter", handleWindowDragEnter);
+		window.addEventListener("dragleave", handleWindowDragLeave);
+		window.addEventListener("drop", handleWindowDrop);
+
+		return () => {
+			window.removeEventListener("dragenter", handleWindowDragEnter);
+			window.removeEventListener("dragleave", handleWindowDragLeave);
+			window.removeEventListener("drop", handleWindowDrop);
+		};
+	}, []);
 
 	const openWizard = () => {
 		const wizard = new WizardController(app, api, element);
@@ -68,6 +104,18 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 		codeblockService.updateCodeblockData(attribute.id, value);
 	};
 
+	const handleDragOver = (event: React.DragEvent) => {
+		event.preventDefault();
+	};
+
+	const handleFileDrop = (event: React.DragEvent) => {
+		event.preventDefault();
+		setIsDragging(false);
+		const fileUpload = new FileUploadService(app, api);
+
+		fileUpload.uploadFileList(element, event.dataTransfer.files);
+	};
+
 	return (
 		<>
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
@@ -88,16 +136,25 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 				</div>
 				<div
 					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
-					onClick={openGallery}
-				>
-					{t("gallery.title")}
-				</div>
-				<div
-					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 					onClick={createCustomAttribute}
 				>
 					{t("attributes.custom")}
 				</div>
+				<div
+					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+					onClick={openGallery}
+				>
+					{t("gallery.title")}
+				</div>
+				{isDragging && (
+					<div
+						className="border-2 border-dashed p-4 cursor-pointer flex-1"
+						onDrop={handleFileDrop}
+						onDragOver={handleDragOver}
+					>
+						{t("gallery.dragdrop")}
+					</div>
+				)}
 			</div>
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-1">
 				<h3 className="!mb-3 !text-xl !font-extralight">{t("attributes.attribute", { count: 2 })}</h3>

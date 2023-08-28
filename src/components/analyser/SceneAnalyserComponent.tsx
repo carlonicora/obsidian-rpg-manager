@@ -54,14 +54,14 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 		<div className="w-full mt-3">
 			<h2 className="!m-0 !mb-3">{t("analyser.sceneanalyser")}</h2>
 			<div className={`text-center w-full mb-3 !font-extralight text-5xl ${getTextColor(analysis.score)}`}>
-				{analysis.score + "%"}
+				{analysis.score?.toString() + "%"}
 			</div>
 			<div className="w-full !mt-3 mb-2 text-center">
 				{t("analyser.expectedduration")}: <span className="font-bold">{secondsToHHMM(analysis.expectedDuration)}</span>
 			</div>
 
 			<div className="w-full !mt-3 mb-2 text-center">
-				{t("analyser.activity")}: {analysis.activity}%
+				{t("analyser.activity")}: {analysis.activity?.toString() + "%"}
 			</div>
 			<LineIndicator value={analysis.activity} />
 			{getContext(analysis.activity) !== undefined && (
@@ -71,7 +71,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 			)}
 
 			<div className="w-full !mt-3 mb-2 text-center">
-				{t("analyser.excitement")}: {analysis.excitement}%
+				{t("analyser.excitement")}: {analysis.excitement?.toString() + "%"}
 			</div>
 			<LineIndicator value={analysis.excitement} />
 			{getContext(analysis.excitement) && (
@@ -81,7 +81,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 			)}
 
 			<div className="w-full !mt-3 mb-2 text-center">
-				{t("analyser.interest")}: {analysis.interest}%
+				{t("analyser.interest")}: {analysis.interest?.toString() + "%"}
 			</div>
 			<LineIndicator value={analysis.interest} />
 			{getContext(analysis.interest) && (
@@ -91,7 +91,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 			)}
 
 			<div className="w-full !mt-3 mb-2 text-center">
-				{t("analyser.variety")}: {analysis.variety}%
+				{t("analyser.variety")}: {analysis.variety?.toString() + "%"}
 			</div>
 			<LineIndicator value={analysis.variety} />
 			{getContext(analysis.variety) && (
