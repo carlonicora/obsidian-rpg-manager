@@ -6,6 +6,7 @@ export interface RpgManagerSettingsInterface {
 	templatesFolder: string | undefined;
 	assetsFolder: string | undefined;
 	automaticMove: boolean;
+	useSceneAnalyser: boolean;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -15,6 +16,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	templatesFolder: undefined,
 	assetsFolder: undefined,
 	automaticMove: false,
+	useSceneAnalyser: true,
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
@@ -35,78 +37,93 @@ export class RpgManagerSettings extends PluginSettingTab {
 	}
 
 	display(): void {
-		this.containerEl.empty();
-
-		this.containerEl.createEl("h2", { text: "Rpg Manager Settings" });
-
 		this._createFolderMap();
 
-		this._automaticMoveSettings();
-		this._templateFolderSettings();
-		this._assetsFolderSettings();
-		this._chatGptSettings();
-	}
+		const { containerEl } = this;
+		containerEl.empty();
 
-	private async _automaticMoveSettings(): Promise<void> {
-		this.containerEl.createEl("h2", { text: "Automatically organise elements in foldersTemplate Folder" });
-		this.containerEl.createEl("p", {
-			text: "Keeps your structure organised by creating subfolders for your Elements.",
-		});
+		containerEl.createEl("h3", { text: "Rpg Manager Settings" });
+		const mainDesc = containerEl.createEl("p");
+		mainDesc.addClass("mb-3");
+		mainDesc.appendText("For help or support, refer to ");
+		mainDesc.appendChild(
+			createEl("a", {
+				text: "github",
+				href: "https://github.com/carlonicora/obsidian-rpg-manager",
+			})
+		);
+		mainDesc.appendText(" or join the ");
+		mainDesc.appendChild(
+			createEl("a", {
+				text: "discord suport thread",
+				href: "https://discord.com/channels/686053708261228577/1022806716343144518",
+			})
+		);
 
-		new Setting(this.containerEl).setName("Keep Element Organised").addToggle((toggle) => {
-			toggle.setValue(this._plugin.settings.automaticMove).onChange(async (value) => {
-				await this.saveSettings({ automaticMove: value });
-			});
-		});
-	}
+		containerEl.createEl("h3", { text: "Main Options" });
 
-	private async _templateFolderSettings(): Promise<void> {
-		this.containerEl.createEl("h2", { text: "Template Folder" });
-		this.containerEl.createEl("p", {
-			text: "Select the folder in which you keep the templates for RPG Manager.",
-		});
+		new Setting(containerEl)
+			.setName("Templates Folder")
+			.setDesc("To use a custom templates, select the folder that contains them.")
+			.addDropdown((dropdown) => {
+				dropdown.addOption("", "");
+				this._folderMap.forEach((value: string, display: string) => {
+					dropdown.addOption(value, display);
+				});
 
-		new Setting(this.containerEl).setName("Templates Folder").addDropdown((dropdown) => {
-			dropdown.addOption("", "");
-			this._folderMap.forEach((value: string, display: string) => {
-				dropdown.addOption(value, display);
-			});
-
-			dropdown.setValue(this._plugin.settings.templatesFolder);
-			dropdown.onChange(async (value) => {
-				await this.saveSettings({ templatesFolder: value });
-			});
-		});
-	}
-
-	private async _assetsFolderSettings(): Promise<void> {
-		this.containerEl.createEl("h2", { text: "Assets Folder" });
-		this.containerEl.createEl("p", {
-			text: "Select the folder in which you keep the assets (images) for RPG Manager.",
-		});
-
-		new Setting(this.containerEl).setName("Assets Folder").addDropdown((dropdown) => {
-			dropdown.addOption("", "");
-			this._folderMap.forEach((value: string, display: string) => {
-				dropdown.addOption(value, display);
+				dropdown.setValue(this._plugin.settings.templatesFolder);
+				dropdown.onChange(async (value) => {
+					await this.saveSettings({ templatesFolder: value });
+				});
 			});
 
-			dropdown.setValue(this._plugin.settings.assetsFolder);
-			dropdown.onChange(async (value) => {
-				await this.saveSettings({ assetsFolder: value });
+		new Setting(containerEl)
+			.setName("Keep Element Organised")
+			.setDesc("Automatically move new elements in subfolders of their campaign.")
+			.addToggle((toggle) => {
+				toggle.setValue(this._plugin.settings.automaticMove).onChange(async (value) => {
+					await this.saveSettings({ automaticMove: value });
+				});
 			});
-		});
-	}
 
-	private async _chatGptSettings(): Promise<void> {
-		this.containerEl.createEl("h2", { text: "ChatGptSettings" });
-		this.containerEl.createEl("p", {
-			text: "Configurations are saved in a file in your vault. If you share your vault, you share your key!",
-		}).style.color = "var(--text-error)";
+		new Setting(containerEl)
+			.setName("Folder")
+			.setDesc("Select the folder that contains the assets.")
+			.addDropdown((dropdown) => {
+				dropdown.addOption("", "");
+				this._folderMap.forEach((value: string, display: string) => {
+					dropdown.addOption(value, display);
+				});
 
-		new Setting(this.containerEl)
+				dropdown.setValue(this._plugin.settings.assetsFolder);
+				dropdown.onChange(async (value) => {
+					await this.saveSettings({ assetsFolder: value });
+				});
+			});
+
+		new Setting(containerEl)
+			.setName("Scene Analyser")
+			.setDesc("Show the tool that helps you create balanced sessions.")
+			.addToggle((toggle) => {
+				toggle.setValue(this._plugin.settings.useSceneAnalyser).onChange(async (value) => {
+					await this.saveSettings({ useSceneAnalyser: value });
+				});
+			});
+
+		containerEl.createEl("h3", { text: "ChatGPT", cls: "mt-3" });
+		const ChatGPT = containerEl.createEl("p");
+		ChatGPT.appendText("Set up all hte add-ons for the plugin. ");
+		const ChatGPTWarning = containerEl.createEl("p");
+		ChatGPTWarning.appendChild(
+			createEl("span", {
+				text: "Please note: ChatGPT is a paid service, you need to have a key to use it. Also, some data from your vault will be sent to OpenAI.",
+				cls: "text-[--text-warning]",
+			})
+		);
+
+		new Setting(containerEl)
 			.setName("OpenAI Key")
-			.setDesc(this._generateFragment("Insert your OpenAI key here."))
+			.setDesc("Insert your OpenAI key here.")
 			.addText((text) =>
 				text
 					.setPlaceholder("")
@@ -115,18 +132,6 @@ export class RpgManagerSettings extends PluginSettingTab {
 						await this.saveSettings({ chatGptKey: value });
 					})
 			);
-	}
-
-	private _generateFragment(text: string): DocumentFragment {
-		const lines = text.split("\n");
-
-		return createFragment((fragment) => {
-			lines.forEach((content: string) => {
-				fragment.appendText(content);
-				fragment.createEl("br");
-			});
-			fragment.appendText(" ");
-		});
 	}
 
 	private _createFolderMap(parent: TFolder | undefined = undefined, indent = 0): void {

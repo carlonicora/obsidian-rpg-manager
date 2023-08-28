@@ -171,7 +171,9 @@ export default function HierarchyComponent({
 						</button>
 					</div>
 				)}
-				{!isInPopover && type === ElementType.Scene && <SceneAnalyserComponent element={element} />}
+				{!isInPopover && type === ElementType.Scene && api.settings.useSceneAnalyser && (
+					<SceneAnalyserComponent element={element} />
+				)}
 			</>
 		</div>
 	);

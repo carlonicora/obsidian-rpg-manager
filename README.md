@@ -2,6 +2,19 @@
 
 RPG Manager is an Obsidian plugin to simplify the creation and running of role playing game campaings. The plugin is system-agnostic, which means you can use it if you are running a D&D, Call of Chtulhu or any other TTRPG.
 
+### Incompatibility with v3
+
+The new version of the plugin is NOT compatible with any previous version.
+If you have built your campaign with RPG Manager v3.4.5 (the latest in v3)
+and want to continue using it, you can do it as follow:
+
+- Install and activate BRAT
+- In BRAT Settings, select "Add Beta plugin with frozen version"
+  - Add "carlonicora/obsidian-rpg-manager" as "Repository"
+  - Add "3.4.5" as the version
+
+In this way you will be able to continue using the previous version of RPG Manager.
+
 ## How to use RPG Manager
 
 Once installed, you can create your first campaign and start adding all the elements you are using or you plan to use.

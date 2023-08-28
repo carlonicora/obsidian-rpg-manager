@@ -16,8 +16,7 @@ import {
 } from "./settings/RpgManagerSettings";
 import { OptionView } from "./views/OptionsView";
 
-//TODO: add OGAS to NPC
-//TODO: Add Google Maps or Javalent mapa
+//TODO: Add Google Maps or Javalent maps
 
 export default class RpgManager extends Plugin implements RpgManagerInterface {
 	private _database: ElementInterface[] | undefined = undefined;
