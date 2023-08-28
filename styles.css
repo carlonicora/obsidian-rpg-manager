@@ -816,6 +816,10 @@ video {
   display: none;
 }
 
+.h-2 {
+  height: 0.5rem;
+}
+
 .h-32 {
   height: 8rem;
 }
@@ -1306,6 +1310,10 @@ video {
   background-color: var(--interactive-accent);
 }
 
+.bg-\[--text-accent\] {
+  background-color: var(--text-accent);
+}
+
 .bg-\[--text-error\] {
   background-color: var(--text-error);
 }
@@ -1510,6 +1518,11 @@ video {
 .text-6xl {
   font-size: 3.75rem;
   line-height: 1;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .text-sm {

@@ -103,6 +103,13 @@ export class ChatGptNonPlayerCharacterModel {
 		});
 	}
 
+	set occupation(occupation: string) {
+		this._dataMessages.set("occupation", {
+			role: "system",
+			content: `The "occupation" of ${this._name} is: \`\`\`${occupation}\`\`\`.`,
+		});
+	}
+
 	set characterArc(characterArc: ArcType) {
 		this._dataMessages.set("characterArc", {
 			role: "system",

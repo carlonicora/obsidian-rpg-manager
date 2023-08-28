@@ -19,4 +19,5 @@ export enum AttributeComponentType {
 	MajorClues = "MajorClues",
 	NonPlayerCharacterType = "NonPlayerCharacterType",
 	SensoryImprint = "SensoryImprint",
+	Scale = "Scale",
 }

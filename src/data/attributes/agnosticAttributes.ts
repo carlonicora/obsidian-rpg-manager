@@ -18,7 +18,7 @@ const storycircle = { id: AttributeType.StoryCircle, type: AttributeComponentTyp
 const type = { id: AttributeType.SceneType, type: AttributeComponentType.SceneType };
 const dob = { id: AttributeType.Dob, type: AttributeComponentType.Date };
 const dod = { id: AttributeType.Dod, type: AttributeComponentType.Date };
-
+const occupation = { id: AttributeType.Occupation, type: AttributeComponentType.Text };
 const sceneaction = { id: AttributeType.SceneAction, type: AttributeComponentType.LongText };
 const date = { id: AttributeType.Date, type: AttributeComponentType.Date };
 const sessiondate = { id: AttributeType.SessionDate, type: AttributeComponentType.Date };
@@ -36,6 +36,7 @@ const nonplayercharactertype = {
 	type: AttributeComponentType.NonPlayerCharacterType,
 };
 const sensoryimprint = { id: AttributeType.SensoryImprint, type: AttributeComponentType.SensoryImprint };
+const stake = { id: AttributeType.Stake, type: AttributeComponentType.Scale };
 
 export const agnosticAttributes: Map<ElementType, AttributeInterface[]> = new Map<ElementType, AttributeInterface[]>([
 	[ElementType.Campaign, [description, storycircle]],
@@ -46,9 +47,10 @@ export const agnosticAttributes: Map<ElementType, AttributeInterface[]> = new Ma
 	[
 		ElementType.NonPlayerCharacter,
 		[
+			description,
 			sensoryimprint,
 			nonplayercharactertype,
-			description,
+			occupation,
 			ghost,
 			lie,
 			arc,
@@ -56,6 +58,7 @@ export const agnosticAttributes: Map<ElementType, AttributeInterface[]> = new Ma
 			need,
 			behaviour,
 			want,
+			stake,
 			opposition,
 			strengths,
 			weaknesses,

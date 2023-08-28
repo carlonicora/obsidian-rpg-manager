@@ -1,7 +1,9 @@
+import { ElementType } from "@/data/enums/ElementType";
 import * as React from "react";
 import { AttributeType } from "src/data/enums/AttributeType";
 import AttributeListComponent from "../attributes/AttributeListComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
+import OgasAttributeComponent from "../attributes/types/OgasAttributeComponent";
 import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprintAttributeComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
@@ -46,6 +48,7 @@ export default function MainV1Component({
 							attribute={element.attribute(AttributeType.Description)}
 							isEditable={!isInPopover}
 						/>
+						{element.type === ElementType.NonPlayerCharacter && <OgasAttributeComponent element={element} />}
 					</div>
 					<div className={`col-span-1 ${!isInPopover && "lg:col-span-5"}`}>
 						<AttributeListComponent element={element} isEditable={!isInPopover} />

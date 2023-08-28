@@ -111,11 +111,17 @@ If you want to create new ones, just click on the button and define the name and
 		coordinates: "Coordinates",
 		sensoryimprints: "Sensory Imprints",
 		active: " (Active)",
+		occupation: "Occupation",
+		stake: "Stake",
+		goals: "Goals (Want)",
+		attitude: "Attitude (Behaviour)",
 	},
 	npctype: {
 		npctype_main: "Main",
+		npctype_supporting: "Supporting",
 		npctype_extra: "Extra",
 		description_main: "A fully fledged non-player character, with details about their personality, wants and needs.",
+		description_supporting: "A recurring non-player character that is not a main character.",
 		description_extra: "A non-player character with minimal details, just enough to be used as a background character.",
 	},
 	arc: {
@@ -346,6 +352,10 @@ What are the beliefs of *{{name}}*?`,
 storyteller to clearly identify them. This part is particularly importan if you wish to use the automatic character generation via the AI feature.
 
 Describe *{{name}}*.`,
+			description_occupation: `The occupation defines what a character does for living. While this does not define who they are,
+it adds a layer of depth to the character and suggests a set of skill they possess.
+
+What's *{{name}}* occupation?`,
 			description_ghost: `The Ghost is an important event in the character's past that defines their beliefs.
 The ghost is highly likely a turning point, highly positive or highly negative and may have shaped their view of the world as a lie.
 
@@ -371,6 +381,10 @@ Who is *{{name}}*?`,
 			description_want: `The Want is what characters think they want to achieve, even if it is not what they really need. This is pulicly known and determines their behaviour.
 
 What does *{{name}}* wants?`,
+			description_stake: `The Stake defines a value of how much the character is **invested** in their occupation, wants and behaviours.
+This helps defining how much effort they will put into achieving them.
+
+What's *{{name}}* stake?`,
 		},
 	},
 	errors: {

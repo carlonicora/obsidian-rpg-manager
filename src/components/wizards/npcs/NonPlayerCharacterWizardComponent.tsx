@@ -22,7 +22,9 @@ import NonPlayerCharacterWizardDescriptionStepComponent from "./steps/NonPlayerC
 import NonPlayerCharacterWizardGhostStepComponent from "./steps/NonPlayerCharacterWizardGhostStepComponent";
 import NonPlayerCharacterWizardLieStepComponent from "./steps/NonPlayerCharacterWizardLieStepComponent";
 import NonPlayerCharacterWizardNeedStepComponent from "./steps/NonPlayerCharacterWizardNeedStepComponent";
+import NonPlayerCharacterWizardOccupationStepComponent from "./steps/NonPlayerCharacterWizardOccupationStepComponent";
 import NonPlayerCharacterWizardOppositionStepComponent from "./steps/NonPlayerCharacterWizardOppositionStepComponent";
+import NonPlayerCharacterWizardStakeStepComponent from "./steps/NonPlayerCharacterWizardStakeStepComponent";
 import NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent from "./steps/NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent";
 import NonPlayerCharacterWizardTypeStepComponent from "./steps/NonPlayerCharacterWizardTypeStepComponent";
 import NonPlayerCharacterWizardWantStepComponent from "./steps/NonPlayerCharacterWizardWantStepComponent";
@@ -35,6 +37,7 @@ const initialStepComponents: StepComponentInterface[] = [
 const stepComponents: StepComponentInterface[] = [
 	{ name: "Type", component: NonPlayerCharacterWizardTypeStepComponent },
 	{ name: "Description", component: NonPlayerCharacterWizardDescriptionStepComponent },
+	{ name: "Occupation", component: NonPlayerCharacterWizardOccupationStepComponent },
 	{ name: "Character Arc", component: NonPlayerCharacterWizardArcStepComponent },
 	{ name: "Beliefs", component: NonPlayerCharacterWizardBeliefsStepComponent, chatGptId: "beliefs" },
 	{ name: "Ghost", component: NonPlayerCharacterWizardGhostStepComponent, chatGptId: "ghost" },
@@ -47,12 +50,14 @@ const stepComponents: StepComponentInterface[] = [
 	},
 	{ name: "Behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
 	{ name: "Want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
+	{ name: "Stake", component: NonPlayerCharacterWizardStakeStepComponent },
 	{ name: "Opposition", component: NonPlayerCharacterWizardOppositionStepComponent, chatGptId: "opposition" },
 ];
 
 const minimalStepComponents: StepComponentInterface[] = [
 	{ name: "Type", component: NonPlayerCharacterWizardTypeStepComponent },
 	{ name: "Description", component: NonPlayerCharacterWizardDescriptionStepComponent },
+	{ name: "Occupation", component: NonPlayerCharacterWizardOccupationStepComponent },
 	{
 		name: "Strengths and Weaknesses",
 		component: NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent,
@@ -60,6 +65,7 @@ const minimalStepComponents: StepComponentInterface[] = [
 	},
 	{ name: "Behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
 	{ name: "Want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
+	{ name: "Stake", component: NonPlayerCharacterWizardStakeStepComponent },
 ];
 
 export default function NonPlayerCharacterWizardComponent({
@@ -213,9 +219,25 @@ export default function NonPlayerCharacterWizardComponent({
 		chatGpt.current = new ChatGptNonPlayerCharacterModel(api, element?.campaign ?? campaign, element?.name ?? name);
 	}
 
+	const setCurrentChatGPT = () => {
+		if (wizardData.description !== undefined) chatGpt.current.description = wizardData.description;
+		if (wizardData.occupation !== undefined) chatGpt.current.occupation = wizardData.occupation;
+		if (wizardData.arc !== undefined) chatGpt.current.characterArc = wizardData.arc as ArcType;
+		if (wizardData.beliefs !== undefined) chatGpt.current.beliefs = wizardData.beliefs;
+		if (wizardData.ghost !== undefined) chatGpt.current.ghost = wizardData.ghost;
+		if (wizardData.lie !== undefined) chatGpt.current.lie = wizardData.lie;
+		if (wizardData.need !== undefined) chatGpt.current.need = wizardData.need;
+		if (wizardData.strengths !== undefined) setStrengthsValue();
+		if (wizardData.weaknesses !== undefined) setWeaknessesValue();
+		if (wizardData.behaviour !== undefined) chatGpt.current.behaviour = wizardData.behaviour;
+		if (wizardData.want !== undefined) chatGpt.current.want = wizardData.want;
+		if (wizardData.opposition !== undefined) chatGpt.current.opposition = wizardData.opposition;
+	};
+
 	if (Object.keys(wizardData).length === 0) {
 		wizardData.nonplayercharactertype = element?.attribute(AttributeType.NonPlayerCharacterType)?.value;
 		wizardData.description = element?.attribute(AttributeType.Description)?.value;
+		wizardData.occupation = element?.attribute(AttributeType.Occupation)?.value;
 		wizardData.arc = element?.attribute(AttributeType.Arc)?.value;
 		wizardData.ghost = element?.attribute(AttributeType.Ghost)?.value;
 		wizardData.lie = element?.attribute(AttributeType.Lie)?.value;
@@ -226,59 +248,16 @@ export default function NonPlayerCharacterWizardComponent({
 		wizardData.weaknesses = element?.attribute(AttributeType.Weaknesses)?.value;
 		wizardData.beliefs = element?.attribute(AttributeType.Beliefs)?.value;
 		wizardData.behaviour = element?.attribute(AttributeType.Behaviour)?.value;
+		wizardData.stake = element?.attribute(AttributeType.Stake)?.value;
 
-		if (chatGpt.current !== undefined) {
-			if (wizardData.description !== undefined) chatGpt.current.description = wizardData.description;
-			if (wizardData.arc !== undefined) chatGpt.current.characterArc = wizardData.arc as ArcType;
-			if (wizardData.beliefs !== undefined) chatGpt.current.beliefs = wizardData.beliefs;
-			if (wizardData.ghost !== undefined) chatGpt.current.ghost = wizardData.ghost;
-			if (wizardData.lie !== undefined) chatGpt.current.lie = wizardData.lie;
-			if (wizardData.need !== undefined) chatGpt.current.need = wizardData.need;
-			if (wizardData.strengths !== undefined) setStrengthsValue();
-			if (wizardData.weaknesses !== undefined) setWeaknessesValue();
-			if (wizardData.behaviour !== undefined) chatGpt.current.behaviour = wizardData.behaviour;
-			if (wizardData.want !== undefined) chatGpt.current.want = wizardData.want;
-			if (wizardData.opposition !== undefined) chatGpt.current.opposition = wizardData.opposition;
-		}
+		if (chatGpt.current !== undefined) setCurrentChatGPT();
 	}
 
 	const [step, setStep] = React.useState(1);
 
 	const updateStep = (newStep: number) => {
 		if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "") {
-			switch (step) {
-				case 2:
-					if (wizardData.description !== undefined) chatGpt.current.description = wizardData.description;
-					break;
-				case 3:
-					if (wizardData.arc !== undefined) chatGpt.current.characterArc = wizardData.arc as ArcType;
-					break;
-				case 4:
-					if (wizardData.beliefs !== undefined) chatGpt.current.beliefs = wizardData.beliefs;
-					break;
-				case 5:
-					if (wizardData.ghost !== undefined) chatGpt.current.ghost = wizardData.ghost;
-					break;
-				case 6:
-					if (wizardData.lie !== undefined) chatGpt.current.lie = wizardData.lie;
-					break;
-				case 7:
-					if (wizardData.need !== undefined) chatGpt.current.need = wizardData.need;
-					break;
-				case 8:
-					if (wizardData.strengths !== undefined) setStrengthsValue();
-					if (wizardData.weaknesses !== undefined) setWeaknessesValue();
-					break;
-				case 9:
-					if (wizardData.behaviour !== undefined) chatGpt.current.behaviour = wizardData.behaviour;
-					break;
-				case 10:
-					if (wizardData.want !== undefined) chatGpt.current.want = wizardData.want;
-					break;
-				case 11:
-					if (wizardData.opposition !== undefined) chatGpt.current.opposition = wizardData.opposition;
-					break;
-			}
+			setCurrentChatGPT();
 		}
 
 		if (step === 1) {
@@ -290,13 +269,13 @@ export default function NonPlayerCharacterWizardComponent({
 		}
 
 		if (
-			(newStep === 5 || newStep === 6) &&
+			(newStep === 6 || newStep === 7) &&
 			(wizardData.arc === ArcType.Flat || wizardData.arc === ArcType.Corruption)
 		) {
 			if (step > newStep) {
-				newStep = 4;
+				newStep = 5;
 			} else {
-				newStep = 7;
+				newStep = 8;
 			}
 		}
 

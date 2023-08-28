@@ -34,6 +34,12 @@ export default function NonPlayerCharacterWizardTypeStepComponent({
 			selected: characterType === NonPlayerCharacterType.Main,
 		},
 		{
+			type: NonPlayerCharacterType.Supporting,
+			name: t("npctype.npctype", { context: NonPlayerCharacterType.Supporting }),
+			description: t("npctype.description", { context: NonPlayerCharacterType.Supporting }),
+			selected: characterType === NonPlayerCharacterType.Supporting,
+		},
+		{
 			type: NonPlayerCharacterType.Extra,
 			name: t("npctype.npctype", { context: NonPlayerCharacterType.Extra }),
 			description: t("npctype.description", { context: NonPlayerCharacterType.Extra }),

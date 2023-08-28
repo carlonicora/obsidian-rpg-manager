@@ -29,4 +29,6 @@ export enum AttributeType {
 	FactionStructure = "factionstructure",
 	NonPlayerCharacterType = "nonplayercharactertype",
 	SensoryImprint = "sensoryimprint",
+	Occupation = "occupation",
+	Stake = "stake",
 }

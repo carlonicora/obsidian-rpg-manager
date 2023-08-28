@@ -13,6 +13,7 @@ import MajorCluesAttributeComponent from "./types/MajorCluesAttributeComponent";
 import MapAttributeComponent from "./types/MapAttributeComponent";
 import NonPlayerCharacterTypeAttributeComponent from "./types/NonPlayerCharacterTypeAttributeComponent";
 import NumberAttributeTypeComponent from "./types/NumberAttributeTypeComponent";
+import ScaleTypeAttributeComponent from "./types/ScaleTypeAttributeComponent";
 import SceneTypeAttributeComponent from "./types/SceneTypeAttributeComponent";
 import SelectAttributeTypeComponent from "./types/SelectAttributeTypeComponent";
 import StoryCircleStageAttributeComponent from "./types/StoryCircleStageAttributeComponent";
@@ -50,6 +51,11 @@ export default function AttributeListComponent({
 					let attributeComponent;
 
 					switch (attribute.type) {
+						case AttributeComponentType.Scale:
+							attributeComponent = (
+								<ScaleTypeAttributeComponent element={element} attribute={attribute} isEditable={isEditable} />
+							);
+							break;
 						case AttributeComponentType.SceneType:
 							attributeComponent = (
 								<SceneTypeAttributeComponent element={element} attribute={attribute} isEditable={isEditable} />
