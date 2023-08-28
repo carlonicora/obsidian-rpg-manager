@@ -13,7 +13,7 @@ export default function OptionContainerComponent({
 	const api: RpgManagerInterface = useApi();
 
 	return (
-		<div className="flex flex-col min-h-screen p-3 pb-16">
+		<div className="flex flex-col min-h-screen pb-16">
 			{element && (
 				<div className="mb-3">
 					<h1 className="text-xl !font-bold mb-3">{element.name}</h1>

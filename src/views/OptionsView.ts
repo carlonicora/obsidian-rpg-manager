@@ -16,7 +16,7 @@ export class OptionView extends ItemView implements View {
 	constructor(private _api: RpgManagerInterface, leaf: WorkspaceLeaf) {
 		super(leaf);
 
-		this._root = createRoot(this.containerEl);
+		this._root = createRoot(this.contentEl);
 
 		this.registerEvent(app.workspace.on("rpgmanager:refresh-option-view", this.render.bind(this)));
 		this.registerEvent(app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
