@@ -1,3 +1,5 @@
+import { OptionView } from "@/views/OptionsView";
+import { WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -29,10 +31,10 @@ export default function HeaderComponent({
 
 	return (
 		<>
-			<div className="!m-0 flex justify-end p-1 text-[--text-faint] absolute right-0 !mt-[-1.25rem] text-xs">
+			<div className="!m-0 flex justify-end p-1 text-[--text-faint] text-xs absolute right-0 !mt-[-1.25rem]">
 				Rpg Manager {api.version}
 			</div>
-			<div className="!m-0 flex flex-col justify-center items-center">
+			<div className="relative flex flex-col justify-center items-center h-full">
 				<h1 className="!text-4xl !font-extralight">{element.name}</h1>
 				{!isInPopover && (
 					<div className="!font-extralight text-[--text-faint] grid grid-cols-12">
@@ -65,6 +67,25 @@ export default function HeaderComponent({
 						</div>
 					</div>
 				)}
+				<div
+					className="absolute bottom-0 right-0 flex justify-end p-1 text-[--text-faint] text-xs z-10"
+					onClick={async () => {
+						app.workspace.detachLeavesOfType("rpg-manager-options");
+						await app.workspace.getRightLeaf(false).setViewState({
+							type: "rpg-manager-options",
+							active: true,
+						});
+
+						const leaf: WorkspaceLeaf = app.workspace.getLeavesOfType("rpg-manager-options")[0];
+						const view: OptionView = leaf.view as OptionView;
+
+						app.workspace.revealLeaf(leaf);
+
+						view.render();
+					}}
+				>
+					<div className="ml-4 cursor-pointer">{t("options.option", { count: 2 })}</div>
+				</div>
 			</div>
 		</>
 	);

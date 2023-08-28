@@ -720,10 +720,6 @@ video {
   margin-top: 0.75rem !important;
 }
 
-.\!mt-5 {
-  margin-top: 1.25rem !important;
-}
-
 .\!mt-\[-1\.25rem\] {
   margin-top: -1.25rem !important;
 }
@@ -750,6 +746,10 @@ video {
 
 .ml-3 {
   margin-left: 0.75rem;
+}
+
+.ml-4 {
+  margin-left: 1rem;
 }
 
 .ml-5 {
@@ -1359,10 +1359,6 @@ video {
 
 .\!p-0 {
   padding: 0px !important;
-}
-
-.\!p-1 {
-  padding: 0.25rem !important;
 }
 
 .\!p-3 {
