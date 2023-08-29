@@ -139,16 +139,7 @@ export class RpgManagerCodeblockService {
 
 		const element = this._api.get(this._file.path) as ElementInterface;
 
-		if (
-			[
-				ElementType.Campaign,
-				ElementType.Adventure,
-				ElementType.Chapter,
-				ElementType.Session,
-				ElementType.Scene,
-			].includes(element.type)
-		)
-			return;
+		if (element.type === ElementType.Campaign) return;
 
 		const relationshipsNotInContent = relationships.filter(
 			(relationship: RelationshipInterface) =>
@@ -410,7 +401,8 @@ export class RpgManagerCodeblockService {
 		if (oldBaseName !== toFile.basename && newCodeblockContent.indexOf("|" + oldBaseName) !== -1)
 			newCodeblockContent = newCodeblockContent.replaceAll("|" + oldBaseName, "|" + toFile.basename);
 
-		const content = this._fileContent.replace(this._codeblockContent, newCodeblockContent);
+		let content = this._fileContent.replace(this._codeblockContent, newCodeblockContent);
+		content = content.replaceAll("[[" + oldPath + "|]]", "[[" + toFile.path + "|]]");
 
 		this._modifyFileContent(content);
 	}
