@@ -400,7 +400,7 @@ export class RpgManagerCodeblockService {
 	}
 
 	async updateRelationshipsPaths(toFile: TFile, oldPath: string): Promise<void> {
-		await this._readMetadata();
+		await this.readCodeblock();
 
 		if (this._codeblockContent.indexOf(oldPath) === -1) return;
 
