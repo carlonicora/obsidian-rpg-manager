@@ -15,6 +15,7 @@ import {
 	rpgManagerDefaultSettings,
 } from "./settings/RpgManagerSettings";
 import { OptionView } from "./views/OptionsView";
+import { ReadmeView } from "./views/ReadmeView";
 
 //TODO: Add Google Maps or Javalent maps
 
@@ -67,6 +68,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		);
 
 		this.registerView("rpg-manager-options", (leaf) => new OptionView(this, leaf));
+		this.registerView("rpg-manager-readme", (leaf) => new ReadmeView(this, leaf));
+
 		this.addRibbonIcon("d20", "RPG Manager", () => {
 			PluginServices.createView();
 		});
@@ -80,6 +83,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 	onunload(): void {
 		super.onunload();
+		app.workspace.detachLeavesOfType("rpg-manager-readme");
 	}
 
 	async onLayoutReady() {
@@ -102,5 +106,16 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		PluginServices.registerProcessors(this);
 		PluginServices.registerCommands(this);
 		this.addSettingTab(new RpgManagerSettings(app, this));
+
+		if (this.settings.version !== this.manifest.version) {
+			console.warn("RpgManager " + this.manifest.version + " updated from " + this.settings.version);
+			this.settings = { ...this.settings, version: this.manifest.version };
+			await this.saveData(this.settings);
+			app.workspace.detachLeavesOfType("rpg-manager-readme");
+			app.workspace.getLeaf(true).setViewState({
+				type: "rpg-manager-readme",
+				active: true,
+			});
+		}
 	}
 }

@@ -7,6 +7,7 @@ export interface RpgManagerSettingsInterface {
 	assetsFolder: string | undefined;
 	automaticMove: boolean;
 	useSceneAnalyser: boolean;
+	version: string;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -17,6 +18,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	assetsFolder: undefined,
 	automaticMove: false,
 	useSceneAnalyser: true,
+	version: "0.0.0",
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
