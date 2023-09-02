@@ -15,7 +15,7 @@ export default function NewElementComponent({
 	const api: RpgManagerInterface = useApi();
 
 	return (
-		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs">
+		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
 			<h3 className="!mb-1 !text-xl !font-extralight">{t("create.title")}</h3>
 			{Object.values(ElementType)
 				.filter((v) => isNaN(Number(v)))
