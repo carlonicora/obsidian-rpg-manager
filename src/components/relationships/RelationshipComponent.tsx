@@ -80,11 +80,19 @@ export default function RelationshipComponent({
 			<div className="flex align-bottom mt-auto w-full p-2">
 				<button
 					className={`w-full
-							${relationship.isInContent || relationship.isAlsoInContent ? "text-[--text-faint] cursor-not-allowed" : "rpgm-danger"}`}
-					disabled={relationship.isInContent || relationship.isAlsoInContent}
+							${
+								relationship.isInContent ||
+								relationship.isAlsoInContent ||
+								relationship.type === RelationshipType.Reversed
+									? "text-[--text-faint] cursor-not-allowed"
+									: "rpgm-danger"
+							}`}
+					disabled={
+						relationship.isInContent || relationship.isAlsoInContent || relationship.type === RelationshipType.Reversed
+					}
 					onClick={removeRelationship}
 					title={
-						relationship.isInContent || relationship.isAlsoInContent
+						relationship.isInContent || relationship.isAlsoInContent || relationship.type === RelationshipType.Reversed
 							? relationship.type === RelationshipType.Reversed
 								? "You cannot remove the relationship, as it is contained in the content of the related element"
 								: "You cannot remove the relationship, as it is contained in the content"

@@ -95,7 +95,15 @@ export default function RelationshipDescriptionComponent({
 							"
 						>
 							{Object.entries(RelationshipType)
-								.filter(([key]) => RelationshipType[key as keyof typeof RelationshipType] !== RelationshipType.Reversed)
+								.filter(
+									([key]) =>
+										!(RelationshipType[key as keyof typeof RelationshipType] === RelationshipType.Reversed) &&
+										!(
+											element.type !== relationship.component.type &&
+											(RelationshipType[key as keyof typeof RelationshipType] === RelationshipType.Parent ||
+												RelationshipType[key as keyof typeof RelationshipType] === RelationshipType.Child)
+										)
+								)
 								.map(([key]) => (
 									<option key={key} value={RelationshipType[key as keyof typeof RelationshipType]}>
 										{key}
