@@ -30,6 +30,9 @@ export class ElementFactory {
 
 		const relationships: RelationshipInterface[] = await codeblockService.readInContentRelationships();
 
+		if (response.path === "Campaigns/Æther/05. Locations/Europe/United Kingdom/London/Carlton Club.md")
+			console.warn(relationships);
+
 		relationships.forEach((relationship: RelationshipInterface) => {
 			if (relationship.path === response.path) return;
 			const existingRelationship: RelationshipInterface | undefined = response.relationships.find(
@@ -52,8 +55,6 @@ export class ElementFactory {
 
 		if (rpgManagerBlock === undefined || rpgManagerBlock.id === undefined || rpgManagerBlock.id.type === undefined)
 			return undefined;
-
-		//ElementFactory.addUserAttributes(element, rpgManagerBlock);
 
 		element.codeblock = rpgManagerBlock;
 		element.metadata = codeblockService.metadata;
@@ -180,6 +181,28 @@ export class ElementFactory {
 		updateReverseRelationships: boolean
 	): void {
 		ElementFactory.initialiseRelationships(element, elements);
+
+		let touch = false;
+
+		elements.forEach((elementInList: ElementInterface) => {
+			const reverseRelationship: RelationshipInterface | undefined = elementInList.relationships.find(
+				(relationship: RelationshipInterface) => relationship.path === element.path
+			);
+			const existingRelationship: RelationshipInterface | undefined = element.relationships.find(
+				(relationship: RelationshipInterface) => relationship.path === elementInList.path
+			);
+
+			if (reverseRelationship !== undefined && existingRelationship === undefined) {
+				const newRelationship = RelationshipFactory.createFromReverse(reverseRelationship, elementInList);
+
+				if (newRelationship !== undefined) {
+					element.relationships.push(newRelationship);
+					touch = true;
+				}
+			}
+		});
+
+		if (touch) element.touch();
 
 		if (updateReverseRelationships)
 			elements.forEach((relatedElement: ElementInterface) => {

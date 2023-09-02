@@ -532,7 +532,11 @@ export class RpgManagerCodeblockService {
 
 		const response: RelationshipInterface[] = [];
 
-		response.push(...this._getRelationshipsFromContent(this._codeblockContent, true));
+		const yamlService = new YamlService();
+		const codeblockStringWithoutRelationships = parseYaml(this._codeblockContent);
+		codeblockStringWithoutRelationships.relationships = [];
+		const codeblockWithoutRelationships = yamlService.stringify(codeblockStringWithoutRelationships);
+		response.push(...this._getRelationshipsFromContent(codeblockWithoutRelationships, true));
 
 		const additionalRelationships = this._getRelationshipsFromContent(
 			this._fileContent.replace(this._codeblockContent, ""),
