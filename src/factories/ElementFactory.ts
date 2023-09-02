@@ -30,9 +30,6 @@ export class ElementFactory {
 
 		const relationships: RelationshipInterface[] = await codeblockService.readInContentRelationships();
 
-		if (response.path === "Campaigns/Æther/05. Locations/Europe/United Kingdom/London/Carlton Club.md")
-			console.warn(relationships);
-
 		relationships.forEach((relationship: RelationshipInterface) => {
 			if (relationship.path === response.path) return;
 			const existingRelationship: RelationshipInterface | undefined = response.relationships.find(
