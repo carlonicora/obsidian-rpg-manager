@@ -7,6 +7,7 @@ import { DatabaseFactory } from "./factories/DatabaseFactory";
 import { ServiceFactory } from "./factories/ServiceFactory";
 import { InternationalisationService } from "./services/InternationalisationService";
 import { PluginServices } from "./services/PluginServices";
+import { UpdaterView } from "./services/UpdaterService/views/UpdaterView";
 import { taskService } from "./services/taskService/TaskService";
 import { TaskServiceInterface } from "./services/taskService/interfaces/TaskServiceInterface";
 import {
@@ -69,6 +70,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 		this.registerView("rpg-manager-options", (leaf) => new OptionView(this, leaf));
 		this.registerView("rpg-manager-readme", (leaf) => new ReadmeView(this, leaf));
+		this.registerView("rpg-manager-updater", (leaf) => new UpdaterView(this, leaf));
 
 		this.addRibbonIcon("d20", "RPG Manager", () => {
 			PluginServices.createView();
@@ -107,8 +109,15 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		PluginServices.registerCommands(this);
 		this.addSettingTab(new RpgManagerSettings(app, this));
 
-		if (this.settings.version !== this.manifest.version) {
-			console.warn("RpgManager " + this.manifest.version + " updated from " + this.settings.version);
+		/*
+		if ((this.settings as any).previousVersion !== undefined) {
+			console.log("Updating settings");
+			app.workspace.detachLeavesOfType("rpg-manager-updater");
+			app.workspace.getLeaf(true).setViewState({
+				type: "rpg-manager-updater",
+				active: true,
+			});
+		} else if (this.settings.version !== this.manifest.version) {
 			this.settings = { ...this.settings, version: this.manifest.version };
 			await this.saveData(this.settings);
 			app.workspace.detachLeavesOfType("rpg-manager-readme");
@@ -117,5 +126,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 				active: true,
 			});
 		}
+		*/
 	}
 }
