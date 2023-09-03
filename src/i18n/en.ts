@@ -421,6 +421,14 @@ What's *{{name}}* stake?`,
 		must_session: "You must create a session first",
 	},
 	storycircle: {
+		you: "You/They",
+		need: "Need",
+		go: "Go",
+		search: "Search",
+		find: "Find",
+		take: "Take",
+		return: "Return",
+		change: "Change",
 		description_you:
 			"Start by establishing the current situation of the player characters at the beginning of this particular plot. What are they currently doing? Where are they? What is their immediate goal?",
 		description_need:

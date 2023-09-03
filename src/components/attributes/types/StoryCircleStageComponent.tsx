@@ -92,7 +92,7 @@ export default function StoryCircleStageComponent({
 	return (
 		<>
 			<div className={`!font-bold ${isEditable && "sm:col-span-1 lg:col-span-1"}`}>
-				<div>{stage}</div>
+				<div>{t("storycircle." + stage.toLowerCase())}</div>
 				<div
 					className="text-xs cursor-pointer text-[--color-base-25] hover:text-[--text-accent-hover]"
 					onClick={() => setShowHelp(!showHelp)}
