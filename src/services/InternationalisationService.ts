@@ -12,7 +12,7 @@ export class InternationalisationService {
 				initImmediate: false,
 				lng: window.localStorage.getItem("language") ?? "en",
 				fallbackLng: "en",
-				debug: true,
+				debug: false,
 				interpolation: {
 					escapeValue: false,
 				},
