@@ -1,7 +1,7 @@
+import { attributes } from "@/data/attributes/attributes";
 import _ from "lodash";
 import { CachedMetadata, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
-import { agnosticAttributes } from "src/data/attributes/agnosticAttributes";
 import { ImageService } from "src/services/ImageService";
 import { Task } from "../../services/taskService/Task";
 import { TaskInterface } from "../../services/taskService/interfaces/TaskInterface";
@@ -69,7 +69,7 @@ export class Element implements ElementInterface {
 
 		switch (this.system) {
 			case SystemType.Agnostic:
-				elementAttributes.push(...(agnosticAttributes.get(this.type) ?? []));
+				elementAttributes.push(...(attributes.get(this.type) ?? []));
 				break;
 		}
 
@@ -97,7 +97,7 @@ export class Element implements ElementInterface {
 
 		switch (this.system) {
 			case SystemType.Agnostic:
-				attribute = agnosticAttributes
+				attribute = attributes
 					.get(this.type)
 					?.find((attribute: AttributeInterface) => attribute.id === id.toLowerCase());
 				break;
