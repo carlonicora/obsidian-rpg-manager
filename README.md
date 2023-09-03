@@ -43,6 +43,9 @@ In this way you will be able to continue using the previous version of RPG Manag
     - [3.3.12. Player characters](#3312-player-characters)
     - [3.3.13. Sessions](#3313-sessions)
     - [3.3.14. Scenes](#3314-scenes)
+  - [3.4. Custom Attributes](#34-custom-attributes)
+  - [3.5. Tasks](#35-tasks)
+  - [3.6. Element Templates](#36-element-templates)
 - [4. Creating a World](#4-creating-a-world)
   - [4.1. What Type of Storyteller Are You?](#41-what-type-of-storyteller-are-you)
   - [4.2. For Every Storyteller You Are](#42-for-every-storyteller-you-are)
@@ -224,7 +227,7 @@ By establishing relationships between elements, the storyteller can create a com
 
 ### 3.3 Elements
 
-#### 3.1.1. Campaign
+#### 3.3.1. Campaign
 
 The campaign is the cornerstone of RPG Manager, the main element a storyteller can create, and all its other elements will form the central repository of information for it.
 
@@ -242,7 +245,7 @@ The campaign is the cornerstone of RPG Manager, the main element a storyteller c
 
 In the next sections, we will delve deeper into other elements and how they relate to and support the campaign.
 
-#### 3.1.2. Adventures
+#### 3.3.2. Adventures
 
 An adventure is a significant component of a campaign, encompassing a series of events or challenges that have a distinct beginning and conclusion. For instance, in the well-known Call of Cthulhu campaign, "Masks of Nyarlathotep," all events transpiring in New York could be classified as a single adventure. Each adventure comprises multiple chapters, which help in structuring the narrative in a more organized manner.
 
@@ -260,7 +263,7 @@ An adventure serves as a pivotal building block within a campaign, functioning a
 - Each adventure can only belong to one campaign.
 - Adventures may consist of multiple chapters, which can be organized in a specific order to align with the story's progression.
 
-#### 3.1.3. Chapters
+#### 3.3.3. Chapters
 
 A chapter is a more focused and manageable segment of an adventure, a building block of an adventure. It typically focusses on a specific event or location that the player characters may encounter, and all the relationships and interactions they may have within that context. It serves as a segment of the narrative that leads to one or more destinations, which could be subsequent adventures or chapters. By breaking down an adventure into chapters, it becomes easier to manage the narrative flow, develop intricate relationships, and create immersive experiences for the players.
 
@@ -275,7 +278,7 @@ A chapter is a more focused and manageable segment of an adventure, a building b
 - A chapter can only belong to one adventure.
 - Chapters are the most granular level of organization within an adventure, and cannot be subdivided into sub-chapters.
 
-#### 3.1.4. Events
+#### 3.3.4. Events
 
 An event is a significant occurrence or happening in the narrative, something in which the player characters may become involved. It contains a description and leverages relationships to ensure they give information to the player characters. Events are crucial narrative elements that help to propel the story forward and create engaging experiences for the player characters.
 
@@ -291,7 +294,7 @@ An event is a significant occurrence or happening in the narrative, something in
 
 Events, while not unique in terms of metadata, are logically distinct narrative elements. Storytellers should consider them as proper events and craft their descriptions accordingly to create engaging and impactful moments in the narrative.
 
-#### 3.1.5. Locations
+#### 3.3.5. Locations
 
 Locations represent the physical places within the game world where events occur and characters interact. They serve as the backdrop for the narrative and play a crucial role in setting the scene and immersing the players in the game world.
 
@@ -305,7 +308,7 @@ Locations represent the physical places within the game world where events occur
 - Locations can be related to any other elements, including events, NPCs, and clues.
 - A location can be defined as a child of another location through relationships, but there is no strict hierarchy or structure that needs to be maintained.
 
-#### 3.1.6. Clues
+#### 3.3.6. Clues
 
 Clues are pieces of information that propel the plot forward. A clue should describe what the information is and how it can be found. This information is typically part of the clue's description. The relationships of a clue would usually be an event, a location, or a non-player character where the clue can be found and where it leads. However, any element can be related to any other element in RPG Manager, so a clue can also be related to adventures, campaigns, sessions, or any other elements as needed.
 
@@ -318,7 +321,7 @@ Clues are pieces of information that propel the plot forward. A clue should desc
 - A clue can have as many relationships as needed, indicating where it can be found and where it leads. It all depends on the description the GM writes.
 - A clue can lead to multiple different locations, events, or non-player characters, or any combination thereof, depending on the GM's narrative.
 
-#### 3.1.6. Non-player characters
+#### 3.3.6. Non-player characters
 
 Non-player characters (NPCs) are the lifeblood of any campaign. They are the individuals that populate the world, providing context, challenges, and support to the player characters. Their presence contributes significantly to the atmosphere and narrative of the campaign.
 
@@ -347,7 +350,7 @@ Additionally, the RPG Manager features a Wizard that assists storytellers in cre
 
 Ultimately, NPCs play a pivotal role in shaping the narrative and interactions within a campaign. Their characteristics, desires, and challenges can drive the plot forward, create conflicts, and enrich the world-building process. Therefore, it is essential for storytellers and GMs to carefully craft their NPCs, considering the impact they will have on the overall narrative and the experiences of the player characters.
 
-#### 3.1.8. Factions
+#### 3.3.8. Factions
 
 Factions represent organized groups of non-player characters that share common goals, philosophies, or interests. They play a crucial role in shaping the world of the campaign and often serve as allies, enemies, or sources of intrigue for the player characters.
 
@@ -367,7 +370,7 @@ In RPG Manager, a non-player character's affiliation with a faction is defined t
 
 Factions are a vital element in RPG Manager as they influence the actions of non-player characters and can have a significant impact on the campaign's narrative and dynamics. By thoughtfully defining a faction's attributes and relationships, storytellers can create a rich tapestry of interactions that add depth and complexity to their campaign.
 
-#### 3.1.9. Objects
+#### 3.3.9. Objects
 
 Objects are items of importance within the campaign. While their role and significance can vary widely depending on the GM's narrative, they are essential tools for enriching the storyline and providing depth to the campaign world.
 
@@ -382,9 +385,9 @@ Objects are items of importance within the campaign. While their role and signif
 
 In conclusion, objects, while seemingly simple, are a versatile element that can be employed in various ways to enhance the storytelling and the immersive experience of the RPG.
 
-#### 3.1.10. Monsters
+#### 3.3.10. Monsters
 
-#### 3.1.10. Monsters
+#### 3.3.10. Monsters
 
 Monsters are creatures that player characters may encounter during their adventures. They can be creatures of myth, products of magic, or beings from another dimension. Regardless of their origin, monsters add an element of danger and unpredictability to the campaign.
 
@@ -399,7 +402,7 @@ Monsters are creatures that player characters may encounter during their adventu
 
 In summary, monsters, while potentially fearsome, are a crucial element in shaping the narrative and the challenges that player characters face during their adventures.
 
-#### 3.1.11. Subplots
+#### 3.3.11. Subplots
 
 Subplots are additional narratives that supplement the main plot of the campaign. While the main plot drives the overarching narrative, subplots add depth, complexity, and richness to the world and its characters. They can vary in scope and scale, and can be generic, affecting the world at large, or specific, tied to a particular non-player character (NPC) or player character (PC).
 
@@ -415,7 +418,7 @@ Subplots are additional narratives that supplement the main plot of the campaign
 
 Subplots are an essential tool for the storyteller, providing a way to create a multifaceted narrative that engages players on multiple levels. Whether it's a personal journey of an NPC, a side quest that the PCs undertake, or a larger event that affects the world, subplots help in creating a dynamic and immersive storytelling experience.
 
-#### 3.1.12. Player characters
+#### 3.3.12. Player characters
 
 Player characters are the avatars of the players in the game world, serving as a crucial reference for the storyteller. While they are generally created and developed by the players themselves, the RPG Manager provides a space for the storyteller to record key aspects of each player character that are essential for the narrative.
 
@@ -438,7 +441,7 @@ Each of the attributes, apart from the description, is optional and can be fille
 
 In summary, the player characters section in the RPG Manager serves as a useful reference for the storyteller, allowing them to have a quick overview of the key aspects of each player character and understand their place within the broader narrative.
 
-#### 3.1.13. Sessions
+#### 3.3.13. Sessions
 
 You've been there, right? The session is about to start, and you've got some scribbled notes on a napkin, or maybe you've meticulously planned every single detail down to the NPC's favorite type of cheese. Regardless, you know that once the game starts, all your plans could go down the drain because, let's face it, players are chaos incarnate. That's where RPG Manager's `Sessions` feature comes in. Think of it as your digital napkin, only way cooler and less likely to be used to wipe up spilled soda.
 
@@ -455,7 +458,7 @@ Okay, let's address the elephant in the room. Why use the Sessions feature? Well
 
 In a nutshell, the Sessions feature in RPG Manager is your best friend for session planning and tracking. It's adaptable, it's organized, and most importantly, it's got your back when your players decide to go off the rails... which, let's be honest, is every session.
 
-#### 3.1.14. Scenes
+#### 3.3.14. Scenes
 
 In the world of tabletop RPGs, a scene is a fundamental unit of gameplay. It represents a specific moment in the game when the player characters are required to perform an active action. This can range from engaging in combat with a fearsome dragon to making a crucial decision that could alter the course of their adventure. The key purpose of a scene is to facilitate active participation and decision-making by the player characters, thereby driving the narrative forward.
 
@@ -468,6 +471,46 @@ In the world of tabletop RPGs, a scene is a fundamental unit of gameplay. It rep
 - **Is Exciting**: This attribute indicates whether the scene includes external elements, such as non-player characters, natural disasters, traps, etc., that trigger an exciting moment.
 
 Scenes are an essential tool for the GM, as they help structure the session and provide a roadmap for the narrative. However, it is important to remember that scenes are not set in stone and may evolve organically based on the decisions and actions of the player characters. The key is to facilitate active engagement and participation from the players, thereby creating a dynamic and memorable gaming experience.
+
+### 3.4. Custom Attributes
+
+Custom Attributes in RPG Manager are user-defined fields that you can create to add specific details to various elements of your game that are not covered by the default attributes. For example, if you are running a campaign with a magic system that involves "Mana Points," which is not a default attribute in RPG Manager, you can create a custom attribute for it. Custom Attributes provide a way to customize and extend the RPG Manager to better suit the specific needs of your game, helping you to create a more immersive and detailed world for your players based on your specific needs.
+
+Custom Attributes can be associated with various elements. This means you can create an attribute like "Political Affiliation" for non-player characters, "Weather" for scenes, or "Morale" for player characters, making your game world more detailed and tailored to your narrative.
+
+The type of data a custom attribute can hold includes Text, Number, Option (a dropdown list of predefined options), Checkbox, Long Text, and Date. This wide range of data types allows you to create attributes that can hold different kinds of information, making your game management more flexible and detailed.
+
+You can access this feature through the options menu by clicking on the "Custom Attributes" link. This will open a Modal form where you can define your own attributes. Each custom attribute must have a name, a type (e.g., Text, Number, Option, Checkbox, Long Text, Date), and, if the type is 'Option,' a list of options that will appear in a dropdown menu. Additionally, you need to specify which element type(s) the custom attribute should be associated with.
+
+Creating Custom Attributes allows you to add specific details to the elements of your game that are not covered by the default attributes provided by RPG Manager. This gives you the flexibility to customize your game according to your needs and preferences, making your storytelling more detailed and engaging.
+
+### 3.5. Tasks
+
+Tasks are essentially a to-do list for each element in your RPG Manager. Whether it's a non-player character, a scene, a session, or any other element, you can assign a list of tasks to it. These tasks represent things that need to be done or accomplished within the context of that element. For example, a task for a non-player character could be "Player characters should discover their secret." If you think this task could be discovered in a scene or a session, you can assign it to those specific elements as well. This helps maintain consistency throughout your campaign and ensures that important plot points or character developments are not overlooked.
+
+**Creating a Task**
+Creating a task is straightforward. When you are in the context of a specific element, you can add a task to it. This means you can't create a task independently; it has to be associated with an element right from the start. Each task can be assigned to one or more elements, making it a versatile tool to keep track of important objectives or plot developments across different parts of your campaign.
+
+**Tracking Progress**
+RPG Manager allows you to easily track the progress of each task. You can view all the open tasks for a particular campaign, and in each element, you can see all the tasks that have already been completed. This helps you stay organized and ensures that you don't lose track of important objectives as your campaign progresses.
+
+**Editing and Deleting Tasks**
+Tasks can be edited or deleted after they have been created and assigned. This provides flexibility in case you need to make changes or adjustments as your campaign develops.
+
+**Limitations**
+There is no limit to the number of tasks that can be created or assigned to an element. This means you can create as many tasks as you need to fully flesh out your campaign and ensure that all important objectives are accounted for.
+
+Overall, tasks are a powerful tool in RPG Manager that helps you stay organized and ensure that important plot points, character developments, and objectives are not overlooked throughout your campaign.
+
+### 3.6. Element Templates
+
+In RPG Manager, an element template is an Obsidian note that contains a special code block, `RpgManager4`, which is used by the application to render its user interface (UI). This allows Storytellers/GMs to customize their notes by adding any information, text, or other code blocks they need, while still having the RPG Manager UI integrated into the note.
+
+Creating a template is a two-step process:
+
+1. **Define the Template Location:** In the RPG Manager settings, specify the folder where your templates are stored. This is where RPG Manager will look for your templates.
+
+2. **Create the Template:** A template is an Obsidian note that contains the \`\`\`RpgManager4\`\`\` code block where you want the RPG Manager UI to appear. You can add any other content you want to the note, but it can only contain one \`\`\`RpgManager4\`\`\` code block.
 
 ## 4. Creating a World
 
