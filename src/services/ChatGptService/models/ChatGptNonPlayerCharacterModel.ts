@@ -70,8 +70,6 @@ export class ChatGptNonPlayerCharacterModel {
 		const messages: ChatGptMessageInterface[] = this._generateMessages(length);
 		messages.push(message);
 
-		console.info(messages);
-
 		return this._service.sendMessage(messages).then((response: ChatGptResponse[]) => {
 			return response.map((message: ChatGptResponse) => message.response);
 		});

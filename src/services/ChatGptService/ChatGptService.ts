@@ -65,12 +65,10 @@ Each option should be qualitative, not a short sentence and will allow the story
 				}
 			);
 
-			console.log("ChatGPT API response: ", response.data);
-
 			const latestMessage = response.data.choices?.[0]?.message?.content;
 			return this._processLatestMessage(latestMessage);
 		} catch (error) {
-			console.error("Error calling ChatGPT API: ", error);
+			console.warn(error);
 			throw error;
 		}
 	}
