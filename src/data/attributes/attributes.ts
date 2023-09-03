@@ -38,7 +38,7 @@ const nonplayercharactertype = {
 const sensoryimprint = { id: AttributeType.SensoryImprint, type: AttributeComponentType.SensoryImprint };
 const stake = { id: AttributeType.Stake, type: AttributeComponentType.Scale };
 
-export const agnosticAttributes: Map<ElementType, AttributeInterface[]> = new Map<ElementType, AttributeInterface[]>([
+export const attributes: Map<ElementType, AttributeInterface[]> = new Map<ElementType, AttributeInterface[]>([
 	[ElementType.Campaign, [description, storycircle]],
 	[ElementType.Adventure, [description, storycircle, majorclues]],
 	[ElementType.Chapter, [description, abtstage, storycircle, majorclues]],
