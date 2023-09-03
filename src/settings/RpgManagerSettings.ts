@@ -57,7 +57,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 		mainDesc.appendText(" or join the ");
 		mainDesc.appendChild(
 			createEl("a", {
-				text: "discord suport thread",
+				text: "discord support thread",
 				href: "https://discord.com/channels/686053708261228577/1022806716343144518",
 			})
 		);
@@ -66,7 +66,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Templates Folder")
-			.setDesc("To use a custom templates, select the folder that contains them.")
+			.setDesc("To use custom templates, select the folder that contains them.")
 			.addDropdown((dropdown) => {
 				dropdown.addOption("", "");
 				this._folderMap.forEach((value: string, display: string) => {
@@ -114,7 +114,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 		containerEl.createEl("h3", { text: "ChatGPT", cls: "mt-3" });
 		const ChatGPT = containerEl.createEl("p");
-		ChatGPT.appendText("Set up all hte add-ons for the plugin. ");
+		ChatGPT.appendText("Set up all the add-ons for the plugin. ");
 		const ChatGPTWarning = containerEl.createEl("p");
 		ChatGPTWarning.appendChild(
 			createEl("span", {
