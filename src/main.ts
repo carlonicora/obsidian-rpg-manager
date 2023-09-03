@@ -109,10 +109,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		PluginServices.registerCommands(this);
 		this.addSettingTab(new RpgManagerSettings(app, this));
 
-		/*
+		app.workspace.detachLeavesOfType("rpg-manager-updater");
+		app.workspace.detachLeavesOfType("rpg-manager-readme");
+
 		if ((this.settings as any).previousVersion !== undefined) {
 			console.log("Updating settings");
-			app.workspace.detachLeavesOfType("rpg-manager-updater");
 			app.workspace.getLeaf(true).setViewState({
 				type: "rpg-manager-updater",
 				active: true,
@@ -120,12 +121,11 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		} else if (this.settings.version !== this.manifest.version) {
 			this.settings = { ...this.settings, version: this.manifest.version };
 			await this.saveData(this.settings);
-			app.workspace.detachLeavesOfType("rpg-manager-readme");
+
 			app.workspace.getLeaf(true).setViewState({
 				type: "rpg-manager-readme",
 				active: true,
 			});
 		}
-		*/
 	}
 }

@@ -1,3 +1,4 @@
+import { YamlService } from "@/data/classes/YamlService";
 import { ElementType } from "@/data/enums/ElementType";
 import { CachedMetadata, SectionCache, TFile, parseYaml } from "obsidian";
 
@@ -10,7 +11,6 @@ interface DataInterface {
 }
 
 export class UpdaterService {
-	private _process = "";
 	private _total = 0;
 	private _current = 0;
 
@@ -53,7 +53,21 @@ export class UpdaterService {
 					images: this._convertImages(value[0], value[1]),
 				};
 
+				if (codeblock.images.length === 0) delete codeblock.images;
+				if (codeblock.relationships.length === 0) delete codeblock.relationships;
+
 				this._newElements.set(value[1].file, codeblock);
+			})
+		);
+
+		this._current = 0;
+		this._updateView(this._total, this._current, "Updating files...");
+
+		await Promise.all(
+			Array.from(this._newElements.entries()).map(async (value: [TFile, any]) => {
+				await this._replaceCodeblock(value[0], value[1]);
+				this._current++;
+				return this._updateView(this._total, this._current, "Updating files...");
 			})
 		);
 	}
@@ -80,11 +94,14 @@ export class UpdaterService {
 				if (data.metadata.data.sessionId !== undefined)
 					parentData = this._elementsMap.get(data.metadata.data.sessionId);
 
+				if (data.metadata.data.positionInSession !== undefined)
+					idData.positionInParent = data.metadata.data.positionInSession;
+
 				if (parentData === undefined) parentData = this._elementsMap.get(data.metadata.ID.parentId);
 
 				if (parentData !== undefined) {
 					idData.parent = parentData.file.path;
-					idData.positionInParent = data.metadata.ID.positionInParent;
+					if (idData.positionInParent === undefined) idData.positionInParent = data.metadata.ID.positionInParent;
 				}
 			}
 
@@ -97,26 +114,90 @@ export class UpdaterService {
 	private _convertData(id: string, data: DataInterface): any {
 		const response: any = {};
 
-		for (const key in data.metadata.data) {
-			if (data.metadata.data.hasOwnProperty(key)) {
+		const oldData: any = data.metadata.data.data;
+
+		for (const key in oldData) {
+			if (oldData.hasOwnProperty(key) && oldData[key]) {
 				switch (key.toLocaleLowerCase()) {
 					case "synopsis":
-					case "action":
-						response.description = data.metadata.data[key];
+						if (response.description === undefined) {
+							response.description = oldData[key];
+						} else {
+							response.description = oldData[key] + "\n\n" + response.description;
+						}
 						break;
 					case "irl":
-						response.sessiondate = data.metadata.data[key];
+						response.sessiondate = oldData[key];
 						break;
 					case "abtstage":
-						response.abtstage = data.metadata.data[key];
+						response.abtstage = (oldData[key] as string).toLowerCase();
 						break;
 					case "date":
-						response.date = data.metadata.data[key];
+						response.date = oldData[key];
 						break;
 					case "duration":
-						response.duration = data.metadata.data[key];
+						response.duration = oldData[key];
+						break;
+					case "action":
+						response.action = oldData[key];
+						break;
+					case "isactedupon":
+						response.externalactions = oldData[key];
+						break;
+					case "scenetype":
+						response.scenetype = oldData[key];
+						break;
+					case "storycirclestage":
+						response.storycirclestage = (oldData[key] as string).toLowerCase();
+						break;
+					case "trigger":
+						if (response.description === undefined) {
+							response.description = oldData[key];
+						} else {
+							response.description += "\n\n" + oldData[key];
+						}
+						break;
+					case "dob":
+						response.dob = oldData[key];
+						break;
+					case "death":
+						response.dod = oldData[key];
+						break;
+					case "pronoun":
+						response.want = oldData[key];
+						break;
+					case "address":
+						response.address = oldData[key];
 						break;
 				}
+			}
+		}
+		if (data.metadata.data?.plot !== undefined && data.metadata.data.plot?.storycircle !== undefined) {
+			const storycircle = data.metadata.data.plot.storycircle;
+
+			if (
+				storycircle.you ||
+				storycircle.need ||
+				storycircle.go ||
+				storycircle.search ||
+				storycircle.find ||
+				storycircle.take ||
+				storycircle.return ||
+				storycircle.change
+			)
+				response.storycircle = data.metadata.data.plot.storycircle;
+		}
+
+		if (data.metadata.data?.plot !== undefined && data.metadata.data.plot?.abt !== undefined) {
+			const abt = data.metadata.data.plot.abt;
+
+			if (abt.need || abt.and || abt.but || abt.therefore) {
+				if (response.description === undefined) response.description = "";
+
+				response.description += "\n\nNeed: " + abt.need;
+				response.description += "\n\nAnd: " + abt.and;
+				response.description += "\n\nBut: " + abt.but;
+				response.description += "\n\nTherefore: " + abt.therefore;
 			}
 		}
 
@@ -126,9 +207,11 @@ export class UpdaterService {
 	private _convertImages(id: string, data: DataInterface): any[] {
 		const response: any[] = [];
 
-		if (data.metadata.data.images === undefined || data.metadata.data.images.length === 0) return response;
+		const images: any[] | undefined = data.metadata.data?.data?.images;
 
-		data.metadata.data.images.forEach((image: any) => {
+		if (images === undefined || !Array.isArray(images) || images.length === 0) return response;
+
+		images.forEach((image: any) => {
 			const newImage: any = {
 				path: image.path,
 			};
@@ -142,7 +225,24 @@ export class UpdaterService {
 	}
 
 	private _convertRelationships(id: string, data: DataInterface): any[] {
-		return [];
+		const response: any[] = [];
+
+		const relationships: any[] | undefined = data.metadata.data?.relationships;
+
+		if (relationships === undefined || !Array.isArray(relationships) || relationships.length === 0) return response;
+
+		relationships.forEach((relationship: any) => {
+			const newRelationship: any = {
+				path: relationship.path,
+				type: relationship.type,
+			};
+
+			if (relationship.description) newRelationship.description = relationship.description;
+
+			response.push(newRelationship);
+		});
+
+		return response;
 	}
 
 	private _getType(typeId: number): string {
@@ -172,6 +272,77 @@ export class UpdaterService {
 			case 4096:
 				return ElementType.Subplot;
 		}
+	}
+
+	private async _replaceCodeblock(file: TFile, codeblock: any): Promise<void> {
+		const metadata: CachedMetadata | null = app.metadataCache.getFileCache(file);
+
+		if (metadata === null || metadata.sections == undefined || metadata.sections.length === 0) return;
+
+		let content = await app.vault.read(file);
+		const lines = content.split("\n");
+
+		let codeblockData: SectionCache | undefined = undefined;
+
+		const yamlService = new YamlService();
+
+		for (let index = 0; index < metadata.sections.length; index++) {
+			codeblockData = metadata.sections[index];
+
+			let type = "";
+
+			if (
+				codeblockData !== undefined &&
+				(lines[codeblockData.position.start.line] === "```RpgManagerData" ||
+					lines[codeblockData.position.start.line] === "```RpgManagerID" ||
+					lines[codeblockData.position.start.line] === "```RpgManager")
+			) {
+				switch (lines[codeblockData.position.start.line]) {
+					case "```RpgManagerData":
+						type = "data";
+						break;
+					case "```RpgManagerID":
+						type = "ID";
+						break;
+					case "```RpgManager":
+						type = "codeblock";
+						break;
+				}
+
+				let codeblockContent = "";
+				for (
+					let lineIndex = codeblockData.position.start.line + 1;
+					lineIndex < codeblockData.position.end.line;
+					lineIndex++
+				) {
+					codeblockContent += lines[lineIndex] + "\n";
+				}
+
+				if (codeblockContent !== undefined) {
+					switch (type) {
+						case "data":
+							content = content.replace(
+								"```RpgManagerData\n" + codeblockContent,
+								"\n```RpgManager4\n" + yamlService.stringify(codeblock)
+							);
+							break;
+						case "ID":
+							content = content.replace("```RpgManagerID\n" + codeblockContent + "```\n", "");
+							content = content.replace("```RpgManagerID\n" + codeblockContent + "```", "");
+							break;
+						case "codeblock":
+							content = content.replace("```RpgManager\n" + codeblockContent + "```\n", "");
+							content = content.replace("```RpgManager\n" + codeblockContent + "```", "");
+							break;
+					}
+				}
+
+				content = content.replace(/\[\[.*?\|\]\]\n/g, "");
+				content = content.replace(/\[\[.*?\|\]\]/g, "");
+			}
+		}
+
+		await app.vault.modify(file, content);
 	}
 
 	private async _readCodeblocks(file: TFile): Promise<void> {

@@ -1,10 +1,18 @@
+import { RpgManagerInterface } from "@/RpgManagerInterface";
+import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
+import { useApi } from "@/hooks/useApi";
+import { RpgManagerSettingsInterface } from "@/settings/RpgManagerSettings";
+import { Plugin_2 } from "obsidian";
 import * as React from "react";
 import { UpdaterService } from "../UpdaterService";
 
 function Upgrading(): React.ReactElement {
-	const [total, setTotal] = React.useState(0);
-	const [processed, setProcessed] = React.useState(0);
+	const api: RpgManagerInterface = useApi();
+
+	const [total, setTotal] = React.useState<number | undefined>(0);
+	const [processed, setProcessed] = React.useState<number | undefined>(0);
 	const [process, setProcess] = React.useState<string | undefined>(undefined);
+	const [message, setMessage] = React.useState<string | undefined>(undefined);
 
 	const updateViewRef = React.useRef<(total: number, processed: number, process: string) => void>();
 	updateViewRef.current = (total, processed, process) => {
@@ -20,15 +28,35 @@ function Upgrading(): React.ReactElement {
 
 		const updater = new UpdaterService(updateView);
 		updater.updateVault().then(() => {
-			console.log("FINISHED");
+			const settings: RpgManagerSettingsInterface = {
+				chatGptKey: undefined,
+				templatesFolder: (api.settings as any).templateFolder,
+				assetsFolder: (api.settings as any).imagesFolder,
+				automaticMove: false,
+				useSceneAnalyser: true,
+				version: api.version,
+			};
+			(api as unknown as Plugin_2).saveData(settings);
+
+			setTotal(undefined);
+			setProcessed(undefined);
+			setProcess(undefined);
+			setMessage(
+				"**Upgrade completed**.\n\nObsidian is currently re-indexing your vault.\n\nPlease wait a minute then restart Obsidian to enjoy the new RPG Manager!"
+			);
 		});
 	}, []);
 
 	return (
 		<div>
-			<div>total: {total}</div>
-			<div>processed: {processed}</div>
-			<div>process: {process}</div>
+			{total && <div>total: {total}</div>}
+			{processed && <div>processed: {processed}</div>}
+			{process && <div>process: {process}</div>}
+			{message && (
+				<div>
+					<MarkdownComponent value={message} />
+				</div>
+			)}
 		</div>
 	);
 }
@@ -37,7 +65,7 @@ export default function UpdaterComponent(): React.ReactElement {
 	const [upgrading, setUpgrading] = React.useState(false);
 
 	return (
-		<>
+		<div className="relative">
 			<div className="flex flex-col m-3">
 				<h1 className="text-[--text-error] text-4xl font-bold mt-3 mb-3">RPG Manager WARNING!</h1>
 				<p className="mt-2 mb-2">
@@ -118,7 +146,16 @@ export default function UpdaterComponent(): React.ReactElement {
 					I am ready! I have backed up my vault! upgrade my vault to Version 4
 				</button>
 			</div>
-			{upgrading && <Upgrading />}
-		</>
+			{upgrading && (
+				<>
+					<div className="fixed inset-0 bg-gray-900 bg-opacity-75"></div>
+					<div className="fixed inset-0 flex justify-center items-center">
+						<div className="bg-white p-10 rounded-lg">
+							<Upgrading />
+						</div>
+					</div>
+				</>
+			)}
+		</div>
 	);
 }
