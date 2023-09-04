@@ -2,7 +2,7 @@ import { RpgManagerInterface } from "@/RpgManagerInterface";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
 import { useApi } from "@/hooks/useApi";
 import { RpgManagerSettingsInterface } from "@/settings/RpgManagerSettings";
-import { Plugin_2 } from "obsidian";
+import { Plugin } from "obsidian";
 import * as React from "react";
 import { UpdaterService } from "../UpdaterService";
 
@@ -36,7 +36,7 @@ function Upgrading(): React.ReactElement {
 				useSceneAnalyser: true,
 				version: api.version,
 			};
-			(api as unknown as Plugin_2).saveData(settings);
+			(api as unknown as Plugin).saveData(settings);
 
 			setTotal(undefined);
 			setProcessed(undefined);

@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Plugin_2, Setting, TAbstractFile, TFolder } from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting, TAbstractFile, TFolder } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 
 export interface RpgManagerSettingsInterface {
@@ -25,7 +25,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 	private _folderMap: Map<string, string>;
 
 	constructor(private _app: App, private _plugin: RpgManagerInterface) {
-		super(_app, _plugin as unknown as Plugin_2);
+		super(_app, _plugin as unknown as Plugin);
 
 		const { containerEl } = this;
 		this.containerEl = containerEl;
@@ -33,7 +33,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 
 	async saveSettings(changed: PartialSettings) {
 		this._plugin.settings = { ...this._plugin.settings, ...changed };
-		await (this._plugin as unknown as Plugin_2).saveData(this._plugin.settings);
+		await (this._plugin as unknown as Plugin).saveData(this._plugin.settings);
 
 		this._app.workspace.trigger("rpgmanager:refresh-views");
 	}

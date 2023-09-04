@@ -1,6 +1,6 @@
 import { OptionView } from "@/views/OptionsView";
 import i18n from "i18next";
-import { MarkdownView, Plugin_2, TFile, WorkspaceLeaf } from "obsidian";
+import { MarkdownView, Plugin, TFile, WorkspaceLeaf } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { Controller } from "src/controllers/Controller";
 import { ModalCreationController } from "src/controllers/ModalCreationController";
@@ -28,7 +28,7 @@ export class PluginServices {
 	}
 
 	static async registerProcessors(rpgm: RpgManagerInterface): Promise<void> {
-		(rpgm as unknown as Plugin_2).registerMarkdownCodeBlockProcessor("RpgManager4", async (source: string, el, ctx) => {
+		(rpgm as unknown as Plugin).registerMarkdownCodeBlockProcessor("RpgManager4", async (source: string, el, ctx) => {
 			ctx.addChild(new Controller(rpgm, ctx.sourcePath, el, source));
 		});
 	}
@@ -49,7 +49,7 @@ export class PluginServices {
 			if (!sceneFound) TimerService.endTimer(rpgm);
 		});
 
-		(rpgm as unknown as Plugin_2).registerEvent(
+		(rpgm as unknown as Plugin).registerEvent(
 			app.metadataCache.on("resolve", (file: TFile) => {
 				const element: ElementInterface | ElementInterface[] | undefined = rpgm.get(file.path);
 				if (element === undefined || Array.isArray(element)) {
@@ -76,7 +76,7 @@ export class PluginServices {
 			})
 		);
 
-		(rpgm as unknown as Plugin_2).registerEvent(
+		(rpgm as unknown as Plugin).registerEvent(
 			app.vault.on("rename", (file: TFile, oldPath: string) => {
 				const element: ElementInterface | ElementInterface[] | undefined = rpgm.get(file.path);
 
@@ -90,13 +90,13 @@ export class PluginServices {
 			})
 		);
 
-		(rpgm as unknown as Plugin_2).registerEvent(
+		(rpgm as unknown as Plugin).registerEvent(
 			app.vault.on("delete", (file: TFile) => {
 				database = database.filter((element: ElementInterface) => element.path !== file.path);
 			})
 		);
 
-		(rpgm as unknown as Plugin_2).registerEvent(
+		(rpgm as unknown as Plugin).registerEvent(
 			app.workspace.on("file-open", (file: TFile) => {
 				app.workspace.trigger("rpgmanager:refresh-views");
 			})
@@ -104,14 +104,14 @@ export class PluginServices {
 	}
 
 	static async registerCommands(rpgm: RpgManagerInterface): Promise<void> {
-		(rpgm as unknown as Plugin_2).addCommand({
+		(rpgm as unknown as Plugin).addCommand({
 			id: "rpg-manager-create-select",
 			name: i18n.t("create.new", { context: "element" }),
 			callback: () => {
 				new ModalCreationController(rpgm).open();
 			},
 		});
-		(rpgm as unknown as Plugin_2).addCommand({
+		(rpgm as unknown as Plugin).addCommand({
 			id: "rpg-manager-create-in-select",
 			name: i18n.t("create.in", { context: "element" }),
 			callback: () => {
@@ -122,14 +122,14 @@ export class PluginServices {
 		Object.keys(ElementType)
 			.filter((v) => isNaN(Number(v)))
 			.forEach((type, index) => {
-				(rpgm as unknown as Plugin_2).addCommand({
+				(rpgm as unknown as Plugin).addCommand({
 					id: "rpg-manager-create-" + type.toLowerCase(),
 					name: i18n.t("create.new", { context: type.toLowerCase() }),
 					callback: () => {
 						new ModalCreationController(rpgm, ElementType[type as keyof typeof ElementType]).open();
 					},
 				});
-				(rpgm as unknown as Plugin_2).addCommand({
+				(rpgm as unknown as Plugin).addCommand({
 					id: "rpg-manager-create-in-" + type.toLowerCase(),
 					name: i18n.t("create.in", { context: type.toLowerCase() }),
 					callback: () => {
