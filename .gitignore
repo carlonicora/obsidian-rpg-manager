@@ -29,3 +29,4 @@ versionMinor.sh
 
 # Exclude css file in src
 src/**/*.css
+WRITING.md
