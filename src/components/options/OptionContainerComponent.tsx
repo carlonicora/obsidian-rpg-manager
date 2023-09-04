@@ -1,6 +1,7 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
 import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApi } from "@/hooks/useApi";
+import { TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import NewElementComponent from "../creation/NewElementComponent";
@@ -8,8 +9,10 @@ import OptionsViewComponent from "./OptionsViewComponent";
 
 export default function OptionContainerComponent({
 	element,
+	file,
 }: {
 	element: ElementInterface | undefined;
+	file: TFile | undefined;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
@@ -30,7 +33,7 @@ export default function OptionContainerComponent({
 					<OptionsViewComponent element={element} />
 				</div>
 			)}
-			<NewElementComponent element={element} />
+			<NewElementComponent element={element} file={file} />
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs">
 				<div
 					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"

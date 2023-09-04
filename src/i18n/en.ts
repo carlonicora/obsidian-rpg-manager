@@ -243,6 +243,7 @@ If you want to create new ones, just click on the button and define the name and
 	},
 	create: {
 		title: "Create New...",
+		in_title: "Convert to...",
 		new_campaign: "Create new Campaign",
 		new_adventure: "Create new Adventure",
 		new_session: "Create new Session",
