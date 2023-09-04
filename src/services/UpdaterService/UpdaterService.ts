@@ -1,6 +1,6 @@
 import { YamlService } from "@/data/classes/YamlService";
 import { ElementType } from "@/data/enums/ElementType";
-import { CachedMetadata, SectionCache, TFile, parseYaml } from "obsidian";
+import { App, CachedMetadata, SectionCache, TFile, parseYaml } from "obsidian";
 
 interface DataInterface {
 	file: TFile;
@@ -17,13 +17,13 @@ export class UpdaterService {
 	private _elementsMap: Map<string, DataInterface>;
 	private _newElements: Map<TFile, any>;
 
-	constructor(private _updateView: (total: number, current: number, process: string) => void) {
+	constructor(private _app: App, private _updateView: (total: number, current: number, process: string) => void) {
 		this._elementsMap = new Map<string, DataInterface>();
 		this._newElements = new Map<TFile, any>();
 	}
 
 	async updateVault(): Promise<void> {
-		const allFiles: TFile[] = app.vault.getFiles();
+		const allFiles: TFile[] = this._app.vault.getFiles();
 
 		this._total = allFiles.length;
 		this._updateView(this._total, this._current, "Reading files...");
@@ -275,11 +275,11 @@ export class UpdaterService {
 	}
 
 	private async _replaceCodeblock(file: TFile, codeblock: any): Promise<void> {
-		const metadata: CachedMetadata | null = app.metadataCache.getFileCache(file);
+		const metadata: CachedMetadata | null = this._app.metadataCache.getFileCache(file);
 
 		if (metadata === null || metadata.sections == undefined || metadata.sections.length === 0) return;
 
-		let content = await app.vault.read(file);
+		let content = await this._app.vault.read(file);
 		const lines = content.split("\n");
 
 		let codeblockData: SectionCache | undefined = undefined;
@@ -342,15 +342,15 @@ export class UpdaterService {
 			}
 		}
 
-		await app.vault.modify(file, content);
+		await this._app.vault.modify(file, content);
 	}
 
 	private async _readCodeblocks(file: TFile): Promise<void> {
-		const metadata: CachedMetadata | null = app.metadataCache.getFileCache(file);
+		const metadata: CachedMetadata | null = this._app.metadataCache.getFileCache(file);
 
 		if (metadata === null || metadata.sections == undefined || metadata.sections.length === 0) return;
 
-		const content = await app.vault.read(file);
+		const content = await this._app.vault.read(file);
 		const lines = content.split("\n");
 
 		let codeblockContent: string | undefined = undefined;

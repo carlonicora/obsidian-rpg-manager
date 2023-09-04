@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -12,6 +14,7 @@ import SingleImageComponent from "./SingleImageComponent";
 
 export default function GalleryComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
+	const app: App = useApp();
 
 	const [currentImage, setCurrentImage] = React.useState<ImageInterface | undefined>(undefined);
 	const [browseImages, setBrowseImages] = React.useState<boolean>(false);

@@ -31,11 +31,12 @@
 		"@types/react-flatpickr": "^3.8.8",
 		"@types/react-simple-maps": "^3.0.0",
 		"@types/uuid": "^9.0.0",
-		"@typescript-eslint/eslint-plugin": "5.29.0",
-		"@typescript-eslint/parser": "5.29.0",
+		"@typescript-eslint/eslint-plugin": "^6.5.0",
+		"@typescript-eslint/parser": "^6.5.0",
 		"babel-jest": "^29.5.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.14.47",
+		"eslint-plugin-deprecation": "^1.5.0",
 		"install": "^0.13.0",
 		"jest": "^29.5.0",
 		"jest-environment-jsdom": "^29.5.0",
@@ -46,7 +47,7 @@
 		"tailwindcss": "^3.3.3",
 		"ts-jest": "^29.0.5",
 		"tslib": "2.4.0",
-		"typescript": "^4.7.4"
+		"typescript": "^4.9"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.4.2",

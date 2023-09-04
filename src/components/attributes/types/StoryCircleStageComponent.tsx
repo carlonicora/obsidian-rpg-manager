@@ -1,5 +1,7 @@
+import { useApp } from "@/hooks/useApp";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -24,6 +26,7 @@ export default function StoryCircleStageComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [value, setValue] = React.useState<string>(attribute?.value?.[stage.toLowerCase()] ?? "");
 	const [editing, setEditing] = React.useState<boolean>(false);

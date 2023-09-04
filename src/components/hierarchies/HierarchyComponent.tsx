@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import {
 	DragDropContext,
@@ -36,6 +38,7 @@ export default function HierarchyComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [newChild, setNewChild] = React.useState<boolean>(false);
 

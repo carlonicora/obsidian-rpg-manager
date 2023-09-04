@@ -1,6 +1,7 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
 import { useApi } from "@/hooks/useApi";
-import { TFile } from "obsidian";
+import { useApp } from "@/hooks/useApp";
+import { App, TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +12,7 @@ export default function TemplateSelectionComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	if (!api.settings.templatesFolder) return null;
 

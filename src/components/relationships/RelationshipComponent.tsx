@@ -1,4 +1,5 @@
-import { TFile } from "obsidian";
+import { useApp } from "@/hooks/useApp";
+import { App, TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -18,6 +19,7 @@ export default function RelationshipComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const removeRelationship = () => {
 		let file: TFile;

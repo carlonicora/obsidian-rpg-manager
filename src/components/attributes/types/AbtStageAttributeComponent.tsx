@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -20,8 +22,8 @@ export default function AbtStageAttributeComponent({
 	if (!attribute.isSet) return null;
 
 	const { t } = useTranslation();
-
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 

@@ -7,11 +7,12 @@ import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { RelationshipInterface } from "@/data/interfaces/RelationshipInterface";
 import { StepComponentInterface } from "@/data/interfaces/StepComponentInterface";
 import { useApi } from "@/hooks/useApi";
+import { useApp } from "@/hooks/useApp";
 import { useWizard } from "@/hooks/useWizard";
 import { FileCreationService } from "@/services/FileCreationService";
 import { HelperService } from "@/services/HelperService";
 import { RpgManagerCodeblockService } from "@/services/RpgManagerCodeblockService";
-import { TFile } from "obsidian";
+import { App, TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import WizardNavigatorComponent from "../WizardNavigatorComponent";
@@ -43,6 +44,7 @@ export default function ChapterWizardComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 	const wizardData = useWizard();
 
 	if (campaign === undefined && element !== undefined) campaign = element.campaign;

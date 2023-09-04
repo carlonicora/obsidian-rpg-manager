@@ -1,6 +1,6 @@
 import { OptionView } from "@/views/OptionsView";
 import i18n from "i18next";
-import { MarkdownView, Plugin, TFile, WorkspaceLeaf } from "obsidian";
+import { App, MarkdownView, Plugin, TFile, WorkspaceLeaf } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { Controller } from "src/controllers/Controller";
 import { ModalCreationController } from "src/controllers/ModalCreationController";
@@ -12,7 +12,7 @@ import { EditorPositionService } from "./EditorPositionService";
 import { TimerService } from "./TimerService";
 
 export class PluginServices {
-	static async createView(): Promise<void> {
+	static async createView(app: App): Promise<void> {
 		app.workspace.detachLeavesOfType("rpg-manager-options");
 		await app.workspace.getRightLeaf(false).setViewState({
 			type: "rpg-manager-options",
@@ -27,13 +27,13 @@ export class PluginServices {
 		view.render();
 	}
 
-	static async registerProcessors(rpgm: RpgManagerInterface): Promise<void> {
+	static async registerProcessors(app: App, rpgm: RpgManagerInterface): Promise<void> {
 		(rpgm as unknown as Plugin).registerMarkdownCodeBlockProcessor("RpgManager4", async (source: string, el, ctx) => {
-			ctx.addChild(new Controller(rpgm, ctx.sourcePath, el, source));
+			ctx.addChild(new Controller(app, rpgm, ctx.sourcePath, el, source));
 		});
 	}
 
-	static async registerEvents(rpgm: RpgManagerInterface, database: ElementInterface[]): Promise<void> {
+	static async registerEvents(app: App, rpgm: RpgManagerInterface, database: ElementInterface[]): Promise<void> {
 		app.workspace.on("active-leaf-change", (leaf: WorkspaceLeaf | null) => {
 			app.workspace.trigger("rpgmanager:refresh-option-view");
 			if (TimerService.runningScene === undefined) return;
@@ -46,7 +46,7 @@ export class PluginServices {
 				}
 			});
 
-			if (!sceneFound) TimerService.endTimer(rpgm);
+			if (!sceneFound) TimerService.endTimer(app, rpgm);
 		});
 
 		(rpgm as unknown as Plugin).registerEvent(
@@ -103,19 +103,19 @@ export class PluginServices {
 		);
 	}
 
-	static async registerCommands(rpgm: RpgManagerInterface): Promise<void> {
+	static async registerCommands(app: App, rpgm: RpgManagerInterface): Promise<void> {
 		(rpgm as unknown as Plugin).addCommand({
 			id: "rpg-manager-create-select",
 			name: i18n.t("create.new", { context: "element" }),
 			callback: () => {
-				new ModalCreationController(rpgm).open();
+				new ModalCreationController(app, rpgm).open();
 			},
 		});
 		(rpgm as unknown as Plugin).addCommand({
 			id: "rpg-manager-create-in-select",
 			name: i18n.t("create.in", { context: "element" }),
 			callback: () => {
-				new ModalCreationController(rpgm, undefined, true).open();
+				new ModalCreationController(app, rpgm, undefined, true).open();
 			},
 		});
 
@@ -126,14 +126,14 @@ export class PluginServices {
 					id: "rpg-manager-create-" + type.toLowerCase(),
 					name: i18n.t("create.new", { context: type.toLowerCase() }),
 					callback: () => {
-						new ModalCreationController(rpgm, ElementType[type as keyof typeof ElementType]).open();
+						new ModalCreationController(app, rpgm, ElementType[type as keyof typeof ElementType]).open();
 					},
 				});
 				(rpgm as unknown as Plugin).addCommand({
 					id: "rpg-manager-create-in-" + type.toLowerCase(),
 					name: i18n.t("create.in", { context: type.toLowerCase() }),
 					callback: () => {
-						new ModalCreationController(rpgm, ElementType[type as keyof typeof ElementType], true).open();
+						new ModalCreationController(app, rpgm, ElementType[type as keyof typeof ElementType], true).open();
 					},
 				});
 			});

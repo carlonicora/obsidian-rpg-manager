@@ -1,4 +1,5 @@
-import { TAbstractFile } from "obsidian";
+import { useApp } from "@/hooks/useApp";
+import { App, TAbstractFile } from "obsidian";
 import * as React from "react";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
@@ -15,6 +16,7 @@ export default function BrowseImagesComponent({
 	selectImage: () => void;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const allImages: TAbstractFile[] = app.vault
 		.getAllLoadedFiles()

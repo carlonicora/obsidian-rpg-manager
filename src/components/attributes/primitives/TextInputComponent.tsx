@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { NewRelationshipController } from "src/controllers/NewRelationshipController";
@@ -17,6 +19,7 @@ export default function TextInputComponent({
 	onBlur?: (value: string) => void;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [value, setValue] = React.useState<string>(initialValue || "");
 

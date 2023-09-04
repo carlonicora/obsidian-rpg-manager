@@ -1,4 +1,5 @@
-import { Modal, TFile } from "obsidian";
+import { useApp } from "@/hooks/useApp";
+import { App, Modal, TFile } from "obsidian";
 import * as React from "react";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { WizardContext } from "src/contexts/WizardContext";
@@ -23,6 +24,7 @@ export default function CreationComponent({
 	close: () => void;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [inWizard, setInWizard] = React.useState<boolean>(false);
 	const [selectedType, setSelectedType] = React.useState<ElementType | undefined>(type);

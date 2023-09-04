@@ -1,4 +1,5 @@
-import { Modal, Scope } from "obsidian";
+import { AppContext } from "@/contexts/AppContext";
+import { App, Modal, Scope } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -7,8 +8,8 @@ import { ApiContext } from "src/contexts/ApiContext";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export class CustomAttributesController extends Modal {
-	constructor(private _api: RpgManagerInterface, private _element?: ElementInterface) {
-		super(app);
+	constructor(private _app: App, private _api: RpgManagerInterface, private _element?: ElementInterface) {
+		super(_app);
 
 		this.scope = new Scope();
 
@@ -28,7 +29,12 @@ export class CustomAttributesController extends Modal {
 		const creationComponent = createElement(CustomAttributesComponent, {
 			element: this._element,
 		});
-		const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
+		const reactComponent = createElement(
+			AppContext.Provider,
+			{ value: this._app },
+			createElement(ApiContext.Provider, { value: this._api }, creationComponent)
+		);
+		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
 
 		root.render(reactComponent);
 	}

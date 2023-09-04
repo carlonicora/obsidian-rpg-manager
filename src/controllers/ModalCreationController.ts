@@ -1,4 +1,5 @@
-import { MarkdownView, Modal, Scope, TFile } from "obsidian";
+import { AppContext } from "@/contexts/AppContext";
+import { App, MarkdownView, Modal, Scope, TFile } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -8,11 +9,12 @@ import { ElementType } from "src/data/enums/ElementType";
 
 export class ModalCreationController extends Modal {
 	constructor(
+		private _app: App,
 		private _api: RpgManagerInterface,
 		private _type?: ElementType,
 		private _addToCurrentNote: boolean = false
 	) {
-		super(app);
+		super(_app);
 
 		this.scope = new Scope();
 
@@ -31,7 +33,7 @@ export class ModalCreationController extends Modal {
 
 		let file: TFile | undefined = undefined;
 		if (this._addToCurrentNote) {
-			const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+			const activeView = this._app.workspace.getActiveViewOfType(MarkdownView);
 			file = activeView.file;
 		}
 
@@ -41,7 +43,13 @@ export class ModalCreationController extends Modal {
 			controller: this,
 			close: this.close.bind(this),
 		});
-		const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
+
+		const reactComponent = createElement(
+			AppContext.Provider,
+			{ value: this._app },
+			createElement(ApiContext.Provider, { value: this._api }, creationComponent)
+		);
+		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
 
 		root.render(reactComponent);
 	}

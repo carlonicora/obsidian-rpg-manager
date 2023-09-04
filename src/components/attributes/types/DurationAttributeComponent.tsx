@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -17,13 +19,15 @@ export default function DurationAttributeComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
+
 	const [isRunning, setIsRunning] = React.useState<boolean>(false);
 	const [duration, setDuration] = React.useState<number>(attribute.value || 0);
 	const timerRef = React.useRef<NodeJS.Timeout | null>(null); // Use a ref to store the timer ID
 
 	const handleStartStop = () => {
-		if (isRunning) TimerService.endTimer(api);
-		else TimerService.startTimer(api, element);
+		if (isRunning) TimerService.endTimer(app, api);
+		else TimerService.startTimer(app, api, element);
 
 		setIsRunning(!isRunning);
 	};

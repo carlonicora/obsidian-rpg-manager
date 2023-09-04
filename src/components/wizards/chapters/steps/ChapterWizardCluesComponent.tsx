@@ -5,8 +5,10 @@ import { NewRelationshipController } from "@/controllers/NewRelationshipControll
 import { ElementType } from "@/data/enums/ElementType";
 import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApi } from "@/hooks/useApi";
+import { useApp } from "@/hooks/useApp";
 import { useWizard } from "@/hooks/useWizard";
 import { HelperService } from "@/services/HelperService";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
@@ -27,6 +29,7 @@ export default function ChapterWizardCluesComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 	const wizardData = useWizard();
 
 	const [chapterClues, setChapterClues] = React.useState<ChapterCluesInterface[]>(

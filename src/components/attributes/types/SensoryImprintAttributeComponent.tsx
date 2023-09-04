@@ -1,5 +1,7 @@
+import { useApp } from "@/hooks/useApp";
 import { faEarListen, faEdit, faEye, faHandPointer, faTint, faWind } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -33,6 +35,7 @@ function EditComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [showOverlay, setShowOverlay] = React.useState<boolean>(false);
 

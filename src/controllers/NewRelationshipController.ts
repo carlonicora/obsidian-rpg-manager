@@ -22,7 +22,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 		private _callback?: (relationship: string, params?: any) => void,
 		private _params?: any
 	) {
-		super(app);
+		super(_app);
 	}
 
 	getSuggestions(query: string): FuzzyMatch<SearchableElementInterface>[] {
@@ -126,7 +126,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 
 	async onChooseItem(found: SearchableElementInterface, evt: MouseEvent | KeyboardEvent) {
 		if (found.path === "") {
-			await app.vault.create(found.name + ".md", "");
+			await this._app.vault.create(found.name + ".md", "");
 			if (this._callback) {
 				this._callback("[[" + found.name + ".md|" + found.name + "]]", this._params);
 			}

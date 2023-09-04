@@ -1,4 +1,6 @@
+import { useApp } from "@/hooks/useApp";
 import { FileUploadService } from "@/services/FileUploadService";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -17,6 +19,7 @@ import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockServ
 export default function OptionsViewComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [isDragging, setIsDragging] = React.useState(false);
 
@@ -69,7 +72,7 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 	};
 
 	const createCustomAttribute = () => {
-		const customAttributeController = new CustomAttributesController(api, element);
+		const customAttributeController = new CustomAttributesController(app, api, element);
 		customAttributeController.open();
 	};
 

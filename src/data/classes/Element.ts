@@ -1,6 +1,6 @@
 import { attributes } from "@/data/attributes/attributes";
 import _ from "lodash";
-import { CachedMetadata, TFile } from "obsidian";
+import { App, CachedMetadata, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ImageService } from "src/services/ImageService";
 import { Task } from "../../services/taskService/Task";
@@ -20,7 +20,12 @@ export class Element implements ElementInterface {
 	private _metadata: CachedMetadata | undefined = undefined;
 	private _runningStart = 0;
 
-	constructor(private _api: RpgManagerInterface, private _file: TFile, protected _rpgManagerBlock: any) {
+	constructor(
+		private _app: App,
+		private _api: RpgManagerInterface,
+		private _file: TFile,
+		protected _rpgManagerBlock: any
+	) {
 		if (
 			this._rpgManagerBlock.id.type === ElementType.Campaign ||
 			this._rpgManagerBlock.id.type === ElementType.Adventure ||
@@ -136,7 +141,7 @@ export class Element implements ElementInterface {
 		if (this._rpgManagerBlock.images == undefined) return response;
 
 		this._rpgManagerBlock.images.forEach((imageData: any) => {
-			const image: ImageInterface | undefined = ImageService.createImage(app, this._api, imageData);
+			const image: ImageInterface | undefined = ImageService.createImage(this._app, this._api, imageData);
 
 			if (image) response.push(image);
 		});

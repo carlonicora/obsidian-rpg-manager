@@ -1,13 +1,15 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
 import { useApi } from "@/hooks/useApi";
+import { useApp } from "@/hooks/useApp";
 import { RpgManagerSettingsInterface } from "@/settings/RpgManagerSettings";
-import { Plugin } from "obsidian";
+import { App, Plugin } from "obsidian";
 import * as React from "react";
 import { UpdaterService } from "../UpdaterService";
 
 function Upgrading(): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [total, setTotal] = React.useState<number | undefined>(0);
 	const [processed, setProcessed] = React.useState<number | undefined>(0);
@@ -26,7 +28,7 @@ function Upgrading(): React.ReactElement {
 			updateViewRef.current?.(total, processed, process);
 		};
 
-		const updater = new UpdaterService(updateView);
+		const updater = new UpdaterService(app, updateView);
 		updater.updateVault().then(() => {
 			const settings: RpgManagerSettingsInterface = {
 				chatGptKey: undefined,

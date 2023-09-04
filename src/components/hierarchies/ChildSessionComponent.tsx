@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import Flatpickr from "react-flatpickr";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -16,6 +18,7 @@ export default function ChildSessionComponent({
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
 	const date: AttributeInterface = element.attribute(AttributeType.SessionDate);
+	const app: App = useApp();
 
 	function saveAttribute(attributeName: string, value: string | boolean): Promise<void> {
 		if (attributeName === "name") {

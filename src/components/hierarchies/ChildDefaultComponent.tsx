@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { AttributeType } from "src/data/enums/AttributeType";
@@ -13,6 +15,7 @@ export default function ChildDefaultComponent({
 	isInPopover: boolean;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	function saveAttribute(attributeName: string, value: string | boolean): Promise<void> {
 		if (attributeName === "name") {

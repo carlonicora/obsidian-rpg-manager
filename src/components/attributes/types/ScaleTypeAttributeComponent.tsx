@@ -2,7 +2,9 @@ import { RpgManagerInterface } from "@/RpgManagerInterface";
 import { AttributeInterface } from "@/data/interfaces/AttributeInterface";
 import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApi } from "@/hooks/useApi";
+import { useApp } from "@/hooks/useApp";
 import { RpgManagerCodeblockService } from "@/services/RpgManagerCodeblockService";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import AttributeTitleComponent from "../AttributeTitleComponent";
@@ -51,6 +53,7 @@ function EditComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const [widthPercentage, setWidthPercentage] = React.useState((attribute.value / 10) * 100);
 

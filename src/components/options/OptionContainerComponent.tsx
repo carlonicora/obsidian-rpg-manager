@@ -1,7 +1,8 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
 import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApi } from "@/hooks/useApi";
-import { TFile } from "obsidian";
+import { useApp } from "@/hooks/useApp";
+import { App, TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import NewElementComponent from "../creation/NewElementComponent";
@@ -16,6 +17,7 @@ export default function OptionContainerComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const showReadme = () => {
 		app.workspace.detachLeavesOfType("rpg-manager-readme");

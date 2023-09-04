@@ -1,3 +1,4 @@
+import { App } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { AttributeComponentType } from "src/data/enums/AttributeComponentType";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
@@ -12,16 +13,16 @@ export class TimerService {
 		return this._runningScene;
 	}
 
-	static startTimer(api: RpgManagerInterface, element: ElementInterface): void {
+	static startTimer(app: App, api: RpgManagerInterface, element: ElementInterface): void {
 		if (this._runningScene !== undefined && this._runningScene !== element.path) return;
 
-		if (this._runningScene !== undefined) TimerService.endTimer(api);
+		if (this._runningScene !== undefined) TimerService.endTimer(app, api);
 
 		this._runningScene = element.path;
 		this._runningStart = Math.round(Date.now() / 1000);
 	}
 
-	static endTimer(api: RpgManagerInterface): void {
+	static endTimer(app: App, api: RpgManagerInterface): void {
 		if (TimerService._runningScene === undefined || TimerService._runningStart === undefined) {
 			TimerService._runningScene = undefined;
 			TimerService._runningStart = undefined;

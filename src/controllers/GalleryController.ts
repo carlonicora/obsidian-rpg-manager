@@ -1,3 +1,4 @@
+import { AppContext } from "@/contexts/AppContext";
 import { App, Modal, Scope } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
@@ -8,7 +9,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export class GalleryController extends Modal {
 	constructor(private _app: App, private _api: RpgManagerInterface, private _element: ElementInterface) {
-		super(app);
+		super(_app);
 
 		this.scope = new Scope();
 
@@ -30,7 +31,13 @@ export class GalleryController extends Modal {
 			element: this._element,
 			key: this._element.version,
 		});
-		const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
+
+		const reactComponent = createElement(
+			AppContext.Provider,
+			{ value: this._app },
+			createElement(ApiContext.Provider, { value: this._api }, creationComponent)
+		);
+		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
 
 		root.render(reactComponent);
 	}

@@ -1,4 +1,6 @@
+import { useApp } from "@/hooks/useApp";
 import { DateTime } from "luxon";
+import { App } from "obsidian";
 import * as React from "react";
 import Flatpickr from "react-flatpickr";
 import { useTranslation } from "react-i18next";
@@ -20,6 +22,7 @@ export default function DateAttributeComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 

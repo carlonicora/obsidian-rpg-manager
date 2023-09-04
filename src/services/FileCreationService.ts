@@ -96,9 +96,9 @@ export class FileCreationService {
 		}
 
 		const fileName = await this._generateFilePath();
-		const newFile = await app.vault.create(fileName, content);
-		const currentLeaf = app.workspace.getActiveViewOfType(MarkdownView);
-		const leaf = app.workspace.getLeaf(currentLeaf != null);
+		const newFile = await this._app.vault.create(fileName, content);
+		const currentLeaf = this._app.workspace.getActiveViewOfType(MarkdownView);
+		const leaf = this._app.workspace.getLeaf(currentLeaf != null);
 		// open ? await leaf.openFile(newFile) : leaf.detach();
 		open && (await leaf.openFile(newFile));
 
@@ -106,7 +106,7 @@ export class FileCreationService {
 	}
 
 	async createInCurrentFile(): Promise<TFile> {
-		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+		const activeView = this._app.workspace.getActiveViewOfType(MarkdownView);
 		const file = activeView.file as TFile;
 
 		const codeblockService = new RpgManagerCodeblockService(this._app, this._api, file);

@@ -16,7 +16,7 @@ export class ElementFactory {
 		if (rpgManagerBlock === undefined || rpgManagerBlock.id === undefined || rpgManagerBlock.id.type === undefined)
 			return undefined;
 
-		const response: ElementInterface = new Element(api, file, rpgManagerBlock);
+		const response: ElementInterface = new Element(app, api, file, rpgManagerBlock);
 		response.metadata = codeblockService.metadata;
 
 		if (rpgManagerBlock.relationships != undefined && rpgManagerBlock.relationships.length > 0) {

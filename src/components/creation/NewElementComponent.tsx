@@ -1,7 +1,8 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
 import { ModalCreationController } from "@/controllers/ModalCreationController";
 import { useApi } from "@/hooks/useApi";
-import { TFile } from "obsidian";
+import { useApp } from "@/hooks/useApp";
+import { App, TFile } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { ElementType } from "src/data/enums/ElementType";
@@ -16,8 +17,7 @@ export default function NewElementComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
-
-	console.log(element, file);
+	const app: App = useApp();
 
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
@@ -30,7 +30,7 @@ export default function NewElementComponent({
 							<div
 								className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 								key={index}
-								onClick={() => new ModalCreationController(api, type, true).open()}
+								onClick={() => new ModalCreationController(app, api, type, true).open()}
 							>
 								{t("elements." + type, { count: 1 })}
 							</div>
@@ -44,7 +44,7 @@ export default function NewElementComponent({
 					<div
 						className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 						key={index}
-						onClick={() => new ModalCreationController(api, type).open()}
+						onClick={() => new ModalCreationController(app, api, type).open()}
 					>
 						{t("elements." + type, { count: 1 })}
 					</div>

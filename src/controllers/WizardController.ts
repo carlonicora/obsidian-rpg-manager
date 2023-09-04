@@ -1,4 +1,5 @@
 import ChapterWizardComponent from "@/components/wizards/chapters/ChapterWizardComponent";
+import { AppContext } from "@/contexts/AppContext";
 import { ElementType } from "@/data/enums/ElementType";
 import { App, Modal, Scope } from "obsidian";
 import { createElement } from "react";
@@ -11,7 +12,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export class WizardController extends Modal {
 	constructor(private _app: App, private _api: RpgManagerInterface, private _element: ElementInterface) {
-		super(app);
+		super(_app);
 
 		this.scope = new Scope();
 
@@ -42,7 +43,13 @@ export class WizardController extends Modal {
 		}
 
 		const wizardProvider = createElement(WizardContext.Provider, { value: {} }, wizardComponent);
-		const reactComponent = createElement(ApiContext.Provider, { value: this._api }, wizardProvider);
+
+		const reactComponent = createElement(
+			AppContext.Provider,
+			{ value: this._app },
+			createElement(ApiContext.Provider, { value: this._api }, wizardProvider)
+		);
+		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, wizardProvider);
 
 		root.render(reactComponent);
 	}

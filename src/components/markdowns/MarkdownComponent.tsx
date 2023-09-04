@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -12,6 +14,7 @@ const transformMarkdownLinks = (api: RpgManagerInterface, markdown: string) => {
 
 export default function MarkdownComponent({ value }: { value?: string }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const transformedValue = transformMarkdownLinks(api, value ?? ""); //.replaceAll("\n\n", "<br/>&nbsp;\n");
 

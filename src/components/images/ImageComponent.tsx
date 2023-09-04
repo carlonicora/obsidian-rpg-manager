@@ -1,3 +1,5 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
@@ -14,6 +16,7 @@ export default function ImageComponent({
 }): React.ReactElement {
 	const [currentIndex, setCurrentIndex] = React.useState(0);
 	const api: RpgManagerInterface = useApi();
+	const app: App = useApp();
 
 	const goPrev = () => {
 		if (currentIndex === 0) setCurrentIndex(element.images.length - 1);
