@@ -128,12 +128,14 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 						{t("options.wizard")}
 					</div>
 				)}
-				<div
-					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
-					onClick={addRelationship}
-				>
-					{t("create.add", { context: "relationship" })}
-				</div>
+				{element.type !== ElementType.Campaign && (
+					<div
+						className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+						onClick={addRelationship}
+					>
+						{t("create.add", { context: "relationship" })}
+					</div>
+				)}
 				<div
 					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
 					onClick={createCustomAttribute}
