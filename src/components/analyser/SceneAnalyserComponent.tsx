@@ -10,6 +10,8 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 	const sceneAnalyser = ServiceFactory.createSceneAnalyserService();
 	const analysis: SceneAnalysisInterface = sceneAnalyser.analyseSession(element);
 
+	if (analysis === undefined) return null;
+
 	const getLineColor = (value: number): string => {
 		if ((value >= -100 && value <= -50) || (value >= 50 && value <= 100)) return "bg-[--text-error]";
 		if ((value >= -49 && value <= -25) || (value >= 25 && value <= 49)) return "bg-[--text-warning]";
