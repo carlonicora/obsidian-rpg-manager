@@ -26,7 +26,8 @@ export class SceneAnalyserService {
 		const scenes: ElementInterface[] = this._api.get(
 			undefined,
 			session.campaign,
-			ElementType.Scene
+			ElementType.Scene,
+			session
 		) as ElementInterface[];
 
 		if (scenes.length === 0) return undefined;
