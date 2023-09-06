@@ -25,6 +25,8 @@ export default function ParentAttributeComponent({
 		element.parent.type
 	) as ElementInterface[];
 
+	if (possibleParents === undefined || possibleParents.length === 0) return null;
+
 	possibleParents.sort((a, b) => b.positionInParent - a.positionInParent);
 
 	const updateParent = (newPath: string) => {
