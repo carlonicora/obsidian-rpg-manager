@@ -401,8 +401,9 @@ export class RpgManagerCodeblockService {
 		if (oldBaseName !== toFile.basename && newCodeblockContent.indexOf("|" + oldBaseName) !== -1)
 			newCodeblockContent = newCodeblockContent.replaceAll("|" + oldBaseName, "|" + toFile.basename);
 
-		let content = this._fileContent.replace(this._codeblockContent, newCodeblockContent);
-		content = content.replaceAll("[[" + oldPath + "|]]", "[[" + toFile.path + "|]]");
+		const content = this._fileContent.replace(this._codeblockContent, newCodeblockContent);
+
+		//content = content.replaceAll("[[" + oldPath + "|]]", "[[" + toFile.path + "|]]");
 
 		this._modifyFileContent(content);
 	}

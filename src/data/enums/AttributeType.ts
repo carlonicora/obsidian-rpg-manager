@@ -31,4 +31,5 @@ export enum AttributeType {
 	SensoryImprint = "sensoryimprint",
 	Occupation = "occupation",
 	Stake = "stake",
+	Kishotenketsu = "kishotenketsu",
 }

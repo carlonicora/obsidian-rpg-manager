@@ -103,6 +103,14 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 				change: "",
 			};
 		}
+		if (attribute.type === AttributeComponentType.Kishotenketsu) {
+			value = {
+				ki: "",
+				sho: "",
+				ten: "",
+				ketsu: "",
+			};
+		}
 		if (attribute.type === AttributeComponentType.MajorClues) value = [];
 		codeblockService.updateCodeblockData(attribute.id, value);
 	};

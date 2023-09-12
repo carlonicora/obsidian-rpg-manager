@@ -20,4 +20,5 @@ export enum AttributeComponentType {
 	NonPlayerCharacterType = "NonPlayerCharacterType",
 	SensoryImprint = "SensoryImprint",
 	Scale = "Scale",
+	Kishotenketsu = "Kishotenketsu",
 }

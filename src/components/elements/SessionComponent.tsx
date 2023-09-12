@@ -12,6 +12,7 @@ import HeaderComponent from "../headers/HeaderComponent";
 import HierarchyComponent from "../hierarchies/HierarchyComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import ImageComponent from "../images/ImageComponent";
+import KishotenketsuComponent from "../kishotenketsu/KishotenketsuComponent";
 import RelationshipsComponent from "../relationships/RelationshipsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
@@ -23,6 +24,7 @@ export default function SessionComponent({
 	isInPopover: boolean;
 }): React.ReactElement {
 	const storyCircle: AttributeInterface | undefined = element.attribute(AttributeComponentType.StoryCircle);
+	const kishotenketsu: AttributeInterface | undefined = element.attribute(AttributeType.Kishotenketsu);
 
 	return (
 		<>
@@ -46,6 +48,11 @@ export default function SessionComponent({
 						<AttributeListComponent element={element} isEditable={!isInPopover} />
 					</div>
 				</div>
+				{kishotenketsu && kishotenketsu.isSet && (
+					<div className="col-span-1 sm:col-span-1 lg:col-span-6">
+						<KishotenketsuComponent element={element} attribute={kishotenketsu} isEditable={!isInPopover} />
+					</div>
+				)}
 				{storyCircle && storyCircle.isSet && (
 					<div className="col-span-1 sm:col-span-1 lg:col-span-6">
 						<StoryCircleAttributeComponent element={element} attribute={storyCircle} isEditable={!isInPopover} />

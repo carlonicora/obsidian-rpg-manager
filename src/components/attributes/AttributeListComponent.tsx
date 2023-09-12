@@ -41,6 +41,7 @@ export default function AttributeListComponent({
 					if (
 						attribute.type === AttributeComponentType.Description ||
 						attribute.type === AttributeComponentType.StoryCircle ||
+						attribute.type === AttributeComponentType.Kishotenketsu ||
 						attribute.type === AttributeComponentType.Duration ||
 						attribute.type === AttributeComponentType.Parent ||
 						attribute.type === AttributeComponentType.SensoryImprint ||

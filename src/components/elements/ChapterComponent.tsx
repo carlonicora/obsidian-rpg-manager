@@ -1,12 +1,16 @@
+import { AttributeComponentType } from "@/data/enums/AttributeComponentType";
+import { AttributeInterface } from "@/data/interfaces/AttributeInterface";
 import * as React from "react";
 import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import AttributeListComponent from "../attributes/AttributeListComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import ParentAttributeComponent from "../attributes/types/ParentAttributeComponent";
+import StoryCircleAttributeComponent from "../attributes/types/StoryCircleAttributeComponent";
 import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
+import KishotenketsuComponent from "../kishotenketsu/KishotenketsuComponent";
 import RelationshipsComponent from "../relationships/RelationshipsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
@@ -17,6 +21,9 @@ export default function ChapterComponent({
 	element: ElementInterface;
 	isInPopover: boolean;
 }): React.ReactElement {
+	const storyCircle: AttributeInterface | undefined = element.attribute(AttributeComponentType.StoryCircle);
+	const kishotenketsu: AttributeInterface | undefined = element.attribute(AttributeType.Kishotenketsu);
+
 	return (
 		<>
 			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
@@ -38,6 +45,16 @@ export default function ChapterComponent({
 				{element.images.length > 1 && (
 					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
 						<ImageCarouselComponent element={element} />
+					</div>
+				)}
+				{kishotenketsu && kishotenketsu.isSet && (
+					<div className="col-span-1 sm:col-span-1 lg:col-span-6">
+						<KishotenketsuComponent element={element} attribute={kishotenketsu} isEditable={!isInPopover} />
+					</div>
+				)}
+				{storyCircle && storyCircle.isSet && (
+					<div className="col-span-1 sm:col-span-1 lg:col-span-6">
+						<StoryCircleAttributeComponent element={element} attribute={storyCircle} isEditable={!isInPopover} />
 					</div>
 				)}
 				{!isInPopover && <TasksContainerComponent element={element} />}
