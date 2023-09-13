@@ -43,6 +43,14 @@ export default function KishotenketsuComponent({
 		});
 	};
 
+	const remove = () => {
+		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
+
+		codeblockService.updateCodeblockData(attribute.id, undefined).then(() => {
+			setEdit(false);
+		});
+	};
+
 	const setValue = (subAttibute: string, newValue: string) => {
 		setKishotenketsuValue({ ...kishotenketsuValue, [subAttibute]: newValue });
 	};
@@ -51,7 +59,10 @@ export default function KishotenketsuComponent({
 		setEdit(false);
 	};
 
-	if (edit) return <Edit element={element} attribute={attribute} setValue={setValue} save={save} reset={reset} />;
+	if (edit)
+		return (
+			<Edit element={element} attribute={attribute} setValue={setValue} save={save} remove={remove} reset={reset} />
+		);
 
 	if (isEditable) return <View attribute={attribute} setEdit={setEdit} />;
 
@@ -63,12 +74,14 @@ function Edit({
 	attribute,
 	setValue,
 	save,
+	remove,
 	reset,
 }: {
 	element: ElementInterface;
 	attribute: AttributeInterface;
 	setValue: (subAttibute: string, newValue: string) => void;
 	save: () => void;
+	remove: () => void;
 	reset: () => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
@@ -88,6 +101,9 @@ function Edit({
 			</div>
 
 			<div className="flex justify-end mt-3">
+				<button className="rpgm-danger" onClick={remove}>
+					{t("buttons.delete")}
+				</button>
 				<button className="rpgm-secondary" onClick={reset}>
 					{t("buttons.cancel")}
 				</button>
@@ -159,12 +175,14 @@ function EditableAttribute({
 		<>
 			<div className="!font-bold col-span-1">
 				<div>{t("kishotenketsu." + subAttribute)}</div>
-				<div
-					className="text-xs cursor-pointer text-[--color-base-25] hover:text-[--text-accent-hover]"
-					onClick={() => setShowHelp(!showHelp)}
-				>
-					<FontAwesomeIcon icon={faCircleQuestion} />
-				</div>
+				{setValue && (
+					<div
+						className="text-xs cursor-pointer text-[--color-base-25] hover:text-[--text-accent-hover]"
+						onClick={() => setShowHelp(!showHelp)}
+					>
+						<FontAwesomeIcon icon={faCircleQuestion} />
+					</div>
+				)}
 			</div>
 			<div className="col-span-6">
 				{setValue ? (
