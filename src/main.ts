@@ -39,11 +39,17 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		if (this._database === undefined) return undefined;
 
 		if (!path && !campaign && !parent) {
-			if (!type) return this._database.filter((element: ElementInterface) => element.campaign === undefined);
+			let all: ElementInterface[] = [];
 
-			return this._database.filter(
-				(element: ElementInterface) => element.campaign === undefined && element.type === type
-			);
+			if (campaign === undefined) {
+				all = this._database.filter((element: ElementInterface) => element.campaign === undefined);
+			} else if (campaign === null) {
+				all = this._database;
+			}
+
+			if (!type) return all;
+
+			return all.filter((element: ElementInterface) => element.campaign === undefined && element.type === type);
 		}
 
 		const matchesPath = (element: ElementInterface) => path === undefined || element.path === path;

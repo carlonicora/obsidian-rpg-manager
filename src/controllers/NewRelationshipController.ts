@@ -43,8 +43,8 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 	getItems(): SearchableElementInterface[] {
 		let allCampaignElements: ElementInterface[];
 
-		if (!this._element && !this._campaignPath) {
-			allCampaignElements = this._api.get() as ElementInterface[];
+		if (!this._element?.campaign && !this._campaignPath) {
+			allCampaignElements = this._api.get(undefined, null) as ElementInterface[];
 		} else {
 			if (this._element !== undefined) {
 				allCampaignElements = this._api.get(undefined, this._element.campaign ?? this._element) as ElementInterface[];
