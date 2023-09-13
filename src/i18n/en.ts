@@ -428,10 +428,12 @@ What's *{{name}}* stake?`,
 		sho: "Shō",
 		ten: "Ten",
 		ketsu: "Ketsu",
-		description_ki: "Ki",
-		description_sho: "Shō",
-		description_ten: "Ten",
-		description_ketsu: "Ketsu",
+		description_ki:
+			"**Introduction**: an introduction to the characters, era, and other information required to understand the plot",
+		description_sho: "**Development**: follows leads towards the twist in the story. No major changes so far.",
+		description_ten:
+			"**Twist**: the story turns toward an unexpected development. This is the crux of the story, the yama (ヤマ) or climax. If the narrative takes several turns, this is the biggest one.",
+		description_ketsu: "**Conclusion**: also called ochi (落ち) or ending, wraps up the story.",
 	},
 	storycircle: {
 		you: "You/They",
