@@ -91,27 +91,38 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 
 		let value: string | number | boolean | any | any[] = "";
-		if (attribute.type === AttributeComponentType.StoryCircle) {
-			value = {
-				you: "",
-				need: "",
-				go: "",
-				search: "",
-				find: "",
-				take: "",
-				return: "",
-				change: "",
-			};
+
+		switch (attribute.type) {
+			case AttributeComponentType.StoryCircle:
+				value = {
+					you: "",
+					need: "",
+					go: "",
+					search: "",
+					find: "",
+					take: "",
+					return: "",
+					change: "",
+				};
+				break;
+			case AttributeComponentType.Kishotenketsu:
+				value = {
+					ki: "",
+					sho: "",
+					ten: "",
+					ketsu: "",
+				};
+				break;
+			case AttributeComponentType.MajorClues:
+				value = [];
+				break;
+			case AttributeComponentType.Conflict:
+				value = {
+					status: "planned",
+				};
+				break;
 		}
-		if (attribute.type === AttributeComponentType.Kishotenketsu) {
-			value = {
-				ki: "",
-				sho: "",
-				ten: "",
-				ketsu: "",
-			};
-		}
-		if (attribute.type === AttributeComponentType.MajorClues) value = [];
+
 		codeblockService.updateCodeblockData(attribute.id, value);
 	};
 

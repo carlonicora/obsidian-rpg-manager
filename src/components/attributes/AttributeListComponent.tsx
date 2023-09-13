@@ -44,6 +44,7 @@ export default function AttributeListComponent({
 						attribute.type === AttributeComponentType.Kishotenketsu ||
 						attribute.type === AttributeComponentType.Duration ||
 						attribute.type === AttributeComponentType.Parent ||
+						attribute.type === AttributeComponentType.Conflict ||
 						attribute.type === AttributeComponentType.SensoryImprint ||
 						!attribute.isSet
 					)

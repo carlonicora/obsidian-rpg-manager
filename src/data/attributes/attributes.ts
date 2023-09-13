@@ -38,12 +38,13 @@ const nonplayercharactertype = {
 const sensoryimprint = { id: AttributeType.SensoryImprint, type: AttributeComponentType.SensoryImprint };
 const stake = { id: AttributeType.Stake, type: AttributeComponentType.Scale };
 const kishotenketsu = { id: AttributeType.Kishotenketsu, type: AttributeComponentType.Kishotenketsu };
+const conflict = { id: AttributeType.Conflict, type: AttributeComponentType.Conflict };
 
 export const attributes: Map<ElementType, AttributeInterface[]> = new Map<ElementType, AttributeInterface[]>([
 	[ElementType.Campaign, [description, storycircle]],
-	[ElementType.Adventure, [description, storycircle, majorclues, kishotenketsu]],
-	[ElementType.Chapter, [description, abtstage, storycircle, majorclues, kishotenketsu]],
-	[ElementType.Session, [description, storycircle, abtstage, sessiondate, kishotenketsu]],
+	[ElementType.Adventure, [description, storycircle, majorclues, kishotenketsu, conflict]],
+	[ElementType.Chapter, [description, abtstage, storycircle, majorclues, kishotenketsu, conflict]],
+	[ElementType.Session, [description, storycircle, abtstage, sessiondate, kishotenketsu, conflict]],
 	[ElementType.Scene, [description, storycirclestage, sceneaction, type, date, externalactions, duration]],
 	[
 		ElementType.NonPlayerCharacter,

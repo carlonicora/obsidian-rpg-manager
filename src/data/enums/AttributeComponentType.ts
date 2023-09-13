@@ -21,4 +21,5 @@ export enum AttributeComponentType {
 	SensoryImprint = "SensoryImprint",
 	Scale = "Scale",
 	Kishotenketsu = "Kishotenketsu",
+	Conflict = "Conflict",
 }

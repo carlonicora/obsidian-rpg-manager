@@ -144,6 +144,7 @@ If you want to create new ones, just click on the button and define the name and
 		goals: "Goals (Want)",
 		attitude: "Attitude (Behaviour)",
 		kishotenketsu: "Kishōtenketsu",
+		conflict: "Conflict",
 	},
 	npctype: {
 		npctype_main: "Main",
@@ -457,6 +458,86 @@ What's *{{name}}* stake?`,
 			"The player characters fight to get what they need, and in doing so they return to the world they know.",
 		description_change:
 			"The player characters have changed, and they should see the effect of their actions in the world they know.",
+	},
+	conflict: {
+		title: "Title",
+		description_title:
+			"This is a descriptive name for the conflict, which should help the storyteller remember what it's about.",
+		description: "Description",
+		description_description: "A description of the conflict, including how the player characters are involved.",
+		outcome: "Outcome",
+		description_outcome: "This describes the ultimate outcome of the conflict, after the conflict is played out.",
+		category: "Category",
+		description_category: `This is a broad category that helps to describe the nature of the conflict and helps the storyteller to understand what the conflict is about.
+			
+- **Ambition**: The characters involved want to achieve something.
+- **Betrayal**: The conflict is about a betrayal.
+- **Survival**: It's a matter of life and death.
+- **Revenge**: The conflict is about characters' revenge.
+- **Ideology**: Everything revolves around an ideology.
+- **Love**: Personal conflict focusing on relationships.
+- **Guilt**: The conflict is about guilt.
+- **Fear**: It revolves around fear.`,
+		category_ambition: "Ambition",
+		category_betrayal: "Betrayal",
+		category_survival: "Survival",
+		category_revenge: "Revenge",
+		category_ideology: "Ideology",
+		category_love: "Love",
+		category_guilt: "Guilt",
+		category_fear: "Fear",
+		involvement: "Involvement",
+		involvement_active: "Active",
+		involvement_passive: "Passive",
+		involvement_unaware: "Unaware",
+		involvement_forced: "Forced",
+		involvement_opportunistic: "Opportunistic",
+		description_involvement: `This describes how the player characters are involved in the conflict, and helps the storyteller to understand how they can be linked to the conflict.
+			
+- **Active**: The player characters are actively involved in the conflict.
+- **Passive**: The player characters are not actively involved in the conflict, but they are affected by it.
+- **Unaware**: The player characters are not aware of the conflict, but they are affected by it.
+- **Forced**: The player characters are forced to be involved in the conflict.
+- **Opportunistic**: The player characters are not involved in the conflict, but they can take advantage of it.`,
+		opposingforces: "Opposing Forces",
+		description_opposingforces:
+			"List of non-player characters or factions in the conflict. It helps the storyteller to understand who is fighting who.",
+		events: "Events",
+		description_events: "List of events that are part of the conflict.",
+		status: "Status",
+		description_status: `This describes the current status of the conflict, and helps the storyteller to understand how the conflict is developing.
+			
+- **Planned**: The conflict is planned, but it has not started yet.
+- **In Progress**: The conflict is currently happening.
+- **Resolved**: The conflict has been resolved.`,
+		status_planned: "Planned",
+		status_inprogress: "In Progress",
+		status_resolved: "Resolved",
+		stakes: "Stakes",
+		description_stakes: `This describes what's at stake in the conflict, and what will happen if one side wins over the other.
+			
+- **Life and Death**: Threathening someone's life.
+- **Love and Relationships**: Involving personal relationships.
+- **Power and Control**: Involving power and control over others.
+- **Reputation and Honor**: Challenging a character's honour.
+- **Wealth and Resources**: All about Money.
+- **Freedom and Justice**: Similar to Morality and Ethics, but from a justice perspective.
+- **Knowledge and Information**: Information is power.
+- **Morality and Ethics**: It's a matter of what's right and what's wrong.
+- **Beliefs and Values**: Challenging a character's beliefs.
+- **Future and Legacy**: What will be left behind.`,
+		stake: {
+			lifeanddeath: "Life and Death",
+			loveandrelationships: "Love and Relationships",
+			powerandcontrol: "Power and Control",
+			reputationandhonor: "Reputation and Honor",
+			wealthandresources: "Wealth and Resources",
+			freedomandjustice: "Freedom and Justice",
+			knowledgeandinformation: "Knowledge and Information",
+			moralityandethics: "Morality and Ethics",
+			beliefsandvalues: "Beliefs and Values",
+			futureandlegacy: "Future and Legacy",
+		},
 	},
 	name: "Name",
 	documentation: "Documentation",

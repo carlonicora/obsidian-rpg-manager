@@ -7,6 +7,7 @@ import AttributeListComponent from "../attributes/AttributeListComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import ParentAttributeComponent from "../attributes/types/ParentAttributeComponent";
 import StoryCircleAttributeComponent from "../attributes/types/StoryCircleAttributeComponent";
+import ConflictComponent from "../conflict/ConflictComponent";
 import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
@@ -23,6 +24,7 @@ export default function ChapterComponent({
 }): React.ReactElement {
 	const storyCircle: AttributeInterface | undefined = element.attribute(AttributeComponentType.StoryCircle);
 	const kishotenketsu: AttributeInterface | undefined = element.attribute(AttributeType.Kishotenketsu);
+	const conflict: AttributeInterface | undefined = element.attribute(AttributeType.Conflict);
 
 	return (
 		<>
@@ -45,6 +47,11 @@ export default function ChapterComponent({
 				{element.images.length > 1 && (
 					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
 						<ImageCarouselComponent element={element} />
+					</div>
+				)}
+				{conflict && conflict.isSet && (
+					<div className="col-span-1 sm:col-span-1 lg:col-span-6">
+						<ConflictComponent element={element} attribute={conflict} isEditable={!isInPopover} />
 					</div>
 				)}
 				{kishotenketsu && kishotenketsu.isSet && (
