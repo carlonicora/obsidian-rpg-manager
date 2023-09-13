@@ -33,6 +33,7 @@ RPG Manager is an Obsidian plugin to simplify the creation and running of role p
   - [3.4. Custom Attributes](#34-custom-attributes)
   - [3.5. Tasks](#35-tasks)
   - [3.6. Element Templates](#36-element-templates)
+  - [3.7. Global Assets](#37-global-assets)
 - [4. Creating a World](#4-creating-a-world)
   - [4.1. What Type of Storyteller Are You?](#41-what-type-of-storyteller-are-you)
   - [4.2. For Every Storyteller You Are](#42-for-every-storyteller-you-are)
@@ -502,6 +503,10 @@ Creating a template is a two-step process:
 1. **Define the Template Location:** In the RPG Manager settings, specify the folder where your templates are stored. This is where RPG Manager will look for your templates.
 
 2. **Create the Template:** A template is an Obsidian note that contains the \`\`\`RpgManager4\`\`\` code block where you want the RPG Manager UI to appear. You can add any other content you want to the note, but it can only contain one \`\`\`RpgManager4\`\`\` code block.
+
+### 3.7. Global Assets
+
+In version 4 you can create elements that are not part of a single campaing. These assets (events, locations, clues, non-player characters, factions, objects, monsters, subplots and player-characters) can be used in anyone of your campaigns. Just add a relationship and you are good to go, writing once, reusing many times!
 
 ## 4. Creating a World
 
