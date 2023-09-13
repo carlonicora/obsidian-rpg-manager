@@ -43,11 +43,20 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 	getItems(): SearchableElementInterface[] {
 		let allCampaignElements: ElementInterface[];
 
-		if (this._element !== undefined) {
-			allCampaignElements = this._api.get(undefined, this._element.campaign ?? this._element) as ElementInterface[];
+		if (!this._element && !this._campaignPath) {
+			allCampaignElements = this._api.get() as ElementInterface[];
 		} else {
-			const campaign: ElementInterface = this._api.get(this._campaignPath) as ElementInterface;
-			allCampaignElements = this._api.get(undefined, campaign) as ElementInterface[];
+			if (this._element !== undefined) {
+				allCampaignElements = this._api.get(undefined, this._element.campaign ?? this._element) as ElementInterface[];
+			} else if (this._campaignPath !== undefined) {
+				const campaign: ElementInterface = this._api.get(this._campaignPath) as ElementInterface;
+				allCampaignElements = this._api.get(undefined, campaign) as ElementInterface[];
+			}
+
+			const globalElements: ElementInterface[] = this._api.get() as ElementInterface[];
+			allCampaignElements = allCampaignElements.concat(globalElements);
+
+			console.warn(globalElements);
 		}
 
 		if (this._typeLimit) {
@@ -79,6 +88,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 				path: element.path,
 				type: element.type,
 				image: element.images[0] ?? undefined,
+				campaignName: element.campaign?.name ?? undefined,
 			};
 			response.push(searchableElement);
 
@@ -89,12 +99,16 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 					type: element.type,
 					alias: alias,
 					image: element.images[0] ?? undefined,
+					campaignName: element.campaign?.name ?? undefined,
 				};
 				response.push(searchableElementAlias);
 			});
 		});
 
-		if (this._typeLimit?.includes(ElementType.PlayerCharacter))
+		if (
+			this._typeLimit?.includes(ElementType.PlayerCharacter) &&
+			(this._element !== undefined || this._campaignPath !== undefined)
+		)
 			response.push({
 				name: "All player characters",
 				path: "all-player-characters",
@@ -119,6 +133,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 		} else {
 			reactComponent = createElement(FuzzySearchResult, {
 				searchableElement: item.item as SearchableElementInterface,
+				hasCampaign: this._element !== undefined || this._campaignPath !== undefined,
 			});
 		}
 		root.render(reactComponent);

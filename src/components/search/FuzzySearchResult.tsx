@@ -5,10 +5,28 @@ import { SearchableElementInterface } from "src/data/interfaces/SearchableElemen
 
 export default function FuzzySearchResult({
 	searchableElement,
+	hasCampaign,
 }: {
 	searchableElement: SearchableElementInterface;
+	hasCampaign: boolean;
 }): React.ReactElement {
 	const { t } = useTranslation();
+
+	let small = searchableElement.type
+		? t("elements." + searchableElement.type, { count: 1 })
+		: ElementType.PlayerCharacter;
+
+	console.warn("searchableElement", searchableElement);
+
+	if (!hasCampaign && searchableElement.type !== ElementType.Campaign && searchableElement.campaignName !== undefined) {
+		small += " (" + (searchableElement.campaignName ?? "") + ")";
+	} else if (
+		hasCampaign &&
+		searchableElement.type !== ElementType.Campaign &&
+		searchableElement.campaignName === undefined
+	) {
+		small += " (" + t("global") + ")";
+	}
 
 	return (
 		<div className="flex items-center">
@@ -23,9 +41,7 @@ export default function FuzzySearchResult({
 			</div>
 			<div className="ml-2">
 				<div>{searchableElement.alias ?? searchableElement.name}</div>
-				<small>
-					{searchableElement.type ? t("elements." + searchableElement.type, { count: 1 }) : ElementType.PlayerCharacter}
-				</small>
+				<small>{small}</small>
 			</div>
 		</div>
 	);

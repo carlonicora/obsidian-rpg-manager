@@ -543,4 +543,5 @@ What's *{{name}}* stake?`,
 	},
 	name: "Name",
 	documentation: "Documentation",
+	global: "Global Element",
 };

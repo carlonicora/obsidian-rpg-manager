@@ -7,4 +7,5 @@ export interface SearchableElementInterface {
 	type: ElementType;
 	alias?: string;
 	image?: ImageInterface;
+	campaignName?: string;
 }
