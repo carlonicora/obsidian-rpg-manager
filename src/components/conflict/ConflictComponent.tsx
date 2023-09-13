@@ -47,6 +47,16 @@ export default function ConflictComponent({
 		});
 	};
 
+	const remove = () => {
+		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
+
+		attribute.value = conflictValue;
+
+		codeblockService.updateCodeblockData(attribute.id, undefined).then(() => {
+			setEdit(false);
+		});
+	};
+
 	const setValue = (subAttibute: string, newValue: string | string[]) => {
 		setConflictValue({ ...conflictValue, [subAttibute]: newValue });
 	};
@@ -65,6 +75,7 @@ export default function ConflictComponent({
 				attribute={attribute}
 				setValue={setValue}
 				save={save}
+				remove={remove}
 				reset={reset}
 			/>
 		);
@@ -80,6 +91,7 @@ function Edit({
 	attribute,
 	setValue,
 	save,
+	remove,
 	reset,
 }: {
 	element: ElementInterface;
@@ -87,6 +99,7 @@ function Edit({
 	attribute: AttributeInterface;
 	setValue: (subAttibute: string, newValue: string) => void;
 	save: () => void;
+	remove: () => void;
 	reset: () => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
@@ -129,6 +142,9 @@ function Edit({
 			</div>
 
 			<div className="flex justify-end mt-3">
+				<button className="rpgm-danger" onClick={remove}>
+					{t("buttons.delete")}
+				</button>
 				<button className="rpgm-secondary" onClick={reset}>
 					{t("buttons.cancel")}
 				</button>
