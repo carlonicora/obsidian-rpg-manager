@@ -52,6 +52,7 @@ export default function MarkdownComponent({ value }: { value?: string }): React.
 						/>
 					),
 					h3: ({ node, ...props }) => <h3 {...props} className="!mt-3 !mb-1 !text-xl !font-extralight" />,
+					small: ({ node, ...props }) => <small {...props} className="!text-xs text-[--text-muted]" />,
 				}}
 			/>
 		</div>

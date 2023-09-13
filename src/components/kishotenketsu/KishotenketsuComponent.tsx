@@ -174,7 +174,9 @@ function EditableAttribute({
 	return (
 		<>
 			<div className="!font-bold col-span-1">
-				<div>{t("kishotenketsu." + subAttribute)}</div>
+				<div>
+					<MarkdownComponent value={t("kishotenketsu." + subAttribute)} />
+				</div>
 				{setValue && (
 					<div
 						className="text-xs cursor-pointer text-[--color-base-25] hover:text-[--text-accent-hover]"
