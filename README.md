@@ -244,6 +244,8 @@ An adventure serves as a pivotal building block within a campaign, functioning a
 - **Story Circle**: A space to develop your adventure's narrative using the story circle method. This is optional and particularly useful for plotters.
 - **Major Clues**: A list of significant clues and the narrative paths they could potentially lead to.
 - **Child Chapters**: A list of chapters that form part of the adventure. These are automatically generated when you create one or more chapters within the adventure.
+- **Kishōtenketsu**: A plot tool to structure and develop your narrative using a classic Chinese, Korean and Japanese style.
+- **Conflict**: A tool to describe conflicts that help to drive the narrative. They helps storytellers set up conflicts that are useful to identify unstructured plots to move the story forward.
 
 **Notes**:
 
@@ -259,6 +261,8 @@ A chapter is a more focused and manageable segment of an adventure, a building b
 - **Description**: A text field where you can describe the overall theme, setting, and plot of your chapter. This is the only required attribute.
 - **Story Circle**: A space to develop your chapter's narrative using the story circle method. This is optional and particularly useful for plotters.
 - **Major Clues**: A list of major clues and where they lead.
+- **Kishōtenketsu**: A plot tool to structure and develop your narrative using a classic Chinese, Korean and Japanese style.
+- **Conflict**: A tool to describe conflicts that help to drive the narrative. They helps storytellers set up conflicts that are useful to identify unstructured plots to move the story forward.
 
 **Notes**
 
@@ -374,8 +378,6 @@ In conclusion, objects, while seemingly simple, are a versatile element that can
 
 #### 3.3.10. Monsters
 
-#### 3.3.10. Monsters
-
 Monsters are creatures that player characters may encounter during their adventures. They can be creatures of myth, products of magic, or beings from another dimension. Regardless of their origin, monsters add an element of danger and unpredictability to the campaign.
 
 **Attributes**
@@ -440,6 +442,8 @@ So, why does RPG Manager have sessions? Simple. Sessions are where the rubber me
 - **Session Date**: When did this madness occur? Keeping track of dates is crucial for managing the timeline of your campaign.
 - **Story Circle**: For the Plotters out there, this is your narrative tool to craft a session with a cohesive structure and captivating arcs.
 - **List of Scenes**: Automatically populated when scenes are created for the session. It helps organize the various encounters or events within the session.
+- **Kishōtenketsu**: A plot tool to structure and develop your narrative using a classic Chinese, Korean and Japanese style.
+- **Conflict**: A tool to describe conflicts that help to drive the narrative. They helps storytellers set up conflicts that are useful to identify unstructured plots to move the story forward.
 
 Okay, let's address the elephant in the room. Why use the Sessions feature? Well, it's not just a note-taking tool. It’s a way to strategically plan and record the chaos. With it, you can take notes during the session, track player characters' actions, and know how to progress the campaign. And let's not forget the best part; it facilitates the creation of relationships between Sessions and any other element in the game. So, a session can be linked to specific NPCs, locations, events, and other elements, helping you manage the intricate network of relationships and narratives that make up the campaign. It’s like having a super-organized, digital assistant that doesn’t judge you for letting the player characters fight a dragon way above their level.
 
