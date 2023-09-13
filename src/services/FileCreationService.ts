@@ -133,9 +133,11 @@ export class FileCreationService {
 			const campaign: ElementInterface = this._api.get(this._campaignPath) as ElementInterface;
 
 			return campaign.file.parent.path + pathSeparator + this._name + ".md";
+		} else if (this._campaignPath === undefined) {
+			response = "Assets";
+		} else {
+			response += pathSeparator + this._campaign.name;
 		}
-
-		response += pathSeparator + this._campaign.name;
 
 		const parent: ElementInterface | undefined =
 			this._parentPath !== undefined ? (this._api.get(this._parentPath) as ElementInterface) : undefined;

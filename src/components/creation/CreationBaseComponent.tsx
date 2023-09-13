@@ -27,7 +27,7 @@ export default function CreationBaseComponent({
 		type: ElementType,
 		name: string,
 		system: SystemType,
-		campaignPath: string,
+		campaignPath?: string,
 		parentPath?: string,
 		positionInParent?: number,
 		template?: string
@@ -38,6 +38,7 @@ export default function CreationBaseComponent({
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
 
+	const [global, setGlobal] = React.useState<boolean>(false);
 	const [type, setType] = React.useState<ElementType | undefined>(initialType);
 	const [campaignPath, setCampaignPath] = React.useState<string | undefined>();
 	const [parentPath, setParentPath] = React.useState<string | undefined>(undefined);
@@ -61,7 +62,7 @@ export default function CreationBaseComponent({
 	if (type !== undefined) {
 		if (type !== ElementType.Campaign) {
 			campaigns = api.get(undefined, undefined, ElementType.Campaign) as ElementInterface[];
-			if (campaigns.length === 0) return <div>{t("errors.must", { context: "campaign" })}</div>;
+			if (campaigns.length === 0 && !global) return <div>{t("errors.must", { context: "campaign" })}</div>;
 
 			if (campaigns.length === 1) {
 				campaign = campaigns[0];
@@ -133,7 +134,7 @@ export default function CreationBaseComponent({
 
 	const createElement = async (launchWizard: boolean) => {
 		let e = "";
-		if (type !== ElementType.Campaign && campaignPath === undefined) e += "You must select a campaign";
+		if (type !== ElementType.Campaign && campaignPath === undefined && !global) e += "You must select a campaign";
 		if (name === undefined || name === "") e += "You must enter a name";
 		if ((type === ElementType.Adventure || type === ElementType.Session) && parentPath === undefined)
 			e += "You must select a campaign";
@@ -145,7 +146,7 @@ export default function CreationBaseComponent({
 			return;
 		}
 
-		setId(launchWizard, type, name, system, campaignPath, parentPath, positionInParent, template);
+		setId(launchWizard, type, name, system, global ? undefined : campaignPath, parentPath, positionInParent, template);
 	};
 
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -182,7 +183,22 @@ export default function CreationBaseComponent({
 					)}
 
 					{type !== undefined && type !== ElementType.Campaign && (
-						<CampaignSelectionComponent campaigns={campaigns} setCampaign={setCampaignPath} setSystem={setSystem} />
+						<CampaignSelectionComponent
+							campaigns={campaigns}
+							setCampaign={setCampaignPath}
+							setAsGlobal={
+								![
+									ElementType.Campaign,
+									ElementType.Adventure,
+									ElementType.Chapter,
+									ElementType.Session,
+									ElementType.Scene,
+								].contains(type)
+									? setGlobal
+									: undefined
+							}
+							setSystem={setSystem}
+						/>
 					)}
 					{type !== undefined && type === ElementType.Scene && (
 						<SessionSelectionComponent sessions={sessions} setSessionPath={setParentPath} />

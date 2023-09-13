@@ -676,6 +676,10 @@ video {
   margin-right: 1rem;
 }
 
+.\!-mt-3 {
+  margin-top: -0.75rem !important;
+}
+
 .\!mb-0 {
   margin-bottom: 0px !important;
 }
@@ -732,6 +736,10 @@ video {
   margin-left: -2rem;
 }
 
+.-mt-2 {
+  margin-top: -0.5rem;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -778,6 +786,10 @@ video {
 
 .mr-6 {
   margin-right: 1.5rem;
+}
+
+.mt-0 {
+  margin-top: 0px;
 }
 
 .mt-2 {
@@ -1595,6 +1607,14 @@ video {
 
 .lowercase {
   text-transform: lowercase;
+}
+
+.\!italic {
+  font-style: italic !important;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .\!text-\[--text-faint\] {

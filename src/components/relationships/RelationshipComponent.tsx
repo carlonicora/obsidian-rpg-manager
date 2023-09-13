@@ -1,3 +1,4 @@
+import { ElementType } from "@/data/enums/ElementType";
 import { useApp } from "@/hooks/useApp";
 import { App, TFile } from "obsidian";
 import * as React from "react";
@@ -40,6 +41,14 @@ export default function RelationshipComponent({
 		codeblockService.removeRelationship(currentElement, relatedElementToRemove);
 	};
 
+	let campaign = undefined;
+
+	if (element.type !== ElementType.Campaign && element.campaign === undefined)
+		campaign = relationship.component?.campaign?.path;
+
+	let isGeneric = false;
+	if (relationship.component.type !== ElementType.Campaign && !relationship.component.campaign) isGeneric = true;
+
 	return (
 		<div className="border border-[--background-modifier-border] rounded-lg flex flex-col">
 			<div className="flex justify-center relative">
@@ -74,6 +83,18 @@ export default function RelationshipComponent({
 					<h4 className="!font-extralight !m-0 !text-base">{relationship.component.file.basename}</h4>
 				</a>
 			</div>
+
+			{campaign !== undefined && (
+				<div className="flex justify-center -mt-2 mb-2">
+					<a href={campaign} className="internal-link !no-underline !text-[--text-muted] text-sm mt-0">
+						{relationship.component.campaign?.name}
+					</a>
+				</div>
+			)}
+
+			{isGeneric && (
+				<div className="flex justify-center -mt-2 mb-2!text-[--text-muted] text-xs italic">{t("global")}</div>
+			)}
 
 			<div className="flex p-2">
 				<RelationshipDescriptionComponent element={element} relationship={relationship} />

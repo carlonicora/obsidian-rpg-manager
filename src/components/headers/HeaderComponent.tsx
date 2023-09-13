@@ -1,3 +1,4 @@
+import { ElementType } from "@/data/enums/ElementType";
 import { useApp } from "@/hooks/useApp";
 import { OptionView } from "@/views/OptionsView";
 import { App, WorkspaceLeaf } from "obsidian";
@@ -38,6 +39,9 @@ export default function HeaderComponent({
 			</div>
 			<div className="relative flex flex-col justify-center items-center h-full">
 				<h1 className="!text-4xl !font-extralight">{element.name}</h1>
+				{element.type !== ElementType.Campaign && element.campaign === undefined && (
+					<h3 className="!text-xl !font-extralight !text-[--text-muted] !-mt-3 !mb-3 !italic">{t("global")}</h3>
+				)}
 				{!isInPopover && (
 					<div className="!font-extralight text-[--text-faint] grid grid-cols-12">
 						<div className="text-center col-span-4">

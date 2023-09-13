@@ -543,5 +543,6 @@ What's *{{name}}* stake?`,
 	},
 	name: "Name",
 	documentation: "Documentation",
-	global: "Global Element",
+	global: "Global Asset",
+	global_description: "Make this element available in all campaigns",
 };

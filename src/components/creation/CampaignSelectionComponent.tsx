@@ -6,10 +6,12 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export default function CampaignSelectionComponent({
 	campaigns,
+	setAsGlobal,
 	setCampaign,
 	setSystem,
 }: {
 	campaigns: ElementInterface[];
+	setAsGlobal?: (asGlobal: boolean) => void;
 	setCampaign: (path: string) => void;
 	setSystem: (system: SystemType) => void;
 }): React.ReactElement {
@@ -36,6 +38,14 @@ export default function CampaignSelectionComponent({
 					</option>
 				))}
 			</select>
+			{setAsGlobal !== undefined && (
+				<>
+					<label key={"global"} className="block">
+						<input type="checkbox" onChange={(e) => setAsGlobal(e.target.checked)} />
+						{t("global_description")}
+					</label>
+				</>
+			)}
 		</div>
 	);
 }

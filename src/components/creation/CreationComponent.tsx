@@ -40,7 +40,7 @@ export default function CreationComponent({
 		passedType: ElementType,
 		passedName: string,
 		passedSystem: SystemType,
-		passedCampaignPath: string,
+		passedCampaignPath?: string,
 		passedParentPath?: string,
 		passedPositionInParent?: number,
 		passedTemplate?: string
