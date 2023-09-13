@@ -55,8 +55,6 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 
 			const globalElements: ElementInterface[] = this._api.get() as ElementInterface[];
 			allCampaignElements = allCampaignElements.concat(globalElements);
-
-			console.warn(globalElements);
 		}
 
 		if (this._typeLimit) {

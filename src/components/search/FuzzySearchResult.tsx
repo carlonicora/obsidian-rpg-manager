@@ -16,8 +16,6 @@ export default function FuzzySearchResult({
 		? t("elements." + searchableElement.type, { count: 1 })
 		: ElementType.PlayerCharacter;
 
-	console.warn("searchableElement", searchableElement);
-
 	if (!hasCampaign && searchableElement.type !== ElementType.Campaign && searchableElement.campaignName !== undefined) {
 		small += " (" + (searchableElement.campaignName ?? "") + ")";
 	} else if (
