@@ -1,6 +1,6 @@
 {
 	"name": "rpg-manager",
-	"version": "4.0.0-20",
+	"version": "4.0.0-21",
 	"description": "Manage your Tabletop Role Playing Game Campaigns in Obsidian.",
 	"main": "src/main.ts",
 	"scripts": {
