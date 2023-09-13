@@ -90,17 +90,19 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 			};
 			response.push(searchableElement);
 
-			element.aliases.forEach((alias: string) => {
-				const searchableElementAlias: SearchableElementInterface = {
-					name: element.name,
-					path: element.path,
-					type: element.type,
-					alias: alias,
-					image: element.images[0] ?? undefined,
-					campaignName: element.campaign?.name ?? undefined,
-				};
-				response.push(searchableElementAlias);
-			});
+			if (element.aliases !== undefined && Array.isArray(element.aliases) && element.aliases.length > 0) {
+				element.aliases.forEach((alias: string) => {
+					const searchableElementAlias: SearchableElementInterface = {
+						name: element.name,
+						path: element.path,
+						type: element.type,
+						alias: alias,
+						image: element.images[0] ?? undefined,
+						campaignName: element.campaign?.name ?? undefined,
+					};
+					response.push(searchableElementAlias);
+				});
+			}
 		});
 
 		if (
