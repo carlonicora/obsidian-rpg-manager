@@ -11,12 +11,14 @@ export default function TextInputComponent({
 	className,
 	onChange,
 	onBlur,
+	placeholder,
 }: {
 	initialValue?: string;
 	campaignPath: string;
 	className?: string;
 	onChange: (value: string) => void;
 	onBlur?: (value: string) => void;
+	placeholder?: string;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
 	const app: App = useApp();
@@ -140,6 +142,7 @@ export default function TextInputComponent({
 				onBlur={() => {
 					onBlur && onBlur(value);
 				}}
+				placeholder={placeholder}
 			/>
 		</>
 	);
