@@ -120,7 +120,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		InternationalisationService.loadSettings();
 
 		if ((this.settings as any).previousVersion !== undefined) {
-			console.log("Updating settings");
 			this.app.workspace.getLeaf(true).setViewState({
 				type: "rpg-manager-updater",
 				active: true,
