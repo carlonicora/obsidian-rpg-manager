@@ -105,6 +105,16 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 	async onLayoutReady() {
 		InternationalisationService.loadSettings();
 
+		if ((this.settings as any).previousVersion !== undefined) {
+			console.log("Updating settings");
+			this.app.workspace.getLeaf(true).setViewState({
+				type: "rpg-manager-updater",
+				active: true,
+			});
+
+			return;
+		}
+
 		DatabaseFactory.create(this.app, this).then((database: ElementInterface[]) => {
 			this._database = database;
 
@@ -126,13 +136,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		this.app.workspace.detachLeavesOfType("rpg-manager-updater");
 		this.app.workspace.detachLeavesOfType("rpg-manager-readme");
 
-		if ((this.settings as any).previousVersion !== undefined) {
-			console.log("Updating settings");
-			this.app.workspace.getLeaf(true).setViewState({
-				type: "rpg-manager-updater",
-				active: true,
-			});
-		} else if (this.settings.version !== this.manifest.version) {
+		if (this.settings.version !== this.manifest.version) {
 			this.settings = { ...this.settings, version: this.manifest.version };
 			await this.saveData(this.settings);
 
