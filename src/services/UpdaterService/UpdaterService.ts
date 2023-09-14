@@ -91,11 +91,11 @@ export class UpdaterService {
 				}
 			} else if (type === ElementType.Scene) {
 				let parentData;
-				if (data.metadata.data.sessionId !== undefined)
-					parentData = this._elementsMap.get(data.metadata.data.sessionId);
+				if (data.metadata.data.data.sessionId !== undefined)
+					parentData = this._elementsMap.get(data.metadata.data.data.sessionId);
 
-				if (data.metadata.data.positionInSession !== undefined)
-					idData.positionInParent = data.metadata.data.positionInSession;
+				if (data.metadata.data.data.positionInSession !== undefined)
+					idData.positionInParent = data.metadata.data.data.positionInSession;
 
 				if (parentData === undefined) parentData = this._elementsMap.get(data.metadata.ID.parentId);
 
@@ -168,6 +168,19 @@ export class UpdaterService {
 						break;
 					case "address":
 						response.address = oldData[key];
+						break;
+					case "targetduration":
+						response.targetDuration = oldData[key];
+						break;
+					case "images":
+					case "sessionid":
+					case "durations":
+					case "positioninsession":
+					case "completed":
+					case "complete":
+						break;
+					default:
+						response["FromV3-" + key] = oldData[key];
 						break;
 				}
 			}
