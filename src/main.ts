@@ -1,21 +1,21 @@
 import {
-	App,
-	Component,
-	MarkdownPostProcessorContext,
-	MarkdownRenderChild,
+	// App,
+	// Component,
+	// MarkdownPostProcessorContext,
+	// MarkdownRenderChild,
+	// editorLivePreviewField,
+	// TFile,
 	Plugin,
-	TFile,
 	addIcon,
-	editorLivePreviewField,
 } from "obsidian";
 
-import { syntaxTree, tokenClassNodeProp } from "@codemirror/language";
-import { Extension, Range } from "@codemirror/state";
-import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType } from "@codemirror/view";
-import { SyntaxNode } from "@lezer/common";
+// import { syntaxTree, tokenClassNodeProp } from "@codemirror/language";
+// import { Extension, Range } from "@codemirror/state";
+// import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType } from "@codemirror/view";
+// import { SyntaxNode } from "@lezer/common";
 import { RpgManagerInterface } from "./RpgManagerInterface";
 import { ElementType } from "./data/enums/ElementType";
-import { AttributeInterface } from "./data/interfaces/AttributeInterface";
+// import { AttributeInterface } from "./data/interfaces/AttributeInterface";
 import { ElementInterface } from "./data/interfaces/ElementInterface";
 import { DatabaseFactory } from "./factories/DatabaseFactory";
 import { ServiceFactory } from "./factories/ServiceFactory";
@@ -38,7 +38,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 	settings: RpgManagerSettingsInterface;
 
-	private _extensions: Extension[];
+	// private _extensions: Extension[];
 
 	get version(): string {
 		return this.manifest.version;
@@ -138,12 +138,14 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 			console.info("RpgManager " + this.manifest.version + " loaded");
 			PluginServices.registerEvents(this.app, this, this._database);
 
+			/*
 			this.registerMarkdownPostProcessor(async (el, ctx) => {
 				this.inlineAttribute(el, ctx, ctx.sourcePath);
 			});
 
 			this._extensions = [inlinePlugin(this.app, this)];
 			this.registerEditorExtension(this._extensions);
+			*/
 
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 		});
@@ -168,6 +170,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		}
 	}
 
+	/*
 	public async inlineAttribute(
 		el: HTMLElement,
 		component: Component | MarkdownPostProcessorContext,
@@ -186,8 +189,10 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 			}
 		}
 	}
+	*/
 }
 
+/*
 export class RpgManagerInlineAttributeFetcher {
 	static fetch(api: RpgManagerInterface, path: string, attributeName: string): AttributeInterface | undefined {
 		const element: ElementInterface | undefined = api.get(path) as ElementInterface | undefined;
@@ -387,3 +392,4 @@ export function inlinePlugin(app: App, api: RpgManagerInterface) {
 		{ decorations: (v) => v.decorations }
 	);
 }
+*/
