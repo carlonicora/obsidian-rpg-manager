@@ -89,7 +89,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Folder")
+			.setName("Image and Assets Folder")
 			.setDesc("Select the folder that contains the assets.")
 			.addDropdown((dropdown) => {
 				dropdown.addOption("", "");
