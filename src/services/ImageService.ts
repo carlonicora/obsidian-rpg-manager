@@ -26,6 +26,10 @@ export class ImageService {
 
 		if (app.vault.getAbstractFileByPath(path) === undefined) return undefined;
 
-		return root + api.settings.assetsFolder + "/" + path;
+		let response = root;
+		if (api.settings.assetsFolder) response += api.settings.assetsFolder + "/";
+		response += path;
+
+		return response;
 	}
 }
