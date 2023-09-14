@@ -97,7 +97,7 @@ export default function CreationComponent({
 		);
 
 		if (currentNote !== undefined) {
-			fileCreator.createInCurrentFile().then((newFile: TFile) => {
+			fileCreator.createInCurrentFile(currentNote).then((newFile: TFile) => {
 				controller.close();
 			});
 		} else {

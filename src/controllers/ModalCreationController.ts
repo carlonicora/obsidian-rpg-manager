@@ -1,5 +1,5 @@
 import { AppContext } from "@/contexts/AppContext";
-import { App, MarkdownView, Modal, Scope, TFile } from "obsidian";
+import { App, Modal, Scope, TFile } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -32,10 +32,7 @@ export class ModalCreationController extends Modal {
 		this.modalEl.style.width = "var(--modal-max-width)";
 
 		let file: TFile | undefined = undefined;
-		if (this._addToCurrentNote) {
-			const activeView = this._app.workspace.getActiveViewOfType(MarkdownView);
-			file = activeView.file;
-		}
+		if (this._addToCurrentNote) file = this._app.workspace.getActiveFile();
 
 		const creationComponent = createElement(CreationComponent, {
 			type: this._type,

@@ -105,10 +105,7 @@ export class FileCreationService {
 		return newFile;
 	}
 
-	async createInCurrentFile(): Promise<TFile> {
-		const activeView = this._app.workspace.getActiveViewOfType(MarkdownView);
-		const file = activeView.file as TFile;
-
+	async createInCurrentFile(file: TFile): Promise<TFile> {
 		const codeblockService = new RpgManagerCodeblockService(this._app, this._api, file);
 		return codeblockService.addCodeBlock(this._codeblock);
 	}
