@@ -17,7 +17,11 @@ export default function CurrentImagesComponent({
 					className="m-1 w-48 h-48 overflow-hidden cursor-pointer"
 					onClick={() => setCurrentImage(image)}
 				>
-					<img src={image.src} alt={image.caption} className="min-w-full min-h-full object-cover rounded-lg" />
+					<img
+						src={image.src}
+						alt={image.caption}
+						className="w-full h-auto object-contain !cursor-pointer rounded-lg"
+					/>
 				</div>
 			))}
 		</div>
