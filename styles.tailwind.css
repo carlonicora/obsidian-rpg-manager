@@ -15,6 +15,26 @@
 	width: 100% !important;
 }
 
+.border {
+	border-style: solid;
+}
+
+.border-r {
+	border-right-style: solid;
+}
+
+.border-t {
+	border-top-style: solid;
+}
+
+.border-b {
+	border-bottom-style: solid;
+}
+
+.border-l {
+	border-left-style: solid;
+}
+
 .markdown-editor-component {
 	white-space: pre-wrap !important;
 }
