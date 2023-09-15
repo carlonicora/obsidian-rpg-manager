@@ -1774,6 +1774,7 @@ video {
 
 .markdown-editor-component .cm-content {
   white-space: pre-wrap !important;
+  flex-shrink: 1 !important;
 }
 
 .popover.hover-popover > .markdown-embed > .markdown-embed-content > .markdown-preview-view {

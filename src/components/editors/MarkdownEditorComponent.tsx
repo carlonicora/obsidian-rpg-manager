@@ -29,7 +29,7 @@ export default function MarkdownEditorComponent({
 	const editorViewRef = React.useRef<EditorView | null>(null);
 	const lastDetectedPositionRef = React.useRef<number | null>(null);
 	const [scope, setScope] = React.useState<Scope | undefined>(undefined);
-	const [originalScope, setOriginalScope] = React.useState<Scope | undefined>(undefined);
+	const [originalScope] = React.useState<Scope>(app.scope);
 
 	const contentChangeExtension = EditorState.changeFilter.of((change) => {
 		const newContent = change.state.doc.toString();
@@ -103,7 +103,6 @@ export default function MarkdownEditorComponent({
 
 	const initializeEditor = async () => {
 		if (parentDivRef.current) {
-			setOriginalScope(app.scope);
 			const localScope = new Scope(app.scope);
 			localScope.register(["Mod"], "b", (evt: any) => {
 				evt.preventDefault();
@@ -135,7 +134,7 @@ export default function MarkdownEditorComponent({
 			editorViewRef.current?.destroy();
 
 			if (scope !== undefined) app.keymap.popScope(scope);
-			if (originalScope !== undefined) app.keymap.pushScope(originalScope);
+			app.keymap.pushScope(originalScope);
 		};
 	}, []);
 
