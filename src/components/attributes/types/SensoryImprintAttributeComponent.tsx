@@ -238,14 +238,14 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 				<h3 className="!m-0 !p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
 			</div>
 			<div
-				className={`w-full grid grid-cols-${totalSenses} gap-3 items-start opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-[100vh] transition-all duration-500 ease-in-out`}
+				className={`w-full grid grid-cols-${totalSenses} gap-3 items-start opacity-0 visibility-hidden max-h-0 pointer-events-none group-hover:opacity-100 group-hover:visibility-visible group-hover:max-h-[300px] group-hover:pointer-events-auto transition-all duration-500 ease-in-out`}
 			>
 				{sensoryImprint.sight && (
 					<div className="grid items-center justify-center">
 						<div className="flex justify-center !text-[--text-faint]">
 							<FontAwesomeIcon icon={faEye} />
 						</div>
-						<div className="flex justify-center -ml-8">
+						<div className="flex justify-center -ml-8 text-sm">
 							<MarkdownComponent value={sensoryImprint.sight} />
 						</div>
 					</div>
@@ -255,7 +255,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 						<div className="flex justify-center !text-[--text-faint]">
 							<FontAwesomeIcon icon={faEarListen} />
 						</div>
-						<div className="flex justify-center -ml-8">
+						<div className="flex justify-center -ml-8 text-sm">
 							<MarkdownComponent value={sensoryImprint.hear} />
 						</div>
 					</div>
@@ -265,7 +265,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 						<div className="flex justify-center !text-[--text-faint]">
 							<FontAwesomeIcon icon={faWind} />
 						</div>
-						<div className="flex justify-center -ml-8">
+						<div className="flex justify-center -ml-8 text-sm">
 							<MarkdownComponent value={sensoryImprint.smell} />
 						</div>
 					</div>
@@ -275,7 +275,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 						<div className="flex justify-center !text-[--text-faint]">
 							<FontAwesomeIcon icon={faHandPointer} />
 						</div>
-						<div className="flex justify-center -ml-8">
+						<div className="flex justify-center -ml-8 text-sm">
 							<MarkdownComponent value={sensoryImprint.touch} />
 						</div>
 					</div>
@@ -285,7 +285,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 						<div className="flex justify-center !text-[--text-faint]">
 							<FontAwesomeIcon icon={faTint} />
 						</div>
-						<div className="flex justify-center -ml-8">
+						<div className="flex justify-center -ml-8 text-sm">
 							<MarkdownComponent value={sensoryImprint.taste} />
 						</div>
 					</div>
