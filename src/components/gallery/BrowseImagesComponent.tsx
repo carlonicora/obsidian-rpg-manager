@@ -18,6 +18,8 @@ export default function BrowseImagesComponent({
 	const api: RpgManagerInterface = useApi();
 	const app: App = useApp();
 
+	const [searchTerm, setSearchTerm] = React.useState<string>("");
+
 	let allImages: TAbstractFile[] = app.vault.getAllLoadedFiles();
 
 	if (api.settings.assetsFolder !== undefined && api.settings.assetsFolder !== "") {
@@ -29,6 +31,10 @@ export default function BrowseImagesComponent({
 			file.extension === "png" || file.extension === "jpg" || file.extension === "jpeg" || file.extension === "webp"
 	);
 
+	if (searchTerm !== "") {
+		allImages = allImages.filter((file: TFile) => file.path.toLowerCase().includes(searchTerm.toLowerCase()));
+	}
+
 	const handleAddExistingImage = async (image: ImageInterface) => {
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 		codeblockService.addImage(image.path, "").then(() => {
@@ -38,14 +44,19 @@ export default function BrowseImagesComponent({
 
 	return (
 		<div className="mt-3">
-			<div>
-				<a
-					href="#"
-					className="!no-underline cursor-pointer text-[--text-normal] hover:text-[--text-accent-hover]"
-					onClick={selectImage}
-				>
-					&lt; back
-				</a>
+			<div className="grid mb-3 grid-cols-1 md:grid-cols-4 items-center justify-center">
+				<div className="col-span-1">
+					<a
+						href="#"
+						className="!no-underline cursor-pointer text-[--text-normal] hover:text-[--text-accent-hover]"
+						onClick={selectImage}
+					>
+						&lt;back
+					</a>
+				</div>
+				<div className="col-span-3 w-full">
+					<input type="text" className="w-full" placeholder="Search" onChange={(e) => setSearchTerm(e.target.value)} />
+				</div>
 			</div>
 			<div className="grid grid-cols-4 justify-center gap-3">
 				{allImages.map((imageFile: TAbstractFile, index: number) => {
@@ -71,11 +82,7 @@ export default function BrowseImagesComponent({
 						<div key={index} className="flex justify-center relative" onClick={() => handleAddExistingImage(image)}>
 							<div className="w-full relative pb-[100%]">
 								<div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-lg">
-									<img
-										src={image.src}
-										alt={image.caption}
-										className="min-w-full min-h-full object-cover !cursor-pointer"
-									/>
+									<img src={image.src} alt={image.caption} className="w-full h-auto object-contain !cursor-pointer" />
 								</div>
 							</div>
 						</div>
