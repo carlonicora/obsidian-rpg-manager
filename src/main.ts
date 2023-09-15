@@ -18,8 +18,6 @@ import {
 import { OptionView } from "./views/OptionsView";
 import { ReadmeView } from "./views/ReadmeView";
 
-//TODO: Add Google Maps or Javalent maps
-
 export default class RpgManager extends Plugin implements RpgManagerInterface {
 	private _database: ElementInterface[] | undefined = undefined;
 	private _taskService: TaskServiceInterface;
@@ -30,6 +28,19 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		return this.manifest.version;
 	}
 
+	/**
+	 * This function is used to get elements from the RPG Manager database.
+	 * Depending on the parameters, it will return a single element, an array of elements or undefined.
+	 *
+	 * @param path 		The path of the element to get.
+	 * 					If undefined, it will not limit the result to a single element.
+	 * @param campaign 	The campaign of the element to get.
+	 * 					If **undefined**, it will limit the result to the global elements,
+	 * 					if **null** will return the elements from every campaign in the vault, including the global elements.
+	 * @param type		Limits the results to the specified type of element.
+	 * @param parent	Limits the results to the children of the specified element.
+	 * @returns 		ElementInterface | ElementInterface[] | undefined
+	 */
 	get(
 		path?: string,
 		campaign?: ElementInterface,
@@ -71,6 +82,10 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		return this._database.filter(isMatchingElement);
 	}
 
+	/**
+	 * This function is used to get the task service.
+	 * @returns TaskServiceInterface
+	 */
 	get tasks(): TaskServiceInterface {
 		return this._taskService;
 	}
