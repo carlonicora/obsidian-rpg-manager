@@ -31,7 +31,7 @@ export default function OptionContainerComponent({
 		<div className="flex flex-col min-h-screen pb-16">
 			{element && (
 				<div className="mb-3">
-					<h1 className="text-xl !font-bold mb-3">{element.name}</h1>
+					<h1 className="text-xl !font-bold mb-3 mt-0">{element.name}</h1>
 					<OptionsViewComponent element={element} />
 				</div>
 			)}

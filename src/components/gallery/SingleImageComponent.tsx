@@ -56,7 +56,7 @@ export default function SingleImageComponent({
 				</div>
 				<div className="ml-3 w-full">
 					<div>
-						<h3 className="!m-0 !text-xl !font-extralight">{t("gallery.caption")}</h3>
+						<h3 className="!text-xl !font-extralight">{t("gallery.caption")}</h3>
 						<div className="w-full">
 							<TextAreaComponent
 								initialValue={caption}

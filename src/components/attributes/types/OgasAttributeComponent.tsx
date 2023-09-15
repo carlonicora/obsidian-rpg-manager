@@ -19,7 +19,7 @@ export default function OgasAttributeComponent({ element }: { element: ElementIn
 	const widthPercentage = (stake / 10) * 100;
 
 	return (
-		<div className="space-y-3 m-3 border border-[--background-modifier-border] grid grid-cols-4 p-3 rounded-lg text-xs">
+		<div className="space-y-3 mt-3 border border-[--background-modifier-border] grid grid-cols-4 p-3 rounded-lg text-xs">
 			<div className="col-span-4 font-bold text-base">OGAS</div>
 			<div className="font-bold">{t("attributes.occupation")}</div>
 			<div className="col-span-3">

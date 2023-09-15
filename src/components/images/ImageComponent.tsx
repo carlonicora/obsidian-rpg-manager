@@ -66,7 +66,7 @@ export default function ImageComponent({
 					<img
 						src={element.images[currentIndex].src}
 						alt={element.images[currentIndex].caption}
-						className="w-full h-full object-cover"
+						className="w-full object-contain"
 					/>
 					{element.images[currentIndex].caption && (
 						<div className="p-2">
@@ -99,7 +99,7 @@ export default function ImageComponent({
 					<img
 						src={element.images[currentIndex].src}
 						alt={element.images[currentIndex].caption}
-						className="w-full h-full object-cover"
+						className="w-full object-contain"
 					/>
 					{element.images[currentIndex].caption && (
 						<div className="p-2">

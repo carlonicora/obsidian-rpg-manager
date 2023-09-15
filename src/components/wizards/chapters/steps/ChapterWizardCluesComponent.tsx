@@ -93,7 +93,7 @@ export default function ChapterWizardCluesComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("elements.clue", { count: 2 })}</h3>
+			<h3 className="!text-xl !font-extralight">{t("elements.clue", { count: 2 })}</h3>
 			{error && (
 				<div className="!mt-3 !mb-3 text-[--text-error]">
 					<MarkdownComponent value={error} />

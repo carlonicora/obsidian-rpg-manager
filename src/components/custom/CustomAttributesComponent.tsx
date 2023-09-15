@@ -54,7 +54,7 @@ export default function CustomAttributesComponent({ element }: { element: Elemen
 
 	return (
 		<>
-			<h2 className="!m-0 !text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
+			<h2 className="!text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
 				{t("attributes.custom")}
 			</h2>
 			<div className="grid grid-cols-5 border-b border-b-[--background-modifier-border]">
@@ -70,7 +70,7 @@ export default function CustomAttributesComponent({ element }: { element: Elemen
 						<>{content}</>
 					) : (
 						<div>
-							<h3 className="!m-0 !mb-3 !p-0 !text-xl !font-extralight">{t("customattributes.your")}</h3>
+							<h3 className="!p-0 !text-xl !font-extralight">{t("customattributes.your")}</h3>
 							<div>
 								<MarkdownComponent value={t("customattributes.describe")} />
 							</div>

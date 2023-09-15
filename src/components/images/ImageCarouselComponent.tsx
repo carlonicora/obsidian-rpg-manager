@@ -22,9 +22,7 @@ export default function ImageCarouselComponent({ element }: { element: ElementIn
 
 	return (
 		<div>
-			<h2 className="!m-0 !mb-6 !text-2xl !font-bold border-b border-b-[--background-modifier-border]">
-				{t("gallery.carousel")}
-			</h2>
+			<h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">{t("gallery.carousel")}</h2>
 			<div className="relative w-full h-48">
 				{/* Previous Button */}
 				<button

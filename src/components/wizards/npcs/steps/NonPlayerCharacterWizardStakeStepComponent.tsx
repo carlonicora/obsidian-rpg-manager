@@ -42,7 +42,7 @@ export default function NonPlayerCharacterWizardStakeStepComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("attributes.stake")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("attributes.stake")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.npc.description", { context: "stake", name: name })} />
 			</div>

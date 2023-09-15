@@ -165,7 +165,7 @@ export default function CreationBaseComponent({
 
 	return (
 		<>
-			<h2 className="!m-0 !text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
+			<h2 className="!text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
 				{t("create.new", { context: type })}
 			</h2>
 			<div className="grid grid-cols-5 border-b border-b-[--background-modifier-border]">

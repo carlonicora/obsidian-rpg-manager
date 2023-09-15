@@ -96,7 +96,7 @@ export default function HierarchyComponent({
 	if (!isDraggable) {
 		return (
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-				<h2 className="!m-0 !mb-3">{t("elements." + type, { count: 2 })}</h2>
+				<h2>{t("elements." + type, { count: 2 })}</h2>
 				<>
 					{getHeaderComponent()}
 					{children.map((child: ElementInterface, index: number) => getChildComponent(child))}
@@ -121,7 +121,7 @@ export default function HierarchyComponent({
 			key={element.path + "draggable"}
 			className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3"
 		>
-			<h2 className="!m-0 !mb-3">{t("elements." + type, { count: 2 })}</h2>
+			<h2>{t("elements." + type, { count: 2 })}</h2>
 			<>
 				{getHeaderComponent()}
 				<DragDropContext onDragEnd={handleOnDragEnd}>

@@ -21,7 +21,7 @@ export default function SceneComponent({
 
 	return (
 		<>
-			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
+			<div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
 				<div className={`gap-3 !mb-3 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5`}>
 					<div className={`lg:col-span-2`}>
@@ -46,7 +46,7 @@ export default function SceneComponent({
 				)}
 				{!isInPopover && <TasksContainerComponent element={element} />}
 				{isInPopover === false && element.relationships.length > 0 && (
-					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
+					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 m-3">
 						<RelationshipsComponent element={element} />
 					</div>
 				)}

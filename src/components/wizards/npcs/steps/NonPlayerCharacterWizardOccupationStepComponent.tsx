@@ -28,7 +28,7 @@ export default function NonPlayerCharacterWizardOccupationStepComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("attributes.occupation")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("attributes.occupation")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.npc.description", { context: "occupation", name: name })} />
 			</div>

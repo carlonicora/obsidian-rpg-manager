@@ -54,7 +54,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 
 	return (
 		<div className="w-full mt-3">
-			<h2 className="!m-0 !mb-3">{t("analyser.sceneanalyser")}</h2>
+			<h2>{t("analyser.sceneanalyser")}</h2>
 			<div className={`text-center w-full mb-3 !font-extralight text-5xl ${getTextColor(analysis.score)}`}>
 				{analysis.score?.toString() + "%"}
 			</div>

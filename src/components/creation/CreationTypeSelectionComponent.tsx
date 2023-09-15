@@ -10,7 +10,7 @@ export default function CreationTypeSelectionComponent({
 	const { t } = useTranslation();
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("create.new", { context: "element" })}</h3>
+			<h3 className="!text-xl !font-extralight">{t("create.new", { context: "element" })}</h3>
 			<div className="!mt-3 !mb-3">{t("create.select", { context: "type" })}</div>
 			<div className="">
 				{Object.keys(ElementType).map((type: ElementType, index: number) => {

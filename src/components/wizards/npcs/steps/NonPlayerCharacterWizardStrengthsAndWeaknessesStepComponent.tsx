@@ -94,7 +94,7 @@ export default function NonPlayerCharacterWizardStrengthsAndWeaknessesStepCompon
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("attributes.strengths")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("attributes.strengths")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.npc.description", { context: "strengths", name: name })} />
 			</div>
@@ -120,7 +120,7 @@ export default function NonPlayerCharacterWizardStrengthsAndWeaknessesStepCompon
 				</div>
 			)}
 
-			<h3 className="!m-0 !text-xl !font-extralight">{t("attributes.weaknesses")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("attributes.weaknesses")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.npc.description", { context: "weaknesses", name: name })} />
 			</div>

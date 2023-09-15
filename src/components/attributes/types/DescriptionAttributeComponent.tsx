@@ -86,11 +86,11 @@ export default function DescriptionAttributeComponent({
 	}
 
 	return (
-		<div className="!p-3">
-			<h2 className="!m-0 !mb-6 !text-2xl !font-bold border-b border-b-[--background-modifier-border]">
+		<>
+			<h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
 				{t("attributes.description")}
 			</h2>
 			<div>{content}</div>
-		</div>
+		</>
 	);
 }

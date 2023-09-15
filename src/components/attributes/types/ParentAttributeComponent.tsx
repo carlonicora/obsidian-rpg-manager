@@ -50,7 +50,7 @@ export default function ParentAttributeComponent({
 	};
 
 	return (
-		<div className="!p-3">
+		<>
 			<div className="!font-bold">{t("parents.parent", { context: element.parent.type })}</div>
 			<div>
 				{isEditable && (
@@ -75,6 +75,6 @@ export default function ParentAttributeComponent({
 					</a>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }

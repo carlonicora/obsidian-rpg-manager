@@ -129,7 +129,7 @@ function EditComponent({
 		<div className="relative w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg">
 			{showOverlay && <ChatGptOverlay type="sensoryimprint" />}
 			<div className="w-full flex justify-center mb-3">
-				<h3 className="!m-0 !p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
+				<h3 className="!p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
 			</div>
 			<div className={`w-full grid grid-cols-5 gap-3 items-start`}>
 				<div className="grid items-center justify-center">
@@ -235,7 +235,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 	return (
 		<div className="w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg group">
 			<div className="w-full flex justify-center mb-3">
-				<h3 className="!m-0 !p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
+				<h3 className="!p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
 			</div>
 			<div
 				className={`w-full grid grid-cols-${totalSenses} gap-3 items-start opacity-0 visibility-hidden max-h-0 pointer-events-none group-hover:opacity-100 group-hover:visibility-visible group-hover:max-h-[300px] group-hover:pointer-events-auto transition-all duration-500 ease-in-out`}
