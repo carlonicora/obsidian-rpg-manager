@@ -23,7 +23,7 @@ export default function NewElementComponent({
 		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
 			{file && !element && (
 				<div className="mb-3">
-					<h3 className="!text-xl !font-extralight mt-0">{t("create.in_title")}</h3>
+					<h3 className="!mb-1 !text-xl !font-extralight mt-0">{t("create.in_title")}</h3>
 					{Object.values(ElementType)
 						.filter((v) => isNaN(Number(v)))
 						.map((type, index) => (
@@ -37,7 +37,7 @@ export default function NewElementComponent({
 						))}
 				</div>
 			)}
-			<h3 className="!text-xl !font-extralight mt-0">{t("create.title")}</h3>
+			<h3 className="!mb-1 !text-xl !font-extralight mt-0">{t("create.title")}</h3>
 			{Object.values(ElementType)
 				.filter((v) => isNaN(Number(v)))
 				.map((type, index) => (
