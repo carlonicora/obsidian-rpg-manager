@@ -46,7 +46,9 @@ export default function PronounComponent({
 						<option value=""></option>
 						<option value="they">They / Them / Themself</option>
 						<option value="she">She / Her / Herself</option>
+						<option value="st">She / They / Themself</option>
 						<option value="he">He / Him / Himself</option>
+						<option value="ht">He / They / Themself</option>
 						<option value="it">It / Its / Itself</option>
 						<option value="ae">(f)Ae / (f)Aer / (f)Aerself</option>
 						<option value="e">E(Ey) / Em / Eirelf</option>
@@ -72,8 +74,14 @@ export default function PronounComponent({
 			case "she":
 				value = "She / Her / Herself";
 				break;
+			case "st":
+				value = "She / They / Themself";
+				break;
 			case "he":
 				value = "He / Him / Himself";
+				break;
+			case "ht":
+				value = "He / They / Themself";
 				break;
 			case "it":
 				value = "It / Its / Itself";
