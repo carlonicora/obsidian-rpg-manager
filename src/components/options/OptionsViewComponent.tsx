@@ -181,7 +181,7 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 				)}
 			</div>
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-1">
-				<h3 className="!text-xl !font-extralight mt-0">{t("attributes.attribute", { count: 2 })}</h3>
+				<h3 className="!text-xl !font-extralight !mb-1 mt-0">{t("attributes.attribute", { count: 2 })}</h3>
 				{availableAttributes
 					.filter(
 						(attribute: AttributeInterface) =>
