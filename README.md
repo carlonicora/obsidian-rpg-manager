@@ -9,6 +9,7 @@ RPG Manager is an Obsidian plugin to simplify the creation and running of role p
   - [1.2. Key Features](#12-key-features)
   - [1.3. Target Audience (Plotters, Sandboxers, Lazy GMs)](#13-target-audience-plotters-sandboxers-lazy-gms)
   - [1.4. Getting Started](#14-getting-started)
+  - [1.5. Upgrade your vault from v3](#15-upgrade-your-vault-from-v3)
 - [2. Installation](#2-installation)
   - [2.1. Setting up your first Campaign](#21-setting-up-your-first-campaign)
   - [2.2. User Interface](#22-user-interface)
@@ -121,6 +122,14 @@ Common Pitfalls
 **Resources**
 
 While there are no tutorials or guides available at the moment, we are working on creating video tutorials to help you get the most out of RPG Manager. Stay tuned!
+
+## 1.5. Upgrade your vault from v3
+
+If you are already using RPG Manager and you update it to version 4, the plugin will not work. You have two options: use BRAT to revert to v3.4.5 or upgrade your vault.
+
+Upgrading your vault is always a complicated matter, as the way you structured your data can be different from the way other storytellers have. For this reason, before upgrading your vault, **create a backup copy of it**!
+
+**Important**: if the upgrade process gets stuck, check the Inspector Console for errors, and look for help either on [Discord](https://discord.com/channels/686053708261228577/1022806716343144518) or on [Github](https://github.com/carlonicora/obsidian-rpg-manager/issues).
 
 ## 2. Installation
 
