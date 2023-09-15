@@ -534,6 +534,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.pointer-events-none {
+  pointer-events: none;
+}
+
 .invisible {
   visibility: hidden;
 }
@@ -2788,12 +2792,16 @@ span.flatpickr-day.selected {
   color: var(--text-faint);
 }
 
+.group:hover .group-hover\:pointer-events-auto {
+  pointer-events: auto;
+}
+
 .group:hover .group-hover\:visible {
   visibility: visible;
 }
 
-.group:hover .group-hover\:max-h-\[100vh\] {
-  max-height: 100vh;
+.group:hover .group-hover\:max-h-\[300px\] {
+  max-height: 300px;
 }
 
 .group:hover .group-hover\:\!border-\[--background-modifier-border\] {
