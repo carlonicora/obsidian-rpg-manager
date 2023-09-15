@@ -52,7 +52,7 @@ export default function SingleImageComponent({
 			</div>
 			<div className="flex items-start">
 				<div className="flex items-start justify-start w-[350px] h-[350px]">
-					<img src={image.src} alt={caption} className="object-contain rounded-lg" />
+					<img src={image.src} alt={caption} className="w-full h-auto object-contain rounded-lg" />
 				</div>
 				<div className="ml-3 w-full">
 					<div>
