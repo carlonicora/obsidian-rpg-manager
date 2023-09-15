@@ -22,4 +22,5 @@ export enum AttributeComponentType {
 	Scale = "Scale",
 	Kishotenketsu = "Kishotenketsu",
 	Conflict = "Conflict",
+	Pronoun = "Pronoun",
 }

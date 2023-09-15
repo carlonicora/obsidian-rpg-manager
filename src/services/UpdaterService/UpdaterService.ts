@@ -164,7 +164,7 @@ export class UpdaterService {
 						response.dod = oldData[key];
 						break;
 					case "pronoun":
-						response.want = oldData[key];
+						response.pronoun = oldData[key];
 						break;
 					case "address":
 						response.address = oldData[key];

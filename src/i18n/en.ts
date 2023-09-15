@@ -145,6 +145,7 @@ If you want to create new ones, just click on the button and define the name and
 		attitude: "Attitude (Behaviour)",
 		kishotenketsu: "Kishōtenketsu",
 		conflict: "Conflict",
+		pronoun: "Pronoun",
 	},
 	npctype: {
 		npctype_main: "Main",

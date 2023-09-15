@@ -39,6 +39,7 @@ const sensoryimprint = { id: AttributeType.SensoryImprint, type: AttributeCompon
 const stake = { id: AttributeType.Stake, type: AttributeComponentType.Scale };
 const kishotenketsu = { id: AttributeType.Kishotenketsu, type: AttributeComponentType.Kishotenketsu };
 const conflict = { id: AttributeType.Conflict, type: AttributeComponentType.Conflict };
+const pronoun = { id: AttributeType.Pronoun, type: AttributeComponentType.Pronoun };
 
 export const attributes: Map<ElementType, AttributeInterface[]> = new Map<ElementType, AttributeInterface[]>([
 	[ElementType.Campaign, [description, storycircle]],
@@ -66,13 +67,14 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<Elemen
 			weaknesses,
 			dob,
 			dod,
+			pronoun,
 		],
 	],
 	[ElementType.Event, [description, date]],
 	[ElementType.Location, [sensoryimprint, description, address, location]],
 	[ElementType.Faction, [description, philosophy, factionstructure]],
 	[ElementType.Clue, [description]],
-	[ElementType.PlayerCharacter, [description, beliefs, lie, need, want, strengths, weaknesses, dob]],
+	[ElementType.PlayerCharacter, [description, beliefs, lie, need, want, strengths, weaknesses, dob, pronoun]],
 	[ElementType.Subplot, [description, storycircle]],
 	[ElementType.Object, [sensoryimprint, description]],
 	[ElementType.Monster, [sensoryimprint, description]],
