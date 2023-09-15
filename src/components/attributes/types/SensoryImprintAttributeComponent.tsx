@@ -1,3 +1,4 @@
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import { useApp } from "@/hooks/useApp";
 import { faEarListen, faEdit, faEye, faHandPointer, faTint, faWind } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +15,6 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { ChatGptNonPlayerCharacterModel } from "src/services/ChatGptService/models/ChatGptNonPlayerCharacterModel";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import TextAreaComponent from "../primitives/TextAreaComponent";
 
 interface SensoryImprintInterface {
 	sight?: string;
@@ -137,7 +137,7 @@ function EditComponent({
 						<FontAwesomeIcon icon={faEye} title="Sight" />
 					</div>
 					<div className="flex justify-center">
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							key={"sight:" + sight}
 							initialValue={sight}
 							onChange={handleSightChange}
@@ -150,7 +150,7 @@ function EditComponent({
 						<FontAwesomeIcon icon={faEarListen} title="Hearing" />
 					</div>
 					<div className="flex justify-center">
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							key={"hear:" + hear}
 							initialValue={hear}
 							onChange={handleHearChange}
@@ -163,7 +163,7 @@ function EditComponent({
 						<FontAwesomeIcon icon={faWind} title="Smell" />
 					</div>
 					<div className="flex justify-center">
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							key={"smell:" + smell}
 							initialValue={smell}
 							onChange={handleSmellChange}
@@ -176,7 +176,7 @@ function EditComponent({
 						<FontAwesomeIcon icon={faHandPointer} title="Touch" />
 					</div>
 					<div className="flex justify-center">
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							key={"touch:" + touch}
 							initialValue={touch}
 							onChange={handleTouchChange}
@@ -189,7 +189,7 @@ function EditComponent({
 						<FontAwesomeIcon icon={faTint} title="Taste" />
 					</div>
 					<div className="flex justify-center">
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							key={"taste:" + taste}
 							initialValue={taste}
 							onChange={handleTasteChange}

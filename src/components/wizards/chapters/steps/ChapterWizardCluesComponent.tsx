@@ -1,5 +1,5 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
-import TextAreaComponent from "@/components/attributes/primitives/TextAreaComponent";
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
 import { NewRelationshipController } from "@/controllers/NewRelationshipController";
 import { ElementType } from "@/data/enums/ElementType";
@@ -142,7 +142,7 @@ export default function ChapterWizardCluesComponent({
 						</div>
 						{!clue.isExistingClue && (
 							<div className="w-full ml-3">
-								<TextAreaComponent
+								<MarkdownEditorComponent
 									campaignPath={campaignPath}
 									initialValue={clue.description}
 									onChange={(value) => handleInputChange(index, "description", value)}

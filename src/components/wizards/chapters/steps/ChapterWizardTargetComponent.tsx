@@ -1,5 +1,5 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
-import TextAreaComponent from "@/components/attributes/primitives/TextAreaComponent";
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
 import { NewRelationshipController } from "@/controllers/NewRelationshipController";
 import { ElementType } from "@/data/enums/ElementType";
@@ -240,7 +240,7 @@ export default function ChapterWizardTargetComponent({
 							/>
 							<h3 className="!m-0 !mt-3 !text-xl !font-extralight">{t("wizards.chapter.targetelementdescription")}</h3>
 							<div className="ml-3">
-								<TextAreaComponent
+								<MarkdownEditorComponent
 									initialValue={wizardData.targetDescription}
 									campaignPath={campaignPath}
 									onChange={updateDescription}

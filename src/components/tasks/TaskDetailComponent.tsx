@@ -12,7 +12,7 @@ import { useApi } from "src/hooks/useApi";
 import { HelperService } from "src/services/HelperService";
 import { PriorityType } from "src/services/taskService/enums/PriorityType";
 import { TaskInterface } from "src/services/taskService/interfaces/TaskInterface";
-import TextAreaComponent from "../attributes/primitives/TextAreaComponent";
+import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
 
 export default function TaskDetailComponent({
 	element,
@@ -149,7 +149,7 @@ export default function TaskDetailComponent({
 			</div>
 			<div className="col-span-1 ml-2 text-xs text-[--text-faint]">{t("tasks.description")}</div>
 			<div className="col-span-3 ml-3">
-				<TextAreaComponent
+				<MarkdownEditorComponent
 					initialValue={description}
 					campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 					onChange={setDescription}

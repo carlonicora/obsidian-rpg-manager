@@ -13,8 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import TextAreaComponent from "../attributes/primitives/TextAreaComponent";
 import TextInputComponent from "../attributes/primitives/TextInputComponent";
+import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
 import MarkdownComponent from "../markdowns/MarkdownComponent";
 
 export default function ConflictComponent({
@@ -588,7 +588,7 @@ function EditableLongTextAttribute({
 			</div>
 			<div className="col-span-6">
 				{setValue ? (
-					<TextAreaComponent
+					<MarkdownEditorComponent
 						className="min-h-[2em] w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
 						campaignPath={campaignPath}
 						onChange={setSubAttributeValue}

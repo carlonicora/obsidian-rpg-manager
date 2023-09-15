@@ -1,3 +1,4 @@
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import { useApp } from "@/hooks/useApp";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,7 +12,6 @@ import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import TextAreaComponent from "../primitives/TextAreaComponent";
 
 export default function StoryCircleStageComponent({
 	element,
@@ -55,7 +55,7 @@ export default function StoryCircleStageComponent({
 			<div className={`${isEditable && "sm:col-span-1 lg:col-span-6"}`}>
 				<div className="grid grid-cols-1">
 					<div>
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							initialValue={value}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
 							onChange={setValue}

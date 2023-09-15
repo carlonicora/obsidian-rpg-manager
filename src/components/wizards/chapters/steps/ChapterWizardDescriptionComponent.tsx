@@ -1,4 +1,4 @@
-import TextAreaComponent from "@/components/attributes/primitives/TextAreaComponent";
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
 import { useWizard } from "@/hooks/useWizard";
 import * as React from "react";
@@ -42,7 +42,7 @@ export default function ChapterWizardDescriptionComponent({
 				</div>
 			)}
 			<div className="">
-				<TextAreaComponent
+				<MarkdownEditorComponent
 					initialValue={wizardData.description}
 					campaignPath={campaignPath}
 					onChange={updateDescription}
