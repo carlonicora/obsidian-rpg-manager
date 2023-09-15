@@ -1,49 +1,115 @@
+import { RpgManagerInterface } from "@/RpgManagerInterface";
+import { NewRelationshipController } from "@/controllers/NewRelationshipController";
+import { useApi } from "@/hooks/useApi";
+import { useApp } from "@/hooks/useApp";
 import { EditorSelection, EditorState, Range, Text } from "@codemirror/state";
-import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType } from "@codemirror/view";
+import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType, keymap } from "@codemirror/view";
+import { App } from "obsidian";
 import * as React from "react";
 
-export default function Temp(): React.ReactElement {
+export default function MarkdownEditorComponent({
+	initialValue,
+	campaignPath,
+	className,
+	onChange,
+	forceFocus,
+}: {
+	initialValue?: string;
+	campaignPath?: string;
+	className?: string;
+	onChange: (value: string) => void;
+	forceFocus?: boolean;
+}): React.ReactElement {
+	const app: App = useApp();
+	const api: RpgManagerInterface = useApi();
+
 	const parentDivRef = React.useRef<HTMLDivElement | null>(null);
-	const [editorView, setEditorView] = React.useState<EditorView | null>(null);
+	const [editorContent, setEditorContent] = React.useState(initialValue);
 
-	const a = `**bold** _italic_ *italic* **bold**
-[[Campaigns/Æther/Æther.md|Æther]]
-[[Campaigns/Æther/Æther.md]]
-
-# h1
-## h2
-### h3
-
-- list1
-- list2
-
-1. list1
-2. list2
-`;
-
-	const [editorContent, setEditorContent] = React.useState(a); // `a` being your initial content
+	const editorViewRef = React.useRef<EditorView | null>(null);
+	const lastDetectedPositionRef = React.useRef<number | null>(null);
 
 	const contentChangeExtension = EditorState.changeFilter.of((change) => {
-		// Get the updated content of the editor
 		const newContent = change.state.doc.toString();
 
-		// Update the state
 		setEditorContent(newContent);
+		onChange(newContent);
 
-		return true; // Return true to allow the change to proceed
+		return true;
 	});
+
+	const handleNewRelationship = () => {
+		const relationshipModal = new NewRelationshipController(
+			app,
+			api,
+			undefined,
+			campaignPath,
+			undefined,
+			replaceSequenceWithModalValue
+		);
+		relationshipModal.open();
+	};
+
+	const replaceSequenceWithModalValue = (replacementString: string) => {
+		if (editorViewRef.current && lastDetectedPositionRef.current !== null) {
+			const startPos = lastDetectedPositionRef.current;
+			const editorView = editorViewRef.current;
+
+			const nextChar = editorView.state.doc.sliceString(startPos + 1, startPos + 2).toString() || "END_OF_STRING";
+
+			let toPosition = startPos + 2;
+			const specialCharacters = [" ", ",", ";", ":", "!", ".", "?", "-"];
+			if (!specialCharacters.includes(nextChar) || nextChar === "END_OF_STRING") {
+				replacementString += " ";
+			} else {
+				toPosition -= 1;
+			}
+
+			if (nextChar === "\n") toPosition -= 1;
+
+			const tr = editorView.state.update({
+				changes: { from: startPos, to: toPosition, insert: replacementString },
+			});
+			editorView.dispatch(tr);
+
+			const endPos = startPos + replacementString.length;
+			editorView.dispatch({
+				selection: { anchor: endPos, head: endPos },
+				scrollIntoView: true,
+			});
+
+			lastDetectedPositionRef.current = null;
+		}
+	};
+
+	const doubleBracketKeyBinding = keymap.of([
+		{
+			key: "[",
+			run: (view) => {
+				const cursorPos = view.state.selection.main.head;
+				const beforeCursorChar = view.state.doc.sliceString(cursorPos - 1, cursorPos);
+				if (beforeCursorChar === "[") {
+					lastDetectedPositionRef.current = cursorPos - 1;
+
+					handleNewRelationship();
+					return true;
+				}
+				return false;
+			},
+		},
+	]);
 
 	const initializeEditor = async () => {
 		if (parentDivRef.current) {
 			const view = new EditorView({
 				state: EditorState.create({
-					doc: a,
-					extensions: [inlinePlugin(), contentChangeExtension],
+					doc: initialValue,
+					extensions: [inlinePlugin(), contentChangeExtension, doubleBracketKeyBinding],
 				}),
 				parent: parentDivRef.current,
 			});
 
-			setEditorView(view);
+			editorViewRef.current = view;
 		}
 	};
 
@@ -51,13 +117,13 @@ export default function Temp(): React.ReactElement {
 		initializeEditor();
 
 		return () => {
-			editorView?.destroy();
+			editorViewRef.current?.destroy();
 		};
 	}, []);
 
 	return (
 		<>
-			<div className="border border-[--background-modifier-border] rounded-lg" ref={parentDivRef}></div>
+			<div className={className} ref={parentDivRef}></div>
 			<button
 				onClick={() => {
 					console.log(editorContent);
@@ -229,6 +295,7 @@ function renderItalic(match: RegExpExecArray, view: EditorView): Range<Decoratio
 function renderHeading(match: RegExpExecArray, view: EditorView, headingLevel: number): Range<Decoration> {
 	const el = document.createElement("h" + headingLevel);
 	el.textContent = match[2];
+	el.className = "!-mt-1 !-mb-5";
 
 	const endOffset = match[0].endsWith("\n") ? match.index + match[0].length - 1 : match.index + match[0].length;
 
