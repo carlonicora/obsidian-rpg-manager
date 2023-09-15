@@ -188,7 +188,7 @@ export default function ChapterWizardDestinationComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("wizards.chapter.destinationtitle")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("wizards.chapter.destinationtitle")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.chapter.destination", { name: name })} />
 			</div>
@@ -213,7 +213,7 @@ export default function ChapterWizardDestinationComponent({
 			</div>
 			{destinationType !== undefined && (
 				<>
-					<h3 className="!m-0 !text-xl !font-extralight">{t("wizards.chapter.destinationelementtype")}</h3>
+					<h3 className="!text-xl !font-extralight">{t("wizards.chapter.destinationelementtype")}</h3>
 					<div className="grid grid-cols-2">
 						<DestinationElementTypeComponent
 							isElement={isExistingDestination}
@@ -224,14 +224,14 @@ export default function ChapterWizardDestinationComponent({
 						<></>
 					) : isExistingDestination ? (
 						<>
-							<h3 className="!m-0 !text-xl !font-extralight">
+							<h3 className="!text-xl !font-extralight">
 								{t("wizards.chapter.destinationelement", { context: "existing" })}
 							</h3>
 							<div className="ml-3">{destinationElementPath && destinationElement && destinationElement.name}</div>
 						</>
 					) : (
 						<>
-							<h3 className="!m-0 !text-xl !font-extralight">
+							<h3 className="!text-xl !font-extralight">
 								{t("wizards.chapter.destinationelement", { context: "new" })}
 							</h3>
 							<input

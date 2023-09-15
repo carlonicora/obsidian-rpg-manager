@@ -189,7 +189,7 @@ export default function ChapterWizardTargetComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("wizards.chapter.targettitle")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("wizards.chapter.targettitle")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.chapter.target", { name: name })} />
 			</div>
@@ -214,7 +214,7 @@ export default function ChapterWizardTargetComponent({
 			</div>
 			{targetType !== undefined && (
 				<>
-					<h3 className="!m-0 !text-xl !font-extralight">{t("wizards.chapter.targetelementtype")}</h3>
+					<h3 className="!text-xl !font-extralight">{t("wizards.chapter.targetelementtype")}</h3>
 					<div className="grid grid-cols-2">
 						<TargetElementTypeComponent isElement={isExistingTarget} setIsExistingTarget={onSetIsExistingTarget} />
 					</div>
@@ -222,23 +222,21 @@ export default function ChapterWizardTargetComponent({
 						<></>
 					) : isExistingTarget ? (
 						<>
-							<h3 className="!m-0 !text-xl !font-extralight">
+							<h3 className="!text-xl !font-extralight">
 								{t("wizards.chapter.targetelement", { context: "existing" })}
 							</h3>
 							<div className="ml-3">{targetElementPath && targetElement && targetElement.name}</div>
 						</>
 					) : (
 						<>
-							<h3 className="!m-0 !text-xl !font-extralight">
-								{t("wizards.chapter.targetelement", { context: "new" })}
-							</h3>
+							<h3 className="!text-xl !font-extralight">{t("wizards.chapter.targetelement", { context: "new" })}</h3>
 							<input
 								type="text"
 								defaultValue={targetName}
 								onChange={(e) => onSetTargetName(e.target.value)}
 								className="ml-3"
 							/>
-							<h3 className="!m-0 !mt-3 !text-xl !font-extralight">{t("wizards.chapter.targetelementdescription")}</h3>
+							<h3 className="!text-xl !font-extralight">{t("wizards.chapter.targetelementdescription")}</h3>
 							<div className="ml-3">
 								<MarkdownEditorComponent
 									initialValue={wizardData.targetDescription}

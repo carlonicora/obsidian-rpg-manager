@@ -8,6 +8,7 @@ import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprint
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import ImageComponent from "../images/ImageComponent";
+import RelationshipsComponent from "../relationships/RelationshipsComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
 export default function MainV1Component({
@@ -30,18 +31,22 @@ export default function MainV1Component({
 			<div className={`gap-3 !mb-3 grid grid-cols-1 ${isInPopover ? "" : "sm:grid-cols-1 lg:grid-cols-5"}`}>
 				<div className={`grid ${isInPopover ? "grid-cols-1" : "lg:col-span-5 lg:grid-cols-5"} gap-3`}>
 					{element.images.length > 0 && (
-						<div
-							className={`${
-								isInPopover ? "col-span-1" : "lg:col-span-2"
-							} rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary]`}
-						>
-							<ImageComponent element={element} isEditable={!isInPopover} />
+						<div className={`${isInPopover ? "col-span-1" : "lg:col-span-2"} `}>
+							<div
+								className="
+							rounded-lg border border-[--background-modifier-border] 
+							overflow-hidden 
+							bg-[--background-primary]
+							"
+							>
+								<ImageComponent element={element} isEditable={!isInPopover} />
+							</div>
 						</div>
 					)}
 					<div
 						className={`${
 							isInPopover ? "col-span-1" : element.images.length > 0 ? "lg:col-span-3" : "lg:col-span-5"
-						} rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] !mt-0`}
+						} rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] !mt-0 p-3`}
 					>
 						<DescriptionAttributeComponent
 							element={element}
@@ -61,6 +66,11 @@ export default function MainV1Component({
 				</div>
 			)}
 			{!isInPopover && <TasksContainerComponent element={element} />}
+			{isInPopover === false && element.relationships.length > 0 && (
+				<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
+					<RelationshipsComponent element={element} />
+				</div>
+			)}
 		</>
 	);
 }

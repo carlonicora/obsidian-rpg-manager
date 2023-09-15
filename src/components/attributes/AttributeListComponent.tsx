@@ -33,7 +33,7 @@ export default function AttributeListComponent({
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] relative p-3">
 			<div>
-				<h2 className="!m-0 !mb-6 !text-2xl !font-bold border-b border-b-[--background-modifier-border]">
+				<h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
 					{t("attributes.attribute", { count: 2 })}
 				</h2>
 			</div>

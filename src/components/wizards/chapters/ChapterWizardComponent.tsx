@@ -281,7 +281,7 @@ export default function ChapterWizardComponent({
 	return (
 		<div className="relative">
 			{showOverlay && <ChatGptOverlay type={ElementType.Chapter} />}
-			<h2 className="!m-0 !text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
+			<h2 className="!text-2xl !font-extralight border-b border-b-[--background-modifier-border]">
 				{t("wizards.chapter.title")}
 			</h2>
 			<div className="grid grid-cols-5 border-b border-b-[--background-modifier-border]">

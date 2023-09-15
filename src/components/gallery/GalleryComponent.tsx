@@ -91,12 +91,12 @@ export default function GalleryComponent({ element }: { element: ElementInterfac
 	return (
 		<div key={key}>
 			<div className="flex justify-center items-center">
-				<h2 className="!m-0 !mb-6 !text-2xl !font-extralight">{t("gallery.title")}</h2>
+				<h2 className="!text-2xl !font-extralight">{t("gallery.title")}</h2>
 			</div>
 			<div className="border-2 p-4">
 				<div className="grid grid-cols-4 space-x-4">
 					<div className="flex-1">
-						<h3 className="!m-0 !text-xl !font-extralight">{t("gallery.drag")}</h3>
+						<h3 className="!text-xl !font-extralight">{t("gallery.drag")}</h3>
 						<div
 							className="border-2 border-dashed p-4 cursor-pointer flex-1"
 							onDrop={handleFileDrop}
@@ -106,11 +106,11 @@ export default function GalleryComponent({ element }: { element: ElementInterfac
 						</div>
 					</div>
 					<div className="flex-1">
-						<h3 className="!m-0 !text-xl !font-extralight">{t("gallery.upload")}</h3>
+						<h3 className="!text-xl !font-extralight">{t("gallery.upload")}</h3>
 						<input type="file" onChange={handleFileSelect} accept="image/*" />
 					</div>
 					<div className="flex-1">
-						<h3 className="!m-0 !text-xl !font-extralight">{t("gallery.link")}</h3>
+						<h3 className="!text-xl !font-extralight">{t("gallery.link")}</h3>
 						<input
 							type="text"
 							onChange={handleImageUrlChange}
@@ -119,7 +119,7 @@ export default function GalleryComponent({ element }: { element: ElementInterfac
 						/>
 					</div>
 					<div className="flex-1">
-						<h3 className="!m-0 !text-xl !font-extralight">{t("gallery.browse")}</h3>
+						<h3 className="!text-xl !font-extralight">{t("gallery.browse")}</h3>
 						<button className="rpgm-secondary" onClick={() => setBrowseImages(true)}>
 							{t("gallery.browselocal")}
 						</button>

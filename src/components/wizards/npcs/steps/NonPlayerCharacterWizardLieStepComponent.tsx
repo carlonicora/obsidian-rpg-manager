@@ -49,7 +49,7 @@ export default function NonPlayerCharacterWizardLieStepComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("attributes.lie")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("attributes.lie")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.npc.description", { context: "lie", name: name })} />
 			</div>

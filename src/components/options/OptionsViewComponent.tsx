@@ -141,7 +141,7 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 	return (
 		<>
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
-				<h3 className="!text-xl !font-extralight !mb-1">{t("options.option", { count: 2 })}</h3>
+				<h3 className="!text-xl !font-extralight !mb-1 mt-0">{t("options.option", { count: 2 })}</h3>
 				{hasWizard && (
 					<div
 						className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
@@ -181,7 +181,7 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 				)}
 			</div>
 			<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-1">
-				<h3 className="!mb-3 !text-xl !font-extralight">{t("attributes.attribute", { count: 2 })}</h3>
+				<h3 className="!text-xl !font-extralight mt-0">{t("attributes.attribute", { count: 2 })}</h3>
 				{availableAttributes
 					.filter(
 						(attribute: AttributeInterface) =>

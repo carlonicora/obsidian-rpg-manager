@@ -28,7 +28,7 @@ export default function ChapterComponent({
 
 	return (
 		<>
-			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
+			<div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
 				{element.images.length > 0 && <BannerComponent image={element.images[0]} />}
 				<div className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-3 !mb-3}`}>

@@ -11,7 +11,7 @@ export default function RelationshipsComponent({ element }: { element: ElementIn
 
 	return (
 		<div>
-			<h2 className="!m-0 !mb-3">{t("relationships.relationship", { count: 2 })}</h2>
+			<h2>{t("relationships.relationship", { count: 2 })}</h2>
 
 			<RelationshipListComponent
 				key={element.type + "parent"}

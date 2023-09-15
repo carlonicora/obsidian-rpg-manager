@@ -30,7 +30,7 @@ export default function SessionComponent({
 
 	return (
 		<>
-			<div className="space-y-3 p-5 bg-[--background-primary-alt] border border-[--background-modifier-border]">
+			<div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
 				{element.images.length > 0 && (
 					<div className="max-h-32 h-32 overflow-hidden">
@@ -79,7 +79,7 @@ export default function SessionComponent({
 				)}
 				{!isInPopover && <TasksContainerComponent element={element} />}
 				{isInPopover === false && element.relationships.length > 0 && (
-					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
+					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 m-3">
 						<RelationshipsComponent element={element} />
 					</div>
 				)}

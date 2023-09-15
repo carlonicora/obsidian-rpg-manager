@@ -90,7 +90,7 @@ function Edit({
 
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
-			<h2 className="!m-0 !mb-6 !text-2xl !font-bold border-b border-b-[--background-modifier-border]">
+			<h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
 				{t("attributes.kishotenketsu")}
 			</h2>
 			<div className="gap-3 grid grid-cols-7">
@@ -139,7 +139,7 @@ function Browse({ attribute }: { attribute: AttributeInterface }): React.ReactEl
 
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
-			<h2 className="!m-0 !mb-6 !text-2xl !font-bold border-b border-b-[--background-modifier-border]">
+			<h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
 				{t("attributes.kishotenketsu")}
 			</h2>
 			<div className="gap-3 grid grid-cols-7">

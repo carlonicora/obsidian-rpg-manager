@@ -32,7 +32,7 @@ export default function ChapterWizardDescriptionComponent({
 
 	return (
 		<>
-			<h3 className="!m-0 !text-xl !font-extralight">{t("attributes.description")}</h3>
+			<h3 className="!text-xl !font-extralight">{t("attributes.description")}</h3>
 			<div className="!mt-3 !mb-3">
 				<MarkdownComponent value={t("wizards.chapter.description", { context: "description", name: name })} />
 			</div>
