@@ -1305,6 +1305,10 @@ video {
   border-color: var(--background-modifier-border);
 }
 
+.border-\[--text-accent\] {
+  border-color: var(--text-accent);
+}
+
 .border-transparent {
   border-color: transparent;
 }
@@ -1762,6 +1766,14 @@ video {
 .cm-sizer {
   max-width: 100% !important;
   width: 100% !important;
+}
+
+.markdown-editor-component {
+  white-space: pre-wrap !important;
+}
+
+.markdown-editor-component .cm-content {
+  white-space: pre-wrap !important;
 }
 
 .popover.hover-popover > .markdown-embed > .markdown-embed-content > .markdown-preview-view {

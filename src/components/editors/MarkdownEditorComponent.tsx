@@ -4,7 +4,7 @@ import { useApi } from "@/hooks/useApi";
 import { useApp } from "@/hooks/useApp";
 import { EditorSelection, EditorState, Range, Text } from "@codemirror/state";
 import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType, keymap } from "@codemirror/view";
-import { App } from "obsidian";
+import { App, Scope } from "obsidian";
 import * as React from "react";
 
 export default function MarkdownEditorComponent({
@@ -24,15 +24,17 @@ export default function MarkdownEditorComponent({
 	const api: RpgManagerInterface = useApi();
 
 	const parentDivRef = React.useRef<HTMLDivElement | null>(null);
-	const [editorContent, setEditorContent] = React.useState(initialValue);
 
+	const [value, setValue] = React.useState<string>(initialValue || "");
 	const editorViewRef = React.useRef<EditorView | null>(null);
 	const lastDetectedPositionRef = React.useRef<number | null>(null);
+	const [scope, setScope] = React.useState<Scope | undefined>(undefined);
+	const [originalScope, setOriginalScope] = React.useState<Scope | undefined>(undefined);
 
 	const contentChangeExtension = EditorState.changeFilter.of((change) => {
 		const newContent = change.state.doc.toString();
 
-		setEditorContent(newContent);
+		setValue(newContent);
 		onChange(newContent);
 
 		return true;
@@ -101,9 +103,22 @@ export default function MarkdownEditorComponent({
 
 	const initializeEditor = async () => {
 		if (parentDivRef.current) {
+			setOriginalScope(app.scope);
+			const localScope = new Scope(app.scope);
+			localScope.register(["Mod"], "b", (evt: any) => {
+				evt.preventDefault();
+				applyBold(editorViewRef.current!);
+			});
+			localScope.register(["Mod"], "i", (evt: any) => {
+				evt.preventDefault();
+				applyItalic(editorViewRef.current!);
+			});
+			app.keymap.pushScope(localScope);
+			setScope(localScope);
+
 			const view = new EditorView({
 				state: EditorState.create({
-					doc: initialValue,
+					doc: value,
 					extensions: [inlinePlugin(), contentChangeExtension, doubleBracketKeyBinding],
 				}),
 				parent: parentDivRef.current,
@@ -118,20 +133,18 @@ export default function MarkdownEditorComponent({
 
 		return () => {
 			editorViewRef.current?.destroy();
+
+			if (scope !== undefined) app.keymap.popScope(scope);
+			if (originalScope !== undefined) app.keymap.pushScope(originalScope);
 		};
 	}, []);
 
 	return (
-		<>
-			<div className={className} ref={parentDivRef}></div>
-			<button
-				onClick={() => {
-					console.log(editorContent);
-				}}
-			>
-				Log
-			</button>
-		</>
+		<div
+			id="rpgm-editor"
+			className={`${className} border-[--text-accent] markdown-editor-component p-3`}
+			ref={parentDivRef}
+		></div>
 	);
 }
 
@@ -157,7 +170,7 @@ export function inlinePlugin() {
 				return Decoration.set(
 					decorations.filter((decoRange) => {
 						const { from: decoFrom, to: decoTo } = decoRange;
-						return to <= decoFrom || from >= decoTo; // Remove decorations that intersect with the cursor/selection
+						return to <= decoFrom || from >= decoTo;
 					})
 				);
 			}
@@ -312,4 +325,36 @@ function renderLink(match: RegExpExecArray, view: EditorView): Range<Decoration>
 	el.className = "internal-link !no-underline";
 
 	return Decoration.replace({ widget: new Widget(el) }).range(match.index, match.index + match[0].length);
+}
+
+function applyBold(view: EditorView) {
+	const { from, to } = view.state.selection.main;
+
+	const changes = [
+		{ from, insert: "**" },
+		{ from: to, insert: "**" },
+	];
+
+	const tr = view.state.update({
+		changes,
+		selection: { anchor: from, head: to + 4 },
+	});
+
+	view.dispatch(tr);
+}
+
+function applyItalic(view: EditorView) {
+	const { from, to } = view.state.selection.main;
+
+	const changes = [
+		{ from, insert: "*" },
+		{ from: to, insert: "*" },
+	];
+
+	const tr = view.state.update({
+		changes,
+		selection: { anchor: from, head: to + 2 },
+	});
+
+	view.dispatch(tr);
 }
