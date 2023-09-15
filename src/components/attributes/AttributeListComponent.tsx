@@ -13,6 +13,7 @@ import MajorCluesAttributeComponent from "./types/MajorCluesAttributeComponent";
 import MapAttributeComponent from "./types/MapAttributeComponent";
 import NonPlayerCharacterTypeAttributeComponent from "./types/NonPlayerCharacterTypeAttributeComponent";
 import NumberAttributeTypeComponent from "./types/NumberAttributeTypeComponent";
+import PronounComponent from "./types/PronounComponent";
 import ScaleTypeAttributeComponent from "./types/ScaleTypeAttributeComponent";
 import SceneTypeAttributeComponent from "./types/SceneTypeAttributeComponent";
 import SelectAttributeTypeComponent from "./types/SelectAttributeTypeComponent";
@@ -53,6 +54,9 @@ export default function AttributeListComponent({
 					let attributeComponent;
 
 					switch (attribute.type) {
+						case AttributeComponentType.Pronoun:
+							attributeComponent = <PronounComponent element={element} attribute={attribute} isEditable={isEditable} />;
+							break;
 						case AttributeComponentType.Scale:
 							attributeComponent = (
 								<ScaleTypeAttributeComponent element={element} attribute={attribute} isEditable={isEditable} />

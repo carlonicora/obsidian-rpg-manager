@@ -33,4 +33,5 @@ export enum AttributeType {
 	Stake = "stake",
 	Kishotenketsu = "kishotenketsu",
 	Conflict = "conflict",
+	Pronoun = "pronoun",
 }
