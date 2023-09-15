@@ -1,19 +1,16 @@
 import "obsidian";
-import {RpgManagerInterface} from "../core/interfaces/RpgManagerInterface";
-import {RpgManagerApiInterface} from "../api/interfaces/RpgManagerApiInterface";
-import {API} from "obsidian-fantasy-calendar";
+import { RpgManagerInterface } from "src/RpgManagerInterface";
 
 export type CalendarEventTree = Map<string, Set<number>>;
 
 declare global {
 	interface Window {
-		RpgManagerAPI?: RpgManagerApiInterface,
-		FantasyCalendarAPI: API,
+		RpgManagerAPI?: RpgManagerInterface;
 	}
 }
 
 declare module "obsidian" {
-	function getIcon(iconId: string, size?: number): SVGSVGElement|null;
+	function getIcon(iconId: string, size?: number): SVGSVGElement | null;
 
 	interface MetadataCache {
 		trigger(...args: Parameters<MetadataCache["on"]>): void;
@@ -35,18 +32,12 @@ declare module "obsidian" {
 		appId?: string;
 		plugins: {
 			getPlugin(plugin: "rpg-manager"): RpgManagerInterface;
-			getPlugin(plugin: "fantasy-calendar"): any;
 			enabledPlugins: Set<string>;
 		};
 	}
 
 	interface Workspace {
-		on(name: "rpgmanager:database-ready", callback: () => void, ctx?: any): EventRef;
+		on(name: "rpgmanager:refresh-option-view", callback: () => void, ctx?: any): EventRef;
 		on(name: "rpgmanager:refresh-views", callback: () => void, ctx?: any): EventRef;
-		on(name: "rpgmanager:force-refresh-views", callback: () => void, ctx?: any): EventRef;
-		on(name: "rpgmanager:index-complete", callback: () => void, ctx?: any): EventRef;
-		on(name: "fantasy-calendars-settings-loaded", callback: () => void, ctx?: any): EventRef;
-		on(name: "fantasy-calendars-updated", callback: () => void, ctx?: any): EventRef;
-		on(name: "fantasy-calendars-event-update", callback: (tree: CalendarEventTree) => any): EventRef;
 	}
 }

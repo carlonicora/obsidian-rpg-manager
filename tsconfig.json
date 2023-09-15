@@ -1,24 +1,20 @@
 {
-  "compilerOptions": {
-    "baseUrl": "../../../Desktop/New Folder With Items",
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "module": "ESNext",
-    "target": "ES6",
-    "allowJs": true,
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "isolatedModules": true,
-	"strictNullChecks": true,
-    "lib": [
-      "DOM",
-      "ES5",
-      "ES6",
-      "ES7",
-	  "ES2021.String"
-    ]
-  },
-  "include": ["**/*.ts"],
-	"exclude": ["REFACTOR"]
+	"compilerOptions": {
+		"baseUrl": ".",
+		"allowSyntheticDefaultImports": true,
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"jsx": "react",
+		"module": "ESNext",
+		"target": "esnext",
+		"allowJs": true,
+		"noImplicitAny": true,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"lib": ["dom", "esnext"],
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx"]
 }
