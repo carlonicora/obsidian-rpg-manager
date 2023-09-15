@@ -246,7 +246,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 							<FontAwesomeIcon icon={faEye} />
 						</div>
 						<div className="flex justify-center -ml-8 text-sm">
-							<MarkdownComponent value={sensoryImprint.sight} />
+							<MarkdownComponent value={sensoryImprint.sight} specificComponent="sensory" />
 						</div>
 					</div>
 				)}
@@ -256,7 +256,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 							<FontAwesomeIcon icon={faEarListen} />
 						</div>
 						<div className="flex justify-center -ml-8 text-sm">
-							<MarkdownComponent value={sensoryImprint.hear} />
+							<MarkdownComponent value={sensoryImprint.hear} specificComponent="sensory" />
 						</div>
 					</div>
 				)}
@@ -266,7 +266,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 							<FontAwesomeIcon icon={faWind} />
 						</div>
 						<div className="flex justify-center -ml-8 text-sm">
-							<MarkdownComponent value={sensoryImprint.smell} />
+							<MarkdownComponent value={sensoryImprint.smell} specificComponent="sensory" />
 						</div>
 					</div>
 				)}
@@ -276,7 +276,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 							<FontAwesomeIcon icon={faHandPointer} />
 						</div>
 						<div className="flex justify-center -ml-8 text-sm">
-							<MarkdownComponent value={sensoryImprint.touch} />
+							<MarkdownComponent value={sensoryImprint.touch} specificComponent="sensory" />
 						</div>
 					</div>
 				)}
@@ -286,7 +286,7 @@ function BrowseComponent({ attribute }: { attribute: AttributeInterface }): Reac
 							<FontAwesomeIcon icon={faTint} />
 						</div>
 						<div className="flex justify-center -ml-8 text-sm">
-							<MarkdownComponent value={sensoryImprint.taste} />
+							<MarkdownComponent value={sensoryImprint.taste} specificComponent="sensory" />
 						</div>
 					</div>
 				)}

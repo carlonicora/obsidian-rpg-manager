@@ -1118,6 +1118,10 @@ video {
   list-style-type: disc;
 }
 
+.list-none {
+  list-style-type: none;
+}
+
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
