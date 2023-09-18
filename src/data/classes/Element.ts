@@ -35,41 +35,13 @@ export class Element implements ElementInterface {
 			this.touch();
 	}
 
-	getCustomAttributes(type?: ElementType): AttributeInterface[] {
-		const response: AttributeInterface[] = [];
-
-		if (this.type === ElementType.Campaign) {
-			const availableCustomAttributes: any[] | undefined = this._rpgManagerBlock.attributes as any[] | undefined;
-
-			if (availableCustomAttributes === undefined || availableCustomAttributes.length === 0) return [];
-
-			availableCustomAttributes
-				.filter(
-					(customAttribute: AttributeInterface) => type === undefined || customAttribute.customTypes.contains(type)
-				)
-				.forEach((customAttribute: any) => {
-					response.push({
-						id: customAttribute.id,
-						type: customAttribute.type,
-						isCustom: true,
-						options: customAttribute.options,
-						customName: customAttribute.customName,
-						customTypes: customAttribute.customTypes,
-					});
-				});
-
-			return response;
-		}
-
-		if (this._campaign === undefined) return [];
-
-		return this._campaign.getCustomAttributes(type);
-	}
-
 	get attributes(): AttributeInterface[] {
 		const response: AttributeInterface[] = [];
 
-		const customAttributes: AttributeInterface[] = this.getCustomAttributes(this.type);
+		const customAttributes: AttributeInterface[] = this._api.settings.customAttributes.filter(
+			(customAttribute: AttributeInterface) =>
+				customAttribute.customTypes !== undefined && customAttribute.customTypes.contains(this.type)
+		);
 		const elementAttributes: AttributeInterface[] = [];
 
 		switch (this.system) {
@@ -109,7 +81,12 @@ export class Element implements ElementInterface {
 		}
 
 		if (attribute === undefined) {
-			attribute = this.getCustomAttributes(this.type).find((attribute: AttributeInterface) => attribute.id === id);
+			attribute = this._api.settings.customAttributes.find(
+				(customAttribute: AttributeInterface) =>
+					customAttribute.customTypes !== undefined &&
+					customAttribute.customTypes.contains(this.type) &&
+					customAttribute.id === id.toLowerCase()
+			);
 		}
 
 		if (attribute === undefined) return undefined;

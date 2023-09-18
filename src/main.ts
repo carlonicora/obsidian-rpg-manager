@@ -21,6 +21,7 @@ import { DatabaseFactory } from "./factories/DatabaseFactory";
 import { ServiceFactory } from "./factories/ServiceFactory";
 import { InternationalisationService } from "./services/InternationalisationService";
 import { PluginServices } from "./services/PluginServices";
+import { CustomAttribtuesUpdater } from "./services/UpdaterService/CustomAttributesUpdater";
 import { UpdaterView } from "./services/UpdaterService/views/UpdaterView";
 import { taskService } from "./services/taskService/TaskService";
 import { TaskServiceInterface } from "./services/taskService/interfaces/TaskServiceInterface";
@@ -165,26 +166,32 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 			*/
 
 			this.app.workspace.trigger("rpgmanager:refresh-views");
-		});
 
-		(window["RpgManagerAPI"] = this) && this.register(() => delete window["RpgManagerAPI"]);
+			(window["RpgManagerAPI"] = this) && this.register(() => delete window["RpgManagerAPI"]);
+
+			this.app.workspace.detachLeavesOfType("rpg-manager-updater");
+			this.app.workspace.detachLeavesOfType("rpg-manager-readme");
+
+			CustomAttribtuesUpdater.update(this.app, this);
+
+			if (this.settings.version !== this.manifest.version) {
+				// if (this.settings.customAttributes === undefined || this.settings.customAttributes.length === 0) {
+				// CustomAttribtuesUpdater.update(this.app, this);
+				// }
+
+				this.settings = { ...this.settings, version: this.manifest.version };
+				this.saveData(this.settings);
+
+				this.app.workspace.getLeaf(true).setViewState({
+					type: "rpg-manager-readme",
+					active: true,
+				});
+			}
+		});
 
 		PluginServices.registerProcessors(this.app, this);
 		PluginServices.registerCommands(this.app, this);
 		this.addSettingTab(new RpgManagerSettings(this.app, this));
-
-		this.app.workspace.detachLeavesOfType("rpg-manager-updater");
-		this.app.workspace.detachLeavesOfType("rpg-manager-readme");
-
-		if (this.settings.version !== this.manifest.version) {
-			this.settings = { ...this.settings, version: this.manifest.version };
-			await this.saveData(this.settings);
-
-			this.app.workspace.getLeaf(true).setViewState({
-				type: "rpg-manager-readme",
-				active: true,
-			});
-		}
 	}
 
 	/*
