@@ -1,6 +1,6 @@
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import TextAreaComponent from "src/components/attributes/primitives/TextAreaComponent";
 import MarkdownComponent from "src/components/markdowns/MarkdownComponent";
 import { useWizard } from "src/hooks/useWizard";
 import { ChatGptNonPlayerCharacterModel } from "src/services/ChatGptService/models/ChatGptNonPlayerCharacterModel";
@@ -30,7 +30,7 @@ export default function NonPlayerCharacterWizardDescriptionStepComponent({
 				<MarkdownComponent value={t("wizards.npc.description", { context: "description", name: name })} />
 			</div>
 			<div className="">
-				<TextAreaComponent
+				<MarkdownEditorComponent
 					initialValue={wizardData.description}
 					campaignPath={campaignPath}
 					onChange={updateDescription}

@@ -8,7 +8,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { ImageInterface } from "src/data/interfaces/ImageInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import TextAreaComponent from "../attributes/primitives/TextAreaComponent";
+import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
 
 export default function SingleImageComponent({
 	element,
@@ -58,7 +58,7 @@ export default function SingleImageComponent({
 					<div>
 						<h3 className="!text-xl !font-extralight">{t("gallery.caption")}</h3>
 						<div className="w-full">
-							<TextAreaComponent
+							<MarkdownEditorComponent
 								initialValue={caption}
 								onChange={setCaption}
 								campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}

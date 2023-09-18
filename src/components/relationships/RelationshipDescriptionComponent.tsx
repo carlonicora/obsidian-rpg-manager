@@ -9,7 +9,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { RelationshipInterface } from "src/data/interfaces/RelationshipInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import TextAreaComponent from "../attributes/primitives/TextAreaComponent";
+import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
 import MarkdownComponent from "../markdowns/MarkdownComponent";
 
 export default function RelationshipDescriptionComponent({
@@ -115,7 +115,7 @@ export default function RelationshipDescriptionComponent({
 						</select>
 					</div>
 					<div>
-						<TextAreaComponent
+						<MarkdownEditorComponent
 							initialValue={value}
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
 							onChange={updateRelationship}

@@ -1,6 +1,6 @@
 {
 	"name": "rpg-manager",
-	"version": "4.0.8",
+	"version": "4.1.0",
 	"description": "Manage your Tabletop Role Playing Game Campaigns in Obsidian.",
 	"main": "src/main.ts",
 	"scripts": {
@@ -17,6 +17,11 @@
 		"@babel/preset-env": "^7.22.10",
 		"@babel/preset-react": "^7.22.5",
 		"@babel/preset-typescript": "^7.22.11",
+		"@codemirror/lang-markdown": "^6.2.1",
+		"@codemirror/language": "https://github.com/lishid/cm-language",
+		"@codemirror/state": "github:codemirror/state",
+		"@codemirror/stream-parser": "github:codemirror/stream-parser",
+		"@codemirror/view": "github:codemirror/view",
 		"@testing-library/dom": "^9.2.0",
 		"@testing-library/jest-dom": "^5.17.0",
 		"@testing-library/react": "^14.0.0",

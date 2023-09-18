@@ -1,7 +1,21 @@
-import { Plugin, addIcon } from "obsidian";
+import {
+	// App,
+	// Component,
+	// MarkdownPostProcessorContext,
+	// MarkdownRenderChild,
+	// editorLivePreviewField,
+	// TFile,
+	Plugin,
+	addIcon,
+} from "obsidian";
 
+// import { syntaxTree, tokenClassNodeProp } from "@codemirror/language";
+// import { Extension, Range } from "@codemirror/state";
+// import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType } from "@codemirror/view";
+// import { SyntaxNode } from "@lezer/common";
 import { RpgManagerInterface } from "./RpgManagerInterface";
 import { ElementType } from "./data/enums/ElementType";
+// import { AttributeInterface } from "./data/interfaces/AttributeInterface";
 import { ElementInterface } from "./data/interfaces/ElementInterface";
 import { DatabaseFactory } from "./factories/DatabaseFactory";
 import { ServiceFactory } from "./factories/ServiceFactory";
@@ -24,6 +38,8 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 	private _taskService: TaskServiceInterface;
 
 	settings: RpgManagerSettingsInterface;
+
+	// private _extensions: Extension[];
 
 	get version(): string {
 		return this.manifest.version;
@@ -139,6 +155,16 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 			console.info("RpgManager " + this.manifest.version + " loaded");
 			PluginServices.registerEvents(this.app, this, this._database);
+
+			/*
+			this.registerMarkdownPostProcessor(async (el, ctx) => {
+				this.inlineAttribute(el, ctx, ctx.sourcePath);
+			});
+
+			this._extensions = [inlinePlugin(this.app, this)];
+			this.registerEditorExtension(this._extensions);
+			*/
+
 			this.app.workspace.trigger("rpgmanager:refresh-views");
 
 			(window["RpgManagerAPI"] = this) && this.register(() => delete window["RpgManagerAPI"]);
@@ -167,4 +193,227 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		PluginServices.registerCommands(this.app, this);
 		this.addSettingTab(new RpgManagerSettings(this.app, this));
 	}
+
+	/*
+	public async inlineAttribute(
+		el: HTMLElement,
+		component: Component | MarkdownPostProcessorContext,
+		sourcePath: string
+	) {
+		const codeblocks = el.querySelectorAll("code");
+		for (let index = 0; index < codeblocks.length; index++) {
+			const codeblock = codeblocks.item(index);
+
+			const text = codeblock.innerText.trim();
+			if (text.startsWith("rpgm")) {
+				const code = text.substring(4).trim();
+				if (code.length == 0) continue;
+
+				component.addChild(new RpgManagerInlineAttributeRenderer(this.app, this, code, el, codeblock, sourcePath));
+			}
+		}
+	}
+	*/
 }
+
+/*
+export class RpgManagerInlineAttributeFetcher {
+	static fetch(api: RpgManagerInterface, path: string, attributeName: string): AttributeInterface | undefined {
+		const element: ElementInterface | undefined = api.get(path) as ElementInterface | undefined;
+		if (!element) return undefined;
+		const attribute: AttributeInterface | undefined = element.attribute(attributeName);
+		if (!attribute || !attribute.isSet) return undefined;
+
+		return attribute;
+	}
+}
+
+export class RpgManagerInlineAttributeRenderer extends MarkdownRenderChild {
+	constructor(
+		public app: App,
+		public api: RpgManagerInterface,
+		public script: string,
+		public container: HTMLElement,
+		public target: HTMLElement,
+		public origin: string
+	) {
+		super(container);
+	}
+
+	onload() {
+		this.render();
+
+		this.registerEvent(this.app.workspace.on("rpgmanager:refresh-views", this.maybeRefresh));
+		this.register(this.container.onNodeInserted(this.maybeRefresh));
+	}
+
+	maybeRefresh = () => {
+		if (this.container.isShown()) {
+			this.render();
+		}
+	};
+
+	async render() {
+		const attribute = RpgManagerInlineAttributeFetcher.fetch(this.api, this.origin, this.script);
+		const el = document.createElement("span");
+
+		if (attribute) {
+			el.textContent = attribute.value;
+		} else {
+			el.textContent = this.script;
+		}
+
+		this.target.replaceWith(el);
+		this.target = el;
+	}
+}
+
+class RpgManagerInlineWidget extends WidgetType {
+	constructor(private _el: HTMLElement) {
+		super();
+	}
+
+	toDOM(view: EditorView): HTMLElement {
+		return this._el;
+	}
+}
+
+export function inlinePlugin(app: App, api: RpgManagerInterface) {
+	return ViewPlugin.fromClass(
+		class {
+			decorations: DecorationSet;
+			component: Component;
+
+			constructor(view: EditorView) {
+				this.component = new Component();
+				this.component.load();
+				this.decorations = this.inlineRender(view) ?? Decoration.none;
+			}
+
+			update(update: ViewUpdate) {
+				if (!update.state.field(editorLivePreviewField)) {
+					this.decorations = Decoration.none;
+					return;
+				}
+				if (update.docChanged) {
+					this.decorations = this.decorations.map(update.changes);
+					this.updateTree(update.view);
+				} else if (update.selectionSet) {
+					this.updateTree(update.view);
+				} else if (update.viewportChanged) {
+					this.decorations = this.inlineRender(update.view) ?? Decoration.none;
+				}
+			}
+
+			updateTree(view: EditorView) {
+				for (const { from, to } of view.visibleRanges) {
+					syntaxTree(view.state).iterate({
+						from,
+						to,
+						enter: ({ node }) => {
+							if (this.renderNode(view, node)) {
+								this.addDeco(node, view);
+							} else {
+								this.removeDeco(node);
+							}
+						},
+					});
+				}
+			}
+
+			removeDeco(node: SyntaxNode) {
+				this.decorations.between(node.from - 1, node.to + 1, (from, to, value) => {
+					this.decorations = this.decorations.update({
+						filterFrom: from,
+						filterTo: to,
+						filter: (from, to, value) => false,
+					});
+				});
+			}
+
+			addDeco(node: SyntaxNode, view: EditorView) {
+				const from = node.from - 1;
+				const to = node.to + 1;
+				let exists = false;
+				this.decorations.between(from, to, (from, to, value) => {
+					exists = true;
+				});
+				if (!exists) {
+					const currentFile = app.workspace.getActiveFile();
+					if (!currentFile) return;
+					const newDeco = this.renderWidget(node, view, currentFile)?.value;
+					if (newDeco) {
+						this.decorations = this.decorations.update({
+							add: [{ from: from, to: to, value: newDeco }],
+						});
+					}
+				}
+			}
+
+			renderNode(view: EditorView, node: SyntaxNode) {
+				const type = node.type;
+				const tokenProps = type.prop<string>(tokenClassNodeProp);
+				const props = new Set(tokenProps?.split(" "));
+				if (!props.has("inline-code") || props.has("formatting")) return true;
+
+				for (const range of view.state.selection.ranges) {
+					if (range.from <= node.to + 1 && range.to >= node.from - 1) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			inlineRender(view: EditorView) {
+				const currentFile = app.workspace.getActiveFile();
+				if (!currentFile) return;
+
+				const widgets: Range<Decoration>[] = [];
+				for (const { from, to } of view.visibleRanges) {
+					syntaxTree(view.state).iterate({
+						from,
+						to,
+						enter: ({ node }) => {
+							if (!this.renderNode(view, node)) return;
+
+							const widget = this.renderWidget(node, view, currentFile);
+							if (widget) widgets.push(widget);
+						},
+					});
+				}
+
+				return Decoration.set(widgets, true);
+			}
+
+			renderWidget(node: SyntaxNode, view: EditorView, currentFile: TFile) {
+				const start = node.from;
+				const end = node.to;
+
+				if (view.state.doc.sliceString(end, end + 1) === "\n") return;
+
+				const text = view.state.doc.sliceString(start, end);
+
+				if (!text.startsWith("rpgm")) return;
+
+				const attribute = RpgManagerInlineAttributeFetcher.fetch(api, currentFile.path, text.substring(4).trim());
+				if (!attribute) return;
+
+				const el = createSpan();
+				el.appendText(attribute.value);
+
+				return Decoration.replace({
+					widget: new RpgManagerInlineWidget(el),
+					inclusive: false,
+					block: false,
+				}).range(start - 1, end + 1);
+			}
+
+			destroy() {
+				this.component.unload();
+			}
+		},
+		{ decorations: (v) => v.decorations }
+	);
+}
+*/

@@ -1,3 +1,4 @@
+import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
 import { useApp } from "@/hooks/useApp";
 import { App } from "obsidian";
 import * as React from "react";
@@ -9,7 +10,6 @@ import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import TextAreaComponent from "../primitives/TextAreaComponent";
 
 export default function DescriptionAttributeComponent({
 	element,
@@ -51,7 +51,7 @@ export default function DescriptionAttributeComponent({
 		content = (
 			<div className="grid grid-cols-1">
 				<div>
-					<TextAreaComponent
+					<MarkdownEditorComponent
 						initialValue={attribute.value}
 						campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
 						onChange={setDescription}

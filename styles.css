@@ -244,6 +244,14 @@
   margin-right: 1rem;
 }
 
+.\!-mb-5 {
+  margin-bottom: -1.25rem !important;
+}
+
+.\!-mt-1 {
+  margin-top: -0.25rem !important;
+}
+
 .\!-mt-3 {
   margin-top: -0.75rem !important;
 }
@@ -678,6 +686,10 @@
   list-style-type: disc;
 }
 
+.list-none {
+  list-style-type: none;
+}
+
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
@@ -863,6 +875,10 @@
 
 .border-\[--background-modifier-border\] {
   border-color: var(--background-modifier-border);
+}
+
+.border-\[--text-accent\] {
+  border-color: var(--text-accent);
 }
 
 .border-transparent {
@@ -1338,6 +1354,15 @@
 
 .border-l {
   border-left-style: solid;
+}
+
+.markdown-editor-component {
+  white-space: pre-wrap !important;
+}
+
+.markdown-editor-component .cm-content {
+  white-space: pre-wrap !important;
+  flex-shrink: 1 !important;
 }
 
 .popover.hover-popover > .markdown-embed > .markdown-embed-content > .markdown-preview-view {
