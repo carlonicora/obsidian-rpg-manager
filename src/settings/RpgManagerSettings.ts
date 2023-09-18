@@ -1,3 +1,4 @@
+import { AttributeInterface } from "@/data/interfaces/AttributeInterface";
 import { App, Plugin, PluginSettingTab, Setting, TAbstractFile, TFolder } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 
@@ -8,6 +9,7 @@ export interface RpgManagerSettingsInterface {
 	automaticMove: boolean;
 	useSceneAnalyser: boolean;
 	version: string;
+	customAttributes: AttributeInterface[];
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -19,6 +21,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	automaticMove: false,
 	useSceneAnalyser: true,
 	version: "0.0.0",
+	customAttributes: [],
 };
 
 export class RpgManagerSettings extends PluginSettingTab {

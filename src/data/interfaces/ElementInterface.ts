@@ -29,7 +29,6 @@ export interface ElementInterface {
 	get images(): ImageInterface[];
 	get tasks(): TaskInterface[];
 
-	getCustomAttributes(type?: ElementType): AttributeInterface[];
 	get attributes(): AttributeInterface[];
 	attribute(name: string): AttributeInterface | undefined;
 }

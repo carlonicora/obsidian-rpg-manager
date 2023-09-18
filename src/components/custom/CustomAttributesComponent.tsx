@@ -1,6 +1,7 @@
+import { useApp } from "@/hooks/useApp";
+import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { ElementType } from "src/data/enums/ElementType";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import MarkdownComponent from "../markdowns/MarkdownComponent";
@@ -9,6 +10,7 @@ import CustomAttributeListComponent from "./CustomAttributeListComponent";
 
 export default function CustomAttributesComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();
+	const app: App = useApp();
 
 	const [attribute, setAttribute] = React.useState<AttributeInterface | undefined>(undefined);
 	const [newAttribute, setNewAttribute] = React.useState<boolean>(false);
@@ -27,29 +29,19 @@ export default function CustomAttributesComponent({ element }: { element: Elemen
 		setTimeout(() => {
 			setAttribute(undefined);
 			setNewAttribute(false);
+
+			app.workspace.trigger("rpgmanager:refresh-option-view");
 		}, 500);
 	};
 
 	let content: React.ReactElement | undefined = undefined;
 
 	if (attribute) {
-		content = (
-			<CustomAttributeComponent
-				key={attribute.id}
-				attribute={attribute}
-				campaign={element.type === ElementType.Campaign ? element : element.campaign}
-				onSaveAttribute={reset}
-			/>
-		);
+		content = <CustomAttributeComponent key={attribute.id} attribute={attribute} onSaveAttribute={reset} />;
 	}
 
 	if (newAttribute) {
-		content = (
-			<CustomAttributeComponent
-				campaign={element.type === ElementType.Campaign ? element : element.campaign}
-				onSaveAttribute={reset}
-			/>
-		);
+		content = <CustomAttributeComponent onSaveAttribute={reset} />;
 	}
 
 	return (
@@ -60,7 +52,7 @@ export default function CustomAttributesComponent({ element }: { element: Elemen
 			<div className="grid grid-cols-5 border-b border-b-[--background-modifier-border]">
 				<div className="col-span-1 border-r border-r-[--background-modifier-border]">
 					<CustomAttributeListComponent
-						campaign={element.type === ElementType.Campaign ? element : element.campaign}
+						element={element}
 						setAttribute={handleSetAttribute}
 						setNewAttribute={handleSetNewAttribute}
 					/>

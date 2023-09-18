@@ -1,20 +1,26 @@
+import { RpgManagerInterface } from "@/RpgManagerInterface";
+import { useApi } from "@/hooks/useApi";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export default function CustomAttributeListComponent({
-	campaign,
+	element,
 	setAttribute,
 	setNewAttribute,
 }: {
-	campaign: ElementInterface;
+	element: ElementInterface;
 	setAttribute: (attribute: AttributeInterface) => void;
 	setNewAttribute: (newAttribute: boolean) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
+	const api: RpgManagerInterface = useApi();
 
-	const customAttributes: AttributeInterface[] = campaign.getCustomAttributes();
+	let customAttributes: AttributeInterface[] = api.settings.customAttributes ?? [];
+	customAttributes = customAttributes.filter((customAttribute: AttributeInterface) =>
+		customAttribute.customTypes.contains(element.type)
+	);
 
 	return (
 		<>
