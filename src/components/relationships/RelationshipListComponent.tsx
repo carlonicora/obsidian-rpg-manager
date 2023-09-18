@@ -26,6 +26,8 @@ export default function RelationshipListComponent({
 			relationship.component.path !== element.path
 	);
 
+	if (relationships === undefined || relationships.length === 0) return null;
+
 	let title = t("elements." + type, { count: 2 });
 	if (parent) {
 		relationships = relationships.filter(
@@ -33,7 +35,8 @@ export default function RelationshipListComponent({
 				relationship.type === RelationshipType.Parent ||
 				(relationship.type === RelationshipType.Reversed &&
 					relationship.component.relationships.find(
-						(rel: RelationshipInterface) => rel.component.path === element.path && rel.type === RelationshipType.Child
+						(rel: RelationshipInterface) =>
+							rel.component !== undefined && rel.component.path === element.path && rel.type === RelationshipType.Child
 					))
 		);
 		title = t("elements." + element.type, { context: "inside" });
@@ -43,7 +46,8 @@ export default function RelationshipListComponent({
 				relationship.type === RelationshipType.Child ||
 				(relationship.type === RelationshipType.Reversed &&
 					relationship.component.relationships.find(
-						(rel: RelationshipInterface) => rel.component.path === element.path && rel.type === RelationshipType.Parent
+						(rel: RelationshipInterface) =>
+							rel.component !== undefined && rel.component.path === element.path && rel.type === RelationshipType.Parent
 					))
 		);
 		title = t("elements." + element.type, { context: "contains" });
@@ -54,7 +58,7 @@ export default function RelationshipListComponent({
 		);
 	}
 
-	if (relationships.length === 0) return null;
+	if (relationships === undefined || relationships.length === 0) return null;
 
 	return (
 		<div>
