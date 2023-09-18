@@ -101,6 +101,7 @@ export const i18nEn = {
 On the left you can see the attributes you have already created, and you can edit them.
 
 If you want to create new ones, just click on the button and define the name and type of the attribute and in which elements it is goign to be available.`,
+		cantdelete: "You can't delete this attribute because it is used in one or more elements.",
 	},
 	attributes: {
 		attribute_one: "Attribute",

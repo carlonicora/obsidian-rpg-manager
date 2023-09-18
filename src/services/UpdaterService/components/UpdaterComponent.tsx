@@ -37,6 +37,7 @@ function Upgrading(): React.ReactElement {
 				automaticMove: false,
 				useSceneAnalyser: true,
 				version: api.version,
+				customAttributes: [],
 			};
 			(api as unknown as Plugin).saveData(settings);
 

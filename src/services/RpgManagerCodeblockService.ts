@@ -264,6 +264,19 @@ export class RpgManagerCodeblockService {
 		this._modifyFileContent(this._fileContent.replace(this._codeblockContent, codeblockContent));
 	}
 
+	async deleteAttributes(): Promise<void> {
+		const codeblock = await this.readCodeblock();
+
+		if (codeblock.attributes !== undefined) {
+			delete codeblock.attributes;
+
+			const yamlService: YamlService = new YamlService();
+			const codeblockContent: string = yamlService.stringify(codeblock);
+
+			this._modifyFileContent(this._fileContent.replace(this._codeblockContent, codeblockContent));
+		}
+	}
+
 	async addOrUpdateAttribute(attribute: AttributeInterface): Promise<void> {
 		const codeblock = await this.readCodeblock();
 

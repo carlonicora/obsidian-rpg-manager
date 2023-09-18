@@ -1,27 +1,22 @@
-import { useApp } from "@/hooks/useApp";
-import { App } from "obsidian";
+import { ElementInterface } from "@/data/interfaces/ElementInterface";
+import { Plugin } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { AttributeComponentType } from "src/data/enums/AttributeComponentType";
 import { ElementType } from "src/data/enums/ElementType";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
-import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
-import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
 
 export default function CustomAttributeComponent({
-	campaign,
 	attribute,
 	onSaveAttribute,
 }: {
-	campaign: ElementInterface;
 	attribute?: AttributeInterface;
 	onSaveAttribute: () => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
-	const app: App = useApp();
 
 	const [name, setName] = React.useState<string>(attribute?.customName || "");
 	const [type, setType] = React.useState<AttributeComponentType | undefined>(attribute?.type);
@@ -30,6 +25,13 @@ export default function CustomAttributeComponent({
 	);
 	const [customTypes, setCustomTypes] = React.useState<ElementType[] | undefined>(attribute?.customTypes ?? []);
 	const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+	const [canBeDeleted] = React.useState(() => {
+		if (!attribute) return false;
+
+		return !(api.get() as ElementInterface[]).some(
+			(element: ElementInterface) => element.attribute(attribute.id)?.isSet === true
+		);
+	});
 
 	const handleCustomTypeChange = (value: ElementType, checked: boolean) => {
 		if (checked && !customTypes?.includes(value)) {
@@ -67,7 +69,22 @@ export default function CustomAttributeComponent({
 		return Object.keys(newErrors).length === 0;
 	};
 
-	const handleSave = () => {
+	const handleDelete = async () => {
+		const id = attribute?.id ?? "_" + name?.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+		const customAttributes = api.settings.customAttributes ?? [];
+
+		const existingIndex = customAttributes.findIndex((attribute: AttributeInterface) => attribute.id === id);
+
+		if (existingIndex !== -1) {
+			customAttributes.splice(existingIndex, 1);
+			api.settings = { ...api.settings, customAttributes: customAttributes };
+			await (api as unknown as Plugin).saveData(api.settings);
+
+			onSaveAttribute();
+		}
+	};
+
+	const handleSave = async () => {
 		if (!validate()) return;
 
 		// Convert the name to lowercase, remove spaces and non-alphanumeric characters for id
@@ -77,6 +94,7 @@ export default function CustomAttributeComponent({
 			customName: name,
 			type: type,
 			id: id,
+			isCustom: true,
 		};
 
 		// Add options if they are valid and non-empty
@@ -92,10 +110,21 @@ export default function CustomAttributeComponent({
 			updatedAttribute.customTypes = customTypes;
 		}
 
-		const codeblockService = new RpgManagerCodeblockService(app, api, campaign.file);
-		codeblockService.addOrUpdateAttribute(updatedAttribute).then(() => {
-			onSaveAttribute();
-		});
+		const customAttributes = api.settings.customAttributes ?? [];
+		const existingIndex = customAttributes.findIndex(
+			(attribute: AttributeInterface) => attribute.id === updatedAttribute.id
+		);
+
+		if (existingIndex === -1) {
+			customAttributes.push(updatedAttribute);
+		} else {
+			customAttributes[existingIndex] = updatedAttribute;
+		}
+
+		api.settings = { ...api.settings, customAttributes: customAttributes };
+		await (api as unknown as Plugin).saveData(api.settings);
+
+		onSaveAttribute();
 	};
 
 	return (
@@ -163,6 +192,19 @@ export default function CustomAttributeComponent({
 				</div>
 			</div>
 			<div className="flex w-full justify-end">
+				{canBeDeleted === true ? (
+					<button className="rpgm-danger" onClick={handleDelete}>
+						{t("buttons.delete")}
+					</button>
+				) : (
+					<button
+						className="text-[--text-faint] cursor-not-allowed"
+						disabled={true}
+						title={t("customattributes.cantdelete")}
+					>
+						{t("buttons.delete")}
+					</button>
+				)}
 				<button className="rpgm-primary" onClick={handleSave}>
 					{t("buttons.save")}
 				</button>

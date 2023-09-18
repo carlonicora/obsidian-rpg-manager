@@ -123,7 +123,7 @@ Common Pitfalls
 
 While there are no tutorials or guides available at the moment, we are working on creating video tutorials to help you get the most out of RPG Manager. Stay tuned!
 
-## 1.5. Upgrade your vault from v3
+### 1.5. Upgrade your vault from v3
 
 If you are already using RPG Manager and you update it to version 4, the plugin will not work. You have two options: use BRAT to revert to v3.4.5 or upgrade your vault.
 
