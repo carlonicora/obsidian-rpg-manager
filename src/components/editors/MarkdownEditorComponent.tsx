@@ -69,12 +69,16 @@ export default function MarkdownEditorComponent({
 
 			if (nextChar === "\n") toPosition -= 1;
 
+			toPosition = Math.min(toPosition, editorView.state.doc.length);
+
 			const tr = editorView.state.update({
 				changes: { from: startPos, to: toPosition, insert: replacementString },
 			});
 			editorView.dispatch(tr);
 
-			const endPos = startPos + replacementString.length;
+			// const endPos = startPos + replacementString.length;
+			const endPos = Math.min(startPos + replacementString.length, editorView.state.doc.length);
+
 			editorView.dispatch({
 				selection: { anchor: endPos, head: endPos },
 				scrollIntoView: true,
