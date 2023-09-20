@@ -26,7 +26,7 @@ export default function ImageAndDescriptionComponent({
 				</div>
 			)}
 
-			<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary]">
+			<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] p-3">
 				<DescriptionAttributeComponent
 					element={element}
 					attribute={element.attribute(AttributeType.Description)}

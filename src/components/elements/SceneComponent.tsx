@@ -46,7 +46,7 @@ export default function SceneComponent({
 				)}
 				{!isInPopover && <TasksContainerComponent element={element} />}
 				{isInPopover === false && element.relationships.length > 0 && (
-					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 m-3">
+					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
 						<RelationshipsComponent element={element} />
 					</div>
 				)}
