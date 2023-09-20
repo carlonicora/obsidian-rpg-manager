@@ -51,32 +51,24 @@ export default function RelationshipComponent({
 
 	return (
 		<div className="border border-[--background-modifier-border] rounded-lg flex flex-col">
-			<div className="flex justify-center relative">
-				<div className="w-full relative pb-[100%]">
-					<div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-tl-lg rounded-tr-lg">
-						<a
-							href={relationship.component.file.path}
-							className="w-full h-full internal-link flex items-center justify-center"
-						>
-							{relationship.component.images.length > 0 ? (
+			{relationship.component.images.length > 0 && (
+				<div className="flex justify-center relative">
+					<div className="w-full relative pb-[100%]">
+						<div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-tl-lg rounded-tr-lg">
+							<a
+								href={relationship.component.file.path}
+								className="w-full h-full internal-link flex items-center justify-center"
+							>
 								<img
 									src={relationship.component.images[0].src}
 									alt={relationship.component.images[0].caption}
 									className="min-w-full min-h-full object-cover !cursor-pointer"
 								/>
-							) : (
-								<svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full" viewBox="0 0 16 16">
-									<path
-										d="m 4 1 c -1.644531 0 -3 1.355469 -3 3 v 1 h 1 v -1 c 0 -1.109375 0.890625 -2 2 -2 h 1 v -1 z m 2 0 v 1 h 4 v -1 z m 5 0 v 1 h 1 c 1.109375 0 2 0.890625 2 2 v 1 h 1 v -1 c 0 -1.644531 -1.355469 -3 -3 -3 z m -5 4 c -0.550781 0 -1 0.449219 -1 1 s 0.449219 1 1 1 s 1 -0.449219 1 -1 s -0.449219 -1 -1 -1 z m -5 1 v 4 h 1 v -4 z m 13 0 v 4 h 1 v -4 z m -4.5 2 l -2 2 l -1.5 -1 l -2 2 v 0.5 c 0 0.5 0.5 0.5 0.5 0.5 h 7 s 0.472656 -0.035156 0.5 -0.5 v -1 z m -8.5 3 v 1 c 0 1.644531 1.355469 3 3 3 h 1 v -1 h -1 c -1.109375 0 -2 -0.890625 -2 -2 v -1 z m 13 0 v 1 c 0 1.109375 -0.890625 2 -2 2 h -1 v 1 h 1 c 1.644531 0 3 -1.355469 3 -3 v -1 z m -8 3 v 1 h 4 v -1 z m 0 0"
-										fill="#2e3434"
-										fillOpacity="0.34902"
-									/>
-								</svg>
-							)}
-						</a>
+							</a>
+						</div>
 					</div>
 				</div>
-			</div>
+			)}
 
 			<div className="flex justify-center p-2">
 				<a href={relationship.component.file.path} className="internal-link !no-underline !text-[--text-normal]">
