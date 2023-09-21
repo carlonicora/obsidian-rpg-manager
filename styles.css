@@ -1356,6 +1356,10 @@
   border-left-style: solid;
 }
 
+.markdown-editor-component .cm-scroller {
+  padding: 0 !important;
+}
+
 .markdown-editor-component {
   white-space: pre-wrap !important;
 }
