@@ -150,6 +150,7 @@ export default function CustomAttributeComponent({
 								<option value={AttributeComponentType.Boolean}>{t("customattributes.checkbox")}</option>
 								<option value={AttributeComponentType.LongText}>{t("customattributes.longtext")}</option>
 								<option value={AttributeComponentType.Date}>{t("customattributes.date")}</option>
+								<option value={AttributeComponentType.Link}>{t("customattributes.link")}</option>
 							</select>
 							{errors.type && <div className="text-[--text-error] text-sm">{errors.type}</div>}
 						</div>
@@ -184,7 +185,7 @@ export default function CustomAttributeComponent({
 									checked={customTypes?.includes(type) || false}
 									onChange={(e) => handleCustomTypeChange(type, e.target.checked)}
 								/>
-								{type}
+								{t(`elements.${type}`, { count: 2 })}
 							</label>
 						))}
 					</div>

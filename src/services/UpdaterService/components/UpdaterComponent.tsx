@@ -38,6 +38,7 @@ function Upgrading(): React.ReactElement {
 				useSceneAnalyser: true,
 				version: api.version,
 				customAttributes: [],
+				forceFullWidth: false,
 			};
 			(api as unknown as Plugin).saveData(settings);
 

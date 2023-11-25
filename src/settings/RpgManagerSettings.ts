@@ -10,6 +10,7 @@ export interface RpgManagerSettingsInterface {
 	useSceneAnalyser: boolean;
 	version: string;
 	customAttributes: AttributeInterface[];
+	forceFullWidth: boolean;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -22,6 +23,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	useSceneAnalyser: true,
 	version: "0.0.0",
 	customAttributes: [],
+	forceFullWidth: false,
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
@@ -88,6 +90,17 @@ export class RpgManagerSettings extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle.setValue(this._plugin.settings.automaticMove).onChange(async (value) => {
 					await this.saveSettings({ automaticMove: value });
+				});
+			});
+
+		new Setting(containerEl)
+			.setName("Force Full Width")
+			.setDesc("Force the markdown editor to use the full width of the screen. This might clash with some themes.")
+			.addToggle((toggle) => {
+				toggle.setValue(this._plugin.settings.forceFullWidth).onChange(async (value) => {
+					await this.saveSettings({ forceFullWidth: value });
+					if (value === true) document.body.classList.add("rpgm-toggle-full-width-styles");
+					else document.body.classList.remove("rpgm-toggle-full-width-styles");
 				});
 			});
 
