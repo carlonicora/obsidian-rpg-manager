@@ -8,6 +8,7 @@ import ArcAttributeComponent from "./types/ArcAttributeComponent";
 import BooleanAttributeComponent from "./types/BooleanAttributeComponent";
 import DateAttributeComponent from "./types/DateAttributeComponent";
 import DefaultAttributeTypeComponent from "./types/DefaultAttributeTypeComponent";
+import LinkAttributeTypeComponent from "./types/LinkAttributeComponent";
 import LongTextAttributeComponent from "./types/LongTextAttributeComponent";
 import MajorCluesAttributeComponent from "./types/MajorCluesAttributeComponent";
 import MapAttributeComponent from "./types/MapAttributeComponent";
@@ -115,6 +116,11 @@ export default function AttributeListComponent({
 						case AttributeComponentType.Number:
 							attributeComponent = (
 								<NumberAttributeTypeComponent element={element} attribute={attribute} isEditable={isEditable} />
+							);
+							break;
+						case AttributeComponentType.Link:
+							attributeComponent = (
+								<LinkAttributeTypeComponent element={element} attribute={attribute} isEditable={isEditable} />
 							);
 							break;
 						case AttributeComponentType.Select:

@@ -93,6 +93,7 @@ export const i18nEn = {
 		option: "Option",
 		checkbox: "Checkbox",
 		longtext: "Long Text",
+		link: "Link",
 		date: "Date",
 		availableon: "Available on",
 		your: "Your Custom Attributes",
