@@ -184,7 +184,7 @@ export default function CustomAttributeComponent({
 									checked={customTypes?.includes(type) || false}
 									onChange={(e) => handleCustomTypeChange(type, e.target.checked)}
 								/>
-								{type}
+								{t(`elements.${type}`, { count: 2 })}
 							</label>
 						))}
 					</div>
