@@ -11,7 +11,12 @@ export class ElementFactory {
 	static async createElement(app: App, api: RpgManagerInterface, file: TFile): Promise<ElementInterface> {
 		const codeblockService = new RpgManagerCodeblockService(app, api, file);
 
-		const rpgManagerBlock: any | undefined = await codeblockService.readCodeblock();
+		let rpgManagerBlock: any | undefined = undefined;
+		try {
+			rpgManagerBlock = await codeblockService.readCodeblock();
+		} catch (e) {
+			throw Error("Error reading the RPG Manager YAML in file " + file.path);
+		}
 
 		if (rpgManagerBlock === undefined || rpgManagerBlock.id === undefined || rpgManagerBlock.id.type === undefined)
 			return undefined;

@@ -10,9 +10,14 @@ export class DatabaseFactory {
 		const response: (ElementInterface | undefined)[] = [];
 
 		const elementPromises = app.vault.getMarkdownFiles().map((file) =>
-			ElementFactory.createElement(app, api, file).then((element: ElementInterface | undefined) => {
-				return element;
-			})
+			ElementFactory.createElement(app, api, file)
+				.then((element: ElementInterface | undefined) => {
+					return element;
+				})
+				.catch((error) => {
+					console.warn(error);
+					return undefined;
+				})
 		);
 
 		const elements = await Promise.all(elementPromises);
