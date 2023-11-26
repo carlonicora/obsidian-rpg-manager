@@ -222,8 +222,7 @@ export class ElementFactory {
 		elements: ElementInterface[]
 	): Promise<void> {
 		const element: ElementInterface = elements.find((element: ElementInterface) => element.path === file.path);
-
-		if (!element.relationships || element.relationships.length === 0) return;
+		if (!element || !element.relationships || element.relationships.length === 0) return;
 
 		const codeblockService = new RpgManagerCodeblockService(app, api, file);
 		codeblockService.updateRelationshipInContent(element.relationships);
