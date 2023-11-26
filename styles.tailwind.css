@@ -23,6 +23,9 @@
 	width: 100% !important;
 }
 
+#rpgm-editor .cm-editor {
+	outline: none;
+}
 #rpgm-editor .cm-editor .cm-scroller .cm-content .cm-line {
 	max-width: 100% !important;
 	width: 100% !important;

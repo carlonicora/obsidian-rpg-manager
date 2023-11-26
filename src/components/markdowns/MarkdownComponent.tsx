@@ -65,7 +65,7 @@ export default function MarkdownComponent({
 					onClick={handleLinkClick}
 				/>
 			),
-			ul: ({ node, ordered, ...props }) => <ul {...props} className="list-none text-center" />,
+			ul: ({ node, ordered, ...props }) => <ul {...props} className="list-disc" />,
 			ol: ({ node, ordered, ...props }) => <ol {...props} className="list-none" />,
 			li: ({ node, ordered, ...props }) => <li {...props} className={"!mb-1"} />,
 			h2: ({ node, ...props }) => (
