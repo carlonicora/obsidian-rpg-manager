@@ -860,6 +860,10 @@
   border-right-width: 1px;
 }
 
+.\!border-solid {
+  border-style: solid !important;
+}
+
 .border-dashed {
   border-style: dashed;
 }
@@ -908,6 +912,10 @@
 
 .bg-\[--background-modifier-border\] {
   background-color: var(--background-modifier-border);
+}
+
+.bg-\[--background-modifier-form-field\] {
+  background-color: var(--background-modifier-form-field);
 }
 
 .bg-\[--background-primary-alt\] {
