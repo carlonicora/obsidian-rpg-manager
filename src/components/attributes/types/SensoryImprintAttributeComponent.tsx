@@ -92,23 +92,38 @@ function EditComponent({
 	};
 
 	const handleSightChange = (value: string) => {
-		setSensoryImprint({ ...sensoryImprint, sight: value });
+		console.log(`sight: ${value}`);
+		setSensoryImprint((prevSensoryImprint) => {
+			return { ...prevSensoryImprint, sight: value };
+		});
 	};
 
 	const handleHearChange = (value: string) => {
-		setSensoryImprint({ ...sensoryImprint, hear: value });
+		console.log(`hear: ${value}`);
+		setSensoryImprint((prevSensoryImprint) => {
+			return { ...prevSensoryImprint, hear: value };
+		});
 	};
 
 	const handleTasteChange = (value: string) => {
-		setSensoryImprint({ ...sensoryImprint, taste: value });
+		console.log(`taste: ${value}`);
+		setSensoryImprint((prevSensoryImprint) => {
+			return { ...prevSensoryImprint, taste: value };
+		});
 	};
 
 	const handleTouchChange = (value: string) => {
-		setSensoryImprint({ ...sensoryImprint, touch: value });
+		console.log(`touch: ${value}`);
+		setSensoryImprint((prevSensoryImprint) => {
+			return { ...prevSensoryImprint, touch: value };
+		});
 	};
 
 	const handleSmellChange = (value: string) => {
-		setSensoryImprint({ ...sensoryImprint, smell: value });
+		console.log(`smell: ${value}`);
+		setSensoryImprint((prevSensoryImprint) => {
+			return { ...prevSensoryImprint, smell: value };
+		});
 	};
 
 	const handleDelete = () => {
@@ -119,6 +134,7 @@ function EditComponent({
 	};
 
 	const handleSave = () => {
+		console.log(sensoryImprint);
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 		codeblockService.updateCodeblockData(attribute.id, sensoryImprint).then(() => {
 			onSave();
@@ -132,7 +148,7 @@ function EditComponent({
 				<h3 className="!p-0 !text-xl !font-extralight">{t("attributes.sensoryimprints")}</h3>
 			</div>
 			<div className={`w-full grid grid-cols-5 gap-3 items-start`}>
-				<div className="grid items-center justify-center">
+				<div className="grid grid-cols-1 items-center justify-center w-full">
 					<div className="flex justify-center !text-[--text-faint] mb-1">
 						<FontAwesomeIcon icon={faEye} title="Sight" />
 					</div>
@@ -141,11 +157,12 @@ function EditComponent({
 							key={"sight:" + sight}
 							initialValue={sight}
 							onChange={handleSightChange}
+							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
 					</div>
 				</div>
-				<div className="grid items-center justify-center">
+				<div className="grid grid-cols-1 items-center justify-center w-full mb-3">
 					<div className="flex justify-center !text-[--text-faint] mb-1">
 						<FontAwesomeIcon icon={faEarListen} title="Hearing" />
 					</div>
@@ -154,11 +171,12 @@ function EditComponent({
 							key={"hear:" + hear}
 							initialValue={hear}
 							onChange={handleHearChange}
+							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
 					</div>
 				</div>
-				<div className="grid items-center justify-center">
+				<div className="grid grid-cols-1 items-center justify-center w-full">
 					<div className="flex justify-center !text-[--text-faint] mb-1">
 						<FontAwesomeIcon icon={faWind} title="Smell" />
 					</div>
@@ -167,11 +185,12 @@ function EditComponent({
 							key={"smell:" + smell}
 							initialValue={smell}
 							onChange={handleSmellChange}
+							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
 					</div>
 				</div>
-				<div className="grid items-center justify-center">
+				<div className="grid grid-cols-1 items-center justify-center w-full">
 					<div className="flex justify-center !text-[--text-faint] mb-1">
 						<FontAwesomeIcon icon={faHandPointer} title="Touch" />
 					</div>
@@ -180,11 +199,12 @@ function EditComponent({
 							key={"touch:" + touch}
 							initialValue={touch}
 							onChange={handleTouchChange}
+							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
 					</div>
 				</div>
-				<div className="grid items-center justify-center">
+				<div className="grid grid-cols-1 items-center justify-center w-full">
 					<div className="flex justify-center !text-[--text-faint] mb-1">
 						<FontAwesomeIcon icon={faTint} title="Taste" />
 					</div>
@@ -193,6 +213,7 @@ function EditComponent({
 							key={"taste:" + taste}
 							initialValue={taste}
 							onChange={handleTasteChange}
+							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
 							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 						/>
 					</div>
