@@ -23,7 +23,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	useSceneAnalyser: true,
 	version: "0.0.0",
 	customAttributes: [],
-	forceFullWidth: false,
+	forceFullWidth: true,
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
