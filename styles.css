@@ -218,6 +218,10 @@
   margin: 0.5rem !important;
 }
 
+.m-0 {
+  margin: 0px;
+}
+
 .m-1 {
   margin: 0.25rem;
 }
@@ -989,6 +993,10 @@
 
 .\!p-0 {
   padding: 0px !important;
+}
+
+.\!p-1 {
+  padding: 0.25rem !important;
 }
 
 .\!p-3 {
@@ -2420,6 +2428,10 @@ span.flatpickr-day.selected {
 
 .group:hover .group-hover\:max-h-\[300px\] {
   max-height: 300px;
+}
+
+.group:hover .group-hover\:\!border-solid {
+  border-style: solid !important;
 }
 
 .group:hover .group-hover\:\!border-\[--background-modifier-border\] {

@@ -12,12 +12,14 @@ export default function MarkdownEditorComponent({
 	campaignPath,
 	className,
 	onChange,
+	onBlur,
 	forceFocus,
 }: {
 	initialValue?: string;
 	campaignPath?: string;
 	className?: string;
-	onChange: (value: string) => void;
+	onChange?: (value: string) => void;
+	onBlur?: (value: string) => void;
 	forceFocus?: boolean;
 }): React.ReactElement {
 	const app: App = useApp();
@@ -30,15 +32,20 @@ export default function MarkdownEditorComponent({
 	const lastDetectedPositionRef = React.useRef<number | null>(null);
 	const [scope, setScope] = React.useState<Scope | undefined>(undefined);
 	const [originalScope] = React.useState<Scope>(app.scope);
+	const [showRelatioshipModal, setShowRelationshipModal] = React.useState(false);
 
 	const contentChangeExtension = EditorState.changeFilter.of((change) => {
 		const newContent = change.state.doc.toString();
 
 		setValue(newContent);
-		onChange(newContent);
+		if (onChange) onChange(newContent);
 
 		return true;
 	});
+
+	const handleBlur = () => {
+		if (onBlur && !showRelatioshipModal) onBlur(value);
+	};
 
 	const handleNewRelationship = () => {
 		const relationshipModal = new NewRelationshipController(
@@ -85,6 +92,7 @@ export default function MarkdownEditorComponent({
 			});
 
 			lastDetectedPositionRef.current = null;
+			setShowRelationshipModal(false);
 		}
 	};
 
@@ -92,6 +100,7 @@ export default function MarkdownEditorComponent({
 		{
 			key: "[",
 			run: (view) => {
+				setShowRelationshipModal(true);
 				const cursorPos = view.state.selection.main.head;
 				const beforeCursorChar = view.state.doc.sliceString(cursorPos - 1, cursorPos);
 				if (beforeCursorChar === "[") {
@@ -145,8 +154,9 @@ export default function MarkdownEditorComponent({
 	return (
 		<div
 			id="rpgm-editor"
-			className={`${className} border-[--text-accent] markdown-editor-component p-3`}
+			className={`border-[--text-accent] markdown-editor-component p-3 ${className}`}
 			ref={parentDivRef}
+			onBlur={handleBlur}
 		></div>
 	);
 }
