@@ -57,6 +57,8 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 			allCampaignElements = allCampaignElements.concat(globalElements);
 		}
 
+		console.log("LIMIT" + this._typeLimit);
+
 		if (this._typeLimit) {
 			allCampaignElements = allCampaignElements.filter((element: ElementInterface) =>
 				this._typeLimit?.includes(element.type)
@@ -72,10 +74,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 				this._callback ||
 				(!relatedPaths.includes(element.path) &&
 					element.path !== this._element?.path &&
-					element.type !== ElementType.Campaign &&
-					element.type !== ElementType.Adventure &&
-					element.type !== ElementType.Session &&
-					element.type !== ElementType.Scene)
+					element.type !== ElementType.Campaign)
 		);
 
 		const response: SearchableElementInterface[] = [];
@@ -105,10 +104,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 			}
 		});
 
-		if (
-			this._typeLimit?.includes(ElementType.PlayerCharacter) &&
-			(this._element !== undefined || this._campaignPath !== undefined)
-		)
+		if (this._element !== undefined || this._campaignPath !== undefined)
 			response.push({
 				name: "All player characters",
 				path: "all-player-characters",
