@@ -92,35 +92,30 @@ function EditComponent({
 	};
 
 	const handleSightChange = (value: string) => {
-		console.log(`sight: ${value}`);
 		setSensoryImprint((prevSensoryImprint) => {
 			return { ...prevSensoryImprint, sight: value };
 		});
 	};
 
 	const handleHearChange = (value: string) => {
-		console.log(`hear: ${value}`);
 		setSensoryImprint((prevSensoryImprint) => {
 			return { ...prevSensoryImprint, hear: value };
 		});
 	};
 
 	const handleTasteChange = (value: string) => {
-		console.log(`taste: ${value}`);
 		setSensoryImprint((prevSensoryImprint) => {
 			return { ...prevSensoryImprint, taste: value };
 		});
 	};
 
 	const handleTouchChange = (value: string) => {
-		console.log(`touch: ${value}`);
 		setSensoryImprint((prevSensoryImprint) => {
 			return { ...prevSensoryImprint, touch: value };
 		});
 	};
 
 	const handleSmellChange = (value: string) => {
-		console.log(`smell: ${value}`);
 		setSensoryImprint((prevSensoryImprint) => {
 			return { ...prevSensoryImprint, smell: value };
 		});
@@ -134,7 +129,6 @@ function EditComponent({
 	};
 
 	const handleSave = () => {
-		console.log(sensoryImprint);
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 		codeblockService.updateCodeblockData(attribute.id, sensoryImprint).then(() => {
 			onSave();
