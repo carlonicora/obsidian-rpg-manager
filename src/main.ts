@@ -83,6 +83,12 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		return this._database.filter(isMatchingElement);
 	}
 
+	getById(id: string): ElementInterface | undefined {
+		if (this._database === undefined) return undefined;
+
+		return this._database.find((element: ElementInterface) => element.id === id);
+	}
+
 	/**
 	 * This function is used to get the task service.
 	 * @returns TaskServiceInterface

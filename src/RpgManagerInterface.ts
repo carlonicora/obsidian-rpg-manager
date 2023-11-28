@@ -12,6 +12,7 @@ export interface RpgManagerInterface {
 		type?: ElementType,
 		parent?: ElementInterface
 	): ElementInterface | ElementInterface[] | undefined;
+	getById(id: string): ElementInterface | undefined;
 
 	get tasks(): TaskServiceInterface;
 }

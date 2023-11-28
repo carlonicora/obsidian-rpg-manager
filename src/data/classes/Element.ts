@@ -35,6 +35,10 @@ export class Element implements ElementInterface {
 			this.touch();
 	}
 
+	get id(): string {
+		return this._rpgManagerBlock.id.id;
+	}
+
 	get attributes(): AttributeInterface[] {
 		const response: AttributeInterface[] = [];
 

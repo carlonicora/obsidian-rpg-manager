@@ -58,7 +58,6 @@ export class OptionView extends ItemView implements View {
 			{ value: this._app },
 			createElement(ApiContext.Provider, { value: this._api }, elementComponent)
 		);
-		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, elementComponent);
 
 		this._root.render(reactComponent);
 	}

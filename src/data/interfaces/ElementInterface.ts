@@ -12,6 +12,7 @@ export interface ElementInterface {
 	set metadata(metadata: CachedMetadata);
 	get aliases(): string[];
 	get file(): TFile;
+	get id(): string;
 	get type(): ElementType;
 	get system(): SystemType;
 	get campaignPath(): string | undefined;
