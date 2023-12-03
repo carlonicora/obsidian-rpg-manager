@@ -54,85 +54,21 @@ export default function ChapterWizardComponent({
 	const [step, setStep] = React.useState(1);
 	const [steps, setSteps] = React.useState<StepComponentInterface[]>(stepComponents);
 
-	/*
-    const chatGpt = React.useRef<ChatGptNonPlayerCharacterModel | undefined>(undefined);
-
-    if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "" && !chatGpt.current) {
-		chatGpt.current = new ChatGptNonPlayerCharacterModel(api, element?.campaign ?? campaign, element?.name ?? name);
-	}
-    */
-
 	if (Object.keys(wizardData).length === 0) {
 		wizardData.description = element?.attribute(AttributeType.Description)?.value;
 
 		wizardData.destinationType = undefined;
 		wizardData.destinationName = undefined;
 		wizardData.destinationElement = undefined;
-
 		wizardData.tagetType = undefined;
 		wizardData.targetName = undefined;
 		wizardData.targetElement = undefined;
-
 		wizardData.targetDescription = "";
 
 		wizardData.clues = [];
-
-		/*
-		if (chatGpt.current !== undefined) {
-			if (wizardData.description !== undefined) chatGpt.current.description = wizardData.description;
-			if (wizardData.arc !== undefined) chatGpt.current.characterArc = wizardData.arc as ArcType;
-			if (wizardData.beliefs !== undefined) chatGpt.current.beliefs = wizardData.beliefs;
-			if (wizardData.ghost !== undefined) chatGpt.current.ghost = wizardData.ghost;
-			if (wizardData.lie !== undefined) chatGpt.current.lie = wizardData.lie;
-			if (wizardData.need !== undefined) chatGpt.current.need = wizardData.need;
-			if (wizardData.strengths !== undefined) setStrengthsValue();
-			if (wizardData.weaknesses !== undefined) setWeaknessesValue();
-			if (wizardData.behaviour !== undefined) chatGpt.current.behaviour = wizardData.behaviour;
-			if (wizardData.want !== undefined) chatGpt.current.want = wizardData.want;
-			if (wizardData.opposition !== undefined) chatGpt.current.opposition = wizardData.opposition;
-		}
-        */
 	}
 
 	const updateStep = (newStep: number) => {
-		/*
-		if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "") {
-			switch (step) {
-				case 2:
-					if (wizardData.description !== undefined) chatGpt.current.description = wizardData.description;
-					break;
-				case 3:
-					if (wizardData.arc !== undefined) chatGpt.current.characterArc = wizardData.arc as ArcType;
-					break;
-				case 4:
-					if (wizardData.beliefs !== undefined) chatGpt.current.beliefs = wizardData.beliefs;
-					break;
-				case 5:
-					if (wizardData.ghost !== undefined) chatGpt.current.ghost = wizardData.ghost;
-					break;
-				case 6:
-					if (wizardData.lie !== undefined) chatGpt.current.lie = wizardData.lie;
-					break;
-				case 7:
-					if (wizardData.need !== undefined) chatGpt.current.need = wizardData.need;
-					break;
-				case 8:
-					if (wizardData.strengths !== undefined) setStrengthsValue();
-					if (wizardData.weaknesses !== undefined) setWeaknessesValue();
-					break;
-				case 9:
-					if (wizardData.behaviour !== undefined) chatGpt.current.behaviour = wizardData.behaviour;
-					break;
-				case 10:
-					if (wizardData.want !== undefined) chatGpt.current.want = wizardData.want;
-					break;
-				case 11:
-					if (wizardData.opposition !== undefined) chatGpt.current.opposition = wizardData.opposition;
-					break;
-			}
-		}
-        */
-
 		setStep(newStep);
 	};
 
@@ -189,8 +125,8 @@ export default function ChapterWizardComponent({
 					wizardData.destinationType,
 					wizardData.destinationName,
 					campaign.system,
-					element.campaignPath,
-					wizardData.destinationElement === ElementType.Adventure ? element.campaignPath : element.parentPath,
+					element.campaignId,
+					wizardData.destinationElement === ElementType.Adventure ? element.campaignId : element.parentId,
 					positionInParent
 				);
 				const file: TFile = await fileCreationService.create(false);
@@ -204,7 +140,7 @@ export default function ChapterWizardComponent({
 
 			finalClues = await Promise.all(
 				clues.map(async (clue: ChapterCluesInterface) => {
-					if (clue.isExistingClue || clue.cluePath) return clue.cluePath;
+					if (clue.isExistingClue || clue.clueId) return clue.clueId;
 
 					const fileCreationService = new FileCreationService(
 						app,
@@ -212,7 +148,7 @@ export default function ChapterWizardComponent({
 						ElementType.Clue,
 						clue.clueName,
 						campaign.system,
-						element.campaignPath,
+						element.campaignId,
 						undefined,
 						undefined,
 						[{ name: AttributeType.Description, value: clue.description }]
@@ -229,7 +165,7 @@ export default function ChapterWizardComponent({
 		} else {
 			const relationships: RelationshipInterface[] = [];
 			finalClues.forEach((clue: string) => {
-				relationships.push({ type: RelationshipType.Bidirectional, path: clue, isInContent: false });
+				relationships.push({ type: RelationshipType.Bidirectional, id: clue, isInContent: false });
 			});
 
 			const fileCreationService = new FileCreationService(
@@ -238,7 +174,7 @@ export default function ChapterWizardComponent({
 				wizardData.targetType,
 				wizardData.targetName,
 				campaign.system,
-				element.campaignPath,
+				element.campaignId,
 				undefined,
 				undefined,
 				[{ name: AttributeType.Description, value: wizardData.targetDescription }],
@@ -259,7 +195,7 @@ export default function ChapterWizardComponent({
 				[AttributeType.Description]: wizardData.description,
 				[AttributeType.MajorClues]: majorClues,
 			},
-			relationships: [{ type: RelationshipType.Bidirectional, path: targetFile, isInContent: false }],
+			relationships: [{ type: RelationshipType.Bidirectional, id: targetFile, isInContent: false }],
 		};
 
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
@@ -270,12 +206,12 @@ export default function ChapterWizardComponent({
 
 	const CurrentStepComponent = steps[step - 1];
 
-	let campaignPath;
+	let campaignId;
 
 	if (element !== undefined) {
-		campaignPath = element?.type === ElementType.Campaign ? element?.path : element.campaignPath;
+		campaignId = element?.type === ElementType.Campaign ? element?.id : element.campaignId;
 	} else {
-		campaignPath = campaign?.path;
+		campaignId = campaign?.id;
 	}
 
 	return (
@@ -294,7 +230,7 @@ export default function ChapterWizardComponent({
 						name={element ? element?.name : name}
 						//chatGpt={chatGpt.current}
 						chatGpt={undefined}
-						campaignPath={campaignPath}
+						campaignId={campaignId}
 						setOverlay={setShowOverlay}
 						errors={CurrentStepComponent.errors}
 					/>

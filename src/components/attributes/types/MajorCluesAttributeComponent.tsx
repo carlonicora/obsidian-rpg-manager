@@ -139,7 +139,7 @@ function MajorCluesEdit({
 						<div className="col-span-3 pr-1">
 							<TextInputComponent
 								initialValue={clue.description}
-								campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+								campaignId={element.type === ElementType.Campaign ? element.path : element.campaign.path}
 								className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
 								onChange={(value: string) => {
 									setClues(

@@ -61,7 +61,7 @@ export default function SingleImageComponent({
 							<MarkdownEditorComponent
 								initialValue={caption}
 								onChange={setCaption}
-								campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
+								campaignId={element.type === ElementType.Campaign ? element.id : element.campaignId}
 								className="w-full"
 							/>
 						</div>

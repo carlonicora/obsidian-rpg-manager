@@ -7,12 +7,12 @@ import { ChatGptNonPlayerCharacterModel } from "src/services/ChatGptService/mode
 
 export default function NonPlayerCharacterWizardDescriptionStepComponent({
 	name,
-	campaignPath,
+	campaignId,
 	chatGpt,
 	setOverlay,
 }: {
 	name: string;
-	campaignPath?: string;
+	campaignId?: string;
 	chatGpt?: ChatGptNonPlayerCharacterModel;
 	setOverlay: (show: boolean) => void;
 }): React.ReactElement {
@@ -32,7 +32,7 @@ export default function NonPlayerCharacterWizardDescriptionStepComponent({
 			<div className="">
 				<MarkdownEditorComponent
 					initialValue={wizardData.description}
-					campaignPath={campaignPath}
+					campaignId={campaignId}
 					onChange={updateDescription}
 					className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
 				/>

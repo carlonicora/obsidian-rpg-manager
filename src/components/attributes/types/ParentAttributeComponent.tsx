@@ -29,12 +29,12 @@ export default function ParentAttributeComponent({
 
 	possibleParents.sort((a, b) => b.positionInParent - a.positionInParent);
 
-	const updateParent = (newPath: string) => {
+	const updateParent = (newId: string) => {
 		const newParentChildren: ElementInterface[] = api.get(
 			undefined,
 			element.campaign,
 			element.type,
-			possibleParents.find((parentElement: ElementInterface) => parentElement.path === newPath)
+			possibleParents.find((parentElement: ElementInterface) => parentElement.id === newId)
 		) as ElementInterface[];
 
 		const newPositionInParent: number =
@@ -44,7 +44,7 @@ export default function ParentAttributeComponent({
 
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 		codeblockService.updateCodeblockIdList([
-			{ name: "parent", value: newPath },
+			{ name: "parent", value: newId },
 			{ name: "positionInParent", value: newPositionInParent + 1 },
 		]);
 	};
@@ -57,10 +57,10 @@ export default function ParentAttributeComponent({
 					<select
 						onChange={(e) => updateParent(e.target.value)}
 						className="min-w-full pl-3"
-						defaultValue={element.parent.file.path}
+						defaultValue={element.parent.id}
 					>
 						{possibleParents.map((parent) => (
-							<option key={parent.path} value={parent.path}>
+							<option key={parent.id} value={parent.id}>
 								{parent.name}
 							</option>
 						))}
@@ -68,7 +68,7 @@ export default function ParentAttributeComponent({
 				)}
 				<div className="!ml-3 text-sm !mt-1">
 					<a
-						href={element.parent.path}
+						href={element.parent.id}
 						className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
 					>
 						{element.parent.name}

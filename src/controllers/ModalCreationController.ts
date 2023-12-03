@@ -46,7 +46,6 @@ export class ModalCreationController extends Modal {
 			{ value: this._app },
 			createElement(ApiContext.Provider, { value: this._api }, creationComponent)
 		);
-		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, creationComponent);
 
 		root.render(reactComponent);
 	}

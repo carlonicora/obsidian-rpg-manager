@@ -78,12 +78,12 @@ export class RpgManagerCodeblockService {
 		if (values.relationships !== undefined) {
 			values.relationships.forEach((relationship: RelationshipInterface) => {
 				const existingRelationship: RelationshipInterface | undefined = codeblock.relationships.find(
-					(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+					(existingRelationship: RelationshipInterface) => existingRelationship.id === relationship.id
 				);
 				if (existingRelationship === undefined) {
 					codeblock.relationships.push({
 						type: relationship.type,
-						path: relationship.path,
+						id: relationship.id,
 					});
 				} else {
 					existingRelationship.type = relationship.type;
@@ -310,13 +310,13 @@ export class RpgManagerCodeblockService {
 		if (codeblock.relationships == undefined) {
 			codeblock.relationships = [];
 		} else {
-			existingRelationship = codeblock.relationships.find((rel: any) => rel.path === relationship.path);
+			existingRelationship = codeblock.relationships.find((rel: any) => rel.id === relationship.id);
 		}
 
 		if (existingRelationship === undefined) {
 			existingRelationship = {
 				type: relationship.type,
-				path: relationship.path,
+				id: relationship.id,
 				description: relationship.description,
 			};
 			codeblock.relationships.push(existingRelationship);
@@ -445,7 +445,7 @@ export class RpgManagerCodeblockService {
 
 		const minimalRelationship: any = {
 			type: relationship.type,
-			path: relationship.path,
+			id: relationship.id,
 		};
 
 		codeblock.relationships.push(minimalRelationship);
@@ -494,13 +494,13 @@ export class RpgManagerCodeblockService {
 
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const foundRelationship: RelationshipInterface | undefined = codeblock.relationships.find(
-				(foundRelationship: RelationshipInterface) => foundRelationship.path === relationship.path
+				(foundRelationship: RelationshipInterface) => foundRelationship.id === relationship.id
 			);
 			if (foundRelationship !== undefined) return;
 
 			const minimalRelationship: any = {
 				type: relationship.type,
-				path: relationship.path,
+				id: relationship.id,
 			};
 			codeblock.relationships.push(minimalRelationship);
 		});
@@ -516,14 +516,14 @@ export class RpgManagerCodeblockService {
 		if (codeblock.relationships === undefined || codeblock.relationships.length === 0) return;
 
 		codeblock.relationships = codeblock.relationships.filter(
-			(minimalRelationship: any) => minimalRelationship.path !== relatedElement.file.path
+			(minimalRelationship: any) => minimalRelationship.id !== relatedElement.id
 		);
 
 		const yamlService: YamlService = new YamlService();
 		const codeblockContent: string = yamlService.stringify(codeblock);
 
 		relatedElement.relationships = relatedElement.relationships.filter(
-			(relationship: RelationshipInterface) => relationship.path !== element.file.path
+			(relationship: RelationshipInterface) => relationship.id !== element.id
 		);
 
 		this._modifyFileContent(this._fileContent.replace(this._codeblockContent, codeblockContent));
@@ -558,7 +558,7 @@ export class RpgManagerCodeblockService {
 		);
 		additionalRelationships.forEach((relationship: RelationshipInterface) => {
 			const existingRelationship: RelationshipInterface | undefined = response.find(
-				(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+				(existingRelationship: RelationshipInterface) => existingRelationship.id === relationship.id
 			);
 			if (existingRelationship === undefined) {
 				response.push(relationship);
@@ -612,12 +612,25 @@ export class RpgManagerCodeblockService {
 
 				if (
 					matchingFile !== undefined &&
-					response.find((relationship: RelationshipInterface) => relationship.path === matchingFile.path) === undefined
+					response.find(
+						(relationship: RelationshipInterface) =>
+							relationship.id === (this._api.get(matchingFile.path) as ElementInterface | undefined)?.id
+					) === undefined
 				) {
 					if (isInCodeblock) {
-						response.push(RelationshipFactory.createFromCodeblock(RelationshipType.Bidirectional, matchingFile.path));
+						response.push(
+							RelationshipFactory.createFromCodeblock(
+								RelationshipType.Bidirectional,
+								(this._api.get(matchingFile.path) as ElementInterface | undefined)?.id
+							)
+						);
 					} else {
-						response.push(RelationshipFactory.createFromContent(RelationshipType.Bidirectional, matchingFile.path));
+						response.push(
+							RelationshipFactory.createFromContent(
+								RelationshipType.Bidirectional,
+								(this._api.get(matchingFile.path) as ElementInterface | undefined)?.id
+							)
+						);
 					}
 				}
 			}

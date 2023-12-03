@@ -36,9 +36,9 @@ export class ElementFactory {
 		const relationships: RelationshipInterface[] = await codeblockService.readInContentRelationships();
 
 		relationships.forEach((relationship: RelationshipInterface) => {
-			if (relationship.path === response.path) return;
+			if (relationship.id === response.id) return;
 			const existingRelationship: RelationshipInterface | undefined = response.relationships.find(
-				(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+				(existingRelationship: RelationshipInterface) => existingRelationship.id === relationship.id
 			);
 			if (existingRelationship === undefined) {
 				response.relationships.push(relationship);
@@ -66,7 +66,7 @@ export class ElementFactory {
 		if (rpgManagerBlock.relationships != undefined && rpgManagerBlock.relationships.length > 0) {
 			rpgManagerBlock.relationships.forEach((relationshipDefinition: any) => {
 				const foundRelationship: RelationshipInterface | undefined = element.relationships.find(
-					(relationship: RelationshipInterface) => relationship.path === relationshipDefinition.path
+					(relationship: RelationshipInterface) => relationship.id === relationshipDefinition.id
 				);
 
 				if (foundRelationship === undefined) {
@@ -87,7 +87,7 @@ export class ElementFactory {
 
 		relationships.forEach((relationship: RelationshipInterface) => {
 			const existingRelationship: RelationshipInterface | undefined = element.relationships.find(
-				(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+				(existingRelationship: RelationshipInterface) => existingRelationship.id === relationship.id
 			);
 			if (existingRelationship === undefined) {
 				areRelationshipChanged = true;
@@ -103,34 +103,32 @@ export class ElementFactory {
 		const existingRelationships: RelationshipInterface[] = element.relationships.filter(
 			(existingRelationship: RelationshipInterface) => existingRelationship.isInContent
 		);
-		const inContentRelationshipPaths = new Set(
-			relationships.filter((relationship: RelationshipInterface) => relationship.isInContent).map((r) => r.path)
+		const inContentRelationshipIds = new Set(
+			relationships.filter((relationship: RelationshipInterface) => relationship.isInContent).map((r) => r.id)
 		);
 
-		const pathsToRemove = new Set(
-			existingRelationships
-				.filter((r) => !inContentRelationshipPaths.has(r.path))
-				.map((r: RelationshipInterface) => r.path)
+		const idsToRemove = new Set(
+			existingRelationships.filter((r) => !inContentRelationshipIds.has(r.id)).map((r: RelationshipInterface) => r.id)
 		);
 		element.relationships = element.relationships.filter(
-			(relationship) => relationship.type === RelationshipType.Reversed || !pathsToRemove.has(relationship.path)
+			(relationship) => relationship.type === RelationshipType.Reversed || !idsToRemove.has(relationship.id)
 		);
 
-		const allExistingRelationships = new Set(relationships.map((r: RelationshipInterface) => r.path));
+		const allExistingRelationships = new Set(relationships.map((r: RelationshipInterface) => r.id));
 		if (rpgManagerBlock.relationships !== undefined && rpgManagerBlock.relationships.length > 0) {
 			rpgManagerBlock.relationships.forEach((relationshipDefinition: any) =>
-				allExistingRelationships.add(relationshipDefinition.path)
+				allExistingRelationships.add(relationshipDefinition.id)
 			);
 		}
 
 		const relationshipsToBeRemoved = element.relationships.filter(
 			(relationship: RelationshipInterface) =>
-				relationship.type !== RelationshipType.Reversed && !allExistingRelationships.has(relationship.path)
+				relationship.type !== RelationshipType.Reversed && !allExistingRelationships.has(relationship.id)
 		);
 
 		if (relationshipsToBeRemoved.length !== 0) {
 			element.relationships = element.relationships.filter((relationship: RelationshipInterface) =>
-				allExistingRelationships.has(relationship.path)
+				allExistingRelationships.has(relationship.id)
 			);
 			areRelationshipChanged = true;
 		}
@@ -139,26 +137,21 @@ export class ElementFactory {
 	}
 
 	static initialiseRelationships(element: ElementInterface, elements: ElementInterface[]): void {
-		if (element.campaign === undefined && element.campaignPath !== undefined)
-			element.campaign = elements.find(
-				(elementInList: ElementInterface) => elementInList.path === element.campaignPath
-			);
+		if (element.campaign === undefined && element.campaignId !== undefined)
+			element.campaign = elements.find((elementInList: ElementInterface) => elementInList.id === element.campaignId);
 
-		if (
-			element.parent === undefined ||
-			(element.parentPath !== undefined && element.parent.file.path !== element.parentPath)
-		)
-			element.parent = elements.find((elementInList: ElementInterface) => elementInList.path === element.parentPath);
+		if (element.parent === undefined || (element.parentId !== undefined && element.parent.id !== element.parentId))
+			element.parent = elements.find((elementInList: ElementInterface) => elementInList.id === element.parentId);
 
 		element.relationships.forEach((relationship: RelationshipInterface) => {
 			const targetElement: ElementInterface | undefined = elements.find(
-				(element: ElementInterface) => element.path === relationship.path
+				(element: ElementInterface) => element.id === relationship.id
 			);
-			if (targetElement !== undefined && targetElement.path !== element.path) {
+			if (targetElement !== undefined && targetElement.id !== element.id) {
 				relationship.component = targetElement;
 
 				const reverseRelationship: RelationshipInterface | undefined = targetElement.relationships.find(
-					(relationship: RelationshipInterface) => relationship.path === element.path
+					(relationship: RelationshipInterface) => relationship.id === element.id
 				);
 
 				if (reverseRelationship === undefined) {
@@ -188,10 +181,10 @@ export class ElementFactory {
 
 		elements.forEach((elementInList: ElementInterface) => {
 			const reverseRelationship: RelationshipInterface | undefined = elementInList.relationships.find(
-				(relationship: RelationshipInterface) => relationship.path === element.path
+				(relationship: RelationshipInterface) => relationship.id === element.id
 			);
 			const existingRelationship: RelationshipInterface | undefined = element.relationships.find(
-				(relationship: RelationshipInterface) => relationship.path === elementInList.path
+				(relationship: RelationshipInterface) => relationship.id === elementInList.id
 			);
 
 			if (reverseRelationship !== undefined && existingRelationship === undefined) {
@@ -208,9 +201,7 @@ export class ElementFactory {
 
 		if (updateReverseRelationships)
 			elements.forEach((relatedElement: ElementInterface) => {
-				if (
-					relatedElement.relationships.some((relationship: RelationshipInterface) => relationship.path === element.path)
-				)
+				if (relatedElement.relationships.some((relationship: RelationshipInterface) => relationship.id === element.id))
 					relatedElement.touch();
 			});
 	}

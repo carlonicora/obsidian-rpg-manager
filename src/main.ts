@@ -66,7 +66,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 		const matchesPath = (element: ElementInterface) => path === undefined || element.path === path;
 		const matchesCampaign = (element: ElementInterface) =>
-			campaign === undefined || element.path === campaign.path || element.campaignPath === campaign.path;
+			campaign === undefined || element.id === campaign.id || element.campaignId === campaign.id;
 
 		if (path !== undefined) return this._database.find(matchesPath);
 
@@ -75,7 +75,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 		}
 
 		const matchesType = (element: ElementInterface) => type === undefined || element.type === type;
-		const matchesParent = (element: ElementInterface) => parent === undefined || element.parentPath === parent.path;
+		const matchesParent = (element: ElementInterface) => parent === undefined || element.parentId === parent.id;
 
 		const isMatchingElement = (element: ElementInterface) =>
 			matchesCampaign(element) && matchesPath(element) && matchesType(element) && matchesParent(element);
@@ -145,6 +145,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 			this._taskService = new taskService(this._database);
 
 			console.info("RpgManager " + this.manifest.version + " loaded");
+			console.info(this._database);
 			if (this.settings.forceFullWidth === true) document.body.classList.add("rpgm-toggle-full-width-styles");
 			PluginServices.registerEvents(this.app, this, this._database);
 

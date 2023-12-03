@@ -57,7 +57,7 @@ export default function StoryCircleStageComponent({
 					<div>
 						<MarkdownEditorComponent
 							initialValue={value}
-							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
+							campaignId={element.type === ElementType.Campaign ? element.id : element.campaignId}
 							onChange={setValue}
 							className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
 						/>

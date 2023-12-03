@@ -20,7 +20,7 @@ export default function AssignedTaskComponent({
 	const [showDetails, setShowDetails] = React.useState<boolean>(false);
 
 	const handleTaskRemoval = (task: TaskInterface) => {
-		task.mentionedIn = task.mentionedIn.filter((item) => item !== element.path);
+		task.mentionedIn = task.mentionedIn.filter((item) => item !== element.id);
 		onTaskUpdate(task);
 	};
 

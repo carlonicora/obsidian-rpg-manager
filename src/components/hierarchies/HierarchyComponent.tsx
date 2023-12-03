@@ -66,11 +66,11 @@ export default function HierarchyComponent({
 	function getChildComponent(child: ElementInterface): React.ReactElement {
 		switch (child.type) {
 			case ElementType.Session:
-				return <ChildSessionComponent key={child.path} element={child} isInPopover={isInPopover} />;
+				return <ChildSessionComponent key={child.id} element={child} isInPopover={isInPopover} />;
 			case ElementType.Scene:
-				return <ChildSceneComponent key={child.path} element={child} isInPopover={isInPopover} />;
+				return <ChildSceneComponent key={child.id} element={child} isInPopover={isInPopover} />;
 			default:
-				return <ChildDefaultComponent key={child.path} element={child} isInPopover={isInPopover} />;
+				return <ChildDefaultComponent key={child.id} element={child} isInPopover={isInPopover} />;
 		}
 	}
 
@@ -118,7 +118,7 @@ export default function HierarchyComponent({
 
 	return (
 		<div
-			key={element.path + "draggable"}
+			key={element.id + "draggable"}
 			className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3"
 		>
 			<h2>{t("elements." + type, { count: 2 })}</h2>
@@ -126,7 +126,7 @@ export default function HierarchyComponent({
 				{getHeaderComponent()}
 				<DragDropContext onDragEnd={handleOnDragEnd}>
 					<Droppable
-						droppableId={element.path + "list"}
+						droppableId={element.id + "list"}
 						renderClone={(provided, snapshot, rubric) => (
 							<div
 								ref={provided.innerRef}
@@ -141,7 +141,7 @@ export default function HierarchyComponent({
 						{(provided: DroppableProvided) => (
 							<div {...provided.droppableProps} ref={provided.innerRef}>
 								{children.map((child: ElementInterface, index: number) => (
-									<Draggable key={child.path} draggableId={child.path} index={index}>
+									<Draggable key={child.id} draggableId={child.id} index={index}>
 										{(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
 											return (
 												<div

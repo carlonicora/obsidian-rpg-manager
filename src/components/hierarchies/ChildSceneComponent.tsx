@@ -139,7 +139,7 @@ export default function ChildSceneComponent({
 					<div className="col-span-5 pr-1">
 						<MarkdownEditorComponent
 							initialValue={element.attribute(AttributeType.Description)?.value ?? ""}
-							campaignPath={element.campaignPath}
+							campaignId={element.campaignId}
 							className="!p-1 m-0 border rounded-md border-transparent group-hover:!border-solid group-hover:!border-[--background-modifier-border] bg-transparent group-hover:bg-[--background-modifier-form-field]"
 							onBlur={(value: string) => {
 								saveAttribute(AttributeType.Description, value);

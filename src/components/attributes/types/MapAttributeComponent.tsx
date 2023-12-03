@@ -59,7 +59,7 @@ export default function MapAttributeComponent({
 
 	const allLocations: ElementInterface[] = (api.get(undefined, element.campaign) as ElementInterface[]).filter(
 		(otherElement: ElementInterface) =>
-			otherElement.attribute(AttributeType.Location)?.value !== undefined && otherElement.path !== element.path
+			otherElement.attribute(AttributeType.Location)?.value !== undefined && otherElement.id !== element.id
 	);
 
 	async function handleLinkClick(element: ElementInterface): Promise<void> {
@@ -96,14 +96,14 @@ export default function MapAttributeComponent({
 				>
 					{({ geographies }) => geographies.map((geo) => <Geography key={geo.rsmKey} geography={geo} />)}
 				</Geographies>
-				<Marker key={element.path} coordinates={[longitude, latitude]}>
+				<Marker key={element.id} coordinates={[longitude, latitude]}>
 					<circle r={3} fill="#FF5533" />
 				</Marker>
 				{allLocations.map((location: ElementInterface) => {
 					const [latitude, longitude] = location.attribute(AttributeType.Location)?.value?.split(",") ?? [0, 0];
 					return (
 						<Marker
-							key={location.path}
+							key={location.id}
 							coordinates={[longitude, latitude]}
 							className="hover:cursor-pointer"
 							onClick={() => handleLinkClick(location)}

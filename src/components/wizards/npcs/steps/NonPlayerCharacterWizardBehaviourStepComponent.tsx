@@ -8,12 +8,12 @@ import { ChatGptNonPlayerCharacterModel } from "src/services/ChatGptService/mode
 
 export default function NonPlayerCharacterWizardBehaviourStepComponent({
 	name,
-	campaignPath,
+	campaignId,
 	chatGpt,
 	setOverlay,
 }: {
 	name: string;
-	campaignPath?: string;
+	campaignId?: string;
 	chatGpt?: ChatGptNonPlayerCharacterModel;
 	setOverlay: (show: boolean) => void;
 }): React.ReactElement {
@@ -57,7 +57,7 @@ export default function NonPlayerCharacterWizardBehaviourStepComponent({
 				<MarkdownEditorComponent
 					key={key}
 					initialValue={behaviour}
-					campaignPath={campaignPath}
+					campaignId={campaignId}
 					onChange={updateBehaviour}
 					className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
 				/>

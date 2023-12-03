@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 
 export default function ChapterWizardDescriptionComponent({
 	name,
-	campaignPath,
+	campaignId,
 	chatGpt,
 	setOverlay,
 	errors,
 }: {
 	name: string;
-	campaignPath?: string;
+	campaignId?: string;
 	chatGpt?: any;
 	setOverlay: (show: boolean) => void;
 	errors?: any[];
@@ -44,7 +44,7 @@ export default function ChapterWizardDescriptionComponent({
 			<div className="">
 				<MarkdownEditorComponent
 					initialValue={wizardData.description}
-					campaignPath={campaignPath}
+					campaignId={campaignId}
 					onChange={updateDescription}
 					className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
 				/>

@@ -51,8 +51,8 @@ export default function NewChildComponent({
 			type,
 			fileName,
 			parent.type === ElementType.Campaign ? parent.system : parent.campaign.system,
-			parent.type === ElementType.Campaign ? parent.path : parent.campaign.path,
-			parent.path,
+			parent.type === ElementType.Campaign ? parent.id : parent.campaign.id,
+			parent.id,
 			positionInParent
 		);
 

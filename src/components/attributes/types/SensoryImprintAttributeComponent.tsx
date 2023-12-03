@@ -152,7 +152,7 @@ function EditComponent({
 							initialValue={sight}
 							onChange={handleSightChange}
 							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
-							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+							campaignId={element.type === ElementType.Campaign ? element.id : element.campaign.id}
 						/>
 					</div>
 				</div>
@@ -166,7 +166,7 @@ function EditComponent({
 							initialValue={hear}
 							onChange={handleHearChange}
 							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
-							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+							campaignId={element.type === ElementType.Campaign ? element.id : element.campaign.id}
 						/>
 					</div>
 				</div>
@@ -180,7 +180,7 @@ function EditComponent({
 							initialValue={smell}
 							onChange={handleSmellChange}
 							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
-							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+							campaignId={element.type === ElementType.Campaign ? element.id : element.campaign.id}
 						/>
 					</div>
 				</div>
@@ -194,7 +194,7 @@ function EditComponent({
 							initialValue={touch}
 							onChange={handleTouchChange}
 							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
-							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+							campaignId={element.type === ElementType.Campaign ? element.id : element.campaign.id}
 						/>
 					</div>
 				</div>
@@ -208,7 +208,7 @@ function EditComponent({
 							initialValue={taste}
 							onChange={handleTasteChange}
 							className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
-							campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+							campaignId={element.type === ElementType.Campaign ? element.id : element.campaign.id}
 						/>
 					</div>
 				</div>

@@ -3,7 +3,7 @@ import { ImageInterface } from "./ImageInterface";
 
 export interface SearchableElementInterface {
 	name: string;
-	path: string;
+	id: string;
 	type: ElementType;
 	alias?: string;
 	image?: ImageInterface;

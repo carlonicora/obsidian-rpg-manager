@@ -302,12 +302,12 @@ export default function NonPlayerCharacterWizardComponent({
 		}
 	};
 
-	let campaignPath;
+	let campaignId;
 
 	if (element !== undefined) {
-		campaignPath = element?.type === ElementType.Campaign ? element?.path : element.campaignPath;
+		campaignId = element?.type === ElementType.Campaign ? element?.id : element.campaignId;
 	} else {
-		campaignPath = campaign?.path;
+		campaignId = campaign?.id;
 	}
 
 	return (
@@ -325,7 +325,7 @@ export default function NonPlayerCharacterWizardComponent({
 						key={step}
 						name={element ? element?.name : name}
 						chatGpt={chatGpt.current}
-						campaignPath={campaignPath}
+						campaignId={campaignId}
 						setOverlay={setShowOverlay}
 					/>
 				</div>

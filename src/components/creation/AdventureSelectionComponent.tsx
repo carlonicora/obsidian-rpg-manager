@@ -4,10 +4,10 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export default function AdventureSelectionComponent({
 	adventures,
-	setAdventurePath,
+	setAdventureId,
 }: {
 	adventures: ElementInterface[];
-	setAdventurePath: (path: string) => void;
+	setAdventureId: (id: string) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 
@@ -15,10 +15,10 @@ export default function AdventureSelectionComponent({
 		<div className="max-w-md mb-3">
 			<div>{t("adventure", { count: 1 })}</div>
 			<div>
-				<select onChange={(e) => setAdventurePath(e.target.value)} className="w-full">
+				<select onChange={(e) => setAdventureId(e.target.value)} className="w-full">
 					{adventures.length > 1 && <option value=""></option>}
 					{adventures.map((adventure: ElementInterface) => (
-						<option key={adventure.path} value={adventure.path}>
+						<option key={adventure.id} value={adventure.id}>
 							{adventure.name}
 						</option>
 					))}

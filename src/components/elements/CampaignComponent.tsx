@@ -45,14 +45,14 @@ export default function CampaignComponent({
 					</div>
 				)}
 				<HierarchyComponent
-					key={element.path + ElementType.Adventure + !isInPopover}
+					key={element.id + ElementType.Adventure + !isInPopover}
 					element={element}
 					isInPopover={isInPopover}
 					type={ElementType.Adventure}
 					isDraggable={!isInPopover}
 				/>
 				<HierarchyComponent
-					key={element.path + ElementType.Session + !isInPopover}
+					key={element.id + ElementType.Session + !isInPopover}
 					element={element}
 					isInPopover={isInPopover}
 					type={ElementType.Session}

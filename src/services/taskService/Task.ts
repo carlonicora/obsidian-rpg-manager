@@ -77,7 +77,7 @@ export class Task implements TaskInterface {
 
 		if (this._priority === PriorityType.Medium) response.priority = 2;
 		if (this._priority === PriorityType.High) response.priority = 3;
-		if (this._completedIn !== undefined) response.completedIn = this._completedIn.path;
+		if (this._completedIn !== undefined) response.completedIn = this._completedIn.id;
 		if (this._completionDate !== undefined) response.completionDate = this._completionDate.toISOString();
 		if (this._mentionedIn !== undefined) response.mentionedIn = this._mentionedIn;
 

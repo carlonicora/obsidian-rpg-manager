@@ -12,18 +12,18 @@ export default function CampaignSelectionComponent({
 }: {
 	campaigns: ElementInterface[];
 	setAsGlobal?: (asGlobal: boolean) => void;
-	setCampaign: (path: string) => void;
+	setCampaign: (id: string) => void;
 	setSystem: (system: SystemType) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 
-	const setSelectedCampaign = (campaignPath: string) => {
+	const setSelectedCampaign = (campaignId: string) => {
 		const campaign: ElementInterface | undefined = campaigns.find(
-			(campaign: ElementInterface) => campaign.path === campaignPath
+			(campaign: ElementInterface) => campaign.id === campaignId
 		);
 		if (campaign === undefined) return;
 
-		setCampaign(campaignPath);
+		setCampaign(campaignId);
 		setSystem(campaign.system);
 	};
 
@@ -33,7 +33,7 @@ export default function CampaignSelectionComponent({
 			<select onChange={(e) => setSelectedCampaign(e.target.value)} className="w-full">
 				{campaigns.length > 1 && <option value=""></option>}
 				{campaigns.map((campaign: ElementInterface) => (
-					<option key={campaign.path} value={campaign.path}>
+					<option key={campaign.id} value={campaign.id}>
 						{campaign.name}
 					</option>
 				))}

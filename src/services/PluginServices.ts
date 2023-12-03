@@ -77,20 +77,6 @@ export class PluginServices {
 		);
 
 		(rpgm as unknown as Plugin).registerEvent(
-			app.vault.on("rename", (file: TFile, oldPath: string) => {
-				const element: ElementInterface | ElementInterface[] | undefined = rpgm.get(file.path);
-
-				if (element === undefined || Array.isArray(element)) return;
-
-				DatabaseFactory.rename(app, rpgm, database, element, oldPath).then(() => {
-					element.touch();
-
-					app.workspace.trigger("rpgmanager:refresh-views");
-				});
-			})
-		);
-
-		(rpgm as unknown as Plugin).registerEvent(
 			app.vault.on("delete", (file: TFile) => {
 				database = database.filter((element: ElementInterface) => element.path !== file.path);
 			})

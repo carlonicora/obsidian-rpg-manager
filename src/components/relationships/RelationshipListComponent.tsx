@@ -23,7 +23,7 @@ export default function RelationshipListComponent({
 		(relationship: RelationshipInterface) =>
 			relationship.component !== undefined &&
 			relationship.component.type === type &&
-			relationship.component.path !== element.path
+			relationship.component.id !== element.id
 	);
 
 	if (relationships === undefined || relationships.length === 0) return null;
@@ -36,7 +36,7 @@ export default function RelationshipListComponent({
 				(relationship.type === RelationshipType.Reversed &&
 					relationship.component.relationships.find(
 						(rel: RelationshipInterface) =>
-							rel.component !== undefined && rel.component.path === element.path && rel.type === RelationshipType.Child
+							rel.component !== undefined && rel.component.id === element.id && rel.type === RelationshipType.Child
 					))
 		);
 		title = t("elements." + element.type, { context: "inside" });
@@ -47,7 +47,7 @@ export default function RelationshipListComponent({
 				(relationship.type === RelationshipType.Reversed &&
 					relationship.component.relationships.find(
 						(rel: RelationshipInterface) =>
-							rel.component !== undefined && rel.component.path === element.path && rel.type === RelationshipType.Parent
+							rel.component !== undefined && rel.component.id === element.id && rel.type === RelationshipType.Parent
 					))
 		);
 		title = t("elements." + element.type, { context: "contains" });
@@ -65,7 +65,7 @@ export default function RelationshipListComponent({
 			<h3 className="!text-xl !font-extralight">{title}</h3>
 			<div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
 				{relationships.map((relationship: RelationshipInterface) => (
-					<RelationshipComponent key={relationship.component.file.path} element={element} relationship={relationship} />
+					<RelationshipComponent key={relationship.component.id} element={element} relationship={relationship} />
 				))}
 			</div>
 		</div>

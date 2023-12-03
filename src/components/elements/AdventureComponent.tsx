@@ -69,7 +69,7 @@ export default function AdventureComponent({
 					</div>
 				)}
 				<HierarchyComponent
-					key={element.path + !isInPopover}
+					key={element.id + !isInPopover}
 					element={element}
 					isInPopover={isInPopover}
 					type={ElementType.Chapter}

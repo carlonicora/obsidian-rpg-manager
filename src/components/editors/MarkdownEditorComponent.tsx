@@ -9,14 +9,14 @@ import * as React from "react";
 
 export default function MarkdownEditorComponent({
 	initialValue,
-	campaignPath,
+	campaignId,
 	className,
 	onChange,
 	onBlur,
 	forceFocus,
 }: {
 	initialValue?: string;
-	campaignPath?: string;
+	campaignId?: string;
 	className?: string;
 	onChange?: (value: string) => void;
 	onBlur?: (value: string) => void;
@@ -52,7 +52,7 @@ export default function MarkdownEditorComponent({
 			app,
 			api,
 			undefined,
-			campaignPath,
+			campaignId,
 			undefined,
 			replaceSequenceWithModalValue
 		);

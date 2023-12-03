@@ -86,7 +86,7 @@ function Edit({
 }): React.ReactElement {
 	const { t } = useTranslation();
 
-	const campaignPath = element.type === ElementType.Campaign ? element.path : element.campaignPath;
+	const campaignId = element.type === ElementType.Campaign ? element.id : element.campaignId;
 
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
@@ -94,10 +94,10 @@ function Edit({
 				{t("attributes.kishotenketsu")}
 			</h2>
 			<div className="gap-3 grid grid-cols-7">
-				<EditableAttribute attribute={attribute} campaignPath={campaignPath} subAttribute="ki" setValue={setValue} />
-				<EditableAttribute attribute={attribute} campaignPath={campaignPath} subAttribute="sho" setValue={setValue} />
-				<EditableAttribute attribute={attribute} campaignPath={campaignPath} subAttribute="ten" setValue={setValue} />
-				<EditableAttribute attribute={attribute} campaignPath={campaignPath} subAttribute="ketsu" setValue={setValue} />
+				<EditableAttribute attribute={attribute} campaignId={campaignId} subAttribute="ki" setValue={setValue} />
+				<EditableAttribute attribute={attribute} campaignId={campaignId} subAttribute="sho" setValue={setValue} />
+				<EditableAttribute attribute={attribute} campaignId={campaignId} subAttribute="ten" setValue={setValue} />
+				<EditableAttribute attribute={attribute} campaignId={campaignId} subAttribute="ketsu" setValue={setValue} />
 			</div>
 
 			<div className="flex justify-end mt-3">
@@ -156,12 +156,12 @@ function EditableAttribute({
 	attribute,
 	subAttribute,
 	setValue,
-	campaignPath,
+	campaignId,
 }: {
 	attribute: AttributeInterface;
 	subAttribute: string;
 	setValue?: (subAttibute: string, newValue: string) => void;
-	campaignPath?: string;
+	campaignId?: string;
 }): React.ReactElement {
 	const { t } = useTranslation();
 
@@ -190,7 +190,7 @@ function EditableAttribute({
 				{setValue ? (
 					<MarkdownEditorComponent
 						className="min-h-[2em] w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
-						campaignPath={campaignPath}
+						campaignId={campaignId}
 						onChange={setSubAttributeValue}
 						initialValue={attribute.value[subAttribute]}
 					/>

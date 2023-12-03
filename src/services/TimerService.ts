@@ -14,11 +14,11 @@ export class TimerService {
 	}
 
 	static startTimer(app: App, api: RpgManagerInterface, element: ElementInterface): void {
-		if (this._runningScene !== undefined && this._runningScene !== element.path) return;
+		if (this._runningScene !== undefined && this._runningScene !== element.id) return;
 
 		if (this._runningScene !== undefined) TimerService.endTimer(app, api);
 
-		this._runningScene = element.path;
+		this._runningScene = element.id;
 		this._runningStart = Math.round(Date.now() / 1000);
 	}
 

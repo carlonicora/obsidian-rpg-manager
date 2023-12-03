@@ -65,13 +65,13 @@ export default function ConflictComponent({
 		setEdit(false);
 	};
 
-	const campaignPath = element.type === ElementType.Campaign ? element.path : element.campaignPath;
+	const campaignId = element.type === ElementType.Campaign ? element.id : element.campaignId;
 
 	if (edit)
 		return (
 			<Edit
 				element={element}
-				campaignPath={campaignPath}
+				campaignId={campaignId}
 				attribute={attribute}
 				setValue={setValue}
 				save={save}
@@ -80,14 +80,14 @@ export default function ConflictComponent({
 			/>
 		);
 
-	if (isEditable) return <View attribute={attribute} campaignPath={campaignPath} setEdit={setEdit} />;
+	if (isEditable) return <View attribute={attribute} campaignId={campaignId} setEdit={setEdit} />;
 
-	return <Browse attribute={attribute} campaignPath={campaignPath} />;
+	return <Browse attribute={attribute} campaignId={campaignId} />;
 }
 
 function Edit({
 	element,
-	campaignPath,
+	campaignId,
 	attribute,
 	setValue,
 	save,
@@ -95,7 +95,7 @@ function Edit({
 	reset,
 }: {
 	element: ElementInterface;
-	campaignPath: string;
+	campaignId: string;
 	attribute: AttributeInterface;
 	setValue: (subAttibute: string, newValue: string) => void;
 	save: () => void;
@@ -110,13 +110,13 @@ function Edit({
 				{t("attributes.conflict")}
 			</h2>
 			<div className="gap-3 grid grid-cols-7">
-				<EditableTitleAttribute attribute={attribute} campaignPath={campaignPath} setValue={setValue} />
+				<EditableTitleAttribute attribute={attribute} campaignId={campaignId} setValue={setValue} />
 				<EditableStatusAttribute attribute={attribute} setValue={setValue} />
 				<EditableCategoryAttribute attribute={attribute} setValue={setValue} />
 				<EditableInvolvementAttribute attribute={attribute} setValue={setValue} />
 				<EditableLongTextAttribute
 					attribute={attribute}
-					campaignPath={campaignPath}
+					campaignId={campaignId}
 					setValue={setValue}
 					type="description"
 				/>
@@ -124,21 +124,16 @@ function Edit({
 				<EditableRelationshipsAttribute
 					attribute={attribute}
 					type="opposingforces"
-					campaignPath={campaignPath}
+					campaignId={campaignId}
 					setValue={setValue}
 				/>
 				<EditableRelationshipsAttribute
 					attribute={attribute}
 					type="events"
-					campaignPath={campaignPath}
+					campaignId={campaignId}
 					setValue={setValue}
 				/>
-				<EditableLongTextAttribute
-					attribute={attribute}
-					campaignPath={campaignPath}
-					setValue={setValue}
-					type="outcome"
-				/>
+				<EditableLongTextAttribute attribute={attribute} campaignId={campaignId} setValue={setValue} type="outcome" />
 			</div>
 
 			<div className="flex justify-end mt-3">
@@ -158,11 +153,11 @@ function Edit({
 
 function View({
 	attribute,
-	campaignPath,
+	campaignId,
 	setEdit,
 }: {
 	attribute: AttributeInterface;
-	campaignPath: string;
+	campaignId: string;
 	setEdit: (editable: boolean) => void;
 }): React.ReactElement {
 	return (
@@ -172,18 +167,12 @@ function View({
 			}}
 			className="cursor-pointer hover:bg-[--background-secondary]"
 		>
-			<Browse attribute={attribute} campaignPath={campaignPath} />
+			<Browse attribute={attribute} campaignId={campaignId} />
 		</div>
 	);
 }
 
-function Browse({
-	attribute,
-	campaignPath,
-}: {
-	attribute: AttributeInterface;
-	campaignPath: string;
-}): React.ReactElement {
+function Browse({ attribute, campaignId }: { attribute: AttributeInterface; campaignId: string }): React.ReactElement {
 	const { t } = useTranslation();
 
 	return (
@@ -192,15 +181,15 @@ function Browse({
 				{t("attributes.conflict")}
 			</h2>
 			<div className="gap-3 grid grid-cols-7">
-				<EditableTitleAttribute attribute={attribute} campaignPath={campaignPath} />
+				<EditableTitleAttribute attribute={attribute} campaignId={campaignId} />
 				<EditableStatusAttribute attribute={attribute} />
 				<EditableCategoryAttribute attribute={attribute} />
 				<EditableInvolvementAttribute attribute={attribute} />
-				<EditableLongTextAttribute attribute={attribute} campaignPath={campaignPath} type="description" />
+				<EditableLongTextAttribute attribute={attribute} campaignId={campaignId} type="description" />
 				<EditableConflictStakesAttribute attribute={attribute} />
 				<EditableRelationshipsAttribute attribute={attribute} type="opposingforces" />
 				<EditableRelationshipsAttribute attribute={attribute} type="events" />
-				<EditableLongTextAttribute attribute={attribute} campaignPath={campaignPath} type="outcome" />
+				<EditableLongTextAttribute attribute={attribute} campaignId={campaignId} type="outcome" />
 			</div>
 		</div>
 	);
@@ -208,11 +197,11 @@ function Browse({
 
 function EditableTitleAttribute({
 	attribute,
-	campaignPath,
+	campaignId,
 	setValue,
 }: {
 	attribute: AttributeInterface;
-	campaignPath: string;
+	campaignId: string;
 	setValue?: (subAttibute: string, newValue: string) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
@@ -242,7 +231,7 @@ function EditableTitleAttribute({
 						className="min-h-[2em] w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
 						onChange={setTitle}
 						initialValue={attribute.value?.title ?? ""}
-						campaignPath={campaignPath}
+						campaignId={campaignId}
 					/>
 				) : (
 					<div className="min-h-[2em] p-2 w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md">
@@ -262,12 +251,12 @@ function EditableTitleAttribute({
 function EditableRelationshipsAttribute({
 	attribute,
 	type,
-	campaignPath,
+	campaignId,
 	setValue,
 }: {
 	attribute: AttributeInterface;
 	type: string;
-	campaignPath?: string;
+	campaignId?: string;
 	setValue?: (subAttibute: string, newValue: string | string[]) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
@@ -311,7 +300,7 @@ function EditableRelationshipsAttribute({
 		const limits: ElementType[] =
 			type === "opposingforces" ? [ElementType.NonPlayerCharacter, ElementType.Faction] : [ElementType.Event];
 
-		const searcher = new NewRelationshipController(app, api, undefined, campaignPath, limits, addRelationship);
+		const searcher = new NewRelationshipController(app, api, undefined, campaignId, limits, addRelationship);
 		searcher.open();
 	};
 
@@ -554,12 +543,12 @@ function EditableStatusAttribute({
 
 function EditableLongTextAttribute({
 	attribute,
-	campaignPath,
+	campaignId,
 	setValue,
 	type,
 }: {
 	attribute: AttributeInterface;
-	campaignPath: string;
+	campaignId: string;
 	setValue?: (subAttibute: string, newValue: string) => void;
 	type: string;
 }): React.ReactElement {
@@ -590,7 +579,7 @@ function EditableLongTextAttribute({
 				{setValue ? (
 					<MarkdownEditorComponent
 						className="min-h-[2em] w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
-						campaignPath={campaignPath}
+						campaignId={campaignId}
 						onChange={setSubAttributeValue}
 						initialValue={attribute.value[type]}
 					/>

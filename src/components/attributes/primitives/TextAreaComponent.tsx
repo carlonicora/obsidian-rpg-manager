@@ -7,14 +7,14 @@ import { useApi } from "src/hooks/useApi";
 
 export default function TextAreaComponent({
 	initialValue,
-	campaignPath,
+	campaignId,
 	className,
 	onChange,
 	onBlur,
 	forceFocus,
 }: {
 	initialValue?: string;
-	campaignPath: string;
+	campaignId: string;
 	className?: string;
 	onChange: (value: string) => void;
 	onBlur?: (value: string) => void;
@@ -47,7 +47,7 @@ export default function TextAreaComponent({
 			app,
 			api,
 			undefined,
-			campaignPath,
+			campaignId,
 			undefined,
 			replaceSequenceWithModalValue
 		);

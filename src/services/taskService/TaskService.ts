@@ -23,7 +23,7 @@ export class taskService implements TaskServiceInterface {
 			return response.filter(
 				(task: TaskInterface) =>
 					task.mentionedIn === undefined ||
-					(!task.mentionedIn.contains(notAlreadyMentionedIn.path) && task.element.path !== notAlreadyMentionedIn.path)
+					(!task.mentionedIn.contains(notAlreadyMentionedIn.id) && task.element.id !== notAlreadyMentionedIn.id)
 			);
 
 		return response;
@@ -34,16 +34,16 @@ export class taskService implements TaskServiceInterface {
 	}
 
 	getByElement(element: ElementInterface): TaskInterface[] {
-		return this.getAll().filter((task: TaskInterface) => task.element.path === element.path);
+		return this.getAll().filter((task: TaskInterface) => task.element.id === element.id);
 	}
 
 	getCompletedIn(element: ElementInterface): TaskInterface[] {
-		return this.getAll().filter((task: TaskInterface) => task.completedIn?.path === element.path);
+		return this.getAll().filter((task: TaskInterface) => task.completedIn?.id === element.id);
 	}
 
 	getMentionedIn(element: ElementInterface): TaskInterface[] {
 		return this.getAll().filter(
-			(task: TaskInterface) => task.mentionedIn !== undefined && task.mentionedIn.contains(element.path)
+			(task: TaskInterface) => task.mentionedIn !== undefined && task.mentionedIn.contains(element.id)
 		);
 	}
 }

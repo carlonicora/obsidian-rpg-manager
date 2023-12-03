@@ -27,8 +27,8 @@ export default function CreationBaseComponent({
 		type: ElementType,
 		name: string,
 		system: SystemType,
-		campaignPath?: string,
-		parentPath?: string,
+		campaignId?: string,
+		parentId?: string,
 		positionInParent?: number,
 		template?: string
 	) => Promise<void>;
@@ -40,8 +40,8 @@ export default function CreationBaseComponent({
 
 	const [global, setGlobal] = React.useState<boolean>(false);
 	const [type, setType] = React.useState<ElementType | undefined>(initialType);
-	const [campaignPath, setCampaignPath] = React.useState<string | undefined>();
-	const [parentPath, setParentPath] = React.useState<string | undefined>(undefined);
+	const [campaignId, setCampaignId] = React.useState<string | undefined>();
+	const [parentId, setParentId] = React.useState<string | undefined>(undefined);
 	const [positionInParent, setPositionInParent] = React.useState<number | undefined>(undefined);
 	const [name, setName] = React.useState<string | undefined>(undefined);
 	const [error, setError] = React.useState<string | undefined>(undefined);
@@ -67,17 +67,17 @@ export default function CreationBaseComponent({
 			if (campaigns.length === 1) {
 				campaign = campaigns[0];
 
-				if (!campaignPath) {
-					setCampaignPath(campaign.path);
+				if (!campaignId) {
+					setCampaignId(campaign.id);
 					setSystem(campaign.system);
 				}
 			}
 
-			if (campaignPath !== undefined)
-				campaign = campaigns.find((campaign: ElementInterface) => campaign.path === campaignPath);
+			if (campaignId !== undefined)
+				campaign = campaigns.find((campaign: ElementInterface) => campaign.id === campaignId);
 
 			if (type === ElementType.Adventure || type === ElementType.Session) {
-				if (parentPath === undefined && campaign !== undefined) setParentPath(campaign.path);
+				if (parentId === undefined && campaign !== undefined) setParentId(campaign.id);
 
 				if (positionInParent === undefined) {
 					setPositionInParent(
@@ -92,12 +92,12 @@ export default function CreationBaseComponent({
 
 				if (sessions.length === 1) {
 					session = sessions[0];
-				} else if (parentPath !== undefined) {
-					session = sessions.find((session: ElementInterface) => session.path === parentPath);
+				} else if (parentId !== undefined) {
+					session = sessions.find((session: ElementInterface) => session.id === parentId);
 				}
 
 				if (session !== undefined) {
-					if (parentPath === undefined) setParentPath(session.path);
+					if (parentId === undefined) setParentId(session.id);
 
 					if (positionInParent === undefined) {
 						setPositionInParent(
@@ -115,12 +115,12 @@ export default function CreationBaseComponent({
 
 				if (adventures.length === 1) {
 					adventure = adventures[0];
-				} else if (parentPath !== undefined) {
-					adventure = adventures.find((adventure: ElementInterface) => adventure.path === parentPath);
+				} else if (parentId !== undefined) {
+					adventure = adventures.find((adventure: ElementInterface) => adventure.id === parentId);
 				}
 
 				if (adventure !== undefined) {
-					if (parentPath === undefined) setParentPath(adventure.path);
+					if (parentId === undefined) setParentId(adventure.id);
 
 					if (positionInParent === undefined) {
 						setPositionInParent(
@@ -134,19 +134,19 @@ export default function CreationBaseComponent({
 
 	const createElement = async (launchWizard: boolean) => {
 		let e = "";
-		if (type !== ElementType.Campaign && campaignPath === undefined && !global) e += "You must select a campaign";
+		if (type !== ElementType.Campaign && campaignId === undefined && !global) e += "You must select a campaign";
 		if (name === undefined || name === "") e += "You must enter a name";
-		if ((type === ElementType.Adventure || type === ElementType.Session) && parentPath === undefined)
+		if ((type === ElementType.Adventure || type === ElementType.Session) && parentId === undefined)
 			e += "You must select a campaign";
-		if (type === ElementType.Scene && parentPath === undefined) e += "You must select a session";
-		if (type === ElementType.Chapter && parentPath === undefined) e += "You must select an adventure";
+		if (type === ElementType.Scene && parentId === undefined) e += "You must select a session";
+		if (type === ElementType.Chapter && parentId === undefined) e += "You must select an adventure";
 
 		if (e !== "") {
 			setError(e);
 			return;
 		}
 
-		setId(launchWizard, type, name, system, global ? undefined : campaignPath, parentPath, positionInParent, template);
+		setId(launchWizard, type, name, system, global ? undefined : campaignId, parentId, positionInParent, template);
 	};
 
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -185,7 +185,7 @@ export default function CreationBaseComponent({
 					{type !== undefined && type !== ElementType.Campaign && (
 						<CampaignSelectionComponent
 							campaigns={campaigns}
-							setCampaign={setCampaignPath}
+							setCampaign={setCampaignId}
 							setAsGlobal={
 								![
 									ElementType.Campaign,
@@ -201,10 +201,10 @@ export default function CreationBaseComponent({
 						/>
 					)}
 					{type !== undefined && type === ElementType.Scene && (
-						<SessionSelectionComponent sessions={sessions} setSessionPath={setParentPath} />
+						<SessionSelectionComponent sessions={sessions} setSessionId={setParentId} />
 					)}
 					{type !== undefined && type === ElementType.Chapter && (
-						<AdventureSelectionComponent adventures={adventures} setAdventurePath={setParentPath} />
+						<AdventureSelectionComponent adventures={adventures} setAdventureId={setParentId} />
 					)}
 					{type !== undefined && (
 						<div className="max-w-md">

@@ -164,7 +164,7 @@ export class Element implements ElementInterface {
 		this._relationships = value;
 	}
 
-	get campaignPath(): string | undefined {
+	get campaignId(): string | undefined {
 		return this._rpgManagerBlock.id.campaign;
 	}
 
@@ -176,7 +176,7 @@ export class Element implements ElementInterface {
 		this._campaign = value;
 	}
 
-	get parentPath(): string | undefined {
+	get parentId(): string | undefined {
 		return this._rpgManagerBlock.id.parent;
 	}
 

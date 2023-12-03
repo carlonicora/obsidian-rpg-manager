@@ -53,7 +53,7 @@ export default function DescriptionAttributeComponent({
 				<div>
 					<MarkdownEditorComponent
 						initialValue={attribute.value}
-						campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
+						campaignId={element.type === ElementType.Campaign ? element.id : element.campaignId}
 						onChange={setDescription}
 						className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
 					/>

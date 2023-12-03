@@ -1,4 +1,5 @@
 import { RelationshipInterface } from "@/data/interfaces/RelationshipInterface";
+import { randomUUID } from "crypto";
 import i18next from "i18next";
 import { App, MarkdownView, TAbstractFile, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -24,24 +25,25 @@ export class FileCreationService {
 		private _type: ElementType,
 		private _name: string,
 		system?: SystemType,
-		private _campaignPath?: string,
-		private _parentPath?: string,
+		private _campaignId?: string,
+		private _parentId?: string,
 		positionInParent?: number,
 		attributes?: any[],
 		relationships?: RelationshipInterface[],
 		private _template?: string
 	) {
 		const id: IdInterface = {
+			id: randomUUID(),
 			type: this._type,
 		};
 
 		if (system !== undefined && system !== SystemType.Agnostic) id.system = SystemType.Agnostic;
-		if (this._campaignPath !== undefined) id.campaign = this._campaignPath;
-		if (this._parentPath !== undefined) id.parent = this._parentPath;
+		if (this._campaignId !== undefined) id.campaign = this._campaignId;
+		if (this._parentId !== undefined) id.parent = this._parentId;
 		if (positionInParent !== undefined) id.positionInParent = positionInParent;
 
-		if (this._campaignPath !== undefined) {
-			this._campaign = this._api.get(this._campaignPath) as ElementInterface | undefined;
+		if (this._campaignId !== undefined) {
+			this._campaign = this._api.get(this._campaignId) as ElementInterface | undefined;
 			if (this._campaign !== undefined) system = this._campaign.system ?? SystemType.Agnostic;
 		}
 
@@ -63,7 +65,7 @@ export class FileCreationService {
 			relationships.forEach((relationship: RelationshipInterface) => {
 				this._codeblock.relationships.push({
 					type: relationship.type,
-					path: relationship.path,
+					id: relationship.id,
 				});
 			});
 		}
@@ -126,18 +128,18 @@ export class FileCreationService {
 			this._createFolder(response);
 
 			return response + pathSeparator + this._name + ".md";
-		} else if (this._campaignPath !== undefined && this._api.settings.automaticMove === false) {
-			const campaign: ElementInterface = this._api.get(this._campaignPath) as ElementInterface;
+		} else if (this._campaignId !== undefined && this._api.settings.automaticMove === false) {
+			const campaign: ElementInterface = this._api.get(this._campaignId) as ElementInterface;
 
 			return campaign.file.parent.path + pathSeparator + this._name + ".md";
-		} else if (this._campaignPath === undefined) {
+		} else if (this._campaignId === undefined) {
 			response = "Assets";
 		} else {
 			response += pathSeparator + this._campaign.name;
 		}
 
 		const parent: ElementInterface | undefined =
-			this._parentPath !== undefined ? (this._api.get(this._parentPath) as ElementInterface) : undefined;
+			this._parentId !== undefined ? (this._api.get(this._parentId) as ElementInterface) : undefined;
 
 		switch (this._type) {
 			case ElementType.Adventure:

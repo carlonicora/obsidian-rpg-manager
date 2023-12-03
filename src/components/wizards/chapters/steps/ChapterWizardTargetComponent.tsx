@@ -7,7 +7,6 @@ import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApi } from "@/hooks/useApi";
 import { useApp } from "@/hooks/useApp";
 import { useWizard } from "@/hooks/useWizard";
-import { HelperService } from "@/services/HelperService";
 import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -101,13 +100,13 @@ function TargetElementTypeComponent({
 
 export default function ChapterWizardTargetComponent({
 	name,
-	campaignPath,
+	campaignId,
 	chatGpt,
 	setOverlay,
 	errors,
 }: {
 	name: string;
-	campaignPath?: string;
+	campaignId?: string;
 	chatGpt?: any;
 	setOverlay: (show: boolean) => void;
 	errors?: any[];
@@ -120,7 +119,7 @@ export default function ChapterWizardTargetComponent({
 
 	const [targetType, setTargetType] = React.useState<ElementType | undefined>(wizardData.targetType);
 	const [targetName, setTargetName] = React.useState<string>(wizardData.targetName ?? "");
-	const [targetElementPath, setTargetElementPath] = React.useState<string | undefined>(wizardData.targetElement);
+	const [targetElementPath, setTargetElementId] = React.useState<string | undefined>(wizardData.targetElement);
 	const [targetElement, setTargetElement] = React.useState<ElementInterface | undefined>(
 		wizardData.targetElement ? (api.get(wizardData.targetElement) as ElementInterface) : undefined
 	);
@@ -132,14 +131,7 @@ export default function ChapterWizardTargetComponent({
 		setIsExistingTarget(isExistingTarget);
 
 		if (isExistingTarget) {
-			const selector = new NewRelationshipController(
-				app,
-				api,
-				undefined,
-				campaignPath,
-				[targetType],
-				onSetTargetElement
-			);
+			const selector = new NewRelationshipController(app, api, undefined, campaignId, [targetType], onSetTargetElement);
 			selector.open();
 		}
 	};
@@ -158,7 +150,7 @@ export default function ChapterWizardTargetComponent({
 	const onSetTargetName = (targetName: string) => {
 		setTargetName(targetName);
 		setTargetElement(undefined);
-		setTargetElementPath(undefined);
+		setTargetElementId(undefined);
 		wizardData.targetName = targetName;
 		wizardData.targetElement = undefined;
 	};
@@ -167,16 +159,14 @@ export default function ChapterWizardTargetComponent({
 		wizardData.targetDescription = value;
 	};
 
-	const onSetTargetElement = (path: string) => {
-		path = HelperService.extractPath(path);
-
-		const element: ElementInterface | undefined = api.get(path) as ElementInterface | undefined;
+	const onSetTargetElement = (id: string) => {
+		const element: ElementInterface | undefined = api.getById(id) as ElementInterface | undefined;
 
 		if (element !== undefined) {
-			setTargetElementPath(path);
+			setTargetElementId(id);
 			setTargetElement(element);
 			setTargetName(undefined);
-			wizardData.targetElement = path;
+			wizardData.targetElement = id;
 			wizardData.targetName = undefined;
 		}
 	};
@@ -240,7 +230,7 @@ export default function ChapterWizardTargetComponent({
 							<div className="ml-3">
 								<MarkdownEditorComponent
 									initialValue={wizardData.targetDescription}
-									campaignPath={campaignPath}
+									campaignId={campaignId}
 									onChange={updateDescription}
 									className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
 								/>

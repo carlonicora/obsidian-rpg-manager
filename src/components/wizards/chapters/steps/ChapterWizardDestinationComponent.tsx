@@ -6,7 +6,6 @@ import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApi } from "@/hooks/useApi";
 import { useApp } from "@/hooks/useApp";
 import { useWizard } from "@/hooks/useWizard";
-import { HelperService } from "@/services/HelperService";
 import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -102,13 +101,13 @@ function DestinationElementTypeComponent({
 
 export default function ChapterWizardDestinationComponent({
 	name,
-	campaignPath,
+	campaignId,
 	chatGpt,
 	setOverlay,
 	errors,
 }: {
 	name: string;
-	campaignPath?: string;
+	campaignId?: string;
 	chatGpt?: any;
 	setOverlay: (show: boolean) => void;
 	errors?: any[];
@@ -121,7 +120,7 @@ export default function ChapterWizardDestinationComponent({
 
 	const [destinationType, setDestinationType] = React.useState<ElementType | undefined>(wizardData.destinationType);
 	const [destinationName, setDestinationName] = React.useState<string>(wizardData.destinationName ?? "");
-	const [destinationElementPath, setDestinationElementPath] = React.useState<string | undefined>(
+	const [destinationElementPath, setDestinationElementId] = React.useState<string | undefined>(
 		wizardData.destinationElement
 	);
 	const [destinationElement, setDestinationElement] = React.useState<ElementInterface | undefined>(
@@ -139,7 +138,7 @@ export default function ChapterWizardDestinationComponent({
 				app,
 				api,
 				undefined,
-				campaignPath,
+				campaignId,
 				[destinationType],
 				onSetDestinationElement
 			);
@@ -161,21 +160,19 @@ export default function ChapterWizardDestinationComponent({
 	const onSetDestinationName = (destinationName: string) => {
 		setDestinationName(destinationName);
 		setDestinationElement(undefined);
-		setDestinationElementPath(undefined);
+		setDestinationElementId(undefined);
 		wizardData.destinationName = destinationName;
 		wizardData.destinationElement = undefined;
 	};
 
-	const onSetDestinationElement = (path: string) => {
-		path = HelperService.extractPath(path);
-
-		const element: ElementInterface | undefined = api.get(path) as ElementInterface | undefined;
+	const onSetDestinationElement = (id: string) => {
+		const element: ElementInterface | undefined = api.getById(id) as ElementInterface | undefined;
 
 		if (element !== undefined) {
-			setDestinationElementPath(path);
+			setDestinationElementId(id);
 			setDestinationElement(element);
 			setDestinationName(undefined);
-			wizardData.destinationElement = path;
+			wizardData.destinationElement = id;
 			wizardData.destinationName = undefined;
 		}
 	};

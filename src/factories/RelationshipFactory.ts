@@ -11,7 +11,7 @@ export class RelationshipFactory {
 
 		const response: RelationshipInterface = {
 			type: relationshipType,
-			path: relationshipDefinition.path,
+			id: relationshipDefinition.id,
 			isInContent: false,
 		};
 
@@ -23,23 +23,23 @@ export class RelationshipFactory {
 	static createFromElement(type: RelationshipType, element: ElementInterface): RelationshipInterface {
 		return {
 			type: type,
-			path: element.path,
+			id: element.id,
 			isInContent: false,
 		};
 	}
 
-	static createFromCodeblock(type: RelationshipType, path: string): RelationshipInterface {
+	static createFromCodeblock(type: RelationshipType, id: string): RelationshipInterface {
 		return {
 			type: type,
-			path: path,
+			id: id,
 			isInContent: false,
 		};
 	}
 
-	static createFromContent(type: RelationshipType, path: string): RelationshipInterface {
+	static createFromContent(type: RelationshipType, id: string): RelationshipInterface {
 		return {
 			type: type,
-			path: path,
+			id: id,
 			isInContent: true,
 		};
 	}
@@ -65,7 +65,7 @@ export class RelationshipFactory {
 
 		return {
 			type: reverseRelationshipType,
-			path: element.path,
+			id: element.id,
 			component: element,
 			isInContent: relationship.isInContent,
 			isAlsoInContent: relationship.isAlsoInContent,

@@ -1,7 +1,7 @@
 export interface ChapterCluesInterface {
 	id: string;
 	clueName: string;
-	cluePath?: string;
+	clueId?: string;
 	description?: string;
 	isExistingClue?: boolean;
 }

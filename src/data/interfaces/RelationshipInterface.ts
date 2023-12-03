@@ -3,7 +3,7 @@ import { ElementInterface } from "./ElementInterface";
 
 export interface RelationshipInterface {
 	type: RelationshipType;
-	path: string;
+	id: string;
 	description?: string | undefined;
 	component?: ElementInterface | undefined;
 	isInContent: boolean;

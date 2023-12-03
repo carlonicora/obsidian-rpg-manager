@@ -44,7 +44,7 @@ export default function RelationshipComponent({
 	let campaign = undefined;
 
 	if (element.type !== ElementType.Campaign && element.campaign === undefined)
-		campaign = relationship.component?.campaign?.path;
+		campaign = relationship.component?.campaign?.id;
 
 	let isGeneric = false;
 	if (relationship.component.type !== ElementType.Campaign && !relationship.component.campaign) isGeneric = true;

@@ -16,13 +16,13 @@ import { ChapterCluesInterface } from "../interfaces/ChapterCluesInterface";
 
 export default function ChapterWizardCluesComponent({
 	name,
-	campaignPath,
+	campaignId,
 	chatGpt,
 	setOverlay,
 	errors,
 }: {
 	name: string;
-	campaignPath?: string;
+	campaignId?: string;
 	chatGpt?: any;
 	setOverlay: (show: boolean) => void;
 	errors?: any[];
@@ -33,7 +33,7 @@ export default function ChapterWizardCluesComponent({
 	const wizardData = useWizard();
 
 	const [chapterClues, setChapterClues] = React.useState<ChapterCluesInterface[]>(
-		wizardData.clues.length > 0 ? wizardData.clues : [{ id: uuidv4(), cluePath: "" }]
+		wizardData.clues.length > 0 ? wizardData.clues : [{ id: uuidv4(), clueId: "" }]
 	);
 
 	const handleInputChange = (
@@ -43,16 +43,16 @@ export default function ChapterWizardCluesComponent({
 		isExistingClue?: boolean
 	) => {
 		const updatedClues = [...chapterClues];
-		if (field === "cluePath" || field === "clueName" || field === "description") updatedClues[index][field] = value;
+		if (field === "clueId" || field === "clueName" || field === "description") updatedClues[index][field] = value;
 
 		if (isExistingClue !== undefined) {
 			updatedClues[index].isExistingClue = isExistingClue;
 
 			if (isExistingClue === true) {
 				updatedClues[index].clueName =
-					(api.get(updatedClues[index].cluePath) as ElementInterface | undefined)?.name ?? "";
+					(api.get(updatedClues[index].clueId) as ElementInterface | undefined)?.name ?? "";
 			} else {
-				updatedClues[index].cluePath = undefined;
+				updatedClues[index].clueId = undefined;
 			}
 		}
 
@@ -71,16 +71,16 @@ export default function ChapterWizardCluesComponent({
 	const removeExisting = (index: number) => {
 		const updatedClues = [...chapterClues];
 		updatedClues[index].clueName = undefined;
-		handleInputChange(index, "cluePath", "", false);
+		handleInputChange(index, "clueId", "", false);
 	};
 
-	const setExistingClue = (cluePath: string, params: any) => {
-		cluePath = HelperService.extractPath(cluePath);
-		handleInputChange(params.index, "cluePath", cluePath, true);
+	const setExistingClue = (clueId: string, params: any) => {
+		clueId = HelperService.extractPath(clueId);
+		handleInputChange(params.index, "clueId", clueId, true);
 	};
 
 	const selectExistingClue = (clueIndex: number) => {
-		new NewRelationshipController(app, api, undefined, campaignPath, [ElementType.Clue], setExistingClue, {
+		new NewRelationshipController(app, api, undefined, campaignId, [ElementType.Clue], setExistingClue, {
 			index: clueIndex,
 		}).open();
 	};
@@ -143,7 +143,7 @@ export default function ChapterWizardCluesComponent({
 						{!clue.isExistingClue && (
 							<div className="w-full ml-3">
 								<MarkdownEditorComponent
-									campaignPath={campaignPath}
+									campaignId={campaignId}
 									initialValue={clue.description}
 									onChange={(value) => handleInputChange(index, "description", value)}
 									className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"

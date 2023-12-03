@@ -9,7 +9,6 @@ import { NewRelationshipController } from "src/controllers/NewRelationshipContro
 import { ElementType } from "src/data/enums/ElementType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
-import { HelperService } from "src/services/HelperService";
 import { PriorityType } from "src/services/taskService/enums/PriorityType";
 import { TaskInterface } from "src/services/taskService/interfaces/TaskInterface";
 import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
@@ -47,20 +46,19 @@ export default function TaskDetailComponent({
 	};
 
 	const handleRemoveMentionedIn = (mentionedInElement: ElementInterface) => {
-		task.mentionedIn = task.mentionedIn?.filter((path: string) => path !== mentionedInElement.path);
+		task.mentionedIn = task.mentionedIn?.filter((id: string) => id !== mentionedInElement.id);
 		setMentionedIn(task.mentionedIn);
 	};
 
-	const handleAddMentionedInPath = (path: string) => {
-		path = HelperService.extractPath(path);
-		if (task.mentionedIn.includes(path)) return;
+	const handleAddMentionedInId = (id: string) => {
+		if (task.mentionedIn.includes(id)) return;
 
-		task.mentionedIn = [...(task.mentionedIn ?? []), path];
+		task.mentionedIn = [...(task.mentionedIn ?? []), id];
 		setMentionedIn(task.mentionedIn);
 	};
 
 	const handleAddmentionedIn = () => {
-		const searcher = new NewRelationshipController(app, api, element, undefined, undefined, handleAddMentionedInPath);
+		const searcher = new NewRelationshipController(app, api, element, undefined, undefined, handleAddMentionedInId);
 		searcher.open();
 	};
 
@@ -96,10 +94,10 @@ export default function TaskDetailComponent({
 			</div>
 			<div className="col-span-1 ml-2 text-xs text-[--text-faint] h-7 ">{t("tasks.mentionedin")}</div>
 			<div className="col-span-3 min-h-[1.75rem]">
-				{mentionedIn.map((path: string) => {
-					const mentionedInElement = api.get(path) as ElementInterface;
+				{mentionedIn.map((id: string) => {
+					const mentionedInElement = api.getById(id) as ElementInterface;
 					return (
-						<div key={mentionedInElement.path} className={`ml-3 group w-full`}>
+						<div key={mentionedInElement.id} className={`ml-3 group w-full`}>
 							<a
 								href={mentionedInElement.path}
 								className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
@@ -151,7 +149,7 @@ export default function TaskDetailComponent({
 			<div className="col-span-3 ml-3">
 				<MarkdownEditorComponent
 					initialValue={description}
-					campaignPath={element.type === ElementType.Campaign ? element.path : element.campaign.path}
+					campaignId={element.type === ElementType.Campaign ? element.id : element.campaign.id}
 					onChange={setDescription}
 					className="text-sm w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md focus:!shadow-none !shadow-none"
 				/>

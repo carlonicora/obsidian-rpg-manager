@@ -20,7 +20,7 @@ export default function AllTaskComponent({
 	const [showDetails, setShowDetails] = React.useState<boolean>(false);
 
 	const handleTaskAssign = (task: TaskInterface) => {
-		task.mentionedIn = [...task.mentionedIn, element.path];
+		task.mentionedIn = [...task.mentionedIn, element.id];
 		onTaskUpdate(task);
 	};
 
