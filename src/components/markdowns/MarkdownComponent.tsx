@@ -17,9 +17,11 @@ const transformMarkdownLinks = (api: RpgManagerInterface, markdown: string) => {
 export default function MarkdownComponent({
 	value,
 	specificComponent,
+	className,
 }: {
 	value?: string;
 	specificComponent?: "sensory";
+	className?: string;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
 	const app: App = useApp();
@@ -77,7 +79,7 @@ export default function MarkdownComponent({
 	}
 
 	return (
-		<div className="markdown-content">
+		<div className={`markdown-content ${className ?? ""}`}>
 			<ReactMarkdown rehypePlugins={[rehypeRaw]} children={transformedValue} components={components} />
 		</div>
 	);
