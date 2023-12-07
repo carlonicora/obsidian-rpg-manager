@@ -484,6 +484,10 @@
   min-height: 2em;
 }
 
+.min-h-\[30px\] {
+  min-height: 30px;
+}
+
 .min-h-\[3rem\] {
   min-height: 3rem;
 }
