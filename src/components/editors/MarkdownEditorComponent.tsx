@@ -137,6 +137,8 @@ export default function MarkdownEditorComponent({
 			});
 
 			editorViewRef.current = view;
+
+			if (forceFocus) view.focus();
 		}
 	};
 
@@ -298,6 +300,7 @@ function findMarkdownElements(doc: Text, view: EditorView): Range<Decoration>[] 
 }
 
 function isCursorInsideRange(selection: EditorSelection, start: number, end: number): boolean {
+	if (selection.ranges[0].from === 0 && selection.ranges[0].from === selection.ranges[0].to) return false;
 	for (const range of selection.ranges) {
 		if (range.from <= end && range.to >= start) {
 			return true;
@@ -307,14 +310,14 @@ function isCursorInsideRange(selection: EditorSelection, start: number, end: num
 }
 
 function renderBold(match: RegExpExecArray, view: EditorView): Range<Decoration> {
-	const el = document.createElement("strong"); // Using <strong> tag for bold
-	el.textContent = match[1]; // The content within **...**
+	const el = document.createElement("strong");
+	el.textContent = match[1];
 	return Decoration.replace({ widget: new Widget(el) }).range(match.index, match.index + match[0].length);
 }
 
 function renderItalic(match: RegExpExecArray, view: EditorView): Range<Decoration> {
-	const el = document.createElement("em"); // Using <em> tag for italic
-	el.textContent = match[1]; // The content within _..._
+	const el = document.createElement("em");
+	el.textContent = match[1];
 	return Decoration.replace({ widget: new Widget(el) }).range(match.index, match.index + match[0].length);
 }
 
