@@ -165,6 +165,8 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 					ElementType.PlayerCharacter
 				) as ElementInterface[];
 
+				if (allPlayerCharacters.length === 0) return;
+
 				const relationships: RelationshipInterface[] = allPlayerCharacters.map((playerCharacter: ElementInterface) => {
 					return RelationshipFactory.createFromContent(RelationshipType.Bidirectional, playerCharacter.path);
 				});
