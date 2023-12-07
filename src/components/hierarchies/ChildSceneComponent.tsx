@@ -11,6 +11,7 @@ import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
 import { SceneAnalyserService } from "src/services/sceneAnalyserService/SceneAnalyserService";
 import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
+import MarkdownComponent from "../markdowns/MarkdownComponent";
 
 export default function ChildSceneComponent({
 	element,
@@ -24,6 +25,7 @@ export default function ChildSceneComponent({
 	const app: App = useApp();
 
 	const [showTooltip, setShowTooltip] = React.useState(false);
+	const [isEditing, setIsEditing] = React.useState(false);
 
 	function saveAttribute(attributeName: string, value: string | boolean): Promise<void> {
 		if (attributeName === "name") {
@@ -137,24 +139,24 @@ export default function ChildSceneComponent({
 						</select>
 					</div>
 					<div className="col-span-5 pr-1">
-						<MarkdownEditorComponent
-							initialValue={element.attribute(AttributeType.Description)?.value ?? ""}
-							campaignPath={element.campaignPath}
-							className="!p-1 m-0 border rounded-md border-transparent group-hover:!border-solid group-hover:!border-[--background-modifier-border] bg-transparent group-hover:bg-[--background-modifier-form-field]"
-							onBlur={(value: string) => {
-								saveAttribute(AttributeType.Description, value);
-							}}
-							forceFocus={false}
-						/>
-
-						{/* <input
-							type="text"
-							onBlur={(e) => {
-								saveAttribute(AttributeType.Description, e.target.value);
-							}}
-							className="w-full !border !border-transparent group-hover:!border-[--background-modifier-border] h-5 focus:!border-[--background-modifier-border] focus:!shadow-none"
-							defaultValue={element.attribute(AttributeType.Description)?.value ?? ""}
-						/> */}
+						{isEditing ? (
+							<MarkdownEditorComponent
+								initialValue={element.attribute(AttributeType.Description)?.value ?? ""}
+								campaignPath={element.campaignPath}
+								className="!p-1 m-0 border rounded-md border-transparent group-hover:!border-solid group-hover:!border-[--background-modifier-border] bg-transparent group-hover:bg-[--background-modifier-form-field]"
+								onBlur={(value: string) => {
+									saveAttribute(AttributeType.Description, value);
+								}}
+								forceFocus={true}
+							/>
+						) : (
+							<div className="cursor-pointer" onClick={() => setIsEditing(true)}>
+								<MarkdownComponent
+									className="min-h-[30px] w-full border rounded-md border-transparent group-hover:!border-solid group-hover:!border-[--background-modifier-border] bg-transparent group-hover:bg-[--background-modifier-form-field]"
+									value={element.attribute(AttributeType.Description)?.value ?? ""}
+								/>
+							</div>
+						)}
 					</div>
 					<div className="col-span-2 pr-1">
 						<select
