@@ -165,14 +165,13 @@ export class RpgManagerCodeblockService {
 
 		if (toRemove === toAdd) return;
 
-		const fileContent = this._fileContent;
-		if (toRemove !== toAdd) {
-			if (toRemove === "") {
-				this._fileContentLines.push(...relationshipsToAdd);
-				this._fileContent = this._fileContentLines.join("\n");
-			} else {
-				this._fileContent.replace(toRemove, toAdd);
-			}
+		const fileContent = this._fileContentLines.join("\n");
+
+		if (toRemove === "") {
+			this._fileContentLines.push(...relationshipsToAdd);
+			this._fileContent = this._fileContentLines.join("\n");
+		} else {
+			this._fileContent = this._fileContent.replace(toRemove, toAdd);
 		}
 
 		if (fileContent !== this._fileContent) this._modifyFileContent(this._fileContent);
