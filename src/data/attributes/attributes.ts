@@ -46,7 +46,10 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<Elemen
 	[ElementType.Adventure, [description, storycircle, majorclues, kishotenketsu, conflict]],
 	[ElementType.Chapter, [description, abtstage, storycircle, majorclues, kishotenketsu, conflict]],
 	[ElementType.Session, [description, storycircle, abtstage, sessiondate, kishotenketsu, conflict]],
-	[ElementType.Scene, [description, storycirclestage, sceneaction, type, date, externalactions, duration]],
+	[
+		ElementType.Scene,
+		[description, sensoryimprint, storycirclestage, sceneaction, type, date, externalactions, duration],
+	],
 	[
 		ElementType.NonPlayerCharacter,
 		[
@@ -74,7 +77,10 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<Elemen
 	[ElementType.Location, [sensoryimprint, description, address, location]],
 	[ElementType.Faction, [description, philosophy, factionstructure]],
 	[ElementType.Clue, [description]],
-	[ElementType.PlayerCharacter, [description, beliefs, lie, need, want, strengths, weaknesses, dob, pronoun]],
+	[
+		ElementType.PlayerCharacter,
+		[description, occupation, ghost, lie, beliefs, need, behaviour, want, strengths, weaknesses, dob, pronoun],
+	],
 	[ElementType.Subplot, [description, storycircle]],
 	[ElementType.Object, [sensoryimprint, description]],
 	[ElementType.Monster, [sensoryimprint, description]],

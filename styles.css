@@ -484,6 +484,10 @@
   min-height: 2em;
 }
 
+.min-h-\[30px\] {
+  min-height: 30px;
+}
+
 .min-h-\[3rem\] {
   min-height: 3rem;
 }
@@ -1358,6 +1362,10 @@
 .rpgm-toggle-full-width-styles .cm-sizer {
   max-width: 100% !important;
   width: 100% !important;
+}
+
+#rpgm-editor .cm-editor {
+  outline: none;
 }
 
 #rpgm-editor .cm-editor .cm-scroller .cm-content .cm-line {

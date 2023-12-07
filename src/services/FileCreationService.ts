@@ -97,10 +97,13 @@ export class FileCreationService {
 
 		const fileName = await this._generateFilePath();
 		const newFile = await this._app.vault.create(fileName, content);
+
 		const currentLeaf = this._app.workspace.getActiveViewOfType(MarkdownView);
 		const leaf = this._app.workspace.getLeaf(currentLeaf != null);
+
 		// open ? await leaf.openFile(newFile) : leaf.detach();
-		open && (await leaf.openFile(newFile));
+		if (open === true) await leaf.openFile(newFile);
+		else leaf.detach();
 
 		return newFile;
 	}

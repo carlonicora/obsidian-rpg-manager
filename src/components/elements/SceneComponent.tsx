@@ -7,6 +7,7 @@ import AttributeListComponent from "../attributes/AttributeListComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import DurationAttributeComponent from "../attributes/types/DurationAttributeComponent";
 import ParentAttributeComponent from "../attributes/types/ParentAttributeComponent";
+import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprintAttributeComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import ImageComponent from "../images/ImageComponent";
@@ -26,6 +27,13 @@ export default function SceneComponent({
 		<>
 			<div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
 				<HeaderComponent element={element} isInPopover={isInPopover} />
+				{element.attribute(AttributeType.SensoryImprint) && (
+					<SensoryImprintAttributeComponent
+						element={element}
+						attribute={element.attribute(AttributeType.SensoryImprint)}
+						isEditable={!isInPopover}
+					/>
+				)}
 				{element.images.length > 0 && (
 					<div className="max-h-32 h-32 overflow-hidden">
 						<ImageComponent element={element} isEditable={!isInPopover} />

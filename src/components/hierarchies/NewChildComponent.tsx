@@ -73,6 +73,7 @@ export default function NewChildComponent({
 						onChange={(e) => setFileName(e.target.value)}
 						className="w-full !border !border-[--background-modifier-border] h-5 focus:!border-[--background-modifier-border] focus:!shadow-none"
 						defaultValue={fileName}
+						onBlur={handleCreateNewChild}
 					/>
 				</div>
 			</div>

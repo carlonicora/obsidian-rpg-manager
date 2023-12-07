@@ -57,8 +57,6 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 			allCampaignElements = allCampaignElements.concat(globalElements);
 		}
 
-		console.log("LIMIT" + this._typeLimit);
-
 		if (this._typeLimit) {
 			allCampaignElements = allCampaignElements.filter((element: ElementInterface) =>
 				this._typeLimit?.includes(element.type)
@@ -115,7 +113,9 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 	}
 
 	getItemText(element: SearchableElementInterface): string {
-		return element.alias || element.name || element.path;
+		return (
+			element.alias || (element.name ? `${element.name} ${element.type}` : undefined) || element.type || element.path
+		);
 	}
 
 	renderSuggestion(item: FuzzyMatch<SearchableElementInterface>, el: HTMLElement): void {

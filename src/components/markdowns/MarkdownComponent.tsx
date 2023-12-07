@@ -17,9 +17,11 @@ const transformMarkdownLinks = (api: RpgManagerInterface, markdown: string) => {
 export default function MarkdownComponent({
 	value,
 	specificComponent,
+	className,
 }: {
 	value?: string;
 	specificComponent?: "sensory";
+	className?: string;
 }): React.ReactElement {
 	const api: RpgManagerInterface = useApi();
 	const app: App = useApp();
@@ -65,7 +67,7 @@ export default function MarkdownComponent({
 					onClick={handleLinkClick}
 				/>
 			),
-			ul: ({ node, ordered, ...props }) => <ul {...props} className="list-none text-center" />,
+			ul: ({ node, ordered, ...props }) => <ul {...props} className="list-disc" />,
 			ol: ({ node, ordered, ...props }) => <ol {...props} className="list-none" />,
 			li: ({ node, ordered, ...props }) => <li {...props} className={"!mb-1"} />,
 			h2: ({ node, ...props }) => (
@@ -77,7 +79,7 @@ export default function MarkdownComponent({
 	}
 
 	return (
-		<div className="markdown-content">
+		<div className={`markdown-content ${className ?? ""}`}>
 			<ReactMarkdown rehypePlugins={[rehypeRaw]} children={transformedValue} components={components} />
 		</div>
 	);
