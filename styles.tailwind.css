@@ -29,6 +29,7 @@
 #rpgm-editor .cm-editor .cm-scroller .cm-content .cm-line {
 	max-width: 100% !important;
 	width: 100% !important;
+	caret-color: var(--text-normal);
 }
 
 .border {
