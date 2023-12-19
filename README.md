@@ -322,7 +322,7 @@ Clues are pieces of information that propel the plot forward. A clue should desc
 - A clue can have as many relationships as needed, indicating where it can be found and where it leads. It all depends on the description the GM writes.
 - A clue can lead to multiple different locations, events, or non-player characters, or any combination thereof, depending on the GM's narrative.
 
-#### 3.3.6. Non-player characters
+#### 3.3.7. Non-player characters
 
 Non-player characters (NPCs) are the lifeblood of any campaign. They are the individuals that populate the world, providing context, challenges, and support to the player characters. Their presence contributes significantly to the atmosphere and narrative of the campaign.
 
