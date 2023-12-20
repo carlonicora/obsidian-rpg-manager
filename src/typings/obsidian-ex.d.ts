@@ -1,11 +1,12 @@
 import "obsidian";
-import { RpgManagerInterface } from "src/RpgManagerInterface";
+import { RPGManager } from "src/interfaces/RPGManager";
+import RpgManagerPlugin from "src/main";
 
 export type CalendarEventTree = Map<string, Set<number>>;
 
 declare global {
 	interface Window {
-		RpgManagerAPI?: RpgManagerInterface;
+		RpgManagerAPI?: RPGManager;
 	}
 }
 
@@ -31,7 +32,7 @@ declare module "obsidian" {
 	interface App {
 		appId?: string;
 		plugins: {
-			getPlugin(plugin: "rpg-manager"): RpgManagerInterface;
+			getPlugin(plugin: "rpg-manager"): RpgManagerPlugin;
 			enabledPlugins: Set<string>;
 		};
 	}

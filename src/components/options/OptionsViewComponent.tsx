@@ -1,20 +1,20 @@
-import { useApp } from "@/hooks/useApp";
-import { FileUploadService } from "@/services/FileUploadService";
+import { RpgManagerInterface } from "OLD/src/RpgManagerInterface";
+import { CustomAttributesController } from "OLD/src/controllers/CustomAttributesController";
+import { GalleryController } from "OLD/src/controllers/GalleryController";
+import { NewRelationshipController } from "OLD/src/controllers/NewRelationshipController";
+import { WizardController } from "OLD/src/controllers/WizardController";
+import { AttributeComponentType } from "OLD/src/data/enums/AttributeComponentType";
+import { AttributeType } from "OLD/src/data/enums/AttributeType";
+import { ElementType } from "OLD/src/data/enums/ElementType";
+import { AttributeInterface } from "OLD/src/data/interfaces/AttributeInterface";
+import { ElementInterface } from "OLD/src/data/interfaces/ElementInterface";
+import { useApi } from "OLD/src/hooks/useApi";
+import { useApp } from "OLD/src/hooks/useApp";
+import { FileUploadService } from "OLD/src/services/FileUploadService";
+import { RpgManagerCodeblockService } from "OLD/src/services/RpgManagerCodeblockService";
 import { App } from "obsidian";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { RpgManagerInterface } from "src/RpgManagerInterface";
-import { CustomAttributesController } from "src/controllers/CustomAttributesController";
-import { GalleryController } from "src/controllers/GalleryController";
-import { NewRelationshipController } from "src/controllers/NewRelationshipController";
-import { WizardController } from "src/controllers/WizardController";
-import { AttributeComponentType } from "src/data/enums/AttributeComponentType";
-import { AttributeType } from "src/data/enums/AttributeType";
-import { ElementType } from "src/data/enums/ElementType";
-import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
-import { ElementInterface } from "src/data/interfaces/ElementInterface";
-import { useApi } from "src/hooks/useApi";
-import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
 
 export default function OptionsViewComponent({ element }: { element: ElementInterface }): React.ReactElement {
 	const { t } = useTranslation();

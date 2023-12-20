@@ -1,7 +1,7 @@
 import React from "react";
-import { RpgManagerInterface } from "src/RpgManagerInterface";
+import { RPGManager } from "src/interfaces/RPGManager";
 import { ApiContext } from "../contexts/ApiContext";
 
-export const useApi = (): RpgManagerInterface | undefined => {
+export const useApi = (): RPGManager | undefined => {
 	return React.useContext(ApiContext);
 };

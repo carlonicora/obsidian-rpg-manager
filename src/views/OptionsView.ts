@@ -1,23 +1,23 @@
-import { RpgManagerInterface } from "@/RpgManagerInterface";
-import OptionContainerComponent from "@/components/options/OptionContainerComponent";
-import { ApiContext } from "@/contexts/ApiContext";
-import { AppContext } from "@/contexts/AppContext";
-import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { App, ItemView, TFile, View, WorkspaceLeaf } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
+import OptionContainerComponent from "src/components/options/OptionContainerComponent";
+import { ApiContext } from "src/contexts/ApiContext";
+import { AppContext } from "src/contexts/AppContext";
+import { Element } from "src/interfaces/Element";
+import { RPGManager } from "src/interfaces/RPGManager";
 
-export class OptionView extends ItemView implements View {
+export class OptionsView extends ItemView implements View {
 	protected viewType = "rpg-manager-options";
 	protected displayText = "RPG Manager";
 	public icon = "d20";
-	private _element: ElementInterface | undefined;
+	private _element: Element | undefined;
 	private _root: Root | undefined = undefined;
 
-	constructor(private _app: App, private _api: RpgManagerInterface, leaf: WorkspaceLeaf) {
+	constructor(private _app: App, private _api: RPGManager, leaf: WorkspaceLeaf) {
 		super(leaf);
 
-		this._root = createRoot(this.contentEl);
+		this._root = createRoot(this.containerEl);
 
 		this.registerEvent(_app.workspace.on("rpgmanager:refresh-option-view", this.render.bind(this)));
 		this.registerEvent(_app.workspace.on("rpgmanager:refresh-views", this.render.bind(this)));
@@ -45,7 +45,7 @@ export class OptionView extends ItemView implements View {
 
 		const file: TFile | null = this.app.workspace.getActiveFile();
 
-		if (file != undefined) this._element = this._api.get(file.path) as ElementInterface | undefined;
+		if (file != undefined) this._element = this._api.getByPath(file.path) as Element | undefined;
 
 		const elementComponent = createElement(OptionContainerComponent, {
 			element: this._element,

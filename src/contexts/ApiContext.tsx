@@ -1,4 +1,4 @@
 import * as React from "react";
-import { RpgManagerInterface } from "src/RpgManagerInterface";
+import { RPGManager } from "src/interfaces/RPGManager";
 
-export const ApiContext = React.createContext<RpgManagerInterface | undefined>(undefined);
+export const ApiContext = React.createContext<RPGManager | undefined>(undefined);

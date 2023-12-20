@@ -1,74 +1,19 @@
-import { RelationshipType } from "src/data/enums/RelationshipType";
-import { ElementInterface } from "src/data/interfaces/ElementInterface";
-import { RelationshipInterface } from "src/data/interfaces/RelationshipInterface";
+import { RpgManagerRelationship } from "src/data/RpgManagerRelationship";
+import { RelationshipLocation } from "src/enums/RelationshipLocation";
+import { RelationshipType } from "src/enums/RelationshipType";
+import { RPGManager } from "src/interfaces/RPGManager";
+import { Relationship } from "src/interfaces/Relationship";
+import { RelationshipData } from "src/interfaces/RelationshipData";
 
 export class RelationshipFactory {
-	static createFromRpgManagerBlock(relationshipDefinition: any): RelationshipInterface | undefined {
-		const relationshipName = relationshipDefinition.type.charAt(0).toUpperCase() + relationshipDefinition.type.slice(1);
-		const relationshipType = RelationshipType[relationshipName as keyof typeof RelationshipType];
+	static create(data: RelationshipData, api: RPGManager): Relationship[] {
+		const response: Relationship[] = [];
 
-		if (relationshipType === undefined) return undefined;
+		response.push(new RpgManagerRelationship(data, api, true, RelationshipLocation.OnlyMetadata));
 
-		const response: RelationshipInterface = {
-			type: relationshipType,
-			id: relationshipDefinition.id,
-			isInContent: false,
-		};
-
-		if (relationshipDefinition.description !== undefined) response.description = relationshipDefinition.description;
+		if (data.type !== RelationshipType.Unidirectional)
+			response.push(new RpgManagerRelationship(data, api, false, RelationshipLocation.OnlyMetadata));
 
 		return response;
-	}
-
-	static createFromElement(type: RelationshipType, element: ElementInterface): RelationshipInterface {
-		return {
-			type: type,
-			id: element.id,
-			isInContent: false,
-		};
-	}
-
-	static createFromCodeblock(type: RelationshipType, id: string): RelationshipInterface {
-		return {
-			type: type,
-			id: id,
-			isInContent: false,
-		};
-	}
-
-	static createFromContent(type: RelationshipType, id: string): RelationshipInterface {
-		return {
-			type: type,
-			id: id,
-			isInContent: true,
-		};
-	}
-
-	static createFromReverse(
-		relationship: RelationshipInterface,
-		element: ElementInterface
-	): RelationshipInterface | undefined {
-		if (relationship.type === RelationshipType.Unidirectional) return undefined;
-
-		let reverseRelationshipType: RelationshipType = RelationshipType.Bidirectional;
-		switch (relationship.type) {
-			case RelationshipType.Child:
-				reverseRelationshipType = RelationshipType.Parent;
-				break;
-			case RelationshipType.Parent:
-				reverseRelationshipType = RelationshipType.Child;
-				break;
-			case RelationshipType.Bidirectional:
-				reverseRelationshipType = RelationshipType.Reversed;
-				break;
-		}
-
-		return {
-			type: reverseRelationshipType,
-			id: element.id,
-			component: element,
-			isInContent: relationship.isInContent,
-			isAlsoInContent: relationship.isAlsoInContent,
-		};
 	}
 }
