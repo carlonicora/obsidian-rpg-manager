@@ -1,4 +1,5 @@
 # Role Playing Game Manager
+[![it](https://img.shields.io/badge/lang-it-green.svg)](https://github.com/Jackson98Tomphson/rpgm-4-1-13/blob/507a08bb5b6f690f635c7d54ba1604a67d048d66/README.it.md)
 
 RPG Manager is an Obsidian plugin to simplify the creation and running of role playing game campaings. The plugin is system-agnostic, which means you can use it if you are running a D&D, Call of Chtulhu or any other TTRPG.
 
@@ -322,7 +323,7 @@ Clues are pieces of information that propel the plot forward. A clue should desc
 - A clue can have as many relationships as needed, indicating where it can be found and where it leads. It all depends on the description the GM writes.
 - A clue can lead to multiple different locations, events, or non-player characters, or any combination thereof, depending on the GM's narrative.
 
-#### 3.3.6. Non-player characters
+#### 3.3.7. Non-player characters
 
 Non-player characters (NPCs) are the lifeblood of any campaign. They are the individuals that populate the world, providing context, challenges, and support to the player characters. Their presence contributes significantly to the atmosphere and narrative of the campaign.
 
