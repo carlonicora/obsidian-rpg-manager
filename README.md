@@ -1,4 +1,5 @@
 # Role Playing Game Manager
+[![it](https://img.shields.io/badge/lang-it-green.svg)]()
 
 RPG Manager is an Obsidian plugin to simplify the creation and running of role playing game campaings. The plugin is system-agnostic, which means you can use it if you are running a D&D, Call of Chtulhu or any other TTRPG.
 

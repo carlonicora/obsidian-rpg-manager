@@ -1,4 +1,5 @@
 # Gestore di Giochi di Ruolo
+[![en](https://img.shields.io/badge/lang-en-red.svg)]()
 
 Il Gestore di Giochi di Ruolo (RPG Manager) è un plugin per Obsidian progettato per semplificare la creazione e l'esecuzione di campagne di giochi di ruolo. Il plugin è agnostico rispetto al sistema, il che significa che puoi usarlo se stai gestendo una campagna di D&D, Call of Cthulhu o qualsiasi altro gioco di ruolo da tavolo.
 
