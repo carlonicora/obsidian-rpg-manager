@@ -525,245 +525,259 @@ La creazione di un modello è un processo in due fasi:
 
 Nella versione 4 puoi creare elementi che non fanno parte di una singola campagna. Queste risorse (eventi, luoghi, indizi, personaggi non giocanti, fazioni, oggetti, mostri, sottotrame e personaggi giocanti) possono essere utilizzate in qualsiasi delle tue campagne. Aggiungi una relazione e sei a posto, scrivendo una volta, riutilizzando molte volte!
 
-## 4. Creating a World
+## 4. Creazione di un Mondo
 
-Creating a world is more than just outlining a plot; it’s about constructing a living, breathing environment in which your story can unfold. The RPG Manager facilitates this by allowing you to create and interrelate various elements that are crucial for worldbuilding.
+Creare un mondo è più che delineare una trama; si tratta di costruire un ambiente vivo e pulsante in cui la tua storia può svolgersi. RPG Manager facilita questo processo consentendoti di creare e correlare vari elementi cruciali per la costruzione del mondo.
 
-**Interconnectedness**: By creating relationships between different elements - for example, linking an NPC to a faction or a location to an event - you're essentially constructing the fabric of your world. This interconnectedness helps to create a dynamic, coherent setting in which each element influences others. For instance, an NPC's actions might be influenced by their affiliation to a faction, which in turn might be in conflict with another faction over control of a specific location.
+**Interconnessione**: Creando relazioni tra diversi elementi - ad esempio, collegando un PNG a una fazione o un luogo a un evento - stai essenzialmente costruendo la trama del tuo mondo. Questa interconnessione aiuta a creare un ambiente dinamico e coerente in cui ogni elemento influenza gli altri. Ad esempio, le azioni di un PNG potrebbero essere influenzate dalla loro affiliazione a una fazione, che a sua volta potrebbe essere in conflitto con un'altra fazione per il controllo di un luogo specifico.
 
-**Consistency**: As your world grows, it can be challenging to keep track of all the details. The RPG Manager helps maintain consistency by providing a structured way to organize and relate various elements. For example, by linking a subplot to a specific NPC or player character, you can easily track how that subplot progresses as the character interacts with other elements in the world.
+**Coerenza**: Man mano che il tuo mondo cresce, può essere difficile tenere traccia di tutti i dettagli. RPG Manager aiuta a mantenere la coerenza fornendo un modo strutturato per organizzare e correlare vari elementi. Ad esempio, collegando una sottotrama a un determinato PNG o personaggio giocante, puoi tenere facilmente traccia di come quella sottotrama progredisce mentre il personaggio interagisce con altri elementi nel mondo.
 
-**Depth**: Creating relationships between elements also adds depth to your world. For example, a location is not just a physical place; it's also a setting for events, a home for NPCs, and perhaps a base for a faction. By establishing these relationships, you give the location a history and a purpose that can enrich your narrative.
+**Profondità**: Creare relazioni tra gli elementi aggiunge anche profondità al tuo mondo. Ad esempio, un luogo non è solo un luogo fisico; è anche un contesto per gli eventi, una casa per i PNG e forse una base per una fazione. Stabilendo queste relazioni, dai al luogo una storia e uno scopo che possono arricchire la tua narrazione.
 
-**Dynamics**: Relationships between elements also create dynamics that can drive your narrative. For example, the relationship between an NPC and a faction might change over time, influencing the NPC's actions and decisions. These dynamics can create unexpected twists and turns in your story, keeping your players engaged.
+**Dinamiche**: Le relazioni tra gli elementi creano anche dinamiche che possono guidare la tua narrazione. Ad esempio, la relazione tra un PNG e una fazione potrebbe cambiare nel tempo, influenzando le azioni e le decisioni del PNG. Queste dinamiche possono creare svolte inaspettate nella tua storia, mantenendo i tuoi giocatori coinvolti.
 
-### 4.1. What Type of Storyteller Are You?
+### 4.1. Che tipo di Narratore sei?
 
-Understanding your style as a storyteller is crucial for effectively using the RPG Manager. Generally, storytellers can be categorized into three main types:
+Comprendere il tuo stile come narratore è cruciale per utilizzare efficacemente RPG Manager. In generale, i narratori possono essere categorizzati in tre tipi principali:
 
-1. **Plotters**: These are storytellers who like to plan their stories in detail. They create intricate plots with well-defined story arcs, character development, and a clear beginning, middle, and end. They often use tools like the story circle to craft compelling narratives.
+1. **Plotters**: Sono narratori che amano pianificare le loro storie in dettaglio. Creano trame intricate con archi narrativi ben definiti, sviluppo dei personaggi e un inizio, una parte centrale e una fine chiari. Spesso utilizzano strumenti come il cerchio della storia per creare narrazioni coinvolgenti.
 
-   _Example_: If you enjoy creating detailed outlines for each session, developing extensive backstories for your NPCs, and knowing exactly how each subplot will unfold, you are probably a plotter.
+   _Esempio_: Se ti piace creare dettagliati schemi per ogni sessione, sviluppare estese retroscena per i tuoi PNG e sapere esattamente come si svilupperà ogni sottotrama, sei probabilmente un plotter.
 
-   _How RPG Manager Helps_: The RPG Manager is designed to help plotters organize their thoughts and ideas, create detailed relationships between elements, and develop compelling story arcs.
+   _Come aiuta RPG Manager_: RPG Manager è progettato per aiutare i plotters a organizzare i loro pensieri e le loro idee, creare relazioni dettagliate tra gli elementi e sviluppare archi narrativi coinvolgenti.
 
-2. **Sandboxers**: These are storytellers who prefer to create open worlds where the players can explore and create their own stories. They focus on creating a detailed setting with various events, locations, and clues that the players can interact with.
+2. **Sandboxers**: Sono narratori che preferiscono creare mondi aperti in cui i giocatori possono esplorare e creare le proprie storie. Si concentrano sulla creazione di un ambiente dettagliato con vari eventi, luoghi e indizi con cui i giocatori possono interagire.
 
-   _Example_: If you prefer to create a detailed world with various locations, events, and NPCs, but leave it up to the players to decide how they want to interact with these elements, you are probably a sandboxer.
+   _Esempio_: Se preferisci creare un mondo dettagliato con vari luoghi, eventi e PNG, ma lasci che siano i giocatori a decidere come interagire con questi elementi, sei probabilmente un sandboxer.
 
-   _How RPG Manager Helps_: The RPG Manager helps sandboxers by providing a structured way to organize and interrelate various elements of their world, making it easier to manage the open-world setting.
+   _Come aiuta RPG Manager_: RPG Manager aiuta i sandboxers fornendo un modo strutturato per organizzare e correlare vari elementi del loro mondo, facilitando la gestione dell'ambientazione open-world.
 
-3. **Lazy GMs**: These are storytellers who prefer to do minimal preparation before each session. They often have a rough idea of how the session will unfold but prefer to improvise and adapt to the players' actions during the game.
+3. **Lazy GMs**: Sono narratori che preferiscono fare una preparazione minima prima di ogni sessione. Hanno spesso un'idea approssimativa di come si svilupperà la sessione, ma preferiscono improvvisare e adattarsi alle azioni dei giocatori durante il gioco.
 
-   _Example_: If you prefer to do minimal preparation before each session, often jotting down just a few bullet points or key ideas, you are probably a lazy GM.
+   _Esempio_: Se preferisci fare una preparazione minima prima di ogni sessione, annotando spesso solo pochi punti chiave o idee principali, sei probabilmente un lazy GM.
 
-   _How RPG Manager Helps_: The RPG Manager helps lazy GMs by providing a way to quickly and easily create and organize the essential elements needed for each session, making it easier to improvise during the game.
+   _Come aiuta RPG Manager_: RPG Manager aiuta i lazy GMs fornendo un modo per creare e organizzare rapidamente gli elementi essenziali necessari per ogni sessione, facilitando l'improvvisazione durante il gioco.
 
-No matter what type of storyteller you are, the RPG Manager is designed to help you create and manage your world with ease.
+Indipendentemente dal tipo di narratore che sei, RPG Manager è progettato per aiutarti a creare e gestire il tuo mondo con facilità.
 
-### 4.2. For Every Storyteller You Are
+### 4.2. Per Ogni Tipo di Narratore Che Sei
 
-Whether you're a Plotter, a Sandboxed, or a Lazy GM, RPG Manager has something for everyone. This section will help you understand how to use the tool, no matter what your storytelling style is.
+Che tu sia un Plotter, un Sandboxer o un Lazy GM, RPG Manager ha qualcosa per tutti. Questa sezione ti aiuterà a capire come utilizzare lo strumento, indipendentemente dal tuo stile narrativo.
 
-#### 4.2.1. Creating Rounded Non-Player Characters
+#### 4.2.1. Creazione di Personaggi Non Giocanti Ben Caratterizzati
 
-Non-Player Characters (NPCs) are the lifeblood of your world. They are the ones your players interact with, the ones who give out quests, the ones who stand in their way, and the ones who help them on their journey. Creating rounded NPCs is essential to build a three-dimensional world that feels alive and immersive.
+I Personaggi Non Giocanti (PNG) sono il cuore pulsante del tuo mondo. Sono coloro con cui i tuoi giocatori interagiscono, quelli che assegnano missioni, quelli che si pongono sul loro cammino e quelli che li aiutano nel loro viaggio. Creare PNG ben caratterizzati è essenziale per costruire un mondo tridimensionale che sia vivo e coinvolgente.
 
-A rounded NPC is not just a collection of stats and attributes; they have their own desires, fears, and motivations. They have a past that influences their present actions and a future they aspire to. These NPCs are not just passive elements waiting for the player characters (PCs) to interact with them; they have their own goals and can take actions independently of the PCs.
+Un PNG ben caratterizzato non è solo una raccolta di statistiche e attributi; hanno i propri desideri, paure e motivazioni. Hanno un passato che influenza le loro azioni presenti e un futuro a cui aspirano. Questi PNG non sono solo elementi passivi in attesa che i personaggi giocanti (PG) interagiscano con loro; hanno i loro obiettivi e possono agire indipendentemente dai PG.
 
-RPG Manager helps you create rounded NPCs by guiding you through the process of defining their personality, goals, and relationships with other elements of the campaign. This ensures that your NPCs are not just cardboard cutouts but feel like real, living beings that contribute to the richness of your world.
+RPG Manager ti aiuta a creare PNG ben caratterizzati guidandoti attraverso il processo di definizione della loro personalità, obiettivi e relazioni con altri elementi della campagna. Ciò garantisce che i tuoi PNG non siano solo sagome di cartone, ma sembrino esseri veri e propri che contribuiscono alla ricchezza del tuo mondo.
 
-Do not be daunted by the many attributes available in RPG Manager; you can use as many or as few as you wish. The tool is designed to be flexible and adapt to your style of storytelling.
+Non farti intimorire dalle numerose caratteristiche disponibili in RPG Manager; puoi usarne tante o quante ne desideri. Lo strumento è progettato per essere flessibile e adattarsi al tuo stile di narrazione.
 
-By creating rounded NPCs, you not only enhance the realism and depth of your world, but you also create opportunities for more engaging and dynamic storytelling. These NPCs can drive the plot forward, create conflicts and resolutions, and provide a deeper emotional connection for your players.
+Creando PNG ben caratterizzati, migliorai non solo il realismo e la profondità del tuo mondo, ma crei anche opportunità per una narrazione più coinvolgente e dinamica. Questi PNG possono spingere avanti la trama, creare conflitti e risoluzioni e fornire un collegamento emotivo più profondo per i tuoi giocatori.
 
-#### 4.2.2. Developing Adventures and Chapters
+#### 4.2.2. Sviluppo di Avventure e Capitoli
 
-Adventures and Chapters are the building blocks of your campaign. An adventure is a single, self-contained storyline that can be part of a larger campaign, while a chapter is a smaller section of an adventure, or a standalone mini-adventure in its own right.
+Avventure e capitoli sono i mattoni fondamentali della tua campagna. Un'avventura è una singola storia autocontenuta che può far parte di una campagna più ampia, mentre un capitolo è una sezione più piccola di un'avventura o una mini-avventura autonoma.
 
-Developing well-structured adventures and chapters is crucial for maintaining a logical and engaging narrative.
+Sviluppare avventure e capitoli ben strutturati è cruciale per mantenere una narrazione logica e coinvolgente.
 
-- **Adventures**: An adventure is a series of events and challenges that the player characters (PCs) must navigate. It usually has a clear beginning, middle, and end, with a defined goal or objective that the PCs are trying to achieve. Each adventure is composed of multiple chapters, events, and encounters that the PCs will experience as they progress towards their goal.
+- **Avventure**: Un'avventura è una serie di eventi e sfide che i personaggi giocanti (PG) devono affrontare. Di solito ha un inizio, una parte centrale e una fine chiari, con un obiettivo definito che i PG stanno cercando di raggiungere. Ogni avventura è composta da vari capitoli, eventi e incontri che i PG esperimenteranno mentre avanzano verso il loro obiettivo.
 
-- **Chapters**: A chapter is a smaller, more focused section of an adventure. It could be a single encounter, a series of related events, or a specific location that the PCs must navigate. Chapters help to break down the adventure into manageable chunks, making it easier for the storyteller to plan and execute.
+- **Capitoli**: Un capitolo è una sezione più piccola e focalizzata di un'avventura. Potrebbe essere un singolo incontro, una serie di eventi correlati o una specifica località che i PG devono attraversare. I capitoli aiutano a suddividere l'avventura in porzioni gestibili, facilitando la pianificazione ed esecuzione da parte del narratore.
 
-The key to developing engaging adventures and chapters is to create a logical flow of events that guide the PCs from one challenge to the next, while also allowing room for unexpected twists and turns. It is important to strike a balance between guiding the PCs along a predetermined path and allowing them the freedom to make their own decisions and explore the world at their own pace.
+La chiave per sviluppare avventure e capitoli coinvolgenti è creare un flusso logico di eventi che guidi i PG da una sfida all'altra, consentendo al contempo spazio per svolte e svolgimenti inaspettati. È importante trovare un equilibrio tra guidare i PG lungo un percorso predefinito e concedere loro la libertà di prendere decisioni ed esplorare il mondo a loro proprio ritmo.
 
-RPG Manager helps you develop well-structured adventures and chapters by providing a framework to organize your ideas and create a logical flow of events. You can define the relationships between different elements of your campaign, such as how an event in one chapter might trigger a reaction in another, or how a decision made by the PCs in one adventure might have consequences in the next.
+RPG Manager ti aiuta a sviluppare avventure e capitoli ben strutturati fornendo un quadro per organizzare le tue idee e creare un flusso logico di eventi. Puoi definire le relazioni tra diversi elementi della tua campagna, ad esempio come un evento in un capitolo potrebbe innescare una reazione in un altro, o come una decisione presa dai PG in un'avventura potrebbe avere conseguenze nella successiva.
 
-### 4.3. For Plotters
+### 4.3. Per i Plotters
 
-If you are a Plotter, you enjoy creating detailed plans and well-structured narratives for your gaming sessions. You find satisfaction in developing intricate storylines, with carefully thought-out plots, subplots, and character arcs. You appreciate the value of a well-crafted narrative and believe that a good story is the foundation of an engaging gaming experience.
+Se sei un Plotter, ti piace creare piani dettagliati e narrazioni ben strutturate per le tue sessioni di gioco. Trovi soddisfazione nello sviluppare trame intricate, con trame, sottotrame e archi dei personaggi attentamente studiati. Apprezzi il valore di una narrazione ben costruita e credi che una buona storia sia alla base di un'esperienza di gioco coinvolgente.
 
-RPG Manager is designed with you in mind. It provides the tools and structure necessary to organize your ideas, develop your narrative, and plan your sessions in detail. From creating well-rounded non-player characters to developing intricate subplots, RPG Manager provides a comprehensive platform to manage all aspects of your campaign.
+RPG Manager è progettato con te in mente. Fornisce gli strumenti e la struttura necessari per organizzare le tue idee, sviluppare la tua narrazione e pianificare le tue sessioni in dettaglio. Dalla creazione di personaggi non giocanti ben caratterizzati allo sviluppo di trame intricate, RPG Manager offre una piattaforma completa per gestire tutti gli aspetti della tua campagna.
 
-As a Plotter, you will find that RPG Manager streamlines your planning process, making it easier to keep track of all the moving parts of your campaign and ensuring that you are well-prepared for each gaming session.
+Come Plotter, scoprirai che RPG Manager semplifica il tuo processo di pianificazione, facilitando il monitoraggio di tutte le parti in movimento della tua campagna e assicurandoti di essere ben preparato per ogni sessione di gioco.
 
-#### 4.3.1. Using the Story Circle
+#### 4.3.1. Utilizzo del Cerchio della Storia
 
-For Plotters who love crafting well-structured narratives, the Story Circle is a particularly useful tool. It's a framework adapted from Dan Harmon's approach to storytelling, designed to create a satisfying, complete story. The Story Circle consists of eight stages: You, Need, Go, Search, Find, Take, Return, and Change.
-With RPG Manager, you can implement the Story Circle at various levels of granularity:
+Per i Plotters che amano creare narrazioni ben strutturate, il Cerchio della Storia è uno strumento particolarmente utile. Si tratta di una struttura adattata dall'approccio di Dan Harmon alla narrazione, progettata per creare una storia soddisfacente e completa. Il Cerchio della Storia è composto da otto fasi: Tu, Hai Bisogno di, Vai, Cerca, Trova, Prendi, Ritorna, e Cambia.
+Con RPG Manager, puoi implementare il Cerchio della Storia a vari livelli di granularità:
 
-- **Campaigns**: At the campaign level, the Story Circle can help you outline the overarching narrative of your campaign, providing a high-level view of major milestones, turning points, and character arcs.
+- **Campagne**: A livello di campagna, il Cerchio della Storia può aiutarti a delineare la narrazione generale della tua campagna, fornendo una visione di alto livello di pietre miliari, punti di svolta e archi dei personaggi principali.
 
-- **Adventures**: For each adventure within the campaign, you can apply the Story Circle to create a well-rounded, self-contained narrative arc. This ensures that each adventure contributes meaningfully to the campaign while standing as an engaging story in its own right.
+- **Avventure**: Per ogni avventura all'interno della campagna, puoi applicare il Cerchio della Storia per creare un arco narrativo ben strutturato e autonomo. Ciò assicura che ogni avventura contribuisca in modo significativo alla campagna, stando al contempo come una storia coinvolgente a sé stante.
 
-- **Chapters**: If you break your adventures into chapters, the Story Circle can help you maintain a sense of pacing and dramatic tension throughout each adventure. It's a way of ensuring that every chapter moves the story forward and contributes to the characters' development.
+- **Capitoli**: Se suddividi le tue avventure in capitoli, il Cerchio della Storia può aiutarti a mantenere un senso di ritmo e tensione drammatica in ogni avventura. È un modo per garantire che ogni capitolo faccia progredire la storia e contribuisca allo sviluppo dei personaggi.
 
-- **Sessions**: Even on a session-by-session basis, the Story Circle can provide valuable structure. As a Plotter, you can use it to sketch out the expected flow of a single gaming session, planning moments of tension, discovery, conflict, and resolution that will keep your players engaged.
+- **Sessioni**: Anche su base sessione per sessione, il Cerchio della Storia può fornire una struttura preziosa. Come Plotter, puoi usarlo per delineare il flusso previsto di una singola sessione di gioco, pianificando momenti di tensione, scoperta, conflitto e risoluzione che manterranno i tuoi giocatori coinvolti.
 
-So, whether you're crafting the grand tale of a world-saving quest or planning out a single session's escapade, the Story Circle offers a valuable framework for developing compelling narratives. RPG Manager's functionality allows you to incorporate this directly into your planning, making it an indispensable tool for the Plotter GM.
+Quindi, che tu stia elaborando il grande racconto di una missione per salvare il mondo o pianificando l'escursione di una singola sessione, il Cerchio della Storia offre un quadro prezioso per lo sviluppo di narrazioni avvincenti. La funzionalità di RPG Manager ti consente di incorporarlo direttamente nella tua pianificazione, rendendolo uno strumento indispensabile per il GM Plotter.
 
-### 4.4. For Sandboxers
+### 4.4. Per i Sandboxers
 
-Sandboxers thrive on flexibility and improvisation. They create an open world, filled with events, locations, and clues, and then set their players loose to explore and interact with that world as they see fit. The narrative emerges organically from the players' choices and actions.
+I Sandboxers prosperano sulla flessibilità e sull'improvvisazione. Creano un mondo aperto, ricco di eventi, luoghi e indizi, e poi lasciano che i loro giocatori esplorino e interagiscano con quel mondo a loro piacimento. La narrativa emerge organicamente dalle scelte e dalle azioni dei giocatori.
 
-With RPG Manager, Sandboxers can create a detailed and immersive world for their players. The players' choices and actions will determine the course of the narrative, making for a dynamic and engaging gaming experience.
+Con RPG Manager, i Sandboxers possono creare un mondo dettagliato e coinvolgente per i loro giocatori. Le scelte e le azioni dei giocatori determineranno il corso della narrazione, creando un'esperienza di gioco dinamica e coinvolgente.
 
-So, if you're a Sandboxer who loves creating detailed, open worlds for your players to explore, RPG Manager offers the tools and flexibility you need to craft your narrative.
+Quindi, se sei un Sandboxer che ama creare mondi aperti dettagliati per i tuoi giocatori, RPG Manager offre gli strumenti e la flessibilità di cui hai bisogno per plasmare la tua narrazione.
 
-#### 4.4.1. Creating Open Worlds
+#### 4.4.1. Creare Mondi Aperti
 
-Creating an open world involves much more than just sketching out a map with a few cities and points of interest. It's about creating a dynamic and interactive environment that your players can explore and affect through their actions. With RPG Manager, the process of creating such a world is simplified, but still offers the depth and complexity that your world deserves.
+Creare un mondo aperto implica molto più che delineare una mappa con alcune città e punti di interesse. Si tratta di creare un ambiente dinamico e interattivo che i tuoi giocatori possono esplorare e influenzare attraverso le loro azioni. Con RPG Manager, il processo di creazione di un tale mondo è semplificato, ma offre comunque la profondità e la complessità che il tuo mondo merita.
 
-- **Integrating Elements**: Use the different elements in RPG Manager, like locations, events, clues, non-player characters, factions, and objects, to create a world full of life and intrigue. Each of these elements will help you to create a world that is rich in detail and full of possibilities.
+- **Integrare Elementi**: Utilizza gli elementi diversi in RPG Manager, come luoghi, eventi, indizi, personaggi non giocanti, fazioni e oggetti, per creare un mondo pieno di vita e intrighi. Ogni elemento ti aiuterà a creare un mondo ricco di dettagli e ricco di possibilità.
 
-- **Relationships**: Define the relationships between the different elements in your world. This could be the relationship between two non-player characters, between a faction and a location, or between a clue and an event. By defining these relationships, you create a network of interconnected elements that make your world feel cohesive and real.
+- **Relazioni**: Definisci le relazioni tra i diversi elementi del tuo mondo. Potrebbe essere la relazione tra due personaggi non giocanti, tra una fazione e un luogo o tra un indizio e un evento. Definendo queste relazioni, crei una rete di elementi interconnessi che rendono il tuo mondo coeso e reale.
 
-- **Reactivity**: Your world should react to the actions of the player characters. RPG Manager helps you to keep track of the decisions that your players make and the consequences of those decisions. This will help you to create a world that feels dynamic and responsive.
+- **Reattività**: Il tuo mondo dovrebbe reagire alle azioni dei personaggi giocanti. RPG Manager ti aiuta a tenere traccia delle decisioni che i tuoi giocatori prendono e delle conseguenze di tali decisioni. Ciò ti aiuterà a creare un mondo che sembra dinamico e reattivo.
 
-Remember, creating an open world is not just about creating a large space for your players to explore, but about creating a world that feels alive and interconnected. With RPG Manager, you have all the tools you need to create such a world.
+Ricorda, creare un mondo aperto non riguarda solo la creazione di uno spazio ampio per i tuoi giocatori da esplorare, ma anche la creazione di un mondo che sembra vivo e interconnesso. Con RPG Manager, hai tutti gli strumenti necessari per creare un tale mondo.
 
-#### 4.4.2. Developing Events, Locations, and Clues
+#### 4.4.2. Sviluppare Eventi, Luoghi e Indizi
 
-RPG Manager is your trusted companion in this creative endeavor. It enables you to populate your world with various elements, all interconnected and ripe for exploration:
+RPG Manager è il tuo compagno di fiducia in questa impresa creativa. Ti consente di popolare il tuo mondo con vari elementi, tutti interconnessi e pronti per l'esplorazione:
 
-- **Events**: Define significant happenings that populate your world. These can be historical events that shaped the world, ongoing conflicts that create tension, or potential future events that the players can influence.
+- **Eventi**: Definisci avvenimenti significativi che popolano il tuo mondo. Possono essere eventi storici che hanno plasmato il mondo, conflitti in corso che creano tensione o eventi futuri potenziali che i giocatori possono influenzare.
 
-- **Locations**: Craft detailed locations that your players can explore. RPG Manager allows you to define not only the physical characteristics of a location but also its inhabitants, its history, and its significance to the world.
+- **Luoghi**: Crea luoghi dettagliati che i tuoi giocatori possono esplorare. RPG Manager ti permette di definire non solo le caratteristiche fisiche di un luogo, ma anche i suoi abitanti, la sua storia e la sua importanza per il mondo.
 
-- **Clues**: Develop a series of clues that can guide your players through the world. These clues can take many forms – an ancient artifact, a cryptic prophecy, a rumor overheard in a tavern – and can be linked to various events, locations, and non-player characters.
+- **Indizi**: Sviluppa una serie di indizi che possono guidare i tuoi giocatori attraverso il mondo. Questi indizi possono assumere molte forme: un antico manufatto, una profezia criptica, un pettegolezzo sentito in una taverna, e possono essere collegati a vari eventi, luoghi e personaggi non giocanti.
 
-By developing these elements, you can create a rich tapestry for your players to interact with.
+Sviluppando questi elementi, puoi creare un ricco arazzo con cui i tuoi giocatori possono interagire.
 
-## 5. Running a Campaign
+## 5. Gestire una Campagna
 
-Once you have created your world, developed your adventures, and populated your game with well-rounded non-player characters, the next step is to actually run the campaign. This is where all of your hard work and preparation come into play. Running a campaign involves orchestrating the sessions, managing the player characters, and navigating the storylines as they unfold.
+Una volta che hai creato il tuo mondo, sviluppato le tue avventure e popolato il tuo gioco con personaggi non giocanti ben definiti, il passo successivo è gestire effettivamente la campagna. Qui entrano in gioco tutti i tuoi sforzi e la preparazione. Gestire una campagna comporta orchestrare le sessioni, gestire i personaggi giocanti e navigare nelle trame mentre si svolgono.
 
-RPG Manager is not just a tool for preparation, but also an invaluable companion for the actual gameplay. It will help you keep track of everything that happens during a session, from the actions of the player characters to the progress of the storyline. It's also an excellent tool for improvisation, providing you with quick access to all the necessary information and making it easier to adapt to unexpected twists and turns.
+RPG Manager non è solo uno strumento di preparazione, ma anche un prezioso compagno per il gioco effettivo. Ti aiuterà a tenere traccia di tutto ciò che accade durante una sessione, dalle azioni dei personaggi giocanti al progresso della trama. È anche un ottimo strumento per l'improvvisazione, fornendoti un rapido accesso a tutte le informazioni necessarie e facilitando l'adattamento a svolte e colpi di scena imprevisti.
 
-As the storyteller, you are the guide for your players as they navigate through the world you have created. It's your responsibility to ensure that the campaign runs smoothly and that everyone has a good time. This section will provide you with tips and guidelines on how to effectively run a campaign using RPG Manager.
+Come narratore, sei la guida per i tuoi giocatori mentre navigano nel mondo che hai creato. È tua responsabilità assicurarti che la campagna si svolga senza intoppi e che tutti si divertano. Questa sezione ti fornirà consigli e linee guida su come gestire efficacemente una campagna utilizzando RPG Manager.
 
-### 5.1. Prepping for a Session
+### 5.1. Prepararsi per una Sessione
 
-Prepping for a session is an essential task for any storyteller, regardless of their style. How you approach this task will vary depending on whether you are a plotter, a sandboxer, or a lazy GM. RPG Manager is flexible enough to cater to all these styles, helping you to prepare in the way that suits you best.
+La preparazione per una sessione è un compito essenziale per qualsiasi narratore, indipendentemente dallo stile. Come affronti questo compito varierà a seconda che tu sia un plottista, un sandboxer o un GM pigro. RPG Manager è sufficientemente flessibile da soddisfare tutti questi stili, aiutandoti a prepararti nel modo che ti si addice meglio.
 
-- **For Plotters**: If you are a plotter, you probably like to have a well-structured plan for your sessions. RPG Manager can help you outline your session using the story circle, making sure that you have a coherent narrative with a clear beginning, middle, and end. You can plan out the scenes, define the key moments, and prepare the necessary non-player characters, locations, and events.
+- **Per i Plotters**: Se sei un plottista, probabilmente ti piace avere un piano ben strutturato per le tue sessioni. RPG Manager può aiutarti ad delineare la tua sessione utilizzando il cerchio della storia, assicurandoti di avere una narrazione coerente con un inizio, una parte centrale e una fine chiari. Puoi pianificare le scene, definire i momenti chiave e preparare i necessari personaggi non giocanti, luoghi ed eventi.
 
-- **For Sandboxers**: As a sandboxer, you prefer to create an open world and let your players roam freely. Your prep work will mostly involve creating the world, its inhabitants, and the various plot hooks that the players can choose to pursue. RPG Manager helps you keep track of all these elements, making it easy to access the necessary information during the game and to adapt to the decisions of your players.
+- **Per i Sandboxers**: Come sandboxer, preferisci creare un mondo aperto e lasciare che i tuoi giocatori vaghino liberamente. Il tuo lavoro di preparazione riguarderà principalmente la creazione del mondo, dei suoi abitanti e dei vari ganci di trama che i giocatori possono scegliere di perseguire. RPG Manager ti aiuta a tenere traccia di tutti questi elementi, rendendo facile l'accesso alle informazioni necessarie durante il gioco e l'adattamento alle decisioni dei tuoi giocatori.
 
-- **For Lazy GMs**: If you are a lazy GM, you probably prefer to do minimal prep and improvise as much as possible during the game. RPG Manager can still be a valuable tool for you, as it allows you to quickly jot down notes, create bullet points for the key moments of the session, and have quick access to the essential information about your world.
+- **Per i Lazy GMs**: Se sei un GM pigro, probabilmente preferisci fare una preparazione minima e improvvisare il più possibile durante il gioco. RPG Manager può comunque essere uno strumento prezioso per te, poiché ti consente di appuntare rapidamente note, creare elenchi puntati per i momenti chiave della sessione e avere un rapido accesso alle informazioni essenziali sul tuo mondo.
 
-No matter your style, prepping for a session is crucial to ensure that the game runs smoothly and that your players have a memorable experience. RPG Manager is designed to assist you in this task, making your prep work easier and more efficient.
+Indipendentemente dal tuo stile, prepararsi per una sessione è cruciale per garantire che il gioco si svolga senza intoppi e che i tuoi giocatori vivano un'esperienza memorabile. RPG Manager è progettato per assisterti in questo compito, facilitando la tua preparazione e rendendola più efficiente.
 
-### 5.2. Taking Notes during Sessions
+### 5.2. Prendere Appunti durante le Sessioni
 
-Taking notes during a session is crucial to keep track of what happens, especially because the decisions made and the events that unfold can have lasting effects on the campaign. RPG Manager facilitates this process by allowing you to easily document the progress of the game, even while in the heat of the moment.
+Prendere appunti durante una sessione è fondamentale per tenere traccia di ciò che accade, specialmente perché le decisioni prese e gli eventi che si verificano possono avere effetti duraturi sulla campagna. RPG Manager facilita questo processo consentendoti di documentare facilmente il progresso del gioco, anche mentre sei nel vivo dell'azione.
 
-- **Keeping Track**: During the game, many things will happen that you need to remember for future sessions. This can include character decisions, unexpected plot twists, or new non-player character introductions. With RPG Manager, you can easily note down all these important details, ensuring that you don't forget anything crucial.
+- **Mantenere la Traccia**: Durante il gioco, molte cose accadranno che devi ricordare per le sessioni future. Ciò può includere decisioni dei personaggi, colpi di scena imprevisti o nuove introduzioni di personaggi non giocanti. Con RPG Manager, puoi annotare facilmente tutti questi dettagli importanti, assicurandoti di non dimenticare nulla di cruciale.
 
-- **Flexibility**: Whether you prefer to take detailed notes or just jot down the key points, RPG Manager is flexible enough to accommodate your style. You can write as much or as little as you want, and you can organize your notes in a way that makes sense to you.
+- **Flessibilità**: Che tu preferisca prendere appunti dettagliati o appuntare solo i punti chiave, RPG Manager è sufficientemente flessibile da adattarsi al tuo stile. Puoi scrivere tanto o quanto vuoi e puoi organizzare i tuoi appunti nel modo che ha senso per te.
 
-- **Accessibility**: RPG Manager makes it easy to access your notes during the game. With just a few clicks, you can pull up the information you need, whether it's a non-player character's backstory, a location's description, or the details of a past event.
+- **Accessibilità**: RPG Manager rende facile l'accesso ai tuoi appunti durante il gioco. Con pochi clic, puoi visualizzare le informazioni di cui hai bisogno, che si tratti del retroscena di un personaggio non giocante, della descrizione di un luogo o dei dettagli di un evento passato.
 
-Taking notes during a session helps you maintain continuity in your campaign and ensures that you don't forget any important details. RPG Manager is designed to make this process as easy and efficient as possible, allowing you to focus on running the game and creating a memorable experience for your players.
+Prendere appunti durante una sessione ti aiuta a mantenere la continuità nella tua campagna e assicura che non dimentichi dettagli importanti. RPG Manager è progettato per rendere questo processo il più facile ed efficiente possibile, consentendoti di concentrarti sulla gestione del gioco e sulla creazione di un'esperienza memorabile per i tuoi giocatori.
 
-### 5.3. Managing Scenes
+### 5.3. Gestire le Scene
 
-Managing scenes is a fundamental aspect of running a session as it involves orchestrating the events that your players will engage with. RPG Manager assists you in organizing and managing these scenes, ensuring that your sessions run smoothly and are engaging for your players.
+Gestire le scene è un aspetto fondamentale della gestione di una sessione poiché comporta l'orchestrazione degli eventi con cui i tuoi giocatori interagiranno. RPG Manager ti aiuta nell'organizzare e gestire queste scene, garantendo che le tue sessioni si svolgano senza intoppi e siano coinvolgenti per i tuoi giocatori.
 
-**Scene Organization**
+**Organizzazione delle Scene**
 
-With RPG Manager, you can organize your scenes in the order you expect them to occur. However, the tool is flexible enough to allow quick adjustments in case your players take an unexpected route. This way, you can ensure that you're always prepared, no matter what your players decide to do.
+Con RPG Manager, puoi organizzare le tue scene nell'ordine in cui prevedi che si verificheranno. Tuttavia, lo strumento è abbastanza flessibile da consentire aggiustamenti rapidi nel caso in cui i tuoi giocatori prendano una strada inaspettata. In questo modo, puoi assicurarti di essere sempre preparato, indipendentemente dalle decisioni dei tuoi giocatori.
 
-**Scene Attributes**
+**Attributi delle Scene**
 
-Each scene in RPG Manager can have several attributes, such as the description, the story circle stage, the type of scene (e.g., Action, Combat, Decision, etc.), the in-game date, and whether or not the scene is exciting. This allows you to have a clear picture of what each scene entails and how it fits into the overall narrative of your session.
+Ogni scena in RPG Manager può avere diversi attributi, come la descrizione, lo stadio del cerchio della storia, il tipo di
 
-**Dynamic Scenes**
+ scena (ad esempio, Azione, Combattimento, Decisione, ecc.), la data di gioco e se la scena è emozionante o meno. Ciò ti consente di avere un'immagine chiara di cosa comporta ciascuna scena e come si inserisce nella narrazione complessiva della tua sessione.
 
-Sometimes, your players will do something unexpected, and you'll need to create a new scene on the fly. RPG Manager allows you to quickly add new scenes during the session, ensuring that you can adapt to your players' decisions and keep the game flowing smoothly.
+**Scene Dinamiche**
 
-**Easy Access**
+A volte, i tuoi giocatori faranno qualcosa di inaspettato e dovrai creare una nuova scena al volo. RPG Manager ti consente di aggiungere rapidamente nuove scene durante la sessione, garantendo che tu possa adattarti alle decisioni dei tuoi giocatori e mantenere il gioco fluido.
 
-During the session, you'll need to access information quickly. RPG Manager makes it easy to navigate between scenes, access the necessary details, and make any required adjustments. This ensures that you can focus on narrating the story and engaging with your players, rather than scrambling to find the information you need.
+**Facile Accesso**
 
-**Optional Scene Creation**
+Durante la sessione, avrai bisogno di accedere alle informazioni rapidamente. RPG Manager rende facile navigare tra le scene, accedere alle informazioni necessarie e apportare eventuali aggiustamenti richiesti. Ciò assicura che tu possa concentrarti sulla narrazione della storia e coinvolgerti con i tuoi giocatori, anziché cercare freneticamente le informazioni di cui hai bisogno.
 
-It's worth noting that the creation of scenes in RPG Manager is entirely optional. The tool is designed to be as flexible as possible to accommodate different styles of play. Whether you prefer to meticulously plan each scene or create them on the fly, RPG Manager supports your preferred approach to storytelling.
+**Creazione Opzionale di Scene**
 
-## 6. ChatGPT Integration
+È utile notare che la creazione di scene in RPG Manager è completamente facoltativa. Lo strumento è progettato per essere il più flessibile possibile per adattarsi a diversi stili di gioco. Che tu preferisca pianificare meticolosamente ogni scena o crearle al volo, RPG Manager supporta il tuo approccio preferito alla narrazione.
 
-Imagine having a creative assistant that not only helps you save time in generating non-player characters but also serves as a sparring partner, providing ideas that align with your campaign's description. Sounds like a dream, right? Well, with RPG Manager's ChatGPT integration, this dream becomes a reality!
+As the session comes to a close, there are essential tasks to ensure a satisfying conclusion and set the stage for future sessions.
 
-ChatGPT can serve as your creative companion, generating entire non-player characters from just a few details, or assisting you step-by-step, suggesting parts of the non-player characters as if working shoulder to shoulder with you. The better and more descriptive your campaign is, the more the generated non-player characters will fit right in.
+- **Recording Outcomes**: Use RPG Manager to record the outcomes of significant events, player choices, and the resolution of major plot points. This information serves as a valuable reference for future sessions, maintaining consistency in your narrative.
 
-In this section, we will cover privacy concerns, cost implications, how to generate non-player characters with ChatGPT, and how to activate the ChatGPT integration. Let's dive in!
+- **Awarding Experience Points**: If your campaign uses an experience point system, RPG Manager provides a convenient way to calculate and award experience points based on player achievements, completed quests, and significant milestones.
 
-### 6.1. Privacy Concerns
+- **Previewing Future Content**: Provide teasers or hints about what to expect in the next session or upcoming adventures. RPG Manager allows you to jot down ideas or outline future content, ensuring a smooth transition between sessions.
 
-When using the ChatGPT integration for non-player characters generation, the campaign description and the non-player characters information are sent to OpenAI servers. The data protection measures implemented by OpenAI ensure that the data is handled securely. However, it is important to be aware that this information is being transmitted and processed externally.
+- **Gathering Feedback**: Use RPG Manager to collect feedback from your players. This can be done through notes or comments, allowing you to understand what aspects of the session worked well and where improvements can be made.
 
-### 6.2. Costs Implications
+Running a campaign is a collaborative experience, and RPG Manager is your ally in orchestrating a memorable and immersive journey for both you and your players. The flexibility and features of RPG Manager empower you to adapt, engage, and create a living narrative that evolves with each session.
 
-Utilizing the ChatGPT API has an associated cost, which is calculated based on the number of tokens sent in each message. Each message exchanged with the ChatGPT API consumes tokens, and therefore, incurs a cost. It is important to be mindful of this, as frequent use of the ChatGPT integration will result in higher costs.
+## 6. Integrazione con ChatGPT
 
-### 6.3. Non-player characters generation
+Immagina di avere un assistente creativo che non solo ti aiuta a risparmiare tempo nella generazione di personaggi non giocanti, ma funge anche da compagno di gioco, fornendo idee in linea con la descrizione della tua campagna. Sembra un sogno, vero? Beh, con l'integrazione di ChatGPT in RPG Manager, questo sogno diventa realtà!
 
-The ChatGPT integration can assist in generating attributes for non-player characters, with the exception of the description attribute. This is done via the wizard, which proposes generations for each attribute during the creation process.
+ChatGPT può fungere da compagno creativo, generando interi personaggi non giocanti da pochi dettagli o assistendoti passo dopo passo, suggerendo parti dei personaggi non giocanti come se stesse lavorando fianco a fianco con te. Più dettagliata e descrittiva è la tua campagna, più i personaggi non giocanti generati si inseriranno perfettamente.
 
-### 6.4. How to activate ChatGPT
+In questa sezione, affronteremo le preoccupazioni sulla privacy, le implicazioni di costo, come generare personaggi non giocanti con ChatGPT e come attivare l'integrazione con ChatGPT. Iniziamo!
 
-To activate ChatGPT in RPG Manager, you will need an OpenAI API key. Follow these steps to obtain your key:
+### 6.1. Preoccupazioni sulla Privacy
 
-1. **Sign Up for an OpenAI Account:** Visit the OpenAI website and sign up for an account by clicking on the 'Sign Up' button and following the prompts.
-2. **Generate API Key:** Once you have created your account and logged in, navigate to the 'API' section in your OpenAI account dashboard. Here, you will find the option to generate a new API key. Follow the on-screen instructions to create your key.
-3. **Enter API Key in RPG Manager:** Open RPG Manager and navigate to the settings section. Input your newly generated OpenAI API key into the designated field.
+Quando si utilizza l'integrazione con ChatGPT per la generazione di personaggi non giocanti, la descrizione della campagna e le informazioni sui personaggi non giocanti vengono inviate ai server di OpenAI. Le misure di protezione dei dati implementate da OpenAI garantiscono che i dati siano gestiti in modo sicuro. Tuttavia, è importante essere consapevoli che queste informazioni vengono trasmesse ed elaborate esternamente.
 
-## 7. Contributing
+### 6.2. Implicazioni di Costo
 
-RPG Manager is an open-source project, and we welcome contributions of all kinds - from code contributions, bug reports, to documentation and any other help you can provide.
+L'utilizzo dell'API di ChatGPT comporta un costo associato, calcolato in base al numero di token inviati in ogni messaggio. Ogni messaggio scambiato con l'API di ChatGPT consuma token e, quindi, comporta un costo. È importante tenerne conto, poiché un uso frequente dell'integrazione con ChatGPT comporterà costi più elevati.
 
-### 7.1. Code Contributions
+### 6.3. Generazione di Personaggi Non Giocanti
 
-If you are a developer and want to contribute to the codebase, please feel free to submit a pull request on our [GitHub repository](https://github.com/carlonicora/obsidian-rpg-manager/). We appreciate contributions that improve the functionality, usability, and overall quality of RPG Manager.
+L'integrazione con ChatGPT può aiutare a generare attributi per i personaggi non giocanti, ad eccezione dell'attributo della descrizione. Ciò avviene attraverso la procedura guidata, che propone generazioni per ciascun attributo durante il processo di creazione.
 
-### 7.2. Bug Reporting
+### 6.4. Come Attivare ChatGPT
 
-If you encounter any bugs or issues while using RPG Manager, please [submit a bug report on our GitHub issues page](https://github.com/carlonicora/obsidian-rpg-manager/issues). Be sure to provide as much detail as possible about the issue, including the steps to reproduce it, so that our developers can address it promptly.
+Per attivare ChatGPT in RPG Manager, avrai bisogno di una chiave API di OpenAI. Segui questi passaggi per ottenere la tua chiave:
 
-### 7.3. Documentation:
+1. **Registrati per un Account OpenAI:** Visita il sito web di OpenAI e registrati per un account cliccando su 'Registrati' e seguendo le indicazioni.
+2. **Genera una Chiave API:** Una volta creato l'account e effettuato l'accesso, vai alla sezione 'API' nel pannello del tuo account OpenAI. Qui troverai l'opzione per generare una nuova chiave API. Segui le istruzioni visualizzate per crearla.
+3. **Inserisci la Chiave API in RPG Manager:** Apri RPG Manager e vai alla sezione delle impostazioni. Inserisci la tua nuova chiave API di OpenAI nel campo designato.
 
-Good documentation is crucial for any software project. If you have a knack for writing and want to help improve the RPG Manager documentation, please consider contributing to our documentation repository. Whether it's fixing typos, clarifying existing content, or creating new content, every contribution is valuable.
+## 7. Contributi
 
-### 7.4. Other Ways to Help:
+RPG Manager è un progetto open-source, e accogliamo contributi di ogni tipo: dalle modifiche al codice, segnalazioni di bug, alla documentazione e qualsiasi altro aiuto tu possa offrire.
 
-If you want to contribute in other ways, here are a few suggestions:
+### 7.1. Contributi al Codice
 
-- Spread the word about RPG Manager to your friends and social media networks.
-- Provide feedback on the application's features and usability.
-- Create tutorials or guides that help new users get started with RPG Manager.
+Se sei un programmatore e desideri contribuire al codice, sentiti libero di inviare una pull request sul nostro [repository GitHub](https://github.com/carlonicora/obsidian-rpg-manager/). Apprezziamo i contributi che migliorano la funzionalità, l'usabilità e la qualità complessiva di RPG Manager.
 
-### 7.5. Community
+### 7.2. Segnalazione di Bug
 
-Being an open-source project, RPG Manager thrives on the support and contributions of its community. Whether you are a developer, a storyteller, or just someone who wants to help out, we appreciate your support and encourage you to get involved. [Join us on the support thread on Discord](https://discord.com/channels/686053708261228577/1022806716343144518)!
+Se incontri bug o problemi durante l'uso di RPG Manager, per favore [invia una segnalazione di bug sulla nostra pagina delle issues su GitHub](https://github.com/carlonicora/obsidian-rpg-manager/issues). Assicurati di fornire il maggior numero possibile di dettagli sul problema, compresi i passaggi per riprodurlo, in modo che i nostri sviluppatori possano risolverlo prontamente.
 
-## 8. Frequently Asked Questions
+### 7.3. Documentazione:
 
-- **Can I help?**
+Una buona documentazione è cruciale per qualsiasi progetto software. Se hai un talento per la scrittura e vuoi contribuire a migliorare la documentazione di RPG Manager, considera la possibilità di contribuire al nostro repository di documentazione. Che si tratti di correggere errori di battitura, chiarire contenuti esistenti o creare nuovi contenuti, ogni contributo è prezioso.
 
-  Of course you can. RPG Manager is open source, and you can propose new features or solve pesky bugs.
+### 7.4. Altri Modi per Contribuire:
 
-- **I have a criticism...**
+Se desideri contribuire in altri modi, ecco alcune suggerimenti:
 
-  We truly appreciate all feedback and criticisms as they are crucial in enhancing RPG Manager. Nevertheless, we kindly ask that your feedback is constructive and respectful. It is quite straightforward to point out something that doesn't work or isn't good, but it is infinitely more helpful to provide suggestions for improvement. Keep in mind, RPG Manager is a community project. Therefore, it's up to all of us to contribute and make it the best it can be. Together, we can build something extraordinary! If you have any suggestions or feedback, please share them on [Github Issues](https://github.com/carlonicora/obsidian-rpg-manager/issues). Remember, there are two types of criticisms: constructive ones that help create a better world, and destructive ones made by those who enjoy undermining the efforts of creators working hard to release an open-source project. We obviously prefer the former!
+- Parla di RPG Manager ai tuoi amici e sui social media.
+- Fornisci feedback sulle funzionalità e sull'usabilità dell'applicazione.
+- Crea tutorial o guide che aiutino i nuovi utenti a iniziare con RPG Manager.
+
+### 7.5. Comunità
+
+Essendo un progetto open-source, RPG Manager prospera sul supporto e sui contributi della sua comunità. Che tu sia uno sviluppatore, un narratore o semplicemente qualcuno che vuole dare una mano, apprezziamo il tuo supporto e ti incoraggiamo a partecipare. [Unisciti a noi sul canale di supporto su Discord](https://discord.com/channels/686053708261228577/1022806716343144518)!
+
+## 8. Domande Frequenti
+
+- **Posso aiutare?**
+
+  Certamente che puoi. RPG Manager è open source, e puoi proporre nuove funzionalità o risolvere fastidiosi bug.
+
+- **Ho una critica...**
+
+  Apprezziamo davvero tutti i feedback e le critiche, poiché sono cruciali per migliorare RPG Manager. Tuttavia, ti chiediamo gentilmente che il tuo feedback sia costruttivo e rispettoso. È piuttosto semplice indicare qualcosa che non funziona o che non è buono, ma è infinitamente più utile fornire suggerimenti per il miglioramento. Ricorda, RPG Manager è un progetto della comunità. Pertanto, spetta a tutti noi contribuire e renderlo il migliore possibile. Insieme, possiamo costruire qualcosa di straordinario! Se hai suggerimenti o feedback, per favore condividili su [Github Issues](https://github.com/carlonicora/obsidian-rpg-manager/issues). Ricorda, ci sono due tipi di critiche: quelle costruttive che aiutano a creare un mondo migliore, e quelle distruttive fatte da coloro che godono nel minare gli sforzi dei creatori che lavorano duramente per rilasciare un progetto open source. Ovviamente preferiamo il primo tipo!
