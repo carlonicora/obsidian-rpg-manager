@@ -1,23 +1,27 @@
 import { App } from "obsidian";
-import { ElementType } from "react";
-import { Database } from "src/database/Database";
+import { ElementType } from "src/enums/ElementType";
+import { ServiceFactory } from "src/factories/ServiceFactory";
 import { Element } from "src/interfaces/Element";
 import { RPGManager } from "src/interfaces/RPGManager";
 import { Relationship } from "src/interfaces/Relationship";
+import { DatabaseService } from "src/services/DatabaseService";
 
 export class Api implements RPGManager {
-	private _db: Database;
+	private _db: DatabaseService;
 
-	constructor(private _app: App) {
-		this._db = new Database(this._app, this);
-	}
-
-	async initialise(): Promise<void> {
-		await this._db.initialise();
-	}
+	constructor(private _app: App) {}
 
 	async persist(): Promise<void> {
 		await this._db.persist();
+	}
+
+	async initialise(): Promise<void> {
+		this._db = await ServiceFactory.create(DatabaseService, this._app, this);
+	}
+
+	async add(element: Element): Promise<void> {
+		this._db.db.elements.push(element);
+		await this.persist();
 	}
 
 	getById(id: string): Element | undefined {
@@ -33,6 +37,8 @@ export class Api implements RPGManager {
 	}
 
 	getRelationships(element: Element): Relationship[] {
-		return this._db.db.relationships.filter((relationship: Relationship) => relationship.from.id === element.id);
+		return this._db.db.relationships.filter(
+			(relationship: Relationship) => relationship.from.id === element.id || relationship.from.id === element.id
+		);
 	}
 }

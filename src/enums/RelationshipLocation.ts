@@ -1,5 +1,6 @@
 export enum RelationshipLocation {
-	OnlyMetadata = "metadata",
-	OnlyContent = "content",
-	Both = "both",
+	Metadata = 1,
+	Attributes = 2,
+	Content = 4,
+	Frontmatter = 8,
 }

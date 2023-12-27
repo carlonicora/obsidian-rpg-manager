@@ -2,13 +2,17 @@ import { App, TAbstractFile, TFile } from "obsidian";
 import { Api } from "src/api/Api";
 import { ElementFactory } from "src/factories/ElementFactory";
 import { RelationshipFactory } from "src/factories/RelationshipFactory";
+import { ServiceFactory } from "src/factories/ServiceFactory";
 import { DatabaseStructure } from "src/interfaces/DatabaseStructure";
 import { Element } from "src/interfaces/Element";
 import { ElementData } from "src/interfaces/ElementData";
 import { Relationship } from "src/interfaces/Relationship";
 import { RelationshipData } from "src/interfaces/RelationshipData";
+import { Service } from "src/interfaces/Service";
+import { FileRelationship, FileRelationshipService } from "src/services/FileRelationshipsService";
+import { RelationshipsService } from "src/services/RelationshipsService";
 
-export class Database {
+export class DatabaseService implements Service {
 	public db: DatabaseStructure;
 	private _databaseFile: string;
 
@@ -45,7 +49,7 @@ export class Database {
 		});
 
 		data.relationships.forEach((relationshipData: any) => {
-			this.db.relationships.push(...RelationshipFactory.create(relationshipData, this._api));
+			this.db.relationships.push(RelationshipFactory.create(relationshipData, this._api));
 		});
 	}
 
@@ -56,19 +60,51 @@ export class Database {
 			data.elements.push(element.data);
 		});
 
-		const relationshipIds: string[] = [];
 		this.db.relationships.forEach((relationship: Relationship) => {
-			if (relationshipIds.includes(relationship.id)) return;
 			data.relationships.push(relationship.data);
-			relationshipIds.push(relationship.id);
 		});
 
 		await this._app.vault.adapter.write(this._databaseFile, JSON.stringify(data));
 	}
 
-	private async _savedFile(file: TFile): Promise<void> {}
+	private async _savedFile(file: TFile): Promise<void> {
+		const fileRelationshipsService: FileRelationshipService = await ServiceFactory.create(
+			FileRelationshipService,
+			this._app,
+			file
+		);
+		const relationshipsService: RelationshipsService = await ServiceFactory.create(
+			RelationshipsService,
+			this._app,
+			this._api,
+			file
+		);
 
-	private async _renamedFile(file: TAbstractFile, oldPath: string): Promise<void> {}
+		const fileRelationships: FileRelationship[] = fileRelationshipsService.getFrontmatterAndContentRelationships();
+		const haveRelationshipsChanged: boolean = relationshipsService.createOrUpdateRelationshipsFromFileRelationships(
+			this.db.relationships,
+			fileRelationships
+		);
 
-	private async _deletedFile(file: TFile): Promise<void> {}
+		if (haveRelationshipsChanged) await this.persist();
+	}
+
+	private async _renamedFile(file: TAbstractFile, oldPath: string): Promise<void> {
+		const element: Element | undefined = this.db.elements.find((element: Element) => element.path === oldPath);
+		if (!element) return;
+
+		element.path = file.path;
+		await this.persist();
+	}
+
+	private async _deletedFile(file: TFile): Promise<void> {
+		const element: Element | undefined = this.db.elements.find((element: Element) => element.path === file.path);
+		if (!element) return;
+
+		this.db.elements = this.db.elements.filter((element: Element) => element.path !== file.path);
+		this.db.relationships = this.db.relationships.filter(
+			(relationship: Relationship) => relationship.from.path !== file.path && relationship.to.path !== file.path
+		);
+		await this.persist();
+	}
 }

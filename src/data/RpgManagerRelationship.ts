@@ -6,16 +6,7 @@ import { Relationship } from "src/interfaces/Relationship";
 import { RelationshipData } from "src/interfaces/RelationshipData";
 
 export class RpgManagerRelationship implements Relationship {
-	constructor(
-		public data: RelationshipData,
-		private _api: RPGManager,
-		private _direct: boolean,
-		private _location: RelationshipLocation
-	) {}
-
-	get id(): string {
-		return this.data.id;
-	}
+	constructor(public data: RelationshipData, private _api: RPGManager, private _direct: boolean) {}
 
 	get from(): Element {
 		return this._api.getById(this._direct ? this.data.from : this.data.to);
@@ -42,15 +33,27 @@ export class RpgManagerRelationship implements Relationship {
 		}
 	}
 
-	get location(): RelationshipLocation {
-		return this._location;
-	}
-
 	get description(): string {
 		return this._direct ? this.data.descriptionFrom : this.data.descriptionTo;
 	}
 
+	get fromHasNoLocation(): boolean {
+		return this.data.fromLocation === 0;
+	}
+
+	get toHasNoLocation(): boolean {
+		return this.data.toLocation === 0;
+	}
+
+	fromContainsLocation(location: RelationshipLocation): boolean {
+		return (this.data.fromLocation & location) !== 0;
+	}
+
+	toContainsLocation(location: RelationshipLocation): boolean {
+		return (this.data.toLocation & location) !== 0;
+	}
+
 	addContentRelationships(): void {
-		this._location = RelationshipLocation.Both;
+		// this._location = RelationshipLocation.Both;
 	}
 }

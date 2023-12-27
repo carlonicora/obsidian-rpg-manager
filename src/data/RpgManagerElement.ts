@@ -1,5 +1,7 @@
 import { App, TAbstractFile, TFile } from "obsidian";
 import { ElementType } from "src/enums/ElementType";
+import { AttributeFactory } from "src/factories/AttributeFactory";
+import { Attribute } from "src/interfaces/Attribute";
 import { Element } from "src/interfaces/Element";
 import { ElementData } from "src/interfaces/ElementData";
 import { RPGManager } from "src/interfaces/RPGManager";
@@ -23,6 +25,11 @@ export class RpgManagerElement implements Element {
 
 	get path(): string {
 		return this.data.path;
+	}
+
+	set path(path: string) {
+		this.data.path = path;
+		this._file = this._app.vault.getAbstractFileByPath(this.data.path) as TFile;
 	}
 
 	get type(): ElementType {
@@ -57,7 +64,11 @@ export class RpgManagerElement implements Element {
 		return this._api.getRelationships(this);
 	}
 
-	attribute(attributeName: string): any | undefined {
-		throw new Error("Method not implemented.");
+	get attributes(): Attribute[] {
+		return AttributeFactory.createList(this.type, this.data.attributes);
+	}
+
+	attribute(id: string): Attribute {
+		return AttributeFactory.create(id, this.data.attributes[id]);
 	}
 }

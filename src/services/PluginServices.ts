@@ -1,11 +1,12 @@
 import { App, Plugin } from "obsidian";
+import { ElementController } from "src/controllers/ElementController";
 import { RPGManager } from "src/interfaces/RPGManager";
 
 export class PluginServices {
 	static async registerProcessors(app: App, gtd: Plugin, api: RPGManager): Promise<void> {
-		// gtd.registerMarkdownCodeBlockProcessor("rpgm", async (source: string, el, ctx) => {
-		// 	ctx.addChild(new ProjectController(app, api, ctx.sourcePath, el, source));
-		// });
+		gtd.registerMarkdownCodeBlockProcessor("rpgm5", async (source: string, el, ctx) => {
+			ctx.addChild(new ElementController(app, api, ctx.sourcePath, el, source));
+		});
 	}
 
 	static async registerEvents(app: App, gtd: Plugin, api: RPGManager): Promise<void> {

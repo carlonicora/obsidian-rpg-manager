@@ -1,9 +1,6 @@
 import { App, ItemView, TFile, View, WorkspaceLeaf } from "obsidian";
-import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
-import OptionContainerComponent from "src/components/options/OptionContainerComponent";
-import { ApiContext } from "src/contexts/ApiContext";
-import { AppContext } from "src/contexts/AppContext";
+// import OptionContainerComponent from "src/components/options/OptionContainerComponent";
 import { Element } from "src/interfaces/Element";
 import { RPGManager } from "src/interfaces/RPGManager";
 
@@ -47,18 +44,18 @@ export class OptionsView extends ItemView implements View {
 
 		if (file != undefined) this._element = this._api.getByPath(file.path) as Element | undefined;
 
-		const elementComponent = createElement(OptionContainerComponent, {
-			element: this._element,
-			file: file ?? undefined,
-			key: this._element?.id ?? "" + this._element?.version.toString(),
-		});
+		// const elementComponent = createElement(OptionContainerComponent, {
+		// 	element: this._element,
+		// 	file: file ?? undefined,
+		// 	key: this._element?.id ?? "" + this._element?.version.toString(),
+		// });
 
-		const reactComponent = createElement(
-			AppContext.Provider,
-			{ value: this._app },
-			createElement(ApiContext.Provider, { value: this._api }, elementComponent)
-		);
+		// const reactComponent = createElement(
+		// 	AppContext.Provider,
+		// 	{ value: this._app },
+		// 	createElement(ApiContext.Provider, { value: this._api }, elementComponent)
+		// );
 
-		this._root.render(reactComponent);
+		// this._root.render(reactComponent);
 	}
 }

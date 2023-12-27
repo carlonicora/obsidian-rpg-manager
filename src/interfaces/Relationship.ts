@@ -6,12 +6,14 @@ import { RelationshipData } from "./RelationshipData";
 export type Relationship = {
 	data: RelationshipData;
 
-	get id(): string;
 	get from(): Element;
 	get to(): Element;
 	get type(): RelationshipType;
-	get location(): RelationshipLocation;
 	get description(): string | undefined;
+	get fromHasNoLocation(): boolean;
+	get toHasNoLocation(): boolean;
 
+	fromContainsLocation: (location: RelationshipLocation) => boolean;
+	toContainsLocation: (location: RelationshipLocation) => boolean;
 	addContentRelationships: () => void;
 };
