@@ -23,6 +23,7 @@ export interface ElementInterface {
 	get positionInParent(): number | undefined;
 	get relationships(): RelationshipInterface[];
 	set relationships(value: RelationshipInterface[]);
+	get relationshipsToDisplay(): RelationshipInterface[];
 	get version(): number;
 	get path(): string;
 	get name(): string;

@@ -8,7 +8,7 @@ export default function RelationshipsContainerComponent({ element }: { element: 
 	const api: RpgManagerInterface = useApi();
 
 	if (!api.settings.showRelationships[element.type]) return null;
-	if (element.relationships.length === 0) return null;
+	if (element.relationshipsToDisplay.length === 0) return null;
 
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">

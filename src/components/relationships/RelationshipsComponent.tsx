@@ -5,7 +5,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import RelationshipListComponent from "./RelationshipListComponent";
 
 export default function RelationshipsComponent({ element }: { element: ElementInterface }): React.ReactElement {
-	if (element.relationships.length === 0) return null;
+	if (element.relationshipsToDisplay.length === 0) return null;
 
 	const { t } = useTranslation();
 

@@ -160,6 +160,12 @@ export class Element implements ElementInterface {
 		this._relationships = value;
 	}
 
+	get relationshipsToDisplay(): RelationshipInterface[] {
+		return this._relationships.filter((relationship) =>
+			!([ElementType.Campaign, ElementType.Session, ElementType.Scene].contains(relationship.component.type))
+		);
+	}
+
 	get campaignPath(): string | undefined {
 		return this._rpgManagerBlock.id.campaign;
 	}
