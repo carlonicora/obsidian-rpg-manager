@@ -1,3 +1,4 @@
+import { NewTaskController } from "@/controllers/NewTaskController";
 import { useApp } from "@/hooks/useApp";
 import { FileUploadService } from "@/services/FileUploadService";
 import { App } from "obsidian";
@@ -64,6 +65,11 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 	const addRelationship = () => {
 		const relationshipModal = new NewRelationshipController(app, api, element);
 		relationshipModal.open();
+	};
+
+	const addTask = () => {
+		const taskModal = new NewTaskController(app, api, element);
+		taskModal.open();
 	};
 
 	const openGallery = () => {
@@ -150,6 +156,12 @@ export default function OptionsViewComponent({ element }: { element: ElementInte
 						{t("options.wizard")}
 					</div>
 				)}
+				<div
+					className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+					onClick={addTask}
+				>
+					{t("create.add", { context: "task" })}
+				</div>
 				{element.type !== ElementType.Campaign && (
 					<div
 						className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"

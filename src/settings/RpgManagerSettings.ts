@@ -1,3 +1,4 @@
+import { ElementType } from "@/data/enums/ElementType";
 import { AttributeInterface } from "@/data/interfaces/AttributeInterface";
 import { App, Plugin, PluginSettingTab, Setting, TAbstractFile, TFolder } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -11,6 +12,8 @@ export interface RpgManagerSettingsInterface {
 	version: string;
 	customAttributes: AttributeInterface[];
 	forceFullWidth: boolean;
+	showTasks: Record<ElementType, boolean>;
+	showRelationships: Record<ElementType, boolean>;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -24,6 +27,12 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 	version: "0.0.0",
 	customAttributes: [],
 	forceFullWidth: true,
+	showTasks: Object.values(ElementType).reduce(
+		(acc, element) => ({...acc, [element]: true}), {} as Record<ElementType, boolean>
+	),
+	showRelationships: Object.values(ElementType).reduce(
+		(acc, element) => ({...acc, [element]: true}), {} as Record<ElementType, boolean>
+	),
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
@@ -127,6 +136,31 @@ export class RpgManagerSettings extends PluginSettingTab {
 					await this.saveSettings({ useSceneAnalyser: value });
 				});
 			});
+
+		containerEl.createEl("h3", { text: "Elements", cls: "mt-3" });
+		const ElementSettingsIntro = containerEl.createEl("p");
+		ElementSettingsIntro.appendText("Element options. ");
+
+		Object.entries(ElementType).forEach(([elementKey, elementValue]) => {
+			containerEl.createEl("h2", { text: elementKey, cls: "mt-3" });
+			new Setting(containerEl)
+				.setName(`Show ${elementKey} tasks section`)
+				.setDesc(`Toggle visibility for the Tasks section for ${elementKey} elements. `)
+				.addToggle((toggle) => {
+					toggle.setValue(this._plugin.settings.showTasks[(elementValue as ElementType)]).onChange(async (value) => {
+						await this.saveSettings({ showTasks: {...this._plugin.settings.showTasks, [elementValue]: value} });
+					});
+				});
+
+			new Setting(containerEl)
+				.setName(`Show ${elementKey} relationships section`)
+				.setDesc(`Toggle visibility for the Relationships section for ${elementKey} elements. `)
+				.addToggle((toggle) => {
+					toggle.setValue(this._plugin.settings.showRelationships[(elementValue as ElementType)]).onChange(async (value) => {
+						await this.saveSettings({ showRelationships: {...this._plugin.settings.showRelationships, [elementValue]: value} });
+					});
+				});
+		});
 
 		containerEl.createEl("h3", { text: "ChatGPT", cls: "mt-3" });
 		const ChatGPT = containerEl.createEl("p");

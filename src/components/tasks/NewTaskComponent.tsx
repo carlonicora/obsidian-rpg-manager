@@ -13,7 +13,7 @@ export default function NewTaskComponent({
 }: {
 	element: ElementInterface;
 	onTaskCreation: (task: TaskInterface) => void;
-	onCancel: (showNewTask: boolean) => void;
+	onCancel?: (showNewTask: boolean) => void;
 }): React.ReactElement {
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
@@ -54,9 +54,9 @@ export default function NewTaskComponent({
 				</div>
 			</div>
 			<div className="flex justify-end w-full text-xs">
-				<button className="rpgm-secondary pl-3 pr-3 mr-3" onClick={() => onCancel(false)}>
+				{onCancel && <button className="rpgm-secondary pl-3 pr-3 mr-3" onClick={() => onCancel(false)}>
 					{t("buttons.cancel")}
-				</button>
+				</button>}
 				<button className="rpgm-primary pl-3 pr-3" onClick={handleCreateNewTask}>
 					{t("create.add", { context: "task" })}
 				</button>

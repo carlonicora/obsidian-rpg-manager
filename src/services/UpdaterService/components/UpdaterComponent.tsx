@@ -1,5 +1,6 @@
 import { RpgManagerInterface } from "@/RpgManagerInterface";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
+import { ElementType } from "@/data/enums/ElementType";
 import { useApi } from "@/hooks/useApi";
 import { useApp } from "@/hooks/useApp";
 import { RpgManagerSettingsInterface } from "@/settings/RpgManagerSettings";
@@ -39,6 +40,12 @@ function Upgrading(): React.ReactElement {
 				version: api.version,
 				customAttributes: [],
 				forceFullWidth: false,
+				showTasks: Object.values(ElementType).reduce(
+					(acc, element) => ({...acc, [element]: true}), {} as Record<ElementType, boolean>
+				),
+				showRelationships: Object.values(ElementType).reduce(
+					(acc, element) => ({...acc, [element]: true}), {} as Record<ElementType, boolean>
+				),
 			};
 			(api as unknown as Plugin).saveData(settings);
 
