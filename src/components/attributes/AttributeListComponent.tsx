@@ -22,6 +22,16 @@ import StoryCircleStageAttributeComponent from "./types/StoryCircleStageAttribut
 import StrengthsAttributeComponent from "./types/StrengthsAttributeComponent";
 import WeaknessesAttributeComponent from "./types/WeaknessesAttributeComponent";
 
+const ATTRIBUTES_TO_NOT_SHOW = [
+	AttributeComponentType.Description,
+	AttributeComponentType.StoryCircle,
+	AttributeComponentType.Kishotenketsu,
+	AttributeComponentType.Duration,
+	AttributeComponentType.Parent,
+	AttributeComponentType.Conflict,
+	AttributeComponentType.SensoryImprint,
+];
+
 export default function AttributeListComponent({
 	element,
 	isEditable,
@@ -31,6 +41,9 @@ export default function AttributeListComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 
+	const attributes = element.attributes.filter((attribute) => attribute.isSet && !ATTRIBUTES_TO_NOT_SHOW.contains(attribute.type));
+	if (attributes.length === 0) return null;
+
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] relative p-3">
 			<div>
@@ -39,19 +52,7 @@ export default function AttributeListComponent({
 				</h2>
 			</div>
 			<div>
-				{element.attributes.map((attribute: AttributeInterface, index: number) => {
-					if (
-						attribute.type === AttributeComponentType.Description ||
-						attribute.type === AttributeComponentType.StoryCircle ||
-						attribute.type === AttributeComponentType.Kishotenketsu ||
-						attribute.type === AttributeComponentType.Duration ||
-						attribute.type === AttributeComponentType.Parent ||
-						attribute.type === AttributeComponentType.Conflict ||
-						attribute.type === AttributeComponentType.SensoryImprint ||
-						!attribute.isSet
-					)
-						return null;
-
+				{attributes.map((attribute: AttributeInterface, index: number) => {
 					let attributeComponent;
 
 					switch (attribute.type) {
