@@ -19,6 +19,7 @@ export default function TasksContainerComponent({ element }: { element: ElementI
 	const [viewType, setViewType] = React.useState<"own" | "assigned" | "all">(tasks.length > 0 ? "assigned" : "own");
 
 	if (!api.settings.showTasks[element.type]) return null;
+	if (tasks.length === 0 && element.tasks.length === 0) return null;
 
 	if (viewType === "own") {
 		tasks = element.tasks;
