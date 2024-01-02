@@ -1,4 +1,5 @@
 import { ElementType } from "@/data/enums/ElementType";
+import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import * as React from "react";
 import { AttributeType } from "src/data/enums/AttributeType";
 import AttributeListComponent from "../attributes/AttributeListComponent";
@@ -8,14 +9,14 @@ import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprint
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import ImageComponent from "../images/ImageComponent";
-import RelationshipsComponent from "../relationships/RelationshipsComponent";
+import RelationshipsContainerComponent from "../relationships/RelationshipsContainerComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
 export default function MainV1Component({
 	element,
 	isInPopover,
 }: {
-	element: any;
+	element: ElementInterface;
 	isInPopover: boolean;
 }): React.ReactElement {
 	return (
@@ -66,11 +67,7 @@ export default function MainV1Component({
 				</div>
 			)}
 			{!isInPopover && <TasksContainerComponent element={element} />}
-			{isInPopover === false && element.relationships.length > 0 && (
-				<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-					<RelationshipsComponent element={element} />
-				</div>
-			)}
+			{isInPopover === false && <RelationshipsContainerComponent element={element} /> }
 		</>
 	);
 }

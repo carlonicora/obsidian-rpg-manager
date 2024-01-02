@@ -12,7 +12,7 @@ import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import KishotenketsuComponent from "../kishotenketsu/KishotenketsuComponent";
-import RelationshipsComponent from "../relationships/RelationshipsComponent";
+import RelationshipsContainerComponent from "../relationships/RelationshipsContainerComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
 
 export default function ChapterComponent({
@@ -65,11 +65,8 @@ export default function ChapterComponent({
 					</div>
 				)}
 				{!isInPopover && <TasksContainerComponent element={element} />}
-				{isInPopover === false && element.relationships.length > 0 && (
-					<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-						<RelationshipsComponent element={element} />
-					</div>
-				)}
+				{isInPopover === false && <RelationshipsContainerComponent element={element} /> }
+
 			</div>
 		</>
 	);
