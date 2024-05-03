@@ -1,3 +1,4 @@
+import { ElementInterface } from "@/data/interfaces/ElementInterface";
 import { useApp } from "@/hooks/useApp";
 import { App } from "obsidian";
 import * as React from "react";
@@ -10,7 +11,21 @@ import { useApi } from "src/hooks/useApi";
 
 const transformMarkdownLinks = (api: RpgManagerInterface, markdown: string) => {
   return markdown.replace(/\[\[(.*?)(?:\|(.*?))?\]\]/g, (_, link, alias) => {
-    return `<a href="${link}" data-id="${link}">${alias || link}</a>`;
+    if (link.startsWith("@")) {
+      const element: ElementInterface = api.get({
+        id: link.slice(1),
+      }) as ElementInterface;
+
+      return `<a href="${
+        element.file.path
+      }" class="!no-underline internal-link" data-id="${element.file.path}">${
+        alias || element.name
+      }</a>`;
+    }
+
+    return `<a href="${link}" class="internal-link !no-underline" data-id="${link}">${
+      alias || link
+    }</a>`;
   });
 };
 
@@ -45,7 +60,7 @@ export default function MarkdownComponent({
     a: ({ node, ...props }) => (
       <a
         {...props}
-        className="!no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
+        className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
         onClick={handleLinkClick}
       />
     ),

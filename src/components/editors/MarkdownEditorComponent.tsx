@@ -154,7 +154,7 @@ export default function MarkdownEditorComponent({
         state: EditorState.create({
           doc: value,
           extensions: [
-            inlinePlugin(),
+            inlinePlugin(api),
             contentChangeExtension,
             doubleBracketKeyBinding,
           ],
@@ -189,7 +189,7 @@ export default function MarkdownEditorComponent({
   );
 }
 
-export function inlinePlugin() {
+export function inlinePlugin(api: RpgManagerInterface) {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;
@@ -209,7 +209,7 @@ export function inlinePlugin() {
       }
 
       inlineRender(view: EditorView): DecorationSet {
-        const decorations = findMarkdownElements(view.state.doc, view);
+        const decorations = findMarkdownElements(view.state.doc, view, api);
 
         const { from, to } = view.state.selection.main;
         return Decoration.set(
@@ -272,6 +272,7 @@ function nextMatch(
 function findMarkdownElements(
   doc: Text,
   view: EditorView,
+  api: RpgManagerInterface,
 ): Range<Decoration>[] {
   const patterns = [
     {
@@ -307,7 +308,7 @@ function findMarkdownElements(
     {
       regex: /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
       renderWidget: (match: RegExpExecArray, view: EditorView) =>
-        renderLink(match, view),
+        renderLink(match, view, api),
     },
   ];
 
@@ -403,10 +404,20 @@ function renderHeading(
 function renderLink(
   match: RegExpExecArray,
   view: EditorView,
+  api: RpgManagerInterface,
 ): Range<Decoration> {
   const el = document.createElement("a");
-  const linkTarget = match[1];
-  const linkText = match[2] || linkTarget;
+  let linkTarget = match[1];
+  let linkText = match[2] || linkTarget;
+
+  if (linkTarget.startsWith("@")) {
+    const element: ElementInterface = api.get({
+      id: linkTarget.slice(1),
+    }) as ElementInterface;
+
+    if (linkText === linkTarget) linkText = element.name;
+    linkTarget = element.file.path;
+  }
 
   el.setAttribute("href", linkTarget);
   el.textContent = linkText;

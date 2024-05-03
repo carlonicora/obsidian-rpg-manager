@@ -189,7 +189,9 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
         id: found.id,
       }) as ElementInterface;
 
-      const alias = "|" + (found?.alias ?? foundElement.name);
+      let alias: string = "";
+      if (found.alias) alias = "|" + found.alias;
+
       const response = "[[@" + foundElement.id + alias + "]]";
 
       this._callback(response, this._params);
