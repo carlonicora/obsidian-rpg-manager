@@ -11,71 +11,85 @@ import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockServ
 import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
 
 export default function SingleImageComponent({
-	element,
-	image,
-	resetCurrentImage,
+  element,
+  image,
+  resetCurrentImage,
 }: {
-	element: ElementInterface;
-	image: ImageInterface;
-	resetCurrentImage: () => void;
+  element: ElementInterface;
+  image: ImageInterface;
+  resetCurrentImage: () => void;
 }): React.ReactElement {
-	const { t } = useTranslation();
-	const api: RpgManagerInterface = useApi();
-	const app: App = useApp();
+  const { t } = useTranslation();
+  const api: RpgManagerInterface = useApi();
+  const app: App = useApp();
 
-	const [caption, setCaption] = React.useState<string>(image.caption);
+  const [caption, setCaption] = React.useState<string>(image.caption);
 
-	const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
+  const codeblockService = new RpgManagerCodeblockService(
+    app,
+    api,
+    element.file,
+  );
 
-	const saveCaption = () => {
-		codeblockService.updateImage(image.path, caption).then(() => {
-			resetCurrentImage();
-		});
-	};
+  const saveCaption = () => {
+    codeblockService.updateImage(image.path, caption).then(() => {
+      resetCurrentImage();
+    });
+  };
 
-	const deleteImage = () => {
-		codeblockService.removeImage(image.path).then(() => {
-			resetCurrentImage();
-		});
-	};
+  const deleteImage = () => {
+    codeblockService.removeImage(image.path).then(() => {
+      resetCurrentImage();
+    });
+  };
 
-	return (
-		<div className="mt-3">
-			<div>
-				<a
-					href="#"
-					className="!no-underline cursor-pointer text-[--text-normal] hover:text-[--text-accent-hover]"
-					onClick={resetCurrentImage}
-				>
-					&lt; back
-				</a>
-			</div>
-			<div className="flex items-start">
-				<div className="flex items-start justify-start w-[350px] h-[350px]">
-					<img src={image.src} alt={caption} className="w-full h-auto object-contain rounded-lg" />
-				</div>
-				<div className="ml-3 w-full">
-					<div>
-						<h3 className="!text-xl !font-extralight">{t("gallery.caption")}</h3>
-						<div className="w-full">
-							<MarkdownEditorComponent
-								initialValue={caption}
-								onChange={setCaption}
-								campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
-								className="w-full"
-							/>
-						</div>
-						<div className="flex w-full justify-end">
-							<button className="rpgm-danger" onClick={deleteImage}>
-								{t("buttons.delete")}
-							</button>
-							<button className="rpgm-primary" onClick={saveCaption}>
-								{t("buttons.save")}
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="mt-3">
+      <div>
+        <a
+          href="#"
+          className="!no-underline cursor-pointer text-[--text-normal] hover:text-[--text-accent-hover]"
+          onClick={resetCurrentImage}
+        >
+          &lt; back
+        </a>
+      </div>
+      <div className="flex items-start">
+        <div className="flex items-start justify-start w-[350px] h-[350px]">
+          <img
+            src={image.src}
+            alt={caption}
+            className="w-full h-auto object-contain rounded-lg"
+          />
+        </div>
+        <div className="ml-3 w-full">
+          <div>
+            <h3 className="!text-xl !font-extralight">
+              {t("gallery.caption")}
+            </h3>
+            <div className="w-full">
+              <MarkdownEditorComponent
+                initialValue={caption}
+                onChange={setCaption}
+                campaign={
+                  element.type === ElementType.Campaign
+                    ? element
+                    : element.campaign
+                }
+                className="w-full"
+              />
+            </div>
+            <div className="flex w-full justify-end">
+              <button className="rpgm-danger" onClick={deleteImage}>
+                {t("buttons.delete")}
+              </button>
+              <button className="rpgm-primary" onClick={saveCaption}>
+                {t("buttons.save")}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

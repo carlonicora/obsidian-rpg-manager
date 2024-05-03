@@ -31,10 +31,10 @@ export default function CreationComponent({
   >(type);
   const [name, setName] = React.useState<string | undefined>(undefined);
   const [system, setSystem] = React.useState<SystemType | undefined>(undefined);
-  const [campaignPath, setCampaignPath] = React.useState<string | undefined>(
+  const [campaign, setCampaign] = React.useState<ElementInterface | undefined>(
     undefined,
   );
-  const [parentPath, setParentPath] = React.useState<string | undefined>(
+  const [parent, setParent] = React.useState<ElementInterface | undefined>(
     undefined,
   );
   const [positionInParent, setPositionInParent] = React.useState<
@@ -47,8 +47,8 @@ export default function CreationComponent({
     passedType: ElementType,
     passedName: string,
     passedSystem: SystemType,
-    passedCampaignPath?: string,
-    passedParentPath?: string,
+    passedCampaign?: ElementInterface,
+    passedParent?: ElementInterface,
     passedPositionInParent?: number,
     passedTemplate?: string,
   ): Promise<void> {
@@ -56,8 +56,8 @@ export default function CreationComponent({
       setSelectedType(passedType);
       setName(passedName);
       setSystem(passedSystem);
-      setCampaignPath(passedCampaignPath);
-      if (passedParentPath) setParentPath(passedParentPath);
+      setCampaign(passedCampaign);
+      if (passedParent) setParent(passedParent);
       if (passedPositionInParent) setPositionInParent(passedPositionInParent);
       if (passedTemplate) setTemplate(passedTemplate);
       setInWizard(true);
@@ -67,8 +67,8 @@ export default function CreationComponent({
         passedType,
         passedName,
         passedSystem,
-        passedCampaignPath,
-        passedParentPath,
+        passedCampaign,
+        passedParent,
         passedPositionInParent,
         passedTemplate,
       );
@@ -84,8 +84,8 @@ export default function CreationComponent({
     passedType?: ElementType,
     passedName?: string,
     passedSystem?: SystemType,
-    passedCampaignPath?: string,
-    passedParentPath?: string,
+    passedCampaign?: ElementInterface,
+    passedParent?: ElementInterface,
     passedPositionInParent?: number,
     passedTemplate?: string,
   ): Promise<void> {
@@ -95,8 +95,8 @@ export default function CreationComponent({
       passedType ?? selectedType,
       passedName ?? name,
       passedSystem ?? system,
-      passedCampaignPath ?? campaignPath,
-      passedParentPath ?? parentPath,
+      passedCampaign ?? campaign,
+      passedParent ?? parent,
       passedPositionInParent ?? positionInParent,
       attributes,
       undefined,
@@ -122,7 +122,7 @@ export default function CreationComponent({
         {
           element: undefined,
           name: name,
-          campaign: api.get(campaignPath) as ElementInterface,
+          campaign: campaign,
           close: undefined,
           returnData: setData,
         },

@@ -23,7 +23,7 @@ export default function RelationshipListComponent({
     (relationship: RelationshipInterface) =>
       relationship.component !== undefined &&
       relationship.component.type === type &&
-      relationship.component.path !== element.path,
+      relationship.component.id !== element.id,
   );
 
   if (relationships === undefined || relationships.length === 0) return null;
@@ -37,7 +37,7 @@ export default function RelationshipListComponent({
           relationship.component.relationships.find(
             (rel: RelationshipInterface) =>
               rel.component !== undefined &&
-              rel.component.path === element.path &&
+              rel.component.id === element.id &&
               rel.type === RelationshipType.Child,
           )),
     );
@@ -50,7 +50,7 @@ export default function RelationshipListComponent({
           relationship.component.relationships.find(
             (rel: RelationshipInterface) =>
               rel.component !== undefined &&
-              rel.component.path === element.path &&
+              rel.component.id === element.id &&
               rel.type === RelationshipType.Parent,
           )),
     );
@@ -71,7 +71,7 @@ export default function RelationshipListComponent({
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3">
         {relationships.map((relationship: RelationshipInterface) => (
           <RelationshipComponent
-            key={relationship.component.file.path}
+            key={relationship.component.id}
             element={element}
             relationship={relationship}
           />

@@ -17,7 +17,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
     private _app: App,
     private _api: RpgManagerInterface,
     private _element?: ElementInterface | undefined,
-    private _campaignPath?: string | undefined,
+    private _campaign?: ElementInterface | undefined,
     private _typeLimit?: ElementType[] | undefined,
     private _callback?: (relationship: string, params?: any) => void,
     private _params?: any,
@@ -32,7 +32,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
     if (response.length === 0) {
       const searchableElement: SearchableElementInterface = {
         name: query,
-        path: "",
+        id: "",
         type: ElementType.Campaign,
       };
       response.push({
@@ -47,29 +47,27 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
   getItems(): SearchableElementInterface[] {
     let allCampaignElements: ElementInterface[];
 
-    if (!this._element?.campaign && !this._campaignPath) {
-      allCampaignElements = this._api.get(
-        undefined,
-        null,
-      ) as ElementInterface[];
+    if (!this._element?.campaign && !this._campaign) {
+      allCampaignElements = this._api.get({
+        campaign: null,
+      }) as ElementInterface[];
     } else {
       if (this._element !== undefined) {
-        allCampaignElements = this._api.get(
-          undefined,
-          this._element.campaign ?? this._element,
-        ) as ElementInterface[];
-      } else if (this._campaignPath !== undefined) {
-        const campaign: ElementInterface = this._api.get(
-          this._campaignPath,
-        ) as ElementInterface;
-        allCampaignElements = this._api.get(
-          undefined,
-          campaign,
-        ) as ElementInterface[];
+        allCampaignElements = this._api.get({
+          campaign: this._element.campaign ?? this._element,
+        }) as ElementInterface[];
+      } else if (this._campaign !== undefined) {
+        const campaign: ElementInterface = this._api.get({
+          id: this._campaign.id,
+        }) as ElementInterface;
+        allCampaignElements = this._api.get({
+          campaign: campaign,
+        }) as ElementInterface[];
       }
 
-      const globalElements: ElementInterface[] =
-        this._api.get() as ElementInterface[];
+      const globalElements: ElementInterface[] = this._api.get(
+        {},
+      ) as ElementInterface[];
       allCampaignElements = allCampaignElements.concat(globalElements);
     }
 
@@ -87,15 +85,15 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 
     const relatedPaths: string[] = this._element
       ? this._element.relationships.map(
-          (relationship: RelationshipInterface) => relationship.path,
+          (relationship: RelationshipInterface) => relationship.id,
         )
       : [];
 
     const elementResponse: ElementInterface[] = allCampaignElements.filter(
       (element: ElementInterface) =>
         this._callback ||
-        (!relatedPaths.includes(element.path) &&
-          element.path !== this._element?.path &&
+        (!relatedPaths.includes(element.id) &&
+          element.id !== this._element?.id &&
           element.type !== ElementType.Campaign),
     );
 
@@ -104,7 +102,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
     elementResponse.forEach((element: ElementInterface) => {
       const searchableElement: SearchableElementInterface = {
         name: element.name,
-        path: element.path,
+        id: element.id,
         type: element.type,
         image: element.images[0] ?? undefined,
         campaignName: element.campaign?.name ?? undefined,
@@ -119,7 +117,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
         element.aliases.forEach((alias: string) => {
           const searchableElementAlias: SearchableElementInterface = {
             name: element.name,
-            path: element.path,
+            id: element.id,
             type: element.type,
             alias: alias,
             image: element.images[0] ?? undefined,
@@ -130,10 +128,10 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
       }
     });
 
-    if (this._element !== undefined || this._campaignPath !== undefined)
+    if (this._element !== undefined || this._campaign !== undefined)
       response.push({
         name: "All player characters",
-        path: "all-player-characters",
+        id: "all-player-characters",
         type: ElementType.PlayerCharacter,
       } as SearchableElementInterface);
 
@@ -145,7 +143,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
       element.alias ||
       (element.name ? `${element.name} ${element.type}` : undefined) ||
       element.type ||
-      element.path
+      element.id
     );
   }
 
@@ -156,7 +154,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
     const root: Root = createRoot(el);
     let reactComponent: React.ReactElement;
 
-    if (item.item.path === "") {
+    if (item.item.id === "") {
       reactComponent = createElement(FuzzyNewElementComponent, {
         name: item.item.name,
       });
@@ -164,7 +162,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
       reactComponent = createElement(FuzzySearchResult, {
         searchableElement: item.item as SearchableElementInterface,
         hasCampaign:
-          this._element !== undefined || this._campaignPath !== undefined,
+          this._element !== undefined || this._campaign !== undefined,
       });
     }
     root.render(reactComponent);
@@ -174,7 +172,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
     found: SearchableElementInterface,
     evt: MouseEvent | KeyboardEvent,
   ) {
-    if (found.path === "") {
+    if (found.id === "") {
       await this._app.vault.create(found.name + ".md", "");
       if (this._callback) {
         this._callback(
@@ -187,12 +185,12 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
     }
 
     if (this._callback) {
-      const foundElement: ElementInterface = this._api.get(
-        found.path,
-      ) as ElementInterface;
+      const foundElement: ElementInterface = this._api.get({
+        id: found.id,
+      }) as ElementInterface;
 
       const alias = "|" + (found?.alias ?? foundElement.name);
-      const response = "[[" + foundElement.path + alias + "]]";
+      const response = "[[@" + foundElement.id + alias + "]]";
 
       this._callback(response, this._params);
     } else if (this._element) {
@@ -202,12 +200,11 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
           this._api,
           this._element.file,
         );
-      if (found.path === "all-player-characters") {
-        const allPlayerCharacters: ElementInterface[] = this._api.get(
-          undefined,
-          this._element.campaign,
-          ElementType.PlayerCharacter,
-        ) as ElementInterface[];
+      if (found.id === "all-player-characters") {
+        const allPlayerCharacters: ElementInterface[] = this._api.get({
+          campaign: this._element.campaign,
+          type: ElementType.PlayerCharacter,
+        }) as ElementInterface[];
 
         if (allPlayerCharacters.length === 0) return;
 
@@ -215,7 +212,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
           (playerCharacter: ElementInterface) => {
             return RelationshipFactory.createFromContent(
               RelationshipType.Bidirectional,
-              playerCharacter.path,
+              playerCharacter.id,
             );
           },
         );
@@ -224,7 +221,7 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
       } else {
         const relationship = RelationshipFactory.createFromContent(
           RelationshipType.Bidirectional,
-          found.path,
+          found.id,
         );
         rpgmCodeblock.addRelationship(relationship);
       }

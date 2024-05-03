@@ -86,12 +86,12 @@ export class RpgManagerCodeblockService {
         const existingRelationship: RelationshipInterface | undefined =
           codeblock.relationships.find(
             (existingRelationship: RelationshipInterface) =>
-              existingRelationship.path === relationship.path,
+              existingRelationship.id === relationship.id,
           );
         if (existingRelationship === undefined) {
           codeblock.relationships.push({
             type: relationship.type,
-            path: relationship.path,
+            id: relationship.id,
           });
         } else {
           existingRelationship.type = relationship.type;
@@ -144,7 +144,7 @@ export class RpgManagerCodeblockService {
   //   const relationshipsToAdd: string[] = relationshipsNotInContent.map(
   //     (relationship: RelationshipInterface) => {
   //       if (relationship.component === undefined) return undefined;
-  //       return "[[" + relationship.component.path + "|]]";
+  //       return "[[" + relationship.component.id + "|]]";
   //     },
   //   );
 
@@ -337,14 +337,14 @@ export class RpgManagerCodeblockService {
       codeblock.relationships = [];
     } else {
       existingRelationship = codeblock.relationships.find(
-        (rel: any) => rel.path === relationship.path,
+        (rel: any) => rel.id === relationship.id,
       );
     }
 
     if (existingRelationship === undefined) {
       existingRelationship = {
         type: relationship.type,
-        path: relationship.path,
+        id: relationship.id,
         description: relationship.description,
       };
       codeblock.relationships.push(existingRelationship);
@@ -481,8 +481,6 @@ export class RpgManagerCodeblockService {
       newCodeblockContent,
     );
 
-    //content = content.replaceAll("[[" + oldPath + "|]]", "[[" + toFile.path + "|]]");
-
     this._modifyFileContent(content);
   }
 
@@ -512,7 +510,7 @@ export class RpgManagerCodeblockService {
 
     const minimalRelationship: any = {
       type: relationship.type,
-      path: relationship.path,
+      id: relationship.id,
     };
 
     codeblock.relationships.push(minimalRelationship);
@@ -535,13 +533,13 @@ export class RpgManagerCodeblockService {
       const foundRelationship: RelationshipInterface | undefined =
         codeblock.relationships.find(
           (foundRelationship: RelationshipInterface) =>
-            foundRelationship.path === relationship.path,
+            foundRelationship.id === relationship.id,
         );
       if (foundRelationship !== undefined) return;
 
       const minimalRelationship: any = {
         type: relationship.type,
-        path: relationship.path,
+        id: relationship.id,
       };
       codeblock.relationships.push(minimalRelationship);
     });
@@ -567,15 +565,14 @@ export class RpgManagerCodeblockService {
 
     codeblock.relationships = codeblock.relationships.filter(
       (minimalRelationship: any) =>
-        minimalRelationship.path !== relatedElement.file.path,
+        minimalRelationship.id !== relatedElement.id,
     );
 
     const yamlService: YamlService = new YamlService();
     const codeblockContent: string = yamlService.stringify(codeblock);
 
     relatedElement.relationships = relatedElement.relationships.filter(
-      (relationship: RelationshipInterface) =>
-        relationship.path !== element.file.path,
+      (relationship: RelationshipInterface) => relationship.id !== element.id,
     );
 
     this._modifyFileContent(
@@ -624,7 +621,7 @@ export class RpgManagerCodeblockService {
       const existingRelationship: RelationshipInterface | undefined =
         response.find(
           (existingRelationship: RelationshipInterface) =>
-            existingRelationship.path === relationship.path,
+            existingRelationship.id === relationship.id,
         );
       if (existingRelationship === undefined) {
         response.push(relationship);
@@ -644,7 +641,8 @@ export class RpgManagerCodeblockService {
     const response: RelationshipInterface[] = [];
 
     if (isInCodeblock) {
-      const regex = /"([^"]+\.md)"/g;
+      // const regex = /"([^"]+\.md)"/g;
+      const regex = /\[\[@([^|\]]+)(?:\||\]\])/g;
       let match;
 
       while ((match = regex.exec(content)) !== null) {
@@ -685,25 +683,31 @@ export class RpgManagerCodeblockService {
           .getFiles()
           .find((file) => file.basename === basename || file.path === basename);
 
+        const element: ElementInterface | undefined =
+          matchingFile !== undefined
+            ? (this._api.get({
+                path: matchingFile.path,
+              }) as ElementInterface | undefined)
+            : undefined;
+
         if (
-          matchingFile !== undefined &&
-          response.find(
-            (relationship: RelationshipInterface) =>
-              relationship.path === matchingFile.path,
-          ) === undefined
+          element !== undefined &&
+          response.find((relationship: RelationshipInterface) => {
+            return element !== undefined && relationship.id === element.id;
+          }) === undefined
         ) {
           if (isInCodeblock) {
             response.push(
               RelationshipFactory.createFromCodeblock(
                 RelationshipType.Bidirectional,
-                matchingFile.path,
+                element.id,
               ),
             );
           } else {
             response.push(
               RelationshipFactory.createFromContent(
                 RelationshipType.Bidirectional,
-                matchingFile.path,
+                element.id,
               ),
             );
           }

@@ -54,11 +54,11 @@ export class ElementFactory {
       await codeblockService.readInContentRelationships();
 
     relationships.forEach((relationship: RelationshipInterface) => {
-      if (relationship.path === response.path) return;
+      if (relationship.id === response.id) return;
       const existingRelationship: RelationshipInterface | undefined =
         response.relationships.find(
           (existingRelationship: RelationshipInterface) =>
-            existingRelationship.path === relationship.path,
+            existingRelationship.id === relationship.id,
         );
       if (existingRelationship === undefined) {
         response.relationships.push(relationship);
@@ -104,7 +104,7 @@ export class ElementFactory {
         const foundRelationship: RelationshipInterface | undefined =
           element.relationships.find(
             (relationship: RelationshipInterface) =>
-              relationship.path === relationshipDefinition.path,
+              relationship.id === relationshipDefinition.id,
           );
 
         if (foundRelationship === undefined) {
@@ -133,7 +133,7 @@ export class ElementFactory {
       const existingRelationship: RelationshipInterface | undefined =
         element.relationships.find(
           (existingRelationship: RelationshipInterface) =>
-            existingRelationship.path === relationship.path,
+            existingRelationship.id === relationship.id,
         );
       if (existingRelationship === undefined) {
         areRelationshipChanged = true;
@@ -156,42 +156,42 @@ export class ElementFactory {
         .filter(
           (relationship: RelationshipInterface) => relationship.isInContent,
         )
-        .map((r) => r.path),
+        .map((r) => r.id),
     );
 
-    const pathsToRemove = new Set(
+    const idsToRemove = new Set(
       existingRelationships
-        .filter((r) => !inContentRelationshipPaths.has(r.path))
-        .map((r: RelationshipInterface) => r.path),
+        .filter((r) => !inContentRelationshipPaths.has(r.id))
+        .map((r: RelationshipInterface) => r.id),
     );
     element.relationships = element.relationships.filter(
       (relationship) =>
         relationship.type === RelationshipType.Reversed ||
-        !pathsToRemove.has(relationship.path),
+        !idsToRemove.has(relationship.id),
     );
 
     const allExistingRelationships = new Set(
-      relationships.map((r: RelationshipInterface) => r.path),
+      relationships.map((r: RelationshipInterface) => r.id),
     );
     if (
       rpgManagerBlock.relationships !== undefined &&
       rpgManagerBlock.relationships.length > 0
     ) {
       rpgManagerBlock.relationships.forEach((relationshipDefinition: any) =>
-        allExistingRelationships.add(relationshipDefinition.path),
+        allExistingRelationships.add(relationshipDefinition.id),
       );
     }
 
     const relationshipsToBeRemoved = element.relationships.filter(
       (relationship: RelationshipInterface) =>
         relationship.type !== RelationshipType.Reversed &&
-        !allExistingRelationships.has(relationship.path),
+        !allExistingRelationships.has(relationship.id),
     );
 
     if (relationshipsToBeRemoved.length !== 0) {
       element.relationships = element.relationships.filter(
         (relationship: RelationshipInterface) =>
-          allExistingRelationships.has(relationship.path),
+          allExistingRelationships.has(relationship.id),
       );
       areRelationshipChanged = true;
     }
@@ -203,33 +203,28 @@ export class ElementFactory {
     element: ElementInterface,
     elements: ElementInterface[],
   ): void {
-    if (element.campaign === undefined && element.campaignPath !== undefined)
+    if (element.campaign === undefined && element.campaignId !== undefined)
       element.campaign = elements.find(
-        (elementInList: ElementInterface) =>
-          elementInList.path === element.campaignPath,
+        (elementInList: ElementInterface) => elementInList.id === element.id,
       );
 
-    if (
-      element.parent === undefined ||
-      (element.parentPath !== undefined &&
-        element.parent.file.path !== element.parentPath)
-    )
+    if (element.parent === undefined || element.parentId !== undefined)
       element.parent = elements.find(
         (elementInList: ElementInterface) =>
-          elementInList.path === element.parentPath,
+          elementInList.id === element.parentId,
       );
 
     element.relationships.forEach((relationship: RelationshipInterface) => {
       const targetElement: ElementInterface | undefined = elements.find(
-        (element: ElementInterface) => element.path === relationship.path,
+        (element: ElementInterface) => element.id === relationship.id,
       );
-      if (targetElement !== undefined && targetElement.path !== element.path) {
+      if (targetElement !== undefined && targetElement.id !== element.id) {
         relationship.component = targetElement;
 
         const reverseRelationship: RelationshipInterface | undefined =
           targetElement.relationships.find(
             (relationship: RelationshipInterface) =>
-              relationship.path === element.path,
+              relationship.id === element.id,
           );
 
         if (reverseRelationship === undefined) {
@@ -260,12 +255,12 @@ export class ElementFactory {
       const reverseRelationship: RelationshipInterface | undefined =
         elementInList.relationships.find(
           (relationship: RelationshipInterface) =>
-            relationship.path === element.path,
+            relationship.id === element.id,
         );
       const existingRelationship: RelationshipInterface | undefined =
         element.relationships.find(
           (relationship: RelationshipInterface) =>
-            relationship.path === elementInList.path,
+            relationship.id === elementInList.id,
         );
 
       if (
@@ -291,7 +286,7 @@ export class ElementFactory {
         if (
           relatedElement.relationships.some(
             (relationship: RelationshipInterface) =>
-              relationship.path === element.path,
+              relationship.id === element.id,
           )
         )
           relatedElement.touch();
@@ -304,7 +299,7 @@ export class ElementFactory {
   // 	file: TFile,
   // 	elements: ElementInterface[]
   // ): Promise<void> {
-  // 	const element: ElementInterface = elements.find((element: ElementInterface) => element.path === file.path);
+  // 	const element: ElementInterface = elements.find((element: ElementInterface) => element.id === file.id);
   // 	if (!element || !element.relationships || element.relationships.length === 0) return;
 
   // 	const codeblockService = new RpgManagerCodeblockService(app, api, file);

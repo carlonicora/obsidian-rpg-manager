@@ -13,7 +13,6 @@ const path = require("path");
 export class FileCreationService {
   private _rpgManagerCodeBlock: string;
   private _codeblock: any;
-  private _campaign: ElementInterface | undefined;
 
   constructor(
     private _app: App,
@@ -21,8 +20,8 @@ export class FileCreationService {
     private _type: ElementType,
     private _name: string,
     system?: SystemType,
-    private _campaignPath?: string,
-    private _parentPath?: string,
+    private _campaign?: ElementInterface,
+    private _parent?: ElementInterface,
     positionInParent?: number,
     attributes?: any[],
     relationships?: RelationshipInterface[],
@@ -35,17 +34,12 @@ export class FileCreationService {
 
     if (system !== undefined && system !== SystemType.Agnostic)
       id.system = SystemType.Agnostic;
-    if (this._campaignPath !== undefined) id.campaign = this._campaignPath;
-    if (this._parentPath !== undefined) id.parent = this._parentPath;
+    if (this._campaign !== undefined) id.campaign = this._campaign.id;
+    if (this._parent !== undefined) id.parent = this._parent.id;
     if (positionInParent !== undefined) id.positionInParent = positionInParent;
 
-    if (this._campaignPath !== undefined) {
-      this._campaign = this._api.get(this._campaignPath) as
-        | ElementInterface
-        | undefined;
-      if (this._campaign !== undefined)
-        system = this._campaign.system ?? SystemType.Agnostic;
-    }
+    if (this._campaign !== undefined)
+      system = this._campaign.system ?? SystemType.Agnostic;
 
     this._codeblock = {
       id: id,
@@ -68,7 +62,7 @@ export class FileCreationService {
       relationships.forEach((relationship: RelationshipInterface) => {
         this._codeblock.relationships.push({
           type: relationship.type,
-          path: relationship.path,
+          id: relationship.id,
         });
       });
     }
@@ -132,24 +126,15 @@ export class FileCreationService {
 
       return response + pathSeparator + this._name + ".md";
     } else if (
-      this._campaignPath !== undefined &&
+      this._campaign !== undefined &&
       this._api.settings.automaticMove === false
     ) {
-      const campaign: ElementInterface = this._api.get(
-        this._campaignPath,
-      ) as ElementInterface;
-
-      return campaign.file.parent.path + pathSeparator + this._name + ".md";
-    } else if (this._campaignPath === undefined) {
+      this._campaign.file.parent.path + pathSeparator + this._name + ".md";
+    } else if (this._campaign === undefined) {
       response = "Assets";
     } else {
       response += pathSeparator + this._campaign.name;
     }
-
-    const parent: ElementInterface | undefined =
-      this._parentPath !== undefined
-        ? (this._api.get(this._parentPath) as ElementInterface)
-        : undefined;
 
     switch (this._type) {
       case ElementType.Adventure:
@@ -163,7 +148,7 @@ export class FileCreationService {
           pathSeparator +
           "01. Adventures" +
           pathSeparator +
-          parent.name +
+          this._parent.name +
           pathSeparator +
           "Chapters";
         this._createFolder(response);
@@ -179,7 +164,7 @@ export class FileCreationService {
           pathSeparator +
           "02. Sessions" +
           pathSeparator +
-          parent.name +
+          this._parent.name +
           pathSeparator +
           "Scenes";
         this._createFolder(response);

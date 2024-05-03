@@ -64,7 +64,7 @@ export class PluginServices {
     (rpgm as unknown as Plugin).registerEvent(
       app.metadataCache.on("resolve", (file: TFile) => {
         const element: ElementInterface | ElementInterface[] | undefined =
-          rpgm.get(file.path);
+          rpgm.get({ path: file.path });
         if (element === undefined || Array.isArray(element)) {
           DatabaseFactory.add(app, rpgm, database, file).then(
             (elements: ElementInterface[]) => {
@@ -95,7 +95,7 @@ export class PluginServices {
     (rpgm as unknown as Plugin).registerEvent(
       app.vault.on("rename", (file: TFile, oldPath: string) => {
         const element: ElementInterface | ElementInterface[] | undefined =
-          rpgm.get(file.path);
+          rpgm.get({ path: file.path });
 
         if (element === undefined || Array.isArray(element)) return;
 

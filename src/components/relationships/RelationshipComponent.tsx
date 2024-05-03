@@ -44,14 +44,14 @@ export default function RelationshipComponent({
   let campaign = undefined;
 
   if (element.type !== ElementType.Campaign && element.campaign === undefined)
-    campaign = relationship.component?.campaign?.path;
+    campaign = relationship.component?.campaign?.id;
 
-  let isGeneric = false;
-  if (
-    relationship.component.type !== ElementType.Campaign &&
-    !relationship.component.campaign
-  )
-    isGeneric = true;
+  // let isGeneric = false;
+  // if (
+  //   relationship.component.type !== ElementType.Campaign &&
+  //   !relationship.component.campaign
+  // )
+  //   isGeneric = true;
 
   return (
     <div className="border border-[--background-modifier-border] rounded-lg flex flex-col">
@@ -96,11 +96,11 @@ export default function RelationshipComponent({
         </div>
       )}
 
-      {isGeneric && (
+      {/* {isGeneric && (
         <div className="flex justify-center -mt-2 mb-2!text-[--text-muted] text-xs italic">
           {t("global")}
         </div>
-      )}
+      )} */}
 
       <div className="flex p-2">
         <RelationshipDescriptionComponent

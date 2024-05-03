@@ -12,69 +12,84 @@ import { ElementInterface } from "../data/interfaces/ElementInterface";
 type ElementProps = { element: ElementInterface; isInPopover: boolean };
 
 export class Controller extends MarkdownRenderChild {
-	private _components: Map<SystemType, Map<ElementType, React.FC>> = new Map<SystemType, Map<ElementType, React.FC>>([
-		[SystemType.Agnostic, agnosticComponents],
-	]);
+  private _components: Map<SystemType, Map<ElementType, React.FC>> = new Map<
+    SystemType,
+    Map<ElementType, React.FC>
+  >([[SystemType.Agnostic, agnosticComponents]]);
 
-	private _root: Root | undefined = undefined;
-	private _source: any = {};
-	private _element: ElementInterface | undefined = undefined;
+  private _root: Root | undefined = undefined;
+  private _source: any = {};
+  private _element: ElementInterface | undefined = undefined;
 
-	constructor(
-		private _app: App | undefined,
-		private _api: RpgManagerInterface | undefined,
-		private _path: string,
-		container: HTMLElement,
-		source: string
-	) {
-		super(container);
+  constructor(
+    private _app: App | undefined,
+    private _api: RpgManagerInterface | undefined,
+    private _path: string,
+    container: HTMLElement,
+    source: string,
+  ) {
+    super(container);
 
-		this._source = parseYaml(source);
-		this._root = createRoot(this.containerEl);
+    this._source = parseYaml(source);
+    this._root = createRoot(this.containerEl);
 
-		this.registerEvent(this._app.workspace.on("rpgmanager:refresh-views", this._render.bind(this)));
-	}
+    this.registerEvent(
+      this._app.workspace.on(
+        "rpgmanager:refresh-views",
+        this._render.bind(this),
+      ),
+    );
+  }
 
-	private _render() {
-		if (this._element === undefined) this._element = this._api.get(this._path) as ElementInterface | undefined;
+  private _render() {
+    if (this._element === undefined)
+      this._element = this._api.get({ path: this._path }) as
+        | ElementInterface
+        | undefined;
 
-		if (!this._element || this._root === undefined) return;
+    if (!this._element || this._root === undefined) return;
 
-		this._path = this._element.path;
+    this._path = this._element.path;
 
-		const component: React.FC | undefined = this._components.get(this._element.system)?.get(this._element.type);
+    const component: React.FC | undefined = this._components
+      .get(this._element.system)
+      ?.get(this._element.type);
 
-		if (!component) return;
+    if (!component) return;
 
-		let isInPopover = false;
-		setTimeout(() => {
-			let currentElement = this.containerEl;
-			while (currentElement) {
-				if (currentElement.classList.contains("popover")) {
-					isInPopover = true;
-					break;
-				}
-				currentElement = currentElement.parentElement;
-			}
+    let isInPopover = false;
+    setTimeout(() => {
+      let currentElement = this.containerEl;
+      while (currentElement) {
+        if (currentElement.classList.contains("popover")) {
+          isInPopover = true;
+          break;
+        }
+        currentElement = currentElement.parentElement;
+      }
 
-			const elementComponent = createElement<ElementProps>(component, {
-				element: this._element,
-				isInPopover: isInPopover,
-				key: this._element.version.toString(),
-			});
-			const reactComponent = createElement(
-				AppContext.Provider,
-				{ value: this._app },
-				createElement(ApiContext.Provider, { value: this._api }, elementComponent)
-			);
+      const elementComponent = createElement<ElementProps>(component, {
+        element: this._element,
+        isInPopover: isInPopover,
+        key: this._element.version.toString(),
+      });
+      const reactComponent = createElement(
+        AppContext.Provider,
+        { value: this._app },
+        createElement(
+          ApiContext.Provider,
+          { value: this._api },
+          elementComponent,
+        ),
+      );
 
-			this._root.render(reactComponent);
-		}, 0);
-	}
+      this._root.render(reactComponent);
+    }, 0);
+  }
 
-	onload() {
-		super.onload();
+  onload() {
+    super.onload();
 
-		this._render();
-	}
+    this._render();
+  }
 }

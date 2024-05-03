@@ -14,10 +14,10 @@ export interface ElementInterface {
   get file(): TFile;
   get type(): ElementType;
   get system(): SystemType;
-  get campaignPath(): string | undefined;
+  get campaignId(): string | undefined;
   get campaign(): ElementInterface | undefined;
   set campaign(value: ElementInterface);
-  get parentPath(): string | undefined;
+  get parentId(): string | undefined;
   get parent(): ElementInterface | undefined;
   set parent(value: ElementInterface);
   get positionInParent(): number | undefined;

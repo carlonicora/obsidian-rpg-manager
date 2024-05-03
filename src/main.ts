@@ -1,7 +1,6 @@
 import { Plugin, addIcon } from "obsidian";
 
-import { RpgManagerInterface } from "./RpgManagerInterface";
-import { ElementType } from "./data/enums/ElementType";
+import { QueryOptions, RpgManagerInterface } from "./RpgManagerInterface";
 import { ElementInterface } from "./data/interfaces/ElementInterface";
 import { DatabaseFactory } from "./factories/DatabaseFactory";
 import { ServiceFactory } from "./factories/ServiceFactory";
@@ -39,50 +38,52 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
    * @param parent	Limits the results to the children of the specified element.
    * @returns 		ElementInterface | ElementInterface[] | undefined
    */
-  get(
-    path?: string,
-    campaign?: ElementInterface,
-    type?: ElementType,
-    parent?: ElementInterface,
-  ): ElementInterface | ElementInterface[] | undefined {
+  get(query: QueryOptions): ElementInterface | ElementInterface[] | undefined {
     if (this._database === undefined) return undefined;
 
-    if (!path && !campaign && !parent) {
+    if (query.id)
+      return this._database.find((element) => element.id === query.id);
+
+    if (!query.path && !query.campaign && !query.parent) {
       let all: ElementInterface[] = [];
 
-      if (campaign === undefined) {
+      if (query.campaign === undefined) {
         all = this._database.filter(
           (element: ElementInterface) => element.campaign === undefined,
         );
-      } else if (campaign === null) {
+      } else if (query.campaign === null) {
         all = this._database;
       }
 
-      if (!type) return all;
+      if (!query.type) return all;
 
       return all.filter(
         (element: ElementInterface) =>
-          element.campaign === undefined && element.type === type,
+          element.campaign === undefined && element.type === query.type,
       );
     }
 
     const matchesPath = (element: ElementInterface) =>
-      path === undefined || element.path === path;
+      query.path === undefined || element.path === query.path;
     const matchesCampaign = (element: ElementInterface) =>
-      campaign === undefined ||
-      element.path === campaign.path ||
-      element.campaignPath === campaign.path;
+      query.campaign === undefined ||
+      element.path === query.campaign.path ||
+      element.campaignId === query.campaign.id;
 
-    if (path !== undefined) return this._database.find(matchesPath);
+    if (query.path !== undefined) return this._database.find(matchesPath);
 
-    if (path === undefined && type === undefined && parent === undefined) {
+    if (
+      query.path === undefined &&
+      query.type === undefined &&
+      query.parent === undefined
+    ) {
       return this._database.filter(matchesCampaign);
     }
 
     const matchesType = (element: ElementInterface) =>
-      type === undefined || element.type === type;
+      query.type === undefined || element.type === query.type;
     const matchesParent = (element: ElementInterface) =>
-      parent === undefined || element.parentPath === parent.path;
+      query.parent === undefined || element.parentId === query.parent.id;
 
     const isMatchingElement = (element: ElementInterface) =>
       matchesCampaign(element) &&

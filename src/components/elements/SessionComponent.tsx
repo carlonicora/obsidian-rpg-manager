@@ -78,7 +78,7 @@ export default function SessionComponent({
           </div>
         )}
         <HierarchyComponent
-          key={element.path + !isInPopover}
+          key={element.id + !isInPopover}
           element={element}
           isInPopover={isInPopover}
           type={ElementType.Scene}
