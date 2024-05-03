@@ -234,6 +234,7 @@ function EditableAttribute({
             className="min-h-[2em] w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
             campaign={campaign}
             onChange={setSubAttributeValue}
+            onBlur={() => setSubAttributeValue(attribute.value[subAttribute])}
             initialValue={attribute.value[subAttribute]}
           />
         ) : (

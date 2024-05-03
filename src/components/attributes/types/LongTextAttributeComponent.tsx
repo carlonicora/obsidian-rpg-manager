@@ -70,6 +70,7 @@ export default function LongTextAttributeComponent({
               element.type === ElementType.Campaign ? element : element.campaign
             }
             onChange={setValue}
+            onBlur={() => saveAttribute(value)}
             className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
           />
         </div>

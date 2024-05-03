@@ -63,6 +63,7 @@ export default function DescriptionAttributeComponent({
               element.type === ElementType.Campaign ? element : element.campaign
             }
             onChange={setDescription}
+            onBlur={() => updateDescription(description)}
             className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
           />
         </div>

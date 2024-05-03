@@ -150,6 +150,7 @@ export default function RelationshipDescriptionComponent({
                   : element.campaign
               }
               onChange={updateRelationship}
+              onBlur={() => updateRelationship(value)}
               className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
             />
           </div>

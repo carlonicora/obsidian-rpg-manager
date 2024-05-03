@@ -42,6 +42,7 @@ export default function NonPlayerCharacterWizardDescriptionStepComponent({
           initialValue={wizardData.description}
           campaign={campaign}
           onChange={updateDescription}
+          onBlur={updateDescription}
           className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
         />
       </div>

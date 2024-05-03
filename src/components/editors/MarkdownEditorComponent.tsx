@@ -58,6 +58,7 @@ export default function MarkdownEditorComponent({
   };
 
   const handleNewRelationship = () => {
+    setShowRelationshipModal(true);
     const relationshipModal = new NewRelationshipController(
       app,
       api,

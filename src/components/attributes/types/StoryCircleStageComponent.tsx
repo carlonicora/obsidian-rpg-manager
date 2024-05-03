@@ -71,6 +71,7 @@ export default function StoryCircleStageComponent({
                   : element.campaign
               }
               onChange={setValue}
+              onBlur={() => saveStage(value)}
               className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
             />
           </div>

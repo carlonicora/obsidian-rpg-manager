@@ -181,6 +181,7 @@ function EditComponent({
               key={"sight:" + sight}
               initialValue={sight}
               onChange={handleSightChange}
+              onBlur={() => handleSightChange(sight)}
               className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
               campaign={
                 element.type === ElementType.Campaign
@@ -199,6 +200,7 @@ function EditComponent({
               key={"hear:" + hear}
               initialValue={hear}
               onChange={handleHearChange}
+              onBlur={() => handleHearChange(hear)}
               className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
               campaign={
                 element.type === ElementType.Campaign
@@ -217,6 +219,7 @@ function EditComponent({
               key={"smell:" + smell}
               initialValue={smell}
               onChange={handleSmellChange}
+              onBlur={() => handleSmellChange(smell)}
               className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
               campaign={
                 element.type === ElementType.Campaign
@@ -235,6 +238,7 @@ function EditComponent({
               key={"touch:" + touch}
               initialValue={touch}
               onChange={handleTouchChange}
+              onBlur={() => handleTouchChange(touch)}
               className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
               campaign={
                 element.type === ElementType.Campaign
@@ -253,6 +257,7 @@ function EditComponent({
               key={"taste:" + taste}
               initialValue={taste}
               onChange={handleTasteChange}
+              onBlur={() => handleTasteChange(taste)}
               className="!p-1 m-0 border rounded-md !border-solid !border-[--background-modifier-border] bg-[--background-modifier-form-field] min-w-full min-h[100px] text-xs"
               campaign={
                 element.type === ElementType.Campaign

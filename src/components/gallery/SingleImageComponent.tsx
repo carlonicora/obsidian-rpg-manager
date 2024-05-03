@@ -71,6 +71,7 @@ export default function SingleImageComponent({
               <MarkdownEditorComponent
                 initialValue={caption}
                 onChange={setCaption}
+                onBlur={saveCaption}
                 campaign={
                   element.type === ElementType.Campaign
                     ? element

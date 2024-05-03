@@ -64,6 +64,7 @@ export default function NonPlayerCharacterWizardGhostStepComponent({
           initialValue={ghost}
           campaign={campaign}
           onChange={updateGhost}
+          onBlur={updateGhost}
           className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] rounded-md"
         />
       </div>
