@@ -13,169 +13,221 @@ import { RelationshipFactory } from "src/factories/RelationshipFactory";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
 
 export class NewRelationshipController extends FuzzySuggestModal<SearchableElementInterface> {
-	constructor(
-		private _app: App,
-		private _api: RpgManagerInterface,
-		private _element?: ElementInterface | undefined,
-		private _campaignPath?: string | undefined,
-		private _typeLimit?: ElementType[] | undefined,
-		private _callback?: (relationship: string, params?: any) => void,
-		private _params?: any
-	) {
-		super(_app);
-	}
+  constructor(
+    private _app: App,
+    private _api: RpgManagerInterface,
+    private _element?: ElementInterface | undefined,
+    private _campaignPath?: string | undefined,
+    private _typeLimit?: ElementType[] | undefined,
+    private _callback?: (relationship: string, params?: any) => void,
+    private _params?: any,
+  ) {
+    super(_app);
+  }
 
-	getSuggestions(query: string): FuzzyMatch<SearchableElementInterface>[] {
-		const response: FuzzyMatch<SearchableElementInterface>[] = super.getSuggestions(query);
+  getSuggestions(query: string): FuzzyMatch<SearchableElementInterface>[] {
+    const response: FuzzyMatch<SearchableElementInterface>[] =
+      super.getSuggestions(query);
 
-		if (response.length === 0) {
-			const searchableElement: SearchableElementInterface = {
-				name: query,
-				path: "",
-				type: ElementType.Campaign,
-			};
-			response.push({ item: searchableElement, match: { score: 1, matches: [] } });
-		}
+    if (response.length === 0) {
+      const searchableElement: SearchableElementInterface = {
+        name: query,
+        path: "",
+        type: ElementType.Campaign,
+      };
+      response.push({
+        item: searchableElement,
+        match: { score: 1, matches: [] },
+      });
+    }
 
-		return response;
-	}
+    return response;
+  }
 
-	getItems(): SearchableElementInterface[] {
-		let allCampaignElements: ElementInterface[];
+  getItems(): SearchableElementInterface[] {
+    let allCampaignElements: ElementInterface[];
 
-		if (!this._element?.campaign && !this._campaignPath) {
-			allCampaignElements = this._api.get(undefined, null) as ElementInterface[];
-		} else {
-			if (this._element !== undefined) {
-				allCampaignElements = this._api.get(undefined, this._element.campaign ?? this._element) as ElementInterface[];
-			} else if (this._campaignPath !== undefined) {
-				const campaign: ElementInterface = this._api.get(this._campaignPath) as ElementInterface;
-				allCampaignElements = this._api.get(undefined, campaign) as ElementInterface[];
-			}
+    if (!this._element?.campaign && !this._campaignPath) {
+      allCampaignElements = this._api.get(
+        undefined,
+        null,
+      ) as ElementInterface[];
+    } else {
+      if (this._element !== undefined) {
+        allCampaignElements = this._api.get(
+          undefined,
+          this._element.campaign ?? this._element,
+        ) as ElementInterface[];
+      } else if (this._campaignPath !== undefined) {
+        const campaign: ElementInterface = this._api.get(
+          this._campaignPath,
+        ) as ElementInterface;
+        allCampaignElements = this._api.get(
+          undefined,
+          campaign,
+        ) as ElementInterface[];
+      }
 
-			const globalElements: ElementInterface[] = this._api.get() as ElementInterface[];
-			allCampaignElements = allCampaignElements.concat(globalElements);
-		}
+      const globalElements: ElementInterface[] =
+        this._api.get() as ElementInterface[];
+      allCampaignElements = allCampaignElements.concat(globalElements);
+    }
 
-		if (this._typeLimit) {
-			allCampaignElements = allCampaignElements.filter((element: ElementInterface) =>
-				this._typeLimit?.includes(element.type)
-			);
-		}
+    allCampaignElements = allCampaignElements.filter(
+      (element: ElementInterface) =>
+        element.type !== ElementType.Session &&
+        element.type !== ElementType.Scene,
+    );
 
-		const relatedPaths: string[] = this._element
-			? this._element.relationships.map((relationship: RelationshipInterface) => relationship.path)
-			: [];
+    if (this._typeLimit) {
+      allCampaignElements = allCampaignElements.filter(
+        (element: ElementInterface) => this._typeLimit?.includes(element.type),
+      );
+    }
 
-		const elementResponse: ElementInterface[] = allCampaignElements.filter(
-			(element: ElementInterface) =>
-				this._callback ||
-				(!relatedPaths.includes(element.path) &&
-					element.path !== this._element?.path &&
-					element.type !== ElementType.Campaign)
-		);
+    const relatedPaths: string[] = this._element
+      ? this._element.relationships.map(
+          (relationship: RelationshipInterface) => relationship.path,
+        )
+      : [];
 
-		const response: SearchableElementInterface[] = [];
+    const elementResponse: ElementInterface[] = allCampaignElements.filter(
+      (element: ElementInterface) =>
+        this._callback ||
+        (!relatedPaths.includes(element.path) &&
+          element.path !== this._element?.path &&
+          element.type !== ElementType.Campaign),
+    );
 
-		elementResponse.forEach((element: ElementInterface) => {
-			const searchableElement: SearchableElementInterface = {
-				name: element.name,
-				path: element.path,
-				type: element.type,
-				image: element.images[0] ?? undefined,
-				campaignName: element.campaign?.name ?? undefined,
-			};
-			response.push(searchableElement);
+    const response: SearchableElementInterface[] = [];
 
-			if (element.aliases !== undefined && Array.isArray(element.aliases) && element.aliases.length > 0) {
-				element.aliases.forEach((alias: string) => {
-					const searchableElementAlias: SearchableElementInterface = {
-						name: element.name,
-						path: element.path,
-						type: element.type,
-						alias: alias,
-						image: element.images[0] ?? undefined,
-						campaignName: element.campaign?.name ?? undefined,
-					};
-					response.push(searchableElementAlias);
-				});
-			}
-		});
+    elementResponse.forEach((element: ElementInterface) => {
+      const searchableElement: SearchableElementInterface = {
+        name: element.name,
+        path: element.path,
+        type: element.type,
+        image: element.images[0] ?? undefined,
+        campaignName: element.campaign?.name ?? undefined,
+      };
+      response.push(searchableElement);
 
-		if (this._element !== undefined || this._campaignPath !== undefined)
-			response.push({
-				name: "All player characters",
-				path: "all-player-characters",
-				type: ElementType.PlayerCharacter,
-			} as SearchableElementInterface);
+      if (
+        element.aliases !== undefined &&
+        Array.isArray(element.aliases) &&
+        element.aliases.length > 0
+      ) {
+        element.aliases.forEach((alias: string) => {
+          const searchableElementAlias: SearchableElementInterface = {
+            name: element.name,
+            path: element.path,
+            type: element.type,
+            alias: alias,
+            image: element.images[0] ?? undefined,
+            campaignName: element.campaign?.name ?? undefined,
+          };
+          response.push(searchableElementAlias);
+        });
+      }
+    });
 
-		return response;
-	}
+    if (this._element !== undefined || this._campaignPath !== undefined)
+      response.push({
+        name: "All player characters",
+        path: "all-player-characters",
+        type: ElementType.PlayerCharacter,
+      } as SearchableElementInterface);
 
-	getItemText(element: SearchableElementInterface): string {
-		return (
-			element.alias || (element.name ? `${element.name} ${element.type}` : undefined) || element.type || element.path
-		);
-	}
+    return response;
+  }
 
-	renderSuggestion(item: FuzzyMatch<SearchableElementInterface>, el: HTMLElement): void {
-		const root: Root = createRoot(el);
-		let reactComponent: React.ReactElement;
+  getItemText(element: SearchableElementInterface): string {
+    return (
+      element.alias ||
+      (element.name ? `${element.name} ${element.type}` : undefined) ||
+      element.type ||
+      element.path
+    );
+  }
 
-		if (item.item.path === "") {
-			reactComponent = createElement(FuzzyNewElementComponent, {
-				name: item.item.name,
-			});
-		} else {
-			reactComponent = createElement(FuzzySearchResult, {
-				searchableElement: item.item as SearchableElementInterface,
-				hasCampaign: this._element !== undefined || this._campaignPath !== undefined,
-			});
-		}
-		root.render(reactComponent);
-	}
+  renderSuggestion(
+    item: FuzzyMatch<SearchableElementInterface>,
+    el: HTMLElement,
+  ): void {
+    const root: Root = createRoot(el);
+    let reactComponent: React.ReactElement;
 
-	async onChooseItem(found: SearchableElementInterface, evt: MouseEvent | KeyboardEvent) {
-		if (found.path === "") {
-			await this._app.vault.create(found.name + ".md", "");
-			if (this._callback) {
-				this._callback("[[" + found.name + ".md|" + found.name + "]]", this._params);
-			}
+    if (item.item.path === "") {
+      reactComponent = createElement(FuzzyNewElementComponent, {
+        name: item.item.name,
+      });
+    } else {
+      reactComponent = createElement(FuzzySearchResult, {
+        searchableElement: item.item as SearchableElementInterface,
+        hasCampaign:
+          this._element !== undefined || this._campaignPath !== undefined,
+      });
+    }
+    root.render(reactComponent);
+  }
 
-			return;
-		}
+  async onChooseItem(
+    found: SearchableElementInterface,
+    evt: MouseEvent | KeyboardEvent,
+  ) {
+    if (found.path === "") {
+      await this._app.vault.create(found.name + ".md", "");
+      if (this._callback) {
+        this._callback(
+          "[[" + found.name + ".md|" + found.name + "]]",
+          this._params,
+        );
+      }
 
-		if (this._callback) {
-			const foundElement: ElementInterface = this._api.get(found.path) as ElementInterface;
+      return;
+    }
 
-			const alias = "|" + (found?.alias ?? foundElement.name);
-			const response = "[[" + foundElement.path + alias + "]]";
+    if (this._callback) {
+      const foundElement: ElementInterface = this._api.get(
+        found.path,
+      ) as ElementInterface;
 
-			this._callback(response, this._params);
-		} else if (this._element) {
-			const rpgmCodeblock: RpgManagerCodeblockService = new RpgManagerCodeblockService(
-				this._app,
-				this._api,
-				this._element.file
-			);
-			if (found.path === "all-player-characters") {
-				const allPlayerCharacters: ElementInterface[] = this._api.get(
-					undefined,
-					this._element.campaign,
-					ElementType.PlayerCharacter
-				) as ElementInterface[];
+      const alias = "|" + (found?.alias ?? foundElement.name);
+      const response = "[[" + foundElement.path + alias + "]]";
 
-				if (allPlayerCharacters.length === 0) return;
+      this._callback(response, this._params);
+    } else if (this._element) {
+      const rpgmCodeblock: RpgManagerCodeblockService =
+        new RpgManagerCodeblockService(
+          this._app,
+          this._api,
+          this._element.file,
+        );
+      if (found.path === "all-player-characters") {
+        const allPlayerCharacters: ElementInterface[] = this._api.get(
+          undefined,
+          this._element.campaign,
+          ElementType.PlayerCharacter,
+        ) as ElementInterface[];
 
-				const relationships: RelationshipInterface[] = allPlayerCharacters.map((playerCharacter: ElementInterface) => {
-					return RelationshipFactory.createFromContent(RelationshipType.Bidirectional, playerCharacter.path);
-				});
+        if (allPlayerCharacters.length === 0) return;
 
-				rpgmCodeblock.addRelationships(relationships);
-			} else {
-				const relationship = RelationshipFactory.createFromContent(RelationshipType.Bidirectional, found.path);
-				rpgmCodeblock.addRelationship(relationship);
-			}
-		}
-	}
+        const relationships: RelationshipInterface[] = allPlayerCharacters.map(
+          (playerCharacter: ElementInterface) => {
+            return RelationshipFactory.createFromContent(
+              RelationshipType.Bidirectional,
+              playerCharacter.path,
+            );
+          },
+        );
+
+        rpgmCodeblock.addRelationships(relationships);
+      } else {
+        const relationship = RelationshipFactory.createFromContent(
+          RelationshipType.Bidirectional,
+          found.path,
+        );
+        rpgmCodeblock.addRelationship(relationship);
+      }
+    }
+  }
 }

@@ -3,8 +3,6 @@ import _ from "lodash";
 import { App, CachedMetadata, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ImageService } from "src/services/ImageService";
-import { Task } from "../../services/taskService/Task";
-import { TaskInterface } from "../../services/taskService/interfaces/TaskInterface";
 import { ElementType } from "../enums/ElementType";
 import { SystemType } from "../enums/SystemType";
 import { AttributeInterface } from "../interfaces/AttributeInterface";
@@ -13,194 +11,205 @@ import { ImageInterface } from "../interfaces/ImageInterface";
 import { RelationshipInterface } from "../interfaces/RelationshipInterface";
 
 export class Element implements ElementInterface {
-	private _relationships: RelationshipInterface[] = [];
-	private _campaign: ElementInterface | undefined = undefined;
-	private _parent: ElementInterface | undefined = undefined;
-	private _version = Date.now();
-	private _metadata: CachedMetadata | undefined = undefined;
-	private _runningStart = 0;
+  private _relationships: RelationshipInterface[] = [];
+  private _campaign: ElementInterface | undefined = undefined;
+  private _parent: ElementInterface | undefined = undefined;
+  private _version = Date.now();
+  private _metadata: CachedMetadata | undefined = undefined;
+  private _runningStart = 0;
 
-	constructor(
-		private _app: App,
-		private _api: RpgManagerInterface,
-		private _file: TFile,
-		protected _rpgManagerBlock: any
-	) {
-		if (
-			this._rpgManagerBlock.id.type === ElementType.Campaign ||
-			this._rpgManagerBlock.id.type === ElementType.Adventure ||
-			this._rpgManagerBlock.id.type === ElementType.Session ||
-			this._rpgManagerBlock.id.type === ElementType.Scene
-		)
-			this.touch();
-	}
+  constructor(
+    private _app: App,
+    private _api: RpgManagerInterface,
+    private _file: TFile,
+    protected _rpgManagerBlock: any,
+  ) {
+    if (
+      this._rpgManagerBlock.id.type === ElementType.Campaign ||
+      this._rpgManagerBlock.id.type === ElementType.Adventure ||
+      this._rpgManagerBlock.id.type === ElementType.Session ||
+      this._rpgManagerBlock.id.type === ElementType.Scene
+    )
+      this.touch();
+  }
 
-	get attributes(): AttributeInterface[] {
-		const response: AttributeInterface[] = [];
+  get id(): string {
+    if (this._rpgManagerBlock.id.id === undefined)
+      console.warn(`${this._file.path} has no id`);
+    return this._rpgManagerBlock.id.id ?? this._file.path;
+  }
 
-		const customAttributes: AttributeInterface[] = this._api.settings.customAttributes.filter(
-			(customAttribute: AttributeInterface) =>
-				customAttribute.customTypes !== undefined && customAttribute.customTypes.contains(this.type)
-		);
-		const elementAttributes: AttributeInterface[] = [];
+  get attributes(): AttributeInterface[] {
+    const response: AttributeInterface[] = [];
 
-		switch (this.system) {
-			case SystemType.Agnostic:
-				elementAttributes.push(...(attributes.get(this.type) ?? []));
-				break;
-		}
+    const customAttributes: AttributeInterface[] =
+      this._api.settings.customAttributes.filter(
+        (customAttribute: AttributeInterface) =>
+          customAttribute.customTypes !== undefined &&
+          customAttribute.customTypes.contains(this.type),
+      );
+    const elementAttributes: AttributeInterface[] = [];
 
-		elementAttributes.forEach((elementAttribute: AttributeInterface) => {
-			const deepClone: AttributeInterface = JSON.parse(JSON.stringify(elementAttribute));
-			deepClone.value = this._rpgManagerBlock.data?.[elementAttribute.id];
-			deepClone.isSet = deepClone.value !== undefined;
+    switch (this.system) {
+      case SystemType.Agnostic:
+        elementAttributes.push(...(attributes.get(this.type) ?? []));
+        break;
+    }
 
-			response.push(deepClone);
-		});
+    elementAttributes.forEach((elementAttribute: AttributeInterface) => {
+      const deepClone: AttributeInterface = JSON.parse(
+        JSON.stringify(elementAttribute),
+      );
+      deepClone.value = this._rpgManagerBlock.data?.[elementAttribute.id];
+      deepClone.isSet = deepClone.value !== undefined;
 
-		customAttributes.forEach((customAttribute: AttributeInterface) => {
-			const deepClone: AttributeInterface = JSON.parse(JSON.stringify(customAttribute));
-			deepClone.value = this._rpgManagerBlock.data?.[customAttribute.id];
-			deepClone.isSet = deepClone.value !== undefined;
+      response.push(deepClone);
+    });
 
-			response.push(deepClone);
-		});
+    customAttributes.forEach((customAttribute: AttributeInterface) => {
+      const deepClone: AttributeInterface = JSON.parse(
+        JSON.stringify(customAttribute),
+      );
+      deepClone.value = this._rpgManagerBlock.data?.[customAttribute.id];
+      deepClone.isSet = deepClone.value !== undefined;
 
-		return response;
-	}
+      response.push(deepClone);
+    });
 
-	attribute(id: string): AttributeInterface | undefined {
-		let attribute: AttributeInterface | undefined = undefined;
+    return response;
+  }
 
-		switch (this.system) {
-			case SystemType.Agnostic:
-				attribute = attributes
-					.get(this.type)
-					?.find((attribute: AttributeInterface) => attribute.id === id.toLowerCase());
-				break;
-		}
+  attribute(id: string): AttributeInterface | undefined {
+    let attribute: AttributeInterface | undefined = undefined;
 
-		if (attribute === undefined) {
-			attribute = this._api.settings.customAttributes.find(
-				(customAttribute: AttributeInterface) =>
-					customAttribute.customTypes !== undefined &&
-					customAttribute.customTypes.contains(this.type) &&
-					customAttribute.id === id.toLowerCase()
-			);
-		}
+    switch (this.system) {
+      case SystemType.Agnostic:
+        attribute = attributes
+          .get(this.type)
+          ?.find(
+            (attribute: AttributeInterface) =>
+              attribute.id === id.toLowerCase(),
+          );
+        break;
+    }
 
-		if (attribute === undefined) return undefined;
+    if (attribute === undefined) {
+      attribute = this._api.settings.customAttributes.find(
+        (customAttribute: AttributeInterface) =>
+          customAttribute.customTypes !== undefined &&
+          customAttribute.customTypes.contains(this.type) &&
+          customAttribute.id === id.toLowerCase(),
+      );
+    }
 
-		const response: AttributeInterface = JSON.parse(JSON.stringify(attribute));
+    if (attribute === undefined) return undefined;
 
-		response.value = this._rpgManagerBlock.data?.[attribute.id];
+    const response: AttributeInterface = JSON.parse(JSON.stringify(attribute));
 
-		response.isSet = response.value !== undefined;
+    response.value = this._rpgManagerBlock.data?.[attribute.id];
 
-		return response;
-	}
+    response.isSet = response.value !== undefined;
 
-	touch(): void {
-		this._version = Date.now();
-	}
+    return response;
+  }
 
-	get aliases(): string[] {
-		return this._metadata?.frontmatter?.aliases ?? [];
-	}
+  touch(): void {
+    this._version = Date.now();
+  }
 
-	set metadata(metadata: CachedMetadata) {
-		this._metadata = metadata;
-	}
+  get aliases(): string[] {
+    return this._metadata?.frontmatter?.aliases ?? [];
+  }
 
-	get images(): ImageInterface[] {
-		const response: ImageInterface[] = [];
+  set metadata(metadata: CachedMetadata) {
+    this._metadata = metadata;
+  }
 
-		if (this._rpgManagerBlock.images == undefined) return response;
+  get images(): ImageInterface[] {
+    const response: ImageInterface[] = [];
 
-		this._rpgManagerBlock.images.forEach((imageData: any) => {
-			const image: ImageInterface | undefined = ImageService.createImage(this._app, this._api, imageData);
+    if (this._rpgManagerBlock.images == undefined) return response;
 
-			if (image) response.push(image);
-		});
+    this._rpgManagerBlock.images.forEach((imageData: any) => {
+      const image: ImageInterface | undefined = ImageService.createImage(
+        this._app,
+        this._api,
+        imageData,
+      );
 
-		return response;
-	}
+      if (image) response.push(image);
+    });
 
-	set codeblock(rpgManagerBlock: any) {
-		if (_.isEqual(this._rpgManagerBlock, rpgManagerBlock)) return;
+    return response;
+  }
 
-		this.touch();
-		this._rpgManagerBlock = rpgManagerBlock;
-	}
+  set codeblock(rpgManagerBlock: any) {
+    if (_.isEqual(this._rpgManagerBlock, rpgManagerBlock)) return;
 
-	get version(): number {
-		return this._version;
-	}
+    this.touch();
+    this._rpgManagerBlock = rpgManagerBlock;
+  }
 
-	get file(): TFile {
-		return this._file;
-	}
+  get version(): number {
+    return this._version;
+  }
 
-	get type(): ElementType {
-		return this._rpgManagerBlock.id.type as ElementType;
-	}
+  get file(): TFile {
+    return this._file;
+  }
 
-	get system(): SystemType {
-		return this._rpgManagerBlock.id.system
-			? SystemType[this._rpgManagerBlock.id.system as keyof typeof SystemType]
-			: SystemType.Agnostic;
-	}
+  get type(): ElementType {
+    return this._rpgManagerBlock.id.type as ElementType;
+  }
 
-	get relationships(): RelationshipInterface[] {
-		return this._relationships;
-	}
+  get system(): SystemType {
+    return this._rpgManagerBlock.id.system
+      ? SystemType[this._rpgManagerBlock.id.system as keyof typeof SystemType]
+      : SystemType.Agnostic;
+  }
 
-	set relationships(value: RelationshipInterface[]) {
-		this._version++;
-		this._relationships = value;
-	}
+  get relationships(): RelationshipInterface[] {
+    return this._relationships;
+  }
 
-	get campaignPath(): string | undefined {
-		return this._rpgManagerBlock.id.campaign;
-	}
+  set relationships(value: RelationshipInterface[]) {
+    this._version++;
+    this._relationships = value;
+  }
 
-	get campaign(): ElementInterface | undefined {
-		return this._campaign;
-	}
+  get campaignPath(): string | undefined {
+    return this._rpgManagerBlock.id.campaign;
+  }
 
-	set campaign(value: ElementInterface) {
-		this._campaign = value;
-	}
+  get campaign(): ElementInterface | undefined {
+    return this._campaign;
+  }
 
-	get parentPath(): string | undefined {
-		return this._rpgManagerBlock.id.parent;
-	}
+  set campaign(value: ElementInterface) {
+    this._campaign = value;
+  }
 
-	get parent(): ElementInterface | undefined {
-		return this._parent;
-	}
+  get parentPath(): string | undefined {
+    return this._rpgManagerBlock.id.parent;
+  }
 
-	set parent(value: ElementInterface) {
-		this._parent = value;
-	}
+  get parent(): ElementInterface | undefined {
+    return this._parent;
+  }
 
-	get positionInParent(): number | undefined {
-		return this._rpgManagerBlock.id.positionInParent;
-	}
+  set parent(value: ElementInterface) {
+    this._parent = value;
+  }
 
-	get path(): string {
-		return this._file.path;
-	}
+  get positionInParent(): number | undefined {
+    return this._rpgManagerBlock.id.positionInParent;
+  }
 
-	get name(): string {
-		return this._file.basename;
-	}
+  get path(): string {
+    return this._file.path;
+  }
 
-	get tasks(): TaskInterface[] {
-		if (this._rpgManagerBlock.tasks === undefined || this._rpgManagerBlock.tasks.length === 0) return [];
-
-		return this._rpgManagerBlock.tasks.map((task: any) => {
-			return new Task(this._api, this, task);
-		});
-	}
+  get name(): string {
+    return this._file.basename;
+  }
 }

@@ -1,4 +1,3 @@
-import ChapterWizardComponent from "@/components/wizards/chapters/ChapterWizardComponent";
 import { AppContext } from "@/contexts/AppContext";
 import { ElementType } from "@/data/enums/ElementType";
 import { App, Modal, Scope } from "obsidian";
@@ -11,52 +10,55 @@ import { WizardContext } from "src/contexts/WizardContext";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 
 export class WizardController extends Modal {
-	constructor(private _app: App, private _api: RpgManagerInterface, private _element: ElementInterface) {
-		super(_app);
+  constructor(
+    private _app: App,
+    private _api: RpgManagerInterface,
+    private _element: ElementInterface,
+  ) {
+    super(_app);
 
-		this.scope = new Scope();
+    this.scope = new Scope();
 
-		this.scope.register([], "Escape", (evt) => {
-			evt.preventDefault();
-		});
-	}
+    this.scope.register([], "Escape", (evt) => {
+      evt.preventDefault();
+    });
+  }
 
-	onOpen() {
-		super.onOpen();
+  onOpen() {
+    super.onOpen();
 
-		const { contentEl } = this;
-		contentEl.empty();
-		const root: Root = createRoot(contentEl);
-		this.modalEl.style.width = "var(--modal-max-width)";
+    const { contentEl } = this;
+    contentEl.empty();
+    const root: Root = createRoot(contentEl);
+    this.modalEl.style.width = "var(--modal-max-width)";
 
-		let wizardComponent: React.ReactElement;
-		if (this._element.type === ElementType.NonPlayerCharacter) {
-			wizardComponent = createElement(NonPlayerCharacterWizardComponent, {
-				element: this._element,
-				close: this.close.bind(this),
-			});
-		} else if (this._element.type === ElementType.Chapter) {
-			wizardComponent = createElement(ChapterWizardComponent, {
-				element: this._element,
-				close: this.close.bind(this),
-			});
-		}
+    let wizardComponent: React.ReactElement;
+    if (this._element.type === ElementType.NonPlayerCharacter) {
+      wizardComponent = createElement(NonPlayerCharacterWizardComponent, {
+        element: this._element,
+        close: this.close.bind(this),
+      });
+    }
 
-		const wizardProvider = createElement(WizardContext.Provider, { value: {} }, wizardComponent);
+    const wizardProvider = createElement(
+      WizardContext.Provider,
+      { value: {} },
+      wizardComponent,
+    );
 
-		const reactComponent = createElement(
-			AppContext.Provider,
-			{ value: this._app },
-			createElement(ApiContext.Provider, { value: this._api }, wizardProvider)
-		);
-		//const reactComponent = createElement(ApiContext.Provider, { value: this._api }, wizardProvider);
+    const reactComponent = createElement(
+      AppContext.Provider,
+      { value: this._app },
+      createElement(ApiContext.Provider, { value: this._api }, wizardProvider),
+    );
+    //const reactComponent = createElement(ApiContext.Provider, { value: this._api }, wizardProvider);
 
-		root.render(reactComponent);
-	}
+    root.render(reactComponent);
+  }
 
-	onClose() {
-		const { contentEl } = this;
-		contentEl.empty();
-		super.onClose();
-	}
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
+    super.onClose();
+  }
 }
