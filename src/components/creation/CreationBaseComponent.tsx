@@ -78,7 +78,7 @@ export default function CreationBaseComponent({
       if (type === ElementType.Adventure || type === ElementType.Session) {
         if (parent === undefined && campaign !== undefined) setParent(campaign);
 
-        if (positionInParent === undefined) {
+        if (positionInParent === undefined && campaign !== undefined) {
           setPositionInParent(
             HelperService.getPositionInParent(
               api.get({ campaign: campaign, type: type }) as ElementInterface[],
@@ -105,7 +105,7 @@ export default function CreationBaseComponent({
         if (session !== undefined) {
           if (parent === undefined) setParent(session);
 
-          if (positionInParent === undefined) {
+          if (positionInParent === undefined && session !== undefined) {
             setPositionInParent(
               HelperService.getPositionInParent(
                 api.get({
