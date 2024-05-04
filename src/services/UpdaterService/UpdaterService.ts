@@ -1,3 +1,4 @@
+import { YamlService } from "@/data/classes/YamlService";
 import { App, TFile, parseYaml } from "obsidian";
 import { v4 } from "uuid";
 
@@ -15,7 +16,9 @@ export class UpdaterService {
   ) {}
 
   async updateVault(): Promise<void> {
-    const allFiles: TFile[] = this._app.vault.getFiles();
+    const allFiles: TFile[] = this._app.vault
+      .getFiles()
+      .filter((file: TFile) => file.extension === "md");
 
     this._total = allFiles.length;
     this._updateView(this._total, this._current, "Reading files...");
@@ -27,7 +30,7 @@ export class UpdaterService {
       file: TFile;
     }[] = [];
 
-    await Promise.all(
+    const results = await Promise.all(
       allFiles.map(async (file: TFile) => {
         this._current++;
         this._updateView(this._total, this._current, "Reading files...");
@@ -35,16 +38,20 @@ export class UpdaterService {
         const newId: string = v4();
         const fileData = await this._readCodeblocks(file, newId);
 
-        if (!fileData) return;
+        if (!fileData) return null;
 
-        elementsMap.push({
+        return {
           id: newId,
           codeblock: fileData?.codeblock,
           sanitisedContent: fileData?.sanitisedFileContent,
           file: file,
-        });
+        };
       }),
     );
+
+    results.forEach((result) => {
+      if (result) elementsMap.push(result);
+    });
 
     this._total = elementsMap.length;
     this._current = 0;
@@ -54,83 +61,105 @@ export class UpdaterService {
       "Converting RPG Manager Elements...",
     );
 
-    // UPDATE CAMPAIGN
-    // UPDATE PARENT
-    // UPDATE RELATIONSHIPS
-    // UPDATE CONTENT
+    await Promise.all(
+      elementsMap.map(async (element) => {
+        if (element.codeblock.id.campaign) {
+          element.codeblock.id.campaign = elementsMap.find(
+            (item) => item.file.path === element.codeblock.id.campaign,
+          )?.id;
+        }
+        if (element.codeblock.id.parent) {
+          element.codeblock.id.parent = elementsMap.find(
+            (item) => item.file.path === element.codeblock.id.parent,
+          )?.id;
+        }
 
-    elementsMap.map((element) => {
-      console.log(element.codeblock, element.sanitisedContent);
-    });
+        if (element.codeblock.relationships) {
+          element.codeblock.relationships.map((relationship: any) => {
+            relationship.id = elementsMap.find(
+              (item) => item.file.path === relationship.path,
+            )?.id;
+            delete relationship.path;
+          });
+        }
+        delete element.codeblock.tasks;
 
-    // await Promise.all(
-    //   Array.from(elementsMap.entries()).map(
-    //     async (value: [string, DataInterface]) => {
-    //       this._current++;
-    //       this._updateView(
-    //         this._total,
-    //         this._current,
-    //         "Converting RPG Manager Elements...",
-    //       );
+        this._replaceLinksInCodeBlock(element.codeblock, elementsMap);
 
-    //       const codeblock = {
-    //         id: this._convertId(value[0], value[1]),
-    //         data: this._convertData(value[0], value[1]),
-    //         relationships: this._convertRelationships(value[0], value[1]),
-    //         images: this._convertImages(value[0], value[1]),
-    //       };
+        element.codeblock = this._replaceLinksInCodeBlock(
+          element.codeblock,
+          elementsMap,
+        );
+      }),
+    );
 
-    //       if (codeblock.images.length === 0) delete codeblock.images;
-    //       if (codeblock.relationships.length === 0)
-    //         delete codeblock.relationships;
+    const yamlService = new YamlService();
 
-    //       this._newElements.set(value[1].file, codeblock);
-    //     },
-    //   ),
-    // );
+    await Promise.all(
+      elementsMap.map(async (element) => {
+        this._current++;
+        this._updateView(
+          this._total,
+          this._current,
+          "Converting RPG Manager Elements...",
+        );
 
-    // await Promise.all(
-    //   Array.from(elementsMap.entries()).map(
-    //     async (value: [string, DataInterface]) => {
-    //       this._current++;
-    //       this._updateView(
-    //         this._total,
-    //         this._current,
-    //         "Converting RPG Manager Elements...",
-    //       );
+        const codeblock = yamlService.stringify(element.codeblock);
+        const updatedContent = element.sanitisedContent.replace(
+          "RpgManager4",
+          "```RpgManager5\n" + codeblock + "```",
+        );
+        await this._app.vault.modify(element.file, updatedContent);
+      }),
+    );
+  }
 
-    //       const codeblock = {
-    //         id: this._convertId(value[0], value[1]),
-    //         data: this._convertData(value[0], value[1]),
-    //         relationships: this._convertRelationships(value[0], value[1]),
-    //         images: this._convertImages(value[0], value[1]),
-    //       };
+  private _replaceLinksInCodeBlock(codeblock: any, elementsMap: any[]): any {
+    const pattern = /\[\[(.*?)\]\]/g;
 
-    //       if (codeblock.images.length === 0) delete codeblock.images;
-    //       if (codeblock.relationships.length === 0)
-    //         delete codeblock.relationships;
+    function replaceString(value: string): string {
+      return value.replace(pattern, (match, p1) => {
+        const parts = p1.split("|");
+        const element = elementsMap.find(
+          (item) =>
+            item.file.path === parts[0] || item.file.basename === parts[1],
+        );
 
-    //       this._newElements.set(value[1].file, codeblock);
-    //     },
-    //   ),
-    // );
+        if (!element) console.warn(parts[0], parts[1]);
 
-    // this._current = 0;
-    // this._updateView(this._total, this._current, "Updating files...");
+        if (element) {
+          const newId: string = element.codeblock.id.id;
 
-    // await Promise.all(
-    //   Array.from(this._newElements.entries()).map(
-    //     async (value: [TFile, any]) => {
-    //       await this._replaceCodeblock(value[0], value[1]);
-    //       this._current++;
-    //       return this._updateView(
-    //         this._total,
-    //         this._current,
-    //         "Updating files...",
-    //       );
-    //     },
-    //   ),
-    // );
+          if (parts.length == 1) {
+            return `[[@${newId}]]`;
+          } else {
+            const name: string = element.file.basename;
+            if (parts[1] === name) return `[[@${newId}]]`;
+            return `[[${newId}|${parts[1]}]]`;
+          }
+        }
+
+        return value;
+      });
+    }
+
+    function traverse(value: any): any {
+      if (typeof value === "string") {
+        return replaceString(value);
+      } else if (Array.isArray(value)) {
+        return value.map(traverse);
+      } else if (value !== null && typeof value === "object") {
+        const newValue: any = {};
+        for (const key in value) {
+          newValue[key] = traverse(value[key]);
+        }
+        return newValue;
+      } else {
+        return value;
+      }
+    }
+
+    return traverse(codeblock);
   }
 
   private async _readCodeblocks(
@@ -145,8 +174,8 @@ export class UpdaterService {
     let codeblockContent = "";
 
     lines.forEach((line: string, index: number) => {
-      if (line === "```RpgManagerData4") {
-        sanitisedFileContent += "RpgManagerData4\n";
+      if (line === "```RpgManager4") {
+        sanitisedFileContent += "RpgManager4\n";
         inRPGMCodeblock = true;
         codeblockContent = "";
       } else if (line === "```" && inRPGMCodeblock) {
@@ -169,164 +198,3 @@ export class UpdaterService {
     };
   }
 }
-
-// private _convertId(id: string, data: DataInterface): any {
-//   const type = this._getType(data.metadata.ID.type);
-
-//   const idData: any = {
-//     type: type,
-//   };
-
-//   if (type !== ElementType.Campaign) {
-//     const campaignData = this._elementsMap.get(data.metadata.ID.campaignId);
-
-//     if (
-//       type === ElementType.Adventure ||
-//       type === ElementType.Session ||
-//       type === ElementType.Chapter
-//     ) {
-//       const parentData = this._elementsMap.get(data.metadata.ID.parentId);
-
-//       if (parentData !== undefined) {
-//         idData.parent = parentData.file.path;
-//         idData.positionInParent = data.metadata.ID.positionInParent;
-//       }
-//     } else if (type === ElementType.Scene) {
-//       let parentData;
-//       if (data.metadata.data.data.sessionId !== undefined)
-//         parentData = this._elementsMap.get(data.metadata.data.data.sessionId);
-
-//       if (data.metadata.data.data.positionInSession !== undefined)
-//         idData.positionInParent = data.metadata.data.data.positionInSession;
-
-//       if (parentData === undefined)
-//         parentData = this._elementsMap.get(data.metadata.ID.parentId);
-
-//       if (parentData !== undefined) {
-//         idData.parent = parentData.file.path;
-//         if (idData.positionInParent === undefined)
-//           idData.positionInParent = data.metadata.ID.positionInParent;
-//       }
-//     }
-
-//     if (campaignData !== undefined) idData.campaign = campaignData.file.path;
-//   }
-
-//   return idData;
-// }
-
-// private _convertRelationships(id: string, data: DataInterface): any[] {
-//   const response: any[] = [];
-
-//   const relationships: any[] | undefined = data.metadata.data?.relationships;
-
-//   if (
-//     relationships === undefined ||
-//     !Array.isArray(relationships) ||
-//     relationships.length === 0
-//   )
-//     return response;
-
-//   relationships.forEach((relationship: any) => {
-//     const newRelationship: any = {
-//       path: relationship.path,
-//       type: relationship.type,
-//     };
-
-//     if (relationship.description)
-//       newRelationship.description = relationship.description;
-
-//     response.push(newRelationship);
-//   });
-
-//   return response;
-// }
-
-// private async _replaceCodeblock(file: TFile, codeblock: any): Promise<void> {
-//   const metadata: CachedMetadata | null =
-//     this._app.metadataCache.getFileCache(file);
-
-//   if (
-//     metadata === null ||
-//     metadata.sections == undefined ||
-//     metadata.sections.length === 0
-//   )
-//     return;
-
-//   let content = await this._app.vault.read(file);
-//   const lines = content.split("\n");
-
-//   let codeblockData: SectionCache | undefined = undefined;
-
-//   const yamlService = new YamlService();
-
-//   for (let index = 0; index < metadata.sections.length; index++) {
-//     codeblockData = metadata.sections[index];
-
-//     let type = "";
-
-//     if (
-//       codeblockData !== undefined &&
-//       (lines[codeblockData.position.start.line] === "```RpgManagerData" ||
-//         lines[codeblockData.position.start.line] === "```RpgManagerID" ||
-//         lines[codeblockData.position.start.line] === "```RpgManager")
-//     ) {
-//       switch (lines[codeblockData.position.start.line]) {
-//         case "```RpgManagerData":
-//           type = "data";
-//           break;
-//         case "```RpgManagerID":
-//           type = "ID";
-//           break;
-//         case "```RpgManager":
-//           type = "codeblock";
-//           break;
-//       }
-
-//       let codeblockContent = "";
-//       for (
-//         let lineIndex = codeblockData.position.start.line + 1;
-//         lineIndex < codeblockData.position.end.line;
-//         lineIndex++
-//       ) {
-//         codeblockContent += lines[lineIndex] + "\n";
-//       }
-
-//       if (codeblockContent !== undefined) {
-//         switch (type) {
-//           case "data":
-//             content = content.replace(
-//               "```RpgManagerData\n" + codeblockContent,
-//               "\n```RpgManager4\n" + yamlService.stringify(codeblock),
-//             );
-//             break;
-//           case "ID":
-//             content = content.replace(
-//               "```RpgManagerID\n" + codeblockContent + "```\n",
-//               "",
-//             );
-//             content = content.replace(
-//               "```RpgManagerID\n" + codeblockContent + "```",
-//               "",
-//             );
-//             break;
-//           case "codeblock":
-//             content = content.replace(
-//               "```RpgManager\n" + codeblockContent + "```\n",
-//               "",
-//             );
-//             content = content.replace(
-//               "```RpgManager\n" + codeblockContent + "```",
-//               "",
-//             );
-//             break;
-//         }
-//       }
-
-//       content = content.replace(/\[\[.*?\|\]\]\n/g, "");
-//       content = content.replace(/\[\[.*?\|\]\]/g, "");
-//     }
-//   }
-
-//   await this._app.vault.modify(file, content);
-// }

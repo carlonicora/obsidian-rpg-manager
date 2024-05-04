@@ -32,9 +32,9 @@ function Upgrading(): React.ReactElement {
     const updater = new UpdaterService(app, updateView);
     updater.updateVault().then(() => {
       const settings: RpgManagerSettingsInterface = {
-        chatGptKey: undefined,
-        templatesFolder: (api.settings as any).templateFolder,
-        assetsFolder: (api.settings as any).imagesFolder,
+        chatGptKey: (api.settings as any).templateFolder ?? "",
+        templatesFolder: (api.settings as any).templateFolder ?? "",
+        assetsFolder: (api.settings as any).assetsFolder ?? "_Assets",
         automaticMove: (api.settings as any).automaticMove,
         useSceneAnalyser: (api.settings as any).useSceneAnalyser,
         version: api.version,

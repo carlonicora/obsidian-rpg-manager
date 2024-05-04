@@ -33,7 +33,7 @@ export class PluginServices {
     rpgm: RpgManagerInterface,
   ): Promise<void> {
     (rpgm as unknown as Plugin).registerMarkdownCodeBlockProcessor(
-      "RpgManager4",
+      "RpgManager5",
       async (source: string, el, ctx) => {
         ctx.addChild(new Controller(app, rpgm, ctx.sourcePath, el, source));
       },

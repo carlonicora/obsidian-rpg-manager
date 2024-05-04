@@ -194,7 +194,7 @@ export class RpgManagerCodeblockService {
       if (
         codeblockData !== undefined &&
         this._fileContentLines[codeblockData.position.start.line] ===
-          "```RpgManager4"
+          "```RpgManager5"
       ) {
         codeblockContent = "";
         for (
@@ -229,7 +229,7 @@ export class RpgManagerCodeblockService {
     if (this._metadata.frontmatter === undefined) {
       newContent = [
         "",
-        "```RpgManager4",
+        "```RpgManager5",
         ...codeblockContentLines,
         "```",
         "",
@@ -254,7 +254,7 @@ export class RpgManagerCodeblockService {
         if (frontmatterStarted && frontmatterEnded && !codeblockAdded) {
           newContent.push(
             "",
-            "```RpgManager4",
+            "```RpgManager5",
             ...codeblockContentLines,
             "```",
             "",

@@ -68,7 +68,7 @@ export class FileCreationService {
     }
 
     const yamlService = new YamlService();
-    this._rpgManagerCodeBlock = "\n```RpgManager4\n";
+    this._rpgManagerCodeBlock = "\n```RpgManager5\n";
     this._rpgManagerCodeBlock += yamlService.stringify(this._codeblock);
     this._rpgManagerCodeBlock += "```\n";
   }
@@ -83,8 +83,8 @@ export class FileCreationService {
       const templateContent = await this._app.vault.read(templateFile);
 
       content = templateContent
-        .replace("```RpgManager4```", content)
-        .replace("```RpgManager4\n```", content);
+        .replace("```RpgManager5```", content)
+        .replace("```RpgManager5\n```", content);
     }
 
     const fileName = await this._generateFilePath();
