@@ -67,7 +67,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
       query.path === undefined || element.path === query.path;
     const matchesCampaign = (element: ElementInterface) =>
       query.campaign === undefined ||
-      element.path === query.campaign.path ||
+      element.id === query.campaign.id ||
       element.campaignId === query.campaign.id;
 
     if (query.path !== undefined) return this._database.find(matchesPath);

@@ -205,7 +205,8 @@ export class ElementFactory {
   ): void {
     if (element.campaign === undefined && element.campaignId !== undefined)
       element.campaign = elements.find(
-        (elementInList: ElementInterface) => elementInList.id === element.id,
+        (elementInList: ElementInterface) =>
+          elementInList.id === element.campaignId,
       );
 
     if (element.parent === undefined || element.parentId !== undefined)
