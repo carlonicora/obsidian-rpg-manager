@@ -54,7 +54,7 @@ export default function RelationshipComponent({
   //   isGeneric = true;
 
   return (
-    <div className="border border-[--background-modifier-border] rounded-lg flex flex-col">
+    <div className="border border-[--background-modifier-border] rounded-md flex flex-col">
       {relationship.component.images.length > 0 && (
         <div className="flex justify-center relative">
           <div className="w-full relative pb-[100%]">

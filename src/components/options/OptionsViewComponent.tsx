@@ -151,13 +151,13 @@ export default function OptionsViewComponent({
 
   return (
     <>
-      <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
+      <div className="rounded-md border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-3">
         <h3 className="!text-xl !font-extralight !mb-1 mt-0">
           {t("options.option", { count: 2 })}
         </h3>
         {hasWizard && (
           <div
-            className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+            className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-md"
             onClick={openWizard}
           >
             {t("options.wizard")}
@@ -165,20 +165,20 @@ export default function OptionsViewComponent({
         )}
         {element.type !== ElementType.Campaign && (
           <div
-            className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+            className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-md"
             onClick={addRelationship}
           >
             {t("create.add", { context: "relationship" })}
           </div>
         )}
         <div
-          className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+          className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-md"
           onClick={createCustomAttribute}
         >
           {t("attributes.custom")}
         </div>
         <div
-          className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+          className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-md"
           onClick={openGallery}
         >
           {t("gallery.title")}
@@ -193,7 +193,7 @@ export default function OptionsViewComponent({
           </div>
         )}
       </div>
-      <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-1">
+      <div className="rounded-md border border-[--background-modifier-border] bg-[--background-primary] p-3 col-span-1 text-xs mb-1">
         <h3 className="!text-xl !font-extralight !mb-1 mt-0">
           {t("attributes.attribute", { count: 2 })}
         </h3>
@@ -205,7 +205,7 @@ export default function OptionsViewComponent({
           )
           .map((attribute: AttributeInterface, index: number) => (
             <div
-              className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-lg"
+              className="cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover] list-disc list-inside pl-2 pr-2 pt-1 pb-1 border border-transparent hover:bg-[--background-primary-alt] hover:border-[--background-modifier-border] rounded-md"
               key={index}
               onClick={addAttribute(attribute)}
             >

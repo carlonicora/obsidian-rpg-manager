@@ -180,7 +180,7 @@ export default function UpdaterComponent(): React.ReactElement {
         <>
           <div className="fixed inset-0 bg-gray-900 bg-opacity-75"></div>
           <div className="fixed inset-0 flex justify-center items-center">
-            <div className="bg-white p-10 rounded-lg">
+            <div className="bg-white p-10 rounded-md">
               <Upgrading />
             </div>
           </div>

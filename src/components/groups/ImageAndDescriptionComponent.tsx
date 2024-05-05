@@ -6,34 +6,39 @@ import ParentAttributeComponent from "../attributes/types/ParentAttributeCompone
 import ImageComponent from "../images/ImageComponent";
 
 export default function ImageAndDescriptionComponent({
-	element,
-	isInPopover,
-	requiresImage,
-	showParent,
+  element,
+  isInPopover,
+  requiresImage,
+  showParent,
 }: {
-	element: ElementInterface;
-	isInPopover: boolean;
-	requiresImage: boolean;
-	showParent?: boolean;
+  element: ElementInterface;
+  isInPopover: boolean;
+  requiresImage: boolean;
+  showParent?: boolean;
 }): React.ReactElement {
-	const hasImages: boolean = element.images.length > 0;
+  const hasImages: boolean = element.images.length > 0;
 
-	return (
-		<>
-			{(requiresImage || hasImages) && (
-				<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3">
-					<ImageComponent element={element} isEditable={!isInPopover} />
-				</div>
-			)}
+  return (
+    <>
+      {(requiresImage || hasImages) && (
+        <div className="rounded-md border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3">
+          <ImageComponent element={element} isEditable={!isInPopover} />
+        </div>
+      )}
 
-			<div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] p-3">
-				<DescriptionAttributeComponent
-					element={element}
-					attribute={element.attribute(AttributeType.Description)}
-					isEditable={!isInPopover}
-				/>
-				{showParent && <ParentAttributeComponent element={element} isEditable={!isInPopover} />}
-			</div>
-		</>
-	);
+      <div className="rounded-md border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] p-3">
+        <DescriptionAttributeComponent
+          element={element}
+          attribute={element.attribute(AttributeType.Description)}
+          isEditable={!isInPopover}
+        />
+        {showParent && (
+          <ParentAttributeComponent
+            element={element}
+            isEditable={!isInPopover}
+          />
+        )}
+      </div>
+    </>
+  );
 }

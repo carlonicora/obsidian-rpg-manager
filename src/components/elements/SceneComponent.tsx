@@ -6,7 +6,6 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import AttributeListComponent from "../attributes/AttributeListComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import DurationAttributeComponent from "../attributes/types/DurationAttributeComponent";
-import ParentAttributeComponent from "../attributes/types/ParentAttributeComponent";
 import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprintAttributeComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
@@ -25,60 +24,35 @@ export default function SceneComponent({
   );
 
   return (
-    <>
-      <div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
-        <HeaderComponent element={element} isInPopover={isInPopover} />
-        {element.attribute(AttributeType.SensoryImprint) && (
-          <SensoryImprintAttributeComponent
-            element={element}
-            attribute={element.attribute(AttributeType.SensoryImprint)}
-            isEditable={!isInPopover}
-          />
-        )}
-        {element.images.length > 0 && (
-          <div className="max-h-32 h-32 overflow-hidden">
-            <ImageComponent element={element} isEditable={!isInPopover} />
-          </div>
-        )}
-        <div
-          className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-3 !mb-3}`}
-        >
-          <div className={`col-span-5 sm:col-span-1 lg:col-span-5`}>
-            <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 !mb-3">
-              <DescriptionAttributeComponent
-                element={element}
-                attribute={element.attribute(AttributeType.Description)}
-                isEditable={!isInPopover}
-              />
-              <ParentAttributeComponent
-                element={element}
-                isEditable={!isInPopover}
-              />
-            </div>
-            <AttributeListComponent
-              element={element}
-              isEditable={!isInPopover}
-            />
-          </div>
-        </div>
-        <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-          <DurationAttributeComponent
-            element={element}
-            attribute={attribute}
-            isEditable={!isInPopover}
-          />
-        </div>
-        {element.images.length > 1 && (
-          <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-            <ImageCarouselComponent element={element} />
-          </div>
-        )}
-        {isInPopover === false && element.relationships.length > 0 && (
-          <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-            <RelationshipsComponent element={element} />
-          </div>
-        )}
+    <div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
+      <HeaderComponent element={element} isInPopover={isInPopover} />
+      <SensoryImprintAttributeComponent
+        element={element}
+        isEditable={!isInPopover}
+      />
+      <div className="flex flex-row justify-between items-start">
+        <ImageComponent element={element} isEditable={!isInPopover} />
+        <DescriptionAttributeComponent
+          element={element}
+          attribute={element.attribute(AttributeType.Description)}
+          isEditable={!isInPopover}
+        />
       </div>
-    </>
+
+      <AttributeListComponent element={element} isEditable={!isInPopover} />
+
+      <DurationAttributeComponent
+        element={element}
+        attribute={attribute}
+        isEditable={!isInPopover}
+      />
+
+      {isInPopover === false && element.relationships.length > 0 && (
+        <>
+          <RelationshipsComponent element={element} />
+          <ImageCarouselComponent element={element} />
+        </>
+      )}
+    </div>
   );
 }

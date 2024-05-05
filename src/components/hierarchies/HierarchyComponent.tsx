@@ -1,6 +1,4 @@
 import { useApp } from "@/hooks/useApp";
-import { App } from "obsidian";
-import * as React from "react";
 import {
   DragDropContext,
   Draggable,
@@ -9,7 +7,9 @@ import {
   DropResult,
   Droppable,
   DroppableProvided,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
+import { App } from "obsidian";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementType } from "src/data/enums/ElementType";
@@ -17,6 +17,7 @@ import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
 import SceneAnalyserComponent from "../analyser/SceneAnalyserComponent";
+import ContainerComponent from "../groups/ContainerComponent";
 import ChildDefaultComponent from "./ChildDefaultComponent";
 import ChildDefaultHeadersComponent from "./ChildDefaultHeadersComponent";
 import ChildSceneComponent from "./ChildSceneComponent";
@@ -116,9 +117,8 @@ export default function HierarchyComponent({
 
   if (!isDraggable) {
     return (
-      <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-        <h2>{t("elements." + type, { count: 2 })}</h2>
-        <>
+      <ContainerComponent title={t("elements." + type, { count: 2 })}>
+        <div className="flex flex-col w-full">
           {getHeaderComponent()}
           {children.map((child: ElementInterface, index: number) =>
             getChildComponent(child),
@@ -131,87 +131,7 @@ export default function HierarchyComponent({
               handleFileAdded={handleFileAdded}
             />
           )}
-          {!isInPopover && !newChild && (
-            <div className="flex justify-end w-full text-sm mt-3">
-              <button
-                className="rpgm-secondary pl-3 pr-3"
-                onClick={() => handleCreate()}
-              >
-                {t("create.new", { context: type })}
-              </button>
-            </div>
-          )}
-          {!isInPopover && type === ElementType.Scene && (
-            <SceneAnalyserComponent element={element} />
-          )}
-        </>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      key={element.id + "draggable"}
-      className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3"
-    >
-      <h2>{t("elements." + type, { count: 2 })}</h2>
-      <>
-        {getHeaderComponent()}
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable
-            droppableId={element.id + "list"}
-            renderClone={(provided, snapshot, rubric) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                style={provided.draggableProps.style}
-              >
-                {getChildComponent(children[rubric.source.index])}
-              </div>
-            )}
-          >
-            {(provided: DroppableProvided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {children.map((child: ElementInterface, index: number) => (
-                  <Draggable
-                    key={child.id}
-                    draggableId={child.id}
-                    index={index}
-                  >
-                    {(
-                      provided: DraggableProvided,
-                      snapshot: DraggableStateSnapshot,
-                    ) => {
-                      return (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            zIndex: snapshot.isDragging ? 9999 : "auto",
-                          }}
-                        >
-                          {getChildComponent(child)}
-                        </div>
-                      );
-                    }}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-        {newChild && !isInPopover && (
-          <NewChildComponent
-            key={Date.now()}
-            parent={element}
-            type={type}
-            handleFileAdded={handleFileAdded}
-          />
-        )}
+        </div>
         {!isInPopover && !newChild && (
           <div className="flex justify-end w-full text-sm mt-3">
             <button
@@ -222,12 +142,85 @@ export default function HierarchyComponent({
             </button>
           </div>
         )}
-        {!isInPopover &&
-          type === ElementType.Scene &&
-          api.settings.useSceneAnalyser && (
-            <SceneAnalyserComponent element={element} />
+        {!isInPopover && type === ElementType.Scene && (
+          <SceneAnalyserComponent element={element} />
+        )}
+      </ContainerComponent>
+    );
+  }
+
+  return (
+    <ContainerComponent
+      key={element.id + "draggable"}
+      title={t("elements." + type, { count: 2 })}
+    >
+      {getHeaderComponent()}
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable
+          droppableId={element.id + "list"}
+          renderClone={(provided, snapshot, rubric) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              style={provided.draggableProps.style}
+            >
+              {getChildComponent(children[rubric.source.index])}
+            </div>
           )}
-      </>
-    </div>
+        >
+          {(provided: DroppableProvided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {children.map((child: ElementInterface, index: number) => (
+                <Draggable key={child.id} draggableId={child.id} index={index}>
+                  {(
+                    provided: DraggableProvided,
+                    snapshot: DraggableStateSnapshot,
+                  ) => {
+                    return (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...provided.draggableProps.style,
+                          zIndex: snapshot.isDragging ? 9999 : "auto",
+                        }}
+                      >
+                        {getChildComponent(child)}
+                      </div>
+                    );
+                  }}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+      {newChild && !isInPopover && (
+        <NewChildComponent
+          key={Date.now()}
+          parent={element}
+          type={type}
+          handleFileAdded={handleFileAdded}
+        />
+      )}
+      {!isInPopover && !newChild && (
+        <div className="flex justify-end w-full text-sm mt-3">
+          <button
+            className="rpgm-secondary pl-3 pr-3"
+            onClick={() => handleCreate()}
+          >
+            {t("create.new", { context: type })}
+          </button>
+        </div>
+      )}
+      {!isInPopover &&
+        type === ElementType.Scene &&
+        api.settings.useSceneAnalyser && (
+          <SceneAnalyserComponent element={element} />
+        )}
+    </ContainerComponent>
   );
 }

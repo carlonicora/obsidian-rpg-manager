@@ -18,74 +18,41 @@ export default function MainV1Component({
   isInPopover: boolean;
 }): React.ReactElement {
   return (
-    <>
+    <div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
       <HeaderComponent element={element} isInPopover={isInPopover} />
-      {element.attribute(AttributeType.SensoryImprint) && (
-        <SensoryImprintAttributeComponent
-          element={element}
-          attribute={element.attribute(AttributeType.SensoryImprint)}
-          isEditable={!isInPopover}
-        />
-      )}
+      <SensoryImprintAttributeComponent
+        element={element}
+        isEditable={!isInPopover}
+      />
       <div
-        className={`gap-3 !mb-3 grid grid-cols-1 ${
-          isInPopover ? "" : "sm:grid-cols-1 lg:grid-cols-5"
-        }`}
+        className={`grid ${
+          isInPopover ? "grid-cols-1" : "grid-cols-4 gap-3"
+        } justify-between items-start`}
       >
+        <ImageComponent element={element} isEditable={!isInPopover} />
         <div
-          className={`grid ${
-            isInPopover ? "grid-cols-1" : "lg:col-span-5 lg:grid-cols-5"
-          } gap-3`}
+          className={`${
+            element.images.length === 0 ? "col-span-4" : "col-span-3"
+          }`}
         >
-          {element.images.length > 0 && (
-            <div className={`${isInPopover ? "col-span-1" : "lg:col-span-2"} `}>
-              <div
-                className="
-							rounded-lg border border-[--background-modifier-border] 
-							overflow-hidden 
-							bg-[--background-primary]
-							"
-              >
-                <ImageComponent element={element} isEditable={!isInPopover} />
-              </div>
-            </div>
-          )}
-          <div
-            className={`${
-              isInPopover
-                ? "col-span-1"
-                : element.images.length > 0
-                ? "lg:col-span-3"
-                : "lg:col-span-5"
-            } rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] !mt-0 p-3`}
-          >
-            <DescriptionAttributeComponent
-              element={element}
-              attribute={element.attribute(AttributeType.Description)}
-              isEditable={!isInPopover}
-            />
-            {element.type === ElementType.NonPlayerCharacter && (
-              <OgasAttributeComponent element={element} />
-            )}
-          </div>
-          <div className={`col-span-1 ${!isInPopover && "lg:col-span-5"}`}>
-            <AttributeListComponent
-              element={element}
-              isEditable={!isInPopover}
-            />
-          </div>
+          <DescriptionAttributeComponent
+            element={element}
+            attribute={element.attribute(AttributeType.Description)}
+            isEditable={!isInPopover}
+          />
         </div>
       </div>
-      {element.images.length > 0 && (
-        <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
-          <ImageCarouselComponent element={element} />
-        </div>
+      {element.type === ElementType.NonPlayerCharacter && (
+        <OgasAttributeComponent element={element} />
       )}
+
+      <AttributeListComponent element={element} isEditable={!isInPopover} />
       {isInPopover === false && element.relationships.length > 0 && (
-        <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
+        <>
           <RelationshipsComponent element={element} />
-        </div>
+          <ImageCarouselComponent element={element} />
+        </>
       )}
-    </>
+    </div>
   );
 }

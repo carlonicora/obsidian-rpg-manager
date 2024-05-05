@@ -120,7 +120,7 @@ export default function StoryCircleStageComponent({
       </div>
       {content}
       {showHelp && (
-        <div className="col-span-full mb-3 p-3 rounded-lg bg-[--background-primary-alt] text-sm">
+        <div className="col-span-full mb-3 p-3 rounded-md bg-[--background-primary-alt] text-sm">
           <MarkdownComponent
             value={t("storycircle.description", {
               context: stage.toLocaleLowerCase(),

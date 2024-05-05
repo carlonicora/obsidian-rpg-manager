@@ -72,35 +72,31 @@ export default function NewChildComponent({
   }
 
   return (
-    <div className="flex w-full border-b border-b-[--background-modifier-border] pb-1 mb-1 pt-1">
-      <div className="flex">
-        <div className="col-span-1 max-w-[36px] w-[36px]"></div>
-        <div className="pr-1">
-          <input
-            ref={inputRef}
-            onKeyDown={handleKeyDown}
-            type="text"
-            onChange={(e) => setFileName(e.target.value)}
-            className="w-full !border !border-[--background-modifier-border] h-5 focus:!border-[--background-modifier-border] focus:!shadow-none"
-            defaultValue={fileName}
-            onBlur={handleCreateNewChild}
-          />
-        </div>
+    <div className="flex flex-row w-full justify-between border-b border-b-[--background-modifier-border] pb-1 mb-1 pt-1">
+      <div className="w-full">
+        <input
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+          type="text"
+          onChange={(e) => setFileName(e.target.value)}
+          className="w-full !border !border-[--background-modifier-border] h-5 focus:!border-[--background-modifier-border] focus:!shadow-none"
+          defaultValue={fileName}
+          onBlur={handleCreateNewChild}
+        />
       </div>
-      <div className="flex justify-end w-full text-sm">
-        <button
-          className="rpgm-secondary pl-3 pr-3 mr-3"
-          onClick={handleFileAdded}
-        >
-          {t("buttons.cancel")}
-        </button>
-        <button
-          className="rpgm-primary pl-3 pr-3"
-          onClick={handleCreateNewChild}
-        >
-          {t("create.add", { context: type })}
-        </button>
-      </div>
+
+      <button
+        className="rpgm-secondary pl-3 pr-3 mr-3 text-sm"
+        onClick={handleFileAdded}
+      >
+        {t("buttons.cancel")}
+      </button>
+      <button
+        className="rpgm-primary pl-3 pr-3 text-sm"
+        onClick={handleCreateNewChild}
+      >
+        {t("create.add", { context: type })}
+      </button>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import MarkdownEditorComponent from "@/components/editors/MarkdownEditorComponent";
+import ContainerComponent from "@/components/groups/ContainerComponent";
 import { useApp } from "@/hooks/useApp";
 import { App } from "obsidian";
 import * as React from "react";
@@ -55,19 +56,17 @@ export default function DescriptionAttributeComponent({
 
   if (editing) {
     content = (
-      <div className="grid grid-cols-1">
-        <div>
-          <MarkdownEditorComponent
-            initialValue={attribute.value}
-            campaign={
-              element.type === ElementType.Campaign ? element : element.campaign
-            }
-            onChange={setDescription}
-            onBlur={() => updateDescription(description)}
-            className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
-          />
-        </div>
-        <div className="flex justify-end mt-3">
+      <>
+        <MarkdownEditorComponent
+          initialValue={attribute.value}
+          campaign={
+            element.type === ElementType.Campaign ? element : element.campaign
+          }
+          onChange={setDescription}
+          onBlur={() => updateDescription(description)}
+          className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
+        />
+        <div className="flex flex-row justify-end mt-3">
           <button className="rpgm-secondary" onClick={reset}>
             {t("buttons.cancel")}
           </button>
@@ -78,31 +77,24 @@ export default function DescriptionAttributeComponent({
             {t("buttons.save")}
           </button>
         </div>
-      </div>
+      </>
     );
   } else if (isEditable) {
     content = (
       <div
         onClick={() => setEditing(!editing)}
-        className="p-3 border border-[--background-modifier-border] hover:border-[--background-modifier-border-hover] rounded-md cursor-text"
+        className="cursor-text min-h-10"
       >
         <MarkdownComponent value={attribute.value} />
       </div>
     );
   } else {
-    content = (
-      <div className="">
-        <MarkdownComponent value={attribute.value} />
-      </div>
-    );
+    content = <MarkdownComponent value={attribute.value} />;
   }
 
   return (
-    <>
-      <h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
-        {t("attributes.description")}
-      </h2>
-      <div>{content}</div>
-    </>
+    <ContainerComponent title={t("attributes.description")}>
+      {content}
+    </ContainerComponent>
   );
 }

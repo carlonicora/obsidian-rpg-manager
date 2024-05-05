@@ -5,17 +5,20 @@ import { ElementType } from "src/data/enums/ElementType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { RelationshipInterface } from "src/data/interfaces/RelationshipInterface";
 import RelationshipComponent from "./RelationshipComponent";
+import RelationshipGridElementComponent from "./RelationshipGridElementComponent";
 
 export default function RelationshipListComponent({
   element,
   type,
   parent,
   children,
+  displayType,
 }: {
   element: ElementInterface;
   type: ElementType;
   parent: boolean;
   children: boolean;
+  displayType: "list" | "grid";
 }): React.ReactElement {
   const { t } = useTranslation();
 
@@ -66,17 +69,29 @@ export default function RelationshipListComponent({
   if (relationships === undefined || relationships.length === 0) return null;
 
   return (
-    <div>
+    <div className="flex flex-col w-full">
       <h3 className="!text-xl !font-extralight">{title}</h3>
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3">
-        {relationships.map((relationship: RelationshipInterface) => (
-          <RelationshipComponent
-            key={relationship.component.id}
-            element={element}
-            relationship={relationship}
-          />
-        ))}
-      </div>
+      {displayType === "grid" ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 justify-start gap-2">
+          {relationships.map((relationship: RelationshipInterface) => (
+            <RelationshipGridElementComponent
+              key={relationship.component.id}
+              element={element}
+              relationship={relationship}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          {relationships.map((relationship: RelationshipInterface) => (
+            <RelationshipComponent
+              key={relationship.component.id}
+              element={element}
+              relationship={relationship}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

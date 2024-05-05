@@ -33,11 +33,38 @@ export default function HeaderComponent({
       sibling.positionInParent === element.positionInParent + 1,
   );
 
+  const openOptions = async () => {
+    app.workspace.detachLeavesOfType("rpg-manager-options");
+    await app.workspace.getRightLeaf(false).setViewState({
+      type: "rpg-manager-options",
+      active: true,
+    });
+
+    const leaf: WorkspaceLeaf = app.workspace.getLeavesOfType(
+      "rpg-manager-options",
+    )[0];
+    const view: OptionView = leaf.view as OptionView;
+
+    app.workspace.revealLeaf(leaf);
+
+    view.render();
+  };
+
   return (
-    <>
-      <div className="!m-0 flex justify-end p-1 text-[--text-faint] text-xs absolute right-0 !mt-[-1.25rem]">
-        Rpg Manager {api.version}
-      </div>
+    <div className="flex flex-col w-full">
+      {!isInPopover && (
+        <>
+          <div className="flex flex-col italic justify-end items-end p-1 text-[--text-faint] text-xs absolute right-0 !m-0 !-mt-3 !mr-1">
+            Rpg Manager {api.version}
+          </div>
+          <div
+            className="flex justify-end items-end text-[--text-faint] hover:text-[--text-accent] text-xs cursor-pointer !mt-2"
+            onClick={openOptions}
+          >
+            {t("options.option", { count: 2 })}
+          </div>
+        </>
+      )}
       <div className="relative flex flex-col justify-center items-center h-full">
         <h1 className="!text-4xl !font-extralight">{element.name}</h1>
         {element.type !== ElementType.Campaign &&
@@ -46,67 +73,44 @@ export default function HeaderComponent({
               {t("global")}
             </h3>
           )}
-        {!isInPopover && (
-          <div className="!font-extralight text-[--text-faint] grid grid-cols-12">
-            <div className="text-center col-span-4">
-              {previousElement ? (
-                <a
-                  href={previousElement.path}
-                  className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
-                >
-                  &lt;&nbsp;{previousElement.name}
-                </a>
-              ) : (
-                <>&nbsp;</>
-              )}
-            </div>
-            <div className="text-center">
-              {previousElement ? <>|</> : <>&nbsp;</>}
-            </div>
-            <div className="text-center col-span-2">
-              {t("elements." + element.type, { count: 1 })}
-            </div>
-            <div className="text-center">
-              {nextElement ? <>|</> : <>&nbsp;</>}
-            </div>
-            <div className="text-center col-span-4">
-              {nextElement ? (
-                <a
-                  href={nextElement.path}
-                  className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
-                >
-                  {nextElement.name}&nbsp;&gt;
-                </a>
-              ) : (
-                <>&nbsp;</>
-              )}
-            </div>
+      </div>
+      {!isInPopover && (
+        <div className="w-full !font-extralight text-[--text-faint] grid grid-cols-12">
+          <div className="text-center col-span-4">
+            {previousElement ? (
+              <a
+                href={previousElement.path}
+                className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
+              >
+                &lt;&nbsp;{previousElement.name}
+              </a>
+            ) : (
+              <>&nbsp;</>
+            )}
           </div>
-        )}
-        <div
-          className="absolute bottom-0 right-0 flex justify-end p-1 text-[--text-faint] text-xs z-10"
-          onClick={async () => {
-            app.workspace.detachLeavesOfType("rpg-manager-options");
-            await app.workspace.getRightLeaf(false).setViewState({
-              type: "rpg-manager-options",
-              active: true,
-            });
-
-            const leaf: WorkspaceLeaf = app.workspace.getLeavesOfType(
-              "rpg-manager-options",
-            )[0];
-            const view: OptionView = leaf.view as OptionView;
-
-            app.workspace.revealLeaf(leaf);
-
-            view.render();
-          }}
-        >
-          <div className="ml-4 cursor-pointer">
-            {t("options.option", { count: 2 })}
+          <div className="text-center">
+            {previousElement ? <>|</> : <>&nbsp;</>}
+          </div>
+          <div className="text-center col-span-2">
+            {t("elements." + element.type, { count: 1 })}
+          </div>
+          <div className="text-center">
+            {nextElement ? <>|</> : <>&nbsp;</>}
+          </div>
+          <div className="text-center col-span-4">
+            {nextElement ? (
+              <a
+                href={nextElement.path}
+                className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
+              >
+                {nextElement.name}&nbsp;&gt;
+              </a>
+            ) : (
+              <>&nbsp;</>
+            )}
           </div>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }

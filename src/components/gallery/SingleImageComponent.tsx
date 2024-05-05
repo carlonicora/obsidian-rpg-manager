@@ -59,7 +59,7 @@ export default function SingleImageComponent({
           <img
             src={image.src}
             alt={caption}
-            className="w-full h-auto object-contain rounded-lg"
+            className="w-full h-auto object-contain rounded-md"
           />
         </div>
         <div className="ml-3 w-full">

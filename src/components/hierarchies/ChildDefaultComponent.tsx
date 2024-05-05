@@ -37,9 +37,9 @@ export default function ChildDefaultComponent({
   }
 
   return (
-    <div className="flex items-center w-full hover:bg-[--background-primary-alt] border-b border-b-[--background-modifier-border] text-sm group">
+    <div className="flex flex-row w-full justify-start border-b border-b-[--background-modifier-border] pb-1 pt-1">
       {!isInPopover && (
-        <div className="col-span-1 max-w-[12px] w-[12px] mr-1 pt-1 items-center invisible group-hover:visible">
+        <div className="max-w-[12px] w-[12px] mr-1 items-center invisible group-hover:visible">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ export default function ChildDefaultComponent({
           </svg>
         </div>
       )}
-      <div className="col-span-1 max-w-[20px] w-[20px] align-middle items-center">
+      <div className="max-w-[20px] w-[20px] align-middle items-center pt-1">
         <a
           href={element.file.name}
           className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
@@ -82,28 +82,24 @@ export default function ChildDefaultComponent({
         </a>
       </div>
       {isInPopover ? (
-        <div className="flex w-full items-center">
-          <div>
-            <a
-              href={element.file.name}
-              className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
-            >
-              {element.name}
-            </a>
-          </div>
+        <div className="w-full">
+          <a
+            href={element.file.name}
+            className="internal-link !no-underline cursor-pointer text-[--text-accent] hover:text-[--text-accent-hover]"
+          >
+            {element.name}
+          </a>
         </div>
       ) : (
-        <div className="grid grid-cols-10 w-full pt-1 pb-1 items-center">
-          <div className="col-span-2 pr-1">
-            <input
-              type="text"
-              onBlur={(e) => {
-                saveAttribute(AttributeType.Name, e.target.value);
-              }}
-              className="w-full !border !border-transparent group-hover:!border-[--background-modifier-border] h-5 focus:!border-[--background-modifier-border] focus:!shadow-none"
-              defaultValue={element.name}
-            />
-          </div>
+        <div className="w-full">
+          <input
+            type="text"
+            onBlur={(e) => {
+              saveAttribute(AttributeType.Name, e.target.value);
+            }}
+            className="w-full !border !border-transparent group-hover:!border-[--background-modifier-border] h-5 focus:!border-[--background-modifier-border] focus:!shadow-none"
+            defaultValue={element.name}
+          />
         </div>
       )}
     </div>

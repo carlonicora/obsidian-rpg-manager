@@ -107,7 +107,7 @@ function Edit({
     element.type === ElementType.Campaign ? element : element.campaign;
 
   return (
-    <div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
+    <div className="rounded-md border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
       <h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
         {t("attributes.kishotenketsu")}
       </h2>
@@ -180,7 +180,7 @@ function Browse({
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-lg border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
+    <div className="rounded-md border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] mb-3 p-3">
       <h2 className="!text-2xl !font-bold border-b border-b-[--background-modifier-border]">
         {t("attributes.kishotenketsu")}
       </h2>
@@ -244,7 +244,7 @@ function EditableAttribute({
         )}
       </div>
       {showHelp && (
-        <div className="col-span-full mb-3 p-3 rounded-lg bg-[--background-primary-alt] text-sm">
+        <div className="col-span-full mb-3 p-3 rounded-md bg-[--background-primary-alt] text-sm">
           <MarkdownComponent
             value={t("kishotenketsu.description", { context: subAttribute })}
           />

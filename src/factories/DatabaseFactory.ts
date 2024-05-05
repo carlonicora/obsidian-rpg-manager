@@ -16,7 +16,7 @@ export class DatabaseFactory {
           return element;
         })
         .catch((error) => {
-          console.warn(error);
+          console.error(error);
           return undefined;
         }),
     );

@@ -9,11 +9,5 @@ export default function NonPlayerCharacterComponent({
   element: ElementInterface;
   isInPopover: boolean;
 }): React.ReactElement {
-  return (
-    <>
-      <div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
-        <MainV1Component element={element} isInPopover={isInPopover} />
-      </div>
-    </>
-  );
+  return <MainV1Component element={element} isInPopover={isInPopover} />;
 }

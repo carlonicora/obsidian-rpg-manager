@@ -35,7 +35,7 @@ export class Element implements ElementInterface {
 
   get id(): string {
     if (this._rpgManagerBlock.id.id === undefined)
-      console.warn(`${this._file.path} has no id`);
+      console.error(`${this._file.path} has no id`);
     return this._rpgManagerBlock.id.id ?? this._file.path;
   }
 

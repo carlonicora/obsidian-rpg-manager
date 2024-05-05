@@ -35,7 +35,7 @@ export default function SubplotComponent({
           className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-3 !mb-3}`}
         >
           <div className={`col-span-5 sm:col-span-1 lg:col-span-5`}>
-            <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3 !mb-3">
+            <div className="rounded-md border border-[--background-modifier-border] bg-[--background-primary] p-3 !mb-3">
               <DescriptionAttributeComponent
                 element={element}
                 attribute={element.attribute(AttributeType.Description)}
@@ -58,12 +58,12 @@ export default function SubplotComponent({
           </div>
         )}
         {element.images.length > 1 && (
-          <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
+          <div className="rounded-md border border-[--background-modifier-border] bg-[--background-primary] p-3">
             <ImageCarouselComponent element={element} />
           </div>
         )}
         {isInPopover === false && element.relationships.length > 0 && (
-          <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
+          <div className="rounded-md border border-[--background-modifier-border] bg-[--background-primary] p-3">
             <RelationshipsComponent element={element} />
           </div>
         )}

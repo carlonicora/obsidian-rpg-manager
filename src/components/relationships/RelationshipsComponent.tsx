@@ -2,27 +2,31 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { ElementType } from "src/data/enums/ElementType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
+import ContainerComponent from "../groups/ContainerComponent";
 import RelationshipListComponent from "./RelationshipListComponent";
 
 export default function RelationshipsComponent({
   element,
+  displayType,
 }: {
   element: ElementInterface;
+  displayType?: "list" | "grid";
 }): React.ReactElement {
   if (element.relationships.length === 0) return null;
+
+  if (!displayType) displayType = "grid";
 
   const { t } = useTranslation();
 
   return (
-    <div>
-      <h2>{t("relationships.relationship", { count: 2 })}</h2>
-
+    <ContainerComponent title={t("relationships.relationship", { count: 2 })}>
       <RelationshipListComponent
         key={element.type + "parent"}
         element={element}
         type={element.type}
         parent={true}
         children={false}
+        displayType={displayType}
       />
       <RelationshipListComponent
         key={element.type + "children"}
@@ -30,6 +34,7 @@ export default function RelationshipsComponent({
         type={element.type}
         parent={false}
         children={true}
+        displayType={displayType}
       />
 
       {Object.values(ElementType).map((type: ElementType) => {
@@ -46,9 +51,10 @@ export default function RelationshipsComponent({
             type={type}
             parent={false}
             children={false}
+            displayType={displayType}
           />
         );
       })}
-    </div>
+    </ContainerComponent>
   );
 }

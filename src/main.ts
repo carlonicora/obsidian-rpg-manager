@@ -154,13 +154,17 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
       }
     }
 
+    const start: Date = new Date();
     DatabaseFactory.create(this.app, this).then(
       (database: ElementInterface[]) => {
         this._database = database;
+        const duration: number = new Date().getTime() - start.getTime();
+        console.info(
+          `RpgManager ${this.manifest.version} database loaded in ${duration}ms with ${this._database.length} elements`,
+        );
 
         ServiceFactory.initialise(this.app, this);
 
-        console.info("RpgManager " + this.manifest.version + " loaded");
         if (this.settings.forceFullWidth === true)
           document.body.classList.add("rpgm-toggle-full-width-styles");
         PluginServices.registerEvents(this.app, this, this._database);

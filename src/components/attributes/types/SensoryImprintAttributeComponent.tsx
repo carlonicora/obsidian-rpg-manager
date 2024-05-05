@@ -164,7 +164,7 @@ function EditComponent({
   };
 
   return (
-    <div className="relative w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg">
+    <div className="relative w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-md">
       {showOverlay && <ChatGptOverlay type="sensoryimprint" />}
       <div className="w-full flex justify-center mb-3">
         <h3 className="!p-0 !text-xl !font-extralight">
@@ -318,7 +318,7 @@ function BrowseComponent({
   const totalSenses = Object.values(sensoryImprint).filter(Boolean).length;
 
   return (
-    <div className="w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-lg group">
+    <div className="w-full bg-[--background-primary] p-3 border border-[--background-modifier-border] rounded-md group">
       <div className="w-full flex justify-center mb-3">
         <h3 className="!p-0 !text-xl !font-extralight">
           {t("attributes.sensoryimprints")}
@@ -399,13 +399,14 @@ function BrowseComponent({
 
 export default function SensoryImprintAttributeComponent({
   element,
-  attribute,
   isEditable,
 }: {
   element: ElementInterface;
-  attribute?: AttributeInterface;
   isEditable: boolean;
 }): React.ReactElement {
+  const attribute: AttributeInterface = element.attribute(
+    AttributeType.SensoryImprint,
+  );
   if (attribute === undefined || !attribute.isSet) return null;
 
   const [editing, setEditing] = React.useState<boolean>(false);
@@ -415,7 +416,7 @@ export default function SensoryImprintAttributeComponent({
   };
 
   return (
-    <>
+    <div className="flex flex-row w-full">
       {editing ? (
         <EditComponent
           element={element}
@@ -427,6 +428,6 @@ export default function SensoryImprintAttributeComponent({
       ) : (
         <BrowseComponent attribute={attribute} />
       )}
-    </>
+    </div>
   );
 }
