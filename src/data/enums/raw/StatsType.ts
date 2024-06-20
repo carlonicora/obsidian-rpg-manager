@@ -1,0 +1,23 @@
+export type StatsType = {
+  Athletics: number;
+  Arts: number;
+  Drive: number;
+  Education: number;
+  Empathy: number;
+  Investigation: number;
+  Medicine: number;
+  Melee: number;
+  Occult: number;
+  Perception: number;
+  Persuasion: number;
+  Ranged: number;
+  Stealth: number;
+  Technology: number;
+  Willpower: number;
+  Health: number;
+  Damage: number;
+  UsedMana: number;
+  DefaultMeleeDamage: number;
+  DefaultRangedDamage: number;
+  Armour: number;
+};

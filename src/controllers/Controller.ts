@@ -15,7 +15,10 @@ export class Controller extends MarkdownRenderChild {
   private _components: Map<SystemType, Map<ElementType, React.FC>> = new Map<
     SystemType,
     Map<ElementType, React.FC>
-  >([[SystemType.Agnostic, agnosticComponents]]);
+  >([
+    [SystemType.Agnostic, agnosticComponents],
+    [SystemType.RAW, agnosticComponents],
+  ]);
 
   private _root: Root | undefined = undefined;
   private _source: any = {};

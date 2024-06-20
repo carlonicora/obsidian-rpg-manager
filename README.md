@@ -507,13 +507,13 @@ Overall, tasks are a powerful tool in RPG Manager that helps you stay organized 
 
 ### 3.6. Element Templates
 
-In RPG Manager, an element template is an Obsidian note that contains a special code block, `RpgManager4`, which is used by the application to render its user interface (UI). This allows Storytellers/GMs to customize their notes by adding any information, text, or other code blocks they need, while still having the RPG Manager UI integrated into the note.
+In RPG Manager, an element template is an Obsidian note that contains a special code block, `RpgManager5`, which is used by the application to render its user interface (UI). This allows Storytellers/GMs to customize their notes by adding any information, text, or other code blocks they need, while still having the RPG Manager UI integrated into the note.
 
 Creating a template is a two-step process:
 
 1. **Define the Template Location:** In the RPG Manager settings, specify the folder where your templates are stored. This is where RPG Manager will look for your templates.
 
-2. **Create the Template:** A template is an Obsidian note that contains the \`\`\`RpgManager4\`\`\` code block where you want the RPG Manager UI to appear. You can add any other content you want to the note, but it can only contain one \`\`\`RpgManager4\`\`\` code block.
+2. **Create the Template:** A template is an Obsidian note that contains the \`\`\`RpgManager5\`\`\` code block where you want the RPG Manager UI to appear. You can add any other content you want to the note, but it can only contain one \`\`\`RpgManager5\`\`\` code block.
 
 ### 3.7. Global Assets
 

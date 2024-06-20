@@ -4,8 +4,9 @@ import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementType } from "src/data/enums/ElementType";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
+import ConflictsRelationshipsListController from "../../attributes/conflict/components/ConflictsRelationshipsListController";
+import DescriptionComponent from "../../attributes/description/components/DescriptionComponent";
 import AttributeListComponent from "../attributes/AttributeListComponent";
-import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import StoryCircleAttributeComponent from "../attributes/types/StoryCircleAttributeComponent";
 import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
@@ -32,11 +33,12 @@ export default function AdventureComponent({
     <div className="flex flex-col space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border] rounded-md">
       <HeaderComponent element={element} isInPopover={isInPopover} />
       <BannerComponent element={element} />
-      <DescriptionAttributeComponent
+      <DescriptionComponent
         element={element}
         attribute={element.attribute(AttributeType.Description)}
         isEditable={!isInPopover}
       />
+      <ConflictsRelationshipsListController element={element} />
       <AttributeListComponent element={element} isEditable={!isInPopover} />
 
       {kishotenketsu && kishotenketsu.isSet && (

@@ -1,3 +1,4 @@
+import { RelationshipInterface } from "@/data/interfaces/RelationshipInterface";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { ElementType } from "src/data/enums/ElementType";
@@ -12,7 +13,19 @@ export default function RelationshipsComponent({
   element: ElementInterface;
   displayType?: "list" | "grid";
 }): React.ReactElement {
-  if (element.relationships.length === 0) return null;
+  if (
+    element.relationships.filter(
+      (relationship: RelationshipInterface) =>
+        relationship.component !== undefined &&
+        relationship.component.type !== ElementType.Campaign &&
+        relationship.component.type !== ElementType.Adventure &&
+        relationship.component.type !== ElementType.Chapter &&
+        relationship.component.type !== ElementType.Session &&
+        relationship.component.type !== ElementType.Scene &&
+        relationship.component.type !== ElementType.Conflict,
+    ).length === 0
+  )
+    return null;
 
   if (!displayType) displayType = "grid";
 
@@ -40,6 +53,9 @@ export default function RelationshipsComponent({
       {Object.values(ElementType).map((type: ElementType) => {
         if (
           type === ElementType.Campaign ||
+          type === ElementType.Adventure ||
+          type === ElementType.Chapter ||
+          type === ElementType.Conflict ||
           type === ElementType.Session ||
           type === ElementType.Scene
         )

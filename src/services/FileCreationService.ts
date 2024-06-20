@@ -6,8 +6,8 @@ import { SystemType } from "src/data/enums/SystemType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { IdInterface } from "src/data/interfaces/IdInterface";
 import { v4 } from "uuid";
-import { YamlService } from "../data/classes/YamlService";
 import { RpgManagerCodeblockService } from "./RpgManagerCodeblockService";
+import { YamlService } from "./YamlService";
 const path = require("path");
 
 export class FileCreationService {
@@ -156,6 +156,12 @@ export class FileCreationService {
         break;
       case ElementType.Session:
         response += pathSeparator + "02. Sessions" + pathSeparator + this._name;
+        this._createFolder(response);
+        response += pathSeparator + this._name + ".md";
+        break;
+      case ElementType.Conflict:
+        response +=
+          pathSeparator + "12. Conflicts" + pathSeparator + this._name;
         this._createFolder(response);
         response += pathSeparator + this._name + ".md";
         break;

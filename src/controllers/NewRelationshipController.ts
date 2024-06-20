@@ -73,6 +73,8 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 
     allCampaignElements = allCampaignElements.filter(
       (element: ElementInterface) =>
+        element.type !== ElementType.Adventure &&
+        element.type !== ElementType.Chapter &&
         element.type !== ElementType.Session &&
         element.type !== ElementType.Scene,
     );

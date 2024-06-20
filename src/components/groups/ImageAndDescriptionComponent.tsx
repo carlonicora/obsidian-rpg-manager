@@ -1,7 +1,7 @@
 import * as React from "react";
 import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
-import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
+import DescriptionComponent from "../../attributes/description/components/DescriptionComponent";
 import ParentAttributeComponent from "../attributes/types/ParentAttributeComponent";
 import ImageComponent from "../images/ImageComponent";
 
@@ -27,7 +27,7 @@ export default function ImageAndDescriptionComponent({
       )}
 
       <div className="rounded-md border border-[--background-modifier-border] overflow-hidden bg-[--background-primary] p-3">
-        <DescriptionAttributeComponent
+        <DescriptionComponent
           element={element}
           attribute={element.attribute(AttributeType.Description)}
           isEditable={!isInPopover}

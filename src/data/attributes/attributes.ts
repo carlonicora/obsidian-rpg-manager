@@ -74,10 +74,6 @@ const address = {
   id: AttributeType.Address,
   type: AttributeComponentType.LongText,
 };
-const location = {
-  id: AttributeType.Location,
-  type: AttributeComponentType.Map,
-};
 const duration = {
   id: AttributeType.Duration,
   type: AttributeComponentType.Duration,
@@ -89,10 +85,6 @@ const philosophy = {
 const factionstructure = {
   id: AttributeType.FactionStructure,
   type: AttributeComponentType.LongText,
-};
-const nonplayercharactertype = {
-  id: AttributeType.NonPlayerCharacterType,
-  type: AttributeComponentType.NonPlayerCharacterType,
 };
 const sensoryimprint = {
   id: AttributeType.SensoryImprint,
@@ -107,6 +99,14 @@ const pronoun = {
   id: AttributeType.Pronoun,
   type: AttributeComponentType.Pronoun,
 };
+const conflict = {
+  id: AttributeType.Conflict,
+  type: AttributeComponentType.Conflict,
+};
+const stats = {
+  id: AttributeType.Stats,
+  type: AttributeComponentType.Stats,
+};
 
 export const attributes: Map<ElementType, AttributeInterface[]> = new Map<
   ElementType,
@@ -114,6 +114,7 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<
 >([
   [ElementType.Campaign, [description, storycircle]],
   [ElementType.Adventure, [description, storycircle, kishotenketsu]],
+  [ElementType.Conflict, [description, conflict]],
   [ElementType.Chapter, [description, abtstage, storycircle, kishotenketsu]],
   [
     ElementType.Session,
@@ -136,8 +137,8 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<
     ElementType.NonPlayerCharacter,
     [
       description,
+      stats,
       sensoryimprint,
-      nonplayercharactertype,
       occupation,
       ghost,
       lie,
@@ -156,7 +157,7 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<
     ],
   ],
   [ElementType.Event, [description, date]],
-  [ElementType.Location, [sensoryimprint, description, address, location]],
+  [ElementType.Location, [sensoryimprint, description, address]],
   [ElementType.Faction, [description, philosophy, factionstructure]],
   [ElementType.Clue, [description]],
   [

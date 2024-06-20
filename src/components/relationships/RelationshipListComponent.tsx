@@ -72,7 +72,7 @@ export default function RelationshipListComponent({
     <div className="flex flex-col w-full">
       <h3 className="!text-xl !font-extralight">{title}</h3>
       {displayType === "grid" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 justify-start gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 justify-start gap-2">
           {relationships.map((relationship: RelationshipInterface) => (
             <RelationshipGridElementComponent
               key={relationship.component.id}

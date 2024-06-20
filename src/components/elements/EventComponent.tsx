@@ -1,8 +1,9 @@
 import * as React from "react";
 import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
+import ConflictsRelationshipsListController from "../../attributes/conflict/components/ConflictsRelationshipsListController";
+import DescriptionComponent from "../../attributes/description/components/DescriptionComponent";
 import AttributeListComponent from "../attributes/AttributeListComponent";
-import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import BannerComponent from "../headers/BannerComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
@@ -25,12 +26,13 @@ export default function EventComponent({
         >
           <div className={`col-span-5 sm:col-span-1 lg:col-span-5`}>
             <div className="rounded-md border border-[--background-modifier-border] bg-[--background-primary] p-3 !mb-3">
-              <DescriptionAttributeComponent
+              <DescriptionComponent
                 element={element}
                 attribute={element.attribute(AttributeType.Description)}
                 isEditable={!isInPopover}
               />
             </div>
+            <ConflictsRelationshipsListController element={element} />
             <AttributeListComponent
               element={element}
               isEditable={!isInPopover}

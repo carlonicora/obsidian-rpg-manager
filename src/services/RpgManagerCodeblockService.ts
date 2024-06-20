@@ -15,8 +15,8 @@ import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { RelationshipInterface } from "src/data/interfaces/RelationshipInterface";
 import { RelationshipFactory } from "src/factories/RelationshipFactory";
-import { YamlService } from "../data/classes/YamlService";
 import { EditorPositionService } from "./EditorPositionService";
+import { YamlService } from "./YamlService";
 
 export class RpgManagerCodeblockService {
   private _fileContent: string | undefined = undefined;

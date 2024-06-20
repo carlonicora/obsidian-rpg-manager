@@ -18,6 +18,8 @@ export const i18nIt = {
     chapter_contains: "Contiene Capitoli",
     scene_one: "Scena",
     scene_other: "Scene",
+    conflict_one: "Conflitto",
+    conflict_other: "Conflitti",
     scene_inside: "Dentro la Scena",
     scene_contains: "Contiene Scene",
     playercharacter_one: "Personaggio Giocante",
@@ -82,6 +84,9 @@ export const i18nIt = {
   attributes: {
     attribute_one: "Attributo",
     attribute_other: "Attributi",
+    conflict: "Conflitto",
+    conflict_one: "Conflitto",
+    conflict_other: "Conflitti",
     description: "Descrizione",
     ghost: "Fantasma",
     lie: "Menzongna",
@@ -184,32 +189,6 @@ export const i18nIt = {
     caption: "Didascalia",
     carousel: "Carosello Immagini",
   },
-  analyser: {
-    expectedduration: "Durata Prevista",
-    activity: "Attività",
-    excitement: "Eccitazione",
-    interest: "Interesse",
-    variety: "Varietà",
-    sceneanalyser: "Analizzatore di Scene",
-    saactivity_positiveerror: "Troppe scene attive",
-    saactivity_positivewarning:
-      "Il numero di scene attive potrebbe essere più del necessario.",
-    saactivity_negativeerror: "Non abbastanza scene attive",
-    saactivity_negativewarning:
-      "Il numero di scene attive potrebbe non essere sufficiente.",
-    saexcitement_positiveerror: "Troppe scene eccitanti",
-    saexcitement_positivewarning:
-      "Il numero di scene eccitanti potrebbe essere più del necessario.",
-    saexcitement_negativeerror: "Non abbastanza scene eccitanti",
-    saexcitement_negativewarning:
-      "Il numero di scene eccitanti potrebbe non essere sufficiente.",
-    sainterest_negativeerror: "Non abbastanza varietà nel tipo di scene",
-    sainterest_negativewarning:
-      "Il numero di tipi di scene potrebbe non essere sufficiente.",
-    savariety_negativeerror: "Troppi tipi di scene ripetuti",
-    savariety_negativewarning:
-      "Il numero di tipi di scene ripetuti potrebbe essere troppo alto.",
-  },
   clues: {
     description: "Descrizione",
     destination: "Destinazione",
@@ -237,6 +216,7 @@ export const i18nIt = {
     new_session: "Crea una nuova Sessione",
     new_chapter: "Crea un nuovo Capitolo",
     new_scene: "Crea una nuova Scena",
+    new_conflict: "Crea un nuovo Conflitto",
     new_element: "Crea un nuovo Elemento di Rpg Manager",
     new_playercharacter: "Crea un nuovo Personaggio Giocante",
     new_nonplayercharacter: "Crea un nuovo Personaggio Non Giocante",
@@ -253,6 +233,7 @@ export const i18nIt = {
     in_session: "Aggiungi una nuova Sessione alla nota corrente",
     in_chapter: "Aggiungi un nuovo Capitolo alla nota corrente",
     in_scene: "Aggiungi una nuova Scena alla nota corrente",
+    in_conflict: "Aggiungi un nuovo Conflitto alla nota corrente",
     in_playercharacter:
       "Aggiungi un nuovo Personaggio Giocante alla nota corrente",
     in_nonplayercharacter:
@@ -266,6 +247,7 @@ export const i18nIt = {
     in_monster: "Aggiungi un nuovo Mostro alla nota corrente",
     add_session: "Aggiungi una nuova Sessione",
     add_scene: "Aggiungi una nuova Scena",
+    add_conflict: "Aggiungi un nuovo Conflitto",
     add_chapter: "Aggiungi un nuovo Capitolo",
     add_clue: "Aggiungi Indizio",
     add_relationship: "Aggiungi Relazione",
@@ -462,6 +444,12 @@ Qual è la Posta in gioco di *{{name}}*?`,
       "I personaggi giocanti lottano per ottenere ciò di cui hanno bisogno, e nel farlo tornano nel mondo che conoscono.",
     description_change:
       "I personaggi giocanti sono cambiati, e dovrebbero vedere gli effetti delle loro azioni nel mondo che conoscono.",
+  },
+  conflict: {
+    who: "Chi",
+    wants: "Vuole",
+    but: "Ma",
+    therefore: "Quindi",
   },
   name: "Nome",
   documentation: "Documentazione",

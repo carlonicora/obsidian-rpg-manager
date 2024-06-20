@@ -1,0 +1,17 @@
+export enum RawAbilities {
+  Athletics = "Athletics",
+  Arts = "Arts",
+  Drive = "Drive",
+  Education = "Education",
+  Empathy = "Empathy",
+  Investigation = "Investigation",
+  Medicine = "Medicine",
+  Melee = "Melee",
+  Occult = "Occult",
+  Perception = "Perception",
+  Persuasion = "Persuasion",
+  Ranged = "Ranged",
+  Stealth = "Stealth",
+  Technology = "Technology",
+  Willpower = "Willpower",
+}

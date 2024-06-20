@@ -30,7 +30,7 @@ export default function RelationshipGridElementComponent({
           </div>
         </>
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-center">
+        <div className="w-full h-full flex items-center justify-center text-center aspect-square">
           <div className="text-[--text-opacity]">
             <a
               href={relationship.component.file.path}

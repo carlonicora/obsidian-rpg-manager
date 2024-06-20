@@ -75,7 +75,11 @@ export default function CreationBaseComponent({
         setSystem(campaigns[0].system);
       }
 
-      if (type === ElementType.Adventure || type === ElementType.Session) {
+      if (
+        type === ElementType.Adventure ||
+        type === ElementType.Session ||
+        type === ElementType.Conflict
+      ) {
         if (parent === undefined && campaign !== undefined) setParent(campaign);
 
         if (positionInParent === undefined && campaign !== undefined) {

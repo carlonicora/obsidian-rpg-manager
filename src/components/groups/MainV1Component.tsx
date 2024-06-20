@@ -1,14 +1,14 @@
-import { ElementType } from "@/data/enums/ElementType";
 import * as React from "react";
 import { AttributeType } from "src/data/enums/AttributeType";
+import ConflictsRelationshipsListController from "../../attributes/conflict/components/ConflictsRelationshipsListController";
+import DescriptionComponent from "../../attributes/description/components/DescriptionComponent";
 import AttributeListComponent from "../attributes/AttributeListComponent";
-import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
-import OgasAttributeComponent from "../attributes/types/OgasAttributeComponent";
 import SensoryImprintAttributeComponent from "../attributes/types/SensoryImprintAttributeComponent";
 import HeaderComponent from "../headers/HeaderComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import ImageComponent from "../images/ImageComponent";
 import RelationshipsComponent from "../relationships/RelationshipsComponent";
+import UsedInListContainerComponent from "../relationships/UsedInListContainerComponent";
 
 export default function MainV1Component({
   element,
@@ -35,21 +35,20 @@ export default function MainV1Component({
             element.images.length === 0 ? "col-span-4" : "col-span-3"
           }`}
         >
-          <DescriptionAttributeComponent
+          <DescriptionComponent
             element={element}
             attribute={element.attribute(AttributeType.Description)}
             isEditable={!isInPopover}
           />
         </div>
       </div>
-      {element.type === ElementType.NonPlayerCharacter && (
-        <OgasAttributeComponent element={element} />
-      )}
 
+      <ConflictsRelationshipsListController element={element} />
       <AttributeListComponent element={element} isEditable={!isInPopover} />
       {isInPopover === false && element.relationships.length > 0 && (
         <>
           <RelationshipsComponent element={element} />
+          <UsedInListContainerComponent element={element} />
           <ImageCarouselComponent element={element} />
         </>
       )}

@@ -1,5 +1,5 @@
 export enum NonPlayerCharacterType {
-	Main = "main",
-	Supporting = "supporting",
-	Extra = "extra",
+  Main = "main",
+  Supporting = "supporting",
+  Extra = "extra",
 }

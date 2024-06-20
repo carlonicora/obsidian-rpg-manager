@@ -1,3 +1,4 @@
+import { NonPlayerCharacterType } from "@/data/enums/NonPlayerCharacterType";
 import { StepComponentInterface } from "@/data/interfaces/StepComponentInterface";
 import { useApp } from "@/hooks/useApp";
 import { App } from "obsidian";
@@ -8,7 +9,6 @@ import ChatGptOverlay from "src/components/chatgpt/ChatGptOverlay";
 import { ArcType } from "src/data/enums/ArcType";
 import { AttributeType } from "src/data/enums/AttributeType";
 import { ElementType } from "src/data/enums/ElementType";
-import { NonPlayerCharacterType } from "src/data/enums/NonPlayerCharacterType";
 import { StrengthType } from "src/data/enums/StrengthType";
 import { WeaknessType } from "src/data/enums/WeaknessType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";

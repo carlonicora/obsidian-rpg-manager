@@ -1,20 +1,18 @@
+import AbtStageComponent from "@/attributes/abtstage/components/AbtStageComponent";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { AttributeComponentType } from "src/data/enums/AttributeComponentType";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
+import ArcComponent from "../../attributes/arc/components/ArcComponent";
+import BooleanComponent from "../../attributes/boolean/components/BooleanComponent";
+import DateComponent from "../../attributes/date/components/DateComponent";
+import LinkComponent from "../../attributes/link/components/LinkComponent";
+import LongTextComponent from "../../attributes/longtext/components/LongTextComponent";
+import NumberComponent from "../../attributes/number/components/NumberComponent";
+import PronounComponent from "../../attributes/pronoun/components/PronounComponent";
 import ContainerComponent from "../groups/ContainerComponent";
-import AbtStageAttributeComponent from "./types/AbtStageAttributeComponent";
-import ArcAttributeComponent from "./types/ArcAttributeComponent";
-import BooleanAttributeComponent from "./types/BooleanAttributeComponent";
-import DateAttributeComponent from "./types/DateAttributeComponent";
 import DefaultAttributeTypeComponent from "./types/DefaultAttributeTypeComponent";
-import LinkAttributeTypeComponent from "./types/LinkAttributeComponent";
-import LongTextAttributeComponent from "./types/LongTextAttributeComponent";
-import MapAttributeComponent from "./types/MapAttributeComponent";
-import NonPlayerCharacterTypeAttributeComponent from "./types/NonPlayerCharacterTypeAttributeComponent";
-import NumberAttributeTypeComponent from "./types/NumberAttributeTypeComponent";
-import PronounComponent from "./types/PronounComponent";
 import ScaleTypeAttributeComponent from "./types/ScaleTypeAttributeComponent";
 import SceneTypeAttributeComponent from "./types/SceneTypeAttributeComponent";
 import SelectAttributeTypeComponent from "./types/SelectAttributeTypeComponent";
@@ -34,11 +32,12 @@ export default function AttributeListComponent({
       (attribute: AttributeInterface) =>
         attribute.type !== AttributeComponentType.Description &&
         attribute.type !== AttributeComponentType.StoryCircle &&
+        attribute.type !== AttributeComponentType.Conflict &&
         attribute.type !== AttributeComponentType.Kishotenketsu &&
         attribute.type !== AttributeComponentType.Duration &&
         attribute.type !== AttributeComponentType.Parent &&
-        attribute.type !== AttributeComponentType.Conflict &&
         attribute.type !== AttributeComponentType.SensoryImprint &&
+        attribute.type !== AttributeComponentType.Stats &&
         attribute.isSet,
     ).length === 0
   )
@@ -53,11 +52,12 @@ export default function AttributeListComponent({
           if (
             attribute.type === AttributeComponentType.Description ||
             attribute.type === AttributeComponentType.StoryCircle ||
+            attribute.type === AttributeComponentType.Conflict ||
             attribute.type === AttributeComponentType.Kishotenketsu ||
             attribute.type === AttributeComponentType.Duration ||
             attribute.type === AttributeComponentType.Parent ||
-            attribute.type === AttributeComponentType.Conflict ||
             attribute.type === AttributeComponentType.SensoryImprint ||
+            attribute.type === AttributeComponentType.Stats ||
             !attribute.isSet
           )
             return null;
@@ -92,18 +92,9 @@ export default function AttributeListComponent({
                 />
               );
               break;
-            case AttributeComponentType.Map:
-              attributeComponent = (
-                <MapAttributeComponent
-                  element={element}
-                  attribute={attribute}
-                  isEditable={isEditable}
-                />
-              );
-              break;
             case AttributeComponentType.Arc:
               attributeComponent = (
-                <ArcAttributeComponent
+                <ArcComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -112,7 +103,7 @@ export default function AttributeListComponent({
               break;
             case AttributeComponentType.Date:
               attributeComponent = (
-                <DateAttributeComponent
+                <DateComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -139,7 +130,7 @@ export default function AttributeListComponent({
               break;
             case AttributeComponentType.LongText:
               attributeComponent = (
-                <LongTextAttributeComponent
+                <LongTextComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -157,7 +148,7 @@ export default function AttributeListComponent({
               break;
             case AttributeComponentType.AbtStage:
               attributeComponent = (
-                <AbtStageAttributeComponent
+                <AbtStageComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -166,7 +157,7 @@ export default function AttributeListComponent({
               break;
             case AttributeComponentType.Boolean:
               attributeComponent = (
-                <BooleanAttributeComponent
+                <BooleanComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -175,7 +166,7 @@ export default function AttributeListComponent({
               break;
             case AttributeComponentType.Number:
               attributeComponent = (
-                <NumberAttributeTypeComponent
+                <NumberComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -184,7 +175,7 @@ export default function AttributeListComponent({
               break;
             case AttributeComponentType.Link:
               attributeComponent = (
-                <LinkAttributeTypeComponent
+                <LinkComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}
@@ -194,15 +185,6 @@ export default function AttributeListComponent({
             case AttributeComponentType.Select:
               attributeComponent = (
                 <SelectAttributeTypeComponent
-                  element={element}
-                  attribute={attribute}
-                  isEditable={isEditable}
-                />
-              );
-              break;
-            case AttributeComponentType.NonPlayerCharacterType:
-              attributeComponent = (
-                <NonPlayerCharacterTypeAttributeComponent
                   element={element}
                   attribute={attribute}
                   isEditable={isEditable}

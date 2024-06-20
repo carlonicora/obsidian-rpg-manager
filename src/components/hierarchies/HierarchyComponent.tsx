@@ -16,7 +16,6 @@ import { ElementType } from "src/data/enums/ElementType";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import SceneAnalyserComponent from "../analyser/SceneAnalyserComponent";
 import ContainerComponent from "../groups/ContainerComponent";
 import ChildDefaultComponent from "./ChildDefaultComponent";
 import ChildDefaultHeadersComponent from "./ChildDefaultHeadersComponent";
@@ -142,9 +141,6 @@ export default function HierarchyComponent({
             </button>
           </div>
         )}
-        {!isInPopover && type === ElementType.Scene && (
-          <SceneAnalyserComponent element={element} />
-        )}
       </ContainerComponent>
     );
   }
@@ -216,11 +212,6 @@ export default function HierarchyComponent({
           </button>
         </div>
       )}
-      {!isInPopover &&
-        type === ElementType.Scene &&
-        api.settings.useSceneAnalyser && (
-          <SceneAnalyserComponent element={element} />
-        )}
     </ContainerComponent>
   );
 }

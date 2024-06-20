@@ -129,7 +129,35 @@ export default function OptionsViewComponent({
         break;
       case AttributeComponentType.Conflict:
         value = {
-          status: "planned",
+          who: "",
+          wants: "",
+          but: "",
+          therefore: "",
+        };
+        break;
+      case AttributeComponentType.Stats:
+        value = {
+          Athletics: 0,
+          Arts: 0,
+          Drive: 0,
+          Education: 0,
+          Empathy: 0,
+          Investigation: 0,
+          Medicine: 0,
+          Melee: 0,
+          Occult: 0,
+          Perception: 0,
+          Persuasion: 0,
+          Ranged: 0,
+          Stealth: 0,
+          Technology: 0,
+          Willpower: 0,
+          Health: 0,
+          Damage: 0,
+          UsedMana: 0,
+          DefaultMeleeDamage: 0,
+          DefaultRangedDamage: 0,
+          Armour: 0,
         };
         break;
     }

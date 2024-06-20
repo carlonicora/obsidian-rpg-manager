@@ -1,4 +1,4 @@
-import { YamlService } from "@/data/classes/YamlService";
+import { YamlService } from "@/services/YamlService";
 import { App, TFile, parseYaml } from "obsidian";
 import { v4 } from "uuid";
 

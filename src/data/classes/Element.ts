@@ -52,6 +52,7 @@ export class Element implements ElementInterface {
 
     switch (this.system) {
       case SystemType.Agnostic:
+      case SystemType.RAW:
         elementAttributes.push(...(attributes.get(this.type) ?? []));
         break;
     }
@@ -84,6 +85,7 @@ export class Element implements ElementInterface {
 
     switch (this.system) {
       case SystemType.Agnostic:
+      case SystemType.RAW:
         attribute = attributes
           .get(this.type)
           ?.find(

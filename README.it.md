@@ -1,4 +1,5 @@
 # Gestore di Giochi di Ruolo
+
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
 
 Il Gestore di Giochi di Ruolo (RPG Manager) è un plugin per Obsidian progettato per semplificare la creazione e l'esecuzione di campagne di giochi di ruolo. Il plugin è agnostico rispetto al sistema, il che significa che puoi usarlo se stai gestendo una campagna di D&D, Call of Cthulhu o qualsiasi altro gioco di ruolo da tavolo.
@@ -274,9 +275,10 @@ Un capitolo è un segmento più focalizzato e gestibile di un'avventura, un bloc
 - **Descrizione**: Un campo di testo in cui puoi descrivere il tema generale, l'ambientazione e la trama del tuo capitolo. Questo è l'unico attributo obbligatorio.
 - **Cerchio Narrativo**: Uno spazio per sviluppare la narrazione del tuo capitolo utilizzando il metodo del cerchio narrativo. Questo è opzionale e particolarmente utile per chi pianifica in anticipo.
 - **Indizi Principali**: Una lista di indizi principali e dove portano.
-- **K
+- \*\*K
 
-ishōtenketsu**: Uno strumento di trama per strutturare e sviluppare la tua narrazione utilizzando uno stile classico cinese, coreano e giapponese.
+ishōtenketsu\*\*: Uno strumento di trama per strutturare e sviluppare la tua narrazione utilizzando uno stile classico cinese, coreano e giapponese.
+
 - **Conflitto**: Uno strumento per descrivere conflitti che aiutano a guidare la narrazione. Aiuta i narratori a stabilire conflitti utili per identificare trame non strutturate per far avanzare la storia.
 
 **Note**
@@ -317,9 +319,10 @@ I luoghi rappresentano i luoghi fisici all'interno del mondo di gioco in cui si 
 #### 3.3.6. Indizi
 
 Gli indizi sono pezzi di informazione che fanno avanzare la trama. Un indizio dovrebbe descrivere quale è l'informazione e come può essere trovata. Questa informazione è tipicamente parte della descrizione dell'indizio. Le relazioni di un indizio di solito sarebbero un evento, un luogo o un personaggio non giocante in cui può essere trovato l'indizio e dove porta. Tuttavia, in RPG Manager, qualsiasi elemento può essere correlato a qualsiasi altro elemento, quindi un indizio può anche essere correlato ad avventure, campagne, sessioni o qualsiasi altro elemento secondo necessità.
- 
+
 **Attributi**
 ========================Riprendi da qui===============
+
 - **Descrizione**: Questo è un campo di testo in cui il narratore/GM scrive i dettagli dell'indizio, quali informazioni contiene e come possono essere trovate. Questo è l'unico attributo obbligatorio per un indizio.
 
 **Note**:
@@ -473,7 +476,8 @@ Nel mondo dei giochi di ruolo da tavolo, una scena è un'unità fondamentale di 
 - **Descrizione**: Questo è un breve riassunto di ciò che il GM prevede che i personaggi giocatori faranno durante la scena. È cruciale notare che questo è solo una linea guida, poiché le azioni dei personaggi giocatori potrebbero deviare da ciò che ci si aspetta. Ad esempio, il GM potrebbe prevedere che i personaggi giocatori affronteranno in combattimento un gruppo di banditi, ma i giocatori potrebbero scegliere un approccio diverso, come la negoziazione o la furtività.
 - **Fase del Cerchio della Storia**: Se la sessione ha un
 
- cerchio della storia, questo attributo indicherà in quale fase del cerchio della storia dovrebbe verificarsi la scena (tu, bisogno, vai, cerca, trova, prendi, ritorna, cambia).
+cerchio della storia, questo attributo indicherà in quale fase del cerchio della storia dovrebbe verificarsi la scena (tu, bisogno, vai, cerca, trova, prendi, ritorna, cambia).
+
 - **Tipo**: Questo è il tipo di azione prevista durante la scena. Può essere uno dei seguenti: Azione, Combattimento, Decisione, Incontro, Esposizione, Investigazione, Preparazione, Riepilogo, Combattimento Sociale. È importante selezionare il tipo più appropriato per la scena in quanto stabilisce il tono e le aspettative per i personaggi giocatori.
 - **Data**: Questa è la data di gioco in cui si prevede che si verificherà la scena. Ciò aiuta a mantenere la coerenza della linea temporale del mondo di gioco.
 - **È Eccitante**: Questo attributo indica se la scena include elementi esterni, come personaggi non giocanti, disastri naturali, trappole, ecc., che scatenano un momento emozionante.
@@ -512,15 +516,15 @@ In generale, i compiti sono uno strumento potente in RPG Manager che ti aiuta a 
 
 ### 3.6. Modelli di Elementi
 
-In RPG Manager, un modello di elemento è una nota di Obsidian che contiene un blocco di codice speciale, `RpgManager4`, che viene utilizzato dall'applicazione per renderne l'interfaccia utente (UI). Ciò consente ai narratori/GM di personalizzare le proprie note aggiungendo qualsiasi informazione, testo o altri blocchi di codice di cui hanno bisogno, pur avendo ancora l'UI di RPG Manager integrata nella nota.
+In RPG Manager, un modello di elemento è una nota di Obsidian che contiene un blocco di codice speciale, `RpgManager5`, che viene utilizzato dall'applicazione per renderne l'interfaccia utente (UI). Ciò consente ai narratori/GM di personalizzare le proprie note aggiungendo qualsiasi informazione, testo o altri blocchi di codice di cui hanno bisogno, pur avendo ancora l'UI di RPG Manager integrata nella nota.
 
 La creazione di un modello è un processo in due fasi:
 
 1. **Definire la Posizione del Modello:** Nelle impostazioni di RPG Manager, specificare la cartella in cui sono archiviati i tuoi modelli. È qui che RPG Manager cercherà i tuoi modelli.
 
-2. **Creare il Modello:** Un modello è una nota di Obsidian che contiene il blocco di codice \`\`\`RpgManager4\`\`\` dove vuoi che appaia l'UI di RPG Manager. Puoi aggiungere qualsiasi altro contenuto desideri alla nota, ma può contenere solo
+2. **Creare il Modello:** Un modello è una nota di Obsidian che contiene il blocco di codice \`\`\`RpgManager5\`\`\` dove vuoi che appaia l'UI di RPG Manager. Puoi aggiungere qualsiasi altro contenuto desideri alla nota, ma può contenere solo
 
- un blocco di codice \`\`\`RpgManager4\`\`\`.
+un blocco di codice \`\`\`RpgManager5\`\`\`.
 
 ### 3.7. Risorse Globali
 
@@ -691,7 +695,7 @@ Con RPG Manager, puoi organizzare le tue scene nell'ordine in cui prevedi che si
 
 Ogni scena in RPG Manager può avere diversi attributi, come la descrizione, lo stadio del cerchio della storia, il tipo di
 
- scena (ad esempio, Azione, Combattimento, Decisione, ecc.), la data di gioco e se la scena è emozionante o meno. Ciò ti consente di avere un'immagine chiara di cosa comporta ciascuna scena e come si inserisce nella narrazione complessiva della tua sessione.
+scena (ad esempio, Azione, Combattimento, Decisione, ecc.), la data di gioco e se la scena è emozionante o meno. Ciò ti consente di avere un'immagine chiara di cosa comporta ciascuna scena e come si inserisce nella narrazione complessiva della tua sessione.
 
 **Scene Dinamiche**
 

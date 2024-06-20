@@ -1,3 +1,4 @@
+import ConflictComponent from "@/components/elements/ConflictComponent";
 import ChapterComponent from "src/components/elements/ChapterComponent";
 import ClueComponent from "src/components/elements/ClueComponent";
 import EventComponent from "src/components/elements/EventComponent";
@@ -14,19 +15,23 @@ import AdventureComponent from "../../elements/AdventureComponent";
 import CampaignComponent from "../../elements/CampaignComponent";
 import NonPlayerCharacterComponent from "../../elements/NonPlayerCharacterComponent";
 
-export const agnosticComponents: Map<ElementType, React.FC> = new Map<ElementType, React.FC>([
-	[ElementType.Campaign, CampaignComponent],
-	[ElementType.Adventure, AdventureComponent],
-	[ElementType.Chapter, ChapterComponent],
-	[ElementType.Session, SessionComponent],
-	[ElementType.Scene, SceneComponent],
-	[ElementType.NonPlayerCharacter, NonPlayerCharacterComponent],
-	[ElementType.Event, EventComponent],
-	[ElementType.Location, LocationComponent],
-	[ElementType.Faction, FactionComponent],
-	[ElementType.Clue, ClueComponent],
-	[ElementType.PlayerCharacter, PlayerCharacterComponent],
-	[ElementType.Subplot, SubplotComponent],
-	[ElementType.Object, ObjectComponent],
-	[ElementType.Monster, MonsterComponent],
+export const agnosticComponents: Map<ElementType, React.FC> = new Map<
+  ElementType,
+  React.FC
+>([
+  [ElementType.Campaign, CampaignComponent],
+  [ElementType.Adventure, AdventureComponent],
+  [ElementType.Chapter, ChapterComponent],
+  [ElementType.Conflict, ConflictComponent],
+  [ElementType.Session, SessionComponent],
+  [ElementType.Scene, SceneComponent],
+  [ElementType.NonPlayerCharacter, NonPlayerCharacterComponent],
+  [ElementType.Event, EventComponent],
+  [ElementType.Location, LocationComponent],
+  [ElementType.Faction, FactionComponent],
+  [ElementType.Clue, ClueComponent],
+  [ElementType.PlayerCharacter, PlayerCharacterComponent],
+  [ElementType.Subplot, SubplotComponent],
+  [ElementType.Object, ObjectComponent],
+  [ElementType.Monster, MonsterComponent],
 ]);

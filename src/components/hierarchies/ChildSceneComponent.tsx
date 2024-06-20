@@ -9,7 +9,6 @@ import { StoryCircleStage } from "src/data/enums/StoryCircleStage";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
 import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockService";
-import { SceneAnalyserService } from "src/services/sceneAnalyserService/SceneAnalyserService";
 import MarkdownEditorComponent from "../editors/MarkdownEditorComponent";
 import MarkdownComponent from "../markdowns/MarkdownComponent";
 
@@ -24,7 +23,6 @@ export default function ChildSceneComponent({
   const api: RpgManagerInterface = useApi();
   const app: App = useApp();
 
-  const [showTooltip, setShowTooltip] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
 
   function saveAttribute(
@@ -44,26 +42,6 @@ export default function ChildSceneComponent({
       element.file,
     );
     return codeblockService.updateCodeblockData(attributeName, value);
-  }
-
-  let duration: number | undefined = undefined;
-
-  if (showTooltip) {
-    const sceneAnalyser: SceneAnalyserService = new SceneAnalyserService(api);
-    duration = sceneAnalyser.getExpectedDuration(
-      element.campaign,
-      element.attribute(AttributeType.SceneType)?.value,
-    );
-  }
-
-  function secondsToMMSS(duration: number): string {
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0",
-    )}`;
   }
 
   return (
@@ -230,25 +208,6 @@ export default function ChildSceneComponent({
                 }
               />
             </div>
-          </div>
-          <div
-            className="relative flex justify-center opacity-0 group-hover:opacity-100 cursor-help !text-[--text-muted] hover:!text-[text-normal]"
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-          >
-            <span className=" ">?</span>
-            {showTooltip && (
-              <div
-                className="absolute z-10 w-64 p-2 mt-2 text-xs bg-[--background-secondary] rounded shadow-lg"
-                style={{
-                  top: "-40px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                }}
-              >
-                {t("analyser.expectedduration")}: {secondsToMMSS(duration)}
-              </div>
-            )}
           </div>
         </div>
       )}

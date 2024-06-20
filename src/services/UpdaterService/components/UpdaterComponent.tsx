@@ -36,7 +36,6 @@ function Upgrading(): React.ReactElement {
         templatesFolder: (api.settings as any).templateFolder ?? "",
         assetsFolder: (api.settings as any).assetsFolder ?? "_Assets",
         automaticMove: (api.settings as any).automaticMove,
-        useSceneAnalyser: (api.settings as any).useSceneAnalyser,
         version: api.version,
         customAttributes: (api.settings as any).customAttributes,
         forceFullWidth: (api.settings as any).forceFullWidth,
