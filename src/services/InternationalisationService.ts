@@ -1,3 +1,4 @@
+import { i18nFR } from "@/i18n/fr";
 import { i18nIt } from "@/i18n/it";
 import i18n from "i18next";
 import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
@@ -23,6 +24,7 @@ export class InternationalisationService {
 			});
 
 		i18n.addResourceBundle("en", "common", i18nEn);
+		i18n.addResourceBundle("fr", "common", i18nFR);
 		i18n.addResourceBundle("it", "common", i18nIt);
 	}
 }
