@@ -187,7 +187,7 @@ export class RpgManagerSettings extends PluginSettingTab {
 			.setDesc("Enter the ollama model (eg. llama3.1)")
 			.addText((text) =>
 				text
-					.setPlaceholder("llama3.1")
+					.setPlaceholder("")
 					.setValue(this._plugin.settings.ollamaModel)
 					.onChange(async (value: string) => {
 						await this.saveSettings({ ollamaModel: value });
