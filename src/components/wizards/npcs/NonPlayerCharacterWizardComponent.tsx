@@ -218,7 +218,7 @@ export default function NonPlayerCharacterWizardComponent({
 		chatGpt.current.weaknesses = weaknesses.join(", ");
 	};
 
-	if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "" && !chatGpt.current) {
+	if (api.settings.hasLLM && !chatGpt.current) {
 		chatGpt.current = new ChatGptNonPlayerCharacterModel(api, element?.campaign ?? campaign, element?.name ?? name);
 	}
 
@@ -259,7 +259,7 @@ export default function NonPlayerCharacterWizardComponent({
 	const [step, setStep] = React.useState(1);
 
 	const updateStep = (newStep: number) => {
-		if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "") {
+		if (api.settings.hasLLM) {
 			setCurrentChatGPT();
 		}
 
@@ -334,7 +334,7 @@ export default function NonPlayerCharacterWizardComponent({
 				<button className="rpgm-danger pl-3 pr-3 mr-6" onClick={() => close()}>
 					{t("buttons.cancel")}
 				</button>
-				{api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "" && chatGpt.current && step > 2 && (
+				{api.settings.hasLLM && chatGpt.current && step > 2 && (
 					<button className="rpgm-secondary pl-3 pr-3 mr-6" onClick={() => createAutomatically()}>
 						{t("wizards.npc.create")}
 					</button>
