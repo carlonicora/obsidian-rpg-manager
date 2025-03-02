@@ -517,7 +517,7 @@ Creating a template is a two-step process:
 
 ### 3.7. Global Assets
 
-In version 4 you can create elements that are not part of a single campaing. These assets (events, locations, clues, non-player characters, factions, objects, monsters, subplots and player-characters) can be used in anyone of your campaigns. Just add a relationship and you are good to go, writing once, reusing many times!
+In version 4 you can create elements that are not part of a single campaign. These assets (events, locations, clues, non-player characters, factions, objects, monsters, subplots and player-characters) can be used in anyone of your campaigns. Just add a relationship and you are good to go, writing once, reusing many times!
 
 ## 4. Creating a World
 
