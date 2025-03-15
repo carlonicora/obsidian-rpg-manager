@@ -246,9 +246,9 @@ In the next sections, we will delve deeper into other elements and how they rela
 
 #### 3.3.2. Adventures
 
-An adventure is a significant component of a campaign, encompassing a series of events or challenges that have a distinct beginning and conclusion. For instance, in the well-known Call of Cthulhu campaign, "Masks of Nyarlathotep," all events transpiring in New York could be classified as a single adventure. Each adventure comprises multiple chapters, which help in structuring the narrative in a more organized manner.
+An adventure is a significant component of a campaign, encompassing a series of events or challenges that have a distinct beginning and conclusion. Each adventure comprises multiple chapters, which help in structuring the narrative in a more organized manner. An adventure can be further organized into multiple chapters to streamline the storytelling process.
 
-An adventure serves as a pivotal building block within a campaign, functioning as a coherent narrative unit with a specific beginning and end. It normally encompasses a series of events, locations od challenges that can be grouped together in a single narrative. For example, in the famed "Masks of Nyarlathotep" campaign for Call of Cthulhu, everything that happens in New York could be considered a single adventure. An adventure can be further organized into multiple chapters to streamline the storytelling process.
+An adventure serves as a pivotal building block within a campaign, functioning as a coherent narrative unit with a specific beginning and end. It normally encompasses a series of events, locations, and challenges that can be grouped together in a single narrative. For example, in the famed "Masks of Nyarlathotep" campaign for Call of Cthulhu, everything that happens in New York could be considered a single adventure.
 
 **Attributes**
 
