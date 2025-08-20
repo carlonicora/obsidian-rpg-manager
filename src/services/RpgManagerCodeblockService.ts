@@ -57,7 +57,17 @@ export class RpgManagerCodeblockService {
 			EditorPositionService.setEditorPosition(this._file.path, editor, cursorPosition, scrollInfo);
 		}
 
-		this._app.vault.modify(this._file, content);
+		await this._app.vault.modify(this._file, content);
+
+		// This is an attempt to fix  the issue
+		// where the codeblock does not display the added RPGManager 
+		// items
+		if (activeLeaf) {
+			console.info("Reloading file:", this._file.path);
+			this._app.workspace.setActiveLeaf(activeLeaf, {focus: true});
+		}
+
+		this._app.metadataCache.trigger("changed", this._file);
 	}
 
 	async update(values: any): Promise<void> {
@@ -131,6 +141,7 @@ export class RpgManagerCodeblockService {
 		const codeblockContent: string = yamlService.stringify(codeblock);
 
 		this._modifyFileContent(this._fileContent.replace(this._codeblockContent, codeblockContent));
+		this._app.vault.cachedRead(this._file);
 	}
 
 	async updateRelationshipInContent(relationships: RelationshipInterface[]): Promise<void> {
