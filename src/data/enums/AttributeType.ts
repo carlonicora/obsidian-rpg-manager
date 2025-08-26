@@ -23,6 +23,7 @@ export enum AttributeType {
 	ExternalActions = "externalactions",
 	Address = "address",
 	Location = "location",
+	Lore = "lore",
 	Duration = "duration",
 	Philosophy = "philosophy",
 	MajorClues = "majorclues",

@@ -208,6 +208,11 @@ export class FileCreationService {
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
+			case ElementType.Lore:
+				response += pathSeparator + "12. Lore";
+				this._createFolder(response);
+				response += pathSeparator + this._name + ".md";
+				break;
 		}
 
 		return response;

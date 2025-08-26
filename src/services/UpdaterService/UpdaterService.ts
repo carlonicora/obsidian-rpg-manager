@@ -284,6 +284,8 @@ export class UpdaterService {
 				return ElementType.Faction;
 			case 4096:
 				return ElementType.Subplot;
+			case 8192:
+				return ElementType.Lore;
 		}
 	}
 
