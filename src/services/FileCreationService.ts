@@ -148,6 +148,7 @@ export class FileCreationService {
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
+			// TODO: Should this be a different datatype such as LoreChapter to better separate?
 			case ElementType.Chapter:
 				var useLoreOrAdventure = parent.type === ElementType.Lore ? "12. Lore" : "01. Adventures";
 				response += pathSeparator + useLoreOrAdventure + pathSeparator + parent.name + pathSeparator + "Chapters";
