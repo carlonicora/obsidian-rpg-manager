@@ -141,7 +141,7 @@ export class FileCreationService {
 
 		const parent: ElementInterface | undefined =
 			this._parentPath !== undefined ? (this._api.get(this._parentPath) as ElementInterface) : undefined;
-
+			
 		switch (this._type) {
 			case ElementType.Adventure:
 				response += pathSeparator + "01. Adventures" + pathSeparator + this._name;
@@ -149,7 +149,8 @@ export class FileCreationService {
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Chapter:
-				response += pathSeparator + "01. Adventures" + pathSeparator + parent.name + pathSeparator + "Chapters";
+				var useLoreOrAdventure = parent.type === ElementType.Lore ? "12. Lore" : "01. Adventures";
+				response += pathSeparator + useLoreOrAdventure + pathSeparator + parent.name + pathSeparator + "Chapters";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
