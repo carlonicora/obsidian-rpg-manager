@@ -76,9 +76,17 @@ export default function LoreComponent({
                     key={element.path + !isInPopover}
                     element={element}
                     isInPopover={isInPopover}
+                    type={ElementType.Lore}
+                    isDraggable={!isInPopover}
+                />
+                <HierarchyComponent
+                    key={element.path + !isInPopover}
+                    element={element}
+                    isInPopover={isInPopover}
                     type={ElementType.Chapter}
                     isDraggable={!isInPopover}
                 />
+                
                 {!isInPopover && <TasksContainerComponent element={element} />}
                 {isInPopover === false && element.relationships.length > 0 && (
                     <div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] p-3">
