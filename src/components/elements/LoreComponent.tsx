@@ -31,9 +31,6 @@ export default function LoreComponent({
     
     return (
         <>
-            {/* <div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
-                <MainV1Component element={element} isInPopover={isInPopover} />
-            </div> */}
             <div className="space-y-3 p-3 bg-[--background-primary-alt] border border-[--background-modifier-border]">
                 <HeaderComponent element={element} isInPopover={isInPopover} />
                 {element.images.length > 0 && <BannerComponent image={element.images[0]} />}
