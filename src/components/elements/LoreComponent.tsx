@@ -1,11 +1,9 @@
 import * as React from "react";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
-import MainV1Component from "../groups/MainV1Component";
 import HeaderComponent from "../headers/HeaderComponent";
 import BannerComponent from "../headers/BannerComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import { AttributeType } from "@/data/enums/AttributeType";
-// import AttributeListComponent from "../attributes/AttributeListComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import HierarchyComponent from "../hierarchies/HierarchyComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
