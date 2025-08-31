@@ -5,7 +5,7 @@ import HeaderComponent from "../headers/HeaderComponent";
 import BannerComponent from "../headers/BannerComponent";
 import DescriptionAttributeComponent from "../attributes/types/DescriptionAttributeComponent";
 import { AttributeType } from "@/data/enums/AttributeType";
-import AttributeListComponent from "../attributes/AttributeListComponent";
+// import AttributeListComponent from "../attributes/AttributeListComponent";
 import ImageCarouselComponent from "../images/ImageCarouselComponent";
 import HierarchyComponent from "../hierarchies/HierarchyComponent";
 import TasksContainerComponent from "../tasks/TasksContainerComponent";
@@ -46,7 +46,6 @@ export default function LoreComponent({
                                 isEditable={!isInPopover}
                             />
                         </div>
-                        <AttributeListComponent element={element} isEditable={!isInPopover} />
                     </div>
                 </div>
                 {element.images.length > 1 && (
@@ -74,13 +73,6 @@ export default function LoreComponent({
                     element={element}
                     isInPopover={isInPopover}
                     type={ElementType.Lore}
-                    isDraggable={!isInPopover}
-                />
-                <HierarchyComponent
-                    key={element.path + !isInPopover}
-                    element={element}
-                    isInPopover={isInPopover}
-                    type={ElementType.Chapter}
                     isDraggable={!isInPopover}
                 />
                 

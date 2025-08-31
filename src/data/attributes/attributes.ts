@@ -76,7 +76,7 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<Elemen
 	],
 	[ElementType.Event, [description, date]],
 	[ElementType.Location, [sensoryimprint, description, address, location]],
-	[ElementType.Lore, [description, lore]],
+	[ElementType.Lore, [description]],
 	[ElementType.Faction, [description, philosophy, factionstructure]],
 	[ElementType.Clue, [description]],
 	[
