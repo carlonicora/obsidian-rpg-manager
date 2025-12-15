@@ -114,7 +114,6 @@ export class FileCreationService {
 
 	private async _generateFilePath(): Promise<string> {
 		let pathSeparator: string;
-		console.log("Creating file path for type:", this._type, "with parent:", this._parentPath);
 		try {
 			pathSeparator = path.sep;
 		} catch (e) {
@@ -211,7 +210,7 @@ export class FileCreationService {
 				response += pathSeparator + this._name + ".md";
 				break;					
 			case ElementType.Lore:
-				console.log("Generating file path for Lore with parent:", parent, parent?.file?.parent?.path);
+				
 				if (parent?.type === ElementType.Lore) {
 					// Nest under parent lore by using parent's directory path
 					// First ensure the base "12. Lore" directory exists

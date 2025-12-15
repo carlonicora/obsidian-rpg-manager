@@ -18,7 +18,6 @@ export default function ChildLoreComponent({
 	const app: App = useApp();
 
 	function saveAttribute(attributeName: string, value: string | boolean): Promise<void> {
-		console.log("Saving attribute", attributeName, value);
 		if (attributeName === "name") {
 			const lastIndexOfName = element.path.lastIndexOf(element.name);
 			const newPath = element.path.substring(0, lastIndexOfName) + value + ".md";
