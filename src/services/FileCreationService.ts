@@ -209,18 +209,25 @@ export class FileCreationService {
 				response += pathSeparator + "11. Monsters";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
-				break;
+				break;					
 			case ElementType.Lore:
-				console.log("Parent:", parent);
+				console.log("Generating file path for Lore with parent:", parent, parent?.file?.parent?.path);
 				if (parent?.type === ElementType.Lore) {
-					response += pathSeparator + "12. Lore" + pathSeparator + parent.name;
-					this._createFolder(response);	
-				}
-				else {
+					// Nest under parent lore by using parent's directory path
+					// First ensure the base "12. Lore" directory exists
+					const baseLoreDir = response + pathSeparator + "12. Lore";
+					this._createFolder(baseLoreDir);
+					
+					const parentDir = parent.file.parent.path;
+					response = parentDir + pathSeparator + parent?.file?.basename;
+					this._createFolder(response);
+					response += pathSeparator + this._name + ".md";
+				} else {
+					// Top-level lore - create as a folder under 12. Lore
 					response += pathSeparator + "12. Lore";
 					this._createFolder(response);
+					response += pathSeparator + this._name + ".md";
 				}
-				response += pathSeparator + this._name + ".md";
 				break;
 		}
 
