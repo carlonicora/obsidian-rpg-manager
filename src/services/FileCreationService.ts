@@ -87,7 +87,6 @@ export class FileCreationService {
 
 	async create(open: boolean): Promise<TFile | undefined> {
 		let content = this._rpgManagerCodeBlock;
-
 		if (this._template !== undefined) {
 			const templateFile: TFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
 			const templateContent = await this._app.vault.read(templateFile);
@@ -115,7 +114,7 @@ export class FileCreationService {
 
 	private async _generateFilePath(): Promise<string> {
 		let pathSeparator: string;
-
+		console.log("Creating file path for type:", this._type, "with parent:", this._parentPath);
 		try {
 			pathSeparator = path.sep;
 		} catch (e) {
@@ -141,8 +140,9 @@ export class FileCreationService {
 
 		const parent: ElementInterface | undefined =
 			this._parentPath !== undefined ? (this._api.get(this._parentPath) as ElementInterface) : undefined;
-			
+		
 		switch (this._type) {
+			
 			case ElementType.Adventure:
 				response += pathSeparator + "01. Adventures" + pathSeparator + this._name;
 				this._createFolder(response);
@@ -211,8 +211,15 @@ export class FileCreationService {
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Lore:
-				response += pathSeparator + "12. Lore";
-				this._createFolder(response);
+				console.log("Parent:", parent);
+				if (parent?.type === ElementType.Lore) {
+					response += pathSeparator + "12. Lore" + pathSeparator + parent.name;
+					this._createFolder(response);	
+				}
+				else {
+					response += pathSeparator + "12. Lore";
+					this._createFolder(response);
+				}
 				response += pathSeparator + this._name + ".md";
 				break;
 		}
