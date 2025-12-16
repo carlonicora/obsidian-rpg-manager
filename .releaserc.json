@@ -1,0 +1,71 @@
+{
+  "branches": ["master"],
+  "tagFormat": "v${version}",
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits",
+      "releaseRules": [
+        { "type": "feat", "release": "minor" },
+        { "type": "fix", "release": "patch" },
+        { "type": "docs", "release": "patch" },
+        { "type": "style", "release": "patch" },
+        { "type": "refactor", "release": "patch" },
+        { "type": "perf", "release": "patch" },
+        { "type": "test", "release": "patch" },
+        { "type": "build", "release": "patch" },
+        { "type": "ci", "release": "patch" },
+        { "type": "chore", "release": "patch" },
+        { "type": "wip", "release": false }
+      ]
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits",
+      "writerOpts": {
+        "commitsSort": ["scope", "subject"],
+        "commitPartial": "* {{#if scope}}**{{scope}}:** {{/if}}{{subject}} {{#if shortHash}}([{{shortHash}}]({{~@root.host}}/{{~@root.owner}}/{{~@root.repository}}/commit/{{hash}})){{/if}}{{#if author}} - @{{author.name}}{{/if}}\n"
+      },
+      "presetConfig": {
+        "types": [
+          { "type": "feat", "section": "Features", "hidden": false },
+          { "type": "fix", "section": "Bug Fixes", "hidden": false },
+          { "type": "docs", "section": "Documentation", "hidden": false },
+          { "type": "style", "section": "Styles", "hidden": false },
+          { "type": "refactor", "section": "Code Refactoring", "hidden": false },
+          { "type": "perf", "section": "Performance Improvements", "hidden": false },
+          { "type": "test", "section": "Tests", "hidden": false },
+          { "type": "build", "section": "Build System", "hidden": false },
+          { "type": "ci", "section": "Continuous Integration", "hidden": false },
+          { "type": "chore", "section": "Chores", "hidden": false }
+        ]
+      }
+    }],
+    ["@semantic-release/changelog", {
+      "changelogFile": "CHANGELOG.md",
+      "changelogTitle": "# Changelog\n\nAll notable changes to RPG Manager will be documented in this file."
+    }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "node scripts/update-obsidian-versions.mjs ${nextRelease.version}"
+    }],
+    ["@semantic-release/npm", {
+      "npmPublish": false
+    }],
+    ["@semantic-release/git", {
+      "assets": [
+        "package.json",
+        "package-lock.json",
+        "manifest.json",
+        "versions.json",
+        "CHANGELOG.md"
+      ],
+      "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+    }],
+    ["@semantic-release/github", {
+      "assets": [
+        { "path": "main.js", "label": "main.js" },
+        { "path": "manifest.json", "label": "manifest.json" },
+        { "path": "styles.css", "label": "styles.css" }
+      ],
+      "successComment": ":tada: This ${issue.pull_request ? 'PR' : 'issue'} is included in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](${releases.find(r => r.name === nextRelease.gitTag).url})\n\nThank you for your contribution!"
+    }]
+  ]
+}

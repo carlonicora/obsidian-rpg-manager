@@ -13,6 +13,11 @@
   "author": "Carlo Nicora",
   "license": "MIT",
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "semantic-release": "^24.0.0",
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
