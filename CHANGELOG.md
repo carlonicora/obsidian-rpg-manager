@@ -2,6 +2,12 @@
 
 All notable changes to RPG Manager will be documented in this file.
 
+## [4.2.1](https://github.com/carlonicora/obsidian-rpg-manager/compare/4.2.0...4.2.1) (2025-12-16)
+
+### Bug Fixes
+
+* simplify successComment template to avoid undefined error ([57f1fc2](https://github.com/carlonicora/obsidian-rpg-manager/commit/57f1fc2f46e2a9abb939b218fa3408187454ce2f)) - @Carlo Nicora
+
 ## [4.2.0](https://github.com/carlonicora/obsidian-rpg-manager/compare/4.1.14...4.2.0) (2025-12-16)
 
 ### Features
