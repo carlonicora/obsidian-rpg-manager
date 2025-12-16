@@ -87,7 +87,6 @@ export class FileCreationService {
 
 	async create(open: boolean): Promise<TFile | undefined> {
 		let content = this._rpgManagerCodeBlock;
-
 		if (this._template !== undefined) {
 			const templateFile: TFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
 			const templateContent = await this._app.vault.read(templateFile);
@@ -115,7 +114,6 @@ export class FileCreationService {
 
 	private async _generateFilePath(): Promise<string> {
 		let pathSeparator: string;
-
 		try {
 			pathSeparator = path.sep;
 		} catch (e) {
@@ -141,15 +139,18 @@ export class FileCreationService {
 
 		const parent: ElementInterface | undefined =
 			this._parentPath !== undefined ? (this._api.get(this._parentPath) as ElementInterface) : undefined;
-
+		
 		switch (this._type) {
+			
 			case ElementType.Adventure:
 				response += pathSeparator + "01. Adventures" + pathSeparator + this._name;
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
+			// TODO: Should this be a different datatype such as LoreChapter to better separate?
 			case ElementType.Chapter:
-				response += pathSeparator + "01. Adventures" + pathSeparator + parent.name + pathSeparator + "Chapters";
+				var useLoreOrAdventure = parent.type === ElementType.Lore ? "12. Lore" : "01. Adventures";
+				response += pathSeparator + useLoreOrAdventure + pathSeparator + parent.name + pathSeparator + "Chapters";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
@@ -207,6 +208,25 @@ export class FileCreationService {
 				response += pathSeparator + "11. Monsters";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
+				break;					
+			case ElementType.Lore:
+				
+				if (parent?.type === ElementType.Lore) {
+					// Nest under parent lore by using parent's directory path
+					// First ensure the base "12. Lore" directory exists
+					const baseLoreDir = response + pathSeparator + "12. Lore";
+					this._createFolder(baseLoreDir);
+					
+					const parentDir = parent.file.parent.path;
+					response = parentDir + pathSeparator + parent?.file?.basename;
+					this._createFolder(response);
+					response += pathSeparator + this._name + ".md";
+				} else {
+					// Top-level lore - create as a folder under 12. Lore
+					response += pathSeparator + "12. Lore";
+					this._createFolder(response);
+					response += pathSeparator + this._name + ".md";
+				}
 				break;
 		}
 

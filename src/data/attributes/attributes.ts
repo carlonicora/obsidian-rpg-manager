@@ -27,6 +27,7 @@ const abtstage = { id: AttributeType.AbtStage, type: AttributeComponentType.AbtS
 const externalactions = { id: AttributeType.ExternalActions, type: AttributeComponentType.Boolean };
 const address = { id: AttributeType.Address, type: AttributeComponentType.LongText };
 const location = { id: AttributeType.Location, type: AttributeComponentType.Map };
+const lore = { id: AttributeType.Lore, type: AttributeComponentType.LongText };
 const duration = { id: AttributeType.Duration, type: AttributeComponentType.Duration };
 const philosophy = { id: AttributeType.Philosophy, type: AttributeComponentType.LongText };
 const majorclues = { id: AttributeType.MajorClues, type: AttributeComponentType.MajorClues };
@@ -75,6 +76,7 @@ export const attributes: Map<ElementType, AttributeInterface[]> = new Map<Elemen
 	],
 	[ElementType.Event, [description, date]],
 	[ElementType.Location, [sensoryimprint, description, address, location]],
+	[ElementType.Lore, [description]],
 	[ElementType.Faction, [description, philosophy, factionstructure]],
 	[ElementType.Clue, [description]],
 	[
