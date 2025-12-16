@@ -65,7 +65,7 @@
         { "path": "manifest.json", "label": "manifest.json" },
         { "path": "styles.css", "label": "styles.css" }
       ],
-      "successComment": ":tada: This ${issue.pull_request ? 'PR' : 'issue'} is included in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](${releases.find(r => r.name === nextRelease.gitTag).url})\n\nThank you for your contribution!"
+      "successComment": ":tada: This ${issue.pull_request ? 'PR' : 'issue'} is included in version ${nextRelease.version} :tada:\n\nThank you for your contribution!"
     }]
   ]
 }
