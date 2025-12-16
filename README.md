@@ -6,63 +6,66 @@ RPG Manager is an Obsidian plugin to simplify the creation and running of role p
 
 ## Table of Contents
 
-- [1. Introduction](#1-introduction)
-  - [1.1. Overview of the Plugin](#11-overview-of-the-plugin)
-  - [1.2. Key Features](#12-key-features)
-  - [1.3. Target Audience (Plotters, Sandboxers, Lazy GMs)](#13-target-audience-plotters-sandboxers-lazy-gms)
-  - [1.4. Getting Started](#14-getting-started)
-  - [1.5. Upgrade your vault from v3](#15-upgrade-your-vault-from-v3)
-- [2. Installation](#2-installation)
-  - [2.1. Setting up your first Campaign](#21-setting-up-your-first-campaign)
-  - [2.2. User Interface](#22-user-interface)
-- [3. Overview of Elements](#3-overview-of-elements)
-  - [3.1. Creating and Editing Elements](#31-creating-and-editing-elements)
-  - [3.2 Relationships](#32-relationships)
-  - [3.3 Elements](#33-elements)
-    - [3.3.1. Campaign](#331-campaign)
-    - [3.3.2. Adventures](#332-adventures)
-    - [3.3.3. Chapters](#333-chapters)
-    - [3.3.4. Events](#334-events)
-    - [3.3.5. Locations](#335-locations)
-    - [3.3.6. Clues](#336-clues)
-    - [3.3.7. Non-player characters](#337-non-player-characters)
-    - [3.3.8. Factions](#338-factions)
-    - [3.3.9. Objects](#339-objects)
-    - [3.3.10. Monsters](#3310-monsters)
-    - [3.3.11. Subplots](#3311-subplots)
-    - [3.3.12. Player characters](#3312-player-characters)
-    - [3.3.13. Sessions](#3313-sessions)
-    - [3.3.14. Scenes](#3314-scenes)
-  - [3.4. Custom Attributes](#34-custom-attributes)
-  - [3.5. Tasks](#35-tasks)
-  - [3.6. Element Templates](#36-element-templates)
-  - [3.7. Global Assets](#37-global-assets)
-- [4. Creating a World](#4-creating-a-world)
-  - [4.1. What Type of Storyteller Are You?](#41-what-type-of-storyteller-are-you)
-  - [4.2. For Every Storyteller You Are](#42-for-every-storyteller-you-are)
-    - [4.2.1. Creating Rounded Non-Player Characters](#421-creating-rounded-non-player-characters)
-    - [4.2.2. Developing Adventures and Chapters](#422-developing-adventures-and-chapters)
-  - [4.3. For Plotters](#43-for-plotters)
-    - [4.3.1. Using the Story Circle](#431-using-the-story-circle)
-  - [4.4. For Sandboxers](#44-for-sandboxers)
-    - [4.4.1. Creating Open Worlds](#441-creating-open-worlds)
-    - [4.4.2. Developing Events, Locations, and Clues](#442-developing-events-locations-and-clues)
-- [6. ChatGPT Integration](#6-chatgpt-integration)
-  - [6.1. Privacy Concerns](#61-privacy-concerns)
-  - [6.2. Costs Implications](#62-costs-implications)
-  - [6.3. Non-player characters generation](#63-non-player-characters-generation)
-  - [6.4. How to Activate ChatGPT](#64-how-to-activate-chatgpt)
-- [5. Running a Campaign](#5-running-a-campaign)
-  - [5.1. Prepping for a Session](#51-prepping-for-a-session)
-  - [5.2. Taking Notes during Sessions](#52-taking-notes-during-sessions)
-  - [5.3. Managing Scenes](#53-managing-scenes)
-- [7. Contributing](#7-contributing)
-  - [7.1. Code Contribution](#71-code-contributions)
-  - [7.2. Bug Reporting](#72-bug-reporting)
-  - [7.3. Documentation](#73-documentation)
-  - [7.4. Other ways to help](#74-other-ways-to-help)
-  - [7.5. Community](#75-community)
-- [8. Frequently Asked Questions](#8-frequently-asked-questions)
+- [Role Playing Game Manager](#role-playing-game-manager)
+  - [Table of Contents](#table-of-contents)
+  - [1. Introduction](#1-introduction)
+    - [1.1. Overview of the Plugin](#11-overview-of-the-plugin)
+    - [1.2. Key Features](#12-key-features)
+    - [1.3. Target Audience (Plotters, Sandboxers, Lazy GMs)](#13-target-audience-plotters-sandboxers-lazy-gms)
+    - [1.4. Getting Started](#14-getting-started)
+    - [1.5. Upgrade your vault from v3](#15-upgrade-your-vault-from-v3)
+  - [2. Installation](#2-installation)
+    - [2.1. Setting up your first Campaign](#21-setting-up-your-first-campaign)
+    - [2.2. User Interface](#22-user-interface)
+  - [3. Overview of Elements](#3-overview-of-elements)
+    - [3.1. Creating and Editing Elements](#31-creating-and-editing-elements)
+    - [3.2 Relationships](#32-relationships)
+    - [3.3 Elements](#33-elements)
+      - [3.3.1. Campaign](#331-campaign)
+      - [3.3.2. Adventures](#332-adventures)
+      - [3.3.3. Chapters](#333-chapters)
+      - [3.3.4. Events](#334-events)
+      - [3.3.5. Locations](#335-locations)
+      - [3.3.6. Clues](#336-clues)
+      - [3.3.7. Non-player characters](#337-non-player-characters)
+      - [3.3.8. Factions](#338-factions)
+      - [3.3.9. Objects](#339-objects)
+      - [3.3.10. Monsters](#3310-monsters)
+      - [3.3.11. Subplots](#3311-subplots)
+      - [3.3.12. Player characters](#3312-player-characters)
+      - [3.3.13. Sessions](#3313-sessions)
+      - [3.3.14. Scenes](#3314-scenes)
+    - [3.4. Custom Attributes](#34-custom-attributes)
+    - [3.5. Tasks](#35-tasks)
+    - [3.6. Element Templates](#36-element-templates)
+    - [3.7. Global Assets](#37-global-assets)
+  - [4. Creating a World](#4-creating-a-world)
+    - [4.1. What Type of Storyteller Are You?](#41-what-type-of-storyteller-are-you)
+    - [4.2. For Every Storyteller You Are](#42-for-every-storyteller-you-are)
+      - [4.2.1. Creating Rounded Non-Player Characters](#421-creating-rounded-non-player-characters)
+      - [4.2.2. Developing Adventures and Chapters](#422-developing-adventures-and-chapters)
+    - [4.3. For Plotters](#43-for-plotters)
+      - [4.3.1. Using the Story Circle](#431-using-the-story-circle)
+    - [4.4. For Sandboxers](#44-for-sandboxers)
+      - [4.4.1. Creating Open Worlds](#441-creating-open-worlds)
+      - [4.4.2. Developing Events, Locations, and Clues](#442-developing-events-locations-and-clues)
+  - [5. Running a Campaign](#5-running-a-campaign)
+    - [5.1. Prepping for a Session](#51-prepping-for-a-session)
+    - [5.2. Taking Notes during Sessions](#52-taking-notes-during-sessions)
+    - [5.3. Managing Scenes](#53-managing-scenes)
+  - [6. ChatGPT Integration](#6-chatgpt-integration)
+    - [6.1. Privacy Concerns](#61-privacy-concerns)
+    - [6.2. Costs Implications](#62-costs-implications)
+    - [6.3. Non-player characters generation](#63-non-player-characters-generation)
+    - [6.4. How to activate ChatGPT](#64-how-to-activate-chatgpt)
+    - [6.5. Alternatives to ChatGPT](#65-alternatives-to-chatgpt)
+  - [7. Contributing](#7-contributing)
+    - [7.1. Code Contributions](#71-code-contributions)
+    - [7.2. Bug Reporting](#72-bug-reporting)
+    - [7.3. Documentation:](#73-documentation)
+    - [7.4. Other Ways to Help:](#74-other-ways-to-help)
+    - [7.5. Community](#75-community)
+  - [8. Frequently Asked Questions](#8-frequently-asked-questions)
 
 ## 1. Introduction
 
@@ -723,6 +726,7 @@ To activate ChatGPT in RPG Manager, you will need an OpenAI API key. Follow thes
 1. **Sign Up for an OpenAI Account:** Visit the OpenAI website and sign up for an account by clicking on the 'Sign Up' button and following the prompts.
 2. **Generate API Key:** Once you have created your account and logged in, navigate to the 'API' section in your OpenAI account dashboard. Here, you will find the option to generate a new API key. Follow the on-screen instructions to create your key.
 3. **Enter API Key in RPG Manager:** Open RPG Manager and navigate to the settings section. Input your newly generated OpenAI API key into the designated field.
+4. **Select the OpenAI model you want to use:** The model determines the capabilities, speed and cost of the operations. The default model is gpt-4.1-nano
 
 ### 6.5. Alternatives to ChatGPT
 
@@ -734,9 +738,11 @@ To setup locally:
 
 1. **Install the software:** Go to [ollama.com](https://ollama.com) and download ollama for your platform
 2. **Download a model:** Use a run command to download a model: `ollama run llama3.1` on command line. This downloads a model and starts an ollama server on your own computer.
-3. **Set the rpg-manager config:** Set the ollamaUrl and ollamaModel vars in the config:
-  - **REQUIRED** ollamaUrl: default ollama setup puts the server on "http://localhost:11434"
-  - **OPTIONAL** ollamaMode; default model is `llama3.1`. You can explore different models based on your memory and GPU capabilities
+3. **Set the rpg-manager config:** Set the ollamaUrl and model vars in the config:
+
+- **REQUIRED** ollamaUrl: default ollama setup puts the server on "http://localhost:11434"
+- **OPTIONAL** ollamaMode; default model is `llama3.1`. You can explore different models based on your memory and GPU capabilities
+
 4. **Exclusivity Note:** Ollama is mutually exclusive with ChatGPT. If the ollamaUrl is set, ollama is used and chatGPT will **not** be used, regardless of api key
 5. **Shutting down:** When you are finished, shut down ollama (for Windows, it's in the system tray), as it holds a large amount of memory resources. You will need to use `ollama run llama3.1` the next time to want to run this again
 
