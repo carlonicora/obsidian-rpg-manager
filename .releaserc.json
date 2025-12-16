@@ -22,7 +22,7 @@
       "preset": "conventionalcommits",
       "writerOpts": {
         "commitsSort": ["scope", "subject"],
-        "commitPartial": "* {{#if scope}}**{{scope}}:** {{/if}}{{subject}} {{#if shortHash}}([{{shortHash}}]({{~@root.host}}/{{~@root.owner}}/{{~@root.repository}}/commit/{{hash}})){{/if}}{{#if author}} - @{{author.name}}{{/if}}\n"
+        "commitPartial": "* {{#if scope}}**{{scope}}:** {{/if}}{{subject}} {{#if shortHash}}([{{shortHash}}]({{~@root.host}}/{{~@root.owner}}/{{~@root.repository}}/commit/{{hash}})){{/if}}\n"
       },
       "presetConfig": {
         "types": [
