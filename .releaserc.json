@@ -1,6 +1,6 @@
 {
   "branches": ["master"],
-  "tagFormat": "v${version}",
+  "tagFormat": "${version}",
   "plugins": [
     ["@semantic-release/commit-analyzer", {
       "preset": "conventionalcommits",
