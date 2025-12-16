@@ -60,14 +60,12 @@ export class RpgManagerCodeblockService {
 		await this._app.vault.modify(this._file, content);
 
 		// This is an attempt to fix  the issue
-		// where the codeblock does not display the added RPGManager 
+		// where the codeblock does not display the added RPGManager
 		// items
 		if (activeLeaf) {
 			console.info("Reloading file:", this._file.path);
 			this._app.workspace.setActiveLeaf(activeLeaf, {focus: true});
 		}
-
-		this._app.metadataCache.trigger("changed", this._file);
 	}
 
 	async update(values: any): Promise<void> {
@@ -146,7 +144,7 @@ export class RpgManagerCodeblockService {
 
 	async updateRelationshipInContent(relationships: RelationshipInterface[]): Promise<void> {
 		await this._readMetadata();
-		if (this._metadata === null) return undefined;
+		if (this._metadata == null) return undefined;
 
 		const element = this._api.get(this._file.path) as ElementInterface;
 
@@ -190,7 +188,7 @@ export class RpgManagerCodeblockService {
 
 	async readCodeblock(): Promise<any | undefined> {
 		await this._readMetadata();
-		if (this._metadata === null) return undefined;
+		if (this._metadata == null) return undefined;
 
 		let codeblockContent: string | undefined = undefined;
 		let codeblockData: SectionCache | undefined = undefined;
@@ -223,7 +221,7 @@ export class RpgManagerCodeblockService {
 
 	async addCodeBlock(rpgManagerCodeblock: any): Promise<TFile | undefined> {
 		await this._readMetadata();
-		if (this._metadata === null) return undefined;
+		if (this._metadata == null) return undefined;
 
 		const yamlService: YamlService = new YamlService();
 		const codeblockContent: string = yamlService.stringify(rpgManagerCodeblock);
@@ -231,7 +229,7 @@ export class RpgManagerCodeblockService {
 		codeblockContentLines.pop();
 
 		let newContent: string[] = [];
-		if (this._metadata.frontmatter === undefined) {
+		if (this._metadata?.frontmatter === undefined) {
 			newContent = ["", "```RpgManager4", ...codeblockContentLines, "```", "", ...this._fileContentLines];
 		} else {
 			let frontmatterStarted = false;
