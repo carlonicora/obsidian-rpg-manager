@@ -724,6 +724,22 @@ To activate ChatGPT in RPG Manager, you will need an OpenAI API key. Follow thes
 2. **Generate API Key:** Once you have created your account and logged in, navigate to the 'API' section in your OpenAI account dashboard. Here, you will find the option to generate a new API key. Follow the on-screen instructions to create your key.
 3. **Enter API Key in RPG Manager:** Open RPG Manager and navigate to the settings section. Input your newly generated OpenAI API key into the designated field.
 
+### 6.5. Alternatives to ChatGPT
+
+An open source alternative to ChatGPT exists, called Ollama. If you have a sufficiently-powered computer with a modern GPU, it is possible to run a ChatGPT-like experience on your own machine, only for the price of your own electricity and entirely privately.
+
+To use Ollama, you must run an ollama server on the computer running obsidian, or another one to which you have access.
+
+To setup locally:
+
+1. **Install the software:** Go to [ollama.com](https://ollama.com) and download ollama for your platform
+2. **Download a model:** Use a run command to download a model: `ollama run llama3.1` on command line. This downloads a model and starts an ollama server on your own computer.
+3. **Set the rpg-manager config:** Set the ollamaUrl and ollamaModel vars in the config:
+  - **REQUIRED** ollamaUrl: default ollama setup puts the server on "http://localhost:11434"
+  - **OPTIONAL** ollamaMode; default model is `llama3.1`. You can explore different models based on your memory and GPU capabilities
+4. **Exclusivity Note:** Ollama is mutually exclusive with ChatGPT. If the ollamaUrl is set, ollama is used and chatGPT will **not** be used, regardless of api key
+5. **Shutting down:** When you are finished, shut down ollama (for Windows, it's in the system tray), as it holds a large amount of memory resources. You will need to use `ollama run llama3.1` the next time to want to run this again
+
 ## 7. Contributing
 
 RPG Manager is an open-source project, and we welcome contributions of all kinds - from code contributions, bug reports, to documentation and any other help you can provide.

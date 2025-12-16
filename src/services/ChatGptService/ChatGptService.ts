@@ -51,10 +51,12 @@ Each option should be qualitative, not a short sentence and will allow the story
 		// new ChatGptMessage("system", 'Format your response as: {"responses":[{"response":"YOUR RESPONSE"}]}')
 		// );
 		try {
+			const endpoint = this._api.settings.ollamaUrl ? this._api.settings.ollamaUrl + '/v1/chat/completions' : this._endpoint;
+			const model = this._api.settings.ollamaUrl ? this._api.settings.ollamaModel : this._model;
 			const response = await axios.post(
-				this._endpoint,
+				endpoint,
 				{
-					model: this._model,
+					model: model,
 					messages: messages,
 				},
 				{
@@ -74,11 +76,18 @@ Each option should be qualitative, not a short sentence and will allow the story
 	}
 
 	private _processLatestMessage(latestMessage: string): ChatGptResponse[] {
-		const splitResponses = latestMessage.trim().split("\n");
 
-		const results: ChatGptResponse[] = splitResponses
-			.filter((resp) => resp.trim() !== "")
-			.map((resp) => ({ response: resp.replace(/^\d+\.\s*/, "").trim() }));
+		let results : ChatGptResponse[] = [];
+		if (this._api.settings.ollamaUrl) {
+			// formatting rules aren't ollama's strong suit, so we just return everything and let the user edit
+			results.push({response: latestMessage });
+		}
+		else {
+			const splitResponses = latestMessage.trim().split("\n");
+			results = splitResponses
+				.filter((resp) => resp.trim() !== "")
+				.map((resp) => ({ response: resp.replace(/^\d+\.\s*/, "").trim() }));
+		}
 
 		return results;
 	}
