@@ -3,6 +3,7 @@ import ClueComponent from "src/components/elements/ClueComponent";
 import EventComponent from "src/components/elements/EventComponent";
 import FactionComponent from "src/components/elements/FactionComponent";
 import LocationComponent from "src/components/elements/LocationComponent";
+import LoreComponent from "src/components/elements/LoreComponent";
 import MonsterComponent from "src/components/elements/MonsterComponent";
 import ObjectComponent from "src/components/elements/ObjectComponent";
 import PlayerCharacterComponent from "src/components/elements/PlayerCharacterComponent";
@@ -23,6 +24,7 @@ export const agnosticComponents: Map<ElementType, React.FC> = new Map<ElementTyp
 	[ElementType.NonPlayerCharacter, NonPlayerCharacterComponent],
 	[ElementType.Event, EventComponent],
 	[ElementType.Location, LocationComponent],
+	[ElementType.Lore, LoreComponent],
 	[ElementType.Faction, FactionComponent],
 	[ElementType.Clue, ClueComponent],
 	[ElementType.PlayerCharacter, PlayerCharacterComponent],

@@ -51,7 +51,7 @@ function EditComponent({
 
 	let chatGpt: ChatGptNonPlayerCharacterModel | undefined = undefined;
 
-	if (api.settings.chatGptKey !== undefined && api.settings.chatGptKey !== "") {
+	if (api.settings.hasLLM) {
 		chatGpt = new ChatGptNonPlayerCharacterModel(
 			api,
 			element.type === ElementType.Campaign ? element : element.campaign,

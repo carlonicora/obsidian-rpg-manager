@@ -6,6 +6,7 @@ export enum ElementType {
 	PlayerCharacter = "playercharacter",
 	NonPlayerCharacter = "nonplayercharacter",
 	Location = "location",
+	Lore = "lore",
 	Event = "event",
 	Clue = "clue",
 	Faction = "faction",

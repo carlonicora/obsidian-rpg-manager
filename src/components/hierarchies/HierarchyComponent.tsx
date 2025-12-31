@@ -19,6 +19,8 @@ import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockServ
 import SceneAnalyserComponent from "../analyser/SceneAnalyserComponent";
 import ChildDefaultComponent from "./ChildDefaultComponent";
 import ChildDefaultHeadersComponent from "./ChildDefaultHeadersComponent";
+import ChildLoreComponent from "./ChildLoreComponent";
+import ChildLoreHeadersComponent from "./ChildLoreHeadersComponent";
 import ChildSceneComponent from "./ChildSceneComponent";
 import ChildSceneHeadersComponent from "./ChildSceneHeadersComponent";
 import ChildSessionComponent from "./ChildSessionComponent";
@@ -62,24 +64,26 @@ export default function HierarchyComponent({
 			codeblockService.updateCodeblockId("positionInParent", index + 1);
 		});
 	}
-
 	function getChildComponent(child: ElementInterface): React.ReactElement {
 		switch (child.type) {
 			case ElementType.Session:
 				return <ChildSessionComponent key={child.path} element={child} isInPopover={isInPopover} />;
 			case ElementType.Scene:
 				return <ChildSceneComponent key={child.path} element={child} isInPopover={isInPopover} />;
+			case ElementType.Lore:
+				return <ChildLoreComponent key={child.path} element={child} isInPopover={isInPopover} />;
 			default:
 				return <ChildDefaultComponent key={child.path} element={child} isInPopover={isInPopover} />;
 		}
 	}
-
 	function getHeaderComponent(): React.ReactElement {
 		switch (type) {
 			case ElementType.Session:
 				return <ChildSessionHeadersComponent isInPopover={isInPopover} />;
 			case ElementType.Scene:
 				return <ChildSceneHeadersComponent isInPopover={isInPopover} />;
+			case ElementType.Lore:
+				return <ChildLoreHeadersComponent isInPopover={isInPopover} />;
 			default:
 				return <ChildDefaultHeadersComponent isInPopover={isInPopover} />;
 		}
