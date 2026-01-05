@@ -34,10 +34,10 @@ export default function HeaderComponent({
 
 	return (
 		<>
-			<div className="!m-0 flex justify-end p-1 text-[--text-faint] text-xs absolute right-0 !mt-[-1.25rem]">
-				Rpg Manager {api.version}
-			</div>
 			<div className="relative flex flex-col justify-center items-center h-full">
+				<div className="absolute top-0 right-0 p-1 text-[--text-faint] text-xs">
+					Rpg Manager {api.version}
+				</div>
 				<h1 className="!text-4xl !font-extralight">{element.name}</h1>
 				{element.type !== ElementType.Campaign && element.campaign === undefined && (
 					<h3 className="!text-xl !font-extralight !text-[--text-muted] !-mt-3 !mb-3 !italic">{t("global")}</h3>

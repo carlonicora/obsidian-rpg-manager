@@ -1,4 +1,5 @@
 import { AttributeInterface } from "@/data/interfaces/AttributeInterface";
+import i18n from "i18next";
 import {
   App,
   Plugin,
@@ -58,33 +59,34 @@ export class RpgManagerSettings extends PluginSettingTab {
 
   display(): void {
     this._createFolderMap();
+    const t = (key: string) => i18n.t(key);
 
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h3", { text: "Rpg Manager Settings" });
+    containerEl.createEl("h3", { text: t("settings.title") });
     const mainDesc = containerEl.createEl("p");
     mainDesc.addClass("mb-3");
-    mainDesc.appendText("For help or support, refer to ");
+    mainDesc.appendText(t("settings.help") + " ");
     mainDesc.appendChild(
       createEl("a", {
-        text: "github",
+        text: t("settings.github"),
         href: "https://github.com/carlonicora/obsidian-rpg-manager",
       }),
     );
-    mainDesc.appendText(" or join the ");
+    mainDesc.appendText(" " + t("settings.or") + " ");
     mainDesc.appendChild(
       createEl("a", {
-        text: "discord support thread",
+        text: t("settings.discord"),
         href: "https://discord.com/channels/686053708261228577/1022806716343144518",
       }),
     );
 
-    containerEl.createEl("h3", { text: "Main Options" });
+    containerEl.createEl("h3", { text: t("settings.mainOptions") });
 
     new Setting(containerEl)
-      .setName("Templates Folder")
-      .setDesc("To use custom templates, select the folder that contains them.")
+      .setName(t("settings.templatesFolder"))
+      .setDesc(t("settings.templatesFolderDesc"))
       .addDropdown((dropdown) => {
         dropdown.addOption("", "");
         this._folderMap.forEach((value: string, display: string) => {
@@ -98,10 +100,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Keep Element Organised")
-      .setDesc(
-        "Automatically move new elements in subfolders of their campaign.",
-      )
+      .setName(t("settings.keepOrganised"))
+      .setDesc(t("settings.keepOrganisedDesc"))
       .addToggle((toggle) => {
         toggle
           .setValue(this._plugin.settings.automaticMove)
@@ -111,10 +111,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Force Full Width")
-      .setDesc(
-        "Force the markdown editor to use the full width of the screen. This might clash with some themes.",
-      )
+      .setName(t("settings.forceFullWidth"))
+      .setDesc(t("settings.forceFullWidthDesc"))
       .addToggle((toggle) => {
         toggle
           .setValue(this._plugin.settings.forceFullWidth)
@@ -128,8 +126,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Image and Assets Folder")
-      .setDesc("Select the folder that contains the assets.")
+      .setName(t("settings.assetsFolder"))
+      .setDesc(t("settings.assetsFolderDesc"))
       .addDropdown((dropdown) => {
         dropdown.addOption("", "");
         this._folderMap.forEach((value: string, display: string) => {
@@ -143,8 +141,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Scene Analyser")
-      .setDesc("Show the tool that helps you create balanced sessions.")
+      .setName(t("settings.sceneAnalyser"))
+      .setDesc(t("settings.sceneAnalyserDesc"))
       .addToggle((toggle) => {
         toggle
           .setValue(this._plugin.settings.useSceneAnalyser)
@@ -153,20 +151,20 @@ export class RpgManagerSettings extends PluginSettingTab {
           });
       });
 
-    containerEl.createEl("h3", { text: "AI Plugins", cls: "mt-3" });
+    containerEl.createEl("h3", { text: t("settings.aiPlugins"), cls: "mt-3" });
     const AIPlugins = containerEl.createEl("p");
-    AIPlugins.appendText("Set up all the add-ons for the plugin. ");
+    AIPlugins.appendText(t("settings.aiPluginsDesc"));
     const ChatGPTWarning = containerEl.createEl("p");
     ChatGPTWarning.appendChild(
       createEl("span", {
-        text: "Please note: ChatGPT is a paid service, you need to have a key to use it. Also, some data from your vault will be sent to OpenAI.",
+        text: t("settings.chatGptWarning"),
         cls: "text-[--text-warning]",
       }),
     );
 
     new Setting(containerEl)
-      .setName("OpenAI/ChatGPT Key")
-      .setDesc("Insert your OpenAI key here.")
+      .setName(t("settings.chatGptKey"))
+      .setDesc(t("settings.chatGptKeyDesc"))
       .addText((text) =>
         text
           .setPlaceholder("")
@@ -182,16 +180,14 @@ export class RpgManagerSettings extends PluginSettingTab {
     const OllamaWarning = containerEl.createEl("p");
     OllamaWarning.appendChild(
       createEl("span", {
-        text: "Please note: Ollama is an open-source LLM you can run on your own machine(s). See ollama.com for more information",
+        text: t("settings.ollamaWarning"),
         cls: "text-[--text-warning]",
       }),
     );
 
     new Setting(containerEl)
-      .setName("Ollama URL")
-      .setDesc(
-        "Insert the root URL of your local ollama server (eg. http://localhost:11434)",
-      )
+      .setName(t("settings.ollamaUrl"))
+      .setDesc(t("settings.ollamaUrlDesc"))
       .addText((text) =>
         text
           .setPlaceholder("http://localhost:11434")
@@ -207,15 +203,13 @@ export class RpgManagerSettings extends PluginSettingTab {
     const modelWarning = containerEl.createEl("p");
     modelWarning.appendChild(
       createEl("span", {
-        text: "To use either OpenAI or Ollama, you need to select a model.",
+        text: t("settings.modelWarning"),
         cls: "text-[--text-warning]",
       }),
     );
     new Setting(containerEl)
-      .setName("AI Model")
-      .setDesc(
-        "Enter the AI model (eg. gpt-4.1-nano for OpenAI, or llama3.1 for Ollama or any other you like).",
-      )
+      .setName(t("settings.aiModel"))
+      .setDesc(t("settings.aiModelDesc"))
       .addText((text) =>
         text
           .setPlaceholder("")
