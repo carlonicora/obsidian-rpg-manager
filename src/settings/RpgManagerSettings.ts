@@ -10,6 +10,70 @@ import {
 } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 
+export interface FolderStructureInterface {
+  adventures: string;
+  sessions: string;
+  npcs: string;
+  events: string;
+  locations: string;
+  factions: string;
+  clues: string;
+  pcs: string;
+  subplots: string;
+  objects: string;
+  monsters: string;
+  lore: string;
+}
+
+export const defaultFolderStructure: FolderStructureInterface = {
+  adventures: "Adventures",
+  sessions: "Sessions",
+  npcs: "Non Player Characters",
+  events: "Events",
+  locations: "Locations",
+  factions: "Factions",
+  clues: "Clues",
+  pcs: "Player Characters",
+  subplots: "Subplots",
+  objects: "Objects",
+  monsters: "Monsters",
+  lore: "Lore",
+};
+
+export function getLocalizedFolderDefaults(): FolderStructureInterface {
+  return {
+    adventures: i18n.t("settings.defaultAdventures"),
+    sessions: i18n.t("settings.defaultSessions"),
+    npcs: i18n.t("settings.defaultNpcs"),
+    events: i18n.t("settings.defaultEvents"),
+    locations: i18n.t("settings.defaultLocations"),
+    factions: i18n.t("settings.defaultFactions"),
+    clues: i18n.t("settings.defaultClues"),
+    pcs: i18n.t("settings.defaultPcs"),
+    subplots: i18n.t("settings.defaultSubplots"),
+    objects: i18n.t("settings.defaultObjects"),
+    monsters: i18n.t("settings.defaultMonsters"),
+    lore: i18n.t("settings.defaultLore"),
+  };
+}
+
+export type FolderKey = keyof FolderStructureInterface;
+
+export const defaultFolderOrder: FolderKey[] = [
+  "adventures",
+  "sessions",
+  "npcs",
+  "events",
+  "locations",
+  "factions",
+  "clues",
+  "pcs",
+  "subplots",
+  "objects",
+  "monsters",
+  "lore",
+];
+
 export interface RpgManagerSettingsInterface {
   chatGptKey: string | undefined;
   ollamaUrl: string | undefined;
@@ -22,6 +86,8 @@ export interface RpgManagerSettingsInterface {
   version: string;
   customAttributes: AttributeInterface[];
   forceFullWidth: boolean;
+  folderStructure: FolderStructureInterface;
+  folderOrder: FolderKey[];
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -38,6 +104,8 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
   version: "0.0.0",
   customAttributes: [],
   forceFullWidth: true,
+  folderStructure: { ...defaultFolderStructure },
+  folderOrder: [...defaultFolderOrder],
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
@@ -216,6 +284,112 @@ export class RpgManagerSettings extends PluginSettingTab {
           .setValue(this._plugin.settings.model)
           .onChange(async (value: string) => {
             await this.saveSettings({ model: value });
+          }),
+      );
+
+    // Folder Structure Section - Collapsible
+    const folderDetailsEl = containerEl.createEl("details", { cls: "mt-3" });
+    const folderSummaryEl = folderDetailsEl.createEl("summary", {
+      text: t("settings.folderStructure"),
+      cls: "setting-item-heading",
+      attr: { style: "cursor: pointer; font-weight: var(--font-semibold); font-size: var(--h3-size);" }
+    });
+    folderDetailsEl.createEl("p", { text: t("settings.folderStructureDesc") });
+
+    // Get localized defaults
+    const localizedDefaults = getLocalizedFolderDefaults();
+
+    // Ensure folderStructure exists (for existing installations)
+    if (!this._plugin.settings.folderStructure) {
+      this._plugin.settings.folderStructure = { ...localizedDefaults };
+    }
+
+    // Ensure folderOrder exists (for existing installations)
+    if (!this._plugin.settings.folderOrder || this._plugin.settings.folderOrder.length === 0) {
+      this._plugin.settings.folderOrder = [...defaultFolderOrder];
+    }
+
+    const folderLabelMap: Record<FolderKey, string> = {
+      adventures: "settings.folderAdventures",
+      sessions: "settings.folderSessions",
+      npcs: "settings.folderNpcs",
+      events: "settings.folderEvents",
+      locations: "settings.folderLocations",
+      factions: "settings.folderFactions",
+      clues: "settings.folderClues",
+      pcs: "settings.folderPcs",
+      subplots: "settings.folderSubplots",
+      objects: "settings.folderObjects",
+      monsters: "settings.folderMonsters",
+      lore: "settings.folderLore",
+    };
+
+    // Render folders in the saved order
+    const currentOrder = this._plugin.settings.folderOrder;
+
+    currentOrder.forEach((key, index) => {
+      // Format order number with leading zero (01, 02, ... 12)
+      const orderNumber = String(index + 1).padStart(2, "0");
+
+      const setting = new Setting(folderDetailsEl)
+        .setName(`${orderNumber}. ${t(folderLabelMap[key])}`)
+        .addText((text) =>
+          text
+            .setPlaceholder(localizedDefaults[key])
+            .setValue(this._plugin.settings.folderStructure[key])
+            .onChange(async (value: string) => {
+              const newFolderStructure = { ...this._plugin.settings.folderStructure };
+              newFolderStructure[key] = value || localizedDefaults[key];
+              await this.saveSettings({ folderStructure: newFolderStructure });
+            }),
+        );
+
+      // Add move up button (disabled if first)
+      setting.addExtraButton((button) =>
+        button
+          .setIcon("arrow-up")
+          .setTooltip(t("settings.moveUp"))
+          .setDisabled(index === 0)
+          .onClick(async () => {
+            if (index > 0) {
+              const newOrder = [...currentOrder];
+              [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+              await this.saveSettings({ folderOrder: newOrder });
+              this.display();
+            }
+          }),
+      );
+
+      // Add move down button (disabled if last)
+      setting.addExtraButton((button) =>
+        button
+          .setIcon("arrow-down")
+          .setTooltip(t("settings.moveDown"))
+          .setDisabled(index === currentOrder.length - 1)
+          .onClick(async () => {
+            if (index < currentOrder.length - 1) {
+              const newOrder = [...currentOrder];
+              [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+              await this.saveSettings({ folderOrder: newOrder });
+              this.display();
+            }
+          }),
+      );
+    });
+
+    new Setting(folderDetailsEl)
+      .setName(t("settings.resetFolderStructure"))
+      .setDesc(t("settings.resetFolderStructureDesc"))
+      .addButton((button) =>
+        button
+          .setButtonText(t("settings.resetFolderStructure"))
+          .setWarning()
+          .onClick(async () => {
+            await this.saveSettings({
+              folderStructure: { ...localizedDefaults },
+              folderOrder: [...defaultFolderOrder]
+            });
+            this.display(); // Refresh the settings UI
           }),
       );
   }
