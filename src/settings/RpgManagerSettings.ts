@@ -110,6 +110,7 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
 
 export class RpgManagerSettings extends PluginSettingTab {
   private _folderMap: Map<string, string>;
+  private _draftFolderOrder: FolderKey[] | null = null;
 
   constructor(private _app: App, private _plugin: RpgManagerInterface) {
     super(_app, _plugin as unknown as Plugin);
@@ -165,17 +166,6 @@ export class RpgManagerSettings extends PluginSettingTab {
         dropdown.onChange(async (value) => {
           await this.saveSettings({ templatesFolder: value });
         });
-      });
-
-    new Setting(containerEl)
-      .setName(t("settings.keepOrganised"))
-      .setDesc(t("settings.keepOrganisedDesc"))
-      .addToggle((toggle) => {
-        toggle
-          .setValue(this._plugin.settings.automaticMove)
-          .onChange(async (value) => {
-            await this.saveSettings({ automaticMove: value });
-          });
       });
 
     new Setting(containerEl)
@@ -287,9 +277,20 @@ export class RpgManagerSettings extends PluginSettingTab {
           }),
       );
 
+    new Setting(containerEl)
+      .setName(t("settings.keepOrganised"))
+      .setDesc(t("settings.keepOrganisedDesc"))
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this._plugin.settings.automaticMove)
+          .onChange(async (value) => {
+            await this.saveSettings({ automaticMove: value });
+          });
+      });
+
     // Folder Structure Section - Collapsible
-    const folderDetailsEl = containerEl.createEl("details", { cls: "mt-3" });
-    const folderSummaryEl = folderDetailsEl.createEl("summary", {
+    const folderDetailsEl = containerEl.createEl("details", { cls: "mt-3", attr: { open: "" } });
+    folderDetailsEl.createEl("summary", {
       text: t("settings.folderStructure"),
       cls: "setting-item-heading",
       attr: { style: "cursor: pointer; font-weight: var(--font-semibold); font-size: var(--h3-size);" }
@@ -309,6 +310,11 @@ export class RpgManagerSettings extends PluginSettingTab {
       this._plugin.settings.folderOrder = [...defaultFolderOrder];
     }
 
+    // Initialize draft with current saved order if not already set
+    if (this._draftFolderOrder === null) {
+      this._draftFolderOrder = [...this._plugin.settings.folderOrder];
+    }
+
     const folderLabelMap: Record<FolderKey, string> = {
       adventures: "settings.folderAdventures",
       sessions: "settings.folderSessions",
@@ -324,14 +330,177 @@ export class RpgManagerSettings extends PluginSettingTab {
       lore: "settings.folderLore",
     };
 
-    // Render folders in the saved order
-    const currentOrder = this._plugin.settings.folderOrder;
+    // Container for action buttons (save/discard) - will be shown/hidden based on changes
+    const actionButtonsEl = folderDetailsEl.createEl("div", {
+      cls: "rpgm-folder-actions",
+      attr: { style: "margin-bottom: 10px;" }
+    });
+
+    // Container for draggable items
+    const folderListEl = folderDetailsEl.createEl("div", { cls: "rpgm-folder-list" });
+
+    // Function to check if there are unsaved changes
+    const hasUnsavedChanges = (): boolean => {
+      const saved = this._plugin.settings.folderOrder;
+      const draft = this._draftFolderOrder;
+      if (!draft || saved.length !== draft.length) return true;
+      return !saved.every((key, idx) => key === draft[idx]);
+    };
+
+    // Function to update action buttons visibility
+    const updateActionButtons = () => {
+      actionButtonsEl.empty();
+      if (hasUnsavedChanges()) {
+        const warningEl = actionButtonsEl.createEl("div", {
+          cls: "setting-item-description",
+          attr: { style: "color: var(--text-warning); margin-bottom: 8px;" }
+        });
+        warningEl.setText(t("settings.unsavedChanges"));
+
+        const buttonsContainer = actionButtonsEl.createEl("div", {
+          attr: { style: "display: flex; gap: 8px;" }
+        });
+
+        const saveBtn = buttonsContainer.createEl("button", {
+          text: t("settings.saveChanges"),
+          cls: "mod-cta"
+        });
+        saveBtn.addEventListener("click", async () => {
+          await this.saveSettings({ folderOrder: [...this._draftFolderOrder!] });
+          updateActionButtons();
+        });
+
+        const discardBtn = buttonsContainer.createEl("button", {
+          text: t("settings.discardChanges")
+        });
+        discardBtn.addEventListener("click", () => {
+          this._draftFolderOrder = [...this._plugin.settings.folderOrder];
+          this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, updateActionButtons);
+          updateActionButtons();
+        });
+      }
+    };
+
+    // Initial render
+    this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, updateActionButtons);
+    updateActionButtons();
+
+    new Setting(folderDetailsEl)
+      .setName(t("settings.resetFolderStructure"))
+      .setDesc(t("settings.resetFolderStructureDesc"))
+      .addButton((button) =>
+        button
+          .setButtonText(t("settings.resetFolderStructure"))
+          .setWarning()
+          .onClick(async () => {
+            this._draftFolderOrder = [...defaultFolderOrder];
+            await this.saveSettings({
+              folderStructure: { ...localizedDefaults },
+              folderOrder: [...defaultFolderOrder]
+            });
+            this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, updateActionButtons);
+            updateActionButtons();
+          }),
+      );
+  }
+
+  private _renderFolderList(
+    folderListEl: HTMLElement,
+    folderLabelMap: Record<FolderKey, string>,
+    localizedDefaults: FolderStructureInterface,
+    onOrderChange?: () => void
+  ): void {
+    const t = (key: string) => i18n.t(key);
+
+    // Clear the list
+    folderListEl.empty();
+
+    // Use draft order for display
+    const currentOrder = this._draftFolderOrder || this._plugin.settings.folderOrder;
+    let draggedItem: HTMLElement | null = null;
+    let draggedKey: FolderKey | null = null;
 
     currentOrder.forEach((key, index) => {
-      // Format order number with leading zero (01, 02, ... 12)
       const orderNumber = String(index + 1).padStart(2, "0");
 
-      const setting = new Setting(folderDetailsEl)
+      const settingWrapper = folderListEl.createEl("div", {
+        cls: "rpgm-folder-item",
+        attr: {
+          draggable: "true",
+          "data-folder-key": key,
+          style: "cursor: grab;"
+        }
+      });
+
+      settingWrapper.addEventListener("dragstart", (e) => {
+        draggedItem = settingWrapper;
+        draggedKey = key;
+        settingWrapper.style.opacity = "0.5";
+        e.dataTransfer?.setData("text/plain", key);
+      });
+
+      settingWrapper.addEventListener("dragend", () => {
+        if (draggedItem) {
+          draggedItem.style.opacity = "1";
+        }
+        draggedItem = null;
+        draggedKey = null;
+        folderListEl.querySelectorAll(".rpgm-folder-item").forEach((el) => {
+          (el as HTMLElement).style.borderTop = "";
+          (el as HTMLElement).style.borderBottom = "";
+        });
+      });
+
+      settingWrapper.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (draggedItem && draggedItem !== settingWrapper) {
+          const rect = settingWrapper.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          if (e.clientY < midY) {
+            settingWrapper.style.borderTop = "2px solid var(--interactive-accent)";
+            settingWrapper.style.borderBottom = "";
+          } else {
+            settingWrapper.style.borderTop = "";
+            settingWrapper.style.borderBottom = "2px solid var(--interactive-accent)";
+          }
+        }
+      });
+
+      settingWrapper.addEventListener("dragleave", () => {
+        settingWrapper.style.borderTop = "";
+        settingWrapper.style.borderBottom = "";
+      });
+
+      settingWrapper.addEventListener("drop", (e) => {
+        e.preventDefault();
+        settingWrapper.style.borderTop = "";
+        settingWrapper.style.borderBottom = "";
+
+        if (draggedKey && draggedKey !== key) {
+          const newOrder = [...currentOrder];
+          const fromIndex = newOrder.indexOf(draggedKey);
+
+          const rect = settingWrapper.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          const dropAbove = e.clientY < midY;
+
+          newOrder.splice(fromIndex, 1);
+
+          let newIndex = newOrder.indexOf(key);
+          if (!dropAbove) {
+            newIndex++;
+          }
+
+          newOrder.splice(newIndex, 0, draggedKey);
+
+          // Update draft only, don't save yet
+          this._draftFolderOrder = newOrder;
+          this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, onOrderChange);
+          if (onOrderChange) onOrderChange();
+        }
+      });
+
+      const setting = new Setting(settingWrapper)
         .setName(`${orderNumber}. ${t(folderLabelMap[key])}`)
         .addText((text) =>
           text
@@ -344,54 +513,12 @@ export class RpgManagerSettings extends PluginSettingTab {
             }),
         );
 
-      // Add move up button (disabled if first)
       setting.addExtraButton((button) =>
         button
-          .setIcon("arrow-up")
-          .setTooltip(t("settings.moveUp"))
-          .setDisabled(index === 0)
-          .onClick(async () => {
-            if (index > 0) {
-              const newOrder = [...currentOrder];
-              [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-              await this.saveSettings({ folderOrder: newOrder });
-              this.display();
-            }
-          }),
-      );
-
-      // Add move down button (disabled if last)
-      setting.addExtraButton((button) =>
-        button
-          .setIcon("arrow-down")
-          .setTooltip(t("settings.moveDown"))
-          .setDisabled(index === currentOrder.length - 1)
-          .onClick(async () => {
-            if (index < currentOrder.length - 1) {
-              const newOrder = [...currentOrder];
-              [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-              await this.saveSettings({ folderOrder: newOrder });
-              this.display();
-            }
-          }),
+          .setIcon("grip-vertical")
+          .setTooltip(t("settings.dragToReorder"))
       );
     });
-
-    new Setting(folderDetailsEl)
-      .setName(t("settings.resetFolderStructure"))
-      .setDesc(t("settings.resetFolderStructureDesc"))
-      .addButton((button) =>
-        button
-          .setButtonText(t("settings.resetFolderStructure"))
-          .setWarning()
-          .onClick(async () => {
-            await this.saveSettings({
-              folderStructure: { ...localizedDefaults },
-              folderOrder: [...defaultFolderOrder]
-            });
-            this.display(); // Refresh the settings UI
-          }),
-      );
   }
 
   private _createFolderMap(

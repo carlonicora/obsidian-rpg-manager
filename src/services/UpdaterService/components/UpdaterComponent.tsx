@@ -2,7 +2,7 @@ import { RpgManagerInterface } from "@/RpgManagerInterface";
 import MarkdownComponent from "@/components/markdowns/MarkdownComponent";
 import { useApi } from "@/hooks/useApi";
 import { useApp } from "@/hooks/useApp";
-import { RpgManagerSettingsInterface } from "@/settings/RpgManagerSettings";
+import { RpgManagerSettingsInterface, defaultFolderStructure, defaultFolderOrder } from "@/settings/RpgManagerSettings";
 import { App, Plugin } from "obsidian";
 import * as React from "react";
 import { UpdaterService } from "../UpdaterService";
@@ -43,6 +43,8 @@ function Upgrading(): React.ReactElement {
         version: api.version,
         customAttributes: [],
         forceFullWidth: false,
+        folderStructure: { ...defaultFolderStructure },
+        folderOrder: [...defaultFolderOrder],
       };
       (api as unknown as Plugin).saveData(settings);
 

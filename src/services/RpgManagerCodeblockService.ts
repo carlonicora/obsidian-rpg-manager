@@ -163,9 +163,9 @@ export class RpgManagerCodeblockService {
     await this._readMetadata();
     if (this._metadata == null) return undefined;
 
-    const element = this._api.get(this._file.path) as ElementInterface;
+    const element = this._api.get(this._file.path) as ElementInterface | undefined;
 
-    if (element.type === ElementType.Campaign) return;
+    if (element === undefined || element.type === ElementType.Campaign) return;
 
     const relationshipsNotInContent = relationships.filter(
       (relationship: RelationshipInterface) =>
