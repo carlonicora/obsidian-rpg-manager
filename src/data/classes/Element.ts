@@ -203,4 +203,8 @@ export class Element implements ElementInterface {
 			return new Task(this._api, this, task);
 		});
 	}
+
+	get hasTasks(): boolean {
+		return this._rpgManagerBlock.tasks !== undefined;
+	}
 }

@@ -68,16 +68,18 @@ export class FileCreationService {
 			});
 		}
 
-		this._codeblock.tasks = [
-			{
-				id: uuidv4(),
-				priority: 1,
-				name: i18next.t("tasks.complete", { context: this._type }),
-				description: i18next.t("tasks.complete", { context: this._type }) + " " + this._name,
-				type: TaskType.Creation,
-				status: TaskStatusType.Proposed,
-			},
-		];
+		if (this._api.settings.enableTasks ?? true) {
+			this._codeblock.tasks = [
+				{
+					id: uuidv4(),
+					priority: 1,
+					name: i18next.t("tasks.complete", { context: this._type }),
+					description: i18next.t("tasks.complete", { context: this._type }) + " " + this._name,
+					type: TaskType.Creation,
+					status: TaskStatusType.Proposed,
+				},
+			];
+		}
 
 		const yamlService = new YamlService();
 		this._rpgManagerCodeBlock = "\n```RpgManager4\n";
@@ -149,7 +151,7 @@ export class FileCreationService {
 			return `${orderNumber}. ${folders[key as keyof typeof folders]}`;
 		};
 
-		let response = this._api.settings.automaticMove ? "Campaigns" : "";
+		let response = this._api.settings.automaticMove ? (this._api.settings.campaignsFolder || i18next.t("settings.defaultCampaignsFolder")) : "";
 
 		if (this._type === ElementType.Campaign) {
 			response += pathSeparator + this._name;

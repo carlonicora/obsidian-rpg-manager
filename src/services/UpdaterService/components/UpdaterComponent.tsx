@@ -45,6 +45,8 @@ function Upgrading(): React.ReactElement {
         forceFullWidth: false,
         folderStructure: { ...defaultFolderStructure },
         folderOrder: [...defaultFolderOrder],
+        campaignsFolder: "",
+        enableTasks: true,
       };
       (api as unknown as Plugin).saveData(settings);
 

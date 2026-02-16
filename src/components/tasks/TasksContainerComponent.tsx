@@ -13,6 +13,8 @@ export default function TasksContainerComponent({ element }: { element: ElementI
 	const { t } = useTranslation();
 	const api: RpgManagerInterface = useApi();
 
+	if (!element.hasTasks) return null;
+
 	let tasks: TaskInterface[] = api.tasks.getMentionedIn(element);
 
 	const [viewTasks, setViewTasks] = React.useState<boolean>(true);

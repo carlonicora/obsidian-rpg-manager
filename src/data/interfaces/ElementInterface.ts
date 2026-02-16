@@ -28,6 +28,7 @@ export interface ElementInterface {
 	get name(): string;
 	get images(): ImageInterface[];
 	get tasks(): TaskInterface[];
+	get hasTasks(): boolean;
 
 	get attributes(): AttributeInterface[];
 	attribute(name: string): AttributeInterface | undefined;

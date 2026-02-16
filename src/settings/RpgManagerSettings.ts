@@ -88,6 +88,8 @@ export interface RpgManagerSettingsInterface {
   forceFullWidth: boolean;
   folderStructure: FolderStructureInterface;
   folderOrder: FolderKey[];
+  campaignsFolder: string;
+  enableTasks: boolean;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -106,6 +108,8 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
   forceFullWidth: true,
   folderStructure: { ...defaultFolderStructure },
   folderOrder: [...defaultFolderOrder],
+  campaignsFolder: "",
+  enableTasks: true,
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
@@ -209,6 +213,17 @@ export class RpgManagerSettings extends PluginSettingTab {
           });
       });
 
+    new Setting(containerEl)
+      .setName(t("settings.enableTasks"))
+      .setDesc(t("settings.enableTasksDesc"))
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this._plugin.settings.enableTasks ?? true)
+          .onChange(async (value) => {
+            await this.saveSettings({ enableTasks: value });
+          });
+      });
+
     containerEl.createEl("h3", { text: t("settings.aiPlugins"), cls: "mt-3" });
     const AIPlugins = containerEl.createEl("p");
     AIPlugins.appendText(t("settings.aiPluginsDesc"));
@@ -277,7 +292,17 @@ export class RpgManagerSettings extends PluginSettingTab {
           }),
       );
 
-    new Setting(containerEl)
+    // Folder Structure Section - Collapsible
+    const folderDetailsEl = containerEl.createEl("details", { cls: "mt-3", attr: { open: "" } });
+    folderDetailsEl.createEl("summary", {
+      text: t("settings.folderStructure"),
+      cls: "setting-item-heading",
+      attr: { style: "cursor: pointer; font-weight: var(--font-semibold); font-size: var(--h3-size);" }
+    });
+    folderDetailsEl.createEl("p", { text: t("settings.folderStructureDesc") });
+
+    // Keep Elements Organised toggle
+    new Setting(folderDetailsEl)
       .setName(t("settings.keepOrganised"))
       .setDesc(t("settings.keepOrganisedDesc"))
       .addToggle((toggle) => {
@@ -288,14 +313,19 @@ export class RpgManagerSettings extends PluginSettingTab {
           });
       });
 
-    // Folder Structure Section - Collapsible
-    const folderDetailsEl = containerEl.createEl("details", { cls: "mt-3", attr: { open: "" } });
-    folderDetailsEl.createEl("summary", {
-      text: t("settings.folderStructure"),
-      cls: "setting-item-heading",
-      attr: { style: "cursor: pointer; font-weight: var(--font-semibold); font-size: var(--h3-size);" }
-    });
-    folderDetailsEl.createEl("p", { text: t("settings.folderStructureDesc") });
+    // Campaigns root folder
+    const localizedCampaignsDefault = i18n.t("settings.defaultCampaignsFolder");
+    new Setting(folderDetailsEl)
+      .setName(t("settings.campaignsFolder"))
+      .setDesc(t("settings.campaignsFolderDesc"))
+      .addText((text) =>
+        text
+          .setPlaceholder(localizedCampaignsDefault)
+          .setValue(this._plugin.settings.campaignsFolder || "")
+          .onChange(async (value: string) => {
+            await this.saveSettings({ campaignsFolder: value });
+          }),
+      );
 
     // Get localized defaults
     const localizedDefaults = getLocalizedFolderDefaults();
@@ -396,10 +426,10 @@ export class RpgManagerSettings extends PluginSettingTab {
             this._draftFolderOrder = [...defaultFolderOrder];
             await this.saveSettings({
               folderStructure: { ...localizedDefaults },
-              folderOrder: [...defaultFolderOrder]
+              folderOrder: [...defaultFolderOrder],
+              campaignsFolder: "",
             });
-            this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, updateActionButtons);
-            updateActionButtons();
+            this.display();
           }),
       );
   }
@@ -537,8 +567,9 @@ export class RpgManagerSettings extends PluginSettingTab {
         .children.filter((file: TAbstractFile) => file instanceof TFolder);
     }
 
+    const campaignsFolderName = this._plugin.settings.campaignsFolder || i18n.t("settings.defaultCampaignsFolder");
     folderList.forEach((folder: TFolder) => {
-      if (folder.name !== "Campaigns") {
+      if (folder.name !== campaignsFolderName) {
         this._folderMap.set(folder.path, folder.path);
         this._createFolderMap(folder, indent + 1);
       }
