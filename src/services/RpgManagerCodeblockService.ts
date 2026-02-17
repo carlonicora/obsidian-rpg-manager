@@ -35,7 +35,13 @@ export class RpgManagerCodeblockService {
   private async _readMetadata(): Promise<void> {
     if (this._metadata !== undefined) return;
 
-    this._fileContent = await this._app.vault.read(this._file);
+    try {
+      this._fileContent = await this._app.vault.read(this._file);
+    } catch (e) {
+      console.warn("RpgManager: file no longer exists, skipping:", this._file.path);
+      this._metadata = null;
+      return;
+    }
     this._fileContentLines = this._fileContent.split("\n");
     this._metadata = this._app.metadataCache.getFileCache(this._file);
   }
@@ -66,7 +72,12 @@ export class RpgManagerCodeblockService {
       );
     }
 
-    await this._app.vault.modify(this._file, content);
+    try {
+      await this._app.vault.modify(this._file, content);
+    } catch (e) {
+      console.warn("RpgManager: cannot modify file (may have been deleted):", this._file.path);
+      return;
+    }
 
     // This is an attempt to fix  the issue
     // where the codeblock does not display the added RPGManager
@@ -154,7 +165,11 @@ export class RpgManagerCodeblockService {
     this._modifyFileContent(
       this._fileContent.replace(this._codeblockContent, codeblockContent),
     );
-    this._app.vault.cachedRead(this._file);
+    try {
+      this._app.vault.cachedRead(this._file);
+    } catch (e) {
+      // file may have been deleted
+    }
   }
 
   async updateRelationshipInContent(

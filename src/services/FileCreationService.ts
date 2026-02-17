@@ -90,10 +90,15 @@ export class FileCreationService {
 	async create(open: boolean): Promise<TFile | undefined> {
 		let content = this._rpgManagerCodeBlock;
 		if (this._template !== undefined) {
-			const templateFile: TFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
-			const templateContent = await this._app.vault.read(templateFile);
-
-			content = templateContent.replace("```RpgManager4```", content).replace("```RpgManager4\n```", content);
+			const templateFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
+			if (templateFile) {
+				try {
+					const templateContent = await this._app.vault.read(templateFile);
+					content = templateContent.replace("```RpgManager4```", content).replace("```RpgManager4\n```", content);
+				} catch (e) {
+					console.warn("RpgManager: template file not found, using default content:", this._template);
+				}
+			}
 		}
 
 		const fileName = await this._generateFilePath();

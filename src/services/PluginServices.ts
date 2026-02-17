@@ -92,7 +92,19 @@ export class PluginServices {
 
 		(rpgm as unknown as Plugin).registerEvent(
 			app.vault.on("delete", (file: TFile) => {
+				const deletedElement = database.find((element: ElementInterface) => element.path === file.path);
 				database = database.filter((element: ElementInterface) => element.path !== file.path);
+
+				if (deletedElement) {
+					// Clean up relationships that reference the deleted element
+					database.forEach((element: ElementInterface) => {
+						element.relationships = element.relationships.filter(
+							(rel) => rel.path !== file.path
+						);
+					});
+
+					app.workspace.trigger("rpgmanager:refresh-views");
+				}
 			})
 		);
 
