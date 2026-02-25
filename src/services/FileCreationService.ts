@@ -1,6 +1,6 @@
 import { RelationshipInterface } from "@/data/interfaces/RelationshipInterface";
 import i18next from "i18next";
-import { App, MarkdownView, TAbstractFile, TFile } from "obsidian";
+import { App, MarkdownView, Notice, TAbstractFile, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementType } from "src/data/enums/ElementType";
 import { SystemType } from "src/data/enums/SystemType";
@@ -102,12 +102,22 @@ export class FileCreationService {
 		}
 
 		const fileName = await this._generateFilePath();
-		const newFile = await this._app.vault.create(fileName, content);
+
+		let newFile: TFile;
+		try {
+			newFile = await this._app.vault.create(fileName, content);
+		} catch (e) {
+			if (e?.message?.toLowerCase().includes("file already exists") || e?.message?.toLowerCase().includes("already exists")) {
+				new Notice(i18next.t("errors.file_already_exists", { name: this._name }), 5000);
+			} else {
+				new Notice(i18next.t("errors.file_creation_failed", { name: this._name }), 5000);
+			}
+			return undefined;
+		}
 
 		const currentLeaf = this._app.workspace.getActiveViewOfType(MarkdownView);
 		const leaf = this._app.workspace.getLeaf(currentLeaf != null);
 
-		// open ? await leaf.openFile(newFile) : leaf.detach();
 		if (open === true) await leaf.openFile(newFile);
 		else leaf.detach();
 

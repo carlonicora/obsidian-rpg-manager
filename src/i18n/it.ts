@@ -159,7 +159,7 @@ export const i18nIt = {
 		npctype_main: "Principale",
 		npctype_supporting: "Di Supporto",
 		npctype_extra: "Extra",
-		description_main: "Un personaggio non giocante completo, con dettagli sulla loro personalità, desideri e bisogni.",
+		description_main: "Un personaggio non giocante completo, con dettagli sulla sua personalità, desideri e bisogni.",
 		description_supporting: "Un personaggio non giocante ricorrente che non è un personaggio principale.",
 		description_extra: "Un personaggio non giocante con dettagli minimi, sufficienti solo per essere utilizzato come personaggio di sfondo.",
 	},
@@ -170,15 +170,15 @@ export const i18nIt = {
 		arc_4: "Arco della Corruzione",
 		arc_5: "Arco Piatto",
 		description_1:
-			"Il personaggio inizia **credendo in una bugia**, poi incontra la verità e supera la bugia per **accettare la verità**.",
+			"Il personaggio parte **credendo ad una bugia**, poi incontra la verità e supera la bugia per **accettare la verità**.",
 		description_2:
-			"Il personaggio inizia **credendo in una bugia**, poi incontra la verità e supera la bugia, ma **la verità porta a un esito peggiore** rispetto a credere nella bugia.",
+			"Il personaggio parte **credendo ad una bugia**, poi incontra la verità e supera la bugia, ma **la verità porta a un esito peggiore** rispetto a credere nella bugia.",
 		description_3:
-			"Il personaggio inizia **credendo in una bugia**, poi incontra la verità ma la rifiuta e **crede in una bugia più forte o peggiore**.",
+			"Il personaggio parte **credendo ad una bugia**, poi incontra la verità ma la rifiuta e **crede ad una bugia più forte o peggiore**.",
 		description_4:
-			"Il personaggio inizia **conoscendo la verità**, ma poi la rifiuta, **abbracciando una bugia**.",
+			"Il personaggio parte **conoscendo la verità**, ma poi la rifiuta, **abbracciando una bugia**.",
 		description_5:
-			"Il personaggio inizia **conoscendo la verità**, ma poi le loro convinzioni sono messe alla prova, ma continuano a **abbracciare la verità**.",
+			"Il personaggio parte **conoscendo la verità**, ma poi le loro convinzioni sono messe alla prova, ma continuano a **abbracciare la verità**.",
 	},
 	options: {
 		option_one: "Opzione",
@@ -217,19 +217,19 @@ export const i18nIt = {
 	analyser: {
 		expectedduration: "Durata Prevista",
 		activity: "Attività",
-		excitement: "Eccitazione",
+		excitement: "Adrenalina",
 		interest: "Interesse",
 		variety: "Varietà",
-		sceneanalyser: "Analizzatore di Scene",
+		sceneanalyser: "Analizzatore Scene",
 		saactivity_positiveerror: "Troppe scene attive",
 		saactivity_positivewarning: "Il numero di scene attive potrebbe essere più del necessario.",
-		saactivity_negativeerror: "Non abbastanza scene attive",
+		saactivity_negativeerror: "Non ci sono abbastanza scene attive",
 		saactivity_negativewarning: "Il numero di scene attive potrebbe non essere sufficiente.",
-		saexcitement_positiveerror: "Troppe scene eccitanti",
-		saexcitement_positivewarning: "Il numero di scene eccitanti potrebbe essere più del necessario.",
-		saexcitement_negativeerror: "Non abbastanza scene eccitanti",
-		saexcitement_negativewarning: "Il numero di scene eccitanti potrebbe non essere sufficiente.",
-		sainterest_negativeerror: "Non abbastanza varietà nel tipo di scene",
+		saexcitement_positiveerror: "Troppe scene adrenaliniche",
+		saexcitement_positivewarning: "Il numero di scene adrenaliniche potrebbe essere più del necessario.",
+		saexcitement_negativeerror: "Non ci sono abbastanza scene adrenaliniche",
+		saexcitement_negativewarning: "Il numero di scene adrenaliniche potrebbe non essere sufficiente.",
+		sainterest_negativeerror: "Non c'è abbastanza varietà nel tipo di scene",
 		sainterest_negativewarning: "Il numero di tipi di scene potrebbe non essere sufficiente.",
 		savariety_negativeerror: "Troppi tipi di scene ripetuti",
 		savariety_negativewarning: "Il numero di tipi di scene ripetuti potrebbe essere troppo alto.",
@@ -336,6 +336,24 @@ export const i18nIt = {
 	},
 	wizards: {
 		errors: "Sono stati riscontrati i seguenti errori:",
+		steps: {
+			type: "Tipo",
+			description: "Descrizione",
+			occupation: "Occupazione",
+			characterarc: "Arco Personaggio",
+			beliefs: "Convinzioni",
+			ghost: "Fantasma",
+			lie: "Menzogna",
+			need: "Bisogno",
+			strengthsandweaknesses: "Punti di Forza e Debolezze",
+			behaviour: "Comportamento",
+			want: "Desiderio",
+			stake: "Posta in Gioco",
+			opposition: "Opposizione",
+			destination: "Destinazione",
+			target: "Obiettivo",
+			clues: "Indizi",
+		},
 		chapter: {
 			errors: {
 				missingtargettype: "Seleziona un tipo di destinazione",
@@ -345,9 +363,9 @@ export const i18nIt = {
 			cluename: "Nome dell'Indizio",
 			cluesdescription: "Descrizione dell'indizio/i",
 			title: "Wizard Capitolo",
-			description: `Un capitolo è un modo per organizzare avventure più grandi in porzioni più gestibili, come per un libro o un film. 
-		  
-		  Descrivi *{{name}}*.`,
+			description: `Un capitolo è un modo per organizzare avventure più grandi in porzioni più gestibili, come per un libro o un film.
+
+Descrivi ***{{name}}***.`,
 			destinationtitle: "Destinazione",
 			destination: "Dove porta questo capitolo?",
 			destinationelementtype: "Tipo di destinazione",
@@ -363,11 +381,11 @@ export const i18nIt = {
 			target: "Il capitolo punta a un evento o a una posizione per far progredire la trama?",
 			targetdescription: "Prima di descrivere l'obiettivo, seleziona il tipo di obiettivo che vuoi utilizzare.",
 			targettitle_event: "Descrizione dell'evento chiave",
-			targetdescription_event: "Scrivi una descrizione per l'evento chiave nel capitolo *{{name}}*",
+			targetdescription_event: "Scrivi una descrizione per l'evento chiave nel capitolo **{{name}}**",
 			targettitle_location: "Descrizione della posizione chiave",
-			targetdescription_location: "Scrivi una descrizione per la posizione chiave nel capitolo *{{name}}*",
+			targetdescription_location: "Scrivi una descrizione per la posizione chiave nel capitolo **{{name}}**",
 			targettitle_lore: "Descrizione della leggenda chiave",
-			targetdescription_lore: "Scrivi una descrizione per la leggenda chiave nel capitolo *{{name}}*",
+			targetdescription_lore: "Scrivi una descrizione per la leggenda chiave nel capitolo **{{name}}**",
 			targetelementtype: "Tipo di obiettivo",
 			targettype_event: "La trama si sviluppa attraverso un evento",
 			targettype_location: "Il capitolo ruota attorno a una posizione",
@@ -386,57 +404,60 @@ export const i18nIt = {
 			title: "Wizard Personaggio Non Giocante",
 			create: "Crea automaticamente",
 			description_arc: `L'arco del personaggio descrive il modo in cui un personaggio cresce ed evolve durante la storia.
-				
-		  Seleziona **l'arco** che identifica meglio l'evoluzione di *{{name}}*.`,
-			description_behaviour: `Il comportamento è il modo normale in cui un personaggio fa le cose, il modo in cui i personaggi giocatori li vedono.
-		  
-		  Qual è il comportamento di *{{name}}*?`,
-			description_beliefs: `Le Credenze sono ciò che i personaggi accettano come vero nel mondo, anche se non lo è.
-		  
-		  Quali sono le credenze di *{{name}}*?`,
-			description_description: `La descrizione è un'introduzione a un personaggio, fornendo
-			  una breve informazione di sfondo per aiutare il narratore a identificarli chiaramente. Questa parte è particolarmente importante se desideri utilizzare la generazione automatica dei personaggi tramite la funzione IA.
 
-			  Descrivi *{{name}}*.`,
-			description_occupation: `L'occupazione definisce cosa fa un personaggio per vivere. Sebbene questo non definisca chi sono,
-			  aggiunge uno strato di profondità al personaggio e suggerisce un insieme di abilità che possiedono.
-			  
-			  Qual è l'occupazione di *{{name}}*?`,
-			description_ghost: `Il Fantasma è un evento importante nel passato del personaggio che definisce le loro credenze.
-			  Il fantasma è molto probabilmente un punto di svolta, molto positivo o molto negativo, e potrebbe aver plasmato la loro visione del mondo come una menzogna.
-			  
-			  Qual è l'evento che ha plasmato *{{name}}*?`,
+Seleziona **l'arco** che identifica meglio l'evoluzione di ***{{name}}***.`,
+			description_behaviour: `Il comportamento è il modo normale in cui un personaggio fa le cose, il modo in cui i personaggi giocatori li vedono.
+
+Qual è il comportamento di ***{{name}}***?`,
+			description_beliefs: `Le Credenze sono ciò che i personaggi accettano come vero nel mondo, anche se non lo è.
+
+Quali sono le credenze di ***{{name}}***?`,
+			description_description: `La descrizione è un'introduzione a un personaggio, fornendo una breve informazione di sfondo per aiutare il narratore a identificarli chiaramente. Questa parte è particolarmente importante se desideri utilizzare la generazione automatica dei personaggi tramite la funzione IA.
+
+Descrivi ***{{name}}***.`,
+			description_occupation: `L'occupazione definisce cosa fa un personaggio per vivere. Sebbene questo non definisca chi sono, aggiunge uno strato di profondità al personaggio e suggerisce un insieme di abilità che possiedono.
+
+Qual è l'occupazione di ***{{name}}***?`,
+			description_ghost: `Il Fantasma è un evento importante nel passato del personaggio che definisce le loro credenze. Il fantasma è molto probabilmente un punto di svolta, molto positivo o molto negativo, e potrebbe aver plasmato la loro visione del mondo come una menzogna.
+
+Qual è l'evento che ha plasmato ***{{name}}***?`,
 			description_lie: `La Menzogna è ciò che un personaggio crede essere vero nel mondo, ma non lo è.
-			  
-			  In cosa crede la menzogna di *{{name}}*?`,
+
+In cosa crede la menzogna di ***{{name}}***?`,
 			description_need: `Il Bisogno è ciò di cui un personaggio ha veramente bisogno, anche se è sconosciuto a loro.
-			  
-			  Di cosa ha disperatamente bisogno *{{name}}*?`,
+
+Di cosa ha disperatamente bisogno ***{{name}}***?`,
 			description_opposition: `Le Forze Ostili sono forze che impediscono al personaggio di ottenere ciò che desidera.
-					
-			  Cosa sta ostacolando *{{name}}* nel raggiungere ciò che vuole?`,
+
+Cosa sta ostacolando ***{{name}}*** nel raggiungere ciò che vuole?`,
 			description_strengths: `I Punti di Forza sono gli attributi positivi di un personaggio.
-			  
-			  Seleziona quelli di *{{name}}*.`,
+
+Seleziona quelli di ***{{name}}***.`,
 			description_weaknesses: `I Punti Deboli sono gli attributi negativi di un personaggio.
-			  
-			  Seleziona quelli di *{{name}}*.`,
+
+Seleziona quelli di ***{{name}}***.`,
 			description_type: `Il tipo di personaggio definisce la loro importanza nella campagna e la quantità di attributi che hanno di default.
-				  
-			  Chi è *{{name}}*?`,
+
+Chi è ***{{name}}***?`,
 			description_want: `Il Desiderio è ciò che i personaggi pensano di volere raggiungere, anche se non è ciò di cui hanno veramente bisogno. Questo è pubblicamente noto e determina il loro comportamento.
 
-Cosa vuole *{{name}}*?`,
+Cosa vuole **{{name}}**?`,
 			description_stake: `La Posta in gioco definisce il valore di quanto il personaggio è **investito** nella sua occupazione, desideri e comportamenti.
 Ciò aiuta a definire quanto sforzo metteranno nel raggiungerli.
 
-Qual è la Posta in gioco di *{{name}}*?`,
+Qual è la Posta in gioco di **{{name}}**?`,
 		},
 	},
 	errors: {
 		must_campaign: "Devi creare prima una campagna",
 		must_adventure: "Devi creare prima un'avventura",
 		must_session: "Devi creare prima una sessione",
+		select_campaign: "Devi selezionare una campagna",
+		select_adventure: "Devi selezionare un'avventura",
+		select_session: "Devi selezionare una sessione",
+		enter_name: "Devi inserire un nome",
+		file_already_exists: "Una nota con il nome \"{{name}}\" esiste già. Scegli un nome diverso.",
+		file_creation_failed: "Impossibile creare la nota \"{{name}}\". Riprova.",
 	},
 	kishotenketsu: {
 		ki: "Ki<br/><small>(Introduzione)</small>",
@@ -451,14 +472,14 @@ Qual è la Posta in gioco di *{{name}}*?`,
 		description_ketsu: "**Conclusione**: chiamata anche ochi (落ち) o finale, conclude la storia.",
 	},
 	storycircle: {
-		you: "Tu/Loro",
+		you: "Comfort",
 		need: "Bisogno",
-		go: "Vai",
-		search: "Cerca",
-		find: "Trova",
-		take: "Prendi",
-		return: "Torna",
-		change: "Cambia",
+		go: "Partenza",
+		search: "Viaggio",
+		find: "Incontro",
+		take: "Sacrificio",
+		return: "Ritorno",
+		change: "Cambiamento",
 		description_you:
 			"Inizia stabilendo la situazione attuale dei personaggi giocanti all'inizio di questo particolare intreccio. Cosa stanno facendo attualmente? Dove si trovano? Qual è il loro obiettivo immediato?",
 		description_need:
@@ -475,6 +496,69 @@ Qual è la Posta in gioco di *{{name}}*?`,
 			"I personaggi giocanti lottano per ottenere ciò di cui hanno bisogno, e nel farlo tornano nel mondo che conoscono.",
 		description_change:
 			"I personaggi giocanti sono cambiati, e dovrebbero vedere gli effetti delle loro azioni nel mondo che conoscono.",
+	},
+	scenetype: {
+		action: "Azione",
+		combat: "Combattimento",
+		decision: "Decisione",
+		encounter: "Incontro",
+		exposition: "Esposizione",
+		investigation: "Indagine",
+		preparation: "Preparazione",
+		recap: "Riassunto",
+		socialcombat: "CombattimentoSociale",
+	},
+	strength: {
+		adaptable: "Adattabile",
+		ambitious: "Ambizioso",
+		assertive: "Assertivo",
+		charismatic: "Carismatico",
+		compassionate: "Compassionevole",
+		courageous: "Coraggioso",
+		creative: "Creativo",
+		decisive: "Deciso",
+		diligent: "Diligente",
+		disciplined: "Disciplinato",
+		energetic: "Energico",
+		empathetic: "Empatico",
+		humble: "Umile",
+		inspirational: "Ispiratore",
+		intuitive: "Intuitivo",
+		loyal: "Leale",
+		patient: "Paziente",
+		resilient: "Resiliente",
+		selfconfident: "Sicuro di sé",
+		strategic: "Strategico",
+		tenacious: "Tenace",
+		visionary: "Visionario",
+		witty: "Spiritoso",
+	},
+	weakness: {
+		impulsive: "Impulsivo",
+		indecisive: "Indeciso",
+		inflexible: "Inflessibile",
+		insecure: "Insicuro",
+		intolerant: "Intollerante",
+		irresponsible: "Irresponsabile",
+		lazy: "Pigro",
+		naive: "Ingenuo",
+		neglectful: "Negligente",
+		nervous: "Nervoso",
+		obstinate: "Ostinato",
+		overbearing: "Autoritario",
+		overcritical: "Ipercritico",
+		perfectionist: "Perfezionista",
+		pessimistic: "Pessimista",
+		procrastinator: "Procrastinatore",
+		reactive: "Reattivo",
+		rigid: "Rigido",
+		selfcentered: "Egocentrico",
+		sensitive: "Sensibile",
+		shy: "Timido",
+		stubborn: "Testardo",
+		timid: "Titubante",
+		unfocused: "Dispersivo",
+		vague: "Vago",
 	},
 	conflict: {
 		title: "Titolo",

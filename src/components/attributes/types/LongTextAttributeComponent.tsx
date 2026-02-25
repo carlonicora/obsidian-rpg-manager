@@ -27,24 +27,12 @@ export default function LongTextAttributeComponent({
 
 	if (!attribute.isSet) return null;
 
-	const [value, setValue] = React.useState<string>(attribute.value ?? "");
 	const [editing, setEditing] = React.useState<boolean>(false);
 
 	const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 
-	function reset(): void {
-		setValue(attribute.value ?? "");
-		setEditing(false);
-	}
-
-	function removeAttribute(): void {
-		codeblockService.updateCodeblockData(attribute.id, undefined).then(() => {
-			setEditing(false);
-		});
-	}
-
-	function saveAttribute(newValue: string | undefined): void {
-		if (newValue === undefined) {
+	const saveAndClose = (newValue: string) => {
+		if (newValue === undefined || newValue === attribute.value) {
 			setEditing(false);
 			return;
 		}
@@ -52,38 +40,26 @@ export default function LongTextAttributeComponent({
 		codeblockService.updateCodeblockData(attribute.id, newValue).then(() => {
 			setEditing(false);
 		});
-	}
+	};
 
 	let content;
 
 	if (editing) {
 		content = (
 			<div className="grid grid-cols-1">
-				<div>
-					<MarkdownEditorComponent
-						initialValue={attribute.value}
-						campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
-						onChange={setValue}
-						className="w-full resize-none overflow-y-hidden border border-[--background-modifier-border] active:border-[--background-modifier-border-hover] active:shadow-none rounded-md"
-					/>
-				</div>
-				<div className="flex justify-end mt-3">
-					<button className="rpgm-danger" onClick={removeAttribute}>
-						{t("buttons.delete")}
-					</button>
-					<button className="rpgm-secondary" onClick={reset}>
-						{t("buttons.cancel")}
-					</button>
-					<button className="rpgm-primary" onClick={() => saveAttribute(value)}>
-						{t("buttons.save")}
-					</button>
-				</div>
+				<MarkdownEditorComponent
+					initialValue={attribute.value}
+					campaignPath={element.type === ElementType.Campaign ? element.path : element.campaignPath}
+					onBlur={saveAndClose}
+					forceFocus={true}
+					className="w-full resize-none overflow-y-hidden border border-[--text-accent] active:border-[--text-accent] active:shadow-none rounded-md"
+				/>
 			</div>
 		);
 	} else if (isEditable) {
 		content = (
 			<div
-				onClick={() => setEditing(!editing)}
+				onClick={() => setEditing(true)}
 				className="border border-[--background-modifier-border] hover:border-[--background-modifier-border-hover] rounded-md p-3 cursor-text"
 			>
 				<MarkdownComponent value={attribute.value} />

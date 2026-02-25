@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { StrengthType } from "src/data/enums/StrengthType";
 
 export default function StrengthsComponent({
@@ -8,6 +9,7 @@ export default function StrengthsComponent({
 	initialValue?: number;
 	propagateValue: (value: number) => void;
 }): React.ReactElement {
+	const { t } = useTranslation();
 	const toggleStrength = (strength: StrengthType) => {
 		propagateValue(strength);
 	};
@@ -27,7 +29,7 @@ export default function StrengthsComponent({
 								}`}
 								onClick={() => toggleStrength(strengthValue)}
 							>
-								{key}
+								{t("strength." + key.toLowerCase())}
 							</div>
 						);
 					})}

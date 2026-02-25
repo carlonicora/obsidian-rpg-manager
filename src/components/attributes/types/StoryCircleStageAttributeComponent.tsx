@@ -53,7 +53,7 @@ export default function StoryCircleStageAttributeComponent({
 							.filter(([key]) => isNaN(Number(key)))
 							.map(([key, index]) => (
 								<option key={key} value={index}>
-									{key}
+									{t("storycircle." + index)}
 								</option>
 							))}
 					</select>
@@ -68,7 +68,7 @@ export default function StoryCircleStageAttributeComponent({
 	} else {
 		content = (
 			<div>
-				{Object.keys(StoryCircleStage).find((key) => StoryCircleStage[key as keyof typeof StoryCircleStage] === value)}
+				{value ? t("storycircle." + value) : ""}
 			</div>
 		);
 	}

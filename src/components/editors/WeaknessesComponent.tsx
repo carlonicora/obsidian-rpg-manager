@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { WeaknessType } from "src/data/enums/WeaknessType";
 
 export default function WeaknessesComponent({
@@ -8,6 +9,7 @@ export default function WeaknessesComponent({
 	initialValue?: number;
 	propagateValue: (value: number) => void;
 }): React.ReactElement {
+	const { t } = useTranslation();
 	const toggleWeaknesses = (weakness: WeaknessType) => {
 		propagateValue(weakness);
 	};
@@ -27,7 +29,7 @@ export default function WeaknessesComponent({
 								}`}
 								onClick={() => toggleWeaknesses(weaknessValue)}
 							>
-								{key}
+								{t("weakness." + key.toLowerCase())}
 							</div>
 						);
 					})}

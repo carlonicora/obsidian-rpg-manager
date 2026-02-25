@@ -4,7 +4,6 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { SceneType, isSceneActive } from "src/data/enums/SceneType";
-import { StoryCircleStage } from "src/data/enums/StoryCircleStage";
 import { AttributeInterface } from "src/data/interfaces/AttributeInterface";
 import { ElementInterface } from "src/data/interfaces/ElementInterface";
 import { useApi } from "src/hooks/useApi";
@@ -60,7 +59,7 @@ export default function SceneTypeAttributeComponent({
 							.filter(([key]) => isNaN(Number(key)))
 							.map(([key, index]) => (
 								<option key={key} value={index}>
-									{key + (isSceneActive(index) ? " (active)" : "")}
+									{t("scenetype." + index) + (isSceneActive(index) ? t("attributes.active") : "")}
 								</option>
 							))}
 					</select>
@@ -75,7 +74,7 @@ export default function SceneTypeAttributeComponent({
 	} else {
 		content = (
 			<div>
-				{Object.keys(StoryCircleStage).find((key) => StoryCircleStage[key as keyof typeof StoryCircleStage] === value)}
+				{value ? t("scenetype." + value) : ""}
 			</div>
 		);
 	}

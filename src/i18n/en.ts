@@ -222,11 +222,11 @@ If you want to create new ones, just click on the button and define the name and
 		variety: "Variety",
 		sceneanalyser: "Scene Analyser",
 		saactivity_positiveerror: "Too many active scenes",
-		saactivity_positivewarnign: "The number of active scenes might be more than needed.",
+		saactivity_positivewarning: "The number of active scenes might be more than needed.",
 		saactivity_negativeerror: "Not enough active scenes",
 		saactivity_negativewarning: "The number of active scenes could not be enough.",
 		saexcitement_positiveerror: "Too many exciting scenes",
-		saexcitement_positivewarnign: "The number of exciting scenes might be more than needed.",
+		saexcitement_positivewarning: "The number of exciting scenes might be more than needed.",
 		saexcitement_negativeerror: "Not enough exciting scenes",
 		saexcitement_negativewarning: "The number of exciting scenes could not be enough.",
 		sainterest_negativeerror: "Not enough variety in the type of scenes",
@@ -337,6 +337,24 @@ If you want to create new ones, just click on the button and define the name and
 	},
 	wizards: {
 		errors: "The following errors have been found:",
+		steps: {
+			type: "Type",
+			description: "Description",
+			occupation: "Occupation",
+			characterarc: "Character Arc",
+			beliefs: "Beliefs",
+			ghost: "Ghost",
+			lie: "Lie",
+			need: "Need",
+			strengthsandweaknesses: "Strengths and Weaknesses",
+			behaviour: "Behaviour",
+			want: "Want",
+			stake: "Stake",
+			opposition: "Opposition",
+			destination: "Destination",
+			target: "Target",
+			clues: "Clues",
+		},
 		chapter: {
 			errors: {
 				missingtargettype: "Please select a target type",
@@ -348,7 +366,7 @@ If you want to create new ones, just click on the button and define the name and
 			title: "Chapter Wizard",
 			description: `A chapter is a way to organise bigger adventures in more manageable chunks, like for a book or a film. 
 
-Describe *{{name}}*.`,
+Describe **{{name}}**.`,
 			destinationtitle: "Destination",
 			destination: "Where does this chapter lead to?",
 			destinationelementtype: "Destination type",
@@ -364,11 +382,11 @@ Describe *{{name}}*.`,
 			target: "Is the chapter targeting an event or a location to move the plot forward?",
 			targetdescription: "Before describing the target, please select the type of target you want to use.",
 			targettitle_event: "Description of the key event",
-			targetdescription_event: "Write a description for the key event in chapter *{{name}}*",
+			targetdescription_event: "Write a description for the key event in chapter **{{name}}**",
 			targettitle_location: "Description of the key location",
-			targetdescription_location: "Write a description for the key location in chapter *{{name}}*",
+			targetdescription_location: "Write a description for the key location in chapter **{{name}}**",
 			targettitle_lore: "Description of the key lore",
-			targetdescription_lore: "Write a description for the key lore in chapter *{{name}}*",
+			targetdescription_lore: "Write a description for the key lore in chapter **{{name}}**",
 			targetelementtype: "Target type",
 			targettype_event: "The plot is moved forward by an event",
 			targettype_location: "The chapter revolves around a location",
@@ -387,57 +405,63 @@ Describe *{{name}}*.`,
 			title: "Non-Player Character Wizard",
 			create: "Create automatically",
 			description_arc: `The character arc describe the way a character grow and evolve during the story.
-			
-Please **select the arc** that better identifies *{{name}}*'s evolution.`,
+
+Please **select the arc** that better identifies ***{{name}}***'s evolution.`,
 			description_behaviour: `The behaviour is the normal way a character does things, the way the player characters see them.
 
-What is the Behaviour of *{{name}}*?`,
+What is the Behaviour of **{{name}}**?`,
 			description_beliefs: `The Beliefs is what characters accept to be true in the world, even if they are not.
 
-What are the beliefs of *{{name}}*?`,
+What are the beliefs of **{{name}}**?`,
 			description_description: `The description is an introduction to a character, giving a blurb of background information to help the
 storyteller to clearly identify them. This part is particularly importan if you wish to use the automatic character generation via the AI feature.
 
-Describe *{{name}}*.`,
+Describe **{{name}}**.`,
 			description_occupation: `The occupation defines what a character does for living. While this does not define who they are,
 it adds a layer of depth to the character and suggests a set of skill they possess.
 
-What's *{{name}}* occupation?`,
+What's **{{name}}** occupation?`,
 			description_ghost: `The Ghost is an important event in the character's past that defines their beliefs.
 The ghost is highly likely a turning point, highly positive or highly negative and may have shaped their view of the world as a lie.
 
-What is the event that shaped *{{name}}*?`,
+What is the event that shaped **{{name}}**?`,
 			description_lie: `The Lie is what a character believes about the world to be true that is not.
 
-What is the lie *{{name}}* believs in?`,
+What is the lie **{{name}}** believs in?`,
 			description_need: `The Need is what a charater truly need, even it it is unknown to them.
 
-What does *{{name}}* desperately needs?`,
+What does **{{name}}** desperately needs?`,
 			description_opposition: `The Oppositon are forces that stops the character to get what they want.
-			
-What is opposing *{{name}}* from reaching what they want?`,
+
+What is opposing ***{{name}}*** from reaching what they want?`,
 			description_strengths: `Strengths are the positive traits of a character.
 
-Select *{{name}}*'s.`,
+Select **{{name}}**'s.`,
 			description_weaknesses: `Weaknesses are the negative traits of a character.
 
-Select *{{name}}*'s.`,
+Select **{{name}}**'s.`,
 			description_type: `The type of character defines their importance in the campaign and the amount of attributes they have by default.
-			
-Who is *{{name}}*?`,
+
+Who is ***{{name}}***?`,
 			description_want: `The Want is what characters think they want to achieve, even if it is not what they really need. This is pulicly known and determines their behaviour.
 
-What does *{{name}}* wants?`,
+What does **{{name}}** wants?`,
 			description_stake: `The Stake defines a value of how much the character is **invested** in their occupation, wants and behaviours.
 This helps defining how much effort they will put into achieving them.
 
-What's *{{name}}* stake?`,
+What's **{{name}}** stake?`,
 		},
 	},
 	errors: {
 		must_campaign: "You must create a campaign first",
 		must_adventure: "You must create an adventure first",
 		must_session: "You must create a session first",
+		select_campaign: "You must select a campaign",
+		select_adventure: "You must select an adventure",
+		select_session: "You must select a session",
+		enter_name: "You must enter a name",
+		file_already_exists: "A note with the name \"{{name}}\" already exists. Please choose a different name.",
+		file_creation_failed: "Failed to create the note \"{{name}}\". Please try again.",
 	},
 	kishotenketsu: {
 		ki: "Ki<br/><small>(Introduction)</small>",
@@ -476,6 +500,69 @@ What's *{{name}}* stake?`,
 			"The player characters fight to get what they need, and in doing so they return to the world they know.",
 		description_change:
 			"The player characters have changed, and they should see the effect of their actions in the world they know.",
+	},
+	scenetype: {
+		action: "Action",
+		combat: "Combat",
+		decision: "Decision",
+		encounter: "Encounter",
+		exposition: "Exposition",
+		investigation: "Investigation",
+		preparation: "Preparation",
+		recap: "Recap",
+		socialcombat: "Social Combat",
+	},
+	strength: {
+		adaptable: "Adaptable",
+		ambitious: "Ambitious",
+		assertive: "Assertive",
+		charismatic: "Charismatic",
+		compassionate: "Compassionate",
+		courageous: "Courageous",
+		creative: "Creative",
+		decisive: "Decisive",
+		diligent: "Diligent",
+		disciplined: "Disciplined",
+		energetic: "Energetic",
+		empathetic: "Empathetic",
+		humble: "Humble",
+		inspirational: "Inspirational",
+		intuitive: "Intuitive",
+		loyal: "Loyal",
+		patient: "Patient",
+		resilient: "Resilient",
+		selfconfident: "Self Confident",
+		strategic: "Strategic",
+		tenacious: "Tenacious",
+		visionary: "Visionary",
+		witty: "Witty",
+	},
+	weakness: {
+		impulsive: "Impulsive",
+		indecisive: "Indecisive",
+		inflexible: "Inflexible",
+		insecure: "Insecure",
+		intolerant: "Intolerant",
+		irresponsible: "Irresponsible",
+		lazy: "Lazy",
+		naive: "Naive",
+		neglectful: "Neglectful",
+		nervous: "Nervous",
+		obstinate: "Obstinate",
+		overbearing: "Overbearing",
+		overcritical: "Overcritical",
+		perfectionist: "Perfectionist",
+		pessimistic: "Pessimistic",
+		procrastinator: "Procrastinator",
+		reactive: "Reactive",
+		rigid: "Rigid",
+		selfcentered: "Self Centered",
+		sensitive: "Sensitive",
+		shy: "Shy",
+		stubborn: "Stubborn",
+		timid: "Timid",
+		unfocused: "Unfocused",
+		vague: "Vague",
 	},
 	conflict: {
 		title: "Title",

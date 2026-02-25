@@ -101,8 +101,8 @@ export default function CreationComponent({
 				controller.close();
 			});
 		} else {
-			fileCreator.create(true).then((newFile: TFile) => {
-				controller.close();
+			fileCreator.create(true).then((newFile: TFile | undefined) => {
+				if (newFile !== undefined) controller.close();
 			});
 		}
 	}

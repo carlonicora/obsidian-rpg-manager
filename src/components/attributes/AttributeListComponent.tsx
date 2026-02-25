@@ -31,6 +31,20 @@ export default function AttributeListComponent({
 }): React.ReactElement {
 	const { t } = useTranslation();
 
+	const hasVisibleAttributes = element.attributes.some(
+		(attribute: AttributeInterface) =>
+			attribute.isSet &&
+			attribute.type !== AttributeComponentType.Description &&
+			attribute.type !== AttributeComponentType.StoryCircle &&
+			attribute.type !== AttributeComponentType.Kishotenketsu &&
+			attribute.type !== AttributeComponentType.Duration &&
+			attribute.type !== AttributeComponentType.Parent &&
+			attribute.type !== AttributeComponentType.Conflict &&
+			attribute.type !== AttributeComponentType.SensoryImprint
+	);
+
+	if (!hasVisibleAttributes) return null;
+
 	return (
 		<div className="rounded-lg border border-[--background-modifier-border] bg-[--background-primary] relative p-3">
 			<div>

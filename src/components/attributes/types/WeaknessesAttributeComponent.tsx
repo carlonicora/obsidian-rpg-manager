@@ -84,7 +84,7 @@ export default function WeaknessesAttributeComponent({
 
 						return (
 							<div key={key} className="pl-2 pr-2">
-								{key}
+								{t("weakness." + key.toLowerCase())}
 							</div>
 						);
 					})}
@@ -101,7 +101,7 @@ export default function WeaknessesAttributeComponent({
 
 						return (
 							<div key={key} className="pl-2 pr-2">
-								{key}
+								{t("weakness." + key.toLowerCase())}
 							</div>
 						);
 					})}
