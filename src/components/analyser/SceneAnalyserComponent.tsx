@@ -38,7 +38,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 
 	function getContext(value: number): string | undefined {
 		if (value > 50) return "positiveerror";
-		if (value > 25) return "positivewarnign";
+		if (value > 25) return "positivewarning";
 		if (value < -50) return "negativeerror";
 		if (value < -25) return "negativewarning";
 		return undefined;
@@ -78,7 +78,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 			<LineIndicator value={analysis.excitement} />
 			{getContext(analysis.excitement) && (
 				<div className="w-full !mt-0 mb-2 text-center text-xs">
-					{t("sanalyser.aexcitement", { context: getContext(analysis.excitement) })}
+					{t("analyser.saexcitement", { context: getContext(analysis.excitement) })}
 				</div>
 			)}
 
@@ -98,7 +98,7 @@ export default function SceneAnalyserComponent({ element }: { element: ElementIn
 			<LineIndicator value={analysis.variety} />
 			{getContext(analysis.variety) && (
 				<div className="w-full !mt-0 mb-2 text-center text-xs">
-					{t("savariety", { context: getContext(analysis.variety) })}
+					{t("analyser.savariety", { context: getContext(analysis.variety) })}
 				</div>
 			)}
 		</div>

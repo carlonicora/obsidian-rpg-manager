@@ -42,6 +42,8 @@ export class SceneAnalysis implements SceneAnalysisInterface {
 
 		const goal: number = (goalLookup[this._abtStage] || 0.5) * this._expectedDuration;
 
+		if (goal === 0) return 0;
+
 		let response = Math.round(((this._activeDuration - goal) / goal) * 100);
 
 		if (response > 100) {

@@ -133,7 +133,7 @@ export default function ChildSceneComponent({
 								.filter(([key]) => isNaN(Number(key)))
 								.map(([key, index]) => (
 									<option key={key} value={index}>
-										{key}
+										{t("storycircle." + index)}
 									</option>
 								))}
 						</select>
@@ -176,7 +176,7 @@ export default function ChildSceneComponent({
 									const isActive: boolean = isSceneActive(SceneType[key as keyof typeof SceneType]);
 									return (
 										<option key={key} value={index}>
-											{key + " " + (isActive ? t("attributes.active") : "")}
+											{t("scenetype." + index) + (isActive ? t("attributes.active") : "")}
 										</option>
 									);
 								})}

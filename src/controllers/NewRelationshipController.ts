@@ -1,4 +1,5 @@
-import { App, FuzzyMatch, FuzzySuggestModal } from "obsidian";
+import i18next from "i18next";
+import { App, FuzzyMatch, FuzzySuggestModal, Notice } from "obsidian";
 import { createElement } from "react";
 import { Root, createRoot } from "react-dom/client";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
@@ -137,7 +138,16 @@ export class NewRelationshipController extends FuzzySuggestModal<SearchableEleme
 
 	async onChooseItem(found: SearchableElementInterface, evt: MouseEvent | KeyboardEvent) {
 		if (found.path === "") {
-			await this._app.vault.create(found.name + ".md", "");
+			try {
+				await this._app.vault.create(found.name + ".md", "");
+			} catch (e) {
+				if (e?.message?.toLowerCase().includes("already exists")) {
+					new Notice(i18next.t("errors.file_already_exists", { name: found.name }), 5000);
+				} else {
+					new Notice(i18next.t("errors.file_creation_failed", { name: found.name }), 5000);
+				}
+				return;
+			}
 			if (this._callback) {
 				this._callback("[[" + found.name + ".md|" + found.name + "]]", this._params);
 			}

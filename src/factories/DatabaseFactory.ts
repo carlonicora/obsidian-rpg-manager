@@ -6,10 +6,16 @@ import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockServ
 import { ElementFactory } from "./ElementFactory";
 
 export class DatabaseFactory {
+	/**
+	 * Creates a new database of elements.
+	 * @param {App} app - The Obsidian app.
+	 * @param {RpgManagerInterface} api - The RPG Manager API.
+	 * @returns {Promise<ElementInterface[]>} - A promise that resolves to the created elements.
+	 */
 	static async create(app: App, api: RpgManagerInterface): Promise<ElementInterface[]> {
 		const response: (ElementInterface | undefined)[] = [];
 
-		const elementPromises = app.vault.getMarkdownFiles().map((file) =>
+		const elementPromises = app.vault.getMarkdownFiles().map((file: any) =>
 			ElementFactory.createElement(app, api, file)
 				.then((element: ElementInterface | undefined) => {
 					return element;
@@ -22,13 +28,21 @@ export class DatabaseFactory {
 
 		const elements = await Promise.all(elementPromises);
 
-		elements.filter((element) => element !== undefined).forEach((element) => response.push(element));
+		elements.filter((element: any) => element !== undefined).forEach((element: ElementInterface) => response.push(element));
 
 		response.map((element) => ElementFactory.initialiseRelationships(element, response));
 
 		return response;
 	}
 
+	/**
+	* Adds a new element to the database.
+	* @param {App} app - The Obsidian app.
+	* @param {RpgManagerInterface} api - The RPG Manager API.
+	* @param {ElementInterface[]} elements - The existing elements in the database.
+	* @param {TFile} file - The file that contains the new element.
+	* @returns {Promise<ElementInterface[]>} - A promise that resolves to the updated elements.
+	*/
 	static async add(
 		app: App,
 		api: RpgManagerInterface,
@@ -45,6 +59,13 @@ export class DatabaseFactory {
 		return elements;
 	}
 
+	/**
+	 * Updates an existing element in the database.
+	 * @param {App} app - The Obsidian app.
+	 * @param {RpgManagerInterface} api - The RPG Manager API.
+	 * @param {ElementInterface[]} elements - The existing elements in the database.element
+	 * @param {ElementInterface} element - The element to update. 
+	*/
 	static async update(
 		app: App,
 		api: RpgManagerInterface,
@@ -56,6 +77,14 @@ export class DatabaseFactory {
 		ElementFactory.updateRelationships(element, elements, previousVersion !== element.version);
 	}
 
+	/**
+	 * Renames an existing element in the database.
+	 * @param {App} app - The Obsidian app.
+	 * @param {RpgManagerInterface} api - The RPG Manager API.
+	 * @param {ElementInterface[]} elements - The existing elements in the database.
+	 * @param {ElementInterface} element - The element to rename.
+	 * @param {string} oldPath - The old path of the element. 
+	 */
 	static async rename(
 		app: App,
 		api: RpgManagerInterface,

@@ -32,42 +32,42 @@ import NonPlayerCharacterWizardTypeStepComponent from "./steps/NonPlayerCharacte
 import NonPlayerCharacterWizardWantStepComponent from "./steps/NonPlayerCharacterWizardWantStepComponent";
 
 const initialStepComponents: StepComponentInterface[] = [
-	{ name: "Type", component: NonPlayerCharacterWizardTypeStepComponent },
-	{ name: "Description", component: NonPlayerCharacterWizardDescriptionStepComponent },
+	{ name: "wizards.steps.type", component: NonPlayerCharacterWizardTypeStepComponent },
+	{ name: "wizards.steps.description", component: NonPlayerCharacterWizardDescriptionStepComponent },
 ];
 
 const stepComponents: StepComponentInterface[] = [
-	{ name: "Type", component: NonPlayerCharacterWizardTypeStepComponent },
-	{ name: "Description", component: NonPlayerCharacterWizardDescriptionStepComponent },
-	{ name: "Occupation", component: NonPlayerCharacterWizardOccupationStepComponent },
-	{ name: "Character Arc", component: NonPlayerCharacterWizardArcStepComponent },
-	{ name: "Beliefs", component: NonPlayerCharacterWizardBeliefsStepComponent, chatGptId: "beliefs" },
-	{ name: "Ghost", component: NonPlayerCharacterWizardGhostStepComponent, chatGptId: "ghost" },
-	{ name: "Lie", component: NonPlayerCharacterWizardLieStepComponent, chatGptId: "lie" },
-	{ name: "Need", component: NonPlayerCharacterWizardNeedStepComponent, chatGptId: "need" },
+	{ name: "wizards.steps.type", component: NonPlayerCharacterWizardTypeStepComponent },
+	{ name: "wizards.steps.description", component: NonPlayerCharacterWizardDescriptionStepComponent },
+	{ name: "wizards.steps.occupation", component: NonPlayerCharacterWizardOccupationStepComponent },
+	{ name: "wizards.steps.characterarc", component: NonPlayerCharacterWizardArcStepComponent },
+	{ name: "wizards.steps.beliefs", component: NonPlayerCharacterWizardBeliefsStepComponent, chatGptId: "beliefs" },
+	{ name: "wizards.steps.ghost", component: NonPlayerCharacterWizardGhostStepComponent, chatGptId: "ghost" },
+	{ name: "wizards.steps.lie", component: NonPlayerCharacterWizardLieStepComponent, chatGptId: "lie" },
+	{ name: "wizards.steps.need", component: NonPlayerCharacterWizardNeedStepComponent, chatGptId: "need" },
 	{
-		name: "Strengths and Weaknesses",
+		name: "wizards.steps.strengthsandweaknesses",
 		component: NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent,
 		chatGptId: "sw",
 	},
-	{ name: "Behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
-	{ name: "Want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
-	{ name: "Stake", component: NonPlayerCharacterWizardStakeStepComponent },
-	{ name: "Opposition", component: NonPlayerCharacterWizardOppositionStepComponent, chatGptId: "opposition" },
+	{ name: "wizards.steps.behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
+	{ name: "wizards.steps.want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
+	{ name: "wizards.steps.stake", component: NonPlayerCharacterWizardStakeStepComponent },
+	{ name: "wizards.steps.opposition", component: NonPlayerCharacterWizardOppositionStepComponent, chatGptId: "opposition" },
 ];
 
 const minimalStepComponents: StepComponentInterface[] = [
-	{ name: "Type", component: NonPlayerCharacterWizardTypeStepComponent },
-	{ name: "Description", component: NonPlayerCharacterWizardDescriptionStepComponent },
-	{ name: "Occupation", component: NonPlayerCharacterWizardOccupationStepComponent },
+	{ name: "wizards.steps.type", component: NonPlayerCharacterWizardTypeStepComponent },
+	{ name: "wizards.steps.description", component: NonPlayerCharacterWizardDescriptionStepComponent },
+	{ name: "wizards.steps.occupation", component: NonPlayerCharacterWizardOccupationStepComponent },
 	{
-		name: "Strengths and Weaknesses",
+		name: "wizards.steps.strengthsandweaknesses",
 		component: NonPlayerCharacterWizardStrengthsAndWeaknessesStepComponent,
 		chatGptId: "sw",
 	},
-	{ name: "Behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
-	{ name: "Want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
-	{ name: "Stake", component: NonPlayerCharacterWizardStakeStepComponent },
+	{ name: "wizards.steps.behaviour", component: NonPlayerCharacterWizardBehaviourStepComponent, chatGptId: "behaviour" },
+	{ name: "wizards.steps.want", component: NonPlayerCharacterWizardWantStepComponent, chatGptId: "want" },
+	{ name: "wizards.steps.stake", component: NonPlayerCharacterWizardStakeStepComponent },
 ];
 
 export default function NonPlayerCharacterWizardComponent({

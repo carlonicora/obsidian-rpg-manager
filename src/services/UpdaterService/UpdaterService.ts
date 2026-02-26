@@ -294,7 +294,13 @@ export class UpdaterService {
 
 		if (metadata === null || metadata.sections == undefined || metadata.sections.length === 0) return;
 
-		let content = await this._app.vault.read(file);
+		let content: string;
+		try {
+			content = await this._app.vault.read(file);
+		} catch (e) {
+			console.warn("RpgManager: file no longer exists, skipping:", file.path);
+			return;
+		}
 		const lines = content.split("\n");
 
 		let codeblockData: SectionCache | undefined = undefined;
@@ -357,7 +363,11 @@ export class UpdaterService {
 			}
 		}
 
-		await this._app.vault.modify(file, content);
+		try {
+			await this._app.vault.modify(file, content);
+		} catch (e) {
+			console.warn("RpgManager: cannot modify file (may have been deleted):", file.path);
+		}
 	}
 
 	private async _readCodeblocks(file: TFile): Promise<void> {
@@ -365,7 +375,13 @@ export class UpdaterService {
 
 		if (metadata === null || metadata.sections == undefined || metadata.sections.length === 0) return;
 
-		const content = await this._app.vault.read(file);
+		let content: string;
+		try {
+			content = await this._app.vault.read(file);
+		} catch (e) {
+			console.warn("RpgManager: file no longer exists, skipping:", file.path);
+			return;
+		}
 		const lines = content.split("\n");
 
 		let codeblockContent: string | undefined = undefined;

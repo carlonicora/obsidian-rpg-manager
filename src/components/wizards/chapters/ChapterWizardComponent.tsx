@@ -23,10 +23,10 @@ import ChapterWizardDestinationComponent from "./steps/ChapterWizardDestinationC
 import ChapterWizardTargetComponent from "./steps/ChapterWizardTargetComponent";
 
 const stepComponents: StepComponentInterface[] = [
-	{ name: "Description", component: ChapterWizardDescriptionComponent },
-	{ name: "Destination", component: ChapterWizardDestinationComponent },
-	{ name: "Target", component: ChapterWizardTargetComponent },
-	{ name: "Clues", component: ChapterWizardCluesComponent },
+	{ name: "wizards.steps.description", component: ChapterWizardDescriptionComponent },
+	{ name: "wizards.steps.destination", component: ChapterWizardDestinationComponent },
+	{ name: "wizards.steps.target", component: ChapterWizardTargetComponent },
+	{ name: "wizards.steps.clues", component: ChapterWizardCluesComponent },
 ];
 
 export default function ChapterWizardComponent({

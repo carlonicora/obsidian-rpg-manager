@@ -1,5 +1,6 @@
 import { StepComponentInterface } from "@/data/interfaces/StepComponentInterface";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function WizardNavigatorComponent({
 	steps,
@@ -10,9 +11,11 @@ export default function WizardNavigatorComponent({
 	step: number;
 	setStep: (step: number) => void;
 }): React.ReactElement {
+	const { t } = useTranslation();
+
 	return (
 		<>
-			<ul className="!p-0 !m-0 !mt-3 !mb-3">
+			<ul className="!p-0 !m-0 !mt-3 !mb-3 !pl-4">
 				{steps.map((stepComponent: StepComponentInterface, index: number) => {
 					return (
 						<li
@@ -28,7 +31,7 @@ export default function WizardNavigatorComponent({
 								setStep(index + 1);
 							}}
 						>
-							{stepComponent.name}
+							{t(stepComponent.name)}
 						</li>
 					);
 				})}

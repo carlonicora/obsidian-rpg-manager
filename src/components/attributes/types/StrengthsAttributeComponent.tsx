@@ -83,7 +83,7 @@ export default function StrengthsAttributeComponent({
 
 						return (
 							<div key={key} className="pl-2 pr-2">
-								{key}
+								{t("strength." + key.toLowerCase())}
 							</div>
 						);
 					})}
@@ -100,7 +100,7 @@ export default function StrengthsAttributeComponent({
 
 						return (
 							<div key={key} className="pl-2 pr-2">
-								{key}
+								{t("strength." + key.toLowerCase())}
 							</div>
 						);
 					})}

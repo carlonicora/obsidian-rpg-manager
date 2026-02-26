@@ -1,6 +1,6 @@
 import { RelationshipInterface } from "@/data/interfaces/RelationshipInterface";
 import i18next from "i18next";
-import { App, MarkdownView, TAbstractFile, TFile } from "obsidian";
+import { App, MarkdownView, Notice, TAbstractFile, TFile } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
 import { ElementType } from "src/data/enums/ElementType";
 import { SystemType } from "src/data/enums/SystemType";
@@ -68,16 +68,18 @@ export class FileCreationService {
 			});
 		}
 
-		this._codeblock.tasks = [
-			{
-				id: uuidv4(),
-				priority: 1,
-				name: i18next.t("tasks.complete", { context: this._type }),
-				description: i18next.t("tasks.complete", { context: this._type }) + " " + this._name,
-				type: TaskType.Creation,
-				status: TaskStatusType.Proposed,
-			},
-		];
+		if (this._api.settings.enableTasks ?? true) {
+			this._codeblock.tasks = [
+				{
+					id: uuidv4(),
+					priority: 1,
+					name: i18next.t("tasks.complete", { context: this._type }),
+					description: i18next.t("tasks.complete", { context: this._type }) + " " + this._name,
+					type: TaskType.Creation,
+					status: TaskStatusType.Proposed,
+				},
+			];
+		}
 
 		const yamlService = new YamlService();
 		this._rpgManagerCodeBlock = "\n```RpgManager4\n";
@@ -88,19 +90,34 @@ export class FileCreationService {
 	async create(open: boolean): Promise<TFile | undefined> {
 		let content = this._rpgManagerCodeBlock;
 		if (this._template !== undefined) {
-			const templateFile: TFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
-			const templateContent = await this._app.vault.read(templateFile);
-
-			content = templateContent.replace("```RpgManager4```", content).replace("```RpgManager4\n```", content);
+			const templateFile = this._app.vault.getAbstractFileByPath(this._template) as TFile;
+			if (templateFile) {
+				try {
+					const templateContent = await this._app.vault.read(templateFile);
+					content = templateContent.replace("```RpgManager4```", content).replace("```RpgManager4\n```", content);
+				} catch (e) {
+					console.warn("RpgManager: template file not found, using default content:", this._template);
+				}
+			}
 		}
 
 		const fileName = await this._generateFilePath();
-		const newFile = await this._app.vault.create(fileName, content);
+
+		let newFile: TFile;
+		try {
+			newFile = await this._app.vault.create(fileName, content);
+		} catch (e) {
+			if (e?.message?.toLowerCase().includes("file already exists") || e?.message?.toLowerCase().includes("already exists")) {
+				new Notice(i18next.t("errors.file_already_exists", { name: this._name }), 5000);
+			} else {
+				new Notice(i18next.t("errors.file_creation_failed", { name: this._name }), 5000);
+			}
+			return undefined;
+		}
 
 		const currentLeaf = this._app.workspace.getActiveViewOfType(MarkdownView);
 		const leaf = this._app.workspace.getLeaf(currentLeaf != null);
 
-		// open ? await leaf.openFile(newFile) : leaf.detach();
 		if (open === true) await leaf.openFile(newFile);
 		else leaf.detach();
 
@@ -120,7 +137,36 @@ export class FileCreationService {
 			pathSeparator = "/";
 		}
 
-		let response = this._api.settings.automaticMove ? "Campaigns" : "";
+		// Get folder structure from settings, with fallback to defaults
+		const folders = this._api.settings.folderStructure || {
+			adventures: "Adventures",
+			sessions: "Sessions",
+			npcs: "Non Player Characters",
+			events: "Events",
+			locations: "Locations",
+			factions: "Factions",
+			clues: "Clues",
+			pcs: "Player Characters",
+			subplots: "Subplots",
+			objects: "Objects",
+			monsters: "Monsters",
+			lore: "Lore",
+		};
+
+		// Get folder order from settings, with fallback to default order
+		const folderOrder = this._api.settings.folderOrder || [
+			"adventures", "sessions", "npcs", "events", "locations", "factions",
+			"clues", "pcs", "subplots", "objects", "monsters", "lore"
+		];
+
+		// Helper function to get folder name with order prefix
+		const getFolderWithPrefix = (key: string): string => {
+			const orderIndex = folderOrder.indexOf(key as any);
+			const orderNumber = String(orderIndex + 1).padStart(2, "0");
+			return `${orderNumber}. ${folders[key as keyof typeof folders]}`;
+		};
+
+		let response = this._api.settings.automaticMove ? (this._api.settings.campaignsFolder || i18next.t("settings.defaultCampaignsFolder")) : "";
 
 		if (this._type === ElementType.Campaign) {
 			response += pathSeparator + this._name;
@@ -139,91 +185,91 @@ export class FileCreationService {
 
 		const parent: ElementInterface | undefined =
 			this._parentPath !== undefined ? (this._api.get(this._parentPath) as ElementInterface) : undefined;
-		
+
 		switch (this._type) {
-			
+
 			case ElementType.Adventure:
-				response += pathSeparator + "01. Adventures" + pathSeparator + this._name;
+				response += pathSeparator + getFolderWithPrefix("adventures") + pathSeparator + this._name;
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			// TODO: Should this be a different datatype such as LoreChapter to better separate?
 			case ElementType.Chapter:
-				var useLoreOrAdventure = parent.type === ElementType.Lore ? "12. Lore" : "01. Adventures";
+				var useLoreOrAdventure = parent.type === ElementType.Lore ? getFolderWithPrefix("lore") : getFolderWithPrefix("adventures");
 				response += pathSeparator + useLoreOrAdventure + pathSeparator + parent.name + pathSeparator + "Chapters";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Session:
-				response += pathSeparator + "02. Sessions" + pathSeparator + this._name;
+				response += pathSeparator + getFolderWithPrefix("sessions") + pathSeparator + this._name;
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Scene:
-				response += pathSeparator + "02. Sessions" + pathSeparator + parent.name + pathSeparator + "Scenes";
+				response += pathSeparator + getFolderWithPrefix("sessions") + pathSeparator + parent.name + pathSeparator + "Scenes";
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.NonPlayerCharacter:
-				response += pathSeparator + "03. Non Player Characters";
+				response += pathSeparator + getFolderWithPrefix("npcs");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Event:
-				response += pathSeparator + "04. Events";
+				response += pathSeparator + getFolderWithPrefix("events");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Location:
-				response += pathSeparator + "05. Locations";
+				response += pathSeparator + getFolderWithPrefix("locations");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Faction:
-				response += pathSeparator + "06. Factions";
+				response += pathSeparator + getFolderWithPrefix("factions");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Clue:
-				response += pathSeparator + "07. Clues";
+				response += pathSeparator + getFolderWithPrefix("clues");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.PlayerCharacter:
-				response += pathSeparator + "08. Player Characters";
+				response += pathSeparator + getFolderWithPrefix("pcs");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Subplot:
-				response += pathSeparator + "09. Subplots";
+				response += pathSeparator + getFolderWithPrefix("subplots");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Object:
-				response += pathSeparator + "10. Objects";
+				response += pathSeparator + getFolderWithPrefix("objects");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
 				break;
 			case ElementType.Monster:
-				response += pathSeparator + "11. Monsters";
+				response += pathSeparator + getFolderWithPrefix("monsters");
 				this._createFolder(response);
 				response += pathSeparator + this._name + ".md";
-				break;					
+				break;
 			case ElementType.Lore:
-				
+
 				if (parent?.type === ElementType.Lore) {
 					// Nest under parent lore by using parent's directory path
-					// First ensure the base "12. Lore" directory exists
-					const baseLoreDir = response + pathSeparator + "12. Lore";
+					// First ensure the base lore directory exists
+					const baseLoreDir = response + pathSeparator + getFolderWithPrefix("lore");
 					this._createFolder(baseLoreDir);
-					
+
 					const parentDir = parent.file.parent.path;
 					response = parentDir + pathSeparator + parent?.file?.basename;
 					this._createFolder(response);
 					response += pathSeparator + this._name + ".md";
 				} else {
-					// Top-level lore - create as a folder under 12. Lore
-					response += pathSeparator + "12. Lore";
+					// Top-level lore - create as a folder under lore
+					response += pathSeparator + getFolderWithPrefix("lore");
 					this._createFolder(response);
 					response += pathSeparator + this._name + ".md";
 				}

@@ -1,4 +1,5 @@
 import { AttributeInterface } from "@/data/interfaces/AttributeInterface";
+import i18n from "i18next";
 import {
   App,
   Plugin,
@@ -8,6 +9,70 @@ import {
   TFolder,
 } from "obsidian";
 import { RpgManagerInterface } from "src/RpgManagerInterface";
+
+export interface FolderStructureInterface {
+  adventures: string;
+  sessions: string;
+  npcs: string;
+  events: string;
+  locations: string;
+  factions: string;
+  clues: string;
+  pcs: string;
+  subplots: string;
+  objects: string;
+  monsters: string;
+  lore: string;
+}
+
+export const defaultFolderStructure: FolderStructureInterface = {
+  adventures: "Adventures",
+  sessions: "Sessions",
+  npcs: "Non Player Characters",
+  events: "Events",
+  locations: "Locations",
+  factions: "Factions",
+  clues: "Clues",
+  pcs: "Player Characters",
+  subplots: "Subplots",
+  objects: "Objects",
+  monsters: "Monsters",
+  lore: "Lore",
+};
+
+export function getLocalizedFolderDefaults(): FolderStructureInterface {
+  return {
+    adventures: i18n.t("settings.defaultAdventures"),
+    sessions: i18n.t("settings.defaultSessions"),
+    npcs: i18n.t("settings.defaultNpcs"),
+    events: i18n.t("settings.defaultEvents"),
+    locations: i18n.t("settings.defaultLocations"),
+    factions: i18n.t("settings.defaultFactions"),
+    clues: i18n.t("settings.defaultClues"),
+    pcs: i18n.t("settings.defaultPcs"),
+    subplots: i18n.t("settings.defaultSubplots"),
+    objects: i18n.t("settings.defaultObjects"),
+    monsters: i18n.t("settings.defaultMonsters"),
+    lore: i18n.t("settings.defaultLore"),
+  };
+}
+
+export type FolderKey = keyof FolderStructureInterface;
+
+export const defaultFolderOrder: FolderKey[] = [
+  "adventures",
+  "sessions",
+  "npcs",
+  "events",
+  "locations",
+  "factions",
+  "clues",
+  "pcs",
+  "subplots",
+  "objects",
+  "monsters",
+  "lore",
+];
 
 export interface RpgManagerSettingsInterface {
   chatGptKey: string | undefined;
@@ -21,6 +86,10 @@ export interface RpgManagerSettingsInterface {
   version: string;
   customAttributes: AttributeInterface[];
   forceFullWidth: boolean;
+  folderStructure: FolderStructureInterface;
+  folderOrder: FolderKey[];
+  campaignsFolder: string;
+  enableTasks: boolean;
 }
 
 export type PartialSettings = Partial<RpgManagerSettingsInterface>;
@@ -37,10 +106,15 @@ export const rpgManagerDefaultSettings: RpgManagerSettingsInterface = {
   version: "0.0.0",
   customAttributes: [],
   forceFullWidth: true,
+  folderStructure: { ...defaultFolderStructure },
+  folderOrder: [...defaultFolderOrder],
+  campaignsFolder: "",
+  enableTasks: true,
 };
 
 export class RpgManagerSettings extends PluginSettingTab {
   private _folderMap: Map<string, string>;
+  private _draftFolderOrder: FolderKey[] | null = null;
 
   constructor(private _app: App, private _plugin: RpgManagerInterface) {
     super(_app, _plugin as unknown as Plugin);
@@ -58,33 +132,34 @@ export class RpgManagerSettings extends PluginSettingTab {
 
   display(): void {
     this._createFolderMap();
+    const t = (key: string) => i18n.t(key);
 
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h3", { text: "Rpg Manager Settings" });
+    containerEl.createEl("h3", { text: t("settings.title") });
     const mainDesc = containerEl.createEl("p");
     mainDesc.addClass("mb-3");
-    mainDesc.appendText("For help or support, refer to ");
+    mainDesc.appendText(t("settings.help") + " ");
     mainDesc.appendChild(
       createEl("a", {
-        text: "github",
+        text: t("settings.github"),
         href: "https://github.com/carlonicora/obsidian-rpg-manager",
       }),
     );
-    mainDesc.appendText(" or join the ");
+    mainDesc.appendText(" " + t("settings.or") + " ");
     mainDesc.appendChild(
       createEl("a", {
-        text: "discord support thread",
+        text: t("settings.discord"),
         href: "https://discord.com/channels/686053708261228577/1022806716343144518",
       }),
     );
 
-    containerEl.createEl("h3", { text: "Main Options" });
+    containerEl.createEl("h3", { text: t("settings.mainOptions") });
 
     new Setting(containerEl)
-      .setName("Templates Folder")
-      .setDesc("To use custom templates, select the folder that contains them.")
+      .setName(t("settings.templatesFolder"))
+      .setDesc(t("settings.templatesFolderDesc"))
       .addDropdown((dropdown) => {
         dropdown.addOption("", "");
         this._folderMap.forEach((value: string, display: string) => {
@@ -98,23 +173,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Keep Element Organised")
-      .setDesc(
-        "Automatically move new elements in subfolders of their campaign.",
-      )
-      .addToggle((toggle) => {
-        toggle
-          .setValue(this._plugin.settings.automaticMove)
-          .onChange(async (value) => {
-            await this.saveSettings({ automaticMove: value });
-          });
-      });
-
-    new Setting(containerEl)
-      .setName("Force Full Width")
-      .setDesc(
-        "Force the markdown editor to use the full width of the screen. This might clash with some themes.",
-      )
+      .setName(t("settings.forceFullWidth"))
+      .setDesc(t("settings.forceFullWidthDesc"))
       .addToggle((toggle) => {
         toggle
           .setValue(this._plugin.settings.forceFullWidth)
@@ -128,8 +188,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Image and Assets Folder")
-      .setDesc("Select the folder that contains the assets.")
+      .setName(t("settings.assetsFolder"))
+      .setDesc(t("settings.assetsFolderDesc"))
       .addDropdown((dropdown) => {
         dropdown.addOption("", "");
         this._folderMap.forEach((value: string, display: string) => {
@@ -143,8 +203,8 @@ export class RpgManagerSettings extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Scene Analyser")
-      .setDesc("Show the tool that helps you create balanced sessions.")
+      .setName(t("settings.sceneAnalyser"))
+      .setDesc(t("settings.sceneAnalyserDesc"))
       .addToggle((toggle) => {
         toggle
           .setValue(this._plugin.settings.useSceneAnalyser)
@@ -153,20 +213,31 @@ export class RpgManagerSettings extends PluginSettingTab {
           });
       });
 
-    containerEl.createEl("h3", { text: "AI Plugins", cls: "mt-3" });
+    new Setting(containerEl)
+      .setName(t("settings.enableTasks"))
+      .setDesc(t("settings.enableTasksDesc"))
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this._plugin.settings.enableTasks ?? true)
+          .onChange(async (value) => {
+            await this.saveSettings({ enableTasks: value });
+          });
+      });
+
+    containerEl.createEl("h3", { text: t("settings.aiPlugins"), cls: "mt-3" });
     const AIPlugins = containerEl.createEl("p");
-    AIPlugins.appendText("Set up all the add-ons for the plugin. ");
+    AIPlugins.appendText(t("settings.aiPluginsDesc"));
     const ChatGPTWarning = containerEl.createEl("p");
     ChatGPTWarning.appendChild(
       createEl("span", {
-        text: "Please note: ChatGPT is a paid service, you need to have a key to use it. Also, some data from your vault will be sent to OpenAI.",
+        text: t("settings.chatGptWarning"),
         cls: "text-[--text-warning]",
       }),
     );
 
     new Setting(containerEl)
-      .setName("OpenAI/ChatGPT Key")
-      .setDesc("Insert your OpenAI key here.")
+      .setName(t("settings.chatGptKey"))
+      .setDesc(t("settings.chatGptKeyDesc"))
       .addText((text) =>
         text
           .setPlaceholder("")
@@ -182,16 +253,14 @@ export class RpgManagerSettings extends PluginSettingTab {
     const OllamaWarning = containerEl.createEl("p");
     OllamaWarning.appendChild(
       createEl("span", {
-        text: "Please note: Ollama is an open-source LLM you can run on your own machine(s). See ollama.com for more information",
+        text: t("settings.ollamaWarning"),
         cls: "text-[--text-warning]",
       }),
     );
 
     new Setting(containerEl)
-      .setName("Ollama URL")
-      .setDesc(
-        "Insert the root URL of your local ollama server (eg. http://localhost:11434)",
-      )
+      .setName(t("settings.ollamaUrl"))
+      .setDesc(t("settings.ollamaUrlDesc"))
       .addText((text) =>
         text
           .setPlaceholder("http://localhost:11434")
@@ -207,15 +276,13 @@ export class RpgManagerSettings extends PluginSettingTab {
     const modelWarning = containerEl.createEl("p");
     modelWarning.appendChild(
       createEl("span", {
-        text: "To use either OpenAI or Ollama, you need to select a model.",
+        text: t("settings.modelWarning"),
         cls: "text-[--text-warning]",
       }),
     );
     new Setting(containerEl)
-      .setName("AI Model")
-      .setDesc(
-        "Enter the AI model (eg. gpt-4.1-nano for OpenAI, or llama3.1 for Ollama or any other you like).",
-      )
+      .setName(t("settings.aiModel"))
+      .setDesc(t("settings.aiModelDesc"))
       .addText((text) =>
         text
           .setPlaceholder("")
@@ -224,6 +291,264 @@ export class RpgManagerSettings extends PluginSettingTab {
             await this.saveSettings({ model: value });
           }),
       );
+
+    // Folder Structure Section - Collapsible
+    const folderDetailsEl = containerEl.createEl("details", { cls: "mt-3", attr: { open: "" } });
+    folderDetailsEl.createEl("summary", {
+      text: t("settings.folderStructure"),
+      cls: "setting-item-heading",
+      attr: { style: "cursor: pointer; font-weight: var(--font-semibold); font-size: var(--h3-size);" }
+    });
+    folderDetailsEl.createEl("p", { text: t("settings.folderStructureDesc") });
+
+    // Keep Elements Organised toggle
+    new Setting(folderDetailsEl)
+      .setName(t("settings.keepOrganised"))
+      .setDesc(t("settings.keepOrganisedDesc"))
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this._plugin.settings.automaticMove)
+          .onChange(async (value) => {
+            await this.saveSettings({ automaticMove: value });
+          });
+      });
+
+    // Campaigns root folder
+    const localizedCampaignsDefault = i18n.t("settings.defaultCampaignsFolder");
+    new Setting(folderDetailsEl)
+      .setName(t("settings.campaignsFolder"))
+      .setDesc(t("settings.campaignsFolderDesc"))
+      .addText((text) =>
+        text
+          .setPlaceholder(localizedCampaignsDefault)
+          .setValue(this._plugin.settings.campaignsFolder || "")
+          .onChange(async (value: string) => {
+            await this.saveSettings({ campaignsFolder: value });
+          }),
+      );
+
+    // Get localized defaults
+    const localizedDefaults = getLocalizedFolderDefaults();
+
+    // Ensure folderStructure exists (for existing installations)
+    if (!this._plugin.settings.folderStructure) {
+      this._plugin.settings.folderStructure = { ...localizedDefaults };
+    }
+
+    // Ensure folderOrder exists (for existing installations)
+    if (!this._plugin.settings.folderOrder || this._plugin.settings.folderOrder.length === 0) {
+      this._plugin.settings.folderOrder = [...defaultFolderOrder];
+    }
+
+    // Initialize draft with current saved order if not already set
+    if (this._draftFolderOrder === null) {
+      this._draftFolderOrder = [...this._plugin.settings.folderOrder];
+    }
+
+    const folderLabelMap: Record<FolderKey, string> = {
+      adventures: "settings.folderAdventures",
+      sessions: "settings.folderSessions",
+      npcs: "settings.folderNpcs",
+      events: "settings.folderEvents",
+      locations: "settings.folderLocations",
+      factions: "settings.folderFactions",
+      clues: "settings.folderClues",
+      pcs: "settings.folderPcs",
+      subplots: "settings.folderSubplots",
+      objects: "settings.folderObjects",
+      monsters: "settings.folderMonsters",
+      lore: "settings.folderLore",
+    };
+
+    // Container for action buttons (save/discard) - will be shown/hidden based on changes
+    const actionButtonsEl = folderDetailsEl.createEl("div", {
+      cls: "rpgm-folder-actions",
+      attr: { style: "margin-bottom: 10px;" }
+    });
+
+    // Container for draggable items
+    const folderListEl = folderDetailsEl.createEl("div", { cls: "rpgm-folder-list" });
+
+    // Function to check if there are unsaved changes
+    const hasUnsavedChanges = (): boolean => {
+      const saved = this._plugin.settings.folderOrder;
+      const draft = this._draftFolderOrder;
+      if (!draft || saved.length !== draft.length) return true;
+      return !saved.every((key, idx) => key === draft[idx]);
+    };
+
+    // Function to update action buttons visibility
+    const updateActionButtons = () => {
+      actionButtonsEl.empty();
+      if (hasUnsavedChanges()) {
+        const warningEl = actionButtonsEl.createEl("div", {
+          cls: "setting-item-description",
+          attr: { style: "color: var(--text-warning); margin-bottom: 8px;" }
+        });
+        warningEl.setText(t("settings.unsavedChanges"));
+
+        const buttonsContainer = actionButtonsEl.createEl("div", {
+          attr: { style: "display: flex; gap: 8px;" }
+        });
+
+        const saveBtn = buttonsContainer.createEl("button", {
+          text: t("settings.saveChanges"),
+          cls: "mod-cta"
+        });
+        saveBtn.addEventListener("click", async () => {
+          await this.saveSettings({ folderOrder: [...this._draftFolderOrder!] });
+          updateActionButtons();
+        });
+
+        const discardBtn = buttonsContainer.createEl("button", {
+          text: t("settings.discardChanges")
+        });
+        discardBtn.addEventListener("click", () => {
+          this._draftFolderOrder = [...this._plugin.settings.folderOrder];
+          this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, updateActionButtons);
+          updateActionButtons();
+        });
+      }
+    };
+
+    // Initial render
+    this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, updateActionButtons);
+    updateActionButtons();
+
+    new Setting(folderDetailsEl)
+      .setName(t("settings.resetFolderStructure"))
+      .setDesc(t("settings.resetFolderStructureDesc"))
+      .addButton((button) =>
+        button
+          .setButtonText(t("settings.resetFolderStructure"))
+          .setWarning()
+          .onClick(async () => {
+            this._draftFolderOrder = [...defaultFolderOrder];
+            await this.saveSettings({
+              folderStructure: { ...localizedDefaults },
+              folderOrder: [...defaultFolderOrder],
+              campaignsFolder: "",
+            });
+            this.display();
+          }),
+      );
+  }
+
+  private _renderFolderList(
+    folderListEl: HTMLElement,
+    folderLabelMap: Record<FolderKey, string>,
+    localizedDefaults: FolderStructureInterface,
+    onOrderChange?: () => void
+  ): void {
+    const t = (key: string) => i18n.t(key);
+
+    // Clear the list
+    folderListEl.empty();
+
+    // Use draft order for display
+    const currentOrder = this._draftFolderOrder || this._plugin.settings.folderOrder;
+    let draggedItem: HTMLElement | null = null;
+    let draggedKey: FolderKey | null = null;
+
+    currentOrder.forEach((key, index) => {
+      const orderNumber = String(index + 1).padStart(2, "0");
+
+      const settingWrapper = folderListEl.createEl("div", {
+        cls: "rpgm-folder-item",
+        attr: {
+          draggable: "true",
+          "data-folder-key": key,
+          style: "cursor: grab;"
+        }
+      });
+
+      settingWrapper.addEventListener("dragstart", (e) => {
+        draggedItem = settingWrapper;
+        draggedKey = key;
+        settingWrapper.style.opacity = "0.5";
+        e.dataTransfer?.setData("text/plain", key);
+      });
+
+      settingWrapper.addEventListener("dragend", () => {
+        if (draggedItem) {
+          draggedItem.style.opacity = "1";
+        }
+        draggedItem = null;
+        draggedKey = null;
+        folderListEl.querySelectorAll(".rpgm-folder-item").forEach((el) => {
+          (el as HTMLElement).style.borderTop = "";
+          (el as HTMLElement).style.borderBottom = "";
+        });
+      });
+
+      settingWrapper.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (draggedItem && draggedItem !== settingWrapper) {
+          const rect = settingWrapper.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          if (e.clientY < midY) {
+            settingWrapper.style.borderTop = "2px solid var(--interactive-accent)";
+            settingWrapper.style.borderBottom = "";
+          } else {
+            settingWrapper.style.borderTop = "";
+            settingWrapper.style.borderBottom = "2px solid var(--interactive-accent)";
+          }
+        }
+      });
+
+      settingWrapper.addEventListener("dragleave", () => {
+        settingWrapper.style.borderTop = "";
+        settingWrapper.style.borderBottom = "";
+      });
+
+      settingWrapper.addEventListener("drop", (e) => {
+        e.preventDefault();
+        settingWrapper.style.borderTop = "";
+        settingWrapper.style.borderBottom = "";
+
+        if (draggedKey && draggedKey !== key) {
+          const newOrder = [...currentOrder];
+          const fromIndex = newOrder.indexOf(draggedKey);
+
+          const rect = settingWrapper.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          const dropAbove = e.clientY < midY;
+
+          newOrder.splice(fromIndex, 1);
+
+          let newIndex = newOrder.indexOf(key);
+          if (!dropAbove) {
+            newIndex++;
+          }
+
+          newOrder.splice(newIndex, 0, draggedKey);
+
+          // Update draft only, don't save yet
+          this._draftFolderOrder = newOrder;
+          this._renderFolderList(folderListEl, folderLabelMap, localizedDefaults, onOrderChange);
+          if (onOrderChange) onOrderChange();
+        }
+      });
+
+      const setting = new Setting(settingWrapper)
+        .setName(`${orderNumber}. ${t(folderLabelMap[key])}`)
+        .addText((text) =>
+          text
+            .setPlaceholder(localizedDefaults[key])
+            .setValue(this._plugin.settings.folderStructure[key])
+            .onChange(async (value: string) => {
+              const newFolderStructure = { ...this._plugin.settings.folderStructure };
+              newFolderStructure[key] = value || localizedDefaults[key];
+              await this.saveSettings({ folderStructure: newFolderStructure });
+            }),
+        );
+
+      setting.addExtraButton((button) =>
+        button
+          .setIcon("grip-vertical")
+          .setTooltip(t("settings.dragToReorder"))
+      );
+    });
   }
 
   private _createFolderMap(
@@ -242,8 +567,9 @@ export class RpgManagerSettings extends PluginSettingTab {
         .children.filter((file: TAbstractFile) => file instanceof TFolder);
     }
 
+    const campaignsFolderName = this._plugin.settings.campaignsFolder || i18n.t("settings.defaultCampaignsFolder");
     folderList.forEach((folder: TFolder) => {
-      if (folder.name !== "Campaigns") {
+      if (folder.name !== campaignsFolderName) {
         this._folderMap.set(folder.path, folder.path);
         this._createFolderMap(folder, indent + 1);
       }

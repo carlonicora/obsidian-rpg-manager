@@ -56,8 +56,8 @@ export default function NewChildComponent({
 			positionInParent
 		);
 
-		fileCreator.create(false).then(() => {
-			handleFileAdded();
+		fileCreator.create(false).then((newFile) => {
+			if (newFile !== undefined) handleFileAdded();
 		});
 	}
 

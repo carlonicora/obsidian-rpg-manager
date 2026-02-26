@@ -20,7 +20,7 @@ export class SceneAnalyserService {
 		[SceneType.SocialCombat, 15 * 60],
 	]);
 
-	constructor(private _api: RpgManagerInterface) {}
+	constructor(private _api: RpgManagerInterface) { }
 
 	analyseSession(session: ElementInterface): SceneAnalysisInterface | undefined {
 		const scenes: ElementInterface[] = this._api.get(
@@ -47,7 +47,7 @@ export class SceneAnalyserService {
 			const scene: ElementInterface = scenes[i];
 
 			const sceneType: SceneType | undefined = scene.attribute(AttributeType.SceneType).value as SceneType | undefined;
-			if (sceneType === undefined) continue;
+			if (!sceneType) continue;
 
 			let duration: number | undefined = medianDurations.get(sceneType);
 			if (duration === undefined) duration = this._defaultDuration.get(sceneType);

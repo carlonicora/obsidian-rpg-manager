@@ -134,12 +134,12 @@ export default function CreationBaseComponent({
 
 	const createElement = async (launchWizard: boolean) => {
 		let e = "";
-		if (type !== ElementType.Campaign && campaignPath === undefined && !global) e += "You must select a campaign";
-		if (name === undefined || name === "") e += "You must enter a name";
+		if (type !== ElementType.Campaign && campaignPath === undefined && !global) e += t("errors.select_campaign");
+		if (name === undefined || name === "") e += t("errors.enter_name");
 		if ((type === ElementType.Adventure || type === ElementType.Session) && parentPath === undefined)
-			e += "You must select a campaign";
-		if (type === ElementType.Scene && parentPath === undefined) e += "You must select a session";
-		if (type === ElementType.Chapter && parentPath === undefined) e += "You must select an adventure";
+			e += t("errors.select_campaign");
+		if (type === ElementType.Scene && parentPath === undefined) e += t("errors.select_session");
+		if (type === ElementType.Chapter && parentPath === undefined) e += t("errors.select_adventure");
 
 		if (e !== "") {
 			setError(e);

@@ -28,6 +28,7 @@ export default function MarkdownEditorComponent({
 	const parentDivRef = React.useRef<HTMLDivElement | null>(null);
 
 	const [value, setValue] = React.useState<string>(initialValue || "");
+	const valueRef = React.useRef<string>(initialValue || "");
 	const editorViewRef = React.useRef<EditorView | null>(null);
 	const lastDetectedPositionRef = React.useRef<number | null>(null);
 	const [scope, setScope] = React.useState<Scope | undefined>(undefined);
@@ -37,6 +38,7 @@ export default function MarkdownEditorComponent({
 	const contentChangeExtension = EditorState.changeFilter.of((change) => {
 		const newContent = change.state.doc.toString();
 
+		valueRef.current = newContent;
 		setValue(newContent);
 		if (onChange) onChange(newContent);
 
@@ -44,7 +46,7 @@ export default function MarkdownEditorComponent({
 	});
 
 	const handleBlur = () => {
-		if (onBlur && !showRelatioshipModal) onBlur(value);
+		if (onBlur && !showRelatioshipModal) onBlur(valueRef.current);
 	};
 
 	const handleNewRelationship = () => {

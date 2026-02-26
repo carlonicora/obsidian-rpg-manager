@@ -308,10 +308,6 @@
   margin-top: 0.75rem !important;
 }
 
-.\!mt-\[-1\.25rem\] {
-  margin-top: -1.25rem !important;
-}
-
 .-ml-8 {
   margin-left: -2rem;
 }
@@ -1037,6 +1033,10 @@
 
 .\!pl-2 {
   padding-left: 0.5rem !important;
+}
+
+.\!pl-4 {
+  padding-left: 1rem !important;
 }
 
 .\!pr-4 {
@@ -2418,6 +2418,10 @@ span.flatpickr-day.selected {
 
 .active\:border-\[--background-modifier-border-hover\]:active {
   border-color: var(--background-modifier-border-hover);
+}
+
+.active\:border-\[--text-accent\]:active {
+  border-color: var(--text-accent);
 }
 
 .active\:text-green-700:active {

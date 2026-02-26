@@ -93,6 +93,7 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 
 	async onload() {
 		await this.loadSettings();
+		await InternationalisationService.loadSettings();
 
 		addIcon(
 			"d20",
@@ -120,8 +121,6 @@ export default class RpgManager extends Plugin implements RpgManagerInterface {
 	}
 
 	async onLayoutReady() {
-		InternationalisationService.loadSettings();
-
 		if ((this.settings as any).previousVersion !== undefined) {
 			this.app.workspace.getLeaf(true).setViewState({
 				type: "rpg-manager-updater",

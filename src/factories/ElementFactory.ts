@@ -8,39 +8,46 @@ import { RpgManagerCodeblockService } from "src/services/RpgManagerCodeblockServ
 import { RelationshipFactory } from "./RelationshipFactory";
 
 export class ElementFactory {
+	/**
+	 * Creates a new element in the file.
+	 *
+	 * @param {App} app - The Obsidian app.
+	 * @param {RpgManagerInterface} api - The RPG Manager API.
+	 * @param {TFile} file - The file the element is in.
+	 * @returns {ElementInterface} The created element.
+	 */
 	static async createElement(app: App, api: RpgManagerInterface, file: TFile): Promise<ElementInterface> {
 		const codeblockService = new RpgManagerCodeblockService(app, api, file);
 
-		let rpgManagerBlock: any | undefined = undefined;
+		let rpgManagerBlock;
 		try {
 			rpgManagerBlock = await codeblockService.readCodeblock();
 		} catch (e) {
-			throw Error("Error reading the RPG Manager YAML in file " + file.path);
+			throw new Error(`Error reading the RPG Manager YAML in file ${file.path}`);
 		}
 
-		if (rpgManagerBlock === undefined || rpgManagerBlock.id === undefined || rpgManagerBlock.id.type === undefined)
+		if (!rpgManagerBlock || !rpgManagerBlock.id || !rpgManagerBlock.id.type) {
 			return undefined;
+		}
 
-		const response: ElementInterface = new Element(app, api, file, rpgManagerBlock);
+		const response = new Element(app, api, file, rpgManagerBlock);
 		response.metadata = codeblockService.metadata;
 
-		if (rpgManagerBlock.relationships != undefined && rpgManagerBlock.relationships.length > 0) {
+		if (rpgManagerBlock.relationships && rpgManagerBlock.relationships.length > 0) {
 			rpgManagerBlock.relationships.forEach((relationshipDefinition: any) => {
-				const newRelationship: RelationshipInterface | undefined =
-					RelationshipFactory.createFromRpgManagerBlock(relationshipDefinition);
-
-				if (newRelationship !== undefined) response.relationships.push(newRelationship);
+				const newRelationship = RelationshipFactory.createFromRpgManagerBlock(relationshipDefinition);
+				if (newRelationship) response.relationships.push(newRelationship);
 			});
 		}
 
-		const relationships: RelationshipInterface[] = await codeblockService.readInContentRelationships();
+		const relationships = await codeblockService.readInContentRelationships();
 
-		relationships.forEach((relationship: RelationshipInterface) => {
+		relationships.forEach((relationship) => {
 			if (relationship.path === response.path) return;
-			const existingRelationship: RelationshipInterface | undefined = response.relationships.find(
-				(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+			const existingRelationship = response.relationships.find(
+				(existingRelationship) => existingRelationship.path === relationship.path
 			);
-			if (existingRelationship === undefined) {
+			if (!existingRelationship) {
 				response.relationships.push(relationship);
 			} else {
 				existingRelationship.isAlsoInContent = true;
@@ -50,13 +57,21 @@ export class ElementFactory {
 		return response;
 	}
 
+	/**
+	 * Updates an element in the file.
+	 *
+	 * @param {App} app - The Obsidian app.
+	 * @param {RpgManagerInterface} api - The RPG Manager API.
+	 * @param {ElementInterface} element - The element to update.
+	 */
 	static async updateElement(app: App, api: RpgManagerInterface, element: ElementInterface): Promise<void> {
 		const codeblockService = new RpgManagerCodeblockService(app, api, element.file);
 
-		const rpgManagerBlock: any | undefined = await codeblockService.readCodeblock();
+		const rpgManagerBlock = await codeblockService.readCodeblock();
 
-		if (rpgManagerBlock === undefined || rpgManagerBlock.id === undefined || rpgManagerBlock.id.type === undefined)
+		if (rpgManagerBlock === undefined || rpgManagerBlock.id === undefined || rpgManagerBlock.id.type === undefined) {
 			return undefined;
+		}
 
 		element.codeblock = rpgManagerBlock;
 		element.metadata = codeblockService.metadata;
@@ -64,14 +79,11 @@ export class ElementFactory {
 		let areRelationshipChanged = false;
 
 		if (rpgManagerBlock.relationships != undefined && rpgManagerBlock.relationships.length > 0) {
-			rpgManagerBlock.relationships.forEach((relationshipDefinition: any) => {
-				const foundRelationship: RelationshipInterface | undefined = element.relationships.find(
-					(relationship: RelationshipInterface) => relationship.path === relationshipDefinition.path
-				);
+			rpgManagerBlock.relationships.forEach((relationshipDefinition: { path: string; description: string; }) => {
+				const foundRelationship = element.relationships.find((relationship) => relationship.path === relationshipDefinition.path);
 
 				if (foundRelationship === undefined) {
-					const newRelationship: RelationshipInterface | undefined =
-						RelationshipFactory.createFromRpgManagerBlock(relationshipDefinition);
+					const newRelationship = RelationshipFactory.createFromRpgManagerBlock(relationshipDefinition);
 
 					if (newRelationship !== undefined) {
 						element.relationships.push(newRelationship);
@@ -83,11 +95,11 @@ export class ElementFactory {
 			});
 		}
 
-		const relationships: RelationshipInterface[] = await codeblockService.readInContentRelationships();
+		const relationships = await codeblockService.readInContentRelationships();
 
-		relationships.forEach((relationship: RelationshipInterface) => {
-			const existingRelationship: RelationshipInterface | undefined = element.relationships.find(
-				(existingRelationship: RelationshipInterface) => existingRelationship.path === relationship.path
+		relationships.forEach((relationship) => {
+			const existingRelationship = element.relationships.find((existingRelationship) =>
+				existingRelationship.path === relationship.path
 			);
 			if (existingRelationship === undefined) {
 				areRelationshipChanged = true;
@@ -100,36 +112,34 @@ export class ElementFactory {
 			}
 		});
 
-		const existingRelationships: RelationshipInterface[] = element.relationships.filter(
-			(existingRelationship: RelationshipInterface) => existingRelationship.isInContent
-		);
+		const existingRelationships = element.relationships.filter((existingRelationship) => existingRelationship.isInContent);
 		const inContentRelationshipPaths = new Set(
-			relationships.filter((relationship: RelationshipInterface) => relationship.isInContent).map((r) => r.path)
+			relationships.filter((relationship) => relationship.isInContent).map((r) => r.path)
 		);
 
 		const pathsToRemove = new Set(
 			existingRelationships
 				.filter((r) => !inContentRelationshipPaths.has(r.path))
-				.map((r: RelationshipInterface) => r.path)
+				.map((r) => r.path)
 		);
 		element.relationships = element.relationships.filter(
 			(relationship) => relationship.type === RelationshipType.Reversed || !pathsToRemove.has(relationship.path)
 		);
 
-		const allExistingRelationships = new Set(relationships.map((r: RelationshipInterface) => r.path));
+		const allExistingRelationships = new Set(relationships.map((r) => r.path));
 		if (rpgManagerBlock.relationships !== undefined && rpgManagerBlock.relationships.length > 0) {
-			rpgManagerBlock.relationships.forEach((relationshipDefinition: any) =>
+			rpgManagerBlock.relationships.forEach((relationshipDefinition: { path: string; }) =>
 				allExistingRelationships.add(relationshipDefinition.path)
 			);
 		}
 
 		const relationshipsToBeRemoved = element.relationships.filter(
-			(relationship: RelationshipInterface) =>
+			(relationship) =>
 				relationship.type !== RelationshipType.Reversed && !allExistingRelationships.has(relationship.path)
 		);
 
 		if (relationshipsToBeRemoved.length !== 0) {
-			element.relationships = element.relationships.filter((relationship: RelationshipInterface) =>
+			element.relationships = element.relationships.filter((relationship) =>
 				allExistingRelationships.has(relationship.path)
 			);
 			areRelationshipChanged = true;
@@ -138,17 +148,25 @@ export class ElementFactory {
 		if (areRelationshipChanged) element.touch();
 	}
 
+	/**
+	 * Initializes the relationships of an element.
+	 *
+	 * @param {ElementInterface} element - The element to initialize the relationships of.
+	 * @param {ElementInterface[]} elements - The list of all elements in the file.
+	 */
 	static initialiseRelationships(element: ElementInterface, elements: ElementInterface[]): void {
-		if (element.campaign === undefined && element.campaignPath !== undefined)
+		if (element.campaign === undefined && element.campaignPath !== undefined) {
 			element.campaign = elements.find(
 				(elementInList: ElementInterface) => elementInList.path === element.campaignPath
 			);
+		}
 
 		if (
 			element.parent === undefined ||
 			(element.parentPath !== undefined && element.parent.file.path !== element.parentPath)
-		)
+		) {
 			element.parent = elements.find((elementInList: ElementInterface) => elementInList.path === element.parentPath);
+		}
 
 		element.relationships.forEach((relationship: RelationshipInterface) => {
 			const targetElement: ElementInterface | undefined = elements.find(
@@ -177,11 +195,14 @@ export class ElementFactory {
 		});
 	}
 
-	static updateRelationships(
-		element: ElementInterface,
-		elements: ElementInterface[],
-		updateReverseRelationships: boolean
-	): void {
+	/**
+	* Updates the relationships of an element.
+	*
+	* @param {ElementInterface} element - The element to update the relationships of.
+	* @param {ElementInterface[]} elements - The list of all elements in the file.
+	* @param {boolean} updateReverseRelationships - Whether to update the reverse relationships as well.
+	*/
+	static updateRelationships(element: ElementInterface, elements: ElementInterface[], updateReverseRelationships: boolean): void {
 		ElementFactory.initialiseRelationships(element, elements);
 
 		let touch = false;

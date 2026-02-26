@@ -31,8 +31,9 @@ export default function MarkdownComponent({
 	const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
 		e.stopPropagation();
 
-		if (e.currentTarget.href) {
-			app.workspace.openLinkText(e.currentTarget.dataset.id, "", false);
+		const linkId = e.currentTarget.dataset.id;
+		if (linkId) {
+			app.workspace.openLinkText(linkId, "", false);
 		}
 	};
 
