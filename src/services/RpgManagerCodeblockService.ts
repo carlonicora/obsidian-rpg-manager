@@ -73,6 +73,10 @@ export class RpgManagerCodeblockService {
     // items
     if (activeLeaf) {
       console.info("Reloading file:", this._file.path);
+      // Going to try to advance a frame to make sure the codeblock is re-rendered with the new content. 
+      // This is a bit of a hack but it seems to work.
+      // SEE GITHUB ISSUE: https://github.com/carlonicora/obsidian-rpg-manager/issues/340
+      setTimeout(() => {}); 
       this._app.workspace.setActiveLeaf(activeLeaf, { focus: true });
     }
   }
